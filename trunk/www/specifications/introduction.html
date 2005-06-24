@@ -8,118 +8,145 @@
   <meta name="CREATED" content="20050603;9042213">
   <meta name="CHANGED" content="20050603;10464469">
 </head>
-<body dir="ltr" lang="en-US">
+<body style="direction: ltr;" lang="en-US">
 <h1>Introduction</h1>
-<p>Sun Application Server 8.1 and Eclipse 3.1 RC and WPT:</p>
-<p>The new Eclipse (3.1) will be available at JavaOne 2005. It is
+<p>Sun Application Server 8.1 and
+Eclipse 3.1 RC and WPT:</p>
+<p>The new Eclipse (3.1) will be
+available at JavaOne 2005. It is
 used as the basis for the Web Tool Platform (WTP) project which is
 supposed to deliver J2EE support on top of Eclipse. BEA, Oracle,
 JBOSS, and IBM are now the key owners of the WTP area.</p>
-<p>WTP is composed of 2 sub projects:</p>
+<p>WTP is composed of 2 sub
+projects:</p>
 <ul>
   <li> <a href="http://www.eclipse.org/webtools/wst/main.html">WEB
 Standard Tools (WST): http://www.eclipse.org/webtools/wst/main.html</a></li>
   <li><a href="http://www.eclipse.org/webtools/jst/main.html">J2EE
 Standard Tools (JST): http://www.eclipse.org/webtools/jst/main.html</a></li>
 </ul>
-<p>The WTP project has now a target date of December 2005. So far, WTP
+<p>The WTP project has now a
+target date of December 2005. So far, WTP
 has simple plugins for JBoss, Tomcat, Geronimo, JONA, and Weblogic
 8.1.</p>
-<p>WTP 1.0 (and even 1.1) will&nbsp; not support the entire J2EE 1.4,
+<p>WTP 1.0 (and even 1.1)
+will&nbsp; not support the entire J2EE 1.4 specifications,
 and will not support the new Ease of Development features introduced in
 the Java Enterprise Edition 5 (EJB 3.0 annotations,...). For
 example, there is no plan to support at all EJB CMP creation or
-mapping. . Also, The Eclipse&nbsp; IDE does not support JSR 88 so that
-we cannot reuse all the
-work done on the Glassfish Application Server side or even in&nbsp; the
-NetBeans IDE&nbsp; side
+mapping. . Also, The Eclipse&nbsp; IDE does not support JSR 88 so
+that we cannot reuse all the
+work done on the Glassfish Application Server side or even in&nbsp;
+the NetBeans IDE&nbsp; side
 for Sun specific deployment descriptors editing, or J2EE application
 deployment.<br>
 </p>
-<h1>Eclipse Plugin: a prototype for Sun Application Server
+<h1>Eclipse Plugin: a prototype
+for Sun Application Server
 8.1 and Glassfish<br>
 </h1>
-<p>The best way to learn how to write an Eclipse plugin is actually
+<p>The best way to learn how to
+write an Eclipse plugin is actually
 to write one. A prototype plugin is now available that exposes the
 following features:<br>
 </p>
 <ul>
-  <li>Register the Sun Application Server or the Glassfish Server<br>
+  <li>Register the Sun Application
+Server or the Glassfish Server<br>
   </li>
   <li>Select the Server options</li>
-  <li>Add/Remove Eclipse projects to this Server</li>
-  <li>display Server Status, and Project Explorer showing the J2EE APIS
-added to the project.</li>
-  <li>Start/stop the Application Server from Eclipse</li>
+  <li>Add/Remove Eclipse projects
+to this Server</li>
+  <li>display Server Status, and
+Project Explorer showing the J2EE APIS added to the project.</li>
+  <li>Start/stop the Application
+Server from Eclipse</li>
 </ul>
-<h2>Registering the Glassfish server:<br>
+<h2>Registering the Glassfish
+server:<br>
 </h2>
-<p><img src="introduction_files/Solar%2520Eclipse_html_m1cba1772.jpg"
- name="Graphic1" align="left" border="0" height="512" width="491"><br
+<p><img alt="a" src="introduction_files/introductiom1cba1772.jpg"
+ name="Graphic1"
+ style="border: 0px solid ; width: 491px; height: 512px;" align="left"><br
  clear="left">
 <br>
 <br>
 </p>
 <h2>Selecting the options:<br>
 </h2>
-<p><img src="introduction_files/Solar%2520Eclipse_html_m23ce6d93.jpg"
- name="Graphic2" align="left" border="0" height="512" width="491"><br
+<p><img alt="a" src="introduction_files/introductiom23ce6d93.jpg"
+ name="Graphic2"
+ style="border: 0px solid ; width: 491px; height: 512px;" align="left"><br
  clear="left">
 <br>
 <br>
 </p>
-<h2>Adding/Removing Eclipse projects to this Server:<br>
+<h2>Adding/Removing Eclipse
+projects to this Server:<br>
 </h2>
-<p><img src="introduction_files/Solar%2520Eclipse_html_m31d3c7cb.jpg"
- name="Graphic3" align="left" border="0" height="512" width="491"><br
+<p><img alt="a" src="introduction_files/introductiom31d3c7cb.jpg"
+ name="Graphic3"
+ style="border: 0px solid ; width: 491px; height: 512px;" align="left"><br
  clear="left">
 <br>
 <br>
 </p>
-<h2>Server Status, and Project Explorer showing the J2ee APIS added
+<h2>Server Status, and Project
+Explorer showing the J2ee APIS added
 to the project.</h2>
-<p><img src="introduction_files/Solar%2520Eclipse_html_6727846a.jpg"
+<p><img src="introduction_files/introduction6727846a.jpg"
  name="Graphic4" align="left" border="0" height="498" width="687"><br
  clear="left">
 <br>
 <br>
 </p>
-<h2>Sun-web-app DD file, in XML Editor Mode:<br>
+<h2>Sun-web-app DD file, in XML
+Editor Mode:<br>
 </h2>
-<p><img src="introduction_files/Solar%2520Eclipse_html_m53196c28.jpg"
- name="Graphic5" align="left" border="0" height="498" width="970"><br
+<p><img alt="a" src="introduction_files/introductiom53196c28.jpg"
+ name="Graphic5"
+ style="border: 0px solid ; width: 970px; height: 498px;" align="left"><br
  clear="left">
 <br>
 <br>
 </p>
-<h2>Starting the Application Server from Eclipse:<br>
+<h2>Starting the Application
+Server from Eclipse:<br>
 </h2>
-<p><img src="introduction_files/Solar%2520Eclipse_html_m4d21cbe.jpg"
- name="Graphic6" align="left" border="0" height="498" width="834"><br
+<p><img alt="a" src="introduction_files/introductiom4d21cbe.jpg"
+ name="Graphic6"
+ style="border: 0px solid ; width: 834px; height: 498px;" align="left"><br
  clear="left">
 <br>
 <br>
 </p>
 <h2>The Server is started:<br>
 </h2>
-<p><img src="introduction_files/Solar%2520Eclipse_html_m7f272262.jpg"
- name="Graphic7" align="left" border="0" height="498" width="834"><br
+<p><img alt="a" src="introduction_files/introductiom7f272262.jpg"
+ name="Graphic7"
+ style="border: 0px solid ; width: 834px; height: 498px;" align="left"><br
  clear="left">
 <br>
 <br>
 </p>
 <h1>Next Steps</h1>
-<p style="">The WTP milestones are currently as
+<p style="">The WTP
+milestones are currently as
 follow:</p>
 <ul>
-  <li>Friday Aug. 26, 2005 - Milestone 1 (1.0 M7) - stable build </li>
-  <li>Friday Oct. 7, 2005 - Milestone 2 (1.0 M8) - stable build </li>
-  <li>Friday Nov. 18, 2005 - Milestone 3 (1.0 M9) - stable build </li>
-  <li>Friday Dec. 15, 2005 &ndash; Release 1.0 - release build </li>
+  <li>Friday Aug. 26, 2005 -
+Milestone 1 (1.0 M7) - stable build </li>
+  <li>Friday Oct. 7, 2005 -
+Milestone 2 (1.0 M8) - stable build </li>
+  <li>Friday Nov. 18, 2005 -
+Milestone 3 (1.0 M9) - stable build </li>
+  <li>Friday Dec. 15, 2005
+&ndash; Release 1.0 - release build </li>
 </ul>
-<p style="">This means that the glassfishplugins project should try to
-deliver an Eclipse plugin for each sub-sequent milestones.&nbsp;
-Obvioulsy, this project is actively looking for external contributors.<br>
+<p style="">This means that
+the glassfishplugins project should try to deliver an Eclipse plugin
+for each sub-sequent milestones.&nbsp; Obvioulsy, this project is
+actively looking for external contributors.<br>
 </p>
 <p><br>
 <br>
