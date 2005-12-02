@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/*
+ * The contents of this file are subject to the terms 
+ * of the Common Development and Distribution License 
+ * (the "License").  You may not use this file except 
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at 
+ * glassfish/bootstrap/legal/CDDLv1.0.txt or 
+ * https://glassfish.dev.java.net/public/CDDLv1.0.html. 
+ * See the License for the specific language governing 
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL 
+ * HEADER in each file and include the License file at 
+ * glassfish/bootstrap/legal/CDDLv1.0.txt.  If applicable, 
+ * add the following below this CDDL HEADER, with the 
+ * fields enclosed by brackets "[]" replaced with your 
+ * own identifying information: Portions Copyright [yyyy] 
+ * [name of copyright owner]
+ */
+-->
+
+<tns:ServerRuntime
+    xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
+    name="GlassFish Java EE 5" version="v0.1">
+    
+    
+    <property id="serverRootDirectory"  label="%serverRootDirectory"
+    type="directory"
+    context="runtime"
+    default="C:/sun/AppServer90_18nov" />
+    
+    <!--property id="startScript" label="%AdminStartScript"
+    type="file"
+    context="server"
+    default="C:/sun/AppServer90/bin/asadmin.bat" /-->
+
+    <property id="serverAddress"  label="%serverAddress"
+    type="string"
+    context="server"
+    default="127.0.0.1" />
+    
+    <property id="port" label="%port"
+    type="string"
+    context="server"
+    default="8080" />
+    
+    <property id="domainDirectory"  label="%DomainDirectory"
+    type="directory"
+    context="server"
+    default="C:/sun/AppServer90_18nov/domains/domain1" />
+
+    <property id="adminID"  label="%Administratorid"
+    type="string"
+    context="server"
+    default="admin" />
+    
+    <property id="adminPassword" label="%AdministratorPassword"
+    type="string"
+    context="server"
+    default="adminadmin" />
+    
+
+
+    <port>
+        <no>${port}</no>
+        <name>Http</name>
+        <protocol>http</protocol>
+    </port>
+
+    <module>
+        <type>jst.web</type>
+        <publishDir>${domainDirectory}/autodeploy</publishDir>
+        <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+    </module>
+
+    <module>
+        <type>jst.ejb</type>
+        <publishDir>${domainDirectory}/autodeploy</publishDir>
+        <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+    </module>
+
+    <module>
+        <type>jst.ear</type>
+        <publishDir>${domainDirectory}/autodeploy</publishDir>
+        <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+    </module>
+
+
+    <project>
+        <classpathReference>sunappsrv.project</classpathReference>
+    </project>
+	
+    <start>
+        <external>${serverRootDirectory}/bin/asadmin.bat start-domain domain1</external>
+        <programArguments>start-domain domain1</programArguments>
+        <workingDirectory>${domainDirectory}</workingDirectory>
+        <debugPort>567</debugPort>
+
+    </start>
+
+    <stop>
+        <external>${serverRootDirectory}/bin/asadmin.bat stop-domain domain1 </external>
+        <programArguments>stop-domain domain1 ARGS do not work yet in Eclipse</programArguments>
+        <workingDirectory>${domainDirectory}</workingDirectory>
+    </stop>
+        
+    <publisher id="org.eclipse.jst.server.generic.antpublisher">
+        <publisherdata>
+            <dataname>build.file</dataname>
+            <datavalue>/serverdef/sunappsrv-ant.xml</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.publish.j2ee.web</dataname>
+            <datavalue>deploy.j2ee.web</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.publish.j2ee.ejb</dataname>
+            <datavalue>deploy.j2ee.ejb</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.unpublish.j2ee.web</dataname>
+            <datavalue>undeploy.j2ee.web</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.unpublish.j2ee.ejb</dataname>
+            <datavalue>undeploy.j2ee.ejb</datavalue>
+        </publisherdata>			
+    </publisher>
+
+
+
+    <classpath id="sunappsrv.server" >
+        <archive path="${serverRootDirectory}/lib/appserv-rt.jar" />
+        <archive path="${serverRootDirectory}/lib/appserv-admin.jar" />
+    </classpath>
+    <classpath id="sunappsrv.deploy" >
+        <archive path="${serverRootDirectory}/lib/appserv-rt.jar" />
+    </classpath>
+
+    <classpath id="sunappsrv.project" >
+        <archive path="${serverRootDirectory}/lib/appserv-rt.jar" />
+        <archive path="${serverRootDirectory}/lib/javaee.jar" />
+        <archive path="${serverRootDirectory}/lib/mail.jar" />
+        <archive path="${serverRootDirectory}/lib/appserv-ws.jar" />
+        <archive path="${serverRootDirectory}/lib/appserv-jstl.jar" />
+        <archive path="${serverRootDirectory}/lib/appserv-tags.jar" />
+        <archive path="${serverRootDirectory}/lib/activation.jar" />
+
+    </classpath>
+	
+    <jndiConnection>
+        <providerUrl>jnp://${serverAddress}:1099</providerUrl>
+        <initialContextFactory>org.jnp.interfaces.NamingContextFactory</initialContextFactory>
+        <jndiProperty>
+            <name></name>
+            <value></value>
+        </jndiProperty>
+    </jndiConnection>
+</tns:ServerRuntime>
