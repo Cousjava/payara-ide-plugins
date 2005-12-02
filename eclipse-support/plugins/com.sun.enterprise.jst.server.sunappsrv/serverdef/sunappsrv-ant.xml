@@ -1,0 +1,68 @@
+<!--
+/*
+ * The contents of this file are subject to the terms 
+ * of the Common Development and Distribution License 
+ * (the "License").  You may not use this file except 
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at 
+ * glassfish/bootstrap/legal/CDDLv1.0.txt or 
+ * https://glassfish.dev.java.net/public/CDDLv1.0.html. 
+ * See the License for the specific language governing 
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL 
+ * HEADER in each file and include the License file at 
+ * glassfish/bootstrap/legal/CDDLv1.0.txt.  If applicable, 
+ * add the following below this CDDL HEADER, with the 
+ * fields enclosed by brackets "[]" replaced with your 
+ * own identifying information: Portions Copyright [yyyy] 
+ * [name of copyright owner]
+ */
+-->
+
+<project name="deployextension"  default="deploy.j2ee.web"  basedir=".">
+    <target name="undeploy.j2ee.web">
+        <delete file="${server.publish.dir}/${module.name}.war"> </delete>
+    </target>
+    
+    <target name="undeploy.j2ee.ejb">
+        <delete file="${server.publish.dir}/${module.name}.jar"> </delete>
+    </target>
+	
+    <target name="deploy.j2ee.ejb">
+        <jar destfile="${module.name}.jar"> 
+            <zipfileset dir="${module.dir}">
+                <include name="**/*.*"/>
+                <exclude name="**/*.java"/>
+            </zipfileset>
+        </jar>
+        <move file="${module.name}.jar" todir="${server.publish.dir}"/>
+    </target>
+    
+    <target name="deploy.j2ee.web">
+        <jar destfile="${module.name}.war"> 
+            <zipfileset dir="${module.dir}">
+                <include name="**/*.*"/>
+                <exclude name="**/jsp_servlet/*.class"/>
+                <exclude name="**/*.war"/>
+            </zipfileset>
+        </jar>
+        
+        <delete>
+            <fileset dir="${server.publish.dir}" includes="${module.name}.war_*"/>
+        </delete>
+        
+        <move file="${module.name}.war" todir="${server.publish.dir}"/>
+        
+        <waitfor maxwait="30" maxwaitunit="second">
+            <or>
+                <available file="${server.publish.dir}/${module.name}.war_deployed"/>
+                <available file="${server.publish.dir}/${module.name}.war_deployedFailed"/>
+            </or>
+        </waitfor>  
+
+    </target>
+
+
+</project>

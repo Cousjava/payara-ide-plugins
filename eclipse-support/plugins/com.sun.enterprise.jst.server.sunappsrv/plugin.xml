@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+/*
+ * The contents of this file are subject to the terms 
+ * of the Common Development and Distribution License 
+ * (the "License").  You may not use this file except 
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at 
+ * glassfish/bootstrap/legal/CDDLv1.0.txt or 
+ * https://glassfish.dev.java.net/public/CDDLv1.0.html. 
+ * See the License for the specific language governing 
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL 
+ * HEADER in each file and include the License file at 
+ * glassfish/bootstrap/legal/CDDLv1.0.txt.  If applicable, 
+ * add the following below this CDDL HEADER, with the 
+ * fields enclosed by brackets "[]" replaced with your 
+ * own identifying information: Portions Copyright [yyyy] 
+ * [name of copyright owner]
+ */
+-->
+
+<plugin>  
+    <extension point = "org.eclipse.wst.xml.core.catalogContributions">
+        <catalogContribution id="default">
+            <!--    "SCHEMA:http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd"                    , "ejb-jar_2_1",
+        
+            "SCHEMA:http://java.sun.com/xml/ns/j2ee/application-client_1_4.xsd"         , "application-client_1_4",
+            "SCHEMA:http://java.sun.com/xml/ns/j2ee/application_1_4.xsd"                , "application_1_4",
+            "SCHEMA:http://java.sun.com/xml/ns/j2ee/jax-rpc-ri-config.xsd"              , "jax-rpc-ri-config",
+            "SCHEMA:http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"                  , "connector_1_5",
+            ///"SCHEMA:http://java.sun.com/xml/ns/j2ee/jsp_2_0.xsd"                        , "jsp_2_0.xsd",
+            ///"SCHEMA:http://java.sun.com/xml/ns/j2ee/datatypes.dtd"                      , "datatypes",
+            ///"SCHEMA:http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"                    , "web-app_2_4",
+            ///"SCHEMA:http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"          , "web-jsptaglibrary_2_0",
+            ///"SCHEMA:http://java.sun.com/xml/ns/j2ee/j2ee_1_4.xsd"                       , "j2ee_1_4",
+            "SCHEMA:http://java.sun.com/xml/ns/j2ee/j2ee_jaxrpc_mapping_1_1.xsd"        , "j2ee_jaxrpc_mapping_1_1",
+            "SCHEMA:http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"             ,"j2ee_web_services_1_1",
+            // "SCHEMA:http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd"          ,"j2ee_web_services_client_1_1",-->
+
+           
+            <uri name="http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd" uri="schemas/j2ee_web_services_1_1.xsd"/>
+            <uri name="http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd" uri="schemas/j2ee_web_services_client_1_1.xsd"/>
+            <uri name="java.sun.com/xml/ns/j2ee/j2ee_1_4.xsd" uri="schemas/j2ee_1_4.xsd"/>
+            <uri name="http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd" uri="schemas/ejb-jar_2_1.xsd"/>
+            <uri name="http://java.sun.com/xml/ns/j2ee/application-client_1_4.xsd" uri="schemas/application-client_1_4.xsd"/>
+            <uri name="http://java.sun.com/xml/ns/j2ee/application_1_4.xsd" uri="schemas/application_1_4.xsd"/>
+            <uri name="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" uri="schemas/web-app_2_4.xsd"/>
+
+
+        </catalogContribution>
+    </extension>    
+    
+    
+    <extension point="org.eclipse.wst.server.core.runtimeTypes">
+        <!-- GlassFish 90 server -->
+
+        <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.sunappsrv90"
+            name="%runtimeTypeName9" description="%runtimeTypeDescription9"
+            vendor="%runtimeTypeVendor" version="0.1"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4"/>
+            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
+            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4"/>
+            <moduleType types="jst.utility"  versions="1.0"/>
+        </runtimeType>
+
+        <!-- App Server 8.x server -->
+
+        <!--runtimeType id="com.sun.enterprise.jst.server.runtime.sunappsrv.81"
+        name="%runtimeTypeName"   description="%runtimeTypeDescription"
+        vendor="%runtimeTypeVendor" version="1.0"
+        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+        <moduleType  types="j2ee.web"  versions="2.2, 2.3, 2.4"/>
+        <moduleType  types="j2ee.ejb"  versions="1.1, 2.0, 2.1"/>
+        <moduleType  types="j2ee.ear"   versions="1.2, 1.3, 1.4"/>
+        </runtimeType-->
+
+    </extension>
+
+
+
+    <extension point="org.eclipse.wst.server.core.serverTypes">
+
+        <!-- GlassFish 90 server -->
+
+        <serverType
+            id="com.sun.enterprise.jst.server.sunappsrv90"
+            name="%serverTypeName9"
+            description="%serverTypeDescription9"
+            runtime="true"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServer"
+            initialState="stopped"
+            supportsRemoteHosts="false"
+            runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv90"
+            launchConfigId="org.eclipse.jst.server.generic.core.ExternalLaunchConfigurationType"
+            behaviourClass="org.eclipse.jst.server.generic.core.internal.ExternalServerBehaviour"
+            startBeforePublish="true"
+            hasConfiguration="false"
+            launchModes="run,debug">         
+        </serverType> 
+
+        <!--serverType
+        id="com.sun.enterprise.jst.server.sunappsrv.81"
+        name="%serverTypeName"
+        description="%serverTypeDescription"
+        runtime="true"
+        class="org.eclipse.jst.server.generic.core.internal.GenericServer"
+        initialState="stopped"
+        supportsRemoteHosts="false"
+        runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv.81"
+        launchConfigId="org.eclipse.jst.server.generic.core.ExternalLaunchConfigurationType"
+        behaviourClass="org.eclipse.jst.server.generic.core.internal.ExternalServerBehaviour"
+        startBeforePublish="true"
+        hasConfiguration="false"
+        launchModes="run,debug">         
+        </serverType-->
+
+    
+    </extension>
+
+    <extension point="org.eclipse.jst.server.generic.core.serverdefinition">
+        <!--serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv.81" 
+        definitionfile="/serverdef/sunappsrv81.serverdef">
+        </serverdefinition-->
+
+        <!-- GlassFish 90 server -->
+        <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv90" 
+            definitionfile="/serverdef/sunappsrv9serverdef.xml">
+        </serverdefinition>
+
+    
+    </extension>
+
+    <extension point="org.eclipse.wst.server.ui.wizardFragments">
+        
+        <fragment id="org.eclipse.jst.server.generic.runtime"
+        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv90"
+        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+        <fragment id="org.eclipse.jst.server.generic.server"
+        typeIds="com.sun.enterprise.jst.server.sunappsrv90"
+        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+        
+    </extension>
+    
+    <extension point="org.eclipse.wst.server.ui.serverImages">
+        <image id="org.eclipse.jst.server.generic.image"
+        icon="icons/obj16/sunappsrv.gif"
+        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv90"/>
+        
+        <image id="org.eclipse.jst.server.generic.image"
+        icon="icons/obj16/sunappsrv.gif"
+        typeIds="com.sun.enterprise.jst.server.sunappsrv90"/>
+    </extension>
+    
+
+    
+    <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
+        <runtimeTargetHandler
+        id="com.sun.enterprise.jst.server.sunappsrv.runtimeTarget"
+        runtimeTypeIds="com.sun.enterprise.jst.server.runtime.sunappsrv*"
+        class="com.sun.enterprise.jst.server.sunappsrv.SunAppSrvServerRuntimeTargetHandler"/>
+    </extension>
+    
+    <extension  point="org.eclipse.wst.common.project.facet.core.facets">        
+        <project-facet id="GlassFish.facet">
+            <label>%gf-facet-label</label>
+            <description>%gf-facet-description</description>
+        </project-facet>
+
+        <project-facet-version facet="GlassFish.facet" version="1.0">
+            <action type="install">
+                <delegate class="com.sun.enterprise.jst.server.sunappsrv.MyFacet"/>
+            </action>
+           	<constraint>
+                <or>
+                    <requires facet="jst.ear" version="1.2"/>
+                    <requires facet="jst.ear" version="1.3"/>
+                    <requires facet="jst.ear" version="1.4"/>
+                    <requires facet="jst.appclient" version="1.2"/>
+                    <requires facet="jst.appclient" version="1.3"/>
+                    <requires facet="jst.appclient" version="1.4"/>
+                    <requires facet="jst.connector" version="1.0"/>
+                    <requires facet="jst.connector" version="1.5"/>
+                    <requires facet="jst.ejb" version="1.1"/>
+                    <requires facet="jst.ejb" version="2.0"/>
+                    <requires facet="jst.ejb" version="2.1"/>
+                    <requires facet="jst.web" version="2.2"/>
+                    <requires facet="jst.web" version="2.3"/>
+                    <requires facet="jst.web" version="2.4"/>
+                </or>
+            </constraint>
+        </project-facet-version>
+    </extension>
+   
+    <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
+        <runtimeClasspathProvider  id="com.sun.enterprise.jst.server.runtime.sunappsrv90"
+        runtimeTypeIds="com.sun.enterprise.jst.server.runtime.sunappsrv90"
+        class="com.sun.enterprise.jst.server.sunappsrv.SunAppSrvServerRuntimeTargetHandler"/>
+    </extension>
+   
+    <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+        <runtime-component-type   id="com.sun.enterprise.jst.server.runtime.sunappsrv"/>
+        <runtime-component-version type="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="90"/>
+        <adapter>
+            <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv"/>
+            <factory class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
+            <type class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
+        </adapter>
+        <supported>
+            <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="90"/>
+            <facet id="GlassFish.facet" version="1.0"/>
+            <facet id="jst.web" version="2.2,2.3,2.4"/>
+            <facet id="jst.ejb" version="1.1,2.0,2.1"/>
+            <facet id="jst.ear"  version="1.2,1.3,1.4"/>
+            <facet id="jst.connector"  version="1.5"/>
+            <facet id="jst.appclient" version="1.2,1.3,1.4"/>
+            <facet id="jst.utility"  version="1.0"/>  
+        </supported>
+    </extension>
+  
+    <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
+    <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv"
+    runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="90"/>
+    </extension>    
+    
+    
+    <extension point="org.eclipse.wst.common.project.facet.ui.images">
+        <image runtime-component-type="com.sun.enterprise.jst.server.runtime.sunappsrv"
+        path="icons/obj16/sunappsrv.gif"/>
+     
+    </extension>    
+    
+    
+    
+    <extension id="GlassFishExtensions" name="GlassFishExtensions" point="org.eclipse.wst.common.frameworks.OperationExtension">									
+        <operationExtension
+            id="org.eclipse.jst.j2ee.internal.web.archive.operations.WebComponentCreationFacetOperation"
+            postOperationClass="com.sun.enterprise.jst.server.sunappsrv.SunWebXmlCreate">			
+        </operationExtension>
+    </extension>
+</plugin>
