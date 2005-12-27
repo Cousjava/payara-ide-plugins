@@ -41,6 +41,10 @@
             "SCHEMA:http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"             ,"j2ee_web_services_1_1",
             // "SCHEMA:http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd"          ,"j2ee_web_services_client_1_1",-->
 
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.1 Servlet 2.4//EN" uri="dtds/sun-web-app_2_4-1.dtd"
+            webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_2_4-1.dtd" />
+             <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.1 EJB 2.1//EN" uri="dtds/sun-ejb-jar_2_1-1.dtd"
+            webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_2_1-1.dtd" />
            
             <uri name="http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd" uri="schemas/j2ee_web_services_1_1.xsd"/>
             <uri name="http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd" uri="schemas/j2ee_web_services_client_1_1.xsd"/>
