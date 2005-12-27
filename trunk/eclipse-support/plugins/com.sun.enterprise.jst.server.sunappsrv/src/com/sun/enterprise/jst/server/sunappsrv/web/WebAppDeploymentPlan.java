@@ -23,7 +23,7 @@
 
 
 
-package com.sun.enterprise.jst.server.sunappsrv;
+package com.sun.enterprise.jst.server.sunappsrv.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -20,7 +20,7 @@
  * [name of copyright owner]
  */
 // </editor-fold>
-package com.sun.enterprise.jst.server.sunappsrv;
+package com.sun.enterprise.jst.server.sunappsrv.web;
 
 import java.io.InputStream;
 import org.eclipse.core.runtime.Status;
@@ -76,12 +76,12 @@ public class SunWebXmlCreate extends AbstractDataModelOperation  {
     }
     
     
-    private static WebAppDeploymentPlan createDeploymentPlan(IFile deployPlanFile) {
+    private  WebAppDeploymentPlan createDeploymentPlan(IFile deployPlanFile) {
         WebAppDeploymentPlan plan=null;
         InputStream is=null;
         try {
             
-            String moduleName = "ludosdfsdfsdfsdf";
+            String moduleName =         model.getStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME);
             plan=new WebAppDeploymentPlan();
             plan.getSunWebApp().setContextRoot("/"+moduleName);
             is=plan.getInputStream();
