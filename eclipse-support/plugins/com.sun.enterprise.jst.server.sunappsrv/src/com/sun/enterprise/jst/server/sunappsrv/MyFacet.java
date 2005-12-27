@@ -1,22 +1,22 @@
 // <editor-fold defaultstate="collapsed" desc="CDDL Licence">
 /*
- * The contents of this file are subject to the terms 
- * of the Common Development and Distribution License 
- * (the "License").  You may not use this file except 
+ * The contents of this file are subject to the terms
+ * of the Common Development and Distribution License
+ * (the "License").  You may not use this file except
  * in compliance with the License.
- * 
- * You can obtain a copy of the license at 
- * glassfish/bootstrap/legal/CDDLv1.0.txt or 
- * https://glassfish.dev.java.net/public/CDDLv1.0.html. 
- * See the License for the specific language governing 
+ *
+ * You can obtain a copy of the license at
+ * glassfish/bootstrap/legal/CDDLv1.0.txt or
+ * https://glassfish.dev.java.net/public/CDDLv1.0.html.
+ * See the License for the specific language governing
  * permissions and limitations under the License.
- * 
- * When distributing Covered Code, include this CDDL 
- * HEADER in each file and include the License file at 
- * glassfish/bootstrap/legal/CDDLv1.0.txt.  If applicable, 
- * add the following below this CDDL HEADER, with the 
- * fields enclosed by brackets "[]" replaced with your 
- * own identifying information: Portions Copyright [yyyy] 
+ *
+ * When distributing Covered Code, include this CDDL
+ * HEADER in each file and include the License file at
+ * glassfish/bootstrap/legal/CDDLv1.0.txt.  If applicable,
+ * add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your
+ * own identifying information: Portions Copyright [yyyy]
  * [name of copyright owner]
  */
 // </editor-fold>
@@ -27,17 +27,23 @@ package com.sun.enterprise.jst.server.sunappsrv;
  *
  * @author ludo
  */
+import com.sun.enterprise.jst.server.sunappsrv.web.SunWebXmlCreate;
+import com.sun.enterprise.jst.server.sunappsrv.ejbjar.SunEjbJarXmlCreate;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jst.j2ee.internal.archive.operations.JavaComponentCreationDataModelProvider;
+import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IComponentCreationDataModelProperties;
+import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
+//import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 
 public class MyFacet implements IDelegate {
     
@@ -49,8 +55,30 @@ public class MyFacet implements IDelegate {
         IDataModel model = DataModelFactory.createDataModel(new JavaComponentCreationDataModelProvider());
         model.setStringProperty(IComponentCreationDataModelProperties.COMPONENT_NAME, virtualC.getName());
         model.setStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME, prj.getName());
-        SunWebXmlCreate op = new SunWebXmlCreate(model);
-        op.execute();
+        String type = J2EEProjectUtilities.getJ2EEProjectType(getProject(model ));
+        
+        if (IModuleConstants.JST_WEB_MODULE.equals(type)) {
+            SunWebXmlCreate swa= new SunWebXmlCreate(model);
+            swa.execute();
+        } else if (IModuleConstants.JST_EJB_MODULE.equals(type)) {
+            SunEjbJarXmlCreate sej= new SunEjbJarXmlCreate(model);
+            sej.execute();
+        } else if (IModuleConstants.JST_EAR_MODULE.equals(type)) {
+            
+        } else if (IModuleConstants.JST_CONNECTOR_MODULE.equals(type)) {
+        }
+        
+        
+        
+        
+    }
+    public IProject getProject(IDataModel model ) {
+        String projectName = model.getProperty(
+                IComponentCreationDataModelProperties.PROJECT_NAME).toString();
+        if (projectName != null) {
+            return ResourcesPlugin.getWorkspace().getRoot().getProject( projectName);
+        }
+        return null;
     }
     
 }
