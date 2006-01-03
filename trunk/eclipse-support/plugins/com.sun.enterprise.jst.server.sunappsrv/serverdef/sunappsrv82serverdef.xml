@@ -27,18 +27,14 @@
     xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
-    name="GlassFish Java EE 5" version="v0.1">
+    name="Sun Application Server 8.1" version="8.1">
     
     
     <property id="serverRootDirectory"  label="%serverRootDirectory"
     type="directory"
     context="runtime"
-    default="C:/sun/AppServer90" />
+    default="C:/sun/AppServer81" />
     
-    <!--property id="startScript" label="%AdminStartScript"
-    type="file"
-    context="server"
-    default="C:/sun/AppServer90/bin/asadmin.bat" /-->
 
     <property id="serverAddress"  label="%serverAddress"
     type="string"
@@ -53,7 +49,7 @@
     <property id="domainDirectory"  label="%DomainDirectory"
     type="directory"
     context="server"
-    default="C:/sun/AppServer90/domains/domain1" />
+    default="C:/sun/AppServer81/domains/domain1" />
 
     <property id="adminID"  label="%Administratorid"
     type="string"
@@ -134,23 +130,16 @@
     </publisher>
 
 
-
-    <classpath id="sunappsrv.server" >
-        <archive path="${serverRootDirectory}/lib/appserv-rt.jar" />
-        <archive path="${serverRootDirectory}/lib/appserv-admin.jar" />
-    </classpath>
-    <classpath id="sunappsrv.deploy" >
-        <archive path="${serverRootDirectory}/lib/appserv-rt.jar" />
-    </classpath>
-
     <classpath id="sunappsrv.project" >
-        <archive path="${serverRootDirectory}/lib/appserv-rt.jar" />
-        <archive path="${serverRootDirectory}/lib/javaee.jar" />
+        <archive path="${serverRootDirectory}/lib/j2ee.jar" />
         <archive path="${serverRootDirectory}/lib/mail.jar" />
-        <archive path="${serverRootDirectory}/lib/appserv-ws.jar" />
+        <archive path="${serverRootDirectory}/lib/jsf-api.jar" />
         <archive path="${serverRootDirectory}/lib/appserv-jstl.jar" />
         <archive path="${serverRootDirectory}/lib/appserv-tags.jar" />
         <archive path="${serverRootDirectory}/lib/activation.jar" />
+        <archive path="${serverRootDirectory}/lib/jaxr-api.jar" />
+        <archive path="${serverRootDirectory}/lib/jaxrpc-api.jar" />
+        <archive path="${serverRootDirectory}/lib/saaj-api.jar" />
 
     </classpath>
 	
