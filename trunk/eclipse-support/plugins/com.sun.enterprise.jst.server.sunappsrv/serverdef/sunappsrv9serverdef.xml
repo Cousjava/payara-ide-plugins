@@ -35,10 +35,6 @@
     context="runtime"
     default="C:/sun/AppServer90" />
     
-    <!--property id="startScript" label="%AdminStartScript"
-    type="file"
-    context="server"
-    default="C:/sun/AppServer90/bin/asadmin.bat" /-->
 
     <property id="serverAddress"  label="%serverAddress"
     type="string"
@@ -50,10 +46,12 @@
     context="server"
     default="8080" />
     
-    <property id="domainDirectory"  label="%DomainDirectory"
-    type="directory"
+
+    
+    <property id="domainName"  label="%DomainName"
+    type="string"
     context="server"
-    default="C:/sun/AppServer90/domains/domain1" />
+    default="domain1" />
 
     <property id="adminID"  label="%Administratorid"
     type="string"
@@ -75,19 +73,19 @@
 
     <module>
         <type>jst.web</type>
-        <publishDir>${domainDirectory}/autodeploy</publishDir>
+        <publishDir>${serverRootDirectory}/domains/${domainName}/autodeploy</publishDir>
         <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
     </module>
 
     <module>
         <type>jst.ejb</type>
-        <publishDir>${domainDirectory}/autodeploy</publishDir>
+        <publishDir>${serverRootDirectory}/domains/${domainName}/autodeploy</publishDir>
         <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
     </module>
 
     <module>
         <type>jst.ear</type>
-        <publishDir>${domainDirectory}/autodeploy</publishDir>
+        <publishDir>${serverRootDirectory}/domains/${domainName}/autodeploy</publishDir>
         <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
     </module>
 
@@ -97,17 +95,19 @@
     </project>
 	
     <start>
-        <external>${serverRootDirectory}/bin/asadmin.bat start-domain domain1</external>
-        <programArguments>start-domain domain1</programArguments>
-        <workingDirectory>${domainDirectory}</workingDirectory>
+        <external  >${serverRootDirectory}/bin/asadmin.sh start-domain ${domainName}</external>
+        <external os="Windows">${serverRootDirectory}/bin/asadmin.bat start-domain domain1</external>
+        <programArguments>start-domain  ${domainName}</programArguments>
+        <workingDirectory>${serverRootDirectory}</workingDirectory>
         <debugPort>567</debugPort>
 
     </start>
 
     <stop>
-        <external>${serverRootDirectory}/bin/asadmin.bat stop-domain domain1 </external>
+        <external>${serverRootDirectory}/bin/asadmin.sh stop-domain ${domainName} </external>
+        <external os="Windows">${serverRootDirectory}/bin/asadmin.bat stop-domain ${domainName} </external>
         <programArguments>stop-domain domain1 ARGS do not work yet in Eclipse</programArguments>
-        <workingDirectory>${domainDirectory}</workingDirectory>
+        <workingDirectory>${serverRootDirectory}</workingDirectory>
     </stop>
         
     <publisher id="org.eclipse.jst.server.generic.antpublisher">
