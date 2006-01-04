@@ -47,7 +47,7 @@
         
         <installerBuilder
         jarFile="dist/glassfish-eclipse-plugin_installer_0_1.jar"
-        licenseFile="../../www/CDDLv1.0.text"
+        licenseFile="../../www/license/CDDLv1.0.text"
         zipFile="dist/glassfish-eclipse-plugin_0_1.zip" />        
         
         <unzip dest="${eclipse.rootdir}" overwrite="true" src="dist/glassfish-eclipse-plugin_0_1.zip"/>
