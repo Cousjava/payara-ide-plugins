@@ -1,43 +1,54 @@
-</div>
-<script id="eraser">
-// hide all default navigation bars
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
 
+  <script id="eraser">
+// hide all default navigation bars
 // get to the block
 var div = document.getElementById("eraser").previousSibling;
 for( n=div; n!=null; n=n.previousSibling ) {
-  if(n.nodeType==1) { // if element
-    if(n.className=="body") { // kill all the link items
-      n.style.display = "none";
-    }
-    if(n.className=="label") { // change the title
-      n.innerHTML = "<strong>GlassFish project</strong>";
-    }
-  }
+if(n.nodeType==1) { // if element
+if(n.className=="body") { // kill all the link items
+n.style.display = "none";
 }
-
+if(n.className=="label") { // change the title
+n.innerHTML = "<strong>GlassFish Plug-ins</strong>";
+}
+}
+}
 // delete the "get involved" block
 getInvolved = document.getElementById("communitylinks");
 getInvolved.parentNode.removeChild(getInvolved);
-</script>
+  </script>
+</head>
+<body>
+
 <div class="body">
-	<div>
-	<a href="https://glassfishplugins.dev.java.net/servlets/ProjectHome">GlassFish Plug-ins Home</a>
-	</div>
-	
-	<div>
-		<a href="https://glassfishplugins.dev.java.net/servlets/ProjectNewsList">Announcements</a>
-	</div>
-	<div> 
-		<a href="https://glassfishplugins.dev.java.net/servlets/ProjectMailingListList">Mailing lists</a>
-	</div>
-<br>
-	<div>
-  	<a href="https://glassfishplugins.dev.java.net/source/browse/glassfishplugins">Source code - CVS</a><br>
-	</div>
-	<div>
-  	<a href="https://glassfishplugins.dev.java.net/servlets/ProjectIssues">Issue tracker</a><br>
-        <form method="get" action="https://glassfishplugins.dev.java.net/issues/show_bug.cgi">
-        <input type="submit" value="Go to"/>Issue #<input name="id" size="3"/>
-        </form>
-	</div>
+<div> <a href="https://glassfishplugins.dev.java.net/servlets/ProjectHome">GlassFish
+Plug-ins Home</a> </div>
+
+<div> <a href="https://glassfishplugins.dev.java.net/servlets/ProjectNewsList">Announcements</a>
 </div>
+
+<div> <a href="https://glassfishplugins.dev.java.net/servlets/ProjectMailingListList">Mailing
+lists</a> </div>
+
+<br>
+
+<div> <a href="https://glassfishplugins.dev.java.net/source/browse/glassfishplugins">Source
+code - CVS</a><br>
+
+</div>
+
+<div> <a href="https://glassfishplugins.dev.java.net/servlets/ProjectIssues">Issue
+tracker</a><br>
+
+<form method="get" action="https://glassfishplugins.dev.java.net/issues/show_bug.cgi">
+  <input value="Go to" type="submit">Issue #<input name="id" size="3"> </form>
+
+</div>
+
+</div>
+
+</body>
+</html>
