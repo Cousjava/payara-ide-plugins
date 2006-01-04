@@ -13,41 +13,51 @@
 	-->
 	</style>
 </head>
-<body bgcolor="#ffffff" dir="ltr" lang="en-US" text="#000000">
-<p>
-
-  <a href="https://glassfishplugins.dev.java.net/images/glassfish_logo.gif">
-    <img vspace="8" hspace="8"
-      alt="sparky"
-      style="border: 0px solid ; float: left; width: 120px;"
-      src="https://glassfishplugins.dev.java.net/images/glassfish_logo.gif" />
-  </a>
-
-<br />
-<h2><font color="#88bb88"><b>Welcome to GlassFish Plug-ins!!!</b></font></h2>
+<body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);"
+ dir="ltr" lang="en-US">
+<script>
+// kill "description" h3 bar
+ld = document.getElementById("longdescription");
+for( n=ld.firstChild; n!=null; n=n.nextSibling ) {
+if(n.nodeType==1 && n.innerHTML=="Description" ) {
+n.parentNode.removeChild(n);
+break;
+}
+}
+</script>
+<p> <a
+ href="https://glassfishplugins.dev.java.net/images/glassfish_logo.gif"><img
+ alt="sparky" style="border: 0px solid ; float: left; width: 120px;"
+ src="https://glassfishplugins.dev.java.net/images/glassfish_logo.gif"
+ hspace="8" vspace="8"> </a>
+<br>
 </p>
-
-<p>Welcome to the GlassFish Plugins for the IDE Project! This project enables IDE users to develop, deploy and run their Java Enterprise Edition (Java EE)
+<h2><font color="#88bb88"><b>Welcome to GlassFish Plug-ins!!!</b></font></h2>
+<p>Welcome to the GlassFish Plugins for the IDE Project! This project
+enables IDE users to develop, deploy and run their Java Enterprise
+Edition (Java EE)
 applications using their favorite IDEs. Unfamiliar with the GlassFish
 Project, start <a href="https://glassfish.dev.java.net/">here</a>. </p>
-
 <p>
-<br />
-Would you be interested in contributing to a subproject on this page?<br/><br />
-This is a great way to get your favorite IDE hooked up with new and exciting Project GlassFish!<br />Please contact <a href="mailto:larryfreeman@dev.java.net">Larry Freeman</a> if you are interested.
+<br>
+Would you be interested in contributing to a subproject on this page?<br>
+<br>
+This is a great way to get your favorite IDE hooked up with new and
+exciting Project GlassFish!<br>
+Please contact <a href="mailto:larryfreeman@dev.java.net">Larry Freeman</a>
+if you are interested.
 </p>
-
-
 <h3>GlassFish Plugins Currently Planned</h3>
 <p>
 Here are the IDE Plug-ins that are currently planned:
-<ul>
-<li><a href="#netbeans">GlassFish Plugin for the NetBeans IDE</a></li>
-<li><a href="#eclipse">GlassFish Plugin for the Eclipse IDE</a></li>
-</ul>
 </p>
-
-<a name="netbeans"><h4>GlassFish Plugin for NetBeans IDE</h4></a>
+<ul>
+  <li><a href="#netbeans">GlassFish Plugin for the NetBeans IDE</a></li>
+  <li><a href="#eclipse">GlassFish Plugin for the Eclipse IDE</a></li>
+</ul>
+<a name="netbeans">
+<h4>GlassFish Plugin for NetBeans IDE</h4>
+</a>
 <p>The plugin for the Sun Application Server 8.1 (J2EE SDK Reference
 Implementation) for NetBeans is already bundled with <a
  href="http://www.netbeans.org/">NetBeans
@@ -55,7 +65,8 @@ Implementation) for NetBeans is already bundled with <a
 <ul>
 </ul>
 <ul>
-  <li>Create a Java EE application, automatically add EJB modules and Web
+  <li>Create a Java EE application, automatically add EJB modules and
+Web
 modules, and deploy the application. </li>
   <li>Create an EJB module and deploy it as a stand-alone module or
 packaged in a Java EE application. </li>
@@ -73,8 +84,9 @@ technology. </li>
   <li>Add multiple source folders to EJB module or Web module, create
 Unit tests as a part of the project. </li>
 </ul>
-
-<a name="eclipse"><h4>GlassFish Plugin for Eclipse IDE</h4></a>
+<a name="eclipse">
+<h4>GlassFish Plugin for Eclipse IDE</h4>
+</a>
 <p>The plugin for the <a href="http://www.eclipse.org/">Eclipse IDE
 version 3.1</a> will be coming soon. It will be based on the <a
  href="http://www.eclipse.org/webtools/">Eclipse
