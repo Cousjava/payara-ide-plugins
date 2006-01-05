@@ -29,6 +29,9 @@
     <target name="undeploy.j2ee.ejb">
         <delete file="${server.publish.dir}/${module.name}.jar"> </delete>
     </target>
+    <target name="undeploy.j2ee.ear">
+        <delete file="${server.publish.dir}/${module.name}.ear"> </delete>
+    </target>
 	
     <target name="deploy.j2ee.ejb">
         <jar destfile="${module.name}.jar"> 
@@ -37,7 +40,17 @@
                 <exclude name="**/*.java"/>
             </zipfileset>
         </jar>
-        <move file="${module.name}.jar" todir="${server.publish.dir}"/>
+        <delete>
+            <fileset dir="${server.publish.dir}" includes="${module.name}.jar_*"/>
+            
+        </delete>        <move file="${module.name}.jar" todir="${server.publish.dir}"/>
+        <waitfor maxwait="30" maxwaitunit="second">
+            <or>
+                <available file="${server.publish.dir}/${module.name}.jar_deployed"/>
+                <available file="${server.publish.dir}/${module.name}.jar_deployedFailed"/>
+            </or>
+        </waitfor>
+    
     </target>
     
     <target name="deploy.j2ee.web">
@@ -64,5 +77,22 @@
 
     </target>
 
-
+    <target name="deploy.j2ee.ear" >
+        <jar destfile="${project.working.dir}/${module.name}.ear"> 
+            <zipfileset dir="${module.dir}">
+                <include name="**/*.*"/>
+                <exclude name="**/*.java"/>
+            </zipfileset>
+        </jar>
+        <delete>
+            <fileset dir="${server.publish.dir}" includes="${module.name}.ear_*"/>
+        </delete>
+        <move file="${project.working.dir}/${module.name}.ear" todir="${server.publish.dir}"/>
+        <waitfor maxwait="130" maxwaitunit="second">
+            <or>
+                <available file="${server.publish.dir}/${module.name}.ear_deployed"/>
+                <available file="${server.publish.dir}/${module.name}.ear_deployedFailed"/>
+            </or>
+        </waitfor>
+    </target>
 </project>
