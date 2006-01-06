@@ -35,7 +35,8 @@
 	
     <target name="deploy.j2ee.ejb">
         <jar destfile="${module.name}.jar"> 
-            <zipfileset dir="${module.dir}">
+            <!-- <zipfileset dir="${module.dir}"> -->
+            <zipfileset dir="${project.working.dir}/${module.name}">
                 <include name="**/*.*"/>
                 <exclude name="**/*.java"/>
             </zipfileset>
@@ -44,24 +45,26 @@
             <fileset dir="${server.publish.dir}" includes="${module.name}.jar_*"/>
             
         </delete>        <move file="${module.name}.jar" todir="${server.publish.dir}"/>
-        <waitfor maxwait="40" maxwaitunit="second">
+        <waitfor maxwait="60" maxwaitunit="second">
             <or>
                 <available file="${server.publish.dir}/${module.name}.jar_deployed"/>
                 <available file="${server.publish.dir}/${module.name}.jar_deployFailed"/>
             </or>
         </waitfor>
-  <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
-      <condition>
-          <not>
-              <available file="${server.publish.dir}/${module.name}.jar_deployed"/>
-          </not>
-      </condition>
-  </fail>    
+        <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
+            <condition>
+                <not>
+                    <available file="${server.publish.dir}/${module.name}.jar_deployed"/>
+                </not>
+            </condition>
+        </fail>    
     </target>
     
     <target name="deploy.j2ee.web">
+
         <jar destfile="${module.name}.war"> 
-            <zipfileset dir="${module.dir}">
+            <!-- <zipfileset dir="${module.dir}"> -->
+            <zipfileset dir="${project.working.dir}/${module.name}">
                 <include name="**/*.*"/>
                 <exclude name="**/jsp_servlet/*.class"/>
                 <exclude name="**/*.war"/>
@@ -74,45 +77,46 @@
         
         <move file="${module.name}.war" todir="${server.publish.dir}"/>
         
-        <waitfor maxwait="30" maxwaitunit="second" checkevery="500">
+        <waitfor maxwait="60" maxwaitunit="second" checkevery="500">
             <or>
                 <available file="${server.publish.dir}/${module.name}.war_deployed"/>
                 <available file="${server.publish.dir}/${module.name}.war_deployFailed"/>
             </or>
         </waitfor>
-  <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
-      <condition>
-          <not>
-              <available file="${server.publish.dir}/${module.name}.war_deployed"/>
-          </not>
-      </condition>
-  </fail>  
+        <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
+            <condition>
+                <not>
+                    <available file="${server.publish.dir}/${module.name}.war_deployed"/>
+                </not>
+            </condition>
+        </fail>  
         
 
     </target>
 
     <target name="deploy.j2ee.ear" >
-        <jar destfile="${project.working.dir}/${module.name}.ear"> 
-            <zipfileset dir="${module.dir}">
-                <include name="**/*.*"/>
-                <exclude name="**/*.java"/>
-            </zipfileset>
-        </jar>
-        <delete>
-            <fileset dir="${server.publish.dir}" includes="${module.name}.ear_*"/>
-        </delete>
-        <move file="${project.working.dir}/${module.name}.ear" todir="${server.publish.dir}"/>
-        <waitfor maxwait="50" maxwaitunit="second">
-            <or>
+    <jar destfile="${project.working.dir}/${module.name}.ear"> 
+        <!-- <zipfileset dir="${module.dir}"> -->
+        <zipfileset dir="${project.working.dir}/${module.name}">
+            <include name="**/*.*"/>
+            <exclude name="**/*.java"/>
+        </zipfileset>
+    </jar>
+    <delete>
+        <fileset dir="${server.publish.dir}" includes="${module.name}.ear_*"/>
+    </delete>
+    <move file="${project.working.dir}/${module.name}.ear" todir="${server.publish.dir}"/>
+    <waitfor maxwait="60" maxwaitunit="second">
+        <or>
+            <available file="${server.publish.dir}/${module.name}.ear_deployed"/>
+            <available file="${server.publish.dir}/${module.name}.ear_deployFailed"/>
+        </or>
+    </waitfor>
+    <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
+        <condition>
+            <not>
                 <available file="${server.publish.dir}/${module.name}.ear_deployed"/>
-                <available file="${server.publish.dir}/${module.name}.ear_deployFailed"/>
-            </or>
-        </waitfor>
-  <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
-      <condition>
-          <not>
-              <available file="${server.publish.dir}/${module.name}.ear_deployed"/>
-          </not>
-      </condition>
-  </fail>    </target>
+            </not>
+        </condition>
+    </fail>    </target>
 </project>
