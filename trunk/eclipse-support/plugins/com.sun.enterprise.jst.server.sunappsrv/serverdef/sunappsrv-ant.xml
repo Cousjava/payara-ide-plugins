@@ -50,9 +50,13 @@
                 <available file="${server.publish.dir}/${module.name}.jar_deployFailed"/>
             </or>
         </waitfor>
-        <fail  unless ="${server.publish.dir}/${module.name}.jar_deployed">
-        ${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.</fail>
-    
+  <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
+      <condition>
+          <not>
+              <available file="${server.publish.dir}/${module.name}.jar_deployed"/>
+          </not>
+      </condition>
+  </fail>    
     </target>
     
     <target name="deploy.j2ee.web">
@@ -75,9 +79,15 @@
                 <available file="${server.publish.dir}/${module.name}.war_deployed"/>
                 <available file="${server.publish.dir}/${module.name}.war_deployFailed"/>
             </or>
-        </waitfor>  
-        <fail  unless ="${server.publish.dir}/${module.name}.war_deployed">
-        ${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.</fail>
+        </waitfor>
+  <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
+      <condition>
+          <not>
+              <available file="${server.publish.dir}/${module.name}.war_deployed"/>
+          </not>
+      </condition>
+  </fail>  
+        
 
     </target>
 
@@ -98,7 +108,11 @@
                 <available file="${server.publish.dir}/${module.name}.ear_deployFailed"/>
             </or>
         </waitfor>
-        <fail  unless ="${server.publish.dir}/${module.name}.ear_deployed">
-        ${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.</fail>
-    </target>
+  <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
+      <condition>
+          <not>
+              <available file="${server.publish.dir}/${module.name}.ear_deployed"/>
+          </not>
+      </condition>
+  </fail>    </target>
 </project>
