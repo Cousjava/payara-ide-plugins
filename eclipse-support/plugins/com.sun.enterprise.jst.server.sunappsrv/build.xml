@@ -23,7 +23,6 @@
     
     <target name="-pre-jar">
 
-        <copy file="about.html" todir="build/classes"></copy>
         <copy file="plugin.properties" todir="build/classes"></copy>
         <copy file="plugin.xml" todir="build/classes"></copy>          
         <copy todir="build/classes/serverdef">
