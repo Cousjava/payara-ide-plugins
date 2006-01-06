@@ -93,18 +93,18 @@
     </project>
 	
     <start>
-        <external  >${serverRootDirectory}/bin/asadmin.sh start-domain ${domainName}</external>
-        <external os="Windows">${serverRootDirectory}/bin/asadmin.bat start-domain domain1</external>
-        <programArguments>start-domain  ${domainName}</programArguments>
+        <external  >${serverRootDirectory}/bin/asadmin start-domain ${domainName}</external>
+        <external os="Windows">${serverRootDirectory}/bin/asadmin.bat start-domain ${domainName}</external>
+        <programArguments></programArguments>
         <workingDirectory>${serverRootDirectory}</workingDirectory>
         <debugPort>567</debugPort>
 
     </start>
 
     <stop>
-        <external>${serverRootDirectory}/bin/asadmin.sh stop-domain ${domainName} </external>
-        <external os="Windows">${serverRootDirectory}/bin/asadmin.bat stop-domain ${domainName} </external>
-        <programArguments>stop-domain domain1 ARGS do not work yet in Eclipse</programArguments>
+        <external>${serverRootDirectory}/bin/asadmin stop-domain ${domainName} </external>
+        <external os="Windows">${serverRootDirectory}/bin/asadmin.bat stop-domain ${domainName}</external>
+        <programArguments></programArguments>
         <workingDirectory>${serverRootDirectory}</workingDirectory>
     </stop>
         
