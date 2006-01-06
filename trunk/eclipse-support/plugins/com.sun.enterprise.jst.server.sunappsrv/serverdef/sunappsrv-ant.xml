@@ -44,12 +44,14 @@
             <fileset dir="${server.publish.dir}" includes="${module.name}.jar_*"/>
             
         </delete>        <move file="${module.name}.jar" todir="${server.publish.dir}"/>
-        <waitfor maxwait="30" maxwaitunit="second">
+        <waitfor maxwait="40" maxwaitunit="second">
             <or>
                 <available file="${server.publish.dir}/${module.name}.jar_deployed"/>
-                <available file="${server.publish.dir}/${module.name}.jar_deployedFailed"/>
+                <available file="${server.publish.dir}/${module.name}.jar_deployFailed"/>
             </or>
         </waitfor>
+        <fail  unless ="${server.publish.dir}/${module.name}.jar_deployed">
+        ${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.</fail>
     
     </target>
     
@@ -68,12 +70,14 @@
         
         <move file="${module.name}.war" todir="${server.publish.dir}"/>
         
-        <waitfor maxwait="30" maxwaitunit="second">
+        <waitfor maxwait="30" maxwaitunit="second" checkevery="500">
             <or>
                 <available file="${server.publish.dir}/${module.name}.war_deployed"/>
-                <available file="${server.publish.dir}/${module.name}.war_deployedFailed"/>
+                <available file="${server.publish.dir}/${module.name}.war_deployFailed"/>
             </or>
         </waitfor>  
+        <fail  unless ="${server.publish.dir}/${module.name}.war_deployed">
+        ${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.</fail>
 
     </target>
 
@@ -88,11 +92,13 @@
             <fileset dir="${server.publish.dir}" includes="${module.name}.ear_*"/>
         </delete>
         <move file="${project.working.dir}/${module.name}.ear" todir="${server.publish.dir}"/>
-        <waitfor maxwait="130" maxwaitunit="second">
+        <waitfor maxwait="50" maxwaitunit="second">
             <or>
                 <available file="${server.publish.dir}/${module.name}.ear_deployed"/>
-                <available file="${server.publish.dir}/${module.name}.ear_deployedFailed"/>
+                <available file="${server.publish.dir}/${module.name}.ear_deployFailed"/>
             </or>
         </waitfor>
+        <fail  unless ="${server.publish.dir}/${module.name}.ear_deployed">
+        ${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.</fail>
     </target>
 </project>
