@@ -24,14 +24,13 @@
 <project name="deployextension"  default="deploy.j2ee.web"  basedir=".">
 
     <target name="tools" >
-        <echo message="LDUIODODOFDOFDOFODFDOFD" />
-        <echo message="${sunappserver.rootdirectory}" />
+        <!--echo message="${sunappserver.rootdirectory}" />
         <echo message="${sunappserver.serveraddress}" />
         <echo message="${sunappserver.serverportnumber}" />
         <echo message="${sunappserver.adminserverportnumber}" />
         <echo message="${sunappserver.adminname}" />
         <echo message="${sunappserver.adminpassword}" />
-        <echo message="${sunappserver.domainname}" />
+        <echo message="${sunappserver.domainname}" /-->
         
         <condition property="sunappserver-script-suffix" value=".bat">
             <os family="windows"/>
@@ -101,11 +100,11 @@
     
     <target name="undeploy.j2ee.ejb">
         <property name="app.module" value="${module.name}.jar"/>
-        <delete file="${server.publish.dir}/${module.name}.jar"> </delete>
+        <antcall target="undeploy"/>
     </target>
     <target name="undeploy.j2ee.ear">
         <property name="app.module" value="${module.name}.ear"/>
-        <delete file="${server.publish.dir}/${module.name}.ear"> </delete>
+        <antcall target="undeploy"/>
     </target>
 	
     <target name="deploy.j2ee.ejb">
@@ -117,23 +116,9 @@
                 <exclude name="**/*.java"/>
             </zipfileset>
         </jar>
-        <delete>
-            <fileset dir="${server.publish.dir}" includes="${module.name}.jar_*"/>
-            
-        </delete>        <move file="${module.name}.jar" todir="${server.publish.dir}"/>
-        <waitfor maxwait="60" maxwaitunit="second">
-            <or>
-                <available file="${server.publish.dir}/${module.name}.jar_deployed"/>
-                <available file="${server.publish.dir}/${module.name}.jar_deployFailed"/>
-            </or>
-        </waitfor>
-        <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
-            <condition>
-                <not>
-                    <available file="${server.publish.dir}/${module.name}.jar_deployed"/>
-                </not>
-            </condition>
-        </fail>    
+
+           <antcall target="deploy"/>
+
     </target>
     
     <target name="deploy.j2ee.web">
@@ -183,21 +168,6 @@
             <exclude name="**/*.java"/>
         </zipfileset>
     </jar>
-    <delete>
-        <fileset dir="${server.publish.dir}" includes="${module.name}.ear_*"/>
-    </delete>
-    <move file="${project.working.dir}/${module.name}.ear" todir="${server.publish.dir}"/>
-    <waitfor maxwait="60" maxwaitunit="second">
-        <or>
-            <available file="${server.publish.dir}/${module.name}.ear_deployed"/>
-            <available file="${server.publish.dir}/${module.name}.ear_deployFailed"/>
-        </or>
-    </waitfor>
-    <fail message="${line.separator}Deployment failure. See the server log file (${server.publish.dir}/../logs/server.log) for an explanation.">
-        <condition>
-            <not>
-                <available file="${server.publish.dir}/${module.name}.ear_deployed"/>
-            </not>
-        </condition>
-    </fail>    </target>
+        <antcall target="deploy"/>
+    </target>
 </project>
