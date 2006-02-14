@@ -65,6 +65,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     private String mode;
     private ILaunch launch;
     private IProgressMonitor monitor;
+
+
     
     
     
@@ -140,13 +142,15 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     
     
     public String getSunApplicationServerInstallationDirectory(){
-        String path= (String)getRuntimeDelegate().getServerInstanceProperties().get("sunappserver.rootdirectory");
+        String path= (String)getRuntimeDelegate().getServerInstanceProperties().get(SunAppServer.ROOTDIR);
         SunAppSrvPlugin.logMessage("sunappserver.rootdirectory we are looking for this prop value:"+path);
         return path;
     }
     public String getSunApplicationServerAdminPort(){
-        String port= (String)getRuntimeDelegate().getServerInstanceProperties().get("sunappserver.adminserverportnumber");
-        return port;
+        //String port= (String)getRuntimeDelegate().getServerInstanceProperties().get(SunAppServer.ADMINSERVERPORT);
+        SunAppServer  sunserver = (SunAppServer) getServer().getAdapter(SunAppServer.class);
+        SunAppSrvPlugin.logMessage("sunappserver.adminserverportnumber we are looking for this prop value:"+sunserver.getAdminServerPort());
+        return sunserver.getAdminServerPort();
     }    
     public void stop(boolean force) {
         SunAppSrvPlugin.logMessage("in SunAppServerBehaviour stop");
@@ -206,10 +210,10 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     
     public void startPingingThread(){
         // ping server to check for startup
-        SunAppSrvPlugin.logMessage("in SunAppServerBehaviour startPingingThread");
         try {
             setServerState(IServer.STATE_STARTING);
             String url = "http://"+getServer().getHost() +":" + getSunApplicationServerAdminPort(); 
+        SunAppSrvPlugin.logMessage("in SunAppServerBehaviour startPingingThread" +url);
 
             ping = new PingThread(getServer(), url, this);
         } catch (Exception e) {
