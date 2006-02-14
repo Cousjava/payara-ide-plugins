@@ -37,5 +37,5 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String AdminServerPortNumber;
     public static String wizardSectionTitle;
     public static String wizardSectionDescription;
-    
+    public static String DomainName;
 }
