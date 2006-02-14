@@ -51,14 +51,17 @@
         <!-- setup properties for various Java EE tools -->
         <property name="asadmin" value="${sunappserver.rootdirectory}/bin/asadmin${sunappserver-script-suffix}"/>
         <property name="appclient" value="${sunappserver.rootdirectory}/bin/appclient${sunappserver-script-suffix}"/>
+        <echo file ="passw"  message="AS_ADMIN_PASSWORD=${sunappserver.adminpassword}"/>
     </target>
     <target name="undeploy" depends="tools">
         <echo message="Undeploying ${module.name}." />
         <exec executable="${asadmin}">
             <arg line="undeploy"/>
+            <arg line=" --host ${sunappserver.serveraddress}" />
+            <arg line=" --port ${sunappserver.adminserverportnumber}" />
             <arg line=" --user ${sunappserver.adminname}" />
-            <arg line=" --password ${sunappserver.adminpassword}" />
-            <arg line=" ${module.name} " />
+            <arg line=" --passwordfile passw" />
+            <arg line="${module.name}" />
         </exec> 
     </target>
 
@@ -74,14 +77,15 @@
         <property name="failonerror" value="true"/>
         <exec executable="${asadmin}" failonerror="${failonerror}">
             <arg line=" deploy "/>
-            <arg line=" --user ${sunappserver.adminname}" />
-            <arg line=" --password ${sunappserver.adminpassword}" />
             <arg line=" --host ${sunappserver.serveraddress}" />
             <arg line=" --port ${sunappserver.adminserverportnumber}" />
+            <arg line=" --user ${sunappserver.adminname}" />
+            <arg line=" --passwordfile passw" />
+
             <arg line=" --name ${module.name}"/>
             <arg line=" --force=true "/>
             <arg line=" --upload=true "/>
-            <arg line=" --dbvendorname pointbase"/>
+
             <arg line="${app.module}" />
         </exec>
         <antcall target="deploy-url-message"/>
