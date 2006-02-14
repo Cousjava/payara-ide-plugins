@@ -27,6 +27,7 @@ package com.sun.enterprise.jst.server.sunappsrv.editorsections;
 
 import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerCommands;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import org.eclipse.swt.SWT;
@@ -44,6 +45,7 @@ import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
 
@@ -84,7 +86,10 @@ public class ServerSection extends ServerEditorSection {
                 | ExpandableComposite.FOCUS_TITLE);
         
         section.setText(Messages.wizardSectionTitle);
-        section.setDescription(Messages.wizardSectionDescription);
+        SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
+        String loc =  serverBehavior.getSunApplicationServerInstallationDirectory();
+
+        section.setDescription(Messages.wizardSectionDescription +" ("+ loc+")");
         section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
         
         Composite comp = toolkit.createComposite(section);
@@ -97,6 +102,16 @@ public class ServerSection extends ServerEditorSection {
         comp.setLayout(gl);
         comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         section.setClient(comp);
+        
+        createLabel(comp, Messages.DomainName, toolkit);
+        
+        final Text domainname = toolkit.createText(comp, sunserver.getdomainName(), SWT.BORDER);
+        domainname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        domainname.addModifyListener(new ModifyListener() {
+            public void modifyText(ModifyEvent e) {
+                execute(new SunAppServerCommands(server, domainname.getText(),sunserver.DOMAINNAME));
+            }
+        });
         
         createLabel(comp, Messages.AdminName, toolkit);
         
