@@ -97,7 +97,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             abort(GenericServerCoreMessages.errorLaunchingExecutable, ioe,  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
         try {
-            Thread.sleep(3000);
+            Thread.sleep(8000);
         } catch (InterruptedException ex) {}
         serverBehavior.startPingingThread();       
         
