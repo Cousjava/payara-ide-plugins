@@ -30,35 +30,37 @@
     name="GlassFish Java EE 5" version="v0.1">
     
     
-    <property id="serverRootDirectory"  label="%serverRootDirectory"
+    <property id="sunappserver.rootdirectory"  label="%sunappserver.rootdirectory"
     type="directory"
     context="runtime"
     default="C:/sun/AppServer90" />
     
-
-    <property id="serverAddress"  label="%serverAddress"
+   <property id="sunappserver.serveraddress"  label="%sunappserver.serveraddress"
     type="string"
     context="server"
     default="127.0.0.1" />
     
-    <property id="port" label="%port"
+    <property id="sunappserver.serverportnumber" label="%sunappserver.serverportnumber"
     type="string"
     context="server"
     default="8080" />
     
-
+    <property id="sunappserver.adminserverportnumber" label="%sunappserver.adminserverportnumber"
+    type="string"
+    context="server"
+    default="4848" />
     
-    <property id="domainName"  label="%DomainName"
+    <property id="sunappserver.domainname"  label="%sunappserver.domainname"
     type="string"
     context="server"
     default="domain1" />
 
-    <property id="adminID"  label="%Administratorid"
+    <property id="sunappserver.adminname"  label="%sunappserver.adminname"
     type="string"
     context="server"
     default="admin" />
     
-    <property id="adminPassword" label="%AdministratorPassword"
+    <property id="sunappserver.adminpassword" label="%sunappserver.adminpassword"
     type="string"
     context="server"
     default="adminadmin" />
@@ -66,26 +68,26 @@
 
 
     <port>
-        <no>${port}</no>
+        <no>${sunappserver.serverportnumber}</no>
         <name>Http</name>
         <protocol>http</protocol>
     </port>
 
     <module>
         <type>jst.web</type>
-        <publishDir>${serverRootDirectory}/domains/${domainName}/autodeploy</publishDir>
+        <publishDir>${sunappserver.rootdirectory}/domains/${sunappserver.domainname}/autodeploy</publishDir>
         <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
     </module>
 
     <module>
         <type>jst.ejb</type>
-        <publishDir>${serverRootDirectory}/domains/${domainName}/autodeploy</publishDir>
+        <publishDir>${sunappserver.rootdirectory}/domains/${sunappserver.domainname}/autodeploy</publishDir>
         <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
     </module>
 
     <module>
         <type>jst.ear</type>
-        <publishDir>${serverRootDirectory}/domains/${domainName}/autodeploy</publishDir>
+        <publishDir>${sunappserver.rootdirectory}/domains/${sunappserver.domainname}/autodeploy</publishDir>
         <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
     </module>
 
@@ -95,19 +97,19 @@
     </project>
 	
     <start>
-        <external  >${serverRootDirectory}/bin/asadmin start-domain ${domainName}</external>
-        <external os="Windows">${serverRootDirectory}/bin/asadmin.bat start-domain ${domainName}</external>
+        <external  >${sunappserver.rootdirectory}/bin/asadmin start-domain ${sunappserver.domainname}</external>
+        <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat start-domain   --verbose=true ${sunappserver.domainname} </external>
         <programArguments>}</programArguments>
-        <workingDirectory>${serverRootDirectory}</workingDirectory>
+        <workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
         <debugPort>567</debugPort>
 
     </start>
 
     <stop>
-        <external>${serverRootDirectory}/bin/asadmin stop-domain ${domainName}</external>
-        <external os="Windows">${serverRootDirectory}/bin/asadmin.bat stop-domain ${domainName} </external>
+        <external>${sunappserver.rootdirectory}/bin/asadmin stop-domain ${sunappserver.domainname}</external>
+        <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat stop-domain ${sunappserver.domainname} </external>
         <programArguments></programArguments>
-        <workingDirectory>${serverRootDirectory}</workingDirectory>
+        <workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
     </stop>
         
     <publisher id="org.eclipse.jst.server.generic.antpublisher">
@@ -145,26 +147,26 @@
 
 
     <classpath id="sunappsrv.server" >
-        <archive path="${serverRootDirectory}/lib/appserv-rt.jar" />
-        <archive path="${serverRootDirectory}/lib/appserv-admin.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/appserv-rt.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/appserv-admin.jar" />
     </classpath>
     <classpath id="sunappsrv.deploy" >
-        <archive path="${serverRootDirectory}/lib/appserv-rt.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/appserv-rt.jar" />
     </classpath>
 
     <classpath id="sunappsrv.project" >
-        <archive path="${serverRootDirectory}/lib/appserv-rt.jar" />
-        <archive path="${serverRootDirectory}/lib/javaee.jar" />
-        <archive path="${serverRootDirectory}/lib/mail.jar" />
-        <archive path="${serverRootDirectory}/lib/appserv-ws.jar" />
-        <archive path="${serverRootDirectory}/lib/appserv-jstl.jar" />
-        <archive path="${serverRootDirectory}/lib/appserv-tags.jar" />
-        <archive path="${serverRootDirectory}/lib/activation.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/appserv-rt.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/javaee.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/mail.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/appserv-ws.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/appserv-jstl.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/appserv-tags.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/activation.jar" />
 
     </classpath>
 	
     <jndiConnection>
-        <providerUrl>jnp://${serverAddress}:1099</providerUrl>
+        <providerUrl>jnp://${sunappserver.serveraddress}:1099</providerUrl>
         <initialContextFactory>org.jnp.interfaces.NamingContextFactory</initialContextFactory>
         <jndiProperty>
             <name></name>

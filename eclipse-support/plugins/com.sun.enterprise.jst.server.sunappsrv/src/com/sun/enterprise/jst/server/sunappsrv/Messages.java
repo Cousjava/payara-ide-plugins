@@ -30,4 +30,12 @@ public class Messages extends org.eclipse.osgi.util.NLS {
         org.eclipse.osgi.util.NLS.initializeMessages(
                 "com.sun.enterprise.jst.server.sunappsrv.Messages", Messages.class);
     }
+    
+    public static String AdminName;
+    public static String AdminPassword;
+    public static String ServerPortNumber;
+    public static String AdminServerPortNumber;
+    public static String wizardSectionTitle;
+    public static String wizardSectionDescription;
+    
 }
