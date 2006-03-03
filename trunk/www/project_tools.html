@@ -1,4 +1,4 @@
-</div>
+</dd>
 <script id="eraser">
 // hide all default navigation bars
 
@@ -6,10 +6,10 @@
 var div = document.getElementById("eraser").previousSibling;
 for( n=div; n!=null; n=n.previousSibling ) {
   if(n.nodeType==1) { // if element
-    if(n.className=="body") { // kill all the link items
+    if(n.tagName=="DD") { // kill all the link items
       n.style.display = "none";
     }
-    if(n.className=="label") { // change the title
+    if(n.tagName=="DT") { // change the title
       n.innerHTML = "<strong>GlassFish Plug-ins</strong>";
     }
   }
@@ -19,31 +19,32 @@ for( n=div; n!=null; n=n.previousSibling ) {
 getInvolved = document.getElementById("communitylinks");
 getInvolved.parentNode.removeChild(getInvolved);
 </script>
-<div class="body">
-	<div>
+<dd>
+   <ul>
+      <li>
 	<a href="https://glassfishplugins.dev.java.net/servlets/ProjectHome">GlassFish Plug-ins Home</a> <br>
-
+      </li>
+      <li>
   	<a href="https://glassfishplugins.dev.java.net/download/">Downloads</a><br>
-	</div>
-	
-	<div>
+      </li>
+      <li>
 		<a href="https://glassfishplugins.dev.java.net/servlets/ProjectNewsList">Announcements</a>
-	</div>
-	<div> 
+      </li>
+      <li>
 		<a href="https://glassfishplugins.dev.java.net/servlets/ProjectMailingListList">Mailing lists</a>
-	</div>
-	<div>
+      </li>
+      <li>
 		<a href="http://forums.java.net/jive/forum.jspa?forumID=65">Discussion forums</a>
-	</div>
-	<div>
+      </li>
+      <li>
   	<a href="https://glassfishplugins.dev.java.net/source/browse/glassfishplugins">Source code - CVS</a><br>
-	</div>
 <br>
-	<div>
+      </li>
+      <li>
   	<a href="https://glassfishplugins.dev.java.net/servlets/ProjectIssues">Issue tracker</a><br>
         <form method="get" action="https://glassfishplugins.dev.java.net/issues/show_bug.cgi">
         <input type="submit" value="Go to"/>Issue #<input name="id" size="3"/>
         </form>
-	</div>
+      </li>
 
-</div>
+</ul>
