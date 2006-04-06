@@ -19,7 +19,36 @@
         <property name="javac.classpath" value="${eclipse.libraries}"/>
     </target>  
   
-    
+    <target name="-init-macrodef-javac">
+        <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute name="srcdir" default="${src.dir}"/>
+            <attribute name="destdir" default="${build.classes.dir}"/>
+            <attribute name="classpath" default="${javac.classpath}"/>
+            <attribute name="debug" default="${javac.debug}"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <javac srcdir="@{srcdir}" destdir="@{destdir}" debug="@{debug}" deprecation="${javac.deprecation}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
+                    <classpath>
+                        
+    <path id="base.path">
+      <pathelement path="${classpath}"/>
+      <fileset dir="${eclipse.pluginsdir}">
+        <include name="**/*.jar"/>
+      </fileset>
+
+    </path>                        
+                        
+                        <path path="@{classpath}"/>
+                        
+                        
+                        
+                    </classpath>
+                    <compilerarg line="${javac.compilerargs}"/>
+                    <customize/>
+                </javac>
+            </sequential>
+        </macrodef>
+    </target>    
     
     <target name="-pre-jar">
 
@@ -36,20 +65,21 @@
         <copy todir="dist/eclipse/plugins">
             <fileset dir="../libraries"/>
         </copy>  
-        <zip basedir="dist/eclipse" zipfile="dist/glassfish-eclipse-plugin_0_1.zip" />
+        <copy file="../../www/license/CDDLv1.0.text" todir="dist/eclipse/plugins" />
+        <zip basedir="dist/eclipse" zipfile="dist/glassfish-eclipse-plugin_0_21.zip" />
    
-        <taskdef name="installerBuilder" classname="org.jvnet.poormans_installer.builder.BuilderTask">
+        <!--taskdef name="installerBuilder" classname="org.jvnet.poormans_installer.builder.BuilderTask">
             <classpath>
                 <fileset dir="." includes="installer-libs/*.jar"/>
             </classpath>
         </taskdef>
         
         <installerBuilder
-        jarFile="dist/glassfish-eclipse-plugin_installer_0_1.jar"
+        jarFile="dist/glassfish-eclipse-plugin_installer_0_2.jar"
         licenseFile="../../www/license/CDDLv1.0.text"
-        zipFile="dist/glassfish-eclipse-plugin_0_1.zip" />        
+        zipFile="dist/glassfish-eclipse-plugin_0_2.zip" /!-->        
         
-        <unzip dest="${eclipse.rootdir}" overwrite="true" src="dist/glassfish-eclipse-plugin_0_1.zip"/>
+        <unzip dest="${eclipse.rootdir}" overwrite="true" src="dist/glassfish-eclipse-plugin_0_21.zip"/>
 
     </target>         
 
