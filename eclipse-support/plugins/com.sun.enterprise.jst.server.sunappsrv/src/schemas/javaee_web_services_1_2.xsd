@@ -8,7 +8,7 @@
 	    version="1.2">
   <xsd:annotation>
     <xsd:documentation>
-      @(#)javaee_web_services_1_2.xsds	1.15 09/21/05
+      @(#)javaee_web_services_1_2.xsds	1.18 02/13/06
     </xsd:documentation>
   </xsd:annotation>
 
@@ -181,7 +181,7 @@
 
       <xsd:element name="handler"
                    type="javaee:port-component_handlerType"
-		   minOccurs="0" maxOccurs="unbounded"/>
+		   minOccurs="1" maxOccurs="unbounded"/>
     </xsd:sequence>
 
     <xsd:attribute name="id" type="xsd:ID"/>
@@ -291,9 +291,9 @@
           <xsd:documentation>
 
             Used to enable or disable SOAP MTOM/XOP mechanism for an
-            endpoint implementation. By default its value is false.
-            If this element is not specified, default value is assumed.
+            endpoint implementation.
 
+	    Not to be specified for JAX-RPC runtime
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
@@ -448,7 +448,11 @@
 	   URIs:
 
 	   ##SOAP11_HTTP = "http://schemas.xmlsoap.org/wsdl/soap/http"
+	   ##SOAP11_HTTP_MTOM =
+                 "http://schemas.xmlsoap.org/wsdl/soap/http?mtom=true"
            ##SOAP12_HTTP = "http://www.w3.org/2003/05/soap/bindings/HTTP/"
+           ##SOAP12_HTTP_MTOM =
+		 "http://www.w3.org/2003/05/soap/bindings/HTTP/?mtom=true"
            ##XML_HTTP = "http://www.w3.org/2004/08/wsdl/http"
 
         </xsd:documentation>
@@ -484,7 +488,9 @@
 	   alias the standard binding types:
 
 	    ##SOAP11_HTTP
+	    ##SOAP11_HTTP_MTOM
 	    ##SOAP12_HTTP
+	    ##SOAP12_HTTP_MTOM
 	    ##XML_HTTP
 
 	   Other specifications could define tokens that start with ##

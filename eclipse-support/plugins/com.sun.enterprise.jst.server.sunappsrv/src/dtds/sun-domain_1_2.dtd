@@ -2,22 +2,24 @@
 <!--
  The contents of this file are subject to the terms 
  of the Common Development and Distribution License 
- (the "License").  You may not use this file except 
- in compliance with the License.
+ (the License).  You may not use this file except in
+ compliance with the License.
  
  You can obtain a copy of the license at 
- glassfishplugins/www/license/CDDLv1.0.txt or 
- https://glassfish.dev.java.net/public/CDDLv1.0.html. 
+ https://glassfish.dev.java.net/public/CDDLv1.0.html or
+ glassfish/bootstrap/legal/CDDLv1.0.txt.
  See the License for the specific language governing 
  permissions and limitations under the License.
  
  When distributing Covered Code, include this CDDL 
- HEADER in each file and include the License file at 
- glassfishplugins/www/license/CDDLv1.0.txt.  If applicable, 
- add the following below this CDDL HEADER, with the 
- fields enclosed by brackets "[]" replaced with your 
- own identifying information: Portions Copyright [yyyy] 
- [name of copyright owner]
+ Header Notice in each file and include the License file 
+ at glassfish/bootstrap/legal/CDDLv1.0.txt.  
+ If applicable, add the following below the CDDL Header, 
+ with the fields enclosed by brackets [] replaced by
+ you own identifying information: 
+ "Portions Copyrighted [year] [name of copyright owner]"
+ 
+ Copyright 2006 Sun Microsystems, Inc. All rights reserved.
 -->
 <!-- ENTITIES -->
 <!-- boolean
@@ -879,7 +881,7 @@
     external-port CDATA #IMPLIED
     family (inet | ncsa) "inet"
     blocking-enabled %boolean; "false"
-    acceptor-threads CDATA "10"
+    acceptor-threads CDATA "1"
     security-enabled %boolean; "false"
     default-virtual-server CDATA #REQUIRED
     server-name CDATA #REQUIRED
@@ -920,12 +922,13 @@
 
     ssl3-tls-ciphers                                                           
         A comma-separated list of the SSL3 ciphers used, with the     
-        prefix + to enable or - to disable, for example +rsa_des_sha. 
-        Allowed SSL3 values are rsa_rc4_128_md5, rsa3des_sha,         
-        rsa_des_sha, rsa_rc4_40_md5, rsa_rc2_40_md5, rsa_null_md5.    
-        Allowed TLS values are rsa_des_56_sha, rsa_rc4_56_sha. If no  
-        value is specified, all supported ciphers are assumed to be   
-        enabled.                                                      
+        prefix + to enable or - to disable, for example               
+        +SSL_RSA_WITH_RC4_128_MD5. Allowed SSL3/TLS values are        
+        SSL_RSA_WITH_RC4_128_MD5, SSL_RSA_WITH_3DES_EDE_CBC_SHA,      
+        SSL_RSA_WITH_DES_CBC_SHA, SSL_RSA_EXPORT_WITH_RC4_40_MD5,     
+        SSL_RSA_WITH_NULL_MD5, SSL_RSA_WITH_RC4_128_SHA,              
+        SSL_RSA_WITH_NULL_SHA. If no value is specified, all          
+        supported ciphers are assumed to be enabled.                  
     tls-enabled                                                                
         Determines whether TLS is enabled.                            
     tls-rollback-enabled                                                       
