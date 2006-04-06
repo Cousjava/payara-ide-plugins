@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
- The contents of this file are subject to the terms
- of the Common Development and Distribution License
- (the "License").  You may not use this file except
- in compliance with the License.
-
- You can obtain a copy of the license at
- glassfishplugins/www/license/CDDLv1.0.txt or
- https://glassfish.dev.java.net/public/CDDLv1.0.html.
- See the License for the specific language governing
- permissions and limitations under the License.
-
- When distributing Covered Code, include this CDDL
- HEADER in each file and include the License file at
- glassfishplugins/www/license/CDDLv1.0.txt.  If applicable,
- add the following below this CDDL HEADER, with the
- fields enclosed by brackets "[]" replaced with your
- own identifying information: Portions Copyright [yyyy]
- [name of copyright owner]
--->
-
 <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
 	    targetNamespace="http://java.sun.com/xml/ns/javaee"
 	    xmlns:javaee="http://java.sun.com/xml/ns/javaee"
@@ -30,14 +9,14 @@
 	    version="3.0">
   <xsd:annotation>
     <xsd:documentation>
-      @(#)ejb-jar_3_0.xsds	1.48 11/29/05
+      @(#)ejb-jar_3_0.xsds	1.51 02/23/06
     </xsd:documentation>
   </xsd:annotation>
 
   <xsd:annotation>
     <xsd:documentation>
 
-      Copyright 2003-2005 Sun Microsystems, Inc.
+      Copyright 2003-2006 Sun Microsystems, Inc.
       4150 Network Circle
       Santa Clara, California 95054
       U.S.A
@@ -292,7 +271,7 @@ xpath=".//javaee:ejb-relationship-role/javaee:relationship-role-source"/>
             - an optional rollback element. If this element is
               set to true, the container must rollback the current
               transaction before forwarding the exception to the
-              client.
+              client.  If not specified, it defaults to false.
 
       </xsd:documentation>
     </xsd:annotation>
@@ -304,6 +283,35 @@ xpath=".//javaee:ejb-relationship-role/javaee:relationship-role-source"/>
                    minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
+  </xsd:complexType>
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="around-invokeType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+        The around-invoke type specifies a method on a
+        class to be called during the around invoke portion of an
+        ejb invocation.  Note that each class may have only one
+        around invoke method and that the method may not be
+        overloaded.
+
+        If the class element is missing then
+        the class defining the callback is assumed to be the
+        interceptor class or component class in scope at the
+        location in the descriptor in which the around invoke
+        definition appears.
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="class"
+                   type="javaee:fully-qualified-classType"
+                   minOccurs="0"/>
+      <xsd:element name="method-name"
+                   type="javaee:java-identifierType"/>
+    </xsd:sequence>
   </xsd:complexType>
 
 <!-- **************************************************** -->
@@ -655,23 +663,27 @@ xpath=".//javaee:ejb-relationship-role/javaee:relationship-role-source"/>
 	</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="full" type="xsd:boolean">
+    <xsd:attribute name="metadata-complete" type="xsd:boolean">
       <xsd:annotation>
 	<xsd:documentation>
 
-	  The full attribute defines whether this deployment
-	  descriptor is complete, or whether the class files
-	  of the jar file should be examined for annotations
+	  The metadata-complete attribute defines whether this
+	  deployment descriptor and other related deployment
+	  descriptors for this module (e.g., web service
+	  descriptors) are complete, or whether the class
+	  files available to this module and packaged with
+	  this application should be examined for annotations
 	  that specify deployment information.
 
-	  If full is set to "true", the deployment tool
-	  must ignore any EJB annotations present in the
-	  class files of the application.
+	  If metadata-complete is set to "true", the deployment
+	  tool must ignore any annotations that specify deployment
+	  information, which might be present in the class files
+	  of the application.
 
-	  If full is not specified or is set to "false", the
-	  deployment tool must examine the class files of the
-	  application for annotations, as specified by the EJB
-	  specifications.
+	  If metadata-complete is not specified or is set to
+	  "false", the deployment tool must examine the class
+	  files of the application for annotations, as
+	  specified by the specifications.
 
 	</xsd:documentation>
       </xsd:annotation>
@@ -1615,16 +1627,16 @@ xpath=".//javaee:ejb-relationship-role/javaee:relationship-role-source"/>
 		   maxOccurs="unbounded"/>
       <xsd:element name="interceptor-class"
 		   type="javaee:fully-qualified-classType"/>
-      <xsd:element name="around-invoke-method"
-                   type="javaee:lifecycle-callbackType"
+      <xsd:element name="around-invoke"
+                   type="javaee:around-invokeType"
                    minOccurs="0"
                    maxOccurs="unbounded"/>
       <xsd:group ref="javaee:jndiEnvironmentRefsGroup"/>
-      <xsd:element name="post-activate-method"
+      <xsd:element name="post-activate"
                    type="javaee:lifecycle-callbackType"
                    minOccurs="0"
                    maxOccurs="unbounded"/>
-      <xsd:element name="pre-passivate-method"
+      <xsd:element name="pre-passivate"
                    type="javaee:lifecycle-callbackType"
                    minOccurs="0"
                    maxOccurs="unbounded"/>
@@ -1722,7 +1734,19 @@ xpath=".//javaee:ejb-relationship-role/javaee:relationship-role-source"/>
 		   type="javaee:xsdStringType"
 		   minOccurs="0"/>
       <xsd:element name="ejb-class"
-		   type="javaee:ejb-classType"/>
+		   type="javaee:ejb-classType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+
+             The ejb-class element specifies the fully qualified name
+             of the bean class for this ejb.  It is required unless
+             there is a component-defining annotation for the same
+             ejb-name.
+
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
       <xsd:element name="messaging-type"
 		   type="javaee:fully-qualified-classType"
 		   minOccurs="0">
@@ -1750,8 +1774,8 @@ xpath=".//javaee:ejb-relationship-role/javaee:relationship-role-source"/>
       <xsd:element name="activation-config"
 		   type="javaee:activation-configType"
 		   minOccurs="0"/>
-      <xsd:element name="around-invoke-method"
-                   type="javaee:lifecycle-callbackType"
+      <xsd:element name="around-invoke"
+                   type="javaee:around-invokeType"
                    minOccurs="0"
                    maxOccurs="unbounded"/>
       <xsd:group ref="javaee:jndiEnvironmentRefsGroup"/>
@@ -2335,7 +2359,7 @@ xpath=".//javaee:ejb-relationship-role/javaee:relationship-role-source"/>
 		   type="javaee:named-methodType"/>
       <xsd:element name="retain-if-exception"
 		   type="javaee:true-falseType"
-		   minOccurs="1"/>
+		   minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -2518,7 +2542,19 @@ xpath=".//javaee:ejb-relationship-role/javaee:relationship-role-source"/>
 	</xsd:annotation>
       </xsd:element>
       <xsd:element name="ejb-class"
-		   type="javaee:ejb-classType"/>
+		   type="javaee:ejb-classType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+
+             The ejb-class element specifies the fully qualified name
+             of the bean class for this ejb.  It is required unless
+             there is a component-defining annotation for the same
+             ejb-name.
+
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
       <xsd:element name="session-type"
 		   type="javaee:session-typeType"
                    minOccurs="0"/>
@@ -2558,16 +2594,16 @@ xpath=".//javaee:ejb-relationship-role/javaee:relationship-role-source"/>
       <xsd:element name="transaction-type"
 		   type="javaee:transaction-typeType"
                    minOccurs="0"/>
-      <xsd:element name="around-invoke-method"
-                   type="javaee:lifecycle-callbackType"
+      <xsd:element name="around-invoke"
+                   type="javaee:around-invokeType"
                    minOccurs="0"
                    maxOccurs="unbounded"/>
       <xsd:group ref="javaee:jndiEnvironmentRefsGroup"/>
-      <xsd:element name="post-activate-method"
+      <xsd:element name="post-activate"
                    type="javaee:lifecycle-callbackType"
                    minOccurs="0"
                    maxOccurs="unbounded"/>
-      <xsd:element name="pre-passivate-method"
+      <xsd:element name="pre-passivate"
                    type="javaee:lifecycle-callbackType"
                    minOccurs="0"
                    maxOccurs="unbounded"/>
