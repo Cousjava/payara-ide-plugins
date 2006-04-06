@@ -164,7 +164,7 @@
     </target>
 
     <target name="deploy.j2ee.ear" >
-        <property name="app.module" value="${module.name}.ear"/>
+        <property name="app.module" value="${project.working.dir}/${module.name}.ear"/>
     <jar destfile="${project.working.dir}/${module.name}.ear"> 
         <!-- <zipfileset dir="${module.dir}"> -->
         <zipfileset dir="${project.working.dir}/${module.name}">
