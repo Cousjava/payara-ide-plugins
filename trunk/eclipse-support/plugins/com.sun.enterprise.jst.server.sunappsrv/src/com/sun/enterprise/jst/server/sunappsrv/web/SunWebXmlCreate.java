@@ -23,22 +23,21 @@
 package com.sun.enterprise.jst.server.sunappsrv.web;
 
 import java.io.InputStream;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.wst.common.componentcore.ComponentCore;
-import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jst.j2ee.application.internal.operations.J2EEComponentCreationDataModelProvider;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IComponentCreationDataModelProperties;
+import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
 
 public class SunWebXmlCreate extends AbstractDataModelOperation  {
     
@@ -51,7 +50,7 @@ public class SunWebXmlCreate extends AbstractDataModelOperation  {
     
     public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
         
-        String runtimeID = model.getStringProperty(J2EEComponentCreationDataModelProvider.RUNTIME_TARGET_ID);
+  //ludo j1      String runtimeID = model.getStringProperty(J2EEComponentCreationDataModelProvider.RUNTIME_TARGET_ID);
         //       if (runtimeID != null && runtimeID.startsWith("GlassFish")){
         execute();
         //       }

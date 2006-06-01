@@ -25,11 +25,6 @@ package com.sun.enterprise.jst.server.sunappsrv.editorsections;
 
 
 
-import com.sun.enterprise.jst.server.sunappsrv.Messages;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerCommands;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -47,6 +42,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
+
+import com.sun.enterprise.jst.server.sunappsrv.Messages;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServerCommands;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 
 
@@ -109,7 +110,7 @@ public class ServerSection extends ServerEditorSection {
         domainname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         domainname.addModifyListener(new ModifyListener() {
             public void modifyText(ModifyEvent e) {
-                execute(new SunAppServerCommands(server, domainname.getText(),sunserver.DOMAINNAME));
+                execute(new SunAppServerCommands(server, domainname.getText(),SunAppServer.DOMAINNAME));
             }
         });
         
@@ -118,8 +119,8 @@ public class ServerSection extends ServerEditorSection {
         final Text username = toolkit.createText(comp, sunserver.getAdminName(), SWT.BORDER);
         username.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         username.addModifyListener(new ModifyListener() {
-            public void modifyText(ModifyEvent e) {
-                execute(new SunAppServerCommands(server, username.getText(),sunserver.ADMINNAME));
+			public void modifyText(ModifyEvent e) {
+                execute(new SunAppServerCommands(server, username.getText(),SunAppServer.ADMINNAME));
             }
         });
         
@@ -130,7 +131,7 @@ public class ServerSection extends ServerEditorSection {
         password.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
         password.addModifyListener(new ModifyListener() {
             public void modifyText(ModifyEvent e) {
-                execute(new SunAppServerCommands(server, sunserver.getAdminPassword(),sunserver.ADMINPASSWORD));
+                execute(new SunAppServerCommands(server, sunserver.getAdminPassword(),SunAppServer.ADMINPASSWORD));
             }
         });
         
@@ -141,7 +142,7 @@ public class ServerSection extends ServerEditorSection {
         serverPortNumber.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         serverPortNumber.addModifyListener(new ModifyListener() {
             public void modifyText(ModifyEvent e) {
-                execute(new SunAppServerCommands(server, serverPortNumber.getText(),sunserver.SERVERPORT));
+                execute(new SunAppServerCommands(server, serverPortNumber.getText(),SunAppServer.SERVERPORT));
             }
         });
         
@@ -151,7 +152,7 @@ public class ServerSection extends ServerEditorSection {
         adminServerPortNumber.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
         adminServerPortNumber.addModifyListener(new ModifyListener() {
             public void modifyText(ModifyEvent e) {
-                execute(new SunAppServerCommands(server, adminServerPortNumber.getText(),sunserver.ADMINSERVERPORT));
+                execute(new SunAppServerCommands(server, adminServerPortNumber.getText(),SunAppServer.ADMINSERVERPORT));
             }
         });
         

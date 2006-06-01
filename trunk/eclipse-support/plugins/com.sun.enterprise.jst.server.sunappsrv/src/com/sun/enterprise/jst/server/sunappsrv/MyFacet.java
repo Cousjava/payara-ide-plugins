@@ -27,8 +27,6 @@ package com.sun.enterprise.jst.server.sunappsrv;
  *
  * @author ludo
  */
-import com.sun.enterprise.jst.server.sunappsrv.web.SunWebXmlCreate;
-import com.sun.enterprise.jst.server.sunappsrv.ejbjar.SunEjbJarXmlCreate;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -43,7 +41,9 @@ import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
-//import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
+
+import com.sun.enterprise.jst.server.sunappsrv.ejbjar.SunEjbJarXmlCreate;
+import com.sun.enterprise.jst.server.sunappsrv.web.SunWebXmlCreate;
 
 public class MyFacet implements IDelegate {
     
