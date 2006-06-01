@@ -26,11 +26,6 @@ package com.sun.enterprise.jst.server.sunappsrv;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,16 +33,9 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
+import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
 import org.eclipse.jst.server.generic.core.internal.PingThread;
-import org.eclipse.jst.server.generic.internal.xml.Resolver;
-import org.eclipse.jst.server.generic.servertype.definition.External;
-import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerPort;
-import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
  *

@@ -26,8 +26,7 @@ package com.sun.enterprise.jst.server.sunappsrv;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.server.generic.core.internal.CorePlugin;
-import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
+//import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
 /**
  *Sun Servers Plugin
  */
@@ -49,7 +48,7 @@ public class SunAppSrvPlugin extends Plugin {
     }
     
     public static void logMessage(String mess){
-        final Status status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 1,"Sun App Server: "+mess,null);        
-        CorePlugin.getDefault().getLog().log(status);
+        final Status status = new Status(IStatus.INFO, SUNPLUGIN_ID, 1,"Sun App Server: "+mess,null);        
+        getInstance().getLog().log(status);
     }
 }

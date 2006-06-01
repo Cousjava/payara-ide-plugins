@@ -6,7 +6,7 @@ Bundle-Version: 1.0
 Bundle-Localization: plugin
 Bundle-Activator: com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin
 Bundle-Vendor: %providerName
-Require-Bundle:  org.apache.xerces,
+Require-Bundle: org.apache.xerces,
  org.apache.ant,
  org.eclipse.debug.core,
  org.eclipse.jdt.core,
@@ -43,8 +43,10 @@ Require-Bundle:  org.apache.xerces,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.edit.ui,
  org.netbeans.modules.schema2beans,
- org.netbeans.modules.j2ee.sun.dd
-Eclipse-AutoStart: true
+ org.netbeans.modules.j2ee.sun.dd,
+ org.eclipse.wst.common.environment,
+ org.eclipse.jst.common.project.facet.core
+Eclipse-LazyStart: true
 Export-Package: com.sun.enterprise.jst.server.sunappsrv;x-friends:="com.sun.enterprise.jst.server.sunappsrv.ui"
 
 
