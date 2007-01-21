@@ -134,6 +134,13 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
         SunAppSrvPlugin.logMessage("sunappserver.rootdirectory we are looking for this prop value:"+path);
         return path;
     }
+    
+    public String getDomainName(){
+        SunAppServer  sunserver = (SunAppServer) getServer().getAdapter(SunAppServer.class);
+        String d = sunserver.getdomainName();
+        SunAppSrvPlugin.logMessage("Domain Name is :"+d);
+        return d;
+    }
     public String getSunApplicationServerAdminPort(){
         //String port= (String)getRuntimeDelegate().getServerInstanceProperties().get(SunAppServer.ADMINSERVERPORT);
         SunAppServer  sunserver = (SunAppServer) getServer().getAdapter(SunAppServer.class);
@@ -161,10 +168,10 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     }
     
     private  void stopSunServer() {
-        
         // set arguments to be passed to Runtime.exec
         String asadminCmd =  getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+ getScriptExtension();
-        String domain = "domain1";
+        String domain= getDomainName();
+
         String arr[] = { asadminCmd,
         "stop-domain",
         domain
@@ -180,7 +187,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
         
         // set arguments to be passed to Runtime.exec
         String asadminCmd =  getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+ getScriptExtension();
-        String domain = "domain1";
+        String domain= getDomainName();
         String arr[] = { asadminCmd,
         "start-domain",
         

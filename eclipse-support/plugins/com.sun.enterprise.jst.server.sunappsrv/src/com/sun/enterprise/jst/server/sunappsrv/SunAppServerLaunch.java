@@ -81,7 +81,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         
         SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
         String asadminCmd =  serverBehavior.getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+getScriptExtension();
-        String domain = "domain1";
+        String domain = serverBehavior.getDomainName();
         String arr[] = { asadminCmd,
             "start-domain",        
             domain
