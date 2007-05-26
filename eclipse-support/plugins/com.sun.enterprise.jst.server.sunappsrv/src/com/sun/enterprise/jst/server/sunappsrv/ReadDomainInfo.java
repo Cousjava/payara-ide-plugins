@@ -57,7 +57,7 @@ public class ReadDomainInfo {
         String domainScriptFilePath = loc+"/domains/" + domainName +
                 "/config/domain.xml";                                           //NOI18N
         
-        File domainScriptFile = new File(domainScriptFilePath);
+   ///     File domainScriptFile = new File(domainScriptFilePath);
         
         // Load domain.xml
         Document domainScriptDocument = loadDomainScriptFile(domainScriptFilePath);
