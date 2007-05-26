@@ -1,150 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- You may freely edit this file. See commented blocks below for -->
-<!-- some examples of how to customize the build. -->
-<!-- (If you delete it and reopen the project it will be recreated.) -->
-<project name="GlassFish Eclipse WTP Plugin" default="default" basedir=".">
-    <description>Builds, tests, and runs the project com.sun.enterprise.jst.server.sunappsrv</description>
-    <import file="nbproject/build-impl.xml"/>
-    
-    <target name="-pre-init">
+<!--
+Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  
+You may not modify, use, reproduce, or distribute this software 
+except in compliance with the terms of the License at: 
+ http://developer.sun.com/berkeley_license.html
+-->
 
-        
-        <property file="eclipse.properties"/>
-        <fail unless ="eclipse.libraries"></fail>
-        <available file="${eclipse.rootdir}" property="eclipse.rootdir.present"/>
-        <fail unless ="eclipse.rootdir.present">Make sure the property called eclipse.rootdir in the eclipse.properties file, points to a valid Eclipse installation.</fail>
-
-   
-        <echo message = " Setting the javac.classpath property to the eclipse.libraries value from eclipse.properties."></echo>
-        <property name="javac.classpath" value="${eclipse.libraries}"/>
-    </target>  
-  
-    <target name="-init-macrodef-javac">
-        <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
-            <attribute name="srcdir" default="${src.dir}"/>
-            <attribute name="destdir" default="${build.classes.dir}"/>
-            <attribute name="classpath" default="${javac.classpath}"/>
-            <attribute name="debug" default="${javac.debug}"/>
-            <element name="customize" optional="true"/>
-            <sequential>
-                <javac srcdir="@{srcdir}" destdir="@{destdir}" debug="@{debug}" deprecation="${javac.deprecation}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
-                    <classpath>
-                        
-    <path id="base.path">
-      <pathelement path="${classpath}"/>
-      <fileset dir="${eclipse.pluginsdir}">
-        <include name="**/*.jar"/>
-      </fileset>
-
-    </path>                        
-                        
-                        <path path="@{classpath}"/>
-                        
-                        
-                        
-                    </classpath>
-                    <compilerarg line="${javac.compilerargs}"/>
-                    <customize/>
-                </javac>
-            </sequential>
-        </macrodef>
-    </target>    
-    
-    <target name="-pre-jar">
-
-        <copy file="plugin.properties" todir="build/classes"></copy>
-        <copy file="plugin.xml" todir="build/classes"></copy>          
-        <copy todir="build/classes/serverdef">
-            <fileset dir="serverdef"/>
-        </copy>        
-    </target>    
-    
-    <target name="-post-jar">
-        <mkdir dir="dist/eclipse"/>
-        <mkdir dir="dist/eclipse/plugins"/>
-        <copy todir="dist/eclipse/plugins">
-            <fileset dir="../libraries"/>
-        </copy>  
-        <copy file="../../www/license/CDDLv1.0.text" todir="dist/eclipse/plugins" />
-        <zip basedir="dist/eclipse" zipfile="dist/glassfish-eclipse-plugin_0_21.zip" />
-   
-        <!--taskdef name="installerBuilder" classname="org.jvnet.poormans_installer.builder.BuilderTask">
-            <classpath>
-                <fileset dir="." includes="installer-libs/*.jar"/>
-            </classpath>
-        </taskdef>
-        
-        <installerBuilder
-        jarFile="dist/glassfish-eclipse-plugin_installer_0_2.jar"
-        licenseFile="../../www/license/CDDLv1.0.text"
-        zipFile="dist/glassfish-eclipse-plugin_0_2.zip" /!-->        
-        
-        <unzip dest="${eclipse.rootdir}" overwrite="true" src="dist/glassfish-eclipse-plugin_0_21.zip"/>
-
-    </target>         
-
-        
-
-    
-    <!--
-
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
-
-    -pre-init:                 called before initialization of project properties
-    -post-init:                called after initialization of project properties
-    -pre-compile:              called before javac compilation
-    -post-compile:             called after javac compilation
-    -pre-compile-single:       called before javac compilation of single file
-    -post-compile-single:      called after javac compilation of single file
-    -pre-compile-test:         called before javac compilation of JUnit tests
-    -post-compile-test:        called after javac compilation of JUnit tests
-    -pre-compile-test-single:  called before javac compilation of single JUnit test
-    -post-compile-test-single: called after javac compilation of single JUunit test
-    -pre-jar:                  called before JAR building
-    -post-jar:                 called after JAR building
-    -post-clean:               called after cleaning build products
-
-    (Targets beginning with '-' are not intended to be called on their own.)
-
-    Example of inserting an obfuscator after compilation could look like this:
-
-    <target name="-post-compile">
-    <obfuscate>
-    <fileset dir="${build.classes.dir}"/>
-    </obfuscate>
-    </target>
-
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
-
-
-    Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
-
-    -init-macrodef-javac:     defines macro for javac compilation
-    -init-macrodef-junit:     defines macro for junit execution
-    -init-macrodef-debug:     defines macro for class debugging
-    -init-macrodef-java:      defines macro for class execution
-    -do-jar-with-manifest:    JAR building (if you are using a manifest)
-    -do-jar-without-manifest: JAR building (if you are not using a manifest)
-    run:                      execution of project 
-    -javadoc-build:           Javadoc generation
-    test-report:              JUnit report generation
-
-    An example of overriding the target for project execution could look like this:
-
-    <target name="run" depends="eclipsecore-impl.jar">
-    <exec dir="bin" executable="launcher.exe">
-    <arg file="${dist.jar}"/>
-    </exec>
-    </target>
-
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
-    properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
-
-    -->
+<project name="GlassFish Java EE 5" default="release">
+	<target name="init">
+		<property file="build.properties" />
+		<property name="plugin.id"      value="com.sun.enterprise.jst.server.sunappsrv" />
+		<property name="plugin.version" value="1.0.0" />
+	</target>
+	
+	<target name="release" depends="init">
+		<mkdir dir="plugins/${plugin.id}_${plugin.version}" />
+		<copy todir="plugins/${plugin.id}_${plugin.version}">
+			<fileset dir="." includes="${bin.includes}" />
+		</copy>
+		<copy todir="plugins/${plugin.id}_${plugin.version}">
+			<fileset dir="${output.library.jar}" />
+		</copy>
+        		
+		<zip destfile="${plugin.id}_${plugin.version}.jar" basedir="plugins/${plugin.id}_${plugin.version}" includes="**" />
+		<copy file="${plugin.id}_${plugin.version}.jar" todir="/Users/ludo/Desktop/ecl/eclipse/plugins">
+		</copy>		 
+	</target>
+	<target name="clean" >
+		<delete dir="plugins" />
+	</target>	
+	<target name="archive" depends="init">
+		<zip destfile="../glassfishplugin.zip" basedir="../" includes="com.sun.enterprise.jst.server.sunappsrv/" excludes="*/CVS/,*/bin/"/>
+	</target>
 </project>
