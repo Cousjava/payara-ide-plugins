@@ -42,8 +42,6 @@ Require-Bundle: org.apache.xerces,
  org.eclipse.emf.edit,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.edit.ui,
- org.netbeans.modules.schema2beans,
- org.netbeans.modules.j2ee.sun.dd,
  org.eclipse.wst.common.environment,
  org.eclipse.jst.common.project.facet.core
 Eclipse-LazyStart: true
