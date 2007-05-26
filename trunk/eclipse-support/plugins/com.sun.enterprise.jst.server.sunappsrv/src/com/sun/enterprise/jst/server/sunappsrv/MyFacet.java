@@ -31,10 +31,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jst.j2ee.internal.archive.operations.JavaComponentCreationDataModelProvider;
+import org.eclipse.jst.common.project.facet.JavaProjectFacetCreationDataModelProvider;
 import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IComponentCreationDataModelProperties;
+import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
@@ -52,9 +53,13 @@ public class MyFacet implements IDelegate {
     public void execute(IProject prj, IProjectFacetVersion fv,Object config, IProgressMonitor monitor) throws CoreException {
         
         IVirtualComponent virtualC = ComponentCore.createComponent(prj);
-        IDataModel model = DataModelFactory.createDataModel(new JavaComponentCreationDataModelProvider());
-        model.setStringProperty(IComponentCreationDataModelProperties.COMPONENT_NAME, virtualC.getName());
-        model.setStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME, prj.getName());
+		IDataModel model = DataModelFactory.createDataModel(new JavaProjectFacetCreationDataModelProvider());
+		model.setStringProperty(IFacetDataModelProperties.FACET_PROJECT_NAME, prj.getName());
+
+        
+ ///       IDataModel model = DataModelFactory.createDataModel(new JavaComponentCreationDataModelProvider());
+///        model.setStringProperty(IComponentCreationDataModelProperties.COMPONENT_NAME, virtualC.getName());
+///        model.setStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME, prj.getName());
         String type = J2EEProjectUtilities.getJ2EEProjectType(getProject(model ));
         
         if (IModuleConstants.JST_WEB_MODULE.equals(type)) {
@@ -73,8 +78,7 @@ public class MyFacet implements IDelegate {
         
     }
     public IProject getProject(IDataModel model ) {
-        String projectName = model.getProperty(
-                IComponentCreationDataModelProperties.PROJECT_NAME).toString();
+        String projectName = model.getProperty(IFacetDataModelProperties.FACET_PROJECT_NAME).toString();
         if (projectName != null) {
             return ResourcesPlugin.getWorkspace().getRoot().getProject( projectName);
         }

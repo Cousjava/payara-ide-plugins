@@ -33,12 +33,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.j2ee.application.internal.operations.J2EEComponentCreationDataModelProvider;
+import org.eclipse.jst.server.core.FacetUtil;
 import org.eclipse.wst.common.componentcore.ComponentCore;
-import org.eclipse.wst.common.componentcore.datamodel.properties.IComponentCreationDataModelProperties;
+import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
+import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 
 public class SunEjbJarXmlCreate extends AbstractDataModelOperation  {
     
@@ -51,7 +53,7 @@ public class SunEjbJarXmlCreate extends AbstractDataModelOperation  {
     
     public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
         
-        String runtimeID = model.getStringProperty(J2EEComponentCreationDataModelProvider.RUNTIME_TARGET_ID);
+      ////  String runtimeID = model.getStringProperty(J2EEComponentCreationDataModelProvider.RUNTIME_TARGET_ID);
         //       if (runtimeID != null && runtimeID.startsWith("GlassFish")){
         execute();
         //       }
@@ -73,13 +75,12 @@ public class SunEjbJarXmlCreate extends AbstractDataModelOperation  {
     }
     
     
-    private  SunEjbJarDeploymentPlan createDeploymentPlan(IFile deployPlanFile) {
-        SunEjbJarDeploymentPlan plan=null;
+    private  void createDeploymentPlan(IFile deployPlanFile) {
         InputStream is=null;
         try {
             
-            plan=new SunEjbJarDeploymentPlan();
-            is=plan.getInputStream();
+           // plan=new SunEjbJarDeploymentPlan();
+           // is=plan.getInputStream();
             deployPlanFile.create(is, false, null);
         } catch (Exception e) {
             
@@ -92,7 +93,7 @@ public class SunEjbJarXmlCreate extends AbstractDataModelOperation  {
             }
         }
         
-        return plan;
+
     }
     
     
@@ -106,19 +107,21 @@ public class SunEjbJarXmlCreate extends AbstractDataModelOperation  {
         return null;
     }
     
+ 
     
-    
-    public String getComponentName() {
-        return model.getProperty(
-                IComponentCreationDataModelProperties.COMPONENT_NAME).toString();
-    }
-    
-    public IProject getProject() {
-        String projectName = model.getProperty(
-                IComponentCreationDataModelProperties.PROJECT_NAME).toString();
-        if (projectName != null) {
-            return ResourcesPlugin.getWorkspace().getRoot().getProject( projectName);
-        }
-        return null;
-    }
+	public org.eclipse.wst.server.core.IRuntime getRuntime() {
+		IRuntime runtime = (IRuntime) model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
+		if (runtime != null) {
+			return FacetUtil.getRuntime(runtime);
+		}
+		return null;
+	}
+
+	public IProject getProject() {
+		String projectName = model.getProperty(IFacetDataModelProperties.FACET_PROJECT_NAME).toString();
+		if (projectName != null) {
+			return ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		}
+		return null;
+	}
 }
