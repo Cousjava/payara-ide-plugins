@@ -1,50 +1,46 @@
 </dd>
-<script id="eraser">
-// hide all default navigation bars
-
-// get to the block
-var div = document.getElementById("eraser").previousSibling;
-for( n=div; n!=null; n=n.previousSibling ) {
-  if(n.nodeType==1) { // if element
-    if(n.tagName=="DD") { // kill all the link items
-      n.style.display = "none";
-    }
-    if(n.tagName=="DT") { // change the title
-      n.innerHTML = "<strong>GlassFish Plug-ins</strong>";
-    }
-  }
-}
-
-// delete the "get involved" block
-getInvolved = document.getElementById("communitylinks");
-getInvolved.parentNode.removeChild(getInvolved);
-</script>
-<dd>
-   <ul>
-      <li>
-	<a href="https://glassfishplugins.dev.java.net/servlets/ProjectHome">GlassFish Plug-ins Home</a> <br>
-      </li>
-      <li>
-  	<a href="https://glassfishplugins.dev.java.net/download/">Downloads</a><br>
-      </li>
-      <li>
-		<a href="https://glassfishplugins.dev.java.net/servlets/ProjectNewsList">Announcements</a>
-      </li>
-      <li>
-		<a href="https://glassfishplugins.dev.java.net/servlets/ProjectMailingListList">Mailing lists</a>
-      </li>
-      <li>
-		<a href="http://forums.java.net/jive/forum.jspa?forumID=65">Discussion forums</a>
-      </li>
-      <li>
-  	<a href="https://glassfishplugins.dev.java.net/source/browse/glassfishplugins">Source code - CVS</a><br>
-<br>
-      </li>
-      <li>
-  	<a href="https://glassfishplugins.dev.java.net/servlets/ProjectIssues">Issue tracker</a><br>
-        <form method="get" action="https://glassfishplugins.dev.java.net/issues/show_bug.cgi">
-        <input type="submit" value="Go to"/>Issue #<input name="id" size="3"/>
-        </form>
-      </li>
-
+<script>document.getElementById("main").parentNode.style.display="none";</script>
+<dd id=menubar>
+<ul>
+	<li>
+		<a href="/about.html">About</a>
+	</li>
+	<li>
+		<a href="/download.html">Download</a>
+	</li>
+	<li>
+		<a href="/documentation.html">Documentation</a>
+	</li>
+	<li>
+		<a href="/screencasts/Phobos/Phobos.html">Screencast</a>
+	</li>
+	<li>
+	<a href="#">Project Pages</a>
+	<ul>
+		<li>
+			<a href="/servlets/ProjectNewsList">Announcements</a>
+		</li>
+		<li>
+			<a href="/servlets/ProjectMailingListList">Mailing lists</a>
+		</li>
+		<li>
+			<a href="/servlets/ProjectMemberList">Membership</a>
+		</li>
+		<li>
+			<a href="/issues/">Issue tracker</a>
+		</li>
+		<li>
+			<a href="/source/browse/phobos/" match="/source/browse/phobos/.*">CVS repository</a>
+		</li>
+	</ul>
+	</li>
 </ul>
+
+<script>
+var info = {
+	title: "GlassFish Plugins",
+	logo: "/images/Logo_72.jpg"
+}
+</script>
+<script src="https://glassfish-theme.dev.java.net/zone-webtier.js"></script>
+<script src="https://glassfish-theme.dev.java.net/theme.js"></script>
