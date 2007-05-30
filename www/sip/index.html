@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+
+
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>NetBeans-Sip.html</title></head><body>
+<h2>Using NetBeans 5.5 to develop SIP and Java EE Applications</h2>
+<br>
+Version 0.1, Date: 17 Oct 2006<br>
+
+<br>
+This document describes how to get started with using NetBeans for
+developing Converged applications using Java EE 5 and SIP Servlets. We
+are describing this for Windows. Roughly same instructions will work on
+any platform.<br>
+<br>
+<ul>
+  <li>Download NetBeans 5.5.1 from
+http://www.netbeans.org</li>
+</ul>
+<ul>
+  <li>Choose any install location. Choose a JVM whose version is at
+least 1.5.06 preferably 1.5.08. Start up NetBeans.  We will now configure
+NetBeans to point to the Sip enabled Glassfish evaluation distribution,
+that you should already have installed on your machine. <br>
+  </li>
+</ul>
+<ul>
+  <li>Click on Runtime tab and expand Servers. You should only see the
+default Tomcat. We will add GlassFish now.</li>
+</ul>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp; <img alt="AddServer1" src="NetBeans-Sip.html_files/AddServer1.gif" style="width: 407px; height: 146px;"><br>
+<br>
+<ul>
+  <li>Right Click on Servers and choose Add Server. By default it
+selects <span style="font-weight: bold;">Sun Java System Application
+Server</span> in the drop down menu list. <br>
+  </li>
+</ul>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img alt="ChooseServer" src="NetBeans-Sip.html_files/ChooseServer.gif" style="width: 617px; height: 330px;"><br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; Click <span style="font-weight: bold;">Next<br>
+<br>
+</span>
+<ul>
+  <li>Now we pick the server location</li>
+</ul>
+<img alt="Server Location" src="NetBeans-Sip.html_files/ServerLocation.gif" style="width: 669px; height: 448px;"><br>
+<br>
+Use <span style="font-weight: bold;">Browse </span>to point to the
+install location for your evaluation bundle. It should be some
+directory called Glassfish. Keep the default, which picks a domain
+called domain1 (created by default, change it only if your domain was
+somehow differently named). Click <span style="font-weight: bold;">Finish.
+</span>[If&nbsp; you click <span style="font-weight: bold;">Next</span>,
+you will be prompted for Administration username and password. These
+are defaulted to admin/adminadmin, if you hit <span style="font-weight: bold;">Finish</span>.]<br>
+<br>
+Now the Server is registered. You should see Sun Java System
+Application Server under Servers. <br>
+<br>
+<ul>
+  <li>Right click with the mouse on <span style="font-weight: bold;">Sun
+Java System Application Server</span> and choose <span style="font-weight: bold;">Start. </span>This starts up the
+Application Server.</li>
+</ul>
+<h2>Installing Sip Application Development Support Plugin</h2>
+At the top level of your evaluation bundle install, you should see:
+org-netbeans-modules-sun-sip.nbm. This is the Plugin that needs to be
+configured as follows:<br>
+<br>
+<ul>
+  <li>Choose <span style="font-weight: bold;">Module Manager</span>
+user <span style="font-weight: bold;">Tools </span>Menu item.</li>
+  <li>Click on <span style="font-weight: bold;">Update </span>button
+at bottom. You will see the Update Center Wizard.</li>
+  <li>Choose the radio button <span style="font-weight: bold;">Install
+manually downloaded modules (.nbm files). </span>Click <span style="font-weight: bold;">Next</span></li>
+  <li>Click on <span style="font-weight: bold;">Add</span>. Use the
+File Browser to find org-netbeans-modules-sun-sip.nbm&nbsp; file on
+your system. Click <span style="font-weight: bold;">OK</span><br>
+  </li>
+  <li>Click <span style="font-weight: bold;">Next</span></li>
+  <li>Click <span style="font-weight: bold;">Next</span></li>
+  <li>You will see an Empty License. Click <span style="font-weight: bold;">Accept</span></li>
+  <li>You will see a successful Verification. Clock <span style="font-weight: bold;">Next</span></li>
+  <li>You will be shown a message that the module is unsigned. Just
+click on checkbox and agree that you are okay with this. Hit <span style="font-weight: bold;">Finish</span></li>
+  <li>IDE may need to be restarted. Click OK, if prompted.</li>
+  <li>You are now set up with Sip development capability</li>
+</ul>
+<br>
+This NetBeans plugin allows Sip Archives to be developed. Sip Archives
+are developed as Web Applications that use the Sip Servlets Framework.
+This is similar to how web applications use JSF framework. We will show
+how to do one in a while.<br>
+<br>
+<h2>Developing Sip enabled Web Applications</h2>
+<ul>
+  <li>Click on <span style="font-weight: bold;">File </span>Menu and
+choose <span style="font-weight: bold;">New Project</span><br>
+  </li>
+</ul>
+<img alt="newproject" src="NetBeans-Sip.html_files/newproject.gif" style="width: 739px; height: 511px;"><br>
+<h2><br>
+</h2>
+Choose <span style="font-weight: bold;">Web </span>and <span style="font-weight: bold;">Web Application</span>. Click <span style="font-weight: bold;">Next<br>
+<br>
+</span>
+<ul>
+  <li>Assign the name <span style="font-weight: bold;">SampleSip </span>to
+project. Click <span style="font-weight: bold;">Next</span></li>
+  <li>On next screen, <span style="font-weight: bold;">choose
+Converged Sip Application Framework</span> checkbox. Click Next</li>
+</ul>
+<img alt="sip fw" src="NetBeans-Sip.html_files/sipfw.gif" style="width: 739px; height: 511px;"><br>
+<br>
+<ul>
+  <li>Click <span style="font-weight: bold;">Finish</span></li>
+</ul>
+<h3>Adding Sip Servlets</h3>
+<br>
+<ul>
+  <li>To begin writing code, you need to right click with the mouse on
+the just created project (SampleSip under Projects tab) and choose <span style="font-weight: bold;">New</span></li>
+  <li>You will not see Sip Servlet yet since NetBeans does not place on
+the default palette of components. So only for the first time, go to
+File/Folder under the list that New will show you.<br>
+  </li>
+  <li>Choose Sip Servlet from there. You will be prompted for a package
+name, servlet name and so on. Hit <span style="font-weight: bold;">Finish</span>.
+A Sip Servlet will be added to the project</li>
+</ul>
+<img alt="new sipservlet" src="NetBeans-Sip.html_files/newsipservlet.gif" style="width: 729px; height: 503px;"><br>
+<ul>
+  <li>You can also add Http Servlets, create Entity classes just as you
+would with any Java EE 5 Web Application. You can use the standard Java
+EE 5 annotations in Sip Servlets</li>
+  <li>You can build, deploy, debug and run your application on
+GlassFish (Sun Java System Application Server), just as you would
+normally by using the Right Mouse Click on Project to access all common
+actions. <br>
+  </li>
+</ul>
+<h3><span style="font-weight: bold;">Limitations</span></h3>
+<ul>
+  <li>When you build a converged web application, a SIP Archive
+(foo.sar) must be created. NetBeans is still creating a out file with
+war extension. It is easy to change it. Click on Files Tab. And click
+on project.properties. You will see the file opened for editing on
+right side. <br>
+  </li>
+</ul>
+<img alt="warto sar rename" src="NetBeans-Sip.html_files/sar-rename.gif" style="width: 669px; height: 663px;"><br>
+<br>
+<ul>
+  <li>Change war.name to SampleSip.sar or whatever your project name
+happens to be. Save and Build Project again. You can also produce a war
+file and just rename it with OS commands before you deploy it.<br>
+  </li>
+</ul>
+<ul>
+  <li>When a SIP Servlet is created only some method templates are
+added. Delete what you do not need. To add other methods that you wish
+to override, do the following. We added NewSipServlet under com.foo in
+previous step.</li>
+  <li>Choose NewSipServlet in the sources. <br>
+  </li>
+</ul>
+<img alt="sip servlet" src="NetBeans-Sip.html_files/sipservlet.gif" style="width: 673px; height: 330px;"><br>
+<br>
+<ul>
+  <li>When it is highlighted, choose Source menu item from top menu
+bar. Choose Override Methods (Ctrl+I shortcut). You will be shown
+methods ofSipServlet that you can override.</li>
+  <li>In future, we will extend the Sip Servlet creation wizard to let
+developer choose the method and click <span style="font-weight: bold;">OK</span>.<br>
+  </li>
+</ul>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img alt="override" src="NetBeans-Sip.html_files/override.gif" style="width: 432px; height: 608px;"><br>
+<br>
+<ul>
+  <li>sip.xml is created but it is not populated automatically after a
+Sip Servlet is added. This has to be done manually in NetBeans editor.
+However NetBeans will assist in XML completion and validation checks.
+The automatic creation and population will be added soon.<br>
+  </li>
+</ul>
+<br>
+</body></html>
