@@ -33,7 +33,8 @@
     <property id="sunappserver.rootdirectory"  label="%sunappserver.rootdirectory"
     type="directory"
     context="runtime"
-    default="C:/sun/glassfishv3" />
+    default=""
+    />
     
    <property id="sunappserver.serveraddress"  label="%sunappserver.serveraddress"
     type="string"
@@ -155,7 +156,7 @@
 
     <classpath id="sunappsrv.project" >
         <archive path="${sunappserver.rootdirectory}/lib/glassfish-10.0-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/lib/javaee-5.0.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/javaee.jar" />
 
     </classpath>
 	

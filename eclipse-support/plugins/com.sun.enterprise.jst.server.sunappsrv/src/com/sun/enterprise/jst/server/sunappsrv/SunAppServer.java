@@ -23,7 +23,6 @@
 
 package com.sun.enterprise.jst.server.sunappsrv;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -53,12 +52,9 @@ public class SunAppServer extends GenericServer {
     public SunAppServer(){
     }
     
-    
-    
-    
-    public String getRootDir() {
-        return (String) getServerInstanceProperties().get(ROOTDIR);
-    }   
+  	
+	
+  
     
     public String getServerPort() {
         return (String) getServerInstanceProperties().get(SERVERPORT);
