@@ -154,9 +154,12 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     
     
     public String getSunApplicationServerInstallationDirectory(){
-        SunAppServer  sunserver = (SunAppServer) getServer().getAdapter(SunAppServer.class);
-   //    SunAppSrvPlugin.logMessage("sunappserver.rootdirectory we are looking for this prop value:"+path);
-        return sunserver.getRootDir();
+    	String path= (String)getRuntimeDelegate().getServerInstanceProperties().get(SunAppServer.ROOTDIR);
+       /* SunAppServer  sunserver = (SunAppServer) getServer().getAdapter(SunAppServer.class);
+        String d = sunserver.getRootDir();
+              SunAppSrvPlugin.logMessage("getSunApplicationServerInstallationDirectory is :"+d);
+        return d;*/
+    	return path;
     }
     
     public String getDomainName(){
@@ -207,7 +210,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
             Thread.sleep(3000);
         } catch (InterruptedException ex) {}
     }
-    private void startSunServer() {
+  /*  private void startSunServer() {
         
         // set arguments to be passed to Runtime.exec
         String asadminCmd =  getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+ getScriptExtension();
@@ -215,7 +218,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
         String arr[] = { asadminCmd,
         "start-domain",
         
-        domain
+        domain,
+        "-verbose"
         };
         
         // stop the SJSAS using Runtime.exec
@@ -223,7 +227,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {}
-    }
+    }*/
     
     
     

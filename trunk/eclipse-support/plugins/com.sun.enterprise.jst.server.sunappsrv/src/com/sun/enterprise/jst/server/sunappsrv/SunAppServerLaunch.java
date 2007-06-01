@@ -71,7 +71,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         
     public void launch(ILaunchConfiguration configuration,  String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
         SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch launch");
-        Thread.dumpStack();
        ////////  if (mode.equals("debug")) ...
         
         IServer server = ServerUtil.getServer(configuration);
@@ -84,7 +83,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         String domain = serverBehavior.getDomainName();
         String arr[] = { asadminCmd,
             "start-domain",        
-            domain
+            "--verbose",
+           domain
         };
  
         try {

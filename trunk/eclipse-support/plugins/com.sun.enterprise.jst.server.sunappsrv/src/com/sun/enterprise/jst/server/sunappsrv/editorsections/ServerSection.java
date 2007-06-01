@@ -40,12 +40,10 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
 import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerCommands;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
@@ -88,9 +86,11 @@ public class ServerSection extends ServerEditorSection {
                 | ExpandableComposite.FOCUS_TITLE);
         
         section.setText(Messages.wizardSectionTitle);
-        SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
-        String loc =  serverBehavior.getSunApplicationServerInstallationDirectory();
-
+       /// String loc = sunserver.getRootDir();
+        
+   //     SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
+   //     String loc =  serverBehavior.getSunApplicationServerInstallationDirectory();
+       String loc="";
         section.setDescription(Messages.wizardSectionDescription +" ("+ loc+")");
         section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
         
@@ -105,7 +105,7 @@ public class ServerSection extends ServerEditorSection {
         comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         section.setClient(comp);
         
-    /*    createLabel(comp, Messages.MachineName, toolkit);
+        createLabel(comp, Messages.MachineName, toolkit);
         
         final Text hostname = toolkit.createText(comp, sunserver.getServerAddress(), SWT.BORDER);
         hostname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -113,7 +113,7 @@ public class ServerSection extends ServerEditorSection {
             public void modifyText(ModifyEvent e) {
                 execute(new SunAppServerCommands(server, hostname.getText(),SunAppServer.SERVERPORT));
             }
-        });*/
+        });
         
         createLabel(comp, Messages.DomainName, toolkit);
         
