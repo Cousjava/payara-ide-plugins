@@ -154,9 +154,9 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     
     
     public String getSunApplicationServerInstallationDirectory(){
-        String path= (String)getRuntimeDelegate().getServerInstanceProperties().get(SunAppServer.ROOTDIR);
-        SunAppSrvPlugin.logMessage("sunappserver.rootdirectory we are looking for this prop value:"+path);
-        return path;
+        SunAppServer  sunserver = (SunAppServer) getServer().getAdapter(SunAppServer.class);
+   //    SunAppSrvPlugin.logMessage("sunappserver.rootdirectory we are looking for this prop value:"+path);
+        return sunserver.getRootDir();
     }
     
     public String getDomainName(){

@@ -56,7 +56,9 @@ public class SunAppServer extends GenericServer {
     
     
     
-    
+    public String getRootDir() {
+        return (String) getServerInstanceProperties().get(ROOTDIR);
+    }   
     
     public String getServerPort() {
         return (String) getServerInstanceProperties().get(SERVERPORT);
