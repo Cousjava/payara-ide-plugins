@@ -46,13 +46,13 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import com.sun.enterprise.jst.server.sunappsrv.ejbjar.SunEjbJarXmlCreate;
 import com.sun.enterprise.jst.server.sunappsrv.web.SunWebXmlCreate;
 
-public class MyFacet implements IDelegate {
+public class GlassFishFacet implements IDelegate {
     
     
     
     public void execute(IProject prj, IProjectFacetVersion fv,Object config, IProgressMonitor monitor) throws CoreException {
         
-        IVirtualComponent virtualC = ComponentCore.createComponent(prj);
+        //IVirtualComponent virtualC = ComponentCore.createComponent(prj);
 		IDataModel model = DataModelFactory.createDataModel(new JavaProjectFacetCreationDataModelProvider());
 		model.setStringProperty(IFacetDataModelProperties.FACET_PROJECT_NAME, prj.getName());
 

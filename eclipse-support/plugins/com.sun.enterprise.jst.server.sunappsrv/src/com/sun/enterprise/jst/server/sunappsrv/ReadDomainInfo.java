@@ -25,18 +25,18 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 
 import java.io.File;
-import java.io.FileWriter;
+//import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
+/*import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
+*/
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -127,7 +127,7 @@ public class ReadDomainInfo {
     }
     
 // saves Document to domain.xml
-    private static boolean saveDomainScriptFile(Document domainScriptDocument, String domainScriptFilePath) {
+ /*   private static boolean saveDomainScriptFile(Document domainScriptDocument, String domainScriptFilePath) {
         boolean result = false;
         
         FileWriter domainScriptFileWriter = null;
@@ -168,7 +168,7 @@ public class ReadDomainInfo {
     public static boolean isUnix() {
         return File.separatorChar == '/';
     }
-    
+    */
     
     
 }

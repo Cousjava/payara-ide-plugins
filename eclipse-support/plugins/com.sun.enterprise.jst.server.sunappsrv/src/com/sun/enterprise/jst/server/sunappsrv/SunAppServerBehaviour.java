@@ -25,7 +25,9 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -35,6 +37,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
 import org.eclipse.jst.server.generic.core.internal.PingThread;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 
 /**
@@ -46,6 +49,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     /** Creates a new instance of SunAppServerBehaviour */
     public SunAppServerBehaviour() {
         SunAppSrvPlugin.logMessage("in SunAppServerBehaviour CTOR ");
+
+       
     }
     
     
@@ -59,9 +64,20 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     
     
     protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
-        SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setupLaunch");
         int state = getServer().getServerState();
+        SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setupLaunch state=" +state);
         
+        SunAppServer  sunserver = (SunAppServer) getServer().getAdapter(SunAppServer.class);
+        SunAppSrvPlugin.logMessage("in SunAppServerBehaviour CTOR after sunserver ");
+       if (sunserver.isRunning()){
+           SunAppSrvPlugin.logMessage("in SunAppServerBehaviour CTOR after sunserver it is running!!!");
+           setMode(ILaunchManager.RUN_MODE);
+          setServerState(IServer.STATE_STARTED);
+            resetStatus(IServer.STATE_STARTED);
+
+        } 
+       state = getServer().getServerState();
+       if (state!=IServer.STATE_STARTED){
         try {
             super.setupLaunch(launch, launchMode, monitor);
         } catch (CoreException ce) {
@@ -73,11 +89,19 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
             resetStatus(IServer.STATE_STARTED);
             return;
         }
+       }
         resetStatus(state);
     }
     
     
-    
+    public void publishModule(int kind, int deltaKind, IModule[] module,
+            IProgressMonitor monitor) throws CoreException {
+        SunAppSrvPlugin.logMessage("in SunAppServerBehaviour publishModule" +module);
+        super.publishModule( kind,  deltaKind, module,
+                 monitor);
+       
+          
+    }
     
     
     protected synchronized void setServerStarted() {

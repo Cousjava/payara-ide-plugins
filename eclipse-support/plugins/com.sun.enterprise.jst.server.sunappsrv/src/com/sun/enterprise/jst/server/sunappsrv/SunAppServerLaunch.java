@@ -71,12 +71,12 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         
     public void launch(ILaunchConfiguration configuration,  String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
         SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch launch");
-        
+        Thread.dumpStack();
        ////////  if (mode.equals("debug")) ...
         
         IServer server = ServerUtil.getServer(configuration);
         if (server == null) {
-            abort(GenericServerCoreMessages.missingServer, null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+            abort("missing Server", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
         
         SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
@@ -93,7 +93,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             launch.addProcess(runtimeProcess);
             serverBehavior.setProcess(runtimeProcess);
         } catch (IOException ioe) {
-            abort(GenericServerCoreMessages.errorLaunchingExecutable, ioe,  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+            abort("error Launching Executable", ioe,  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
         try {
             Thread.sleep(8000);

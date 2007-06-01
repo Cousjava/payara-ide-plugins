@@ -22,7 +22,7 @@
 // </editor-fold>
 package com.sun.enterprise.jst.server.sunappsrv.ejbjar;
 
-import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
@@ -76,12 +76,11 @@ public class SunEjbJarXmlCreate extends AbstractDataModelOperation  {
     
     
     private  void createDeploymentPlan(IFile deployPlanFile) {
-        InputStream is=null;
+    	ByteArrayInputStream is=null;
         try {
             
-           // plan=new SunEjbJarDeploymentPlan();
-           // is=plan.getInputStream();
-            deployPlanFile.create(is, false, null);
+            is = new ByteArrayInputStream(getSunEjbXml().getBytes());
+           deployPlanFile.create(is, false, null);
         } catch (Exception e) {
             
         } finally {
@@ -96,7 +95,13 @@ public class SunEjbJarXmlCreate extends AbstractDataModelOperation  {
 
     }
     
-    
+ private String getSunEjbXml   (){
+	 return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+"<!DOCTYPE sun-ejb-jar PUBLIC \"-//Sun Microsystems, Inc.//DTD Application Server 9.0 EJB 3.0//EN\" \"http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_0-0.dtd\">\n"+
+"<sun-ejb-jar>\n"+
+"  <enterprise-beans/>\n"+
+"</sun-ejb-jar>\n";
+ }
     
     public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
         return null;

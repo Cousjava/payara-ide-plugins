@@ -23,6 +23,10 @@
 
 package com.sun.enterprise.jst.server.sunappsrv;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -93,7 +97,7 @@ public class SunAppServer extends GenericServer {
         return (String) getServerInstanceProperties().get(ADMINPASSWORD);
     }
     public void setAdminPassword(String value) {
-        getServerInstanceProperties().put(ADMINPASSWORD, value);
+        getServerInstanceProperties().put(ADMINPASSWORD, value); 
         SunAppSrvPlugin.logMessage("In  setAdminPassword)"+ value);
         try {
             //this.saveConfiguration(new NullProgressMonitor());
@@ -112,16 +116,25 @@ public class SunAppServer extends GenericServer {
         return sunserver;
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    /**
+     * 
+     * @param host 
+     * @param port 
+     * @return 
+     */
+    public  boolean isRunning() {
+
+        
+        try {
+            InetSocketAddress isa = new InetSocketAddress(getServerAddress(), Integer.parseInt(getServerPort()));
+            Socket socket = new Socket();
+            socket.connect(isa, 1);
+            socket.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     
     
     
