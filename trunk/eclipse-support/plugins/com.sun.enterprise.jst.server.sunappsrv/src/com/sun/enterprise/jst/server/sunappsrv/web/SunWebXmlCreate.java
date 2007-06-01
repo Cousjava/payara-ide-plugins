@@ -41,6 +41,8 @@ import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+
 public class SunWebXmlCreate extends AbstractDataModelOperation  {
     
     public SunWebXmlCreate() {
@@ -86,6 +88,8 @@ public class SunWebXmlCreate extends AbstractDataModelOperation  {
              is = new ByteArrayInputStream(getDefautSunWeb(moduleName).getBytes());
 
             deployPlanFile.create(is, false, null);
+            SunAppSrvPlugin.logMessage(getDefautSunWeb(moduleName));
+
         } catch (Exception e) {
             
         } finally {
@@ -104,7 +108,7 @@ public class SunWebXmlCreate extends AbstractDataModelOperation  {
 "<!DOCTYPE sun-web-app PUBLIC \"-//Sun Microsystems, Inc.//DTD Application Server 9.0 Servlet 2.5//EN\" \"http://www.sun.com/software/appserver/dtds/sun-web-app_2_5-0.dtd\">\n"+
 "<sun-web-app error-url=\"\">\n"+
 "  <context-root>/"+contextRoot+"</context-root>\n"+
-"  <class-loader delegate=\"true\"\n/>"+
+"  <class-loader delegate=\"true\"/>\n"+
 "  <jsp-config>\n"+
 "    <property name=\"keepgenerated\" value=\"true\">\n"+
 "      <description>Keep a copy of the generated servlet class java code.</description>\n"+

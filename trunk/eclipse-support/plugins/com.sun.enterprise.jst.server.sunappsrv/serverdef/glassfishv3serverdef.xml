@@ -27,13 +27,13 @@
     xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
-    name="GlassFish Java EE 5" version="v0.1">
+    name="GlassFish V3" version="v0.1">
     
     
     <property id="sunappserver.rootdirectory"  label="%sunappserver.rootdirectory"
     type="directory"
     context="runtime"
-    default="C:/sun/AppServer90" />
+    default="C:/sun/glassfishv3" />
     
    <property id="sunappserver.serveraddress"  label="%sunappserver.serveraddress"
     type="string"
@@ -96,21 +96,21 @@
         <classpathReference>sunappsrv.project</classpathReference>
     </project>
 	
-    <start>
-        <external  >${sunappserver.rootdirectory}/bin/asadmin start-domain ${sunappserver.domainname}</external>
-        <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat start-domain   --verbose=true ${sunappserver.domainname} </external>
-        <programArguments>}</programArguments>
-        <workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
-        <debugPort>567</debugPort>
-
-    </start>
-
-    <stop>
-        <external>${sunappserver.rootdirectory}/bin/asadmin stop-domain ${sunappserver.domainname}</external>
-        <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat stop-domain ${sunappserver.domainname} </external>
-        <programArguments></programArguments>
-        <workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
-    </stop>
+	<start>
+		<mainClass>com.sun.enterprise.glassfish.bootstrap.Main</mainClass>
+		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
+		<programArguments></programArguments>
+		<vmParameters></vmParameters>
+		<classpathReference>sunappsrv.project</classpathReference>
+	</start>
+	
+	<stop>
+		<mainClass>com.xxx.fixME</mainClass>
+		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
+		<programArguments></programArguments>
+		<vmParameters></vmParameters>
+		<classpathReference>sunappsrv.project</classpathReference>
+	</stop>
         
     <publisher id="org.eclipse.jst.server.generic.antpublisher">
         <publisherdata>
@@ -147,21 +147,15 @@
 
 
     <classpath id="sunappsrv.server" >
-        <archive path="${sunappserver.rootdirectory}/lib/appserv-rt.jar" />
-        <archive path="${sunappserver.rootdirectory}/lib/appserv-admin.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/glassfish-10.0-SNAPSHOT.jar" />
     </classpath>
     <classpath id="sunappsrv.deploy" >
-        <archive path="${sunappserver.rootdirectory}/lib/appserv-rt.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/glassfish-10.0-SNAPSHOT.jar" />
     </classpath>
 
     <classpath id="sunappsrv.project" >
-        <archive path="${sunappserver.rootdirectory}/lib/appserv-rt.jar" />
-        <archive path="${sunappserver.rootdirectory}/lib/javaee.jar" />
-        <archive path="${sunappserver.rootdirectory}/lib/mail.jar" />
-        <archive path="${sunappserver.rootdirectory}/lib/appserv-ws.jar" />
-        <archive path="${sunappserver.rootdirectory}/lib/appserv-jstl.jar" />
-        <archive path="${sunappserver.rootdirectory}/lib/appserv-tags.jar" />
-        <archive path="${sunappserver.rootdirectory}/lib/activation.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/glassfish-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/javaee-5.0.jar" />
 
     </classpath>
 	

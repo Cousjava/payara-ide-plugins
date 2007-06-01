@@ -38,7 +38,7 @@
    <property id="sunappserver.serveraddress"  label="%sunappserver.serveraddress"
     type="string"
     context="server"
-    default="127.0.0.1" />
+    default="localhost" />
     
     <property id="sunappserver.serverportnumber" label="%sunappserver.serverportnumber"
     type="string"

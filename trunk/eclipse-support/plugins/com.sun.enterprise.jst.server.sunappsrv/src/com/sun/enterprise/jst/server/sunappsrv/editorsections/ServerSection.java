@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -69,7 +69,8 @@ public class ServerSection extends ServerEditorSection {
     
     
     public void init(IEditorSite site, IEditorInput input) {
-        super.init(site, input);
+        SunAppSrvPlugin.logMessage("In  ServerSection  init()" );
+       super.init(site, input);
         sunserver = SunAppServer.getSunAppServer(server);
     }
     
@@ -103,6 +104,16 @@ public class ServerSection extends ServerEditorSection {
         comp.setLayout(gl);
         comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         section.setClient(comp);
+        
+    /*    createLabel(comp, Messages.MachineName, toolkit);
+        
+        final Text hostname = toolkit.createText(comp, sunserver.getServerAddress(), SWT.BORDER);
+        hostname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        hostname.addModifyListener(new ModifyListener() {
+            public void modifyText(ModifyEvent e) {
+                execute(new SunAppServerCommands(server, hostname.getText(),SunAppServer.SERVERPORT));
+            }
+        });*/
         
         createLabel(comp, Messages.DomainName, toolkit);
         
@@ -160,7 +171,7 @@ public class ServerSection extends ServerEditorSection {
     
     protected Label createLabel(Composite parent, String text, FormToolkit toolkit) {
         Label label = toolkit.createLabel(parent, text);
-        label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+        label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
         label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
         return label;
     }
