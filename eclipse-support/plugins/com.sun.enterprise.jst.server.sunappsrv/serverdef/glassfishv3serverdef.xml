@@ -115,7 +115,7 @@
     <publisher id="org.eclipse.jst.server.generic.antpublisher">
         <publisherdata>
             <dataname>build.file</dataname>
-            <datavalue>/serverdef/sunappsrv-ant.xml</datavalue>
+            <datavalue>/serverdef/glassfishv3-ant.xml</datavalue>
         </publisherdata>
         <publisherdata>
             <dataname>target.publish.jst.web</dataname>

@@ -95,23 +95,20 @@
   
     
     <target name="undeploy.j2ee.web">
-        <property name="app.module" value="${module.name}.war"/>
-        <antcall target="undeploy"/>
+         <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/undeploy?name=${module.name}" dest="foo.html"/>
+    	  <concat>
+    	    <fileset dir="." includes="foo.html"/>
+    	  </concat>
     </target>
     
       
     <target name="deploy.j2ee.web">
 
-        <property name="app.module" value="${module.name}.war"/>
-        <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/deploy?path=${module.name}" dest="foo.html"/>
-<!--echo message= "${project.working.dir}/${module.name}"/>
-        <jar destfile="${module.name}.war"> 
-            <zipfileset dir="${project.working.dir}/${module.name}">
-                <include name="**/*.*"/>
-                <exclude name="**/jsp_servlet/*.class"/>
-                <exclude name="**/*.war"/>
-            </zipfileset>
-        </jar-->
+        <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/deploy?path=${project.working.dir}/${module.name}" dest="foo.html"/>
+        <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/redeploy?name=${module.name}" dest="foo.html"/>
+  	  <concat>
+  	    <fileset dir="." includes="foo.html"/>
+  	  </concat>
 
 <!--        
         <delete>
