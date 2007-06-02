@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  
-You may not modify, use, reproduce, or distribute this software 
-except in compliance with the terms of the License at: 
- http://developer.sun.com/berkeley_license.html
+	Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  
+	You may not modify, use, reproduce, or distribute this software 
+	except in compliance with the terms of the License at: 
+	http://developer.sun.com/berkeley_license.html
 -->
 
 <project name="GlassFish Java EE 5" default="release">
 	<target name="init">
 		<property file="build.properties" />
-		<property name="plugin.id"      value="com.sun.enterprise.jst.server.sunappsrv" />
+		<property name="plugin.id"
+			value="com.sun.enterprise.jst.server.sunappsrv" />
 		<property name="plugin.version" value="1.0.0" />
 	</target>
-	
+
 	<target name="release" depends="init">
 		<mkdir dir="plugins/${plugin.id}_${plugin.version}" />
 		<copy todir="plugins/${plugin.id}_${plugin.version}">
@@ -21,15 +22,19 @@ except in compliance with the terms of the License at:
 		<copy todir="plugins/${plugin.id}_${plugin.version}">
 			<fileset dir="${output.library.jar}" />
 		</copy>
-        		
-		<zip destfile="${plugin.id}_${plugin.version}.jar" basedir="plugins/${plugin.id}_${plugin.version}" includes="**" />
-		<copy file="${plugin.id}_${plugin.version}.jar" todir="/Users/ludo/Desktop/ecl/eclipse/plugins">
-		</copy>		 
+
+		<zip destfile="${plugin.id}_${plugin.version}.jar"
+			basedir="plugins/${plugin.id}_${plugin.version}" includes="**" />
+		<copy file="${plugin.id}_${plugin.version}.jar"
+			todir="/Users/ludo/Desktop/ecl/eclipse/plugins">
+		</copy>
 	</target>
-	<target name="clean" >
+	<target name="clean">
 		<delete dir="plugins" />
-	</target>	
+	</target>
 	<target name="archive" depends="init">
-		<zip destfile="../glassfishplugin.zip" basedir="../" includes="com.sun.enterprise.jst.server.sunappsrv/" excludes="*/CVS/,*/bin/"/>
+		<zip destfile="../glassfishplugin.zip" basedir="../"
+			includes="com.sun.enterprise.jst.server.sunappsrv/"
+			excludes="*/CVS/,*/bin/" />
 	</target>
 </project>
