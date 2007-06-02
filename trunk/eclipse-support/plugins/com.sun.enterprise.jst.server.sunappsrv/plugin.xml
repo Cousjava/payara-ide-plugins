@@ -24,103 +24,103 @@
 -->
 
 <plugin>  
- <extension point="org.eclipse.debug.core.launchConfigurationTypes">
-
-     <launchConfigurationType
-        id="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
-        name="%sunappserver.ConfigurationTypeName"
-        delegate="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunch"
-        modes="run, debug"
-        sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
-        sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
- </extension> 
-  
-  <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
-
-    <launchConfigurationTypeImage
-      id="org.eclipse.jst.server.generic.image.ui.ExternalLaunchConfigurationTypeImage"
-      configTypeID="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
-      icon="icons/obj16/sunappsrv.gif">
-    </launchConfigurationTypeImage>
-  </extension>
-  
-  <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
-
-    <launchConfigurationTabGroup
-      id="org.eclipse.jst.server.generic.ui.internal.launchConfigurationTabGroup"
-      type="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
-      class="org.eclipse.jst.server.generic.ui.internal.GenericLaunchConfigurationTabGroup">
-    </launchConfigurationTabGroup>
-  </extension>
+    <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+        
+        <launchConfigurationType
+            id="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            name="%sunappserver.ConfigurationTypeName"
+            delegate="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunch"
+            modes="run, debug"
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
+    </extension> 
+    
+    <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+        
+        <launchConfigurationTypeImage
+            id="org.eclipse.jst.server.generic.image.ui.ExternalLaunchConfigurationTypeImage"
+            configTypeID="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            icon="icons/obj16/sunappsrv.gif">
+        </launchConfigurationTypeImage>
+    </extension>
+    
+    <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+        
+        <launchConfigurationTabGroup
+            id="org.eclipse.jst.server.generic.ui.internal.launchConfigurationTabGroup"
+            type="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            class="org.eclipse.jst.server.generic.ui.internal.GenericLaunchConfigurationTabGroup">
+        </launchConfigurationTabGroup>
+    </extension>
     
     
     <extension point="org.eclipse.wst.server.core.runtimeTypes">
-     <!-- GlassFish V3 server -->
+        <!-- GlassFish V3 server -->
 
-    <runtimeType
-        id="com.sun.enterprise.jst.server.runtime.sunappsrv92"
-        name="%runtimeTypeName92" description="%runtimeTypeDescription92"
-        vendor="%runtimeTypeGlassFishVendor" version="9.2"
-        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
-        <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
-    </runtimeType>
-    
-       <!-- GlassFish V1 server -->
+        <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.sunappsrv92"
+            name="%runtimeTypeName92" description="%runtimeTypeDescription92"
+            vendor="%runtimeTypeGlassFishVendor" version="9.2"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
+        </runtimeType>
+        
+        <!-- GlassFish V1 server -->
 
-    <runtimeType
-        id="com.sun.enterprise.jst.server.runtime.sunappsrv90"
-        name="%runtimeTypeName9" description="%runtimeTypeDescription9"
-        vendor="%runtimeTypeGlassFishVendor" version="9.0"
-        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
-        <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
-        <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
-        <moduleType types="jst.connector" versions="1.0, 1.5"/>
-        <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0"/>
-        <moduleType types="jst.utility"  versions="1.0"/>
-    </runtimeType>
+        <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.sunappsrv90"
+            name="%runtimeTypeName9" description="%runtimeTypeDescription9"
+            vendor="%runtimeTypeGlassFishVendor" version="9.0"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
+            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
+            <moduleType types="jst.connector" versions="1.0, 1.5"/>
+            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0"/>
+            <moduleType types="jst.utility"  versions="1.0"/>
+        </runtimeType>
+        
+        <!-- GlassFish V3 server -->
+        <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.sunappsrv91"
+            name="%runtimeTypeName91" description="%runtimeTypeDescription91"
+            vendor="%runtimeTypeGlassFishVendor" version="9.1"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
+            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
+            <moduleType types="jst.connector" versions="1.0, 1.5"/>
+            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0"/>
+            <moduleType types="jst.utility"  versions="1.0"/>
+        </runtimeType>
+        
+        <!-- App Server 8.x server -->
 
-    <!-- GlassFish V3 server -->
-    <runtimeType
-        id="com.sun.enterprise.jst.server.runtime.sunappsrv91"
-        name="%runtimeTypeName91" description="%runtimeTypeDescription91"
-        vendor="%runtimeTypeGlassFishVendor" version="9.1"
-        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
-        <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
-        <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
-        <moduleType types="jst.connector" versions="1.0, 1.5"/>
-        <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0"/>
-        <moduleType types="jst.utility"  versions="1.0"/>
-    </runtimeType>
-
-    <!-- App Server 8.x server -->
-
-    <runtimeType
-        id="com.sun.enterprise.jst.server.runtime.sunappsrv81"
-        name="%runtimeTypeName81" description="%runtimeTypeDescription81"
-        vendor="%runtimeTypeVendor" version="8.1"
-        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
-        <moduleType types="jst.web" versions="2.2, 2.3, 2.4"/>
-        <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1"/>
-        <moduleType types="jst.ear" versions="1.2, 1.3, 1.4"/>
-        <moduleType types="jst.utility"  versions="1.0"/>
-    </runtimeType>
-
-    <runtimeType
-        id="com.sun.enterprise.jst.server.runtime.sunappsrv82"
-        name="%runtimeTypeName82" description="%runtimeTypeDescription82"
-        vendor="%runtimeTypeVendor" version="8.2"
-        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
-        <moduleType types="jst.web" versions="2.2, 2.3, 2.4"/>
-        <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1"/>
-        <moduleType types="jst.ear" versions="1.2, 1.3, 1.4"/>
-        <moduleType types="jst.utility"  versions="1.0"/>
+        <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.sunappsrv81"
+            name="%runtimeTypeName81" description="%runtimeTypeDescription81"
+            vendor="%runtimeTypeVendor" version="8.1"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4"/>
+            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1"/>
+            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4"/>
+            <moduleType types="jst.utility"  versions="1.0"/>
+        </runtimeType>
+        
+        <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.sunappsrv82"
+            name="%runtimeTypeName82" description="%runtimeTypeDescription82"
+            vendor="%runtimeTypeVendor" version="8.2"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4"/>
+            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1"/>
+            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4"/>
+            <moduleType types="jst.utility"  versions="1.0"/>
     </runtimeType>    </extension>
-
-
-
+    
+    
+    
     <extension point="org.eclipse.wst.server.core.serverTypes">
-
-         <!-- GlassFish v3 server -->
+        
+        <!-- GlassFish v3 server -->
 
         <serverType
             id="com.sun.enterprise.jst.server.sunappsrv92"
@@ -139,7 +139,7 @@
         </serverType> 
         
         
-               <!-- GlassFish v1 server -->
+        <!-- GlassFish v1 server -->
 
         <serverType
             id="com.sun.enterprise.jst.server.sunappsrv90"
@@ -156,7 +156,7 @@
             hasConfiguration="false"
             launchModes="run,debug">         
         </serverType> 
-
+        
         <!-- GlassFish v2 server -->
         <serverType
             id="com.sun.enterprise.jst.server.sunappsrv91"
@@ -172,7 +172,7 @@
             hasConfiguration="false"
             launchModes="run,debug">         
         </serverType> 
-
+        
         <serverType
             id="com.sun.enterprise.jst.server.sunappsrv81"
             name="%serverTypeName81"
@@ -204,8 +204,8 @@
             hasConfiguration="false"
             launchModes="run,debug">         
         </serverType> 
-
-    
+        
+        
     </extension>
     <!--extension point="org.eclipse.jst.server.generic.core.runtimedefinition">
         <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv92" 
@@ -215,114 +215,114 @@
 
     <extension point="org.eclipse.jst.server.generic.core.serverdefinition">
         <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv81" 
-            definitionfile="/serverdef/sunappsrv81serverdef.xml">
+                          definitionfile="/serverdef/sunappsrv81serverdef.xml">
         </serverdefinition>
         <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv82" 
-            definitionfile="/serverdef/sunappsrv82serverdef.xml">
+                          definitionfile="/serverdef/sunappsrv82serverdef.xml">
         </serverdefinition>
         
         <!-- GlassFish v3 server -->
         <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv92" 
-            definitionfile="/serverdef/glassfishv3serverdef.xml">
+                          definitionfile="/serverdef/glassfishv3serverdef.xml">
         </serverdefinition>
-
+        
         <!-- GlassFish v1 server -->
         <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv90" 
-            definitionfile="/serverdef/sunappsrv9serverdef.xml">
+                          definitionfile="/serverdef/sunappsrv9serverdef.xml">
         </serverdefinition>
-
+        
         <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv91" 
-            definitionfile="/serverdef/sunappsrv91serverdef.xml">
+                          definitionfile="/serverdef/sunappsrv91serverdef.xml">
         </serverdefinition>
-
-    
+        
+        
     </extension>
-
+    
     <extension point="org.eclipse.wst.server.ui.wizardFragments">
         
         <fragment id="org.eclipse.jst.server.generic.runtime"
-        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv81"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+                  typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv81"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
         <fragment id="org.eclipse.jst.server.generic.server"
-        typeIds="com.sun.enterprise.jst.server.sunappsrv81"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
-
+                  typeIds="com.sun.enterprise.jst.server.sunappsrv81"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+        
         <fragment id="org.eclipse.jst.server.generic.runtime"
-        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv82"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+                  typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv82"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
         <fragment id="org.eclipse.jst.server.generic.server"
-        typeIds="com.sun.enterprise.jst.server.sunappsrv82"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
-
+                  typeIds="com.sun.enterprise.jst.server.sunappsrv82"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+        
         <fragment id="org.eclipse.jst.server.generic.runtime"
-        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv90"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+                  typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv90"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
         <fragment id="org.eclipse.jst.server.generic.server"
-        typeIds="com.sun.enterprise.jst.server.sunappsrv90"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
-
+                  typeIds="com.sun.enterprise.jst.server.sunappsrv90"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+        
         <fragment id="org.eclipse.jst.server.generic.runtime"
-        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv91"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+                  typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv91"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
         <fragment id="org.eclipse.jst.server.generic.server"
-        typeIds="com.sun.enterprise.jst.server.sunappsrv91"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
-
+                  typeIds="com.sun.enterprise.jst.server.sunappsrv91"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+        
         <fragment id="org.eclipse.jst.server.generic.runtime"
-        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv92"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+                  typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv92"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
         <fragment id="org.eclipse.jst.server.generic.server"
-        typeIds="com.sun.enterprise.jst.server.sunappsrv92"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
-
+                  typeIds="com.sun.enterprise.jst.server.sunappsrv92"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+        
     </extension>
     
     <extension point="org.eclipse.wst.server.ui.serverImages">
         <image id="org.eclipse.jst.server.generic.image"
-        icon="icons/obj16/sunappsrv.gif"
-        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv81"/>
+               icon="icons/obj16/sunappsrv.gif"
+               typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv81"/>
         
         <image id="org.eclipse.jst.server.generic.image"
-        icon="icons/obj16/sunappsrv.gif"
-        typeIds="com.sun.enterprise.jst.server.sunappsrv81"/>
+               icon="icons/obj16/sunappsrv.gif"
+               typeIds="com.sun.enterprise.jst.server.sunappsrv81"/>
         
         <image id="org.eclipse.jst.server.generic.image"
-        icon="icons/obj16/sunappsrv.gif"
-        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv82"/>
+               icon="icons/obj16/sunappsrv.gif"
+               typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv82"/>
         
         <image id="org.eclipse.jst.server.generic.image"
-        icon="icons/obj16/sunappsrv.gif"
-        typeIds="com.sun.enterprise.jst.server.sunappsrv82"/>
+               icon="icons/obj16/sunappsrv.gif"
+               typeIds="com.sun.enterprise.jst.server.sunappsrv82"/>
         
         
         <image id="org.eclipse.jst.server.generic.image"
-        icon="icons/obj16/glassfishserver.gif"
-        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv90"/>
+               icon="icons/obj16/glassfishserver.gif"
+               typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv90"/>
         
         <image id="org.eclipse.jst.server.generic.image"
-        icon="icons/obj16/glassfishserver.gif"
-        typeIds="com.sun.enterprise.jst.server.sunappsrv90"/>
-
-        <image id="org.eclipse.jst.server.generic.image"
-        icon="icons/obj16/glassfishserver.gif"
-        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv91"/>
+               icon="icons/obj16/glassfishserver.gif"
+               typeIds="com.sun.enterprise.jst.server.sunappsrv90"/>
         
         <image id="org.eclipse.jst.server.generic.image"
-        icon="icons/obj16/glassfishserver.gif"
-        typeIds="com.sun.enterprise.jst.server.sunappsrv91"/>
-
-        <image id="org.eclipse.jst.server.generic.image"
-        icon="icons/obj16/glassfishserver.gif"
-        typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv92"/>
+               icon="icons/obj16/glassfishserver.gif"
+               typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv91"/>
         
         <image id="org.eclipse.jst.server.generic.image"
-        icon="icons/obj16/glassfishserver.gif"
-        typeIds="com.sun.enterprise.jst.server.sunappsrv92"/>
-
+               icon="icons/obj16/glassfishserver.gif"
+               typeIds="com.sun.enterprise.jst.server.sunappsrv91"/>
+        
+        <image id="org.eclipse.jst.server.generic.image"
+               icon="icons/obj16/glassfishserver.gif"
+               typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv92"/>
+        
+        <image id="org.eclipse.jst.server.generic.image"
+               icon="icons/obj16/glassfishserver.gif"
+               typeIds="com.sun.enterprise.jst.server.sunappsrv92"/>
+        
         
     </extension>
     
-
+    
     
     <!--extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
         <runtimeTargetHandler
@@ -336,12 +336,12 @@
             <label>%sunfacetlabel</label>
             <description>%sunfacetdescription</description>
         </project-facet>
-
+        
         <project-facet-version facet="sun.facet" version="8">
             <action type="install">
                 <delegate class="com.sun.enterprise.jst.server.sunappsrv.AppServer8Facet"/>
             </action>
-           	<constraint>
+            <constraint>
                 <or>
                     <requires facet="jst.ear" version="1.2"/>
                     <requires facet="jst.ear" version="1.3"/>
@@ -363,7 +363,7 @@
             <action type="install">
                 <delegate class="com.sun.enterprise.jst.server.sunappsrv.GlassFishFacet"/>
             </action>
-           	<constraint>
+            <constraint>
                 <or>
                     <requires facet="jst.ear" version="1.2"/>
                     <requires facet="jst.ear" version="1.3"/>
@@ -385,14 +385,14 @@
                 </or>
             </constraint>
         </project-facet-version>
-      </extension>
-   
+    </extension>
+    
     <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
         <runtimeClasspathProvider  id="com.sun.enterprise.jst.server.runtimeTarget"
-        runtimeTypeIds="com.sun.enterprise.jst.server.runtime.sunappsrv*"
-        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>
+                                   runtimeTypeIds="com.sun.enterprise.jst.server.runtime.sunappsrv*"
+                                   class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>
     </extension>
-   
+    
     <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
         <runtime-component-type   id="com.sun.enterprise.jst.server.runtime.sunappsrv"/>
         <runtime-component-version type="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="8.1"/>
@@ -452,71 +452,71 @@
         </supported>
         
     </extension>
-  
+    
     <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
         <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv81"
-        runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="8.1"/>
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="8.1"/>
         <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv82"
-        runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="8.2"/>
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="8.2"/>
         <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv90"
-        runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.0"/>
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.0"/>
         <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv91"
-        runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.1"/>
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.1"/>
         <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv92"
-        runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.2"/>
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.2"/>
     </extension>    
     
     
     <extension point="org.eclipse.wst.common.project.facet.ui.images">
         <image runtime-component-type="com.sun.enterprise.jst.server.runtime.sunappsrv"
-        path="icons/obj16/glassfishserver.gif"/>
-     
+               path="icons/obj16/glassfishserver.gif"/>
+        
     </extension>    
     
     
     <extension id="sunappsrv.defaultFacets81"
-        name="%sunfacetlabel"
-        point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+               name="%sunfacetlabel"
+               point="org.eclipse.wst.common.project.facet.core.defaultFacets">
         <default-facets>
             <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="8.1"/>
             <facet id="sun.facet" version="8" />
         </default-facets>
     </extension>    
- 
+    
     <extension id="sunappsrv.defaultFacets82"
-        name="%sunfacetlabel"
-        point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+               name="%sunfacetlabel"
+               point="org.eclipse.wst.common.project.facet.core.defaultFacets">
         <default-facets>
             <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="8.2"/>
             <facet id="sun.facet" version="8" />
         </default-facets>
-
+        
     </extension>    
-       
+    
     <extension id="sunappsrv.defaultFacets90"
-        name="%sunfacetlabel"
-        point="org.eclipse.wst.common.project.facet.core.defaultFacets">
-
+               name="%sunfacetlabel"
+               point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+        
         <default-facets>
             <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="9.0"/>
             <facet id="sun.facet" version="9" />
         </default-facets>        
         
     </extension>
-     <extension id="sunappsrv.defaultFacets91"
-        name="%sunfacetlabel"
-        point="org.eclipse.wst.common.project.facet.core.defaultFacets">
-
+    <extension id="sunappsrv.defaultFacets91"
+               name="%sunfacetlabel"
+               point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+        
         <default-facets>
             <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="9.1"/>
             <facet id="sun.facet" version="9" />
         </default-facets>        
     </extension>
+    
+    <extension id="sunappsrv.defaultFacets92"
+               name="%sunfacetlabel"
+               point="org.eclipse.wst.common.project.facet.core.defaultFacets">
         
-     <extension id="sunappsrv.defaultFacets92"
-        name="%sunfacetlabel"
-        point="org.eclipse.wst.common.project.facet.core.defaultFacets">
-
         <default-facets>
             <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="9.2"/>
             <facet id="sun.facet" version="9" />
@@ -524,36 +524,178 @@
         
     </extension>
     
-       <extension point = "org.eclipse.wst.xml.core.catalogContributions">
+    <extension point = "org.eclipse.wst.xml.core.catalogContributions">
         <catalogContribution id="default">
-
-            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.1 Servlet 2.4//EN" uri="dtds/sun-web-app_2_4-1.dtd"
-            webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_2_4-1.dtd" />
-            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.1 EJB 2.1//EN" uri="dtds/sun-ejb-jar_2_1-1.dtd"
-            webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_2_1-1.dtd" />
+            
            
-            <uri name="http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd" uri="schemas/j2ee_web_services_1_1.xsd"/>
-            <uri name="http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd" uri="schemas/j2ee_web_services_client_1_1.xsd"/>
-            <uri name="java.sun.com/xml/ns/j2ee/j2ee_1_4.xsd" uri="schemas/j2ee_1_4.xsd"/>
-            <uri name="http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd" uri="schemas/ejb-jar_2_1.xsd"/>
-            <uri name="http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd" uri="schemas/ejb-jar_3_0.xsd"/>
-            <uri name="http://java.sun.com/xml/ns/j2ee/application-client_1_4.xsd" uri="schemas/application-client_1_4.xsd"/>
-            <uri name="http://java.sun.com/xml/ns/j2ee/application_1_4.xsd" uri="schemas/application_1_4.xsd"/>
-            <uri name="http://java.sun.com/xml/ns/javaee/application_5.xsd" uri="schemas/application_5.xsd"/>
-            <uri name="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" uri="schemas/web-app_2_4.xsd"/>
-            <uri name="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" uri="schemas/web-app_2_5.xsd"/>
-
-
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 J2EE Application 1.3//EN"
+                    uri="dtds/sun-application_1_3-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application_1_3-0.dtd" />
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 8.0 J2EE Application 1.4//EN"
+                    uri="dtds/sun-application_1_4-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application_1_4-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.0 J2EE Application 1.4//EN"
+                    uri="dtds/sun-application_1_4-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application_1_4-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.1 J2EE Application 1.4//EN"
+                    uri="dtds/sun-application_1_4-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application_1_4-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 Java EE Application 5.0//EN"
+                    uri="dtds/sun-application_5_0-0.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application_5_0-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 EJB 2.0//EN"
+                    uri="dtds/sun-ejb-jar_2_0-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_2_0-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 8.0 EJB 2.1//EN"
+                    uri="dtds/sun-ejb-jar_2_1-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_2_1-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.0 EJB 2.1//EN"
+                    uri="dtds/sun-ejb-jar_2_1-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_2_1-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.1 EJB 2.1//EN"
+                    uri="dtds/sun-ejb-jar_2_1-1.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_2_1-1.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 EJB 3.0//EN"
+                    uri="dtds/sun-ejb-jar_3_0-0.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_0-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 Application Client 1.3//EN"
+                    uri="dtds/sun-application-client_1_3-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application-client_1_3-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 8.0 Application Client 1.4//EN"
+                    uri="dtds/sun-application-client_1_4-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application-client_1_4-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.0 Application Client 1.4//EN" 
+                    uri="dtds/sun-application-client_1_4-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application-client_1_4-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.1 Application Client 1.4//EN"
+                    uri="dtds/sun-application-client_1_4-1.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application-client_1_4-1.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 Application Client 5.0//EN" 
+                    uri="dtds/sun-application-client_5_0-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application-client_5_0-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 Connector 1.0//EN" 
+                    uri="dtds/sun-connector_1_0-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-connector_1_0-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 Servlet 2.3//EN"
+                    uri="dtds/sun-web-app_2_3-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_2_3-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 8.0 Servlet 2.4//EN" 
+                    uri="dtds/sun-web-app_2_4-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_2_4-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.0 Servlet 2.4//EN"
+                    uri="dtds/sun-web-app_2_4-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_2_4-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Web Server 6.1 Servlet 2.3//EN"
+                    uri="dtds/sun-web-app_2_3-1.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_2_3-1.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.1 Servlet 2.4//EN"
+                    uri="dtds/sun-web-app_2_4-1.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_2_4-1.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 Servlet 2.5//EN" 
+                    uri="dtds/sun-web-app_2_5-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_2_5-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 Application Client Container 1.0//EN" 
+                    uri="dtds/sun-application-client-container_1_0.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application-client-container_1_0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 OR Mapping //EN" 
+                    uri="dtds/sun-cmp-mapping_1_0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-cmp-mapping_1_0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.0 OR Mapping//EN" 
+                    uri="dtds/sun-cmp-mapping_1_1.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-cmp-mapping_1_1.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.1 OR Mapping//EN"
+                    uri="dtds/sun-cmp-mapping_1_2.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-cmp-mapping_1_2.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.0 Domain//EN"
+                    uri="dtds/sun-domain_1_0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems Inc.//DTD Application Server 8.0 Application Client Container//EN" 
+                    uri="dtds/sun-application-client-container_1_2.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application-client-container_1_2.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 8.1 Application Client Container //EN" 
+                    uri="dtds/sun-application-client-container_1_1.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application-client-container_1_1.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems Inc.//DTD Application Server 8.0 Domain//EN"
+                    uri="dtds/sun-domain_1_1.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_1.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems Inc.//DTD Application Server 8.1 Domain//EN"
+                    uri="dtds/sun-domain_1_1.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_1.dtd" />
+            
+            
+            
+            
+            
+            
         </catalogContribution>
     </extension> 
     
     
     
-        <extension point="org.eclipse.wst.server.ui.editorPageSections">
+    <extension point="org.eclipse.wst.server.ui.editorPageSections">
         <section id="com.sun.enterprise.jst.server.runtime.sunappsrv" order="10"
-            insertionId="org.eclipse.wst.server.editor.overview.left"
-            typeIds="com.sun.enterprise.jst.server.sunappsrv*"
-            class="com.sun.enterprise.jst.server.sunappsrv.editorsections.ServerSection">
+                 insertionId="org.eclipse.wst.server.editor.overview.left"
+                 typeIds="com.sun.enterprise.jst.server.sunappsrv*"
+                 class="com.sun.enterprise.jst.server.sunappsrv.editorsections.ServerSection">
         </section>
     </extension>
 </plugin>
