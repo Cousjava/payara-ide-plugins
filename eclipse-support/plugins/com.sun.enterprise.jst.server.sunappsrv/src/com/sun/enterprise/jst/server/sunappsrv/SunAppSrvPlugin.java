@@ -26,7 +26,8 @@ package com.sun.enterprise.jst.server.sunappsrv;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-//import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
+
+
 /**
  *Sun Servers Plugin
  */
