@@ -97,8 +97,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     public void publishModule(int kind, int deltaKind, IModule[] module,
             IProgressMonitor monitor) throws CoreException {
         SunAppSrvPlugin.logMessage("in SunAppServerBehaviour publishModule" +module);
-        super.publishModule( kind,  deltaKind, module,
-                 monitor);
+        super.publishModule( kind,  deltaKind, module,  monitor);
        
           
     }

@@ -43,30 +43,23 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 
 public class SunEjbJarXmlCreate extends AbstractDataModelOperation  {
-    
-    public SunEjbJarXmlCreate() {
-    }
-    
-    public SunEjbJarXmlCreate(IDataModel model) {
+
+	   private String version;
+   
+    public SunEjbJarXmlCreate(IDataModel model,String version /*8.x or 9.x */) {
         super(model);
+        this.version=version;
     }
     
     public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
         
-      ////  String runtimeID = model.getStringProperty(J2EEComponentCreationDataModelProvider.RUNTIME_TARGET_ID);
-        //       if (runtimeID != null && runtimeID.startsWith("GlassFish")){
-        execute();
-        //       }
-        
-        return Status.OK_STATUS;
-    }
-    
-    public void execute() {
         IVirtualComponent comp = ComponentCore.createComponent(getProject());
 
         createDeploymentPlan(getSunEjbJarFile(comp));
-
+        
+        return Status.OK_STATUS;
     }
+
     
     public static IFile getSunEjbJarFile(IVirtualComponent comp) {
         IPath deployPlanPath = comp.getRootFolder().getUnderlyingFolder()
@@ -96,8 +89,17 @@ public class SunEjbJarXmlCreate extends AbstractDataModelOperation  {
     }
     
  private String getSunEjbXml   (){
+ 	String h=null;
+	if (version.equals("8.x")){
+		h="<!DOCTYPE sun-ejb-jar PUBLIC \"-//Sun Microsystems, Inc.//DTD Application Server 8.1 EJB 2.1//EN\" \"http://www.sun.com/software/appserver/dtds/sun-ejb-jar_2_1-1.dtd\">\n";
+
+	}
+	else{
+		h="<!DOCTYPE sun-ejb-jar PUBLIC \"-//Sun Microsystems, Inc.//DTD Application Server 9.0 EJB 3.0//EN\" \"http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_0-0.dtd\">\n";
+
+	}
 	 return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
-"<!DOCTYPE sun-ejb-jar PUBLIC \"-//Sun Microsystems, Inc.//DTD Application Server 9.0 EJB 3.0//EN\" \"http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_0-0.dtd\">\n"+
+h+
 "<sun-ejb-jar>\n"+
 "  <enterprise-beans/>\n"+
 "</sun-ejb-jar>\n";

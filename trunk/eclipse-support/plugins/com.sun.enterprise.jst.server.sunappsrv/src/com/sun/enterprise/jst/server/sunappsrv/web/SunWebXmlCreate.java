@@ -44,33 +44,23 @@ import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 public class SunWebXmlCreate extends AbstractDataModelOperation  {
+    private String version;
+
     
-    public SunWebXmlCreate() {
-    }
-    
-    public SunWebXmlCreate(IDataModel model) {
+    public SunWebXmlCreate(IDataModel model,String version /*8.x or 9.x */) {
         super(model);
+        this.version=version;
     }
     
     public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
         
-  //ludo j1      String runtimeID = model.getStringProperty(J2EEComponentCreationDataModelProvider.RUNTIME_TARGET_ID);
-        //       if (runtimeID != null && runtimeID.startsWith("GlassFish")){
-        execute();
-        //       }
+        IVirtualComponent comp = ComponentCore.createComponent(getProject());       
+        createDeploymentPlan(getWebDeploymentPlanFile(comp));
         
         return Status.OK_STATUS;
     }
     
-    public void execute() {
-        IVirtualComponent comp = ComponentCore.createComponent(getProject());
-        
-//////        String type = J2EEProjectUtilities.getJ2EEProjectType(getProject());
-//////
-//////        if (IModuleConstants.JST_WEB_MODULE.equals(type)) {
-        createDeploymentPlan(getWebDeploymentPlanFile(comp));
-////        }
-    }
+
     
     public static IFile getWebDeploymentPlanFile(IVirtualComponent comp) {
         IPath deployPlanPath = comp.getRootFolder().getUnderlyingFolder()
@@ -104,8 +94,17 @@ public class SunWebXmlCreate extends AbstractDataModelOperation  {
      }
     
     private String getDefautSunWeb(String contextRoot){
+    	String h=null;
+    	if (version.equals("8.x")){
+    		h="<!DOCTYPE sun-web-app PUBLIC \"-//Sun Microsystems, Inc.//DTD Application Server 8.1 Servlet 2.4//EN\" \"http://www.sun.com/software/appserver/dtds/sun-web-app_2_4-0.dtd\">\n";
+	
+    	}
+    	else{
+    		h="<!DOCTYPE sun-web-app PUBLIC \"-//Sun Microsystems, Inc.//DTD Application Server 9.0 Servlet 2.5//EN\" \"http://www.sun.com/software/appserver/dtds/sun-web-app_2_5-0.dtd\">\n";
+
+    	}
     	return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
-"<!DOCTYPE sun-web-app PUBLIC \"-//Sun Microsystems, Inc.//DTD Application Server 9.0 Servlet 2.5//EN\" \"http://www.sun.com/software/appserver/dtds/sun-web-app_2_5-0.dtd\">\n"+
+    	h+
 "<sun-web-app error-url=\"\">\n"+
 "  <context-root>/"+contextRoot+"</context-root>\n"+
 "  <class-loader delegate=\"true\"/>\n"+
