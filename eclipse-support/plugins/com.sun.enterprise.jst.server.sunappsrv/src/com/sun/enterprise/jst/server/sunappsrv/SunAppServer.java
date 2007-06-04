@@ -25,6 +25,7 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,34 +55,36 @@ public class SunAppServer extends GenericServer {
     
   	
 	
-  
+  public Map<String, String> getProps(){
+	  return getServerInstanceProperties();
+  }
     
     public String getServerPort() {
-        return (String) getServerInstanceProperties().get(SERVERPORT);
+        return (String) getProps().get(SERVERPORT);
     }
     public void setServerPort(String value) {
-        getServerInstanceProperties().put(SERVERPORT, value);
+    	getProps().put(SERVERPORT, value);
     }
     public String getAdminServerPort() {
-        return (String) getServerInstanceProperties().get(ADMINSERVERPORT);
+        return (String) getProps().get(ADMINSERVERPORT);
     }
     public void setAdminServerPort(String value) {
-        getServerInstanceProperties().put(ADMINSERVERPORT, value);
+    	getProps().put(ADMINSERVERPORT, value);
     }
     
     public String getAdminName() {
-        return (String) getServerInstanceProperties().get(ADMINNAME);
+        return (String) getProps().get(ADMINNAME);
     }
     public void setAdminName(String value) {
-        getServerInstanceProperties().put(ADMINNAME, value);
+    	getProps().put(ADMINNAME, value);
     }
     
     
     public String getdomainName() {
-        return (String) getServerInstanceProperties().get(DOMAINNAME);
+        return (String) getProps().get(DOMAINNAME);
     }
     public String getServerAddress() {
-        return (String) getServerInstanceProperties().get(ADDRESS);
+        return (String) getProps().get(ADDRESS);
     }
     
     public void  saveConfiguration(IProgressMonitor m) throws CoreException  {
@@ -92,10 +95,10 @@ public class SunAppServer extends GenericServer {
     
     public String getAdminPassword() {
         
-        return (String) getServerInstanceProperties().get(ADMINPASSWORD);
+        return (String) getProps().get(ADMINPASSWORD);
     }
     public void setAdminPassword(String value) {
-        getServerInstanceProperties().put(ADMINPASSWORD, value); 
+    	getProps().put(ADMINPASSWORD, value); 
         SunAppSrvPlugin.logMessage("In  setAdminPassword)"+ value);
         try {
             //this.saveConfiguration(new NullProgressMonitor());

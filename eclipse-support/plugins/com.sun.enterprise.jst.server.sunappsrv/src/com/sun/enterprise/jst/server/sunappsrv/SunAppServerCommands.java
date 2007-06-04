@@ -24,13 +24,16 @@
 package com.sun.enterprise.jst.server.sunappsrv;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.internal.command.ServerCommand;
+import org.eclipse.core.commands.operations.AbstractOperation;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 
 /* set all the different app server props using the generic do/undo framework
  *
  **/
 
-public class SunAppServerCommands extends ServerCommand {
+public class SunAppServerCommands  extends AbstractOperation {
     
     protected String value;
     protected String oldValue;
@@ -39,28 +42,33 @@ public class SunAppServerCommands extends ServerCommand {
     SunAppServer sunServer;
     
     public SunAppServerCommands(IServerWorkingCopy server, String newValue, String commandName) {
-        super(server, commandName);
+        super( commandName);
+        sunServer = SunAppServer.getSunAppServer(server);
         this.value = newValue;
         this.commandName = commandName;
     }
     
+     
+
     
-    public void execute() {
-        
-        sunServer = SunAppServer.getSunAppServer(server);
+	public IStatus execute(IProgressMonitor monitor, IAdaptable adapt) {
         oldValue=  (String) sunServer.getServerInstanceProperties().get(commandName);
         sunServer.getServerInstanceProperties().put(commandName, value);
-        
-    }
-    
-    
-    public void undo() {
+        return null;
+	}
+
+
+
+	public IStatus undo(IProgressMonitor monitor, IAdaptable adapt) {
         if (sunServer != null) {
             sunServer.getServerInstanceProperties().put(commandName, oldValue);
         }
-    }
-    
-    
+        return null;
+	}
+	
+	public IStatus redo(IProgressMonitor monitor, IAdaptable adapt) {
+		return execute(monitor, adapt);
+	}    
     
     
 }

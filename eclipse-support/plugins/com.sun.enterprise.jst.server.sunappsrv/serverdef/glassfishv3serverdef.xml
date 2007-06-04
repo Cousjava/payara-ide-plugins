@@ -105,13 +105,12 @@
 		<classpathReference>sunappsrv.project</classpathReference>
 	</start>
 	
-	<stop>
-		<mainClass>com.xxx.fixME</mainClass>
-		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
-		<programArguments></programArguments>
-		<vmParameters></vmParameters>
-		<classpathReference>sunappsrv.project</classpathReference>
-	</stop>
+    <stop>
+        <external>${sunappserver.rootdirectory}/bin/asadmin stop-domain ${sunappserver.domainname}</external>
+        <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat stop-domain ${sunappserver.domainname} </external>
+        <programArguments></programArguments>
+        <workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
+    </stop>
         
     <publisher id="org.eclipse.jst.server.generic.antpublisher">
         <publisherdata>

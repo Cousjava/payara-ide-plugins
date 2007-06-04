@@ -42,6 +42,7 @@ import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
+import org.eclipse.core.commands.ExecutionException;
 
 import com.sun.enterprise.jst.server.sunappsrv.ejbjar.SunEjbJarXmlCreate;
 import com.sun.enterprise.jst.server.sunappsrv.web.SunWebXmlCreate;
@@ -61,20 +62,22 @@ public class AppServer8Facet implements IDelegate {
 ///        model.setStringProperty(IComponentCreationDataModelProperties.COMPONENT_NAME, virtualC.getName());
 ///        model.setStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME, prj.getName());
         String type = J2EEProjectUtilities.getJ2EEProjectType(getProject(model ));
-        
+        try{
         if (IModuleConstants.JST_WEB_MODULE.equals(type)) {
-            SunWebXmlCreate swa= new SunWebXmlCreate(model);
-            swa.execute();
+            SunWebXmlCreate swa= new SunWebXmlCreate(model,"8.x");
+            swa.execute(monitor,null);
         } else if (IModuleConstants.JST_EJB_MODULE.equals(type)) {
-            SunEjbJarXmlCreate sej= new SunEjbJarXmlCreate(model);
-            sej.execute();
+            SunEjbJarXmlCreate sej= new SunEjbJarXmlCreate(model,"8.x");
+            sej.execute(monitor,null);
         } else if (IModuleConstants.JST_EAR_MODULE.equals(type)) {
             
         } else if (IModuleConstants.JST_CONNECTOR_MODULE.equals(type)) {
         }
-        
-        
-        
+        }catch (ExecutionException e){
+        	
+        }
+
+      
         
     }
     public IProject getProject(IDataModel model ) {
