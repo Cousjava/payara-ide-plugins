@@ -25,6 +25,8 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.runtime.CoreException;
@@ -33,13 +35,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.RuntimeProcess;
-import org.eclipse.jdt.internal.launching.JavaRemoteApplicationLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
+import org.eclipse.jdt.launching.IVMConnector;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
@@ -48,10 +49,7 @@ import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 
 public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate {
     
-    
-    
-    private static JavaRemoteApplicationLaunchConfigurationDelegate debuggingDelegate =
-            new JavaRemoteApplicationLaunchConfigurationDelegate();
+
     
     public SunAppServerLaunch(){
          SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch ctor");
@@ -71,18 +69,22 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         
     public void launch(ILaunchConfiguration configuration,  String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
         SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch launch");
-       ////////  if (mode.equals("debug")) ...
+        String debugFlag="--debug=false";
+         if (mode.equals("debug")) {
+        	 debugFlag="--debug";
+         }
         
         IServer server = ServerUtil.getServer(configuration);
         if (server == null) {
             abort("missing Server", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
-        
+       
         SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
         String asadminCmd =  serverBehavior.getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+getScriptExtension();
         String domain = serverBehavior.getDomainName();
         String arr[] = { asadminCmd,
             "start-domain",        
+            debugFlag,
             "--verbose",
            domain
         };
@@ -95,35 +97,43 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         } catch (IOException ioe) {
             abort("error Launching Executable", ioe,  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException ex) {}
-        serverBehavior.startPingingThread();       
-        
+
+        for (int i=0;i<30;i++){//max 60 seconds for start.
+            try {
+                Thread.sleep(2000);//2 secs
+                              
+                SunAppServer  sunserver = serverBehavior.getSunAppServer();
+                if (sunserver.isRunning()){
+                	
+                    serverBehavior.startPingingThread();       
+                    setDefaultSourceLocator(launch, configuration);
+                    monitor.worked(1);
+                    if (mode.equals("debug")) {
+
+                   Map<String, String> argMap = new HashMap<String , String>();
+                    
+                   argMap.put("hostname", "localhost"); 
+                   argMap.put("port", "9009");  
+                   argMap.put("timeout", "25000");  
+                    String connectorId = getVMConnectorId(configuration);
+                    IVMConnector connector = null;
+                    if (connectorId == null) {
+                        connector = JavaRuntime.getDefaultVMConnector();
+                    } else {
+                        connector = JavaRuntime.getVMConnector(connectorId);
+                    }      
+                    // connect to remote VM
+                    connector.connect(argMap, monitor, launch);
+                    }
+                	return;
+                }
+            } catch (InterruptedException ex) {}
+            }
+
+               
 
     }
-    
-    
-    
-    protected static void startDebugging(ILaunchConfigurationWorkingCopy wc,  String mode,  ILaunch launch,  IProgressMonitor monitor) throws CoreException {
-        debuggingDelegate.launch(wc, mode, launch, monitor);
-    }
-    
-//    private void setDebugArgument(ILaunchConfigurationWorkingCopy config, String attribKey, String key, String arg) {
-//        try {
-//            Map args = config.getAttribute(attribKey, (Map)null);
-//            if (args!=null) {
-//                args = new HashMap(args);
-//            } else {
-//                args = new HashMap();
-//            }
-//            args.put(key, String.valueOf(arg));
-//            config.setAttribute(attribKey, args);
-//        } catch (CoreException ce) {
-//           
-//        }
-//    }
-    
+ 
     
     
 }
