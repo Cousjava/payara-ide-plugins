@@ -53,7 +53,7 @@ public class SunAppServer extends GenericServer {
     public SunAppServer(){
     }
     
-  	
+	
 	
   public Map<String, String> getProps(){
 	  return getServerInstanceProperties();
