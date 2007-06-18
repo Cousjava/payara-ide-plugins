@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+
+  
+  <title>GlassFish and Eclipse 3.3</title>
+</head>
+
+
+<body>
+
+
+<h1>Eclipse 3.3 and GlassFish Java EE 5 integration</h1>
+
+
+<br>
+
+
+Download the Eclipse IDE 3.3 for Java Enterprise Developers (122Mb)
+(tools for Java Developers creating JEE and Web applications, including
+a Java IDE, tools for JEE and JSF, Mylyn and others...:<br>
+
+
+<br>
+
+
+<a href="http://www.eclipse.org/downloads/indexProto.php">http://www.eclipse.org/downloads/indexProto.php</a><br>
+
+
+<br>
+
+
+<br>
+
+
+Install the IDE and start it...Then:<br>
+
+
+<br>
+
+
+<br>
+
+
+<table style="text-align: left; width: 100%;" border="0" cellpadding="4" cellspacing="4">
+
+
+  <tbody>
+
+
+    <tr>
+
+
+      <td>Now,
+switch to the "Java EE" perspective:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-90.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Now,
+In the Server Tab, use the popup menu to call the "New Server" wizard:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-91.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td>Click on the link "Download addtional server adapters".</td>
+
+
+      <td align="undefined" valign="undefined">
+      <img alt="1" src="ishot-69.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined"></td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-70.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Select
+the GlassFish Java EE 5 Server entry</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-71.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Accept
+the license to download the GlassFish adapter</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-72.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Eclipse
+will now download the adater from the GlassFish update Center. Click
+the OK button to continue.</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-73.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">After
+the download, Eclipse will prompt for a restart. Click the Yes button
+to continue:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-74.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">After
+a fresh restart, you'll see the GlassFish category in the "New Server"
+wizard:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-75.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Select
+a version of GlassFish you want to work with, for example GlassFish V2:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-76.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Using
+the "Browse..." buttton, navigate to a correct GlassFish installation
+directory. IF you have not installed GlassFish, get it from <br>
+
+
+      <a href="https://glassfish.dev.java.net/downloads/v2-b41d.html">https://glassfish.dev.java.net/downloads/v2-b41d.html</a></td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-77.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">In
+the Next step of the wizard, you can fine tune some server properties.
+Default values are usually correct, but adapt them to your environment:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-78.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">A
+new Server (GlassFish V2) is now added to the Servers tab. Using the
+popup meny, you can start it:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-92.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Once
+started, the server status will be shown as "Started". </td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-80.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Using
+the Console Tab, you can see the server log content:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-81.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Now
+it is time to create a Java EE 5 Web Application: on the PRoject
+Explorer view, if you are using the Java EE perspective, you can use
+the Popup menu New-&gt;Dynamic Web Project:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-93.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Enter
+a name and verify that the Target runtime is GlassFish V2 Java EE 5</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-83.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">In
+the Next step, you can verify the that version for Web Application is
+Servelt 2.5 (java EE 5 compliant), and if you want a default
+sun-web.xml deployment descriptor, make sure this facet is selected (on
+by default):</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-84.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">You
+see the new Web Application on the Project explorer. &nbsp;Just
+create a new JSP index,jsp (Eclipse does not create it by default):</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-85.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Using
+the green run button on the Eclipse Tool bar, you are presented with
+the following choices. Pick the "Run on Server" item:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-86.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">Click
+the Finish button on the "Run On Server" wizard:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-87.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">The Web Application is
+deployed to GlassFish and the index.jsp page is shown in the internal
+broswer in Eclipse. You can see the deployment status in the Eclipse
+Console</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-94.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">If you need to debug, you could also "DEbug" this Web Application</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-88.png"></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td align="undefined" valign="undefined">And the GlassFish V2 server will restart in debug mode, and Eclipse will attach to the debugged server.<br>
+
+If you set a breakpoint on a JSP, the server will be stopped and you
+can use all the Debugger features from Eclipse to debug your Java EE
+application:</td>
+
+
+      <td align="undefined" valign="undefined"><img alt="1" src="ishot-89.png"></td>
+
+
+    </tr>
+
+
+  
+  </tbody>
+</table>
+
+
+<br>
+
+
+</body>
+</html>
