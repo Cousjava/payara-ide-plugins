@@ -101,7 +101,7 @@
         <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat start-domain   --verbose=true ${sunappserver.domainname} </external>
         <programArguments>}</programArguments>
         <workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
-        <debugPort>567</debugPort>
+        <debugPort>9009</debugPort>
 
     </start>
 
