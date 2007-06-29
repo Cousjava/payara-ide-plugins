@@ -112,7 +112,7 @@
             <arg line=" --name ${module.name}"/>
             <arg line=" --force=true "/>
  
-            <arg line="${project.working.dir}/${module.name}" />
+            <arg line="'${project.working.dir}/${module.name}'" />
         </exec>
         <echo message="Application dir Deployed at: ${app.url}"/>
     </target>

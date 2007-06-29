@@ -88,7 +88,7 @@
             <arg line=" --name ${module.name}"/>
             <arg line=" --force=true "/>
  
-            <arg line="${project.working.dir}/${module.name}" />
+            <arg line="'${project.working.dir}/${module.name}'" />
         </exec>
         <echo message="Application dir Deployed at: ${app.url}"/>
     </target>
@@ -103,8 +103,10 @@
     
       
     <target name="deploy.j2ee.web">
-
-        <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/deploy?path=${project.working.dir}/${module.name}" dest="foo.html"/>
+    	   <concat destfile="fooFile.properties">dirtodeploy=${project.working.dir}/${module.name}</concat>
+    	   <replace file="fooFile.properties" token=" " value="%20"/>
+    	  <property file="fooFile.properties"/>
+        <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/deploy?path=${dirtodeploy}" dest="foo.html"/>
         <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/redeploy?name=${module.name}" dest="foo.html"/>
   	  <concat>
   	    <fileset dir="." includes="foo.html"/>
