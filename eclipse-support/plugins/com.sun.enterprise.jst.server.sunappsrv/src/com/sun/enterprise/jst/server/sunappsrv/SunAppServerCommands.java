@@ -52,8 +52,8 @@ public class SunAppServerCommands  extends AbstractOperation {
 
     
 	public IStatus execute(IProgressMonitor monitor, IAdaptable adapt) {
-        oldValue=  (String) sunServer.getServerInstanceProperties().get(commandName);
-        sunServer.getServerInstanceProperties().put(commandName, value);
+        oldValue=  (String) sunServer.getProps().get(commandName);
+        sunServer.getProps().put(commandName, value);
         return null;
 	}
 
@@ -61,7 +61,7 @@ public class SunAppServerCommands  extends AbstractOperation {
 
 	public IStatus undo(IProgressMonitor monitor, IAdaptable adapt) {
         if (sunServer != null) {
-            sunServer.getServerInstanceProperties().put(commandName, oldValue);
+            sunServer.getProps().put(commandName, oldValue);
         }
         return null;
 	}
