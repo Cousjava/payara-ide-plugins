@@ -20,6 +20,7 @@ public class OptionsContainer extends javax.swing.JFrame {
         tabsPanel.addTab("PHP", new PHPPanel());
         tabsPanel.addTab("MySQL", new MySQLPanel());
         tabsPanel.addTab("FTP", new FTPPanel());
+        pack();
     }
     
     /** This method is called from within the constructor to
@@ -53,7 +54,7 @@ public class OptionsContainer extends javax.swing.JFrame {
             .addGroup(buttonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(okButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 236, Short.MAX_VALUE)
                 .addComponent(cancelButton)
                 .addContainerGap())
         );
@@ -68,6 +69,8 @@ public class OptionsContainer extends javax.swing.JFrame {
         );
 
         getContentPane().add(buttonsPanel, java.awt.BorderLayout.PAGE_END);
+
+        tabsPanel.setMinimumSize(new java.awt.Dimension(0, 0));
         getContentPane().add(tabsPanel, java.awt.BorderLayout.CENTER);
 
         pack();
