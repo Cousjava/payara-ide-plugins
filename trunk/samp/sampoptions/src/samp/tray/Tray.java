@@ -1,5 +1,3 @@
-
-
 package samp.tray;
 
 import java.awt.AWTException;
@@ -14,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import javax.swing.ImageIcon;
+import samp.options.OptionsContainer;
 
 public class Tray {
 
@@ -76,8 +75,17 @@ public class Tray {
 
                 public void actionPerformed(ActionEvent e) {
                     trayIcon.displayMessage("Action Event", "An Action Event Has Been Peformed!", TrayIcon.MessageType.INFO);
+                    java.awt.EventQueue.invokeLater(new Runnable() {
+
+                        public void run() {
+                            new OptionsContainer().setVisible(true);
+                        }
+                    });
                 }
             };
+
+
+
 
             trayIcon.setImageAutoSize(true);
             trayIcon.addActionListener(actionListener);
