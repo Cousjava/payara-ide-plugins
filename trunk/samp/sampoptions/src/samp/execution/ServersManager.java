@@ -23,27 +23,40 @@ import java.util.logging.Logger;
 public class ServersManager {
 
     static public void StartServers() {
-        Desktop desktop = null;
-        // Before more Desktop API is used, first check
-        // whether the API is supported by this particular
-        // virtual machine (VM) on this particular host.
-        if (Desktop.isDesktopSupported()) {
-            desktop = Desktop.getDesktop();
-        }
-        if (desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                // launch browser
-                URI uri = new URI("http://localhost:8888");
-                desktop.browse(uri);
-            } catch (IOException ex) {
-                Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (URISyntaxException ex2) {
-                Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex2);
+        try {
+            // svcadm enable apache2
+            Process p = new ProcessBuilder("svcadm", "enable", "apache2").start();
+
+            Desktop desktop = null;
+            // Before more Desktop API is used, first check
+            // whether the API is supported by this particular
+            // virtual machine (VM) on this particular host.
+            if (Desktop.isDesktopSupported()) {
+                desktop = Desktop.getDesktop();
             }
+            if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    // launch browser
+                    URI uri = new URI("http://localhost");
+                    desktop.browse(uri);
+                } catch (IOException ex) {
+                    Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (URISyntaxException ex2) {
+                    Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex2);
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
         static public void StopServers() {
+        try {
             System.out.println("stopping apache2 and MySql");
+            // svcadm enable apache2
+            Process p = new ProcessBuilder("svcadm", "disable", "apache2").start();
+        } catch (IOException ex) {
+            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         }
 
 }
