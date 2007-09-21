@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import javax.swing.ImageIcon;
+import samp.execution.ServersManager;
 import samp.options.OptionsContainer;
 
 public class Tray {
@@ -50,24 +51,61 @@ public class Tray {
                 }
             };
 
-            ActionListener exitListener = new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println(getBundle().getString("LABEL_Exiting"));
-                    System.exit(0);
-                }
-            };
 
             PopupMenu popup = new PopupMenu();
+            MenuItem defaultItem;
+            popup.add(defaultItem = new MenuItem(getBundle().getString("LABEL_Start")));
+            defaultItem.addActionListener(new ActionListener() {
 
-            popup.add(new MenuItem(getBundle().getString("LABEL_Start")));
-            popup.add(new MenuItem(getBundle().getString("LABEL_Stop")));
-            popup.add(new MenuItem(getBundle().getString("LABEL_Options")));
-            popup.add(new MenuItem(getBundle().getString("LABEL_Administer_MySQL")));
-            popup.add(new MenuItem(getBundle().getString("LABEL_Logs")));
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Start");
+                    ServersManager.StartServers();
+                }
+            });
+            popup.add(defaultItem = new MenuItem(getBundle().getString("LABEL_Stop")));
+            defaultItem.addActionListener(new ActionListener() {
 
-            MenuItem defaultItem = new MenuItem(getBundle().getString("LABEL_Exit"));
-            defaultItem.addActionListener(exitListener);
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("stop");
+                     ServersManager.StopServers();
+               }
+            });
+            popup.add(defaultItem = new MenuItem(getBundle().getString("LABEL_Options")));
+            defaultItem.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("options");
+                    java.awt.EventQueue.invokeLater(new Runnable() {
+
+                        public void run() {
+                            new OptionsContainer().setVisible(true);
+                        }
+                    });
+                }
+            });
+            popup.add(defaultItem = new MenuItem(getBundle().getString("LABEL_Administer_MySQL")));
+            defaultItem.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("admin mysql");
+                }
+            });
+            popup.add(defaultItem = new MenuItem(getBundle().getString("LABEL_Logs")));
+            defaultItem.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("logs");
+                }
+            });
+            defaultItem = new MenuItem(getBundle().getString("LABEL_Exit"));
+            defaultItem.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Exiting");
+                    System.exit(0);
+                }
+            });
             popup.add(defaultItem);
             trayIcon = new TrayIcon(image, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
 
@@ -75,12 +113,6 @@ public class Tray {
 
                 public void actionPerformed(ActionEvent e) {
                     trayIcon.displayMessage("Action Event", "An Action Event Has Been Peformed!", TrayIcon.MessageType.INFO);
-                    java.awt.EventQueue.invokeLater(new Runnable() {
-
-                        public void run() {
-                            new OptionsContainer().setVisible(true);
-                        }
-                    });
                 }
             };
 
