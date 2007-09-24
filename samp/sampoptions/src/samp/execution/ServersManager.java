@@ -46,7 +46,7 @@ public class ServersManager {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
         }
     }
         static public void StopServers() {
@@ -55,7 +55,7 @@ public class ServersManager {
             // svcadm enable apache2
             Process p = new ProcessBuilder("svcadm", "disable", "apache2").start();
         } catch (IOException ex) {
-            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
         }
         }
 
