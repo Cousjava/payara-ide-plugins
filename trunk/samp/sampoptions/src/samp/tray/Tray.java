@@ -1,6 +1,8 @@
 package samp.tray;
 
 import java.awt.AWTException;
+import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -8,10 +10,16 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
 import samp.execution.ServersManager;
 import samp.options.OptionsContainer;
 
@@ -20,11 +28,13 @@ public class Tray {
     public Tray() {
 
         final TrayIcon trayIcon;
+        final PopupMenu popup = new PopupMenu();
+        
 
         if (SystemTray.isSupported()) {
 
-            SystemTray tray = SystemTray.getSystemTray();
-            URL url = this.getClass().getResource("resources/samp32.jpg");
+            final SystemTray tray = SystemTray.getSystemTray();
+            URL url = this.getClass().getResource("resources/gnome-html.png");
 
             Image image = new ImageIcon(url).getImage();
 
@@ -44,6 +54,7 @@ public class Tray {
 
                 public void mousePressed(MouseEvent e) {
                     System.out.println("Tray Icon - Mouse pressed!");
+                    new aa();
                 }
 
                 public void mouseReleased(MouseEvent e) {
@@ -53,9 +64,9 @@ public class Tray {
 
 
 
-            PopupMenu popup = new PopupMenu();
+
             MenuItem defaultItem;
-            popup.add(defaultItem = new MenuItem(getBundle().getString("LABEL_Start")));
+            popup.add(defaultItem = new MenuItem(" "+getBundle().getString("LABEL_Start")));
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -63,15 +74,15 @@ public class Tray {
                     ServersManager.StartServers();
                 }
             });
-            popup.add(defaultItem = new MenuItem(getBundle().getString("LABEL_Stop")));
+            popup.add(defaultItem = new MenuItem(" "+getBundle().getString("LABEL_Stop")));
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("stop");
-                     ServersManager.StopServers();
-               }
+                    ServersManager.StopServers();
+                }
             });
-            popup.add(defaultItem = new MenuItem(getBundle().getString("LABEL_Options")));
+            popup.add(defaultItem = new MenuItem(" "+getBundle().getString("LABEL_Options")));
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -84,21 +95,23 @@ public class Tray {
                     });
                 }
             });
-            popup.add(defaultItem = new MenuItem(getBundle().getString("LABEL_Administer_MySQL")));
+            
+            popup.add(defaultItem = new MenuItem(" "+getBundle().getString("LABEL_Administer_MySQL")));
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("admin mysql");
+                    new aa();
                 }
             });
-            popup.add(defaultItem = new MenuItem(getBundle().getString("LABEL_Logs")));
+            popup.add(defaultItem = new MenuItem(" "+getBundle().getString("LABEL_Logs")));
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("logs");
                 }
             });
-            defaultItem = new MenuItem(getBundle().getString("LABEL_Exit"));
+            defaultItem = new MenuItem(" "+getBundle().getString("LABEL_Exit"));
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -107,7 +120,15 @@ public class Tray {
                 }
             });
             popup.add(defaultItem);
-            trayIcon = new TrayIcon(image, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
+            
+            //empty one
+            popup.add(defaultItem = new MenuItem("SAMP Console"));
+            defaultItem.setFont(new Font("Monospaced",Font.BOLD,24));
+defaultItem.setEnabled(false);
+            trayIcon = new TrayIcon(image, 
+                    getBundle().getString("TOOLTIP_Samp_Tooling"), 
+                    popup);
+
 
             ActionListener actionListener = new ActionListener() {
 
@@ -121,7 +142,7 @@ public class Tray {
 
             trayIcon.setImageAutoSize(true);
             trayIcon.addActionListener(actionListener);
-            trayIcon.addMouseListener(mouseListener);
+           // trayIcon.addMouseListener(mouseListener);
 
             try {
                 tray.add(trayIcon);
@@ -135,5 +156,27 @@ public class Tray {
 
     public static java.util.ResourceBundle getBundle() {
         return java.util.ResourceBundle.getBundle("samp/tray/Bundle");
+    }
+
+    static class aa extends JWindow {
+
+        public aa() {
+            this.getContentPane().setLayout(new BorderLayout());
+            JLabel aa=new JLabel("sdfsdsdf");
+           final JPopupMenu pm =new JPopupMenu();
+            JMenuItem jmi = new JMenuItem("sdsdsds");
+            pm.add(jmi);
+            this.getContentPane().add(pm);
+            this.getContentPane().add(aa, BorderLayout.CENTER);
+            pack();
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    setLocation(500,500);
+                    setVisible(true);
+                    pm.show();
+                }
+            });
+        }
     }
 }

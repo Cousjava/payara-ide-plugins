@@ -6,6 +6,11 @@
 
 package samp.options;
 
+import java.awt.Image;
+import java.net.URL;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 /**
  *
  * @author  ludo
@@ -20,8 +25,13 @@ public class OptionsContainer extends javax.swing.JFrame {
         tabsPanel.addTab("PHP", new PHPPanel());
         tabsPanel.addTab("MySQL", new MySQLPanel());
         tabsPanel.addTab("FTP", new FTPPanel());
+        
+       
         pack();
         setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+            URL url = samp.tray.Tray.class.getResource("resources/gnome-html.png");
+
+            Image image = new ImageIcon(url).getImage();        setIconImage(image);
     }
     
     /** This method is called from within the constructor to
@@ -32,16 +42,17 @@ public class OptionsContainer extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        titleLabel = new javax.swing.JLabel();
+        titleLabel = new JLabel(new ImageIcon(samp.tray.Tray.class.getResource("resources/open.png")));
+
+        ;
         buttonsPanel = new javax.swing.JPanel();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         tabsPanel = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("samp/tray/Bundle"); // NOI18N
-        titleLabel.setText(bundle.getString("LABEL_Title")); // NOI18N
+        setTitle(bundle.getString("LABEL_Title")); // NOI18N
         getContentPane().add(titleLabel, java.awt.BorderLayout.PAGE_START);
 
         okButton.setText(bundle.getString("LABEL_OK")); // NOI18N
@@ -65,7 +76,7 @@ public class OptionsContainer extends javax.swing.JFrame {
             .addGroup(buttonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(okButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 236, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 318, Short.MAX_VALUE)
                 .addComponent(cancelButton)
                 .addContainerGap())
         );
