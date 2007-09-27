@@ -1,25 +1,24 @@
 package samp.tray;
 
 import java.awt.AWTException;
-import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JWindow;
-import javax.swing.SwingUtilities;
 import samp.execution.ServersManager;
 import samp.options.OptionsContainer;
 
@@ -29,7 +28,6 @@ public class Tray {
 
         final TrayIcon trayIcon;
         final PopupMenu popup = new PopupMenu();
-        
 
         if (SystemTray.isSupported()) {
 
@@ -54,7 +52,7 @@ public class Tray {
 
                 public void mousePressed(MouseEvent e) {
                     System.out.println("Tray Icon - Mouse pressed!");
-                    new aa();
+
                 }
 
                 public void mouseReleased(MouseEvent e) {
@@ -87,10 +85,13 @@ public class Tray {
 
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("options");
+                    
                     java.awt.EventQueue.invokeLater(new Runnable() {
 
                         public void run() {
-                            new OptionsContainer().setVisible(true);
+
+                            OptionsContainer.getInstance().setVisible(true);
+                            OptionsContainer.getInstance().toFront();
                         }
                     });
                 }
@@ -101,14 +102,31 @@ public class Tray {
 
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("admin mysql");
-                    new aa();
+
                 }
             });
-            popup.add(defaultItem = new MenuItem(" "+getBundle().getString("LABEL_Logs")));
+            Menu logsMenu = new Menu(" "+getBundle().getString("LABEL_Logs"));
+            popup.add(logsMenu);
+            logsMenu.add(defaultItem = new MenuItem("php log"));
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("logs");
+            Desktop desktop = null;
+            // Before more Desktop API is used, first check
+            // whether the API is supported by this particular
+            // virtual machine (VM) on this particular host.
+            if (Desktop.isDesktopSupported()) {
+                desktop = Desktop.getDesktop();
+            }
+            if (desktop.isSupported(Desktop.Action.OPEN)) {
+                try {
+             
+                    desktop.open(new File("/Users/ludo/build.xml"));
+                } catch (IOException ex) {
+                    Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+                } 
+            }
                 }
             });
             defaultItem = new MenuItem(" "+getBundle().getString("LABEL_Exit"));
@@ -134,6 +152,7 @@ defaultItem.setEnabled(false);
 
                 public void actionPerformed(ActionEvent e) {
                     trayIcon.displayMessage("Action Event", "An Action Event Has Been Peformed!", TrayIcon.MessageType.INFO);
+                    trayIcon.displayMessage("Action Exdvfxdfvent", "An fdfdfdfdfAction Event Has Been Peformed!", TrayIcon.MessageType.INFO);
                 }
             };
 
@@ -158,25 +177,5 @@ defaultItem.setEnabled(false);
         return java.util.ResourceBundle.getBundle("samp/tray/Bundle");
     }
 
-    static class aa extends JWindow {
 
-        public aa() {
-            this.getContentPane().setLayout(new BorderLayout());
-            JLabel aa=new JLabel("sdfsdsdf");
-           final JPopupMenu pm =new JPopupMenu();
-            JMenuItem jmi = new JMenuItem("sdsdsds");
-            pm.add(jmi);
-            this.getContentPane().add(pm);
-            this.getContentPane().add(aa, BorderLayout.CENTER);
-            pack();
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    setLocation(500,500);
-                    setVisible(true);
-                    pm.show();
-                }
-            });
-        }
-    }
 }

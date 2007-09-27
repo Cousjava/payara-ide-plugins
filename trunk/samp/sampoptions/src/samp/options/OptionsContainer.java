@@ -16,9 +16,17 @@ import javax.swing.JLabel;
  * @author  ludo
  */
 public class OptionsContainer extends javax.swing.JFrame {
+    private static OptionsContainer optionsContainer =null;
     
+    public static OptionsContainer getInstance(){
+        if (optionsContainer==null){
+            optionsContainer = new OptionsContainer();
+        }
+        return optionsContainer;
+        
+    }
     /** Creates new form OptionsContainer */
-    public OptionsContainer() {
+    private OptionsContainer() {
         initComponents();
         tabsPanel.addTab("General", new GeneralPanel());
         tabsPanel.addTab("Apache 2", new Apache2Panel());
