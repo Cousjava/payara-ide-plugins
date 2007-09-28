@@ -26,8 +26,8 @@ public class Environment {
     private static String phplog = "/var/php5/logs/php_error.log";
     private static String startapache = "svcadm enable apache2";
     private static String stopapache = "svcadm disable apache2";
-    private static String startmysql = "svcadm enable mysql";
-    private static String stopmysql = "svcadm disable mysql";
+    private static String startmysql = "svcadm enable svc:/network/cswmysql5:default";
+    private static String stopmysql = "svcadm disable svc:/network/cswmysql5:default";
 
 static{
         // Read properties file.
