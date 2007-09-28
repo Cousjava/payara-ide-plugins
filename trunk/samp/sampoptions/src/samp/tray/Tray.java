@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import samp.execution.ServersManager;
 import samp.model.Environment;
+import samp.model.Util;
 import samp.options.OptionsContainer;
 
 public class Tray {
@@ -35,8 +36,9 @@ public class Tray {
             final SystemTray tray = SystemTray.getSystemTray();
             URL url = this.getClass().getResource("resources/gnome-html.png");
 
-            Image image = new ImageIcon(url).getImage();
-
+            Image image1 = new ImageIcon(url).getImage();
+            Image badge = new ImageIcon(this.getClass().getResource("resources/red.png")).getImage();
+            Image merged = Util.mergeImages(image1, badge,26,26);
             MouseListener mouseListener = new MouseListener() {
 
                 public void mouseClicked(MouseEvent e) {
@@ -186,7 +188,7 @@ public class Tray {
             popup.add(defaultItem = new MenuItem("SAMP Console"));
             defaultItem.setFont(new Font("Monospaced", Font.BOLD, 24));
             defaultItem.setEnabled(false);
-            trayIcon = new TrayIcon(image, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
+            trayIcon = new TrayIcon(merged, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
 
 
             ActionListener actionListener = new ActionListener() {

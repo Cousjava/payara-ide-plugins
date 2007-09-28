@@ -9,11 +9,16 @@
 
 package samp.model;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,10 +33,6 @@ import java.util.logging.Logger;
  * @author ludo
  */
 public class Util {
-
-
-
-
 
     private void updateFile(File target, String content) throws IOException {
         try {
@@ -65,10 +66,10 @@ public class Util {
 
         return sb.toString();
     }
-    
-        public static String getValue(File confFile, String key) {
+
+    public static String getValue(File confFile, String key) {
         FileInputStream fis = null;
-        BufferedReader br =null;
+        BufferedReader br = null;
         try {
             fis = new FileInputStream(confFile);
             // read the config from resource first
@@ -78,24 +79,64 @@ public class Util {
 
             while (line != null) {
                 if (line.startsWith(key)) {
-                    System.out.println(" line is "+line);
+                    System.out.println(" line is " + line);
                     return line.substring(key.length(), line.length());
                 }
 
                 line = br.readLine();
             }
-
-
-
         } catch (Exception ex) {
             Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                if (br!=null) br.close();
+                if (br != null) {
+                    br.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return "80";
+    }
+
+    /**
+     * Method that attempts to find the merged image in the cache first, then
+     * creates the image if it was not found.
+     *  @param x x position of top-left corner
+     * @param y y position of top-left corner
+     */
+    public static final Image mergeImages(Image im1, Image im2, int x, int y) {
+
+
+
+        return doMergeImages(im1, im2, x, y);
+    }
+
+    private static final Image doMergeImages(Image image1, Image image2, int x, int y) {
+
+        int w = Math.max(image1.getWidth(null), x + image2.getWidth(null));
+        int h = Math.max(image1.getHeight(null), y + image2.getHeight(null));
+        boolean bitmask = (image1 instanceof Transparency) && ((Transparency) image1).getTransparency() != Transparency.TRANSLUCENT && (image2 instanceof Transparency) && ((Transparency) image2).getTransparency() != Transparency.TRANSLUCENT;
+
+        ColorModel model = colorModel(bitmask ? Transparency.BITMASK : Transparency.TRANSLUCENT);
+        BufferedImage buffImage = new BufferedImage(model, model.createCompatibleWritableRaster(w, h), model.isAlphaPremultiplied(), null);
+
+        java.awt.Graphics g = buffImage.createGraphics();
+        g.drawImage(image1, 0, 0, null);
+        g.drawImage(image2, x, y, null);
+        g.dispose();
+
+        return buffImage;
+    }
+
+    private static ColorModel colorModel(int transparency) {
+        ColorModel model;
+        try {
+            model = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getColorModel(transparency);
+        } catch (HeadlessException he) {
+            model = ColorModel.getRGBdefault();
+        }
+
+        return model;
     }
 }
