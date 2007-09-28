@@ -22,7 +22,7 @@ public class Environment {
     private static String httpdconf = "/etc/apache2/httpd.conf";
     private static String phpini = "/etc/php5/php.ini";
     private static String apachelog = "/var/apache2/logs/error_log";
-    private static String mysqllog = "/var/logs/mysql_error_log";
+    private static String mysqllog = "/opt/csw/mysql5/var/solaris-devx.err";
     private static String phplog = "/var/php5/logs/php_error.log";
     private static String startapache = "svcadm enable apache2";
     private static String stopapache = "svcadm disable apache2";
