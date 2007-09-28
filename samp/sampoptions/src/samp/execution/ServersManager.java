@@ -28,8 +28,22 @@ public class ServersManager {
     static public void StartServers() {
         try {
             // svcadm enable apache2
-           Process p1 = new ProcessBuilder(Environment.getStartapache(),"").start();
-            Process p2 = new ProcessBuilder(Environment.getStartmysql(),"").start();
+            String s[]=Environment.getStartapache().split("[ ]");
+            if (s.length==1){
+                Process p1 = new ProcessBuilder(s[0],"").start();
+            }
+            else{
+               Process p1 = new ProcessBuilder(s[0],s[1],s[2]).start();
+                 
+            }
+            s=Environment.getStartmysql().split("[ ]");
+            if (s.length==1){
+                Process p1 = new ProcessBuilder(s[0],"").start();
+            }
+            else{
+               Process p1 = new ProcessBuilder(s[0],s[1],s[2]).start();
+                 
+            }
  
             Desktop desktop = null;
             // Before more Desktop API is used, first check
@@ -59,10 +73,23 @@ public class ServersManager {
         static public void StopServers() {
         try {
             System.out.println("stopping apache2 and MySql");
-            // svcadm enable apache2
-            Process p1 = new ProcessBuilder(Environment.getStopapache(),"").start();
-            Process p2 = new ProcessBuilder(Environment.getStopmysql(),"").start();
-        } catch (IOException ex) {
+            // svcadm disable apache2
+            String s[]=Environment.getStopapache().split("[ ]");
+            if (s.length==1){
+                Process p1 = new ProcessBuilder(s[0],"").start();
+            }
+            else{
+               Process p1 = new ProcessBuilder(s[0],s[1],s[2]).start();
+                 
+            }
+            s=Environment.getStopmysql().split("[ ]");
+            if (s.length==1){
+                Process p1 = new ProcessBuilder(s[0],"").start();
+            }
+            else{
+               Process p1 = new ProcessBuilder(s[0],s[1],s[2]).start();
+                 
+            }        } catch (IOException ex) {
             Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
         }
         }
