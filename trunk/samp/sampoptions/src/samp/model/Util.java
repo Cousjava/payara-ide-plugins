@@ -9,12 +9,16 @@
 
 package samp.model;
 
+import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.awt.image.ImageObserver;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -113,7 +117,8 @@ public class Util {
     }
 
     private static final Image doMergeImages(Image image1, Image image2, int x, int y) {
-
+        ensureLoaded(image1);
+        ensureLoaded(image2);
         int w = Math.max(image1.getWidth(null), x + image2.getWidth(null));
         int h = Math.max(image1.getHeight(null), y + image2.getHeight(null));
         boolean bitmask = (image1 instanceof Transparency) && ((Transparency) image1).getTransparency() != Transparency.TRANSLUCENT && (image2 instanceof Transparency) && ((Transparency) image2).getTransparency() != Transparency.TRANSLUCENT;
@@ -138,5 +143,30 @@ public class Util {
         }
 
         return model;
+    }
+    private static final Component component = new Component() {
+    };
+    private static final MediaTracker tracker = new MediaTracker(component);
+    private static int mediaTrackerID;
+
+    private static void ensureLoaded(Image image) {
+        if ((Toolkit.getDefaultToolkit().checkImage(image, -1, -1, null) & (ImageObserver.ALLBITS | ImageObserver.FRAMEBITS)) != 0) {
+            return;
+        }
+
+        synchronized (tracker) {
+            int id = ++mediaTrackerID;
+
+            tracker.addImage(image, id);
+
+            try {
+                tracker.waitForID(id, 0);
+            } catch (InterruptedException e) {
+                System.out.println("INTERRUPTED while loading Image");
+            }
+
+            assert (tracker.statusID(id, false) == MediaTracker.COMPLETE) : "Image loaded";
+            tracker.removeImage(image, id);
+        }
     }
 }
