@@ -9,6 +9,7 @@
 
 package samp.tray;
 
+import java.io.File;
 import javax.swing.UIManager;
 
 /**
@@ -23,6 +24,7 @@ public class Main {
     public static void main(String[] args) {
 
         installGTK();
+        initMenus();
         new Tray();
     }
 
@@ -33,6 +35,29 @@ public class Main {
             UIManager.installLookAndFeel("GTK", GTK);
         } catch (Exception e) {
             System.err.println("Could not install GTK");
+        }
+    }
+    
+    private static void initMenus(){
+        String homeDir = System.getProperty("user.home");
+        System.out.println("home dir"+homeDir);
+        File apps= new File(homeDir,".local/share/applications");
+
+        if (apps.exists()==false){
+            apps.mkdirs();           
+        }
+        else {
+            return;            
+        }
+        File desktop= new File(homeDir,".local/share/desktop-directories");
+
+        if (desktop.exists()==false){
+            desktop.mkdirs();           
+        }        
+         File merged= new File(homeDir,".config/menus/applications-merged");
+
+        if (merged.exists()==false){
+            merged.mkdirs();           
         }
     }
 }
