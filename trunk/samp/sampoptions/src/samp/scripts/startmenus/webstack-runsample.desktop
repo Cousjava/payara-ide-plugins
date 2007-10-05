@@ -1,0 +1,12 @@
+[Desktop Entry]
+Exec="/opt/samp/stuff.sf"
+Terminal=0
+Type=Application
+Icon=/opt/netbeans-5.5/nb5.5/netbeans.png
+Categories=Application;SAMP;
+Name=Run
+Comment=Run
+Name[ja]=Run
+Comment[ja]=Run
+Name[zh]=Run
+Comment[zh]=Run
