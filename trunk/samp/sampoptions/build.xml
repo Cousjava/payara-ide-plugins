@@ -6,19 +6,20 @@
     <description>Builds, tests, and runs the project sampoptions.</description>
     <import file="nbproject/build-impl.xml"/>
     <target name="-post-jar">
-        <mkdir dir="build/webstack/menus/.local/share/applications" />
-        <mkdir dir="build/webstack/menus/.local/share/desktop-directories" />
-        <mkdir dir="build/webstack/menus/.config/menus/applications-merged" />
+        <delete dir="pkgbuild/webstack"/>
+        <mkdir dir="pkgbuild/webstack/menus/.local/share/applications" />
+        <mkdir dir="pkgbuild/webstack/menus/.local/share/desktop-directories" />
+        <mkdir dir="pkgbuild/webstack/menus/.config/menus/applications-merged" />
         <copy 
-            todir="build/webstack/menus/.local/share/applications"> 
+            todir="pkgbuild/webstack/menus/.local/share/applications"> 
             <fileset dir="src/samp/scripts/startmenus" includes="*.desktop" />      
         </copy>
         <copy 
-            todir="build/webstack/menus/.local/share/desktop-directories"> 
+            todir="pkgbuild/webstack/menus/.local/share/desktop-directories"> 
             <fileset dir="src/samp/scripts/startmenus" includes="*.directory" />      
         </copy>
         <copy 
-            todir="build/webstack/menus/.config/menus/applications-merged"> 
+            todir="pkgbuild/webstack/menus/.config/menus/applications-merged"> 
             <fileset dir="src/samp/scripts/startmenus" includes="*.menu" />      
         </copy>
     </target>
