@@ -25,20 +25,131 @@ public class Apache2Panel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        labelPortNumber = new javax.swing.JLabel();
+        textFieldPortNumber = new javax.swing.JTextField();
+        labelDocRoot = new javax.swing.JLabel();
+        textFieldDocRoot = new javax.swing.JTextField();
+        labelWebSite = new javax.swing.JLabel();
+        textFieldWebSite = new javax.swing.JTextField();
+        buttonOpen = new javax.swing.JButton();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
+        buttonAdvanceConf = new javax.swing.JButton();
+        buttonRepair = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+
+        labelPortNumber.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        labelPortNumber.setLabelFor(textFieldPortNumber);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("samp/options/Bundle"); // NOI18N
+        labelPortNumber.setText(bundle.getString("LABEL_PORT")); // NOI18N
+
+        textFieldPortNumber.setText("jTextField1");
+
+        labelDocRoot.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        labelDocRoot.setLabelFor(textFieldDocRoot);
+        labelDocRoot.setText(bundle.getString("LABEL_DOCDIR")); // NOI18N
+
+        textFieldDocRoot.setText("jTextField1");
+
+        labelWebSite.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        labelWebSite.setLabelFor(textFieldWebSite);
+        labelWebSite.setText(bundle.getString("LABEL_HOMEPAGE")); // NOI18N
+
+        textFieldWebSite.setText("jTextField2");
+
+        buttonOpen.setText(bundle.getString("LABEL_OPEN")); // NOI18N
+
+        jCheckBox1.setText(bundle.getString("LABEL_HOMEDIRS")); // NOI18N
+
+        jLabel1.setText(bundle.getString("LABEL_HELP")); // NOI18N
+        jLabel1.setEnabled(false);
+
+        buttonAdvanceConf.setText(bundle.getString("LABEL_ADVANCE_CONF")); // NOI18N
+
+        buttonRepair.setText(bundle.getString("LABEL_REPAIR")); // NOI18N
+
+        jLabel2.setText(bundle.getString("LABEL_EDITHTTPD")); // NOI18N
+        jLabel2.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(labelDocRoot, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(labelPortNumber, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE))
+                            .addComponent(labelWebSite))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(textFieldWebSite, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(buttonOpen))
+                            .addComponent(textFieldDocRoot, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
+                            .addComponent(textFieldPortNumber, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)))
+                    .addComponent(jCheckBox1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonAdvanceConf)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonRepair))
+                .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {labelDocRoot, labelPortNumber, labelWebSite});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelPortNumber)
+                    .addComponent(textFieldPortNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textFieldDocRoot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelDocRoot))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonOpen)
+                    .addComponent(textFieldWebSite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelWebSite))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonAdvanceConf)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonRepair)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonAdvanceConf;
+    private javax.swing.JButton buttonOpen;
+    private javax.swing.JButton buttonRepair;
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel labelDocRoot;
+    private javax.swing.JLabel labelPortNumber;
+    private javax.swing.JLabel labelWebSite;
+    private javax.swing.JTextField textFieldDocRoot;
+    private javax.swing.JTextField textFieldPortNumber;
+    private javax.swing.JTextField textFieldWebSite;
     // End of variables declaration//GEN-END:variables
     
 }
