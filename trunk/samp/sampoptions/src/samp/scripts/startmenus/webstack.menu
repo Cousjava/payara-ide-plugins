@@ -10,7 +10,7 @@
         <Directory>webstack.directory</Directory>
         <Include>
             <Filename>webstack-configure.desktop</Filename>
-            <Filename>webstack-stop.desktop</Filename>
+            <Filename>webstack-start.desktop</Filename>
             <Filename>webstack-stop.desktop</Filename>
         </Include>
     </Menu>
