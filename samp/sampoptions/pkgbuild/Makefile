@@ -1,0 +1,13 @@
+PKG=WebStackTooling
+#possible ARCH values are i386, sparc, all
+ARCH=all
+PKGFILE=$(PKG)-$(ARCH).pkg
+
+pkg:
+	(echo 'i pkginfo'; pkgproto ./webstack=webstack ) >prototype
+	pkgmk -o -d /tmp -a $(ARCH)
+	touch $(PKGFILE)
+	pkgtrans -s /tmp $(PKGFILE) $(PKG) 
+	rm -r /tmp/$(PKG)
+	@echo check current directory for .pkg files
+
