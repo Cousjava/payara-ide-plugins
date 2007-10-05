@@ -9,9 +9,12 @@
         <DefaultDirectoryDirs/>
         <Directory>webstack.directory</Directory>
         <Include>
-            <Filename>webstack-configure.desktop</Filename>
             <Filename>webstack-start.desktop</Filename>
             <Filename>webstack-stop.desktop</Filename>
+            <Filename>webstack-options.desktop</Filename>
+            <Filename>webstack-administermysql.desktop</Filename>
+            <Filename>webstack-viewgettingstartedguide.desktop</Filename>
+            <Filename>webstack-uninitialize.desktop</Filename>
         </Include>
     </Menu>
 </Menu>
