@@ -25,21 +25,19 @@ public class GeneralPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
+        jCheckBoxStartServers = new javax.swing.JCheckBox();
+        jCheckBoxServersWhenILogIn = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(420, 200));
         setPreferredSize(new java.awt.Dimension(0, 0));
 
-        jCheckBox1.setText("Start Servers when Solaris boots");
+        jCheckBoxStartServers.setText("Start Servers when Solaris boots"); // NOI18N
 
-        jCheckBox2.setText("Start Servers when I log in, Stop Servers when I log out");
+        jCheckBoxServersWhenILogIn.setText("Start Servers when I log in, Stop Servers when I log out"); // NOI18N
 
-        jButton1.setText("Advanced Details");
-
-        jButton2.setText("Repair");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("samp/options/Bundle"); // NOI18N
+        jButton1.setText(bundle.getString("LABEL_VIEWADVANCEDDETAILS")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -48,35 +46,29 @@ public class GeneralPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
+                    .addComponent(jCheckBoxStartServers)
+                    .addComponent(jCheckBoxServersWhenILogIn)
+                    .addComponent(jButton1))
                 .addContainerGap(68, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jCheckBox1)
+                .addComponent(jCheckBoxStartServers)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap())
+                .addComponent(jCheckBoxServersWhenILogIn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap(101, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JCheckBox jCheckBoxServersWhenILogIn;
+    private javax.swing.JCheckBox jCheckBoxStartServers;
     // End of variables declaration//GEN-END:variables
     
 }
