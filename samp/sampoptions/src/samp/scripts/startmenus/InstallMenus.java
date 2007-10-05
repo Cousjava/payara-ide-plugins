@@ -50,12 +50,20 @@ public class InstallMenus {
         }
         //resources is same dir as this class:
         copyResource("webstack.directory", desktop);
+        copyResource("webstack-logs.directory", desktop);
+        copyResource("webstack-sampleapp.directory", desktop);
         copyResource("webstack-start.desktop", apps);
         copyResource("webstack-stop.desktop", apps);
-        copyResource("webstack-configure.desktop", apps);
+        copyResource("webstack-options.desktop", apps);
+        copyResource("webstack-apachelog.desktop", apps);
+        copyResource("webstack-mysqllog.desktop", apps);
+        copyResource("webstack-uninitialize.desktop", apps);
+        copyResource("webstack-createsample.desktop", apps);
+        copyResource("webstack-runsample.desktop", apps);
+        copyResource("webstack-administermysql.desktop", apps);
+        copyResource("webstack-viewgettingstartedguide.desktop", apps);
         copyResource("webstack.menu", merged);
 
-        copyResource("webstack.directory", desktop);
     }
 
     private static void copyResource(String resourceName, File directory) {
