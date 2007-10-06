@@ -70,7 +70,7 @@ public class InstallMenus {
         try {
             URL url = InstallMenus.class.getResource(resourceName);
             String content = readResource(url.openStream(), "UTF-8");
-System.out.println("contnet"+content);
+
             FileOutputStream fos = new FileOutputStream(new File(directory, resourceName));
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));
             bw.write(content);
