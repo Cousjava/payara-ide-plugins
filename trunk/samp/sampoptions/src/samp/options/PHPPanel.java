@@ -6,17 +6,19 @@
 
 package samp.options;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author  ludo
  */
 public class PHPPanel extends javax.swing.JPanel {
-    
+
     /** Creates new form PHPPanel */
     public PHPPanel() {
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -51,6 +53,11 @@ public class PHPPanel extends javax.swing.JPanel {
         jLabel3.setEnabled(false);
 
         buttonRepair.setText(bundle.getString("LABEL_REPAIR")); // NOI18N
+        buttonRepair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRepairActionPerformed(evt);
+            }
+        });
 
         jButton1.setText(bundle.getString("LABEL_SHOWPHPINFO")); // NOI18N
 
@@ -98,8 +105,13 @@ public class PHPPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
+    private void buttonRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRepairActionPerformed
+
+        Object[] options = {"Yes, repair", "Cancel"};
+        int n = JOptionPane.showOptionDialog(null, "question" 
+               , "Repair", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+    }//GEN-LAST:event_buttonRepairActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdvanceConf;
     private javax.swing.JButton buttonRepair;
@@ -110,5 +122,4 @@ public class PHPPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
-    
 }
