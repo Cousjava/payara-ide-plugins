@@ -6,17 +6,25 @@
 
 package samp.options;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import samp.execution.ServersManager;
+import samp.model.Environment;
+
 /**
  *
  * @author  ludo
  */
 public class Apache2Panel extends javax.swing.JPanel {
-    
+
     /** Creates new form Apache2Panel */
     public Apache2Panel() {
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -62,6 +70,11 @@ public class Apache2Panel extends javax.swing.JPanel {
         jLabel1.setEnabled(false);
 
         buttonAdvanceConf.setText(bundle.getString("LABEL_ADVANCE_CONF")); // NOI18N
+        buttonAdvanceConf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAdvanceConfActionPerformed(evt);
+            }
+        });
 
         buttonRepair.setText(bundle.getString("LABEL_REPAIR")); // NOI18N
 
@@ -132,8 +145,25 @@ public class Apache2Panel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
+    private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
+
+        Desktop desktop = null;
+        // Before more Desktop API is used, first check
+        // whether the API is supported by this particular
+        // virtual machine (VM) on this particular host.
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+        }
+        if (desktop.isSupported(Desktop.Action.OPEN)) {
+            try {
+
+                desktop.open(new File(Environment.getHttpdconf()));
+            } catch (IOException ex) {
+                Logger.getLogger(Apache2Panel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_buttonAdvanceConfActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdvanceConf;
     private javax.swing.JButton buttonOpen;
@@ -148,5 +178,4 @@ public class Apache2Panel extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldDocRoot;
     private javax.swing.JTextField textFieldPortNumber;
     // End of variables declaration//GEN-END:variables
-    
 }
