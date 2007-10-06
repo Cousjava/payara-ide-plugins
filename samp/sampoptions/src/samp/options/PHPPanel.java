@@ -6,7 +6,13 @@
 
 package samp.options;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import samp.model.Environment;
 
 /**
  *
@@ -48,6 +54,11 @@ public class PHPPanel extends javax.swing.JPanel {
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         buttonAdvanceConf.setText(bundle.getString("LABEL_ADVANCE_CONF")); // NOI18N
+        buttonAdvanceConf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAdvanceConfActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText(bundle.getString("LABEL_EDITPHPINI")); // NOI18N
         jLabel3.setEnabled(false);
@@ -112,6 +123,26 @@ public class PHPPanel extends javax.swing.JPanel {
         int n = JOptionPane.showOptionDialog(null, "question" 
                , "Repair", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
     }//GEN-LAST:event_buttonRepairActionPerformed
+
+    private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
+        Desktop desktop = null;
+        // Before more Desktop API is used, first check
+        // whether the API is supported by this particular
+        // virtual machine (VM) on this particular host.
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+        }
+        if (desktop.isSupported(Desktop.Action.OPEN)) {
+            try {
+
+                desktop.open(new File(Environment.getPhpini()));
+            } catch (IOException ex) {
+                Logger.getLogger(PHPPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }//GEN-LAST:event_buttonAdvanceConfActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdvanceConf;
     private javax.swing.JButton buttonRepair;
