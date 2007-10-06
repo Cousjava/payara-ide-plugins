@@ -33,7 +33,7 @@ static{
         // Read properties file.
         Properties properties = new Properties();
         try {
-            properties.load(new FileInputStream(System.getProperty("user.home") + ".sampoptions.properties"));
+            properties.load(new FileInputStream(System.getProperty("user.home") + "/.sampoptions.properties"));
             httpdconf= properties.getProperty("httpdconf");
             phpini= properties.getProperty("phpini");
             apachelog= properties.getProperty("apachelog");
