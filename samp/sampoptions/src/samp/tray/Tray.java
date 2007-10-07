@@ -57,11 +57,11 @@ public class Tray {
     private TrayIcon trayIcon;
 
     public void setIcon(String name) {
-        URL url = this.getClass().getResource("resources/gnome-html.png");
+        URL url = this.getClass().getResource("resources/apache.png");
 
         Image image1 = new ImageIcon(url).getImage();
         Image badge = new ImageIcon(this.getClass().getResource("resources/" + name + ".png")).getImage();
-        Image merged = Util.mergeImages(image1, badge, 26, 26);
+        Image merged = Util.mergeImages(image1, badge, 18,18);
         trayIcon.setImage(merged);
     }
 
@@ -230,7 +230,7 @@ public class Tray {
             popup.add(defaultItem = new MenuItem("SAMP Console"));
             defaultItem.setFont(new Font("Monospaced", Font.BOLD, 24));
             defaultItem.setEnabled(false);
-            URL url = this.getClass().getResource("resources/gnome-html.png");
+            URL url = this.getClass().getResource("resources/apache.png");
 
             Image image1 = new ImageIcon(url).getImage();
             trayIcon = new TrayIcon(image1, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
