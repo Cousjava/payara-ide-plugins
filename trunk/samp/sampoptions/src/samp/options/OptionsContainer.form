@@ -25,20 +25,15 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="okButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="350" max="32767" attributes="0"/>
                       <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="titleLabel" alignment="1" pref="431" max="32767" attributes="0"/>
-                          <Component id="tabsPanel" alignment="0" pref="431" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <Component id="titleLabel" alignment="1" pref="500" max="32767" attributes="0"/>
+                  <Component id="tabsPanel" alignment="0" pref="500" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -63,7 +58,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="titleLabel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new JLabel(new ImageIcon(samp.tray.Tray.class.getResource(&quot;resources/open.png&quot;)));&#xa;   &#xa;"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="getImage() ;  &#xa;"/>
       </AuxValues>
     </Component>
     <Container class="javax.swing.JTabbedPane" name="tabsPanel">
