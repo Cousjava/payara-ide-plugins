@@ -1,6 +1,34 @@
+/*
+* CDDL HEADER START
+*
+* The contents of this file are subject to the terms of the
+* Common Development and Distribution License, Version 1.0 only
+* (the "License").  You may not use this file except in compliance
+* with the License.
+*
+* You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+* or http://www.opensolaris.org/os/licensing.
+* See the License for the specific language governing permissions
+* and limitations under the License.
+*
+* When distributing Covered Code, include this CDDL HEADER in each
+* file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+* If applicable, add the following below this CDDL HEADER, with the
+* fields enclosed by brackets "[]" replaced with your own identifying
+* information: Portions Copyright [yyyy] [name of copyright owner]
+*
+* CDDL HEADER END
+*/
+/*
+ * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+* Use is subject to license terms.
+*/
+
+
 package samp.tray;
 
 import java.awt.AWTException;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Image;
@@ -26,19 +54,31 @@ import samp.options.OptionsContainer;
 
 public class Tray {
 
+    private TrayIcon trayIcon;
+
+    public void setIcon(String name) {
+        URL url = this.getClass().getResource("resources/gnome-html.png");
+
+        Image image1 = new ImageIcon(url).getImage();
+        Image badge = new ImageIcon(this.getClass().getResource("resources/" + name + ".png")).getImage();
+        Image merged = Util.mergeImages(image1, badge, 26, 26);
+        trayIcon.setImage(merged);
+    }
+
     public Tray() {
 
-        final TrayIcon trayIcon;
-        final PopupMenu popup = new PopupMenu();
+        final PopupMenu popup = new PopupMenu() {
+
+            public boolean isEnabled() {
+                System.out.println("shoe called");
+                return super.isEnabled();
+            }
+        };
 
         if (SystemTray.isSupported()) {
 
             final SystemTray tray = SystemTray.getSystemTray();
-            URL url = this.getClass().getResource("resources/gnome-html.png");
 
-            Image image1 = new ImageIcon(url).getImage();
-            Image badge = new ImageIcon(this.getClass().getResource("resources/red.png")).getImage();
-            Image merged = Util.mergeImages(image1, badge,26,26);
             MouseListener mouseListener = new MouseListener() {
 
                 public void mouseClicked(MouseEvent e) {
@@ -72,6 +112,7 @@ public class Tray {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Start");
                     ServersManager.StartServers();
+                    setIcon("green");
                 }
             });
             popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Stop")));
@@ -80,6 +121,7 @@ public class Tray {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("stop");
                     ServersManager.StopServers();
+                    setIcon("red");
                 }
             });
             popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Options")));
@@ -173,7 +215,7 @@ public class Tray {
                         }
                     }
                 }
-            });            
+            });
             defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Exit"));
             defaultItem.addActionListener(new ActionListener() {
 
@@ -188,8 +230,10 @@ public class Tray {
             popup.add(defaultItem = new MenuItem("SAMP Console"));
             defaultItem.setFont(new Font("Monospaced", Font.BOLD, 24));
             defaultItem.setEnabled(false);
-            trayIcon = new TrayIcon(merged, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
+            URL url = this.getClass().getResource("resources/gnome-html.png");
 
+            Image image1 = new ImageIcon(url).getImage();
+            trayIcon = new TrayIcon(image1, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
 
             ActionListener actionListener = new ActionListener() {
 

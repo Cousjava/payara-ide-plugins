@@ -1,13 +1,40 @@
 /*
- * OptionsContainer.java
- *
- * Created on September 20, 2007, 4:23 PM
- */
+* CDDL HEADER START
+*
+* The contents of this file are subject to the terms of the
+* Common Development and Distribution License, Version 1.0 only
+* (the "License").  You may not use this file except in compliance
+* with the License.
+*
+* You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+* or http://www.opensolaris.org/os/licensing.
+* See the License for the specific language governing permissions
+* and limitations under the License.
+*
+* When distributing Covered Code, include this CDDL HEADER in each
+* file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+* If applicable, add the following below this CDDL HEADER, with the
+* fields enclosed by brackets "[]" replaced with your own identifying
+* information: Portions Copyright [yyyy] [name of copyright owner]
+*
+* CDDL HEADER END
+*/
+/*
+ * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+* Use is subject to license terms.
+*/
 
 package samp.options;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Graphics2D;
 import java.awt.Image;
-import java.net.URL;
+import java.awt.Paint;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -33,15 +60,56 @@ public class OptionsContainer extends javax.swing.JFrame {
         tabsPanel.addTab("PHP", new PHPPanel());
         tabsPanel.addTab("MySQL", new MySQLPanel());
         tabsPanel.addTab("FTP", new FTPPanel());
-        
+
        
         pack();
         setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-            URL url = samp.tray.Tray.class.getResource("resources/gnome-html.png");
 
-            Image image = new ImageIcon(url).getImage();        setIconImage(image);
     }
-    
+    private JLabel getImage(){
+         BufferedImage image=null;
+        try {
+            image = ImageIO.read(samp.tray.Tray.class.getResource("resources/open.png"));
+           // image = createReflection(image);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+                return new JLabel(new ImageIcon(image));
+    }
+    private BufferedImage createReflection(BufferedImage image) {
+        int height = image.getHeight();
+        
+        BufferedImage result = new BufferedImage(image.getWidth(), height * 2,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = result.createGraphics();
+        
+         // Paints original image
+        g2.drawImage(image, 0, 0, null);
+        
+        // Paints mirrored image
+        g2.scale(1.0, -1.0);
+        g2.drawImage(image, 0, -height - height, null);
+        g2.scale(1.0, -1.0);
+
+        // Move to the origin of the clone
+        g2.translate(0, height);
+        
+        // Creates the alpha mask
+        GradientPaint mask;
+        mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f),
+                0, height / 2, new Color(1.0f, 1.0f, 1.0f, 0.0f));
+        Paint oldPaint = g2.getPaint();
+        g2.setPaint(mask);
+        
+        // Sets the alpha composite
+        g2.setComposite(AlphaComposite.DstIn);
+        
+        // Paints the mask
+        g2.fillRect(0, 0, image.getWidth(), height);
+ 
+        g2.dispose();
+        return result;
+    }    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -50,8 +118,7 @@ public class OptionsContainer extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        titleLabel = new JLabel(new ImageIcon(samp.tray.Tray.class.getResource("resources/open.png")));
-
+        titleLabel = getImage() ;
         ;
         tabsPanel = new javax.swing.JTabbedPane();
         okButton = new javax.swing.JButton();
@@ -83,17 +150,14 @@ public class OptionsContainer extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(okButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 350, Short.MAX_VALUE)
                         .addComponent(cancelButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
-                            .addComponent(tabsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE))))
+                    .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                    .addComponent(tabsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
