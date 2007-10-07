@@ -69,7 +69,7 @@ public class OptionsContainer extends javax.swing.JFrame {
     private JLabel getImage(){
          BufferedImage image=null;
         try {
-            image = ImageIO.read(samp.tray.Tray.class.getResource("resources/open.png"));
+            image = ImageIO.read(samp.tray.Tray.class.getResource("resources/samp.png"));
            // image = createReflection(image);
         } catch (IOException ex) {
             ex.printStackTrace();
