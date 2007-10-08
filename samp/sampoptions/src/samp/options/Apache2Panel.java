@@ -1,37 +1,39 @@
 /*
-* CDDL HEADER START
-*
-* The contents of this file are subject to the terms of the
-* Common Development and Distribution License, Version 1.0 only
-* (the "License").  You may not use this file except in compliance
-* with the License.
-*
-* You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
-* or http://www.opensolaris.org/os/licensing.
-* See the License for the specific language governing permissions
-* and limitations under the License.
-*
-* When distributing Covered Code, include this CDDL HEADER in each
-* file and include the License file at usr/src/OPENSOLARIS.LICENSE.
-* If applicable, add the following below this CDDL HEADER, with the
-* fields enclosed by brackets "[]" replaced with your own identifying
-* information: Portions Copyright [yyyy] [name of copyright owner]
-*
-* CDDL HEADER END
-*/
-/*
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License, Version 1.0 only
+ * (the "License").  You may not use this file except in compliance
+ * with the License.
+ *
+ * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+ * or http://www.opensolaris.org/os/licensing.
+ * See the License for the specific language governing permissions
+ * and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ */ /*
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
-* Use is subject to license terms.
-*/
+ * Use is subject to license terms.
+ */
 
 package samp.options;
 
 import java.awt.Desktop;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import samp.execution.ServersManager;
 import samp.model.Environment;
 
 /**
@@ -43,6 +45,17 @@ public class Apache2Panel extends javax.swing.JPanel {
     /** Creates new form Apache2Panel */
     public Apache2Panel() {
         initComponents();
+        textFieldPortNumber.setText(Environment.getApachePortNumber());
+        textFieldPortNumber.addKeyListener(new KeyAdapter() {
+
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)))) {
+                    getToolkit().beep();
+                    e.consume();
+                }
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -52,6 +65,7 @@ public class Apache2Panel extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         labelPortNumber = new javax.swing.JLabel();
         textFieldPortNumber = new javax.swing.JTextField();
@@ -64,7 +78,7 @@ public class Apache2Panel extends javax.swing.JPanel {
         buttonAdvanceConf = new javax.swing.JButton();
         buttonRepair = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        labelWebPage = new javax.swing.JLabel();
 
         labelPortNumber.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         labelPortNumber.setLabelFor(textFieldPortNumber);
@@ -83,6 +97,11 @@ public class Apache2Panel extends javax.swing.JPanel {
         labelWebSite.setText(bundle.getString("LABEL_HOMEPAGE")); // NOI18N
 
         buttonOpen.setText(bundle.getString("LABEL_OPEN")); // NOI18N
+        buttonOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonOpenActionPerformed(evt);
+            }
+        });
 
         jCheckBox1.setText(bundle.getString("LABEL_HOMEDIRS")); // NOI18N
 
@@ -101,7 +120,8 @@ public class Apache2Panel extends javax.swing.JPanel {
         jLabel2.setText(bundle.getString("LABEL_EDITHTTPD")); // NOI18N
         jLabel2.setEnabled(false);
 
-        jLabel3.setText("http:/localhost:80");
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, textFieldPortNumber, org.jdesktop.beansbinding.ELProperty.create("http://localhost:${text}"), labelWebPage, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -126,7 +146,7 @@ public class Apache2Panel extends javax.swing.JPanel {
                         .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE))
                     .addComponent(buttonRepair)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                        .addComponent(labelWebPage, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(buttonOpen))
                     .addComponent(textFieldDocRoot, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
@@ -151,7 +171,7 @@ public class Apache2Panel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonOpen)
                     .addComponent(labelWebSite)
-                    .addComponent(jLabel3))
+                    .addComponent(labelWebPage))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBox1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -164,6 +184,8 @@ public class Apache2Panel extends javax.swing.JPanel {
                 .addComponent(buttonRepair)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
@@ -184,6 +206,27 @@ public class Apache2Panel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_buttonAdvanceConfActionPerformed
+
+    private void buttonOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOpenActionPerformed
+        Desktop desktop = null;
+        // Before more Desktop API is used, first check
+        // whether the API is supported by this particular
+        // virtual machine (VM) on this particular host.
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+        }
+        if (desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                // launch browser
+                URI uri = new URI(labelWebPage.getText());
+                desktop.browse(uri);
+            } catch (IOException ex) {
+                Logger.getLogger(Apache2Panel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex2) {
+                Logger.getLogger(Apache2Panel.class.getName()).log(Level.SEVERE, null, ex2);
+            }
+        }
+    }//GEN-LAST:event_buttonOpenActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdvanceConf;
     private javax.swing.JButton buttonOpen;
@@ -191,11 +234,12 @@ public class Apache2Panel extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel labelDocRoot;
     private javax.swing.JLabel labelPortNumber;
+    private javax.swing.JLabel labelWebPage;
     private javax.swing.JLabel labelWebSite;
     private javax.swing.JTextField textFieldDocRoot;
     private javax.swing.JTextField textFieldPortNumber;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

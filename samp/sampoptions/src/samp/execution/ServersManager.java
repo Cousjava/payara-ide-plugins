@@ -28,7 +28,6 @@ package samp.execution;
 
 import java.awt.Desktop;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -43,7 +42,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import samp.model.Environment;
-import samp.model.Util;
 
 /**
  *
@@ -84,10 +82,8 @@ public class ServersManager {
             if (desktop.isSupported(Desktop.Action.BROWSE)) {
                 try {
                     // launch browser
-                    String port=Util.getValue(new File(Environment.getHttpdconf()), "Listen ");
-                  //  System.out.println("port is"+port);
-                          
-                    URI uri = new URI("http://localhost:"+port);
+                         
+                    URI uri = new URI("http://localhost:"+Environment.getApachePortNumber());
                     desktop.browse(uri);
                 } catch (IOException ex) {
                     Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
