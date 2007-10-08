@@ -34,6 +34,6 @@ public class StopAction extends MenuItem {
     }
 
     public boolean isEnabled() {
-        return !ServersManager.isApacheRunning(Integer.parseInt(Environment.getApachePortNumber()), 1000);
+        return ServersManager.isApacheRunning(Integer.parseInt(Environment.getApachePortNumber()), 1000);
     }
 }
