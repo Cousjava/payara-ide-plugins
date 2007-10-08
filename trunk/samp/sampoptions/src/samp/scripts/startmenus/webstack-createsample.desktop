@@ -1,8 +1,8 @@
 [Desktop Entry]
-Exec="/opt/samp/stuff.sf"
+Exec="/opt/webstack/bin/createsample.sh"
 Terminal=0
 Type=Application
-Icon=/opt/netbeans-5.5/nb5.5/netbeans.png
+Icon=/usr/share/icons/gnome/24x24/filesystems/gonme-fs-bookmark.png
 Categories=Application;SAMP;
 Name=Create
 Comment=Create

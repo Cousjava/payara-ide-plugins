@@ -28,7 +28,6 @@
 package samp.tray;
 
 import java.awt.AWTException;
-import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Image;
@@ -69,13 +68,7 @@ public class Tray {
 
     public Tray() {
 
-        final PopupMenu popup = new PopupMenu() {
-
-            public boolean isEnabled() {
-                System.out.println("shoe called");
-                return super.isEnabled();
-            }
-        };
+        final PopupMenu popup = new PopupMenu() ;
 
         if (SystemTray.isSupported()) {
 
@@ -137,7 +130,7 @@ public class Tray {
             });
             Menu logsMenu = new Menu(" " + getBundle().getString("LABEL_Logs"));
             popup.add(logsMenu);
-            logsMenu.add(defaultItem = new MenuItem("php log"));
+            logsMenu.add(defaultItem = new MenuItem("PHP log"));
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -159,7 +152,7 @@ public class Tray {
                     }
                 }
             });
-            logsMenu.add(defaultItem = new MenuItem("apache log"));
+            logsMenu.add(defaultItem = new MenuItem("Apache log"));
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -185,7 +178,7 @@ public class Tray {
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("logs");
+                    System.out.println("MySql logs");
                     Desktop desktop = null;
                     // Before more Desktop API is used, first check
                     // whether the API is supported by this particular
