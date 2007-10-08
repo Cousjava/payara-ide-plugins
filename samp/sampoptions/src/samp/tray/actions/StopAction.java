@@ -13,6 +13,7 @@ import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import samp.execution.ServersManager;
+import samp.model.Environment;
 import samp.tray.Tray;
 
 /**
@@ -33,6 +34,6 @@ public class StopAction extends MenuItem {
     }
 
     public boolean isEnabled() {
-        return super.isEnabled();
+        return !ServersManager.isApacheRunning(Integer.parseInt(Environment.getApachePortNumber()), 1000);
     }
 }
