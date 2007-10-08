@@ -226,7 +226,7 @@ public class Tray {
             popup.add(defaultItem);
 
             //empty one
-            popup.add(defaultItem = new MenuItem("WebStack Console"));
+            popup.add(defaultItem = new MenuItem("WebStack"));
             defaultItem.setFont(new Font("Monospaced", Font.BOLD, 24));
             defaultItem.setEnabled(false);
             URL url = this.getClass().getResource("resources/apache.png");
