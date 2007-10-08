@@ -220,14 +220,13 @@ public class Tray {
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Exiting");
                     System.exit(0);
                 }
             });
             popup.add(defaultItem);
 
             //empty one
-            popup.add(defaultItem = new MenuItem("SAMP Console"));
+            popup.add(defaultItem = new MenuItem("WebStack Console"));
             defaultItem.setFont(new Font("Monospaced", Font.BOLD, 24));
             defaultItem.setEnabled(false);
             URL url = this.getClass().getResource("resources/apache.png");
