@@ -51,6 +51,8 @@ import samp.execution.ServersManager;
 import samp.model.Environment;
 import samp.model.Util;
 import samp.options.OptionsContainer;
+import samp.tray.actions.StartAction;
+import samp.tray.actions.StopAction;
 
 public class Tray {
 
@@ -106,24 +108,9 @@ public class Tray {
 
 
             MenuItem defaultItem;
-            popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Start")));
-            defaultItem.addActionListener(new ActionListener() {
+            popup.add( new StartAction(this));
 
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Start");
-                    ServersManager.StartServers();
-                    setIcon("green");
-                }
-            });
-            popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Stop")));
-            defaultItem.addActionListener(new ActionListener() {
-
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("stop");
-                    ServersManager.StopServers();
-                    setIcon("red");
-                }
-            });
+            popup.add(new StopAction(this));
             popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Options")));
             defaultItem.addActionListener(new ActionListener() {
 
@@ -231,14 +218,18 @@ public class Tray {
             defaultItem.setEnabled(false);
             URL url = this.getClass().getResource("resources/apache.png");
 
-            Image image1 = new ImageIcon(url).getImage();
+           Image image1 = new ImageIcon(url).getImage();
             trayIcon = new TrayIcon(image1, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
-
+            boolean running = ServersManager.isApacheRunning(Integer.parseInt(Environment.getApachePortNumber()),1000);
+            if (running){
+                setIcon("green");
+            }else {
+                setIcon("red");
+            }
             ActionListener actionListener = new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
                     trayIcon.displayMessage("Action Event", "An Action Event Has Been Peformed!", TrayIcon.MessageType.INFO);
-                    trayIcon.displayMessage("Action Exdvfxdfvent", "An fdfdfdfdfAction Event Has Been Peformed!", TrayIcon.MessageType.INFO);
                 }
             };
 
