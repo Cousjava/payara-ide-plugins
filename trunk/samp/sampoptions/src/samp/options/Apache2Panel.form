@@ -26,24 +26,20 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jCheckBox1" alignment="0" pref="264" max="32767" attributes="0"/>
+                  <Component id="jCheckBox1" alignment="0" pref="296" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      <Component id="jLabel1" pref="252" max="32767" attributes="0"/>
+                      <Component id="jLabel1" pref="284" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="buttonAdvanceConf" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel2" pref="112" max="32767" attributes="0"/>
+                      <Component id="jLabel2" pref="115" max="32767" attributes="0"/>
                   </Group>
                   <Component id="buttonRepair" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="labelWebPage" pref="203" max="32767" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="buttonOpen" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="textFieldDocRoot" alignment="1" pref="264" max="32767" attributes="0"/>
-                  <Component id="textFieldPortNumber" alignment="1" pref="264" max="32767" attributes="0"/>
+                  <Component id="textFieldDocRoot" alignment="1" pref="296" max="32767" attributes="0"/>
+                  <Component id="textFieldPortNumber" alignment="1" pref="296" max="32767" attributes="0"/>
+                  <Component id="labelWebPage" alignment="0" pref="296" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -64,7 +60,6 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="buttonOpen" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="labelWebSite" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="labelWebPage" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -125,16 +120,6 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="buttonOpen">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="samp/options/Bundle.properties" key="LABEL_OPEN" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonOpenActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JCheckBox" name="jCheckBox1">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
@@ -175,10 +160,13 @@
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="labelWebPage">
-      <BindingProperties>
-        <BindingProperty name="text" source="textFieldPortNumber" sourcePath="http://localhost:${text}" target="labelWebPage" targetPath="text" updateStrategy="0" immediately="false"/>
-      </BindingProperties>
+    <Component class="javax.swing.JButton" name="labelWebPage">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jButton1"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new samp.options.HyperLinkButton(&quot;aaa&quot;,&quot;fff&quot;);"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

@@ -39,10 +39,30 @@ import samp.model.Environment;
  * @author  ludo
  */
 public class PHPPanel extends javax.swing.JPanel {
+    
+       java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("samp/options/Bundle"); // NOI18N
+ 
+         String[] comboTypes = { 
+                bundle.getString("E_ALL"),
+                bundle.getString("E_ERROR"),
+                bundle.getString("E_WARNING"),
+                bundle.getString("E_PARSE"),
+                bundle.getString("E_NOTICE"),
+                bundle.getString("E_CORE_ERROR"),
+                bundle.getString("E_CORE_WARNING"),
+                bundle.getString("E_COMPILE_ERROR"),
+                bundle.getString("E_COMPILE_WARNING"),
+                bundle.getString("E_USER_ERROR"),
+                bundle.getString("E_USER_WARNING"),
+                bundle.getString("E_USER_NOTICE")
+      }; 
 
     /** Creates new form PHPPanel */
     public PHPPanel() {
+ 
         initComponents();
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel( comboTypes));
+
     }
 
     /** This method is called from within the constructor to
@@ -56,7 +76,7 @@ public class PHPPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
+        jComboBox2 = new javax.swing.JComboBox(comboTypes);
         buttonAdvanceConf = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         buttonRepair = new javax.swing.JButton();
@@ -111,7 +131,7 @@ public class PHPPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonRepair)
                         .addGap(103, 103, 103))
-                    .addComponent(jComboBox2, 0, 274, Short.MAX_VALUE)
+                    .addComponent(jComboBox2, 0, 306, Short.MAX_VALUE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );

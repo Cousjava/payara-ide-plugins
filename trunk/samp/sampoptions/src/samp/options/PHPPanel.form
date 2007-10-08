@@ -33,7 +33,7 @@
                       <Component id="buttonRepair" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="103" pref="103" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jComboBox2" pref="274" max="32767" attributes="0"/>
+                  <Component id="jComboBox2" pref="306" max="32767" attributes="0"/>
                   <Component id="jComboBox1" alignment="0" min="-2" pref="52" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -105,6 +105,9 @@
           </StringArray>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox(comboTypes);"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="buttonAdvanceConf">
       <Properties>
