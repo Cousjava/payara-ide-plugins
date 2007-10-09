@@ -2,7 +2,7 @@
 Exec="gedit /var/apache2/logs/error_log"
 Terminal=0
 Type=Application
-Icon=/usr/share/icons/gnome/24x24/filesystems/gonme-fs-bookmark.png
+Icon=/usr/share/icons/gnome/24x24/filesystems/gnome-fs-bookmark.png
 Categories=Application;SAMP;
 Name=MySQL log
 Comment=MySQL log

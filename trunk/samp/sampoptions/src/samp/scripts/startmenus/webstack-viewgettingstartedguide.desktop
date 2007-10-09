@@ -2,7 +2,7 @@
 Exec="/opt/webstack/bin/viewguide.sh"
 Terminal=0
 Type=Application
-Icon=/usr/share/icons/gnome/24x24/filesystems/gonme-fs-bookmark.png
+Icon=/usr/share/icons/gnome/24x24/filesystems/gnome-fs-bookmark.png
 Categories=Application;SAMP;
 Name=View Getting Started Guide
 Comment=View Getting Started Guide
