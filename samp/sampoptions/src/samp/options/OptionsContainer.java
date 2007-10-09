@@ -23,19 +23,20 @@
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
 * Use is subject to license terms.
 */
-
 package samp.options;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Paint;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 /**
@@ -43,16 +44,19 @@ import javax.swing.JLabel;
  * @author  ludo
  */
 public class OptionsContainer extends javax.swing.JFrame {
-    private static OptionsContainer optionsContainer =null;
-    
-    public static OptionsContainer getInstance(){
-        if (optionsContainer==null){
+
+    private static OptionsContainer optionsContainer = null;
+
+    public static OptionsContainer getInstance() {
+        if (optionsContainer == null) {
             optionsContainer = new OptionsContainer();
-        }
+            optionsContainer.setLocationRelativeTo(null);
+       }
         return optionsContainer;
-        
+
     }
     /** Creates new form OptionsContainer */
+
     private OptionsContainer() {
         initComponents();
         tabsPanel.addTab("General", new GeneralPanel());
@@ -61,31 +65,32 @@ public class OptionsContainer extends javax.swing.JFrame {
         tabsPanel.addTab("MySQL", new MySQLPanel());
         tabsPanel.addTab("FTP", new FTPPanel());
 
-       
+
         pack();
         setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
 
     }
-    private JLabel getImage(){
-         BufferedImage image=null;
+
+    private JLabel getImage() {
+        BufferedImage image = null;
         try {
             image = ImageIO.read(samp.tray.Tray.class.getResource("resources/samp.png"));
-           // image = createReflection(image);
+        // image = createReflection(image);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-                return new JLabel(new ImageIcon(image));
+        return new JLabel(new ImageIcon(image));
     }
+
     private BufferedImage createReflection(BufferedImage image) {
         int height = image.getHeight();
-        
-        BufferedImage result = new BufferedImage(image.getWidth(), height * 2,
-                BufferedImage.TYPE_INT_ARGB);
+
+        BufferedImage result = new BufferedImage(image.getWidth(), height * 2, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = result.createGraphics();
-        
-         // Paints original image
+
+        // Paints original image
         g2.drawImage(image, 0, 0, null);
-        
+
         // Paints mirrored image
         g2.scale(1.0, -1.0);
         g2.drawImage(image, 0, -height - height, null);
@@ -93,23 +98,22 @@ public class OptionsContainer extends javax.swing.JFrame {
 
         // Move to the origin of the clone
         g2.translate(0, height);
-        
+
         // Creates the alpha mask
         GradientPaint mask;
-        mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f),
-                0, height / 2, new Color(1.0f, 1.0f, 1.0f, 0.0f));
+        mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, height / 2, new Color(1.0f, 1.0f, 1.0f, 0.0f));
         Paint oldPaint = g2.getPaint();
         g2.setPaint(mask);
-        
+
         // Sets the alpha composite
         g2.setComposite(AlphaComposite.DstIn);
-        
+
         // Paints the mask
         g2.fillRect(0, 0, image.getWidth(), height);
- 
+
         g2.dispose();
         return result;
-    }    
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -184,14 +188,11 @@ public class OptionsContainer extends javax.swing.JFrame {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
-    
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton okButton;
     private javax.swing.JTabbedPane tabsPanel;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
-    
+
 }
