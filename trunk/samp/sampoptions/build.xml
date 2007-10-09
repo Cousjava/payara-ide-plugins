@@ -7,9 +7,20 @@
     <import file="nbproject/build-impl.xml"/>
     <target name="-post-jar">
         <delete dir="pkgbuild/webstack"/>
+        <mkdir dir="pkgbuild/webstack/bin" />
         <mkdir dir="pkgbuild/webstack/menus/.local/share/applications" />
         <mkdir dir="pkgbuild/webstack/menus/.local/share/desktop-directories" />
         <mkdir dir="pkgbuild/webstack/menus/.config/menus/applications-merged" />
+        <copy 
+            todir="pkgbuild/webstack/bin"> 
+            <fileset dir="src/samp/scripts" includes="*.sh" />      
+        </copy>
+         <copy 
+            todir="pkgbuild/webstack/bin"> 
+            <fileset dir="dist" includes="*.jar" />      
+        </copy>
+       <chmod dir="pkgbuild/webstack/bin" perm="ugo+rx" 
+               includes="**/*.sh"/>
         <copy 
             todir="pkgbuild/webstack/menus/.local/share/applications"> 
             <fileset dir="src/samp/scripts/startmenus" includes="*.desktop" />      
@@ -23,5 +34,5 @@
             <fileset dir="src/samp/scripts/startmenus" includes="*.menu" />      
         </copy>
     </target>
-
+    
 </project>
