@@ -2,7 +2,7 @@
 Exec="/opt/webstack/bin/stop.sh"
 Terminal=0
 Type=Application
-Icon=/usr/share/icons/gnome/24x24/filesystems/gonme-fs-bookmark.png
+Icon=/usr/share/icons/gnome/24x24/filesystems/gnome-fs-bookmark.png
 Categories=Application;SAMP;
 Name=Stop Apache2/MySQL Servers
 Comment=Stop Apache2/MySQL Servers

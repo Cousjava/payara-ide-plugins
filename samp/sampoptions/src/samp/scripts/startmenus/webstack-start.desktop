@@ -2,7 +2,7 @@
 Exec="/opt/webstack/bin/start.sh"
 Terminal=0
 Type=Application
-Icon=/usr/share/icons/gnome/24x24/filesystems/gonme-fs-bookmark.png
+Icon=/usr/share/icons/gnome/24x24/filesystems/gnome-fs-bookmark.png
 Categories=Application;SAMP;
 Name=Start Apache2/MySQL Servers
 Comment=Start Apache2/MySQL Servers
