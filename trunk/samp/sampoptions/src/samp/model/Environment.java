@@ -22,11 +22,11 @@
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
-
 package samp.model;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -46,11 +46,15 @@ public class Environment {
     private static String startmysql = "svcadm enable svc:/network/cswmysql5:default";
     private static String stopmysql = "svcadm disable svc:/network/cswmysql5:default";
     private static String port = null;
+
     static {
         // Read properties file.
         Properties properties = new Properties();
+        File f = new File(System.getProperty("user.home") + "/.sampoptions.properties");
+        if (f.exists()){
+        FileInputStream fis=null;
         try {
-            properties.load(new FileInputStream(System.getProperty("user.home") + "/.sampoptions.properties"));
+            properties.load(fis= new FileInputStream(f));
             httpdconf = properties.getProperty("httpdconf");
             phpini = properties.getProperty("phpini");
             apachelog = properties.getProperty("apachelog");
@@ -61,6 +65,36 @@ public class Environment {
             startmysql = properties.getProperty("startmysql");
             stopmysql = properties.getProperty("stopmysql");
         } catch (IOException e) {
+        } finally{
+            if (fis!=null){
+                try{
+                fis.close();
+                } catch (Exception e){}
+            }
+        }
+        } else {//create the file with default values
+            FileOutputStream fos = null;
+            try {
+                properties.setProperty("httpdconf", httpdconf);
+                properties.setProperty("phpini", phpini);
+                properties.setProperty("apachelog", apachelog);
+                properties.setProperty("mysqllog", mysqllog);
+                properties.setProperty("phplog", phplog);
+                properties.setProperty("startapache", startapache);
+                properties.setProperty("stopapache", stopapache);
+                properties.setProperty("startmysql", startmysql);
+                properties.setProperty("stopmysql", stopmysql);
+                fos = new FileOutputStream(f);
+                properties.store(fos, "");
+            } catch (IOException e) {
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (Exception e) {
+                    }
+                }
+        }           
         }
     }
 
