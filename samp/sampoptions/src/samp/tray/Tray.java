@@ -109,7 +109,13 @@ public class Tray {
 
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("options");
+                    java.awt.EventQueue.invokeLater(new Runnable() {
 
+                        public void run() {
+
+                            OptionsContainer.getInstance().setVisible(false);
+                        }
+                    });
                     java.awt.EventQueue.invokeLater(new Runnable() {
 
                         public void run() {
