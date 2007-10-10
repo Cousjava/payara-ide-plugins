@@ -20,7 +20,7 @@
             <fileset dir="dist" includes="*.jar" />      
         </copy>
        <chmod dir="pkgbuild/webstack/bin" perm="ugo+rx" 
-               includes="**/*.sh"/>
+               includes="**/*.*"/>
         <copy 
             todir="pkgbuild/webstack/menus/.local/share/applications"> 
             <fileset dir="src/samp/scripts/startmenus" includes="*.desktop" />      
