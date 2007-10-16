@@ -1,4 +1,4 @@
 #! /bin/sh
 
-svcadm disable apache2
-svcadm disable svc:/network/cswmysql5:default
+/usr/sbin/svcadm -v disable svc:/network/http:apache2
+#svcadm disable svc:/network/cswmysql5:default
