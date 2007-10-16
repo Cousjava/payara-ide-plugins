@@ -39,20 +39,29 @@ LOG=/tmp/webstacktoolinginitialize.log
 
 
 echo "" | /usr/bin/tee -a ${LOG}
+echo "Checking for existing WebStack Tooling" | /usr/bin/tee -a ${LOG}
+if [ -r ${ROOT_PATH}/opt/webstack ] ; then
+   echo " WebStack Tooling exists" | /usr/bin/tee -a ${LOG}
+fi
 
 
 
-# UnInstall menus 
-echo "UnInstalling WebStack menus" | /usr/bin/tee -a ${LOG}
+# Install menus 
+echo "Installing WebStack menus" | /usr/bin/tee -a ${LOG}
 
 
-   echo "UnInstalling NetBeans GNOME desktop file" | /usr/bin/tee -a ${LOG}
+   echo "Installing NetBeans GNOME desktop file" | /usr/bin/tee -a ${LOG}
+   /usr/bin/mkdir -p ${HOME}/.local/share/applications
+   echo "home is ${HOME}" | /usr/bin/tee -a ${LOG}
+   /usr/bin/cp  ${SCRIPTS_DIR}/.local/share/applications/*.desktop ${HOME}/.local/share/applications
+   echo "copy done"
 
-   /usr/bin/rm ${HOME}/.local/share/applications/webstack*.desktop
-
-   /usr/bin/rm ${HOME}/.local/share/desktop-directories/webstack*.directory
-
-   /usr/bin/rm   ${HOME}/.config/menus/applications-merged/webstack*.menu
+   /usr/bin/mkdir -p ${HOME}/.local/share/desktop-directories
+   echo "/usr/bin/mkdir -p ~/.local/share/desktop-directories" | /usr/bin/tee -a ${LOG}
+   /usr/bin/cp ${SCRIPTS_DIR}/.local/share/desktop-directories/*.directory ${HOME}/.local/share/desktop-directories
+   echo "copy done"
+   /usr/bin/mkdir -p ${HOME}/.config/menus/applications-merged
+   /usr/bin/cp  ${SCRIPTS_DIR}/.config/menus/applications-merged/*.menu ${HOME}/.config/menus/applications-merged
 
 
 

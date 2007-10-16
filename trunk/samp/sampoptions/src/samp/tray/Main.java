@@ -27,7 +27,6 @@
 package samp.tray;
 
 import javax.swing.UIManager;
-import samp.scripts.startmenus.InstallMenus;
 
 /**
  *
@@ -41,7 +40,6 @@ public class Main {
     public static void main(String[] args) {
         if (System.getProperty("os.name").startsWith("Mac") == false) {
             installGTK();
-            InstallMenus.initMenus();
         }
         new Tray();
     }
