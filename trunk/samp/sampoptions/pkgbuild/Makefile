@@ -4,7 +4,7 @@ ARCH=all
 PKGFILE=$(PKG)-$(ARCH).pkg
 
 pkg:
-	(echo 'i pkginfo'; pkgproto ./webstack=webstack ) >prototype
+	(echo 'i pkginfo'; echo 'i postinstall=./postinstall' ;pkgproto ./webstack=webstack ) >prototype
 	pkgmk -o -d /tmp -a $(ARCH)
 	touch $(PKGFILE)
 	pkgtrans -s /tmp $(PKGFILE) $(PKG) 

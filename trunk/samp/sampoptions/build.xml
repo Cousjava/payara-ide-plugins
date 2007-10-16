@@ -8,14 +8,18 @@
     <target name="-post-jar">
         <delete dir="pkgbuild/webstack"/>
         <mkdir dir="pkgbuild/webstack/bin" />
+        <mkdir dir="pkgbuild/webstack/globalmenus" />
         <mkdir dir="pkgbuild/webstack/menus/.local/share/applications" />
         <mkdir dir="pkgbuild/webstack/menus/.local/share/desktop-directories" />
         <mkdir dir="pkgbuild/webstack/menus/.config/menus/applications-merged" />
         <copy 
+            todir="pkgbuild/webstack/globalmenus"> 
+            <fileset dir="pkgbuild/globalmenus" includes="*.*" />      
+        </copy>
+        <copy 
             todir="pkgbuild/webstack/bin"> 
             <fileset dir="src/samp/scripts" includes="*.sh" />      
-        </copy>
-         <copy 
+        </copy>         <copy 
             todir="pkgbuild/webstack/bin"> 
             <fileset dir="dist" includes="*.jar" />      
         </copy>

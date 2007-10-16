@@ -1,0 +1,7 @@
+#! /bin/sh
+
+/usr/bin/cp  /opt/webstack/globalmenus/applications.menu /etc/xdg/menus
+echo "/usr/bin/cp  /opt/webstack/globalmenus/application.menu /etc/xdg/menus"
+/usr/bin/cp  /opt/webstack/globalmenus/webstack-initialize.desktop /usr/share/applications
+/usr/bin/cp  /opt/webstack/globalmenus/webstack.directory /usr/share/desktop-directories
+pkill gnome-panel

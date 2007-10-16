@@ -1,4 +1,4 @@
 #! /bin/sh
 
-svcadm enable apache2
-svcadm enable svc:/network/cswmysql5:default
+/usr/sbin/svcadm -v enable svc:/network/http:apache2
+#svcadm enable svc:/network/cswmysql5:default
