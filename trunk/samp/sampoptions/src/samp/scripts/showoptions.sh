@@ -1,3 +1,3 @@
 #! /bin/sh
 
-ls
+/opt/webstack/bin/sampoptions.jar options

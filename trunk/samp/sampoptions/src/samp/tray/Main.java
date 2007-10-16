@@ -41,7 +41,12 @@ public class Main {
         if (System.getProperty("os.name").startsWith("Mac") == false) {
             installGTK();
         }
-        new Tray();
+        Tray tr = new Tray();
+        if (args.length==1){
+            if (args[0].equals("options")){
+                tr.showOptions();
+            }
+        }
     }
 
     private static void installGTK() {
