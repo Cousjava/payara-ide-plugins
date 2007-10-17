@@ -63,7 +63,14 @@ public class Tray {
         Image merged = Util.mergeImages(image1, badge, 18, 18);
         trayIcon.setImage(merged);
     }
-
+    public void updateIcon(){
+            boolean running = ServersManager.isApacheRunning(Integer.parseInt(Environment.getApachePortNumber()), 1000);
+            if (running) {
+                setIcon("green");
+            } else {
+                setIcon("red");
+            }        
+    }
     public void showOptions() {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
@@ -230,12 +237,7 @@ public class Tray {
 
             Image image1 = new ImageIcon(url).getImage();
             trayIcon = new TrayIcon(image1, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
-            boolean running = ServersManager.isApacheRunning(Integer.parseInt(Environment.getApachePortNumber()), 1000);
-            if (running) {
-                setIcon("green");
-            } else {
-                setIcon("red");
-            }
+            updateIcon();
             ActionListener actionListener = new ActionListener() {
 
                         public void actionPerformed(ActionEvent e) {

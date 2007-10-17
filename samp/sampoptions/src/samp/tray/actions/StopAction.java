@@ -28,7 +28,7 @@ public class StopAction extends MenuItem {
 
             public void actionPerformed(ActionEvent e) {
                 ServersManager.StopServers();
-                tray.setIcon("red");
+                tray.updateIcon();
             }
         });
     }
