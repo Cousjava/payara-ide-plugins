@@ -22,8 +22,6 @@
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
-
-
 package samp.tray;
 
 import java.awt.AWTException;
@@ -45,6 +43,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 import samp.execution.ServersManager;
 import samp.model.Environment;
 import samp.model.Util;
@@ -93,35 +92,39 @@ public class Tray {
 
             MouseListener mouseListener = new MouseListener() {
 
-                public void mouseClicked(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse clicked!");
-                }
+                        public void mouseClicked(MouseEvent e) {
+                            System.out.println("Tray Icon - Mouse clicked!");
+                        }
 
-                public void mouseEntered(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse entered!");
-                }
+                        public void mouseEntered(MouseEvent e) {
+                            System.out.println("Tray Icon - Mouse entered!");
+                        }
 
-                public void mouseExited(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse exited!");
-                }
+                        public void mouseExited(MouseEvent e) {
+                            System.out.println("Tray Icon - Mouse exited!");
+                        }
 
-                public void mousePressed(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse pressed!");
-                }
+                        public void mousePressed(MouseEvent e) {
+                            System.out.println("Tray Icon - Mouse pressed!");
+                        }
 
-                public void mouseReleased(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse released!");
-                }
-            };
-
-
+                        public void mouseReleased(MouseEvent e) {
+                            System.out.println("Tray Icon - Mouse released!");
+                        }
+                    };
 
 
+
+
+            Font defaultFont = (Font) UIManager.get("Label.font");
             MenuItem defaultItem;
-            popup.add(new StartAction(this));
+            popup.add(defaultItem = new StartAction(this));
+            defaultItem.setFont(defaultFont);
 
-            popup.add(new StopAction(this));
+            popup.add(defaultItem = new StopAction(this));
+            defaultItem.setFont(defaultFont);
             popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Options")));
+            defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -130,6 +133,7 @@ public class Tray {
             });
 
             popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Administer_MySQL")));
+            defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -137,8 +141,10 @@ public class Tray {
                 }
             });
             Menu logsMenu = new Menu(" " + getBundle().getString("LABEL_Logs"));
+            logsMenu.setFont(defaultFont);
             popup.add(logsMenu);
             logsMenu.add(defaultItem = new MenuItem("PHP log"));
+            defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -161,6 +167,7 @@ public class Tray {
                 }
             });
             logsMenu.add(defaultItem = new MenuItem("Apache log"));
+            defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -183,6 +190,7 @@ public class Tray {
                 }
             });
             logsMenu.add(defaultItem = new MenuItem("MySql log"));
+            defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -205,6 +213,7 @@ public class Tray {
                 }
             });
             defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Exit"));
+            defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -229,10 +238,10 @@ public class Tray {
             }
             ActionListener actionListener = new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    trayIcon.displayMessage("Action Event", "An Action Event Has Been Peformed!", TrayIcon.MessageType.INFO);
-                }
-            };
+                        public void actionPerformed(ActionEvent e) {
+                            trayIcon.displayMessage("Action Event", "An Action Event Has Been Peformed!", TrayIcon.MessageType.INFO);
+                        }
+                    };
 
 
 
