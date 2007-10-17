@@ -29,12 +29,15 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Paint;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import samp.tray.Main;
 
 /**
  *
@@ -48,7 +51,11 @@ public class OptionsContainer extends javax.swing.JFrame {
         if (optionsContainer == null) {
             optionsContainer = new OptionsContainer();
             optionsContainer.setLocationRelativeTo(null);
-       }
+            URL url = Main.class.getResource("resources/apache.png");
+
+            Image image = new ImageIcon(url).getImage();
+            optionsContainer.setIconImage(image);
+        }
         return optionsContainer;
 
     }
