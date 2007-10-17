@@ -28,7 +28,7 @@ public class StartAction extends MenuItem {
 
             public void actionPerformed(ActionEvent e) {
                 ServersManager.StartServers();
-                tray.setIcon("green");
+                tray.updateIcon();
             }
         });
     }
