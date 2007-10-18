@@ -24,7 +24,7 @@
 * Use is subject to license terms.
 */
 
-package samp.execution;
+package org.opensolaris.webstack.settings.execution;
 
 import java.awt.Desktop;
 import java.io.BufferedReader;
@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import samp.model.Environment;
+import org.opensolaris.webstack.settings.model.Environment;
 
 /**
  *

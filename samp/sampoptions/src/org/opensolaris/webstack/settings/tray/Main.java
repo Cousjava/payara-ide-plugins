@@ -24,7 +24,7 @@
 * Use is subject to license terms.
 */
 
-package samp.tray;
+package org.opensolaris.webstack.settings.tray;
 
 import javax.swing.UIManager;
 

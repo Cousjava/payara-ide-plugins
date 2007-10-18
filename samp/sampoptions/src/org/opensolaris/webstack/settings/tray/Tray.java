@@ -22,7 +22,7 @@
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
-package samp.tray;
+package org.opensolaris.webstack.settings.tray;
 
 import java.awt.AWTException;
 import java.awt.Desktop;
@@ -44,12 +44,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
-import samp.execution.ServersManager;
-import samp.model.Environment;
-import samp.model.Util;
-import samp.options.OptionsContainer;
-import samp.tray.actions.StartAction;
-import samp.tray.actions.StopAction;
+import org.opensolaris.webstack.settings.execution.ServersManager;
+import org.opensolaris.webstack.settings.model.Environment;
+import org.opensolaris.webstack.settings.model.Util;
+import org.opensolaris.webstack.settings.options.OptionsContainer;
+import org.opensolaris.webstack.settings.tray.actions.StartAction;
+import org.opensolaris.webstack.settings.tray.actions.StopAction;
+
 
 public class Tray {
 
@@ -262,6 +263,6 @@ public class Tray {
     }
 
     public static java.util.ResourceBundle getBundle() {
-        return java.util.ResourceBundle.getBundle("samp/tray/Bundle");
+        return java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/tray/Bundle");
     }
 }

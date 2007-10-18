@@ -22,7 +22,7 @@
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
-package samp.model;
+package org.opensolaris.webstack.settings.model;
 
 import java.io.File;
 import java.io.FileInputStream;
