@@ -24,7 +24,7 @@
 * Use is subject to license terms.
 */
 
-package samp.execution;
+package org.opensolaris.webstack.settings.execution;
 
 import java.io.IOException;
 import java.io.Reader;

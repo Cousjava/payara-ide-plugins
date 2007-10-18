@@ -24,7 +24,7 @@
 * Use is subject to license terms.
 */
 
-package samp.options;
+package org.opensolaris.webstack.settings.options;
 
 /**
  *
@@ -56,7 +56,7 @@ public class GeneralPanel extends javax.swing.JPanel {
 
         jCheckBoxServersWhenILogIn.setText("Start Servers when I log in, Stop Servers when I log out"); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("samp/options/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
         jButton1.setText(bundle.getString("LABEL_VIEWADVANCEDDETAILS")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

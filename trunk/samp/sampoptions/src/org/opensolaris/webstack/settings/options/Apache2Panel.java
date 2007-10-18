@@ -23,18 +23,18 @@
  * Use is subject to license terms.
  */
 
-package samp.options;
+package org.opensolaris.webstack.settings.options;
 
 import java.awt.Desktop;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import samp.model.Environment;
+import org.opensolaris.webstack.settings.model.Environment;
+
 
 /**
  *
@@ -91,7 +91,7 @@ public class Apache2Panel extends javax.swing.JPanel {
 
         labelPortNumber.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         labelPortNumber.setLabelFor(textFieldPortNumber);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("samp/options/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
         labelPortNumber.setText(bundle.getString("LABEL_PORT")); // NOI18N
 
         textFieldPortNumber.setText("80");

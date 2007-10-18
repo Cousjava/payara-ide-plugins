@@ -24,7 +24,7 @@
 * Use is subject to license terms.
 */
 
-package samp.options;
+package org.opensolaris.webstack.settings.options;
 
 /**
  *

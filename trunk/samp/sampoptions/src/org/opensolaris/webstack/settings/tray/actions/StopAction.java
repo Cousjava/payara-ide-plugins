@@ -7,14 +7,15 @@
  * and open the template in the editor.
  */
 
-package samp.tray.actions;
+package org.opensolaris.webstack.settings.tray.actions;
 
 import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import samp.execution.ServersManager;
-import samp.model.Environment;
-import samp.tray.Tray;
+import org.opensolaris.webstack.settings.execution.ServersManager;
+import org.opensolaris.webstack.settings.model.Environment;
+import org.opensolaris.webstack.settings.tray.Tray;
+
 
 /**
  *

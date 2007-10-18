@@ -23,7 +23,7 @@
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
 * Use is subject to license terms.
 */
-package samp.options;
+package org.opensolaris.webstack.settings.options;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -37,7 +37,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import samp.tray.Main;
+import org.opensolaris.webstack.settings.tray.Main;
 
 /**
  *
@@ -78,7 +78,7 @@ public class OptionsContainer extends javax.swing.JFrame {
     private JLabel getImage() {
         BufferedImage image = null;
         try {
-            image = ImageIO.read(samp.tray.Tray.class.getResource("resources/samp.png"));
+            image = ImageIO.read(org.opensolaris.webstack.settings.tray.Tray.class.getResource("resources/samp.png"));
         // image = createReflection(image);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -133,7 +133,7 @@ public class OptionsContainer extends javax.swing.JFrame {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("samp/tray/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/tray/Bundle"); // NOI18N
         setTitle(bundle.getString("LABEL_Title")); // NOI18N
 
         tabsPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));

@@ -24,7 +24,7 @@
 * Use is subject to license terms.
 */
 
-package samp.options;
+package org.opensolaris.webstack.settings.options;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import samp.model.Environment;
+import org.opensolaris.webstack.settings.model.Environment;
 
 /**
  *
@@ -40,7 +40,7 @@ import samp.model.Environment;
  */
 public class PHPPanel extends javax.swing.JPanel {
     
-       java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("samp/options/Bundle"); // NOI18N
+       java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
  
          String[] comboTypes = { 
                 bundle.getString("E_ALL"),
@@ -83,7 +83,7 @@ public class PHPPanel extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("samp/options/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
         jLabel1.setText(bundle.getString("LABEL_PHPVERSION")); // NOI18N
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "5", "4" }));

@@ -24,7 +24,7 @@
 * Use is subject to license terms.
 */
 
-package samp.model;
+package org.opensolaris.webstack.settings.model;
 
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
