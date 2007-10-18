@@ -18,7 +18,7 @@
         </copy>
         <copy 
             todir="pkgbuild/webstack/bin"> 
-            <fileset dir="src/samp/scripts" includes="*.sh" />      
+            <fileset dir="src/org/opensolaris/webstack/settings/scripts" includes="*.sh" />      
         </copy>         <copy 
             todir="pkgbuild/webstack/bin"> 
             <fileset dir="dist" includes="*.jar" />      
@@ -27,15 +27,15 @@
                includes="**/*.*"/>
         <copy 
             todir="pkgbuild/webstack/menus/.local/share/applications"> 
-            <fileset dir="src/samp/scripts/startmenus" includes="*.desktop" />      
+            <fileset dir="src/org/opensolaris/webstack/settings/scripts/startmenus" includes="*.desktop" />      
         </copy>
         <copy 
             todir="pkgbuild/webstack/menus/.local/share/desktop-directories"> 
-            <fileset dir="src/samp/scripts/startmenus" includes="*.directory" />      
+            <fileset dir="src/org/opensolaris/webstack/settings/scripts/startmenus" includes="*.directory" />      
         </copy>
         <copy 
             todir="pkgbuild/webstack/menus/.config/menus/applications-merged"> 
-            <fileset dir="src/samp/scripts/startmenus" includes="*.menu" />      
+            <fileset dir="src/org/opensolaris/webstack/settings/scripts/startmenus" includes="*.menu" />      
         </copy>
     </target>
     
