@@ -31,6 +31,8 @@ import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Paint;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -47,6 +49,7 @@ public class OptionsContainer extends javax.swing.JFrame {
 
     private static OptionsContainer optionsContainer = null;
 
+    private Apache2Panel apacheTab;
     public static OptionsContainer getInstance() {
         if (optionsContainer == null) {
             optionsContainer = new OptionsContainer();
@@ -64,7 +67,7 @@ public class OptionsContainer extends javax.swing.JFrame {
     private OptionsContainer() {
         initComponents();
         tabsPanel.addTab("General", new GeneralPanel());
-        tabsPanel.addTab("Apache 2", new Apache2Panel());
+        tabsPanel.addTab("Apache 2", apacheTab = new Apache2Panel());
         tabsPanel.addTab("PHP", new PHPPanel());
         tabsPanel.addTab("MySQL", new MySQLPanel());
         tabsPanel.addTab("FTP", new FTPPanel());
@@ -72,6 +75,38 @@ public class OptionsContainer extends javax.swing.JFrame {
 
         pack();
         setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowListener (){
+
+            public void windowOpened(WindowEvent arg0) {
+             }
+
+            public void windowClosing(WindowEvent arg0) {
+                System.out.println("is Closing CALLED.....");
+                apacheTab.OKCalled();
+                OptionsContainer.this.dispose();
+            }
+
+            public void windowClosed(WindowEvent arg0) {
+             //   throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            public void windowIconified(WindowEvent arg0) {
+             //   throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            public void windowDeiconified(WindowEvent arg0) {
+             //   throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            public void windowActivated(WindowEvent arg0) {
+              //  throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            public void windowDeactivated(WindowEvent arg0) {
+             //   throw new UnsupportedOperationException("Not supported yet.");
+            }
+            
+        });
 
     }
 
@@ -133,12 +168,12 @@ public class OptionsContainer extends javax.swing.JFrame {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/tray/Bundle"); // NOI18N
-        setTitle(bundle.getString("LABEL_Title")); // NOI18N
+        setTitle("null");
 
         tabsPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         tabsPanel.setMinimumSize(new java.awt.Dimension(0, 0));
 
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
         okButton.setText(bundle.getString("LABEL_OK")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -157,24 +192,24 @@ public class OptionsContainer extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
+            .addComponent(titleLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 626, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(okButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 340, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 442, Short.MAX_VALUE)
                 .addComponent(cancelButton)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+                .addComponent(tabsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tabsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
@@ -190,6 +225,8 @@ public class OptionsContainer extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        System.out.println(" save is CALLED ");
+        
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
