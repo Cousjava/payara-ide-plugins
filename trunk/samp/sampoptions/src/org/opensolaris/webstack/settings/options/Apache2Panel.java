@@ -28,43 +28,50 @@ package org.opensolaris.webstack.settings.options;
 import java.awt.Desktop;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import org.opensolaris.webstack.settings.model.Environment;
-
+import org.opensolaris.webstack.settings.model.HttpdConfModel;
 
 /**
  *
  * @author  ludo
  */
-public class Apache2Panel extends javax.swing.JPanel {
+public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeListener, OptionTab {
+
+    private HttpdConfModel model;
 
     /** Creates new form Apache2Panel */
     public Apache2Panel() {
         initComponents();
-        textFieldPortNumber.setText(Environment.getApachePortNumber());
+        model = new HttpdConfModel();
+        model.addPropertyChangeListener(this);
+        textFieldPortNumber.setText("" + model.getPortNumber());
         textFieldPortNumber.addKeyListener(new KeyAdapter() {
 
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                if (!((Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)))) {
-                    getToolkit().beep();
-                    e.consume();
-                } else{
-                    if (Character.isDigit(c)){
-                        labelWebPage.setText("http://localhost:"+textFieldPortNumber.getText()+c);
-                    }else{
-                         labelWebPage.setText("http://localhost:"+textFieldPortNumber.getText());
-                       
+                    public void keyTyped(KeyEvent e) {
+                        char c = e.getKeyChar();
+                        if (!((Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)))) {
+                            getToolkit().beep();
+                            e.consume();
+                        } else {
+                            if (Character.isDigit(c)) {
+                                labelWebPage.setText("http://localhost:" + textFieldPortNumber.getText() + c);
+                            } else {
+                                labelWebPage.setText("http://localhost:" + textFieldPortNumber.getText());
+
+                            }
+                        }
+
                     }
-                }
-                
-            }
-        }); 
-        labelWebPage.setText("http://localhost:"+textFieldPortNumber.getText());
+                });
+        labelWebPage.setText("http://localhost:" + textFieldPortNumber.getText());
 
 
     }
@@ -88,6 +95,7 @@ public class Apache2Panel extends javax.swing.JPanel {
         buttonRepair = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         labelWebPage = new HyperLinkButton("aaa","fff");
+        browseButton = new javax.swing.JButton();
 
         labelPortNumber.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         labelPortNumber.setLabelFor(textFieldPortNumber);
@@ -124,6 +132,13 @@ public class Apache2Panel extends javax.swing.JPanel {
 
         labelWebPage.setText("jButton1");
 
+        browseButton.setText(bundle.getString("LBL_BrowseButton")); // NOI18N
+        browseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -137,18 +152,21 @@ public class Apache2Panel extends javax.swing.JPanel {
                     .addComponent(labelWebSite))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                    .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonAdvanceConf)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
                     .addComponent(buttonRepair)
-                    .addComponent(textFieldDocRoot, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
-                    .addComponent(textFieldPortNumber, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
-                    .addComponent(labelWebPage, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE))
+                    .addComponent(textFieldPortNumber, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                    .addComponent(labelWebPage, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(textFieldDocRoot, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -163,8 +181,9 @@ public class Apache2Panel extends javax.swing.JPanel {
                     .addComponent(textFieldPortNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textFieldDocRoot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelDocRoot))
+                    .addComponent(labelDocRoot)
+                    .addComponent(browseButton)
+                    .addComponent(textFieldDocRoot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelWebSite)
@@ -182,7 +201,6 @@ public class Apache2Panel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
 
         Desktop desktop = null;
@@ -202,7 +220,15 @@ public class Apache2Panel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonAdvanceConfActionPerformed
 
+    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
+        String newLoc = browseHTDOCLocation();
+        if (newLoc != null && newLoc.length() > 0) {
+            textFieldDocRoot.setText(newLoc);
+        }
+    }//GEN-LAST:event_browseButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton browseButton;
     private javax.swing.JButton buttonAdvanceConf;
     private javax.swing.JButton buttonRepair;
     private javax.swing.JCheckBox jCheckBox1;
@@ -215,4 +241,67 @@ public class Apache2Panel extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldDocRoot;
     private javax.swing.JTextField textFieldPortNumber;
     // End of variables declaration//GEN-END:variables
+    public void propertyChange(PropertyChangeEvent arg0) {
+        System.out.println("model changed!~~~" + model.getPortNumber());
+        textFieldPortNumber.setText("" + model.getPortNumber());
+    }
+
+    public void OKCalled() {
+        model.setPortNumber(textFieldPortNumber.getText());
+        if (model.isDirty()) {
+            model.save();
+        }
+    }
+
+    private String browseHTDOCLocation() {
+        String location = null;
+        JFileChooser chooser = getJFileChooser();
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
+        int returnValue = chooser.showDialog(this, bundle.getString("LBL_ChooseButton")); //NOI18N
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            location = chooser.getSelectedFile().getAbsolutePath();
+        }
+        return location;
+    }
+
+    private JFileChooser getJFileChooser() {
+        JFileChooser chooser = new JFileChooser();
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
+        chooser.setDialogTitle(bundle.getString("LBL_ChooserName")); //NOI18N
+        chooser.setDialogType(JFileChooser.CUSTOM_DIALOG);
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setApproveButtonMnemonic("Choose_Button_Mnemonic".charAt(0)); //NOI18N
+        chooser.setMultiSelectionEnabled(false);
+        chooser.addChoosableFileFilter(new DirFilter());
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setApproveButtonToolTipText(bundle.getString("LBL_ChooserName")); //NOI18N
+        chooser.getAccessibleContext().setAccessibleName(bundle.getString("LBL_ChooserName")); //NOI18N
+        chooser.getAccessibleContext().setAccessibleDescription(bundle.getString("LBL_ChooserName")); //NOI18N
+
+        // set the current directory
+        File currentLocation = new File(textFieldDocRoot.getText());
+        if (currentLocation.exists() && currentLocation.isDirectory()) {
+            chooser.setCurrentDirectory(currentLocation.getParentFile());
+            chooser.setSelectedFile(currentLocation);
+        }
+
+        return chooser;
+    }
+
+    private static class DirFilter extends javax.swing.filechooser.FileFilter {
+
+        public boolean accept(File f) {
+            if (!f.exists() || !f.canRead() || !f.isDirectory()) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        public String getDescription() {
+            java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
+            return bundle.getString("LBL_DirType");
+        }
+    }
 }
