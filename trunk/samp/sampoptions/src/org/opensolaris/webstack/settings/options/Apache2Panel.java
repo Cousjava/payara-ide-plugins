@@ -48,9 +48,9 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
     private HttpdConfModel model;
 
     /** Creates new form Apache2Panel */
-    public Apache2Panel() {
+    public Apache2Panel(HttpdConfModel model) {
         initComponents();
-        model = new HttpdConfModel();
+        this.model = model;
         model.addPropertyChangeListener(this);
         textFieldPortNumber.setText("" + model.getPortNumber());
         textFieldPortNumber.addKeyListener(new KeyAdapter() {
@@ -244,6 +244,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
     public void propertyChange(PropertyChangeEvent arg0) {
         System.out.println("model changed!~~~" + model.getPortNumber());
         textFieldPortNumber.setText("" + model.getPortNumber());
+        labelWebPage.setText("http://localhost:" + textFieldPortNumber.getText());
     }
 
     public void OKCalled() {

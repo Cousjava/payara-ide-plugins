@@ -135,9 +135,7 @@ public class Environment {
     }
 
     public static String getApachePortNumber() {
-        if (port == null) {
-            port = Util.getValue(new File(getHttpdconf()), "Listen ");
-        }
-        return port;
+
+        return "8888";
     }
 }

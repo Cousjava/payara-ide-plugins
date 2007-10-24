@@ -46,6 +46,7 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import org.opensolaris.webstack.settings.execution.ServersManager;
 import org.opensolaris.webstack.settings.model.Environment;
+import org.opensolaris.webstack.settings.model.HttpdConfModel;
 import org.opensolaris.webstack.settings.model.Util;
 import org.opensolaris.webstack.settings.options.OptionsContainer;
 import org.opensolaris.webstack.settings.tray.actions.StartAction;
@@ -55,7 +56,8 @@ import org.opensolaris.webstack.settings.tray.actions.StopAction;
 public class Tray {
 
     private TrayIcon trayIcon;
-
+    private HttpdConfModel model;
+    private OptionsContainer ui = null;
     public void setIcon(String name) {
         URL url = this.getClass().getResource("resources/apache.png");
 
@@ -73,25 +75,29 @@ public class Tray {
             }        
     }
     public void showOptions() {
+        if (ui==null){
+            ui = new OptionsContainer(model);
+        }
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
 
-                OptionsContainer.getInstance().setVisible(false);
+                ui.setVisible(false);
             }
         });
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
 
-                OptionsContainer.getInstance().setVisible(true);
-                OptionsContainer.getInstance().toFront();
+                ui.setVisible(true);
+                ui.toFront();
             }
         });
     }
 
     public Tray() {
-
+        model = new HttpdConfModel();
+        
         final PopupMenu popup = new PopupMenu();
 
         if (SystemTray.isSupported()) {
