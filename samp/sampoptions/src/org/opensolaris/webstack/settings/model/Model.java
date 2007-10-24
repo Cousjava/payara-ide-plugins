@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 public class Model {
 
     File modelFile = null;
-    ArrayList<String> content = new ArrayList();
+    ArrayList<String> content ;
     long timeStamp = 0;
     Timer timer;
     static private int delay = 0;   // delay for 0 sec.
@@ -56,15 +56,17 @@ public class Model {
     /* 
     reset is called before reading the file after timestamp changes
      * override to reset your private state data if needed
-     * default impl does nothing
+     * default impl is doing a reload from file on disk
      */
     public void reset() {
-
+        load();
     }
 
     public void load() {
         FileInputStream fis = null;
         BufferedReader br = null;
+        content = new ArrayList();
+        timeStamp = 0;
         try {
             fis = new FileInputStream(modelFile);
 
@@ -101,7 +103,7 @@ public class Model {
         FileWriter fout = null;
 
         try {
-            fout = new FileWriter(modelFile);
+            fout = new FileWriter(modelFile,false);
             for (int i = 0; i < content.size(); i++) {
                 fout.write(content.get(i)+"\n");
             }
@@ -129,6 +131,7 @@ public class Model {
             long currentTimeStamp = modelFile.lastModified();
             if (timeStamp < currentTimeStamp) {
                 load();
+                System.out.println("time stamp changed, reloading");
                 long old = timeStamp;
                 timeStamp = modelFile.lastModified();
                 changeSupport.firePropertyChange("timeStamp", "" + old, "" + timeStamp);

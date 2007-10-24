@@ -1,28 +1,28 @@
 /*
-* CDDL HEADER START
-*
-* The contents of this file are subject to the terms of the
-* Common Development and Distribution License, Version 1.0 only
-* (the "License").  You may not use this file except in compliance
-* with the License.
-*
-* You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
-* or http://www.opensolaris.org/os/licensing.
-* See the License for the specific language governing permissions
-* and limitations under the License.
-*
-* When distributing Covered Code, include this CDDL HEADER in each
-* file and include the License file at usr/src/OPENSOLARIS.LICENSE.
-* If applicable, add the following below this CDDL HEADER, with the
-* fields enclosed by brackets "[]" replaced with your own identifying
-* information: Portions Copyright [yyyy] [name of copyright owner]
-*
-* CDDL HEADER END
-*/
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License, Version 1.0 only
+ * (the "License").  You may not use this file except in compliance
+ * with the License.
+ *
+ * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+ * or http://www.opensolaris.org/os/licensing.
+ * See the License for the specific language governing permissions
+ * and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ */
 /*
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
-* Use is subject to license terms.
-*/
+ * Use is subject to license terms.
+ */
 package org.opensolaris.webstack.settings.options;
 
 import java.awt.AlphaComposite;
@@ -39,6 +39,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import org.opensolaris.webstack.settings.model.HttpdConfModel;
 import org.opensolaris.webstack.settings.tray.Main;
 
 /**
@@ -47,66 +48,59 @@ import org.opensolaris.webstack.settings.tray.Main;
  */
 public class OptionsContainer extends javax.swing.JFrame {
 
-    private static OptionsContainer optionsContainer = null;
-
     private Apache2Panel apacheTab;
-    public static OptionsContainer getInstance() {
-        if (optionsContainer == null) {
-            optionsContainer = new OptionsContainer();
-            optionsContainer.setLocationRelativeTo(null);
-            URL url = Main.class.getResource("resources/apache.png");
+    private HttpdConfModel model;
 
-            Image image = new ImageIcon(url).getImage();
-            optionsContainer.setIconImage(image);
-        }
-        return optionsContainer;
 
-    }
     /** Creates new form OptionsContainer */
-
-    private OptionsContainer() {
+    public OptionsContainer(HttpdConfModel model) {
+        this.model=model;
         initComponents();
         tabsPanel.addTab("General", new GeneralPanel());
-        tabsPanel.addTab("Apache 2", apacheTab = new Apache2Panel());
+        tabsPanel.addTab("Apache 2", apacheTab = new Apache2Panel(model));
         tabsPanel.addTab("PHP", new PHPPanel());
         tabsPanel.addTab("MySQL", new MySQLPanel());
         tabsPanel.addTab("FTP", new FTPPanel());
 
 
         pack();
+        setLocationRelativeTo(null);
+        URL url = Main.class.getResource("resources/apache.png");
+
+        Image image = new ImageIcon(url).getImage();
+        setIconImage(image);
         setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        addWindowListener(new WindowListener (){
+        addWindowListener(new WindowListener() {
 
-            public void windowOpened(WindowEvent arg0) {
-             }
+                    public void windowOpened(WindowEvent arg0) {
+                    }
 
-            public void windowClosing(WindowEvent arg0) {
-                System.out.println("is Closing CALLED.....");
-                apacheTab.OKCalled();
-                OptionsContainer.this.dispose();
-            }
+                    public void windowClosing(WindowEvent arg0) {
+                        System.out.println("is Closing CALLED.....");
+                        apacheTab.OKCalled();
+                        OptionsContainer.this.dispose();
+                    }
 
-            public void windowClosed(WindowEvent arg0) {
-             //   throw new UnsupportedOperationException("Not supported yet.");
-            }
+                    public void windowClosed(WindowEvent arg0) {
+                    //   throw new UnsupportedOperationException("Not supported yet.");
+                    }
 
-            public void windowIconified(WindowEvent arg0) {
-             //   throw new UnsupportedOperationException("Not supported yet.");
-            }
+                    public void windowIconified(WindowEvent arg0) {
+                    //   throw new UnsupportedOperationException("Not supported yet.");
+                    }
 
-            public void windowDeiconified(WindowEvent arg0) {
-             //   throw new UnsupportedOperationException("Not supported yet.");
-            }
+                    public void windowDeiconified(WindowEvent arg0) {
+                    //   throw new UnsupportedOperationException("Not supported yet.");
+                    }
 
-            public void windowActivated(WindowEvent arg0) {
-              //  throw new UnsupportedOperationException("Not supported yet.");
-            }
+                    public void windowActivated(WindowEvent arg0) {
+                    //  throw new UnsupportedOperationException("Not supported yet.");
+                    }
 
-            public void windowDeactivated(WindowEvent arg0) {
-             //   throw new UnsupportedOperationException("Not supported yet.");
-            }
-            
-        });
+                    public void windowDeactivated(WindowEvent arg0) {
+                    //   throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                });
 
     }
 
@@ -153,6 +147,7 @@ public class OptionsContainer extends javax.swing.JFrame {
         g2.dispose();
         return result;
     }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -219,14 +214,15 @@ public class OptionsContainer extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        model.reset();
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         System.out.println(" save is CALLED ");
-        
+        apacheTab.OKCalled();
+
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -235,5 +231,4 @@ public class OptionsContainer extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tabsPanel;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
-
 }
