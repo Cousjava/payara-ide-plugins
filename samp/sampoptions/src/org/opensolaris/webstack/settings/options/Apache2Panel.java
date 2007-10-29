@@ -26,8 +26,6 @@
 package org.opensolaris.webstack.settings.options;
 
 import java.awt.Desktop;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -35,7 +33,14 @@ import java.io.IOException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JFileChooser;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 import org.opensolaris.webstack.settings.model.Environment;
 import org.opensolaris.webstack.settings.model.HttpdConfModel;
 
@@ -48,30 +53,12 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
     private HttpdConfModel model;
 
     /** Creates new form Apache2Panel */
-    public Apache2Panel(HttpdConfModel model) {
+    public Apache2Panel(final HttpdConfModel model) {
         initComponents();
         this.model = model;
         model.addPropertyChangeListener(this);
         textFieldPortNumber.setText("" + model.getPortNumber());
-        textFieldPortNumber.addKeyListener(new KeyAdapter() {
 
-                    public void keyTyped(KeyEvent e) {
-                        char c = e.getKeyChar();
-                        if (!((Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)))) {
-                            getToolkit().beep();
-                            e.consume();
-                        } else {
-                            if (Character.isDigit(c)) {
-                                labelWebPage.setText("http://localhost:" + textFieldPortNumber.getText() + c);
-                            } else {
-                                labelWebPage.setText("http://localhost:" + textFieldPortNumber.getText());
-
-                            }
-                        }
-
-                    }
-                });
-        labelWebPage.setText("http://localhost:" + textFieldPortNumber.getText());
 
 
     }
@@ -85,7 +72,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
     private void initComponents() {
 
         labelPortNumber = new javax.swing.JLabel();
-        textFieldPortNumber = new javax.swing.JTextField();
+        textFieldPortNumber = new IntTextField();
         labelDocRoot = new javax.swing.JLabel();
         textFieldDocRoot = new javax.swing.JTextField();
         labelWebSite = new javax.swing.JLabel();
@@ -161,12 +148,12 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
                     .addComponent(buttonRepair)
-                    .addComponent(textFieldPortNumber, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                     .addComponent(labelWebPage, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(textFieldDocRoot, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(browseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textFieldPortNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -303,6 +290,58 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
         public String getDescription() {
             java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
             return bundle.getString("LBL_DirType");
+        }
+    }
+
+    private class IntTextField extends javax.swing.JTextField {
+
+        @Override
+        protected Document createDefaultModel() {
+            final Document d = new IntNumberDocument();
+
+            d.addDocumentListener(new DocumentListener() {
+
+                public void insertUpdate(DocumentEvent arg0) {
+                    try {
+                        labelWebPage.setText("http://localhost:" + d.getText(0, d.getLength()));
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(Apache2Panel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                public void removeUpdate(DocumentEvent arg0) {
+                    insertUpdate(arg0);
+                }
+
+                public void changedUpdate(DocumentEvent arg0) {
+                    insertUpdate(arg0);
+                }
+            });
+            return d;
+        }
+    }
+
+    private class IntNumberDocument extends PlainDocument {
+
+        @Override
+        public void insertString(int offs, String str, AttributeSet a)
+                throws BadLocationException {
+
+            char[] source = str.toCharArray();
+            char[] result = new char[source.length];
+            int j = 0;
+
+            for (int i = 0; i < result.length; i++) {
+                if (Character.isDigit(source[i])) {
+                    result[j++] = source[i];
+                } else {
+                    Apache2Panel.this.getToolkit().beep();
+                }
+            }
+
+            super.insertString(offs, new String(result, 0, j), a);
+
+
         }
     }
 }

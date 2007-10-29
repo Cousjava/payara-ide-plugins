@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import org.opensolaris.webstack.settings.tray.Main;
 
 /**
  *
@@ -136,6 +137,6 @@ public class Environment {
 
     public static String getApachePortNumber() {
 
-        return "8888";
+        return "" +Main.getHttpdConfModel().getPortNumber();
     }
 }

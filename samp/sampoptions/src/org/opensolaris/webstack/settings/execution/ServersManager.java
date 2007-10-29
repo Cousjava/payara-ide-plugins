@@ -161,11 +161,11 @@ public class ServersManager {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     try {
                         // request
-                        out.println("HEAD /webstack-apache-test-if-running HTTP/1.1\nHost: localhost:" + port + "\n"); // NOI18N
+                        out.println("HEAD /favicon.ico HTTP/1.1\nHost: localhost:" + port + "\n"); // NOI18N
 
                         // response
                         String text = in.readLine();
-                        System.out.println("text="+text);
+                        //System.out.println("text="+text);
                         if (text == null || !text.startsWith("HTTP/")) { // NOI18N
                             return false; // not an http response
                         }
@@ -177,15 +177,17 @@ public class ServersManager {
                             }
                             String name = text.substring(0, colon).trim();
                             String value = text.substring(colon + 1).trim();
-                            System.out.println("name"+name);
-                            System.out.println("value"+value);
+                           // System.out.println("name"+name);
+                           // System.out.println("value"+value);
                             if (name.equals("Server"))
 
                             if (value.contains("Apache/2.")) { // NOI18N
+                                System.out.println("is running");
                                     return true;
                                 
                             } 
                         }
+                        System.out.println(" not running");
                         return false;
                     } finally {
                         in.close();
@@ -196,7 +198,7 @@ public class ServersManager {
             } finally {
                 socket.close();
             }
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             return false;
         }
     }
