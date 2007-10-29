@@ -39,6 +39,7 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import org.opensolaris.webstack.settings.model.HttpdConfModel;
 import org.opensolaris.webstack.settings.tray.Main;
 
@@ -51,10 +52,9 @@ public class OptionsContainer extends javax.swing.JFrame {
     private Apache2Panel apacheTab;
     private HttpdConfModel model;
 
-
     /** Creates new form OptionsContainer */
-    public OptionsContainer(HttpdConfModel model) {
-        this.model=model;
+    public OptionsContainer(final HttpdConfModel model) {
+        this.model = model;
         initComponents();
         tabsPanel.addTab("General", new GeneralPanel());
         tabsPanel.addTab("Apache 2", apacheTab = new Apache2Panel(model));
@@ -72,36 +72,47 @@ public class OptionsContainer extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         addWindowListener(new WindowListener() {
 
-                    public void windowOpened(WindowEvent arg0) {
-                    }
+            public void windowOpened(WindowEvent arg0) {
+            }
 
-                    public void windowClosing(WindowEvent arg0) {
-                        System.out.println("is Closing CALLED.....");
-                        apacheTab.OKCalled();
-                        OptionsContainer.this.dispose();
-                    }
+            public void windowClosing(WindowEvent arg0) {
+                saveChanges();
+            }
 
-                    public void windowClosed(WindowEvent arg0) {
-                    //   throw new UnsupportedOperationException("Not supported yet.");
-                    }
+            public void windowClosed(WindowEvent arg0) {
+            //   throw new UnsupportedOperationException("Not supported yet.");
+            }
 
-                    public void windowIconified(WindowEvent arg0) {
-                    //   throw new UnsupportedOperationException("Not supported yet.");
-                    }
+            public void windowIconified(WindowEvent arg0) {
+            //   throw new UnsupportedOperationException("Not supported yet.");
+            }
 
-                    public void windowDeiconified(WindowEvent arg0) {
-                    //   throw new UnsupportedOperationException("Not supported yet.");
-                    }
+            public void windowDeiconified(WindowEvent arg0) {
+            //   throw new UnsupportedOperationException("Not supported yet.");
+            }
 
-                    public void windowActivated(WindowEvent arg0) {
-                    //  throw new UnsupportedOperationException("Not supported yet.");
-                    }
+            public void windowActivated(WindowEvent arg0) {
+            //  throw new UnsupportedOperationException("Not supported yet.");
+            }
 
-                    public void windowDeactivated(WindowEvent arg0) {
-                    //   throw new UnsupportedOperationException("Not supported yet.");
-                    }
-                });
+            public void windowDeactivated(WindowEvent arg0) {
+            //   throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
 
+    }
+
+    private void saveChanges() {
+        System.out.println(" save is CALLED "+ model.isDirty());
+
+        boolean dirtyModel = model.isDirty();
+        apacheTab.OKCalled();
+        if (dirtyModel) {
+            Object[] options = {"Retart Servers Now", "Close"};
+            int n = JOptionPane.showOptionDialog(null, "You must Restart Servers for your changes to take effect. ", "Change Options", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+        }
+
+        this.dispose();
     }
 
     private JLabel getImage() {
@@ -220,10 +231,8 @@ public class OptionsContainer extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        System.out.println(" save is CALLED ");
-        apacheTab.OKCalled();
+        saveChanges();
 
-        this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

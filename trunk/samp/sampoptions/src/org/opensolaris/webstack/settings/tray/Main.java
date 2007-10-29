@@ -27,13 +27,14 @@
 package org.opensolaris.webstack.settings.tray;
 
 import javax.swing.UIManager;
+import org.opensolaris.webstack.settings.model.HttpdConfModel;
 
 /**
  *
  * @author ludo
  */
 public class Main {
-
+    private static HttpdConfModel model = new HttpdConfModel();
     /**
      * @param args the command line arguments
      */
@@ -41,7 +42,8 @@ public class Main {
         if (System.getProperty("os.name").startsWith("Mac") == false) {
             installGTK();
         }
-        Tray tr = new Tray();
+
+        Tray tr = new Tray(model);
         if (args.length==1){
             if (args[0].equals("options")){
                 tr.showOptions();
@@ -57,5 +59,8 @@ public class Main {
         } catch (Exception e) {
             System.err.println("Could not install GTK");
         }
+    }
+    public static HttpdConfModel getHttpdConfModel(){
+        return model;
     }
 }

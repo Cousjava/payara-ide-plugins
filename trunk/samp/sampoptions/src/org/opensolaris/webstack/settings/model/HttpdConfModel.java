@@ -45,6 +45,10 @@ public class HttpdConfModel extends Model {
     }
 
     public void setPortNumber(int i) {
+        System.out.println("change port number is "+changed);
+        System.out.println("change port number 0is "+(portNumber != i));
+        System.out.println("change port number portNumber "+(portNumber ));
+        System.out.println("change port number i  "+(i ));
         if (changed == false) {
             changed = (portNumber != i);
         }

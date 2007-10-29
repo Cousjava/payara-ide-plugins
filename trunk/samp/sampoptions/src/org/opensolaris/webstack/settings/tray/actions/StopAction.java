@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.opensolaris.webstack.settings.execution.ServersManager;
 import org.opensolaris.webstack.settings.model.Environment;
+import org.opensolaris.webstack.settings.tray.Main;
 import org.opensolaris.webstack.settings.tray.Tray;
 
 
@@ -34,7 +35,8 @@ public class StopAction extends MenuItem {
         });
     }
 
+    @Override
     public boolean isEnabled() {
-        return ServersManager.isApacheRunning(Integer.parseInt(Environment.getApachePortNumber()), 1000);
+        return ServersManager.isApacheRunning(Main.getHttpdConfModel().getPortNumber(), 1000);
     }
 }

@@ -58,6 +58,8 @@ public class Tray {
     private TrayIcon trayIcon;
     private HttpdConfModel model;
     private OptionsContainer ui = null;
+    private  StartAction startAction;
+    private  StopAction stopAction;
     public void setIcon(String name) {
         URL url = this.getClass().getResource("resources/apache.png");
 
@@ -67,12 +69,14 @@ public class Tray {
         trayIcon.setImage(merged);
     }
     public void updateIcon(){
-            boolean running = ServersManager.isApacheRunning(Integer.parseInt(Environment.getApachePortNumber()), 1000);
+            boolean running = ServersManager.isApacheRunning(model.getPortNumber(), 1000);
             if (running) {
                 setIcon("green");
             } else {
                 setIcon("red");
-            }        
+            }
+            startAction.setEnabled(!running);
+            stopAction.setEnabled(running);
     }
     public void showOptions() {
         if (ui==null){
@@ -95,11 +99,12 @@ public class Tray {
         });
     }
 
-    public Tray() {
-        model = new HttpdConfModel();
+    public Tray(HttpdConfModel model) {
+        this.model = model;
         
         final PopupMenu popup = new PopupMenu();
-
+        startAction= new StartAction(this);
+        stopAction= new StopAction(this);
         if (SystemTray.isSupported()) {
 
             final SystemTray tray = SystemTray.getSystemTray();
@@ -132,11 +137,13 @@ public class Tray {
 
             Font defaultFont = (Font) UIManager.get("Label.font");
             MenuItem defaultItem;
-            popup.add(defaultItem = new StartAction(this));
-            defaultItem.setFont(defaultFont);
+            popup.add(startAction);
+            startAction.setFont(defaultFont);
 
-            popup.add(defaultItem = new StopAction(this));
-            defaultItem.setFont(defaultFont);
+            popup.add(stopAction);
+            stopAction.setFont(defaultFont);
+            
+            
             popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Options")));
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
@@ -157,29 +164,7 @@ public class Tray {
             Menu logsMenu = new Menu(" " + getBundle().getString("LABEL_Logs"));
             logsMenu.setFont(defaultFont);
             popup.add(logsMenu);
-            logsMenu.add(defaultItem = new MenuItem("PHP log"));
-            defaultItem.setFont(defaultFont);
-            defaultItem.addActionListener(new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("logs");
-                    Desktop desktop = null;
-                    // Before more Desktop API is used, first check
-                    // whether the API is supported by this particular
-                    // virtual machine (VM) on this particular host.
-                    if (Desktop.isDesktopSupported()) {
-                        desktop = Desktop.getDesktop();
-                    }
-                    if (desktop.isSupported(Desktop.Action.OPEN)) {
-                        try {
-
-                            desktop.open(new File(Environment.getPhplog()));
-                        } catch (IOException ex) {
-                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            });
             logsMenu.add(defaultItem = new MenuItem("Apache log"));
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
@@ -197,6 +182,29 @@ public class Tray {
                         try {
 
                             desktop.open(new File(Environment.getApachelog()));
+                        } catch (IOException ex) {
+                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            });
+                        logsMenu.add(defaultItem = new MenuItem("PHP log"));
+            defaultItem.setFont(defaultFont);
+            defaultItem.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("logs");
+                    Desktop desktop = null;
+                    // Before more Desktop API is used, first check
+                    // whether the API is supported by this particular
+                    // virtual machine (VM) on this particular host.
+                    if (Desktop.isDesktopSupported()) {
+                        desktop = Desktop.getDesktop();
+                    }
+                    if (desktop.isSupported(Desktop.Action.OPEN)) {
+                        try {
+
+                            desktop.open(new File(Environment.getPhplog()));
                         } catch (IOException ex) {
                             Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
                         }

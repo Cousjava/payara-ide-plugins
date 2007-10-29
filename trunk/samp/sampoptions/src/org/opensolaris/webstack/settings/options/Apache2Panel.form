@@ -37,13 +37,13 @@
                       <Component id="jLabel2" pref="172" max="32767" attributes="0"/>
                   </Group>
                   <Component id="buttonRepair" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="textFieldPortNumber" alignment="1" pref="353" max="32767" attributes="0"/>
                   <Component id="labelWebPage" alignment="0" pref="353" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="textFieldDocRoot" pref="229" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="browseButton" min="-2" pref="106" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="textFieldPortNumber" alignment="0" min="-2" pref="48" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -100,6 +100,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="80"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new IntTextField()"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="labelDocRoot">
       <Properties>
