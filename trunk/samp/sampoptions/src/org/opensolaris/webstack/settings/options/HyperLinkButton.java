@@ -53,6 +53,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -62,7 +63,6 @@ import javax.swing.border.EmptyBorder;
 public class HyperLinkButton extends JButton implements MouseListener, ActionListener, FocusListener {
 
     private static final int FONT_SIZE = 12; // Utils.getDefaultFontSize();
-    private static final Font BUTTON_FONT = new Font(null, Font.BOLD, FONT_SIZE);
     private static final Stroke LINK_IN_FOCUS_STROKE = new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 0, new float[]{0, 2}, 0);
     private static final String LinkInFocusColor = "0x000000"; //NOI18N
     private static final String LinkColor = "0x164B7B"; //NOI18N
@@ -72,8 +72,11 @@ public class HyperLinkButton extends JButton implements MouseListener, ActionLis
     public HyperLinkButton(String label, String url) {
         super(label);
         this.url = url;
+        
         setForeground(getColor(LinkColor));
-        setFont(BUTTON_FONT);
+        Font defaultFont = (Font) UIManager.get("Label.font");
+        
+        setFont(defaultFont.deriveFont(Font.BOLD));
         setBorder(new EmptyBorder(1, 1, 1, 1));
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         setHorizontalAlignment(JLabel.LEFT);

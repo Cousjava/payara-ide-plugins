@@ -1,5 +1,6 @@
 [Desktop Entry]
-Exec="gedit /var/apache2/logs/error_log"
+Exec=gnome-terminal --hide-menubar --title 'Apache2 Log File (CTRL-C to finish)' --execute tail   -20000f /var/apache2/logs/error_log
+
 Terminal=0
 Type=Application
 Icon=/usr/share/icons/gnome/24x24/filesystems/gnome-fs-bookmark.png
