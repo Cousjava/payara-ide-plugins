@@ -256,7 +256,7 @@ public class Tray {
             ActionListener actionListener = new ActionListener() {
 
                         public void actionPerformed(ActionEvent e) {
-                            trayIcon.displayMessage("Action Event", "An Action Event Has Been Peformed!", TrayIcon.MessageType.INFO);
+                            trayIcon.displayMessage("Solaris WebStack Tray", "Use the right mouse button to display the tray menu.", TrayIcon.MessageType.INFO);
                         }
                     };
 

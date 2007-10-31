@@ -5,60 +5,64 @@
     
     <Name>Applications</Name>
     <Menu>
-        <Name>WebStack</Name>
-        <DefaultDirectoryDirs/>
-        <Directory>webstack.directory</Directory>
+        <Name>Developer Tools</Name>
+            <Directory>Development.directory</Directory>
         <Menu>
-            <Name>webstack-logs</Name>
-            <Directory>webstack-logs.directory</Directory>
+            <Name>WebStack</Name>
+            <DefaultDirectoryDirs/>
+            <Directory>webstack.directory</Directory>
+            <Menu>
+                <Name>webstack-logs</Name>
+                <Directory>webstack-logs.directory</Directory>
+                <Include>
+                    <Filename>webstack-apachelog.desktop</Filename>
+                    <Filename>webstack-mysqllog.desktop</Filename>
+                </Include>
+            </Menu>
+            <Menu>
+                <Name>webstack-sampleapp</Name>
+                <Directory>webstack-sampleapp.directory</Directory>
+                <Include>
+                    <Filename>webstack-createsample.desktop</Filename>
+                    <Filename>webstack-runsample.desktop</Filename>
+                </Include>
+            </Menu>
             <Include>
-                <Filename>webstack-apachelog.desktop</Filename>
-                <Filename>webstack-mysqllog.desktop</Filename>
+                <Filename>webstack-start.desktop</Filename>
+                <Filename>webstack-stop.desktop</Filename>
+                <Filename>webstack-options.desktop</Filename>
+                <Filename>webstack-administermysql.desktop</Filename>
+                <Filename>webstack-viewgettingstartedguide.desktop</Filename>
+                <Filename>webstack-uninitialize.desktop</Filename>
             </Include>
+            <Layout>
+                <Merge type="menus"/>
+                <Filename>webstack-start.desktop</Filename>
+                <Filename>webstack-stop.desktop</Filename>
+                <Filename>webstack-options.desktop</Filename>
+                <Filename>webstack-administermysql.desktop</Filename>
+                <Menuname>webstack-logs</Menuname>
+                <Menuname>webstack-sampleapp</Menuname>
+                <Filename>webstack-viewgettingstartedguide.desktop</Filename>
+                <Filename>webstack-uninitialize.desktop</Filename>
+                <Merge type="files"/>
+            </Layout>
         </Menu>
-        <Menu>
-            <Name>webstack-sampleapp</Name>
-            <Directory>webstack-sampleapp.directory</Directory>
-            <Include>
-                <Filename>webstack-createsample.desktop</Filename>
-                <Filename>webstack-runsample.desktop</Filename>
-            </Include>
-        </Menu>
-        <Include>
-            <Filename>webstack-start.desktop</Filename>
-            <Filename>webstack-stop.desktop</Filename>
-            <Filename>webstack-options.desktop</Filename>
-            <Filename>webstack-administermysql.desktop</Filename>
-            <Filename>webstack-viewgettingstartedguide.desktop</Filename>
-            <Filename>webstack-uninitialize.desktop</Filename>
-        </Include>
         <Layout>
             <Merge type="menus"/>
-            <Filename>webstack-start.desktop</Filename>
-            <Filename>webstack-stop.desktop</Filename>
-            <Filename>webstack-options.desktop</Filename>
-            <Filename>webstack-administermysql.desktop</Filename>
-            <Menuname>webstack-logs</Menuname>
-            <Menuname>webstack-sampleapp</Menuname>
-            <Filename>webstack-viewgettingstartedguide.desktop</Filename>
-            <Filename>webstack-uninitialize.desktop</Filename>
+            <Menuname>Accessories</Menuname>
+            <Menuname>WebStack</Menuname>
+            <Menuname>Developer Tools</Menuname>
+            <Menuname>Education</Menuname>
+            <Menuname>Games</Menuname>
+            <Menuname>Graphics</Menuname>
+            <Menuname>Internet</Menuname>
+            <Menuname>Office</Menuname>
+            <Menuname>Multimedia</Menuname>
+            <Menuname>System</Menuname>
+            <Menuname>Universal Access</Menuname>
             <Merge type="files"/>
         </Layout>
+        
     </Menu>
-    <Layout>
-        <Merge type="menus"/>
-        <Menuname>Accessories</Menuname>
-        <Menuname>WebStack</Menuname>
-        <Menuname>Developer Tools</Menuname>
-        <Menuname>Education</Menuname>
-        <Menuname>Games</Menuname>
-        <Menuname>Graphics</Menuname>
-        <Menuname>Internet</Menuname>
-        <Menuname>Office</Menuname>
-        <Menuname>Multimedia</Menuname>
-        <Menuname>System</Menuname>
-        <Menuname>Universal Access</Menuname>
-        <Merge type="files"/>
-    </Layout>
-    
 </Menu>
