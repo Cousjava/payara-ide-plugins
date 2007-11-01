@@ -12,8 +12,13 @@ import java.io.File;
  */
 public class HttpdConfModel extends Model {
 
+    
+    /* variables storing the line number in the file of various keys
+     * 0 otherwise if not in the file
+     * */
     int listenKey = 0;
     int documentRootKey = 0;
+    int userdirKey = 0;
     int portNumber = 80;
     String docRoot = "";
     
@@ -21,9 +26,13 @@ public class HttpdConfModel extends Model {
      * */
     
     String initialDocRoot;
+    boolean initiaUserDirEnable=false;
+    
+    
     boolean changed = false;
     static private String LISTEN = "Listen";// port key
     static private String DOCROOT = "DocumentRoot";// root key
+    static private String USERDIR="UserDir";  //user dir key
     public HttpdConfModel() {
         super(new File(Environment.getHttpdconf()));
     }
@@ -31,6 +40,7 @@ public class HttpdConfModel extends Model {
     @Override
     public void reset() {
         initialDocRoot="";
+        initiaUserDirEnable=false;
         documentRootKey=-1;
         listenKey=-1;
         
@@ -42,13 +52,16 @@ public class HttpdConfModel extends Model {
     public void lineAddedCallBack(String line, int lineNumber) {
         if (line.startsWith(LISTEN)) {
             listenKey = lineNumber;
-            System.out.println("Line is " + line);
 
             try {
                 portNumber = Integer.parseInt((line.substring(LISTEN.length(), line.length())).trim());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
+        }
+        if (line.startsWith(USERDIR)) {
+            userdirKey = lineNumber;
+            initiaUserDirEnable =true;
         }
         if (line.startsWith(DOCROOT)) {
             documentRootKey = lineNumber;
@@ -103,7 +116,32 @@ public class HttpdConfModel extends Model {
         }
 
     }
+    public boolean isUserDirEnable(){
+        return (userdirKey>0);  //userdir directive is in the file
+        
+    }
+    public void setUserDirEnable(boolean state){
+        if (initiaUserDirEnable==state){
+            return;//do nothing: the state did not change from disk value'
+        }
+                
+        if (state){
+            if (userdirKey >0) {
+                content.set(userdirKey,"UserDir public_html");
+            } else {
+                 content.add("UserDir public_html");
 
+            }       
+        }
+        else {//remove the line if it is there
+            if (userdirKey >0) {
+                content.remove(userdirKey);
+                userdirKey=0;
+            }
+            
+        }
+        changed=true;
+    }
     public boolean isDirty() {
         return changed;
     }

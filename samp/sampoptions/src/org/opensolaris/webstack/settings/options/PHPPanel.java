@@ -55,6 +55,12 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
 
     }
 
+    void UpdateModel() {
+
+        p.setDebugMode(jCheckBoxdebug.isSelected());
+    
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -116,11 +122,6 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         jCheckBox4.setText(bundle.getString("E_NOTICE")); // NOI18N
 
         jCheckBoxdebug.setText("enable");
-        jCheckBoxdebug.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxdebugActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -200,13 +201,6 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         }
         
     }//GEN-LAST:event_buttonAdvanceConfActionPerformed
-
-    private void jCheckBoxdebugActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxdebugActionPerformed
-
-        p.setDebugMode(jCheckBoxdebug.isSelected());
-            
-        
-    }//GEN-LAST:event_jCheckBoxdebugActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:

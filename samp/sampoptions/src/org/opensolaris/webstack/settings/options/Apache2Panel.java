@@ -49,7 +49,7 @@ import org.opensolaris.webstack.settings.model.HttpdConfModel;
  *
  * @author  ludo
  */
-public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeListener, OptionTab {
+public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeListener {
 
     private HttpdConfModel model;
 
@@ -60,6 +60,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
         model.addPropertyChangeListener(this);
         textFieldPortNumber.setText("" + model.getPortNumber());
         textFieldDocRoot.setText(model.getDocumentRoot());
+        jCheckBoxUserDir.setSelected(model.isUserDirEnable());
 
 
     }
@@ -77,7 +78,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
         labelDocRoot = new javax.swing.JLabel();
         textFieldDocRoot = new javax.swing.JTextField();
         labelWebSite = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        jCheckBoxUserDir = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         buttonAdvanceConf = new javax.swing.JButton();
         buttonRepair = new javax.swing.JButton();
@@ -101,7 +102,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
         labelWebSite.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         labelWebSite.setText(bundle.getString("LABEL_HOMEPAGE")); // NOI18N
 
-        jCheckBox1.setText(bundle.getString("LABEL_HOMEDIRS")); // NOI18N
+        jCheckBoxUserDir.setText(bundle.getString("LABEL_HOMEDIRS")); // NOI18N
 
         jLabel1.setText(bundle.getString("LABEL_HELP")); // NOI18N
         jLabel1.setEnabled(false);
@@ -119,6 +120,11 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
         jLabel2.setEnabled(false);
 
         labelWebPage.setText("jButton1");
+        labelWebPage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                labelWebPageActionPerformed(evt);
+            }
+        });
 
         browseButton.setText(bundle.getString("LBL_BrowseButton")); // NOI18N
         browseButton.addActionListener(new java.awt.event.ActionListener() {
@@ -140,14 +146,14 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
                     .addComponent(labelWebSite))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                    .addComponent(jCheckBoxUserDir, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonAdvanceConf)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE))
                     .addComponent(buttonRepair)
                     .addComponent(labelWebPage, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -177,7 +183,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
                     .addComponent(labelWebSite)
                     .addComponent(labelWebPage))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox1)
+                .addComponent(jCheckBoxUserDir)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -215,11 +221,15 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
         }
     }//GEN-LAST:event_browseButtonActionPerformed
 
+    private void labelWebPageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelWebPageActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_labelWebPageActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JButton buttonAdvanceConf;
     private javax.swing.JButton buttonRepair;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBoxUserDir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel labelDocRoot;
@@ -229,24 +239,28 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
     private javax.swing.JTextField textFieldDocRoot;
     private javax.swing.JTextField textFieldPortNumber;
     // End of variables declaration//GEN-END:variables
+
+    
+    
     @Override
     public void propertyChange(PropertyChangeEvent arg0) {
         System.out.println("model changed!~~~" + model.getPortNumber());
         textFieldPortNumber.setText("" + model.getPortNumber());
         labelWebPage.setText("http://localhost:" + textFieldPortNumber.getText());
         textFieldDocRoot.setText(model.getDocumentRoot());
+        jCheckBoxUserDir.setSelected(model.isUserDirEnable());
     }
     /*
      * Called when the OK button is pressed or when the frame is closed
      * */
 
-    @Override
-    public void OKCalled() {
+    
+    public void UpdateModel() {
 
 
         //save the port number
         model.setPortNumber(textFieldPortNumber.getText());
-
+        model.setUserDirEnable(jCheckBoxUserDir.isSelected());
         //try to save the new htdocs if this directory exists
         String htdoc = textFieldDocRoot.getText();
         File f = new File(htdoc);
@@ -257,9 +271,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
             textFieldDocRoot.setText(model.getDocumentRoot());
 
         }
-        if (model.isDirty()) {
-            model.save();
-        }
+
     }
 
     private String browseHTDOCLocation() {

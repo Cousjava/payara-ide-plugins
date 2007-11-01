@@ -51,6 +51,7 @@ import org.opensolaris.webstack.settings.tray.Main;
 public class OptionsContainer extends javax.swing.JFrame {
 
     private Apache2Panel apacheTab;
+    private PHPPanel phpTab;
     private HttpdConfModel model;
     private PHPIniModel phpmodel;
 
@@ -59,9 +60,9 @@ public class OptionsContainer extends javax.swing.JFrame {
         this.model = model;
         phpmodel = new PHPIniModel();
         initComponents();
-   //     tabsPanel.addTab("General", new GeneralPanel());
+        //     tabsPanel.addTab("General", new GeneralPanel());
         tabsPanel.addTab("Apache 2", apacheTab = new Apache2Panel(model));
-        tabsPanel.addTab("PHP", new PHPPanel(phpmodel));
+        tabsPanel.addTab("PHP", phpTab = new PHPPanel(phpmodel));
         tabsPanel.addTab("MySQL", new MySQLPanel());
         tabsPanel.addTab("FTP", new FTPPanel());
 
@@ -106,15 +107,21 @@ public class OptionsContainer extends javax.swing.JFrame {
     }
 
     private void saveChanges() {
-        System.out.println(" save is CALLED "+ model.isDirty());
+        System.out.println(" save is CALLED " + model.isDirty());
 
+
+        apacheTab.UpdateModel();
+        phpTab.UpdateModel();
         boolean apachedirtyModel = model.isDirty();
         boolean phpdirtyModel = phpmodel.isDirty();
-        apacheTab.OKCalled();
-        if (phpdirtyModel){
+        if (model.isDirty()) {
+            model.save();
+        }
+
+        if (phpdirtyModel) {
             phpmodel.save();
         }
-        if (apachedirtyModel||phpdirtyModel) {
+        if (apachedirtyModel || phpdirtyModel) {
             Object[] options = {"Retart Servers Now", "Close"};
             int n = JOptionPane.showOptionDialog(null, "You must Restart Servers for your changes to take effect. ", "Change Options", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
         }
