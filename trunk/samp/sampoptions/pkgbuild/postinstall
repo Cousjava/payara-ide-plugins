@@ -1,7 +1,6 @@
 #! /bin/sh
 
-/usr/bin/cp  /opt/webstack/globalmenus/applications.menu /etc/xdg/menus
-echo "/usr/bin/cp  /opt/webstack/globalmenus/application.menu /etc/xdg/menus"
-/usr/bin/cp  /opt/webstack/globalmenus/webstack-initialize.desktop /usr/share/applications
-/usr/bin/cp  /opt/webstack/globalmenus/webstack.directory /usr/share/desktop-directories
+/usr/bin/cp  $PKG_INSTALL_ROOT/opt/webstack/globalmenus/applications.menu $PKG_INSTALL_ROOT//etc/xdg/menus
+/usr/bin/cp  $PKG_INSTALL_ROOT//opt/webstack/globalmenus/webstack-initialize.desktop $PKG_INSTALL_ROOT//usr/share/applications
+/usr/bin/cp  $PKG_INSTALL_ROOT//opt/webstack/globalmenus/webstack.directory $PKG_INSTALL_ROOT//usr/share/desktop-directories
 pkill gnome-panel

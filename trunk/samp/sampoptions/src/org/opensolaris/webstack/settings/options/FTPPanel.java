@@ -35,7 +35,11 @@ public class FTPPanel extends javax.swing.JPanel {
     /** Creates new form FTPPanel */
     public FTPPanel() {
         initComponents();
+        setEnabled(false);
     }
+
+    
+    
     
     /** This method is called from within the constructor to
      * initialize the form.

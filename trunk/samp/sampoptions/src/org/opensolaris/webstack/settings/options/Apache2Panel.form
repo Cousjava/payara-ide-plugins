@@ -34,7 +34,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="buttonAdvanceConf" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel2" pref="172" max="32767" attributes="0"/>
+                      <Component id="jLabel2" pref="201" max="32767" attributes="0"/>
                   </Group>
                   <Component id="buttonRepair" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="labelWebPage" alignment="0" pref="353" max="32767" attributes="0"/>

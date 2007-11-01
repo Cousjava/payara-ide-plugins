@@ -73,7 +73,6 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         jCheckBox2 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
         jCheckBox4 = new javax.swing.JCheckBox();
-        jCheckBox5 = new javax.swing.JCheckBox();
         jCheckBoxdebug = new javax.swing.JCheckBox();
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -102,6 +101,11 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         });
 
         jButton1.setText(bundle.getString("LABEL_SHOWPHPINFO")); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jCheckBox1.setText(bundle.getString("E_ALL")); // NOI18N
 
@@ -110,8 +114,6 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         jCheckBox3.setText(bundle.getString("E_WARNING")); // NOI18N
 
         jCheckBox4.setText(bundle.getString("E_NOTICE")); // NOI18N
-
-        jCheckBox5.setText("jCheckBox5");
 
         jCheckBoxdebug.setText("enable");
         jCheckBoxdebug.addActionListener(new java.awt.event.ActionListener() {
@@ -138,11 +140,10 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
                     .addComponent(jCheckBox2)
-                    .addComponent(jCheckBox1)
                     .addComponent(jCheckBox3)
                     .addComponent(jCheckBox4)
-                    .addComponent(jCheckBox5)
-                    .addComponent(jCheckBoxdebug))
+                    .addComponent(jCheckBoxdebug)
+                    .addComponent(jCheckBox1))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -155,17 +156,16 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jCheckBox1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(27, 27, 27)
                         .addComponent(jCheckBox2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBox3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBox4))
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox5)
-                .addGap(7, 7, 7)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jCheckBox1)))
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdvanceConf)
                     .addComponent(jLabel3))
@@ -208,6 +208,10 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         
     }//GEN-LAST:event_jCheckBoxdebugActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdvanceConf;
     private javax.swing.JButton buttonRepair;
@@ -216,7 +220,6 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JCheckBox jCheckBox4;
-    private javax.swing.JCheckBox jCheckBox5;
     private javax.swing.JCheckBox jCheckBoxdebug;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -59,7 +59,7 @@ public class OptionsContainer extends javax.swing.JFrame {
         this.model = model;
         phpmodel = new PHPIniModel();
         initComponents();
-        tabsPanel.addTab("General", new GeneralPanel());
+   //     tabsPanel.addTab("General", new GeneralPanel());
         tabsPanel.addTab("Apache 2", apacheTab = new Apache2Panel(model));
         tabsPanel.addTab("PHP", new PHPPanel(phpmodel));
         tabsPanel.addTab("MySQL", new MySQLPanel());
