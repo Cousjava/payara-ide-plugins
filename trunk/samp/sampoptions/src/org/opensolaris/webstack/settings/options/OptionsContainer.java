@@ -41,6 +41,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import org.opensolaris.webstack.settings.model.HttpdConfModel;
+import org.opensolaris.webstack.settings.model.PHPIniModel;
 import org.opensolaris.webstack.settings.tray.Main;
 
 /**
@@ -51,14 +52,16 @@ public class OptionsContainer extends javax.swing.JFrame {
 
     private Apache2Panel apacheTab;
     private HttpdConfModel model;
+    private PHPIniModel phpmodel;
 
     /** Creates new form OptionsContainer */
     public OptionsContainer(final HttpdConfModel model) {
         this.model = model;
+        phpmodel = new PHPIniModel();
         initComponents();
         tabsPanel.addTab("General", new GeneralPanel());
         tabsPanel.addTab("Apache 2", apacheTab = new Apache2Panel(model));
-        tabsPanel.addTab("PHP", new PHPPanel());
+        tabsPanel.addTab("PHP", new PHPPanel(phpmodel));
         tabsPanel.addTab("MySQL", new MySQLPanel());
         tabsPanel.addTab("FTP", new FTPPanel());
 
@@ -105,9 +108,13 @@ public class OptionsContainer extends javax.swing.JFrame {
     private void saveChanges() {
         System.out.println(" save is CALLED "+ model.isDirty());
 
-        boolean dirtyModel = model.isDirty();
+        boolean apachedirtyModel = model.isDirty();
+        boolean phpdirtyModel = phpmodel.isDirty();
         apacheTab.OKCalled();
-        if (dirtyModel) {
+        if (phpdirtyModel){
+            phpmodel.save();
+        }
+        if (apachedirtyModel||phpdirtyModel) {
             Object[] options = {"Retart Servers Now", "Close"};
             int n = JOptionPane.showOptionDialog(null, "You must Restart Servers for your changes to take effect. ", "Change Options", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
         }
@@ -174,20 +181,21 @@ public class OptionsContainer extends javax.swing.JFrame {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("null");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/tray/Bundle"); // NOI18N
+        setTitle(bundle.getString("LABEL_Title")); // NOI18N
 
         tabsPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         tabsPanel.setMinimumSize(new java.awt.Dimension(0, 0));
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
-        okButton.setText(bundle.getString("LABEL_OK")); // NOI18N
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
+        okButton.setText(bundle1.getString("LABEL_OK")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText(bundle.getString("LABEL_Cancel")); // NOI18N
+        cancelButton.setText(bundle1.getString("LABEL_Cancel")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -202,12 +210,12 @@ public class OptionsContainer extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(okButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 442, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 519, Short.MAX_VALUE)
                 .addComponent(cancelButton)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+                .addComponent(tabsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -227,6 +235,7 @@ public class OptionsContainer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         model.reset();
+        phpmodel.reset();
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 

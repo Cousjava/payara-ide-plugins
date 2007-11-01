@@ -26,11 +26,14 @@
 
 package org.opensolaris.webstack.settings.options;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 /**
  *
  * @author  ludo
  */
-public class MySQLPanel extends javax.swing.JPanel {
+public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeListener{
     
     /** Creates new form MySQLPanel */
     public MySQLPanel() {
@@ -56,6 +59,11 @@ public class MySQLPanel extends javax.swing.JPanel {
             .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
