@@ -36,7 +36,7 @@ public class StartAction extends MenuItem {
 
     @Override
     public boolean isEnabled() {
-        System.out.println("isenalbe for action is called");
+       // System.out.println("isenalbe for action is called");
         return !ServersManager.isApacheRunning(Main.getHttpdConfModel().getPortNumber(), 1000);
     }
 }

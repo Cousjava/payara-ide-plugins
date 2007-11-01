@@ -23,6 +23,8 @@ public class PHPIniModel extends Model {
     int xdebugremote_modeKey = -1;
     int xdebugremote_hostKey = -1;
     int xdebugremote_handlerKey = -1;
+    
+    private boolean initialDebugMode;
     private boolean changed = false;
 
     public PHPIniModel() {
@@ -43,6 +45,8 @@ public class PHPIniModel extends Model {
         xdebugremote_modeKey = -1;
         xdebugremote_hostKey = -1;
         xdebugremote_handlerKey = -1;
+        
+        initialDebugMode =false;
         changed=false;
         load();
     }
@@ -56,6 +60,7 @@ public class PHPIniModel extends Model {
         } else if (line.startsWith("zend_extension")) {
             zend_extensionKey = lineNumber;
         } else if (line.startsWith("xdebug.remote_enable")) {
+            initialDebugMode =true;//debug is on in the file
             xdebugremote_enableKey = lineNumber;
         } else if (line.startsWith("xdebug.remote_mode")) {
             xdebugremote_modeKey = lineNumber;
@@ -79,12 +84,15 @@ public class PHPIniModel extends Model {
     }
 
     public void setDebugMode(boolean debugmode) {
+        if (initialDebugMode==debugmode){
+            return;//nothing changed no need to updae the file on disk
+        }
         changed = true;
         if (debugmode) {
             if (zend_extensionKey != -1) {
-                content.set(zend_extensionKey, "zend_extension=/Applications/MAMP/bin/php5/lib/php/extensions/no-debug-non-zts-20050922/xdebug.so");
+                content.set(zend_extensionKey, "zend_extension=/usr/php5/5.2.4/modules/xdebug.so");
             } else {
-                content.add("zend_extension=/Applications/MAMP/bin/php5/lib/php/extensions/no-debug-non-zts-20050922/xdebug.so");
+                content.add("zend_extension=/usr/php5/5.2.4/modules/xdebug.so");
 
             }
             if (xdebugremote_enableKey != -1) {

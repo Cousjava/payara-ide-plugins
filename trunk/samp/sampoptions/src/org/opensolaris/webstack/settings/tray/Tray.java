@@ -84,6 +84,7 @@ public class Tray {
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
 
                 ui.setVisible(false);
@@ -119,14 +120,17 @@ public class Tray {
                             System.out.println("Tray Icon - Mouse entered!");
                         }
 
+                @Override
                         public void mouseExited(MouseEvent e) {
                             System.out.println("Tray Icon - Mouse exited!");
                         }
 
+                @Override
                         public void mousePressed(MouseEvent e) {
                             System.out.println("Tray Icon - Mouse pressed!");
                         }
 
+                @Override
                         public void mouseReleased(MouseEvent e) {
                             System.out.println("Tray Icon - Mouse released!");
                         }
@@ -157,6 +161,7 @@ public class Tray {
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("admin mysql");
                 }
