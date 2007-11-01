@@ -41,6 +41,36 @@ public class PHPIniModel extends Model {
             
 
     }
+    
+    public boolean isDebugMode(){
+        return (xdebugremote_enableKey!=-1);// this key is present in the file
+    }
+    
+    public void setDebugMode(boolean debugmode){
+        if (debugmode){
+            if (zend_extensionKey!=-1){
+                    content.set(zend_extensionKey, "zend_extension=/Applications/MAMP/bin/php5/lib/php/extensions/no-debug-non-zts-20050922/xdebug.so");                
+            }
+            else {
+                   content.add("zend_extension=/Applications/MAMP/bin/php5/lib/php/extensions/no-debug-non-zts-20050922/xdebug.so");                
+                
+            }
+            if (xdebugremote_enableKey!=-1){
+                    content.set(xdebugremote_enableKey, "xdebug.remote_enable=1111");                
+            }
+            else {
+                   content.add("xdebug.remote_enable=1222");                
+                
+            }            
+        }else{
+            content.remove(xdebugremote_hostKey);
+            content.remove(xdebugremote_modeKey);
+            content.remove(xdebugremote_enableKey);
+            content.remove(zend_extensionKey);
+
+        }
+        
+    }
 }
 /*
  * 
