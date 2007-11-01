@@ -1,32 +1,33 @@
 /*
-* CDDL HEADER START
-*
-* The contents of this file are subject to the terms of the
-* Common Development and Distribution License, Version 1.0 only
-* (the "License").  You may not use this file except in compliance
-* with the License.
-*
-* You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
-* or http://www.opensolaris.org/os/licensing.
-* See the License for the specific language governing permissions
-* and limitations under the License.
-*
-* When distributing Covered Code, include this CDDL HEADER in each
-* file and include the License file at usr/src/OPENSOLARIS.LICENSE.
-* If applicable, add the following below this CDDL HEADER, with the
-* fields enclosed by brackets "[]" replaced with your own identifying
-* information: Portions Copyright [yyyy] [name of copyright owner]
-*
-* CDDL HEADER END
-*/
+ * CDDL HEADER START
+ *
+ * The contents of this file are subject to the terms of the
+ * Common Development and Distribution License, Version 1.0 only
+ * (the "License").  You may not use this file except in compliance
+ * with the License.
+ *
+ * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+ * or http://www.opensolaris.org/os/licensing.
+ * See the License for the specific language governing permissions
+ * and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ */
 /*
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
-* Use is subject to license terms.
-*/
-
+ * Use is subject to license terms.
+ */
 package org.opensolaris.webstack.settings.options;
 
 import java.awt.Desktop;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -39,18 +40,18 @@ import org.opensolaris.webstack.settings.model.PHPIniModel;
  *
  * @author  ludo
  */
-public class PHPPanel extends javax.swing.JPanel {
-    
-       java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
- 
- PHPIniModel p;
+public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListener {
+
+    java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
+    PHPIniModel p;
 
     /** Creates new form PHPPanel */
-    public PHPPanel() {
- 
+    public PHPPanel(PHPIniModel phpmodel) {
+        p = phpmodel;
+        p.addPropertyChangeListener(this);
         initComponents();
-     //   jComboBox2.setModel(new javax.swing.DefaultComboBoxModel( comboTypes));
-        p =new PHPIniModel();
+
+        jCheckBoxdebug.setSelected(p.isDebugMode());
 
     }
 
@@ -63,7 +64,6 @@ public class PHPPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         buttonAdvanceConf = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -74,13 +74,12 @@ public class PHPPanel extends javax.swing.JPanel {
         jCheckBox3 = new javax.swing.JCheckBox();
         jCheckBox4 = new javax.swing.JCheckBox();
         jCheckBox5 = new javax.swing.JCheckBox();
+        jCheckBoxdebug = new javax.swing.JCheckBox();
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
         jLabel1.setText(bundle.getString("LABEL_Debug")); // NOI18N
         jLabel1.setToolTipText(bundle.getString("LABEL_PHPVERSION")); // NOI18N
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "On", "Off" }));
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel2.setText(bundle.getString("LABEL_ERRORREPORTINGLEVEL")); // NOI18N
@@ -114,6 +113,13 @@ public class PHPPanel extends javax.swing.JPanel {
 
         jCheckBox5.setText("jCheckBox5");
 
+        jCheckBoxdebug.setText("enable");
+        jCheckBoxdebug.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxdebugActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -136,7 +142,7 @@ public class PHPPanel extends javax.swing.JPanel {
                     .addComponent(jCheckBox3)
                     .addComponent(jCheckBox4)
                     .addComponent(jCheckBox5)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jCheckBoxdebug))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -144,8 +150,8 @@ public class PHPPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBoxdebug))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -167,15 +173,13 @@ public class PHPPanel extends javax.swing.JPanel {
                 .addComponent(buttonRepair)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     private void buttonRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRepairActionPerformed
 
         Object[] options = {"Yes, repair", "Cancel"};
-        int n = JOptionPane.showOptionDialog(null, "question" 
-               , "Repair", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+        int n = JOptionPane.showOptionDialog(null, "question", "Repair", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
     }//GEN-LAST:event_buttonRepairActionPerformed
 
     private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
@@ -197,6 +201,13 @@ public class PHPPanel extends javax.swing.JPanel {
         
     }//GEN-LAST:event_buttonAdvanceConfActionPerformed
 
+    private void jCheckBoxdebugActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxdebugActionPerformed
+
+        p.setDebugMode(jCheckBoxdebug.isSelected());
+            
+        
+    }//GEN-LAST:event_jCheckBoxdebugActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdvanceConf;
     private javax.swing.JButton buttonRepair;
@@ -206,9 +217,15 @@ public class PHPPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JCheckBox jCheckBox5;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JCheckBox jCheckBoxdebug;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println("model changed!~~~" + p.isDebugMode());
+        jCheckBoxdebug.setSelected(p.isDebugMode());
+
+    }
 }

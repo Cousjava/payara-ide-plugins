@@ -35,7 +35,7 @@
                   <Component id="jCheckBox3" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="jCheckBox4" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="jCheckBox5" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jComboBox1" alignment="0" min="-2" pref="70" max="-2" attributes="0"/>
+                  <Component id="jCheckBoxdebug" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -46,8 +46,8 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel1" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
+                  <Component id="jCheckBoxdebug" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -73,7 +73,7 @@
               <Component id="buttonRepair" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="14" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -87,16 +87,6 @@
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/opensolaris/webstack/settings/options/Bundle.properties" key="LABEL_PHPVERSION" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JComboBox" name="jComboBox1">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="2">
-            <StringItem index="0" value="On"/>
-            <StringItem index="1" value="Off"/>
-          </StringArray>
         </Property>
       </Properties>
     </Component>
@@ -175,6 +165,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="jCheckBox5"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="jCheckBoxdebug">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="enable"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxdebugActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

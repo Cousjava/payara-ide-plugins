@@ -97,7 +97,9 @@ public class Model {
         }
 
     }
-
+    public boolean isDirty() {
+        return false;
+    }
     public void save() {
 
         FileWriter fout = null;
@@ -130,7 +132,7 @@ public class Model {
         public void run() {
             long currentTimeStamp = modelFile.lastModified();
             if (timeStamp < currentTimeStamp) {
-                load();
+                reset();
                 System.out.println("time stamp changed, reloading");
                 long old = timeStamp;
                 timeStamp = modelFile.lastModified();
