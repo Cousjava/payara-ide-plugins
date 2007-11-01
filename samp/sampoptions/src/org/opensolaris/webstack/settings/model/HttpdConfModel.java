@@ -15,10 +15,27 @@ public class HttpdConfModel extends Model {
     int listenKey = 0;
     int documentRootKey = 0;
     int portNumber = 80;
+    String docRoot = "";
+    
+    /* value read from the file, before possible user modification
+     * */
+    
+    String initialDocRoot;
     boolean changed = false;
     static private String LISTEN = "Listen";// port key
+    static private String DOCROOT = "DocumentRoot";// root key
     public HttpdConfModel() {
         super(new File(Environment.getHttpdconf()));
+    }
+
+    @Override
+    public void reset() {
+        initialDocRoot="";
+        documentRootKey=-1;
+        listenKey=-1;
+        
+         changed = false;
+        load();
     }
 
     @Override
@@ -33,8 +50,16 @@ public class HttpdConfModel extends Model {
                 e.printStackTrace();
             }
         }
-        if (line.startsWith("DocumentRoot")) {
+        if (line.startsWith(DOCROOT)) {
             documentRootKey = lineNumber;
+            docRoot = line.substring(DOCROOT.length(), line.length()).trim();
+            if (docRoot.startsWith("\"")) {
+                docRoot = docRoot.substring(1);
+            }
+            if (docRoot.endsWith("\"")) {
+                docRoot = docRoot.substring(0, docRoot.length() - 1);
+                initialDocRoot = docRoot;
+            }
         }
     }
 
@@ -45,10 +70,7 @@ public class HttpdConfModel extends Model {
     }
 
     public void setPortNumber(int i) {
-        System.out.println("change port number is "+changed);
-        System.out.println("change port number 0is "+(portNumber != i));
-        System.out.println("change port number portNumber "+(portNumber ));
-        System.out.println("change port number i  "+(i ));
+
         if (changed == false) {
             changed = (portNumber != i);
         }
@@ -64,6 +86,20 @@ public class HttpdConfModel extends Model {
             setPortNumber(val);
         } catch (NumberFormatException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    public String getDocumentRoot() {
+        return docRoot;
+    }
+
+    public void setDocumentRoot(String d) {
+        if (!d.equals(initialDocRoot)) {
+            docRoot = d;
+            changed = true;
+            content.set(documentRootKey, DOCROOT + " \"" + d + "\"");
+
         }
 
     }

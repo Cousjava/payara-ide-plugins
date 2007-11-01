@@ -56,15 +56,16 @@
       </And>
       <Filename>emacs.desktop</Filename>
     </Include>
-  </Menu> <!-- End Development Tools -->
-  <Menu>
-    <Name>WebStack</Name>
-    <Directory>webstack.directory</Directory>
-    <Include>
-        <Category>SAMP</Category>
-    </Include>
+      <Menu>
+        <Name>WebStack</Name>
+        <Directory>webstack.directory</Directory>
+        <Include>
+            <Category>SAMP</Category>
+        </Include>
 
-  </Menu> 
+      </Menu>
+  </Menu> <!-- End Development Tools -->
+ 
 
   <!-- Education -->
   <Menu>

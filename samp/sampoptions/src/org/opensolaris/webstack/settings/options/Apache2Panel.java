@@ -35,6 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
@@ -58,7 +59,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
         this.model = model;
         model.addPropertyChangeListener(this);
         textFieldPortNumber.setText("" + model.getPortNumber());
-
+        textFieldDocRoot.setText(model.getDocumentRoot());
 
 
     }
@@ -228,14 +229,34 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
     private javax.swing.JTextField textFieldDocRoot;
     private javax.swing.JTextField textFieldPortNumber;
     // End of variables declaration//GEN-END:variables
+    @Override
     public void propertyChange(PropertyChangeEvent arg0) {
         System.out.println("model changed!~~~" + model.getPortNumber());
         textFieldPortNumber.setText("" + model.getPortNumber());
         labelWebPage.setText("http://localhost:" + textFieldPortNumber.getText());
+        textFieldDocRoot.setText(model.getDocumentRoot());
     }
+    /*
+     * Called when the OK button is pressed or when the frame is closed
+     * */
 
+    @Override
     public void OKCalled() {
+
+
+        //save the port number
         model.setPortNumber(textFieldPortNumber.getText());
+
+        //try to save the new htdocs if this directory exists
+        String htdoc = textFieldDocRoot.getText();
+        File f = new File(htdoc);
+        if (f.exists() && f.isDirectory()) {
+            model.setDocumentRoot(htdoc);
+        } else {
+            JOptionPane.showMessageDialog(null, htdoc, "Directory does not exist or is not a directory. Not updated...", JOptionPane.ERROR_MESSAGE);
+            textFieldDocRoot.setText(model.getDocumentRoot());
+
+        }
         if (model.isDirty()) {
             model.save();
         }
@@ -279,6 +300,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
 
     private static class DirFilter extends javax.swing.filechooser.FileFilter {
 
+        @Override
         public boolean accept(File f) {
             if (!f.exists() || !f.canRead() || !f.isDirectory()) {
                 return false;
@@ -287,6 +309,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
             }
         }
 
+        @Override
         public String getDescription() {
             java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
             return bundle.getString("LBL_DirType");
@@ -301,6 +324,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
 
             d.addDocumentListener(new DocumentListener() {
 
+                @Override
                 public void insertUpdate(DocumentEvent arg0) {
                     try {
                         labelWebPage.setText("http://localhost:" + d.getText(0, d.getLength()));
@@ -309,10 +333,12 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
                     }
                 }
 
+                @Override
                 public void removeUpdate(DocumentEvent arg0) {
                     insertUpdate(arg0);
                 }
 
+                @Override
                 public void changedUpdate(DocumentEvent arg0) {
                     insertUpdate(arg0);
                 }
