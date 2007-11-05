@@ -26,6 +26,13 @@
 
 package org.opensolaris.webstack.settings.options;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.opensolaris.webstack.settings.model.Environment;
+
 /**
  *
  * @author  ludo
@@ -35,7 +42,7 @@ public class FTPPanel extends javax.swing.JPanel {
     /** Creates new form FTPPanel */
     public FTPPanel() {
         initComponents();
-        setEnabled(false);
+      //  setEnabled(false);
     }
 
     
@@ -49,20 +56,102 @@ public class FTPPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonRepair = new javax.swing.JButton();
+        buttonAdvanceConf = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jCheckBoxUserDir = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
+        buttonRepair.setText(bundle.getString("LABEL_REPAIR")); // NOI18N
+
+        buttonAdvanceConf.setText(bundle.getString("LABEL_ADVANCE_CONF")); // NOI18N
+        buttonAdvanceConf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAdvanceConfActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText(bundle.getString("LABEL_EDITFTPCONF")); // NOI18N
+        jLabel2.setEnabled(false);
+
+        jCheckBoxUserDir.setText(bundle.getString("LABEL_ENABLE_FTP")); // NOI18N
+
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/tray/Bundle"); // NOI18N
+        jLabel1.setText(bundle1.getString("LABEL_FTPDOC")); // NOI18N
+
+        jLabel3.setText("jLabel3");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(buttonAdvanceConf)
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(buttonRepair))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 418, Short.MAX_VALUE))
+                            .addComponent(jCheckBoxUserDir, javax.swing.GroupLayout.DEFAULT_SIZE, 813, Short.MAX_VALUE))
+                        .addGap(165, 165, 165))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addContainerGap(772, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxUserDir)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonAdvanceConf)
+                    .addComponent(jLabel2))
+                .addGap(10, 10, 10)
+                .addComponent(buttonRepair)
+                .addGap(58, 58, 58)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addContainerGap(91, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
+        Desktop desktop = null;
+        // Before more Desktop API is used, first check
+        // whether the API is supported by this particular
+        // virtual machine (VM) on this particular host.
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+        }
+        if (desktop.isSupported(Desktop.Action.OPEN)) {
+            try {
+                
+                desktop.open(new File(Environment.getFTPConf()));
+            } catch (IOException ex) {
+                Logger.getLogger(FTPPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_buttonAdvanceConfActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonAdvanceConf;
+    private javax.swing.JButton buttonRepair;
+    private javax.swing.JCheckBox jCheckBoxUserDir;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
     
 }
