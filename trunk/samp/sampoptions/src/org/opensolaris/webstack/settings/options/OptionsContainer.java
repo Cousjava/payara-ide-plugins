@@ -41,6 +41,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import org.opensolaris.webstack.settings.model.HttpdConfModel;
+import org.opensolaris.webstack.settings.model.MySQLCnfModel;
 import org.opensolaris.webstack.settings.model.PHPIniModel;
 import org.opensolaris.webstack.settings.tray.Main;
 
@@ -54,16 +55,18 @@ public class OptionsContainer extends javax.swing.JFrame {
     private PHPPanel phpTab;
     private HttpdConfModel model;
     private PHPIniModel phpmodel;
+    private MySQLCnfModel mysqlmodel;
 
     /** Creates new form OptionsContainer */
     public OptionsContainer(final HttpdConfModel model) {
         this.model = model;
         phpmodel = new PHPIniModel();
+        mysqlmodel =new MySQLCnfModel();
         initComponents();
         //     tabsPanel.addTab("General", new GeneralPanel());
         tabsPanel.addTab("Apache 2", apacheTab = new Apache2Panel(model));
         tabsPanel.addTab("PHP", phpTab = new PHPPanel(phpmodel));
-        tabsPanel.addTab("MySQL", new MySQLPanel());
+        tabsPanel.addTab("MySQL", new MySQLPanel(mysqlmodel));
         tabsPanel.addTab("FTP", new FTPPanel());
 
 

@@ -26,8 +26,14 @@
 
 package org.opensolaris.webstack.settings.options;
 
+import java.awt.Desktop;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.opensolaris.webstack.settings.model.Environment;
 
 /**
  *
@@ -48,17 +54,94 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jCheckBoxUserDir = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
+        buttonAdvanceConf = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        buttonRepair = new javax.swing.JButton();
+        labelAdminPassword = new javax.swing.JLabel();
+        jPasswordField1 = new javax.swing.JPasswordField();
+
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
+        jCheckBoxUserDir.setText(bundle.getString("LABEL_REMOTE_ACCESS_MYSQL")); // NOI18N
+
+        jLabel1.setText(bundle.getString("LABEL_HELP_MYSQL")); // NOI18N
+        jLabel1.setEnabled(false);
+
+        buttonAdvanceConf.setText(bundle.getString("LABEL_ADVANCE_CONF")); // NOI18N
+        buttonAdvanceConf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAdvanceConfActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText(bundle.getString("LABEL_EDITMYSQLCNF")); // NOI18N
+        jLabel2.setEnabled(false);
+
+        buttonRepair.setText(bundle.getString("LABEL_REPAIR")); // NOI18N
+
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/tray/Bundle"); // NOI18N
+        labelAdminPassword.setText(bundle1.getString("LABEL_Admini_password")); // NOI18N
+
+        jPasswordField1.setText("jPasswordField1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelAdminPassword)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonRepair)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonAdvanceConf)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                    .addComponent(jCheckBoxUserDir, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                    .addComponent(jPasswordField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxUserDir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelAdminPassword))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonAdvanceConf)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buttonRepair)
+                .addContainerGap(127, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
+        Desktop desktop = null;
+        // Before more Desktop API is used, first check
+        // whether the API is supported by this particular
+        // virtual machine (VM) on this particular host.
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+        }
+        if (desktop.isSupported(Desktop.Action.OPEN)) {
+            try {
+                
+                desktop.open(new File(Environment.getMySqlCnf()));
+            } catch (IOException ex) {
+                Logger.getLogger(MySQLPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_buttonAdvanceConfActionPerformed
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -67,6 +150,13 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonAdvanceConf;
+    private javax.swing.JButton buttonRepair;
+    private javax.swing.JCheckBox jCheckBoxUserDir;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPasswordField jPasswordField1;
+    private javax.swing.JLabel labelAdminPassword;
     // End of variables declaration//GEN-END:variables
     
 }

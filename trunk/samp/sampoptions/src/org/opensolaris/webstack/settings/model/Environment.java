@@ -39,25 +39,29 @@ public class Environment {
 
     private static String httpdconf = "/etc/apache2/2.2/httpd.conf";
     private static String phpini = "/etc/php5/5.2.4/php.ini";
+    private static String mysqlcnf = "/etc/mysql/5.0/my.cnf";
+    private static String ftpconf = "/etc/ftpd/ftpaccess";
     private static String apachelog = "/var/apache2/2.2/logs/error_log";
     private static String mysqllog = "/opt/csw/mysql5/var/solaris-devx.err";
     private static String phplog = "/var/php5/logs/php_error.log";
-    private static String startapache = "svcadm enable apache22";
-    private static String stopapache = "svcadm disable apache22";
-    private static String startmysql = "svcadm enable svc:/application/database/mysql:version_50";
-    private static String stopmysql = "svcadm disable svc:/application/database/mysql:version_50";
+    private static String startapache = "/usr/sbin/svcadm enable apache22";
+    private static String stopapache = "/usr/sbin/svcadm disable apache22";
+    private static String startmysql = "/usr/sbin/svcadm enable svc:/application/database/mysql:version_50";
+    private static String stopmysql = "/usr/sbin/svcadm disable svc:/application/database/mysql:version_50";
     private static String port = null;
 
     static {
         // Read properties file.
         Properties properties = new Properties();
-        File f = new File(System.getProperty("user.home") + "/.sampoptions.properties");
+        File f = new File(System.getProperty("user.home") + "/.webstackoptions.properties");
         if (f.exists()){
         FileInputStream fis=null;
         try {
             properties.load(fis= new FileInputStream(f));
             httpdconf = properties.getProperty("httpdconf");
             phpini = properties.getProperty("phpini");
+            mysqlcnf = properties.getProperty("mysqlcnf");
+            ftpconf = properties.getProperty("ftpconf");
             apachelog = properties.getProperty("apachelog");
             mysqllog = properties.getProperty("mysqllog");
             phplog = properties.getProperty("phplog");
@@ -78,6 +82,8 @@ public class Environment {
             try {
                 properties.setProperty("httpdconf", httpdconf);
                 properties.setProperty("phpini", phpini);
+                properties.setProperty("mysqlcnf", mysqlcnf);
+                properties.setProperty("ftpconf", ftpconf);
                 properties.setProperty("apachelog", apachelog);
                 properties.setProperty("mysqllog", mysqllog);
                 properties.setProperty("phplog", phplog);
@@ -106,8 +112,8 @@ public class Environment {
         else{ //temp solution for new and old apache stuff
             httpdconf = "/etc/apache2/httpd.conf";
             apachelog = "/var/apache2/logs/error_log";
-            startapache = "svcadm enable apache2";
-            stopapache = "svcadm disable apache2";
+            startapache = "/usr/sbin/svcadm enable apache2";
+            stopapache = "/usr/sbin/svcadm disable apache2";
             return httpdconf;
         }
     }
@@ -115,7 +121,12 @@ public class Environment {
     public static String getPhpini() {
         return phpini;
     }
-
+    public static String getMySqlCnf() {
+        return mysqlcnf;
+    }
+    public static String getFTPConf() {
+        return ftpconf;
+    }
     public static String getApachelog() {
         return apachelog;
     }
