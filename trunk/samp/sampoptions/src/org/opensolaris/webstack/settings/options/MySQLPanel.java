@@ -34,15 +34,18 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.opensolaris.webstack.settings.model.Environment;
+import org.opensolaris.webstack.settings.model.MySQLCnfModel;
 
 /**
  *
  * @author  ludo
  */
 public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeListener{
+    private MySQLCnfModel model;
     
     /** Creates new form MySQLPanel */
-    public MySQLPanel() {
+    public MySQLPanel(MySQLCnfModel m) {
+        model = m;
         initComponents();
     }
     
