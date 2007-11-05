@@ -61,11 +61,11 @@ public class Tray {
     private  StartAction startAction;
     private  StopAction stopAction;
     public void setIcon(String name) {
-        URL url = this.getClass().getResource("resources/apache.png");
+        URL url = this.getClass().getResource("resources/apache.gif");
 
         Image image1 = new ImageIcon(url).getImage();
         Image badge = new ImageIcon(this.getClass().getResource("resources/" + name + ".png")).getImage();
-        Image merged = Util.mergeImages(image1, badge, 18, 18);
+        Image merged = Util.mergeImages(image1, badge, 16,16);
         trayIcon.setImage(merged);
     }
     public void updateIcon(){

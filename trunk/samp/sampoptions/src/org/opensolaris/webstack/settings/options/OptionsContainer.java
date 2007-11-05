@@ -72,7 +72,7 @@ public class OptionsContainer extends javax.swing.JFrame {
 
         pack();
         setLocationRelativeTo(null);
-        URL url = Main.class.getResource("resources/apache.png");
+        URL url = Main.class.getResource("resources/apache.gif");
 
         Image image = new ImageIcon(url).getImage();
         setIconImage(image);
@@ -135,7 +135,7 @@ public class OptionsContainer extends javax.swing.JFrame {
     private JLabel getImage() {
         BufferedImage image = null;
         try {
-            image = ImageIO.read(org.opensolaris.webstack.settings.tray.Tray.class.getResource("resources/samp.png"));
+            image = ImageIO.read(org.opensolaris.webstack.settings.tray.Tray.class.getResource("resources/samp.gif"));
         // image = createReflection(image);
         } catch (IOException ex) {
             ex.printStackTrace();
