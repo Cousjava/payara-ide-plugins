@@ -1,3 +1,3 @@
 #! /bin/sh
 
-ls
+/usr/bin/firefox /opt/webstack/doc/gettingstartedguide.html &

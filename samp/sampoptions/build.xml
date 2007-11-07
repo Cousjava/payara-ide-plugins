@@ -9,6 +9,8 @@
         <delete dir="pkgbuild/webstack"/>
         <mkdir dir="pkgbuild/webstack/bin" />
         <mkdir dir="pkgbuild/webstack/globalmenus" />
+        <mkdir dir="pkgbuild/webstack/doc" />
+        <mkdir dir="pkgbuild/webstack/sample" />
         <mkdir dir="pkgbuild/webstack/menus/.local/share/applications" />
         <mkdir dir="pkgbuild/webstack/menus/.local/share/desktop-directories" />
         <mkdir dir="pkgbuild/webstack/menus/.config/menus/applications-merged" />
@@ -16,6 +18,14 @@
             todir="pkgbuild/webstack/globalmenus"> 
             <fileset dir="pkgbuild/globalmenus" includes="*.*" />      
         </copy>
+        <copy 
+            todir="pkgbuild/webstack/doc"> 
+            <fileset dir="pkgbuild/doc" includes="*.*" />      
+        </copy>
+        <copy 
+            todir="pkgbuild/webstack/sample"> 
+            <fileset dir="pkgbuild/sample" includes="*.*" />      
+        </copy>        
         <copy 
             todir="pkgbuild/webstack/bin"> 
             <fileset dir="src/org/opensolaris/webstack/settings/scripts" includes="*.sh" />      
