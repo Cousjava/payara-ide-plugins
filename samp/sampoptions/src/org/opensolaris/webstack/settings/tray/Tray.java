@@ -193,29 +193,29 @@ public class Tray {
                     }
                 }
             });
-                        logsMenu.add(defaultItem = new MenuItem("PHP log"));
-            defaultItem.setFont(defaultFont);
-            defaultItem.addActionListener(new ActionListener() {
-
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("logs");
-                    Desktop desktop = null;
-                    // Before more Desktop API is used, first check
-                    // whether the API is supported by this particular
-                    // virtual machine (VM) on this particular host.
-                    if (Desktop.isDesktopSupported()) {
-                        desktop = Desktop.getDesktop();
-                    }
-                    if (desktop.isSupported(Desktop.Action.OPEN)) {
-                        try {
-
-                            desktop.open(new File(Environment.getPhplog()));
-                        } catch (IOException ex) {
-                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            });
+//                        logsMenu.add(defaultItem = new MenuItem("PHP log"));
+//            defaultItem.setFont(defaultFont);
+//            defaultItem.addActionListener(new ActionListener() {
+//
+//                public void actionPerformed(ActionEvent e) {
+//                    System.out.println("logs");
+//                    Desktop desktop = null;
+//                    // Before more Desktop API is used, first check
+//                    // whether the API is supported by this particular
+//                    // virtual machine (VM) on this particular host.
+//                    if (Desktop.isDesktopSupported()) {
+//                        desktop = Desktop.getDesktop();
+//                    }
+//                    if (desktop.isSupported(Desktop.Action.OPEN)) {
+//                        try {
+//
+//                            desktop.open(new File(Environment.getPhplog()));
+//                        } catch (IOException ex) {
+//                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
+//                    }
+//                }
+//            });
             logsMenu.add(defaultItem = new MenuItem("MySql log"));
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
