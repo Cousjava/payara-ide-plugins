@@ -42,7 +42,7 @@ public class Environment {
     private static String mysqlcnf = "/etc/mysql/5.0/my.cnf";
     private static String ftpconf = "/etc/ftpd/ftpaccess";
     private static String apachelog = "/var/apache2/2.2/logs/error_log";
-    private static String mysqllog = "/opt/csw/mysql5/var/solaris-devx.err";
+    private static String mysqllog = "/var/svc/log/application-database-mysql:version_50.log";
     private static String phplog = "/var/php5/logs/php_error.log";
     private static String startapache = "/usr/sbin/svcadm enable apache22";
     private static String stopapache = "/usr/sbin/svcadm disable apache22";
