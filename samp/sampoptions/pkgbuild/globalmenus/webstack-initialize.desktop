@@ -1,6 +1,6 @@
 [Desktop Entry]
 Exec=/opt/webstack/bin/initialize.sh
-Terminal=0
+Terminal=1
 Type=Application
 Icon=/usr/share/icons/gnome/24x24/filesystems/gnome-fs-bookmark.png
 Categories=Application;SAMP;
