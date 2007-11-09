@@ -13,7 +13,6 @@ import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.opensolaris.webstack.settings.execution.ServersManager;
-import org.opensolaris.webstack.settings.model.Environment;
 import org.opensolaris.webstack.settings.tray.Main;
 import org.opensolaris.webstack.settings.tray.Tray;
 
@@ -24,7 +23,7 @@ import org.opensolaris.webstack.settings.tray.Tray;
 public class StartAction extends MenuItem {
 
     public StartAction(final Tray tray) {
-        super(" " + tray.getBundle().getString("LABEL_Start"));
+        super(" " + Tray.getBundle().getString("LABEL_Start"));
         addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
