@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec="/opt/webstack/bin/viewguide.sh"
+Exec="/opt/webstack/bin/viewgettingstartedguide.sh"
 Terminal=0
 Type=Application
 Icon=/usr/share/icons/gnome/24x24/filesystems/gnome-fs-bookmark.png
