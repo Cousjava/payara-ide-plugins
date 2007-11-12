@@ -24,11 +24,15 @@
  */
 package org.opensolaris.webstack.settings.model;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.opensolaris.webstack.settings.tray.Main;
 
 /**
@@ -44,39 +48,33 @@ public class Environment {
     private static String apachelog = "/var/apache2/2.2/logs/error_log";
     private static String mysqllog = "/var/svc/log/application-database-mysql:version_50.log";
     private static String phplog = "/var/php5/logs/php_error.log";
-    private static String startapache = "/usr/sbin/svcadm enable apache22";
-    private static String stopapache = "/usr/sbin/svcadm disable apache22";
-    private static String startmysql = "/usr/sbin/svcadm enable svc:/application/database/mysql:version_50";
-    private static String stopmysql = "/usr/sbin/svcadm disable svc:/application/database/mysql:version_50";
     private static String port = null;
 
     static {
         // Read properties file.
         Properties properties = new Properties();
         File f = new File(System.getProperty("user.home") + "/.webstackoptions.properties");
-        if (f.exists()){
-        FileInputStream fis=null;
-        try {
-            properties.load(fis= new FileInputStream(f));
-            httpdconf = properties.getProperty("httpdconf");
-            phpini = properties.getProperty("phpini");
-            mysqlcnf = properties.getProperty("mysqlcnf");
-            ftpconf = properties.getProperty("ftpconf");
-            apachelog = properties.getProperty("apachelog");
-            mysqllog = properties.getProperty("mysqllog");
-            phplog = properties.getProperty("phplog");
-            startapache = properties.getProperty("startapache");
-            stopapache = properties.getProperty("stopapache");
-            startmysql = properties.getProperty("startmysql");
-            stopmysql = properties.getProperty("stopmysql");
-        } catch (IOException e) {
-        } finally{
-            if (fis!=null){
-                try{
-                fis.close();
-                } catch (Exception e){}
+        if (f.exists()) {
+            FileInputStream fis = null;
+            try {
+                properties.load(fis = new FileInputStream(f));
+                httpdconf = properties.getProperty("httpdconf");
+                phpini = properties.getProperty("phpini");
+                mysqlcnf = properties.getProperty("mysqlcnf");
+                ftpconf = properties.getProperty("ftpconf");
+                apachelog = properties.getProperty("apachelog");
+                mysqllog = properties.getProperty("mysqllog");
+                phplog = properties.getProperty("phplog");
+
+            } catch (IOException e) {
+            } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (Exception e) {
+                    }
+                }
             }
-        }
         } else {//create the file with default values
             FileOutputStream fos = null;
             try {
@@ -87,10 +85,7 @@ public class Environment {
                 properties.setProperty("apachelog", apachelog);
                 properties.setProperty("mysqllog", mysqllog);
                 properties.setProperty("phplog", phplog);
-                properties.setProperty("startapache", startapache);
-                properties.setProperty("stopapache", stopapache);
-                properties.setProperty("startmysql", startmysql);
-                properties.setProperty("stopmysql", stopmysql);
+
                 fos = new FileOutputStream(f);
                 properties.store(fos, "");
             } catch (IOException e) {
@@ -101,19 +96,73 @@ public class Environment {
                     } catch (Exception e) {
                     }
                 }
-        }           
+            }
         }
+
+        //now test the environment to detect config errors:
+        File testF;
+        String errorMessage = "";
+        testF = new File(getHttpdconf());
+        if (!testF.exists()) {
+            errorMessage += "File: " + testF.getAbsolutePath() + " does not exist.\n";
+        } else if (!testF.canWrite()) {
+            errorMessage += "File: " + testF.getAbsolutePath() + " is not writable.\n";
+        }
+
+
+        testF = new File(getPhpini());
+        if (!testF.exists()) {
+            errorMessage += "File: " + testF.getAbsolutePath() + " does not exist.\n";
+        } else if (!testF.canWrite()) {
+            errorMessage += "File: " + testF.getAbsolutePath() + " is not writable.\n";
+        }
+        testF = new File(getMySqlCnf());
+        if (!testF.exists()) {
+            errorMessage += "File: " + testF.getAbsolutePath() + " does not exist.\n";
+        } else if (!testF.canWrite()) {
+            errorMessage += "File: " + testF.getAbsolutePath() + " is not writable.\n";
+        }
+        testF = new File(getApachelog());
+        if (!testF.exists()) {
+            errorMessage += "File: " + testF.getAbsolutePath() + " does not exist.\n";
+        }
+        testF = new File(getMysqllog());
+        if (!testF.exists()) {
+            errorMessage += "File: " + testF.getAbsolutePath() + " does not exist.\n";
+        }
+        if (!errorMessage.equals("")) {
+
+
+            Object[] options = {"Edit Options Config ini file", "Close"};
+            int n = JOptionPane.showOptionDialog(null, errorMessage, "Configuration Error", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+            if (n == JOptionPane.OK_OPTION) {
+                Desktop desktop = null;
+                if (Desktop.isDesktopSupported()) {
+                    desktop = Desktop.getDesktop();
+                }
+                if (desktop.isSupported(Desktop.Action.OPEN)) {
+                    try {
+
+                        desktop.open(f);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+            System.exit(0);
+        }
+
+
     }
 
     public static String getHttpdconf() {
         File f = new File(httpdconf);
-        if (f.exists())
+        if (f.exists()) {
             return httpdconf;
-        else{ //temp solution for new and old apache stuff
+        } else { //temp solution for new and old apache stuff
             httpdconf = "/etc/apache2/httpd.conf";
             apachelog = "/var/apache2/logs/error_log";
-            startapache = "/usr/sbin/svcadm enable apache2";
-            stopapache = "/usr/sbin/svcadm disable apache2";
             return httpdconf;
         }
     }
@@ -121,12 +170,15 @@ public class Environment {
     public static String getPhpini() {
         return phpini;
     }
+
     public static String getMySqlCnf() {
         return mysqlcnf;
     }
+
     public static String getFTPConf() {
         return ftpconf;
     }
+
     public static String getApachelog() {
         return apachelog;
     }
@@ -139,24 +191,10 @@ public class Environment {
         return phplog;
     }
 
-    public static String getStartapache() {
-        return startapache;
-    }
 
-    public static String getStopapache() {
-        return stopapache;
-    }
-
-    public static String getStartmysql() {
-        return startmysql;
-    }
-
-    public static String getStopmysql() {
-        return stopmysql;
-    }
 
     public static String getApachePortNumber() {
 
-        return "" +Main.getHttpdConfModel().getPortNumber();
+        return "" + Main.getHttpdConfModel().getPortNumber();
     }
 }

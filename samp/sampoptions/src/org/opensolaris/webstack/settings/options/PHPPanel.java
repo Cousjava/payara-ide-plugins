@@ -181,6 +181,9 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
 
         Object[] options = {"Yes, repair", "Cancel"};
         int n = JOptionPane.showOptionDialog(null, "question", "Repair", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+        if (n==JOptionPane.OK_OPTION){
+            
+        }
     }//GEN-LAST:event_buttonRepairActionPerformed
 
     private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
