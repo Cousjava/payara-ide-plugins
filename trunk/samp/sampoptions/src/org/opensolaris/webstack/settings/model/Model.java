@@ -85,7 +85,7 @@ public class Model {
                 line = br.readLine();
             }
         } catch (Exception ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), (Throwable)null);
         } finally {
             try {
                 if (br != null) {
