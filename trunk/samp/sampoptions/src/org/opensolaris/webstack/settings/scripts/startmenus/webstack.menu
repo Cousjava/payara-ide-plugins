@@ -5,7 +5,7 @@
     
     <Name>Applications</Name>
     <Menu>
-        <Name>Developer Tools</Name>
+        <Name>Development</Name>
             <Directory>Development.directory</Directory>
         <Menu>
             <Name>WebStack</Name>
