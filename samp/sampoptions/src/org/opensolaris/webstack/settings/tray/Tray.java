@@ -157,15 +157,15 @@ public class Tray {
                 }
             });
 
-            popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Administer_MySQL")));
-            defaultItem.setFont(defaultFont);
-            defaultItem.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("admin mysql");
-                }
-            });
+//            popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Administer_MySQL")));
+//            defaultItem.setFont(defaultFont);
+//            defaultItem.addActionListener(new ActionListener() {
+//
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    System.out.println("admin mysql");
+//                }
+//            });
             Menu logsMenu = new Menu(" " + getBundle().getString("LABEL_Logs"));
             logsMenu.setFont(defaultFont);
             popup.add(logsMenu);

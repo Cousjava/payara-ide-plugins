@@ -132,8 +132,10 @@ public class Model {
         public void run() {
             long currentTimeStamp = modelFile.lastModified();
             if (timeStamp < currentTimeStamp) {
+//                System.out.println("timeStamp < currentTimeStamp"+timeStamp +"---"+ currentTimeStamp);
+//                System.out.println("modelFile"+modelFile);
                 reset();
-                System.out.println("time stamp changed, reloading");
+//                System.out.println("time stamp changed, reloading");
                 long old = timeStamp;
                 timeStamp = modelFile.lastModified();
                 changeSupport.firePropertyChange("timeStamp", "" + old, "" + timeStamp);

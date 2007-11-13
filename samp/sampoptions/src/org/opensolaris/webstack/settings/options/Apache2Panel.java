@@ -244,7 +244,6 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
     
     @Override
     public void propertyChange(PropertyChangeEvent arg0) {
-        System.out.println("model changed!~~~" + model.getPortNumber());
         textFieldPortNumber.setText("" + model.getPortNumber());
         labelWebPage.setText("http://localhost:" + textFieldPortNumber.getText());
         textFieldDocRoot.setText(model.getDocumentRoot());
