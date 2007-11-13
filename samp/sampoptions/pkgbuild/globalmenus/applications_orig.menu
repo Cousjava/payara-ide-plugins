@@ -56,16 +56,7 @@
       </And>
       <Filename>emacs.desktop</Filename>
     </Include>
-      <Menu>
-        <Name>WebStack</Name>
-        <Directory>webstack.directory</Directory>
-        <Include>
-            <Category>SAMP</Category>
-        </Include>
-
-      </Menu>
   </Menu> <!-- End Development Tools -->
- 
 
   <!-- Education -->
   <Menu>
@@ -152,9 +143,9 @@
     <OnlyUnallocated/>
     <Include>
       <And>
-        <Category>Application</Category>
         <Not><Category>Core</Category></Not>
         <Not><Category>Settings</Category></Not>
+        <Not><Category>Screensaver</Category></Not>
       </And>
     </Include>
   </Menu> <!-- End Other -->
