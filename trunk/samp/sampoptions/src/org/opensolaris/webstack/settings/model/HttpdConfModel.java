@@ -87,6 +87,7 @@ public class HttpdConfModel extends Model {
         if (changed == false) {
             changed = (portNumber != i);
         }
+        System.out.println("changed = (portNumber != i)" +changed +portNumber +"   "+ i);
         portNumber = i;
         content.set(listenKey, LISTEN + " " + portNumber);
 
@@ -111,6 +112,7 @@ public class HttpdConfModel extends Model {
         if (!d.equals(initialDocRoot)) {
             docRoot = d;
             changed = true;
+            System.out.println("    doc root changed..."+d+initialDocRoot);
             content.set(documentRootKey, DOCROOT + " \"" + d + "\"");
 
         }

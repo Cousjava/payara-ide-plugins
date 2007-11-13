@@ -244,6 +244,8 @@ public class OptionsContainer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        //reset the model from disk
+        // thsi will update the internal values displayed in the UI to the correct values
         model.reset();
         phpmodel.reset();
         this.dispose();

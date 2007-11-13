@@ -55,8 +55,6 @@ public class PHPIniModel extends Model {
     public void lineAddedCallBack(String line, int lineNumber) {
         if (line.startsWith("error_reporting")) {
             errorreportingKey = lineNumber;
-        } else if (line.startsWith("error_reporting")) {
-            errorreportingKey = lineNumber;
         } else if (line.startsWith("zend_extension")) {
             zend_extensionKey = lineNumber;
         } else if (line.startsWith("xdebug.remote_enable")) {

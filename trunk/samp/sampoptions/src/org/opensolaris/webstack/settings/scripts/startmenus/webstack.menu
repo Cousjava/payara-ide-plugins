@@ -31,7 +31,7 @@
                 <Filename>webstack-start.desktop</Filename>
                 <Filename>webstack-stop.desktop</Filename>
                 <Filename>webstack-options.desktop</Filename>
-                <Filename>webstack-administermysql.desktop</Filename>
+                <!--Filename>webstack-administermysql.desktop</Filename-->
                 <Filename>webstack-viewgettingstartedguide.desktop</Filename>
                 <Filename>webstack-uninitialize.desktop</Filename>
             </Include>
@@ -40,7 +40,7 @@
                 <Filename>webstack-start.desktop</Filename>
                 <Filename>webstack-stop.desktop</Filename>
                 <Filename>webstack-options.desktop</Filename>
-                <Filename>webstack-administermysql.desktop</Filename>
+                <!--Filename>webstack-administermysql.desktop</Filename-->
                 <Menuname>webstack-logs</Menuname>
                 <Menuname>webstack-sampleapp</Menuname>
                 <Filename>webstack-viewgettingstartedguide.desktop</Filename>

@@ -224,7 +224,6 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
     // End of variables declaration//GEN-END:variables
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println("model changed!~~~" + p.isDebugMode());
         jCheckBoxdebug.setSelected(p.isDebugMode());
 
     }
