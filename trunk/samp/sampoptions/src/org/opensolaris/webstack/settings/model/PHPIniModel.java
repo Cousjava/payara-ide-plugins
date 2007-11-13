@@ -15,7 +15,7 @@ public class PHPIniModel extends Model {
     private static final String REMOTEENABLE = "xdebug.remote_enable=1";
     private static final String REMOTEHANDLER = "xdebug.remote_handler=dbgp";
     private static final String REMOTEHOST = "xdebug.remote_host=localhost";
-
+    private static final String ERROR_REPORTING="error_reporting  =";
     int errorreportingKey = -1;
     int xdebugKey = -1;
     int zend_extensionKey = -1;
@@ -26,6 +26,7 @@ public class PHPIniModel extends Model {
     
     private boolean initialDebugMode;
     private boolean changed = false;
+    private String ErrorReporting;
 
     public PHPIniModel() {
         super(new File(Environment.getPhpini()));
@@ -45,7 +46,7 @@ public class PHPIniModel extends Model {
         xdebugremote_modeKey = -1;
         xdebugremote_hostKey = -1;
         xdebugremote_handlerKey = -1;
-        
+        ErrorReporting = "";
         initialDebugMode =false;
         changed=false;
         load();
@@ -53,8 +54,9 @@ public class PHPIniModel extends Model {
 
     @Override
     public void lineAddedCallBack(String line, int lineNumber) {
-        if (line.startsWith("error_reporting")) {
+        if (line.startsWith(ERROR_REPORTING)) {
             errorreportingKey = lineNumber;
+            ErrorReporting=  line.substring(ERROR_REPORTING.length(), line.length()).trim();
         } else if (line.startsWith("zend_extension")) {
             zend_extensionKey = lineNumber;
         } else if (line.startsWith("xdebug.remote_enable")) {
@@ -71,7 +73,14 @@ public class PHPIniModel extends Model {
 
 
     }
-
+    public String getErrorReporting(){
+        return ErrorReporting;
+        
+    }
+    public void setErrorReporting(String e){
+        System.out.println("setting error to:"+e);
+        
+    }
     public boolean isDirty() {
         return changed;
     }

@@ -50,15 +50,51 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         p = phpmodel;
         p.addPropertyChangeListener(this);
         initComponents();
+        initFromModel();
 
+        
+   
+
+    }
+    void initFromModel(){
         jCheckBoxdebug.setSelected(p.isDebugMode());
-
+        String error = p.getErrorReporting();
+       
+        jCheckBoxallErrors.setSelected((error.indexOf("E_ALL")>-1));
+        jCheckBoxRunTimeNotices.setSelected((error.indexOf("E_STRICT")>-1));
+        jCheckBoxRunTimeWarnings.setSelected((error.indexOf("E_WARNING")>-1));
+        jCheckBoxfatalRunTimeErrors.setSelected((error.indexOf("E_ERROR")>-1));        
     }
 
     void UpdateModel() {
 
         p.setDebugMode(jCheckBoxdebug.isSelected());
-    
+        String error = "";
+        if (jCheckBoxallErrors.isSelected()){
+            if (error.length()>0){
+                error+=" & ";
+            }
+            error = error+ "E_ALL";
+        }
+        if (jCheckBoxRunTimeNotices.isSelected()){
+            if (error.length()>0){
+                error+=" & ";
+            }
+            error = error+ "E_STRICT";
+        }    
+        if (jCheckBoxRunTimeWarnings.isSelected()){
+            if (error.length()>0){
+                error+=" & ";
+            }
+            error = error+ "E_WARNING";
+        }
+        if (jCheckBoxfatalRunTimeErrors.isSelected()){
+            if (error.length()>0){
+                error+=" & ";
+            }
+            error = error+ "E_ERROR";
+        }    
+        p.setErrorReporting(error);
     }
 
     /** This method is called from within the constructor to
@@ -75,10 +111,10 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         jLabel3 = new javax.swing.JLabel();
         buttonRepair = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jCheckBox4 = new javax.swing.JCheckBox();
+        jCheckBoxallErrors = new javax.swing.JCheckBox();
+        jCheckBoxfatalRunTimeErrors = new javax.swing.JCheckBox();
+        jCheckBoxRunTimeWarnings = new javax.swing.JCheckBox();
+        jCheckBoxRunTimeNotices = new javax.swing.JCheckBox();
         jCheckBoxdebug = new javax.swing.JCheckBox();
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -113,13 +149,13 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
             }
         });
 
-        jCheckBox1.setText(bundle.getString("E_ALL")); // NOI18N
+        jCheckBoxallErrors.setText(bundle.getString("E_ALL")); // NOI18N
 
-        jCheckBox2.setText(bundle.getString("E_ERROR")); // NOI18N
+        jCheckBoxfatalRunTimeErrors.setText(bundle.getString("E_ERROR")); // NOI18N
 
-        jCheckBox3.setText(bundle.getString("E_WARNING")); // NOI18N
+        jCheckBoxRunTimeWarnings.setText(bundle.getString("E_WARNING")); // NOI18N
 
-        jCheckBox4.setText(bundle.getString("E_NOTICE")); // NOI18N
+        jCheckBoxRunTimeNotices.setText(bundle.getString("E_NOTICE")); // NOI18N
 
         jCheckBoxdebug.setText("enable");
 
@@ -128,15 +164,10 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
-                        .addGap(12, 12, 12))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(buttonRepair)
@@ -144,11 +175,11 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
                         .addComponent(buttonAdvanceConf)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
-                    .addComponent(jCheckBox1)
+                    .addComponent(jCheckBoxallErrors)
                     .addComponent(jCheckBoxdebug)
-                    .addComponent(jCheckBox2)
-                    .addComponent(jCheckBox3)
-                    .addComponent(jCheckBox4))
+                    .addComponent(jCheckBoxfatalRunTimeErrors)
+                    .addComponent(jCheckBoxRunTimeWarnings)
+                    .addComponent(jCheckBoxRunTimeNotices))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -160,14 +191,14 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox1)
+                    .addComponent(jCheckBoxallErrors)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox2)
+                .addComponent(jCheckBoxfatalRunTimeErrors)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox3)
+                .addComponent(jCheckBoxRunTimeWarnings)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox4)
+                .addComponent(jCheckBoxRunTimeNotices)
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdvanceConf)
@@ -215,18 +246,18 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
     private javax.swing.JButton buttonAdvanceConf;
     private javax.swing.JButton buttonRepair;
     private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
+    private javax.swing.JCheckBox jCheckBoxRunTimeNotices;
+    private javax.swing.JCheckBox jCheckBoxRunTimeWarnings;
+    private javax.swing.JCheckBox jCheckBoxallErrors;
     private javax.swing.JCheckBox jCheckBoxdebug;
+    private javax.swing.JCheckBox jCheckBoxfatalRunTimeErrors;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        jCheckBoxdebug.setSelected(p.isDebugMode());
+        initFromModel();
 
     }
 }
