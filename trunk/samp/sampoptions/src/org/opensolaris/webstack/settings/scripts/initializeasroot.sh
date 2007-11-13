@@ -6,6 +6,7 @@ USERNAME=$1
 echo "adding apache22 and mysql privileges to user ${USERNAME}"
 usermod -P 'Apache 22 Administration','MySql 5 Administration' ${USERNAME}
 
+echo "allowing RW access to httpd.conf, php.ini and my.cnf to user ${USERNAME}"
 
 setfacl -m user:${USERNAME}:rw- /etc/apache2/2.2/httpd.conf
 setfacl -m mask:rw- /etc/apache2/2.2/httpd.conf     
