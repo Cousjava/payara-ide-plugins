@@ -17,27 +17,27 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="labelDocRoot" alignment="1" min="-2" max="-2" attributes="1"/>
-                  <Component id="labelWebSite" alignment="1" min="-2" pref="94" max="-2" attributes="1"/>
-                  <Component id="labelPortNumber" min="-2" pref="80" max="-2" attributes="1"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="labelDocRoot" alignment="1" max="32767" attributes="1"/>
+                  <Component id="labelPortNumber" alignment="1" max="32767" attributes="1"/>
+                  <Component id="labelWebSite" alignment="1" min="-2" max="-2" attributes="1"/>
               </Group>
               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jCheckBoxUserDir" alignment="0" pref="307" max="32767" attributes="0"/>
+                  <Component id="jCheckBoxUserDir" alignment="0" pref="373" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      <Component id="jLabel1" pref="295" max="32767" attributes="0"/>
+                      <Component id="jLabel1" pref="361" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="buttonAdvanceConf" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel2" pref="203" max="32767" attributes="0"/>
+                      <Component id="jLabel2" pref="184" max="32767" attributes="0"/>
                   </Group>
                   <Component id="buttonRepair" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="labelWebPage" alignment="0" pref="307" max="32767" attributes="0"/>
+                  <Component id="labelWebPage" alignment="0" pref="373" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="textFieldDocRoot" pref="183" max="32767" attributes="0"/>
+                      <Component id="textFieldDocRoot" pref="249" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="browseButton" min="-2" pref="106" max="-2" attributes="0"/>
                   </Group>
