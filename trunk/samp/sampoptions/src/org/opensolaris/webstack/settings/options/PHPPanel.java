@@ -163,7 +163,7 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))
@@ -199,7 +199,7 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
                 .addComponent(jCheckBoxRunTimeWarnings)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxRunTimeNotices)
-                .addGap(34, 34, 34)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdvanceConf)
                     .addComponent(jLabel3))
@@ -207,7 +207,7 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
                 .addComponent(buttonRepair)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     private void buttonRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRepairActionPerformed
