@@ -18,6 +18,7 @@ public class HttpdConfModel extends Model {
      * */
     int listenKey = 0;
     int documentRootKey = 0;
+    int directorydocumentRootKey = 0 ;//key for line  <Directory "/xxx/htdocs">
     int userdirKey = 0;
     int portNumber = 80;
     String docRoot = "";
@@ -33,6 +34,7 @@ public class HttpdConfModel extends Model {
     static private String LISTEN = "Listen";// port key
     static private String DOCROOT = "DocumentRoot";// root key
     static private String USERDIR="UserDir";  //user dir key
+    static private String DIRECTORY="<Directory";  //dir dir key for the docroot configuration only
     public HttpdConfModel() {
         super(new File(Environment.getHttpdconf()));
     }
@@ -42,6 +44,7 @@ public class HttpdConfModel extends Model {
         initialDocRoot="";
         initiaUserDirEnable=false;
         documentRootKey=-1;
+        directorydocumentRootKey=-1;
         listenKey=-1;
         
          changed = false;
@@ -71,7 +74,25 @@ public class HttpdConfModel extends Model {
             }
             if (docRoot.endsWith("\"")) {
                 docRoot = docRoot.substring(0, docRoot.length() - 1);
+            }
                 initialDocRoot = docRoot;
+        }
+        if (line.startsWith(DIRECTORY)) {
+                //something like <Directory "/Applications/MAMP/htdocs">
+                //test if this dir is the real doc root dir:
+            String dir = line.substring(DOCROOT.length(), line.length()).trim();
+            if (dir.endsWith(">")) {
+                dir = dir.substring(0, dir.length() - 1);
+                
+            }
+            if (dir.startsWith("\"")) {
+                dir = dir.substring(1);
+            }
+            if (dir.endsWith("\"")) {
+                dir = dir.substring(0, dir.length() - 1);                
+            }
+            if (dir.equals(docRoot)){// this is the entry we are looking for
+                directorydocumentRootKey = lineNumber;
             }
         }
     }
@@ -114,6 +135,10 @@ public class HttpdConfModel extends Model {
             changed = true;
             System.out.println("    doc root changed..."+d+initialDocRoot);
             content.set(documentRootKey, DOCROOT + " \"" + d + "\"");
+            if (directorydocumentRootKey!=-1){//we also need to change the corresponding <Directory Entry
+                content.set(directorydocumentRootKey, DIRECTORY + " \"" + d + "\">");
+                
+            }
 
         }
 
