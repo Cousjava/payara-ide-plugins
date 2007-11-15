@@ -68,7 +68,7 @@ public class ServersManager {
         System.out.println(" dir=" + dir);
         try {
             // svcadm enable apache2
-            String s[] = {C1, C2, C3, "'ddd'", C4, "/opt/webstack/bin/start.sh"};
+            String s[] = {C1, C2, C3, "'WebStack'", C4, "/opt/webstack/bin/start.sh"};
             Process p1;
 
             p1 = new ProcessBuilder(s).start();
@@ -104,7 +104,7 @@ public class ServersManager {
         try {
             //            System.out.println("stopping apache2 and MySql");
             // svcadm disable apache2
-            String s[] = {C1, C2, C3, "'ddd'", C4, "/opt/webstack/bin/stop.sh"};
+            String s[] = {C1, C2, C3, "'WebStack'", C4, "/opt/webstack/bin/stop.sh"};
             Process p1;
 
             p1 = new ProcessBuilder(s).start();
@@ -113,7 +113,19 @@ public class ServersManager {
             Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
         }
     }
+    static public void RestartServers() {
+        try {
+            //            System.out.println("stopping apache2 and MySql");
+            // svcadm disable apache2
+            String s[] = {C1, C2, C3, "'WebStack'", C4, "'/opt/webstack/bin/stop.sh;/opt/webstack/bin/start.sh'"};
+            Process p1;
 
+            p1 = new ProcessBuilder(s).start();
+            consumeIOs(p1, System.out);
+        } catch (IOException ex) {
+            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
+        }
+    }
     static private void consumeIOs(Process child, OutputStream outs) {
         //
             // Attach to the process's stdout, and ignore what comes back.

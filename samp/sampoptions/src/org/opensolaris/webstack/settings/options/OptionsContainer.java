@@ -40,6 +40,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import org.opensolaris.webstack.settings.execution.ServersManager;
 import org.opensolaris.webstack.settings.model.HttpdConfModel;
 import org.opensolaris.webstack.settings.model.MySQLCnfModel;
 import org.opensolaris.webstack.settings.model.PHPIniModel;
@@ -125,8 +126,12 @@ public class OptionsContainer extends javax.swing.JFrame {
             phpmodel.save();
         }
         if (apachedirtyModel || phpdirtyModel) {
-            Object[] options = {"Retart Servers Now", "Close"};
+            Object[] options = { "Close","Restart Servers Now"};
             int n = JOptionPane.showOptionDialog(null, "You must Restart Servers for your changes to take effect. ", "Change Options", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+            
+            if (n==1){//restart
+                ServersManager.RestartServers();
+            }
         }
 
         this.dispose();
