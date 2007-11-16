@@ -74,29 +74,33 @@ public class ServersManager {
             p1 = new ProcessBuilder(s).start();
 
             consumeIOs(p1, System.out);
+            displayHomePage();
 
 
-            Desktop desktop = null;
-            // Before more Desktop API is used, first check
-            // whether the API is supported by this particular
-            // virtual machine (VM) on this particular host.
-            if (Desktop.isDesktopSupported()) {
-                desktop = Desktop.getDesktop();
-            }
-            if (desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    // launch browser
-
-                    URI uri = new URI("http://localhost:" + Environment.getApachePortNumber());
-                    desktop.browse(uri);
-                } catch (IOException ex) {
-                    Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (URISyntaxException ex2) {
-                    Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex2);
-                }
-            }
         } catch (IOException ex) {
             Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
+        }
+    }
+
+    static public void displayHomePage() {
+        Desktop desktop = null;
+        // Before more Desktop API is used, first check
+            // whether the API is supported by this particular
+            // virtual machine (VM) on this particular host.
+        if (Desktop.isDesktopSupported()) {
+            desktop = Desktop.getDesktop();
+        }
+        if (desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                // launch browser
+
+                URI uri = new URI("http://localhost:" + Environment.getApachePortNumber());
+                desktop.browse(uri);
+            } catch (IOException ex) {
+                Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex2) {
+                Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex2);
+            }
         }
     }
 
@@ -113,19 +117,22 @@ public class ServersManager {
             Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
         }
     }
+
     static public void RestartServers() {
         try {
             //            System.out.println("stopping apache2 and MySql");
             // svcadm disable apache2
-            String s[] = {C1, C2, C3, "'WebStack'", C4, "'/opt/webstack/bin/stop.sh;/opt/webstack/bin/start.sh'"};
+            String s[] = {C1, C2, C3, "'WebStack'", C4, "/opt/webstack/bin/restart.sh"};
             Process p1;
 
             p1 = new ProcessBuilder(s).start();
             consumeIOs(p1, System.out);
+            displayHomePage();
         } catch (IOException ex) {
             Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
         }
     }
+
     static private void consumeIOs(Process child, OutputStream outs) {
         //
             // Attach to the process's stdout, and ignore what comes back.
