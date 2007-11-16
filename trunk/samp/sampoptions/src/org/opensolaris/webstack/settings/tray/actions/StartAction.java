@@ -6,12 +6,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.opensolaris.webstack.settings.tray.actions;
 
 import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.opensolaris.webstack.settings.execution.ServerStatus;
 import org.opensolaris.webstack.settings.execution.ServersManager;
 import org.opensolaris.webstack.settings.tray.Main;
 import org.opensolaris.webstack.settings.tray.Tray;
@@ -26,16 +26,23 @@ public class StartAction extends MenuItem {
         super(" " + Tray.getBundle().getString("LABEL_Start"));
         addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent e) {
-                ServersManager.StartServers();
-                tray.updateIcon();
-            }
-        });
+                    public void actionPerformed(ActionEvent e) {
+                        ServersManager.StartServers();
+                        tray.updateIcon();
+                    }
+                });
     }
 
     @Override
     public boolean isEnabled() {
-       // System.out.println("isenalbe for action is called");
-        return !ServersManager.isApacheRunning(Main.getHttpdConfModel().getPortNumber(), 1000);
+        final ServerStatus running = ServersManager.getRunningState();
+        if (running.apacheRunning && running.mySqlRunning) {
+            return false;
+
+        } else if (!running.apacheRunning && !running.mySqlRunning) {
+            return true;
+        } else {
+            return true;
+        }
     }
 }

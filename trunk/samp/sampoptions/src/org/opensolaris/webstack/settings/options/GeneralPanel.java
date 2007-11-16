@@ -45,50 +45,23 @@ public class GeneralPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jCheckBoxStartServers = new javax.swing.JCheckBox();
-        jCheckBoxServersWhenILogIn = new javax.swing.JCheckBox();
-        jButton1 = new javax.swing.JButton();
-
         setMinimumSize(new java.awt.Dimension(420, 200));
         setPreferredSize(new java.awt.Dimension(0, 0));
-
-        jCheckBoxStartServers.setText("Start Servers when Solaris boots"); // NOI18N
-
-        jCheckBoxServersWhenILogIn.setText("Start Servers when I log in, Stop Servers when I log out"); // NOI18N
-
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
-        jButton1.setText(bundle.getString("LABEL_VIEWADVANCEDDETAILS")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBoxStartServers)
-                    .addComponent(jCheckBoxServersWhenILogIn)
-                    .addComponent(jButton1))
-                .addContainerGap(68, Short.MAX_VALUE))
+            .addGap(0, 420, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBoxStartServers)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBoxServersWhenILogIn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addContainerGap(101, Short.MAX_VALUE))
+            .addGap(0, 200, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBox jCheckBoxServersWhenILogIn;
-    private javax.swing.JCheckBox jCheckBoxStartServers;
     // End of variables declaration//GEN-END:variables
     
 }

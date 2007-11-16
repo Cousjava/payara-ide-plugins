@@ -44,6 +44,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
+import org.opensolaris.webstack.settings.execution.ServerStatus;
 import org.opensolaris.webstack.settings.execution.ServersManager;
 import org.opensolaris.webstack.settings.model.Environment;
 import org.opensolaris.webstack.settings.model.HttpdConfModel;
@@ -67,6 +68,9 @@ public class Tray {
         Image badge = new ImageIcon(this.getClass().getResource("resources/" + name + ".png")).getImage();
         Image merged = Util.mergeImages(image1, badge, 16, 16);
         trayIcon.setImage(merged);
+        if (ui != null) {
+         //   ui.getJTabbedPane().setIconAt(0, new ImageIcon(badge));
+        }
 
     }
 
@@ -75,14 +79,22 @@ public class Tray {
 
                     @Override
             public void run() {
-                        final boolean running = ServersManager.isApacheRunning(model.getPortNumber(), 1000);
-                        if (running) {
+                        final ServerStatus running = ServersManager.getRunningState();
+                        if (running.apacheRunning && running.mySqlRunning) {
                             setIcon("green");
-                        } else {
+                            startAction.setEnabled(false);
+                            stopAction.setEnabled(true);
+
+                        } else if (!running.apacheRunning && !running.mySqlRunning) {
                             setIcon("red");
+                            startAction.setEnabled(true);
+                            stopAction.setEnabled(false);
+                        } else {
+                            setIcon("yellow");
+                            startAction.setEnabled(true);
+                            stopAction.setEnabled(true);
+
                         }
-                        startAction.setEnabled(!running);
-                        stopAction.setEnabled(running);
                     }
                 });
     }
@@ -122,21 +134,26 @@ public class Tray {
             MouseListener mouseListener = new MouseListener() {
 
                         public void mouseClicked(MouseEvent e) {
-                           // System.out.println("Tray Icon - Mouse clicked!");
+                            //  System.out.println
+      //( "Click at (" + e.getX() + ":" + e.getY() + ")" );
+                            if (e.getClickCount() == 2) {
+                                showOptions();
+                            }
+
                         }
 
                         public void mouseEntered(MouseEvent e) {
-                           // System.out.println("Tray Icon - Mouse entered!");
+                            System.out.println("Tray Icon - Mouse entered!");
                         }
 
                         @Override
                         public void mouseExited(MouseEvent e) {
-                           // System.out.println("Tray Icon - Mouse exited!");
+                        // System.out.println("Tray Icon - Mouse exited!");
                         }
 
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            //System.out.println("Tray Icon - Mouse pressed!");
+                        //System.out.println("Tray Icon - Mouse pressed!");
                         }
 
                         @Override
@@ -268,18 +285,18 @@ public class Tray {
             Image image1 = new ImageIcon(url).getImage();
             trayIcon = new TrayIcon(image1, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
             updateIcon();
-            ActionListener actionListener = new ActionListener() {
-
-                        public void actionPerformed(ActionEvent e) {
-                            trayIcon.displayMessage("Solaris WebStack Tray", "Use the right mouse button to display the tray menu.", TrayIcon.MessageType.INFO);
-                        }
-                    };
+            //            ActionListener actionListener = new ActionListener() {
+//
+//                        public void actionPerformed(ActionEvent e) {
+//                            trayIcon.displayMessage("Solaris WebStack Tray", "Use the right mouse button to display the tray menu.", TrayIcon.MessageType.INFO);
+//                        }
+//                    };
 
 
 
 
             trayIcon.setImageAutoSize(true);
-            trayIcon.addActionListener(actionListener);
+            //   trayIcon.addActionListener(actionListener);
             trayIcon.addMouseListener(mouseListener);
             try {
                 tray.add(trayIcon);
