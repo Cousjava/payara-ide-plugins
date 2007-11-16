@@ -52,60 +52,69 @@ import org.opensolaris.webstack.settings.options.OptionsContainer;
 import org.opensolaris.webstack.settings.tray.actions.StartAction;
 import org.opensolaris.webstack.settings.tray.actions.StopAction;
 
-
 public class Tray {
 
     private TrayIcon trayIcon;
     private HttpdConfModel model;
     private OptionsContainer ui = null;
-    private  StartAction startAction;
-    private  StopAction stopAction;
+    private StartAction startAction;
+    private StopAction stopAction;
+
     public void setIcon(String name) {
         URL url = this.getClass().getResource("resources/apache.gif");
 
         Image image1 = new ImageIcon(url).getImage();
         Image badge = new ImageIcon(this.getClass().getResource("resources/" + name + ".png")).getImage();
-        Image merged = Util.mergeImages(image1, badge, 16,16);
+        Image merged = Util.mergeImages(image1, badge, 16, 16);
         trayIcon.setImage(merged);
+
     }
-    public void updateIcon(){
-            boolean running = ServersManager.isApacheRunning(model.getPortNumber(), 1000);
-            if (running) {
-                setIcon("green");
-            } else {
-                setIcon("red");
-            }
-            startAction.setEnabled(!running);
-            stopAction.setEnabled(running);
+
+    public void updateIcon() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+                    @Override
+            public void run() {
+                        final boolean running = ServersManager.isApacheRunning(model.getPortNumber(), 1000);
+                        if (running) {
+                            setIcon("green");
+                        } else {
+                            setIcon("red");
+                        }
+                        startAction.setEnabled(!running);
+                        stopAction.setEnabled(running);
+                    }
+                });
     }
+
     public void showOptions() {
-        if (ui==null){
+        if (ui == null) {
             ui = new OptionsContainer(model);
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
 
-            @Override
+                    @Override
             public void run() {
 
-                ui.setVisible(false);
-            }
-        });
+                        ui.setVisible(false);
+                    }
+                });
         java.awt.EventQueue.invokeLater(new Runnable() {
 
-            public void run() {
+                    public void run() {
 
-                ui.setVisible(true);
-                ui.toFront();
-            }
-        });
+                        ui.setVisible(true);
+                        ui.toFront();
+                    }
+                });
     }
 
     public Tray(HttpdConfModel model) {
         this.model = model;
-        
+
         final PopupMenu popup = new PopupMenu();
-        startAction= new StartAction(this);
-        stopAction= new StopAction(this);
+        startAction = new StartAction(this);
+        stopAction = new StopAction(this);
         if (SystemTray.isSupported()) {
 
             final SystemTray tray = SystemTray.getSystemTray();
@@ -113,26 +122,27 @@ public class Tray {
             MouseListener mouseListener = new MouseListener() {
 
                         public void mouseClicked(MouseEvent e) {
-                            System.out.println("Tray Icon - Mouse clicked!");
+                           // System.out.println("Tray Icon - Mouse clicked!");
                         }
 
                         public void mouseEntered(MouseEvent e) {
-                            System.out.println("Tray Icon - Mouse entered!");
+                           // System.out.println("Tray Icon - Mouse entered!");
                         }
 
-                @Override
+                        @Override
                         public void mouseExited(MouseEvent e) {
-                            System.out.println("Tray Icon - Mouse exited!");
+                           // System.out.println("Tray Icon - Mouse exited!");
                         }
 
-                @Override
+                        @Override
                         public void mousePressed(MouseEvent e) {
-                            System.out.println("Tray Icon - Mouse pressed!");
+                            //System.out.println("Tray Icon - Mouse pressed!");
                         }
 
-                @Override
+                        @Override
                         public void mouseReleased(MouseEvent e) {
-                            System.out.println("Tray Icon - Mouse released!");
+                            //System.out.println("Tray Icon - Mouse released!");
+                            updateIcon();
                         }
                     };
 
@@ -146,18 +156,18 @@ public class Tray {
 
             popup.add(stopAction);
             stopAction.setFont(defaultFont);
-            
-            
+
+
             popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Options")));
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    showOptions();
-                }
-            });
+                        public void actionPerformed(ActionEvent e) {
+                            showOptions();
+                        }
+                    });
 
-//            popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Administer_MySQL")));
+            //            popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Administer_MySQL")));
 //            defaultItem.setFont(defaultFont);
 //            defaultItem.addActionListener(new ActionListener() {
 //
@@ -174,26 +184,26 @@ public class Tray {
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("logs");
-                    Desktop desktop = null;
-                    // Before more Desktop API is used, first check
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("logs");
+                            Desktop desktop = null;
+                            // Before more Desktop API is used, first check
                     // whether the API is supported by this particular
                     // virtual machine (VM) on this particular host.
-                    if (Desktop.isDesktopSupported()) {
-                        desktop = Desktop.getDesktop();
-                    }
-                    if (desktop.isSupported(Desktop.Action.OPEN)) {
-                        try {
+                            if (Desktop.isDesktopSupported()) {
+                                desktop = Desktop.getDesktop();
+                            }
+                            if (desktop.isSupported(Desktop.Action.OPEN)) {
+                                try {
 
-                            desktop.open(new File(Environment.getApachelog()));
-                        } catch (IOException ex) {
-                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+                                    desktop.open(new File(Environment.getApachelog()));
+                                } catch (IOException ex) {
+                                    Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
                         }
-                    }
-                }
-            });
-//                        logsMenu.add(defaultItem = new MenuItem("PHP log"));
+                    });
+            //                        logsMenu.add(defaultItem = new MenuItem("PHP log"));
 //            defaultItem.setFont(defaultFont);
 //            defaultItem.addActionListener(new ActionListener() {
 //
@@ -220,33 +230,33 @@ public class Tray {
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("MySql logs");
-                    Desktop desktop = null;
-                    // Before more Desktop API is used, first check
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("MySql logs");
+                            Desktop desktop = null;
+                            // Before more Desktop API is used, first check
                     // whether the API is supported by this particular
                     // virtual machine (VM) on this particular host.
-                    if (Desktop.isDesktopSupported()) {
-                        desktop = Desktop.getDesktop();
-                    }
-                    if (desktop.isSupported(Desktop.Action.OPEN)) {
-                        try {
+                            if (Desktop.isDesktopSupported()) {
+                                desktop = Desktop.getDesktop();
+                            }
+                            if (desktop.isSupported(Desktop.Action.OPEN)) {
+                                try {
 
-                            desktop.open(new File(Environment.getMysqllog()));
-                        } catch (IOException ex) {
-                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+                                    desktop.open(new File(Environment.getMysqllog()));
+                                } catch (IOException ex) {
+                                    Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
                         }
-                    }
-                }
-            });
+                    });
             defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Exit"));
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                    System.exit(0);
-                }
-            });
+                        public void actionPerformed(ActionEvent e) {
+                            System.exit(0);
+                        }
+                    });
             popup.add(defaultItem);
 
             //empty one
@@ -270,7 +280,7 @@ public class Tray {
 
             trayIcon.setImageAutoSize(true);
             trayIcon.addActionListener(actionListener);
-            // trayIcon.addMouseListener(mouseListener);
+            trayIcon.addMouseListener(mouseListener);
             try {
                 tray.add(trayIcon);
             } catch (AWTException e) {
