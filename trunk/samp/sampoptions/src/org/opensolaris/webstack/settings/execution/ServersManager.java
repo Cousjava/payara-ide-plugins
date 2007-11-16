@@ -65,7 +65,7 @@ public class ServersManager {
 
         URL url = ServersManager.class.getProtectionDomain().getCodeSource().getLocation();
         String dir = url.getFile();
-        System.out.println(" dir=" + dir);
+      //  System.out.println(" dir=" + dir);
         try {
             // svcadm enable apache2
             String s[] = {C1, C2, C3, "'WebStack'", C4, "/opt/webstack/bin/start.sh"};
@@ -74,9 +74,12 @@ public class ServersManager {
             p1 = new ProcessBuilder(s).start();
 
             consumeIOs(p1, System.out);
+            Thread.sleep(1000); 
             displayHomePage();
 
 
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
         }
@@ -113,6 +116,9 @@ public class ServersManager {
 
             p1 = new ProcessBuilder(s).start();
             consumeIOs(p1, System.out);
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
         }
@@ -127,7 +133,10 @@ public class ServersManager {
 
             p1 = new ProcessBuilder(s).start();
             consumeIOs(p1, System.out);
+            Thread.sleep(1000);
             displayHomePage();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, ex.getMessage(), "");
         }
