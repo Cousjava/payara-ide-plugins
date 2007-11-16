@@ -28,6 +28,7 @@ package org.opensolaris.webstack.settings.execution;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -37,6 +38,7 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -65,7 +67,7 @@ public class ServersManager {
 
         URL url = ServersManager.class.getProtectionDomain().getCodeSource().getLocation();
         String dir = url.getFile();
-      //  System.out.println(" dir=" + dir);
+        //  System.out.println(" dir=" + dir);
         try {
             // svcadm enable apache2
             String s[] = {C1, C2, C3, "'WebStack'", C4, "/opt/webstack/bin/start.sh"};
@@ -74,7 +76,7 @@ public class ServersManager {
             p1 = new ProcessBuilder(s).start();
 
             consumeIOs(p1, System.out);
-            Thread.sleep(1000); 
+            Thread.sleep(1000);
             displayHomePage();
 
 
@@ -219,5 +221,29 @@ public class ServersManager {
         } catch (Exception ioe) {
             return false;
         }
+    }
+
+    public static ServerStatus getRunningState() {
+        String[] s = {"/usr/bin/svcs", "apache22", "mysql"};
+        Process process;
+        ServerStatus ret = new ServerStatus();
+        try {
+            process = new ProcessBuilder(s).start();
+            InputStream is = process.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                if (line.indexOf("mysql") >= 0) {
+                    ret.mySqlRunning = (line.indexOf("online") >= 0);
+                } else if (line.indexOf("apache22") >= 0) {
+                    ret.apacheRunning = (line.indexOf("online") >= 0);
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
     }
 }
