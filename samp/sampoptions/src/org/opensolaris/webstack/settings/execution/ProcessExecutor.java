@@ -23,12 +23,15 @@
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
 * Use is subject to license terms.
 */
-
 package org.opensolaris.webstack.settings.execution;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -43,28 +46,53 @@ public class ProcessExecutor {
 
     static ExecutorService pool = Executors.newFixedThreadPool(1); //1 process at a time
 
+
     public static void main() {
 
         for (int i = 0; i < 10; i++) {
             final int j = i;
             Future f = pool.submit(new Runnable() {
 
-                public void run() {
-                    try {
-                        Thread.sleep(1000 / j);
-                        System.out.println("i" + j);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ProcessExecutor.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            });
+                        public void run() {
+                            try {
+                                Thread.sleep(1000 / j);
+                                System.out.println("i" + j);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(ProcessExecutor.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    });
             if (i == 3) {
                 f.cancel(true);
             }
         }
     }
+    /* execute a command 
+     * @return a array of string form the output of the command
+     * 
+     * */
 
-/** This thread simply reads from given Reader and writes read chars to given Writer. */
+    public static ArrayList<String> executeCommand(String[] command) {
+        Process process;
+        ArrayList<String> a = new ArrayList();
+        try {
+            process = new ProcessBuilder(command).start();
+            InputStream is = process.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                a.add(line);
+
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return a;
+    }
+    /** This thread simply reads from given Reader and writes read chars to given Writer. */
+
     public static class OutputCopier extends Thread {
 
         final Writer os;
