@@ -2,4 +2,5 @@
 
 /usr/bin/cp  $PKG_INSTALL_ROOT/opt/webstack/globalmenus/applications.menu $PKG_INSTALL_ROOT/etc/xdg/menus
 /usr/bin/cp  $PKG_INSTALL_ROOT/opt/webstack/globalmenus/webstack-initialize.desktop $PKG_INSTALL_ROOT/usr/share/applications
+/usr/bin/cp  $PKG_INSTALL_ROOT/opt/webstack/globalmenus/webstack-viewdevtools.desktop $PKG_INSTALL_ROOT/usr/share/applications
 /usr/bin/cp  $PKG_INSTALL_ROOT/opt/webstack/globalmenus/webstack.directory $PKG_INSTALL_ROOT/usr/share/desktop-directories

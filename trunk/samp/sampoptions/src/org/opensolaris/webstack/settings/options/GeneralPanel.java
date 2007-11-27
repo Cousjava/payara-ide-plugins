@@ -23,20 +23,34 @@
  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
 * Use is subject to license terms.
 */
-
 package org.opensolaris.webstack.settings.options;
+
+import java.util.ArrayList;
+import org.opensolaris.webstack.settings.execution.ProcessExecutor;
 
 /**
  *
  * @author  ludo
  */
 public class GeneralPanel extends javax.swing.JPanel {
-    
+
     /** Creates new form GeneralPanel */
     public GeneralPanel() {
         initComponents();
+        updatePanelContent();
     }
-    
+
+    public void updatePanelContent() {
+        String cmd2[] = {"/usr/bin/svcs",  "apache22", "mysql"};
+        String output="";
+        ArrayList<String> a = ProcessExecutor.executeCommand(cmd2);
+        output="/usr/bin/svcs apache22 mysql" + "\n";
+        for (int i = 0; i < a.size(); i++) {
+            System.out.println(a.get(i));
+            output+=a.get(i).replaceAll("\t", "y         ") + "\n";
+        }
+        jTextArea1.setText(output);
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -104,15 +118,13 @@ public class GeneralPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_viewDetailsButtonActionPerformed
 
     private void startStopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startStopButtonActionPerformed
-        // TODO add your handling code here:
+    // TODO add your handling code here:
     }//GEN-LAST:event_startStopButtonActionPerformed
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JButton startStopButton;
     private javax.swing.JButton viewDetailsButton;
     // End of variables declaration//GEN-END:variables
-    
+
 }
