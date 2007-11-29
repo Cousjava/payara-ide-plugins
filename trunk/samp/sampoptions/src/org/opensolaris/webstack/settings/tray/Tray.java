@@ -60,8 +60,10 @@ public class Tray {
     private OptionsContainer ui = null;
     private StartAction startAction;
     private StopAction stopAction;
-
+    //olf the current icon color for server status
+    private String iconColor="";
     public void setIcon(String name) {
+        iconColor = name;
         URL url = this.getClass().getResource("resources/server.png");
 
         Image image1 = new ImageIcon(url).getImage();
@@ -80,21 +82,22 @@ public class Tray {
             @Override
             public void run() {
                 final ServerStatus running = ServersManager.getRunningState();
-                if (running.apacheRunning && running.mySqlRunning) {
+                if (running.apacheRunning && running.mySqlRunning && !iconColor.equals("green")) {
                     setIcon("green");
                     startAction.setEnabled(false);
                     stopAction.setEnabled(true);
 
-                } else if (!running.apacheRunning && !running.mySqlRunning) {
+                } else if (!running.apacheRunning && !running.mySqlRunning && !iconColor.equals("red")) {
                     setIcon("red");
                     startAction.setEnabled(true);
                     stopAction.setEnabled(false);
-                } else {
+                } else if (!iconColor.equals("yellow")){
                     setIcon("yellow");
                     startAction.setEnabled(true);
                     stopAction.setEnabled(true);
 
                 }
+                
             }
         });
     }
@@ -121,7 +124,7 @@ public class Tray {
                 }
 
                 public void mouseEntered(MouseEvent e) {
-                    System.out.println("Tray Icon - Mouse entered!");
+                  //  System.out.println("Tray Icon - Mouse entered!");
                 }
 
                 @Override
@@ -255,7 +258,7 @@ public class Tray {
             popup.add(defaultItem);
 
             //empty one
-            popup.add(defaultItem = new MenuItem("WebStack"));
+            popup.add(defaultItem = new MenuItem("Web Stack"));
             defaultItem.setFont(new Font("Monospaced", Font.BOLD, 24));
             defaultItem.setEnabled(false);
             URL url = this.getClass().getResource("resources/server.png");
