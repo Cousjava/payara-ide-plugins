@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.opensolaris.webstack.settings.model.Environment;
 import org.opensolaris.webstack.settings.model.PHPIniModel;
+import org.opensolaris.webstack.settings.model.XdebugIniModel;
 
 /**
  *
@@ -44,10 +45,12 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
 
     java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
     PHPIniModel p;
+    XdebugIniModel xdebugmodel;
 
     /** Creates new form PHPPanel */
-    public PHPPanel(PHPIniModel phpmodel) {
+    public PHPPanel(PHPIniModel phpmodel , XdebugIniModel xdebugmodel) {
         p = phpmodel;
+        this.xdebugmodel= xdebugmodel;
         p.addPropertyChangeListener(this);
         initComponents();
         initFromModel();
@@ -57,7 +60,7 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
 
     }
     void initFromModel(){
-        jCheckBoxdebug.setSelected(p.isDebugMode());
+        jCheckBoxdebug.setSelected(xdebugmodel.isDebugMode());
         String error = p.getErrorReporting();
        
         jCheckBoxallErrors.setSelected((error.indexOf("E_ALL")>-1));
@@ -68,7 +71,7 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
 
     void UpdateModel() {
 
-        p.setDebugMode(jCheckBoxdebug.isSelected());
+        xdebugmodel.setDebugMode(jCheckBoxdebug.isSelected());
         String error = "";
         if (jCheckBoxallErrors.isSelected()){
             if (error.length()>0){
@@ -109,7 +112,6 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
         jLabel2 = new javax.swing.JLabel();
         buttonAdvanceConf = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        buttonRepair = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jCheckBoxallErrors = new javax.swing.JCheckBox();
         jCheckBoxfatalRunTimeErrors = new javax.swing.JCheckBox();
@@ -134,13 +136,6 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
 
         jLabel3.setText(bundle.getString("LABEL_EDITPHPINI")); // NOI18N
         jLabel3.setEnabled(false);
-
-        buttonRepair.setText(bundle.getString("LABEL_REPAIR")); // NOI18N
-        buttonRepair.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonRepairActionPerformed(evt);
-            }
-        });
 
         jButton1.setText(bundle.getString("LABEL_SHOWPHPINFO")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -170,7 +165,6 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
-                    .addComponent(buttonRepair)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonAdvanceConf)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -203,21 +197,11 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdvanceConf)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonRepair)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(36, 36, 36)
                 .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-    private void buttonRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRepairActionPerformed
-
-        Object[] options = {"Yes, repair", "Cancel"};
-        int n = JOptionPane.showOptionDialog(null, "question", "Repair", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-        if (n==JOptionPane.OK_OPTION){
-            
-        }
-    }//GEN-LAST:event_buttonRepairActionPerformed
 
     private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
         Desktop desktop = null;
@@ -244,7 +228,6 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdvanceConf;
-    private javax.swing.JButton buttonRepair;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBoxRunTimeNotices;
     private javax.swing.JCheckBox jCheckBoxRunTimeWarnings;

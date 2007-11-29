@@ -62,14 +62,14 @@ public class Tray {
     private StopAction stopAction;
 
     public void setIcon(String name) {
-        URL url = this.getClass().getResource("resources/apache.gif");
+        URL url = this.getClass().getResource("resources/server.png");
 
         Image image1 = new ImageIcon(url).getImage();
         Image badge = new ImageIcon(this.getClass().getResource("resources/" + name + ".png")).getImage();
         Image merged = Util.mergeImages(image1, badge, 16, 16);
         trayIcon.setImage(merged);
         if (ui != null) {
-         //   ui.getJTabbedPane().setIconAt(0, new ImageIcon(badge));
+        //   ui.getJTabbedPane().setIconAt(0, new ImageIcon(badge));
         }
 
     }
@@ -77,48 +77,26 @@ public class Tray {
     public void updateIcon() {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
-                    @Override
+            @Override
             public void run() {
-                        final ServerStatus running = ServersManager.getRunningState();
-                        if (running.apacheRunning && running.mySqlRunning) {
-                            setIcon("green");
-                            startAction.setEnabled(false);
-                            stopAction.setEnabled(true);
+                final ServerStatus running = ServersManager.getRunningState();
+                if (running.apacheRunning && running.mySqlRunning) {
+                    setIcon("green");
+                    startAction.setEnabled(false);
+                    stopAction.setEnabled(true);
 
-                        } else if (!running.apacheRunning && !running.mySqlRunning) {
-                            setIcon("red");
-                            startAction.setEnabled(true);
-                            stopAction.setEnabled(false);
-                        } else {
-                            setIcon("yellow");
-                            startAction.setEnabled(true);
-                            stopAction.setEnabled(true);
+                } else if (!running.apacheRunning && !running.mySqlRunning) {
+                    setIcon("red");
+                    startAction.setEnabled(true);
+                    stopAction.setEnabled(false);
+                } else {
+                    setIcon("yellow");
+                    startAction.setEnabled(true);
+                    stopAction.setEnabled(true);
 
-                        }
-                    }
-                });
-    }
-
-    public void showOptions() {
-        if (ui == null) {
-            ui = new OptionsContainer(model);
-        }
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-            public void run() {
-
-                        ui.setVisible(false);
-                    }
-                });
-        java.awt.EventQueue.invokeLater(new Runnable() {
-
-                    public void run() {
-
-                        ui.setVisible(true);
-                        ui.toFront();
-                    }
-                });
+                }
+            }
+        });
     }
 
     public Tray(HttpdConfModel model) {
@@ -133,35 +111,35 @@ public class Tray {
 
             MouseListener mouseListener = new MouseListener() {
 
-                        public void mouseClicked(MouseEvent e) {
-                            //  System.out.println
-      //( "Click at (" + e.getX() + ":" + e.getY() + ")" );
-                            if (e.getClickCount() == 2) {
-                                showOptions();
-                            }
+                public void mouseClicked(MouseEvent e) {
+                    //  System.out.println
+                    //( "Click at (" + e.getX() + ":" + e.getY() + ")" );
+                    if (e.getClickCount() == 2) {
+                        Main.showOptions();
+                    }
 
-                        }
+                }
 
-                        public void mouseEntered(MouseEvent e) {
-                            System.out.println("Tray Icon - Mouse entered!");
-                        }
+                public void mouseEntered(MouseEvent e) {
+                    System.out.println("Tray Icon - Mouse entered!");
+                }
 
-                        @Override
-                        public void mouseExited(MouseEvent e) {
-                        // System.out.println("Tray Icon - Mouse exited!");
-                        }
+                @Override
+                public void mouseExited(MouseEvent e) {
+                // System.out.println("Tray Icon - Mouse exited!");
+                }
 
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-                        //System.out.println("Tray Icon - Mouse pressed!");
-                        }
+                @Override
+                public void mousePressed(MouseEvent e) {
+                //System.out.println("Tray Icon - Mouse pressed!");
+                }
 
-                        @Override
-                        public void mouseReleased(MouseEvent e) {
-                            //System.out.println("Tray Icon - Mouse released!");
-                            updateIcon();
-                        }
-                    };
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    //System.out.println("Tray Icon - Mouse released!");
+                    updateIcon();
+                }
+            };
 
 
 
@@ -179,10 +157,10 @@ public class Tray {
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
-                        public void actionPerformed(ActionEvent e) {
-                            showOptions();
-                        }
-                    });
+                public void actionPerformed(ActionEvent e) {
+                    Main.showOptions();
+                }
+            });
 
             //            popup.add(defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Administer_MySQL")));
 //            defaultItem.setFont(defaultFont);
@@ -201,25 +179,25 @@ public class Tray {
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
-                        public void actionPerformed(ActionEvent e) {
-                            System.out.println("logs");
-                            Desktop desktop = null;
-                            // Before more Desktop API is used, first check
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("logs");
+                    Desktop desktop = null;
+                    // Before more Desktop API is used, first check
                     // whether the API is supported by this particular
                     // virtual machine (VM) on this particular host.
-                            if (Desktop.isDesktopSupported()) {
-                                desktop = Desktop.getDesktop();
-                            }
-                            if (desktop.isSupported(Desktop.Action.OPEN)) {
-                                try {
+                    if (Desktop.isDesktopSupported()) {
+                        desktop = Desktop.getDesktop();
+                    }
+                    if (desktop.isSupported(Desktop.Action.OPEN)) {
+                        try {
 
-                                    desktop.open(new File(Environment.getApachelog()));
-                                } catch (IOException ex) {
-                                    Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
+                            desktop.open(new File(Environment.getApachelog()));
+                        } catch (IOException ex) {
+                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    });
+                    }
+                }
+            });
             //                        logsMenu.add(defaultItem = new MenuItem("PHP log"));
 //            defaultItem.setFont(defaultFont);
 //            defaultItem.addActionListener(new ActionListener() {
@@ -247,40 +225,40 @@ public class Tray {
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
-                        public void actionPerformed(ActionEvent e) {
-                            System.out.println("MySql logs");
-                            Desktop desktop = null;
-                            // Before more Desktop API is used, first check
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("MySql logs");
+                    Desktop desktop = null;
+                    // Before more Desktop API is used, first check
                     // whether the API is supported by this particular
                     // virtual machine (VM) on this particular host.
-                            if (Desktop.isDesktopSupported()) {
-                                desktop = Desktop.getDesktop();
-                            }
-                            if (desktop.isSupported(Desktop.Action.OPEN)) {
-                                try {
+                    if (Desktop.isDesktopSupported()) {
+                        desktop = Desktop.getDesktop();
+                    }
+                    if (desktop.isSupported(Desktop.Action.OPEN)) {
+                        try {
 
-                                    desktop.open(new File(Environment.getMysqllog()));
-                                } catch (IOException ex) {
-                                    Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
+                            desktop.open(new File(Environment.getMysqllog()));
+                        } catch (IOException ex) {
+                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    });
+                    }
+                }
+            });
             defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Exit"));
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
-                        public void actionPerformed(ActionEvent e) {
-                            System.exit(0);
-                        }
-                    });
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(0);
+                }
+            });
             popup.add(defaultItem);
 
             //empty one
             popup.add(defaultItem = new MenuItem("WebStack"));
             defaultItem.setFont(new Font("Monospaced", Font.BOLD, 24));
             defaultItem.setEnabled(false);
-            URL url = this.getClass().getResource("resources/apache.png");
+            URL url = this.getClass().getResource("resources/server.png");
 
             Image image1 = new ImageIcon(url).getImage();
             trayIcon = new TrayIcon(image1, getBundle().getString("TOOLTIP_Samp_Tooling"), popup);
@@ -288,7 +266,7 @@ public class Tray {
             //            ActionListener actionListener = new ActionListener() {
 //
 //                        public void actionPerformed(ActionEvent e) {
-//                            trayIcon.displayMessage("Solaris WebStack Tray", "Use the right mouse button to display the tray menu.", TrayIcon.MessageType.INFO);
+//                            trayIcon.displayMessage("Solaris Web Stack Tray", "Use the right mouse button to display the tray menu.", TrayIcon.MessageType.INFO);
 //                        }
 //                    };
 
@@ -298,11 +276,25 @@ public class Tray {
             trayIcon.setImageAutoSize(true);
             //   trayIcon.addActionListener(actionListener);
             trayIcon.addMouseListener(mouseListener);
-            try {
-                tray.add(trayIcon);
-            } catch (AWTException e) {
-                System.err.println("TrayIcon could not be added.");
-            }
+
+            javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        tray.add(trayIcon);
+                        tray.remove(trayIcon);
+                        Thread.sleep(1000);
+                        tray.add(trayIcon);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Tray.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (AWTException ex) {
+                        Logger.getLogger(Tray.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+
+
         } else {
             System.err.println("System tray is currently not supported.");
         }

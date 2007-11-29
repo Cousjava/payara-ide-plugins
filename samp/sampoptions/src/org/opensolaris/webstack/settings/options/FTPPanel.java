@@ -56,7 +56,6 @@ public class FTPPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonRepair = new javax.swing.JButton();
         buttonAdvanceConf = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jCheckBoxUserDir = new javax.swing.JCheckBox();
@@ -64,8 +63,6 @@ public class FTPPanel extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
-        buttonRepair.setText(bundle.getString("LABEL_REPAIR")); // NOI18N
-
         buttonAdvanceConf.setText(bundle.getString("LABEL_ADVANCE_CONF")); // NOI18N
         buttonAdvanceConf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,17 +92,15 @@ public class FTPPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(buttonAdvanceConf)
                                 .addGap(12, 12, 12)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE))
+                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(buttonRepair))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 418, Short.MAX_VALUE))
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 521, Short.MAX_VALUE))
                             .addComponent(jCheckBoxUserDir, javax.swing.GroupLayout.DEFAULT_SIZE, 813, Short.MAX_VALUE))
                         .addGap(165, 165, 165))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addContainerGap(772, Short.MAX_VALUE))))
+                        .addContainerGap(949, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,9 +111,7 @@ public class FTPPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdvanceConf)
                     .addComponent(jLabel2))
-                .addGap(10, 10, 10)
-                .addComponent(buttonRepair)
-                .addGap(58, 58, 58)
+                .addGap(92, 92, 92)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
@@ -147,7 +140,6 @@ public class FTPPanel extends javax.swing.JPanel {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdvanceConf;
-    private javax.swing.JButton buttonRepair;
     private javax.swing.JCheckBox jCheckBoxUserDir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

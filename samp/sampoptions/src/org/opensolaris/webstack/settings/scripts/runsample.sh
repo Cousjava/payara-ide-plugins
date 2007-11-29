@@ -1,3 +1,4 @@
 #! /bin/sh
 
-ls
+/usr/bin/firefox http://localhost/phpsample/index.php &
+
