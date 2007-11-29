@@ -266,12 +266,12 @@ public class OptionsContainer extends javax.swing.JFrame {
         model.reset();
         phpmodel.reset();
         this.dispose();
-        System.exit(0);
+        //System.exit(0);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         saveChanges();
-        System.exit(0);
+       // System.exit(0);
 
 
     }//GEN-LAST:event_okButtonActionPerformed

@@ -25,7 +25,10 @@
  */
 package org.opensolaris.webstack.settings.tray;
 
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import org.opensolaris.webstack.settings.execution.ProcessExecutor;
 import org.opensolaris.webstack.settings.model.HttpdConfModel;
 import org.opensolaris.webstack.settings.options.OptionsContainer;
 
@@ -45,13 +48,15 @@ public class Main {
         if (System.getProperty("os.name").startsWith("Mac") == false) {
             installGTK();
         }
+        testSingleton();//may exit
 
         Tray tr = new Tray(model);
-        // if (args.length==1){
-        //    if (args[0].equals("options")){
-          //  showOptions();
-    //    }
-    // }
+        new StatusThread(tr);
+        if (args.length == 1) {
+            if (args[0].equals("options")) {
+                showOptions();
+            }
+        }
     }
 
     private static void installGTK() {
@@ -88,5 +93,23 @@ public class Main {
                 ui.toFront();
             }
         });
+    }
+
+    private static void testSingleton() {
+        try {
+            String cmd[] = {"/usr/java/bin/jps", "-l"};
+
+            ArrayList<String> ret = ProcessExecutor.executeCommand(cmd);
+            for (int i = 0; i < ret.size(); i++) {
+                if (ret.get(i).endsWith("/opt/webstack/bin/sampoptions.jar")) {
+
+                    JOptionPane.showMessageDialog(null, "Web Stack Option already running. Check the desktop tray area.");
+                    System.exit(0);
+                }
+
+            }
+        }catch  (Exception e) {
+        //do nothing if for some reason we cannot detect if it is running or not
+        }
     }
 }
