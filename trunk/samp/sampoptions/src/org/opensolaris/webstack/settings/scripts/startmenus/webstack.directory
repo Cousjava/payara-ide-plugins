@@ -2,4 +2,4 @@
 Type=Directory
 Encoding=UTF-8
 Name=Web Stack Admin
-Icon=gnome-favorites
+Icon=/usr/share/icons/gnome/24x24/filesystems/gnome-fs-bookmark.png

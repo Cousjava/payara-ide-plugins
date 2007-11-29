@@ -2,6 +2,6 @@
 # SUN_BRANDING
 Name=Web Stack Admin
 Comment=Web Tools for software development
-Icon=gnome-devel
+Icon=/usr/share/icons/gnome/24x24/filesystems/gnome-fs-bookmark.png
 Type=Directory
 Encoding=UTF-8
