@@ -100,9 +100,12 @@ public class Main {
             String cmd[] = {"/usr/java/bin/jps", "-l"};
 
             ArrayList<String> ret = ProcessExecutor.executeCommand(cmd);
+            int count=0;
             for (int i = 0; i < ret.size(); i++) {
                 if (ret.get(i).endsWith("/opt/webstack/bin/sampoptions.jar")) {
-
+                    count++;
+                }
+                if (count>1){//2 means that this one instance and another one is up and running!
                     JOptionPane.showMessageDialog(null, "Web Stack Option already running. Check the desktop tray area.");
                     System.exit(0);
                 }
