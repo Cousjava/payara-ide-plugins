@@ -43,6 +43,7 @@ public class Environment {
 
     private static String httpdconf = "/etc/apache2/2.2/httpd.conf";
     private static String phpini = "/etc/php5/5.2.4/php.ini";
+    private static String xdebugini = "/etc/php5/5.2.4/conf.d/xdebug.ini";
     private static String mysqlcnf = "/etc/mysql/5.0/my.cnf";
     private static String ftpconf = "/etc/ftpd/ftpaccess";
     private static String apachelog = "/var/apache2/2.2/logs/error_log";
@@ -58,13 +59,14 @@ public class Environment {
             FileInputStream fis = null;
             try {
                 properties.load(fis = new FileInputStream(f));
-                httpdconf = properties.getProperty("httpdconf");
-                phpini = properties.getProperty("phpini");
-                mysqlcnf = properties.getProperty("mysqlcnf");
-                ftpconf = properties.getProperty("ftpconf");
-                apachelog = properties.getProperty("apachelog");
-                mysqllog = properties.getProperty("mysqllog");
-                phplog = properties.getProperty("phplog");
+                httpdconf = properties.getProperty("httpdconf",httpdconf);
+                phpini = properties.getProperty("phpini",phpini);
+                xdebugini = properties.getProperty("xdebugini",xdebugini);
+                mysqlcnf = properties.getProperty("mysqlcnf",mysqlcnf);
+                ftpconf = properties.getProperty("ftpconf",ftpconf);
+                apachelog = properties.getProperty("apachelog",apachelog);
+                mysqllog = properties.getProperty("mysqllog",mysqllog);
+                phplog = properties.getProperty("phplog",phplog);
 
             } catch (IOException e) {
             } finally {
@@ -80,6 +82,7 @@ public class Environment {
             try {
                 properties.setProperty("httpdconf", httpdconf);
                 properties.setProperty("phpini", phpini);
+                properties.setProperty("xdebugini", xdebugini);
                 properties.setProperty("mysqlcnf", mysqlcnf);
                 properties.setProperty("ftpconf", ftpconf);
                 properties.setProperty("apachelog", apachelog);
@@ -170,7 +173,9 @@ public class Environment {
     public static String getPhpini() {
         return phpini;
     }
-
+    public static String getXdebugini() {
+        return xdebugini;
+    }
     public static String getMySqlCnf() {
         return mysqlcnf;
     }

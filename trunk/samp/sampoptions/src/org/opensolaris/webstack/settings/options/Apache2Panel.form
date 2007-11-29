@@ -32,9 +32,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="buttonAdvanceConf" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel2" pref="184" max="32767" attributes="0"/>
+                      <Component id="jLabel2" pref="248" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="buttonRepair" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="labelWebPage" alignment="0" pref="373" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="textFieldDocRoot" pref="249" max="32767" attributes="0"/>
@@ -75,9 +74,7 @@
                   <Component id="buttonAdvanceConf" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="buttonRepair" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="42" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -150,13 +147,6 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAdvanceConfActionPerformed"/>
       </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="buttonRepair">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/opensolaris/webstack/settings/options/Bundle.properties" key="LABEL_REPAIR" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>

@@ -1,12 +1,8 @@
 #! /bin/sh
 
-ROOT_PATH=""
 
 
-# Absolute path to location where webstack tooling should be installed
-ST_DIR=${ROOT_PATH}/opt
-
-SCRIPTS_DIR=${ROOT_PATH}/opt/webstack/menus
+SCRIPTS_DIR=/opt/webstack/menus
 echo "Installing global menus for the WebStack"
 /usr/bin/mkdir -p ${HOME}/.local/share/applications
 /usr/bin/cp  ${SCRIPTS_DIR}/.local/share/applications/*.desktop ${HOME}/.local/share/applications
@@ -17,18 +13,21 @@ echo "Installing global menus for the WebStack"
 /usr/bin/cp  ${SCRIPTS_DIR}/.config/menus/applications-merged/*.menu ${HOME}/.config/menus/applications-merged
 
 /usr/bin/pkill panel
-ME=${USER}
-if [ ${ME} = root ]; then
-echo "nothing to do, root can do anything!"
+CURRENTUSER=${USER}
+if [ ${CURRENTUSER} = root ]; then
+echo "root user is preconfigured."
 else
 
-echo " Please enter the root password in order to complete the installation of the WebStack by user ${ME}" 
+echo " The installation of the Web Stack needs to run a script as the root user."
+echo " This script will add the Apache2 and Mysql SMF privileges and modify the ACL of the apache and   PHP configuration files."
+echo " Please enter the root password in order to complete the installation of the Web Stack for user ${CURRENTUSER}, or CTRL-C to stop." 
 
-su - root -c "${ROOT_PATH}/opt/webstack/bin/initializeasroot.sh ${ME}"
+su - root -c "/opt/webstack/bin/initializeasroot.sh ${CURRENTUSER}"
 fi
 
-echo "All done.  This window will exit in 5 seconds." 
+echo "All done.  Press a key to continue." 
 
-sleep 5
+read $answer
+echo ""
 
 exit 0

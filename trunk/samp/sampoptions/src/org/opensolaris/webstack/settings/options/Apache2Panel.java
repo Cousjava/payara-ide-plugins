@@ -81,7 +81,6 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
         jCheckBoxUserDir = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         buttonAdvanceConf = new javax.swing.JButton();
-        buttonRepair = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         labelWebPage = new HyperLinkButton("aaa","fff");
         browseButton = new javax.swing.JButton();
@@ -113,8 +112,6 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
                 buttonAdvanceConfActionPerformed(evt);
             }
         });
-
-        buttonRepair.setText(bundle.getString("LABEL_REPAIR")); // NOI18N
 
         jLabel2.setText(bundle.getString("LABEL_EDITHTTPD")); // NOI18N
         jLabel2.setEnabled(false);
@@ -152,8 +149,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonAdvanceConf)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE))
-                    .addComponent(buttonRepair)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
                     .addComponent(labelWebPage, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(textFieldDocRoot, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
@@ -186,9 +182,7 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdvanceConf)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonRepair)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
@@ -224,7 +218,6 @@ public class Apache2Panel extends javax.swing.JPanel implements PropertyChangeLi
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JButton buttonAdvanceConf;
-    private javax.swing.JButton buttonRepair;
     private javax.swing.JCheckBox jCheckBoxUserDir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

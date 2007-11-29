@@ -44,6 +44,7 @@ import org.opensolaris.webstack.settings.execution.ServersManager;
 import org.opensolaris.webstack.settings.model.HttpdConfModel;
 import org.opensolaris.webstack.settings.model.MySQLCnfModel;
 import org.opensolaris.webstack.settings.model.PHPIniModel;
+import org.opensolaris.webstack.settings.model.XdebugIniModel;
 import org.opensolaris.webstack.settings.tray.Main;
 
 /**
@@ -57,23 +58,26 @@ public class OptionsContainer extends javax.swing.JFrame {
     private HttpdConfModel model;
     private PHPIniModel phpmodel;
     private MySQLCnfModel mysqlmodel;
+    private XdebugIniModel xdebugmodel;
 
     /** Creates new form OptionsContainer */
     public OptionsContainer(final HttpdConfModel model) {
         this.model = model;
         phpmodel = new PHPIniModel();
-        mysqlmodel =new MySQLCnfModel();
+        mysqlmodel = new MySQLCnfModel();
+        xdebugmodel = new XdebugIniModel();
+
         initComponents();
         tabsPanel.addTab("General", new GeneralPanel());
         tabsPanel.addTab("Apache 2", apacheTab = new Apache2Panel(model));
-        tabsPanel.addTab("PHP", phpTab = new PHPPanel(phpmodel));
+        tabsPanel.addTab("PHP", phpTab = new PHPPanel(phpmodel, xdebugmodel));
         tabsPanel.addTab("MySQL", new MySQLPanel(mysqlmodel));
-       // tabsPanel.addTab("FTP", new FTPPanel());
+        // tabsPanel.addTab("FTP", new FTPPanel());
 
 
         pack();
         setLocationRelativeTo(null);
-        URL url = Main.class.getResource("resources/apache.gif");
+        URL url = Main.class.getResource("resources/server.png");
 
         Image image = new ImageIcon(url).getImage();
         setIconImage(image);
@@ -109,9 +113,11 @@ public class OptionsContainer extends javax.swing.JFrame {
         });
 
     }
-    public javax.swing.JTabbedPane getJTabbedPane(){
+
+    public javax.swing.JTabbedPane getJTabbedPane() {
         return tabsPanel;
     }
+
     private void saveChanges() {
         System.out.println(" save is CALLED " + model.isDirty());
 
@@ -120,6 +126,7 @@ public class OptionsContainer extends javax.swing.JFrame {
         phpTab.UpdateModel();
         boolean apachedirtyModel = model.isDirty();
         boolean phpdirtyModel = phpmodel.isDirty();
+        boolean xdebugModelDirty = xdebugmodel.isDirty();
         if (model.isDirty()) {
             model.save();
         }
@@ -127,11 +134,14 @@ public class OptionsContainer extends javax.swing.JFrame {
         if (phpdirtyModel) {
             phpmodel.save();
         }
-        if (apachedirtyModel || phpdirtyModel) {
-            Object[] options = { "Close","Restart Servers Now"};
+        if (xdebugModelDirty) {
+            xdebugmodel.save();
+        }
+        if (apachedirtyModel || phpdirtyModel || xdebugModelDirty) {
+            Object[] options = {"Close", "Restart Servers Now"};
             int n = JOptionPane.showOptionDialog(null, "You must Restart Servers for your changes to take effect. ", "Change Options", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-            
-            if (n==1){//restart
+
+            if (n == 1) {//restart
                 ServersManager.RestartServers();
             }
         }
@@ -256,10 +266,13 @@ public class OptionsContainer extends javax.swing.JFrame {
         model.reset();
         phpmodel.reset();
         this.dispose();
+        System.exit(0);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         saveChanges();
+        System.exit(0);
+
 
     }//GEN-LAST:event_okButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

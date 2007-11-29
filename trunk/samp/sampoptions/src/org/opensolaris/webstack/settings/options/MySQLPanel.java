@@ -61,7 +61,6 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
         jLabel1 = new javax.swing.JLabel();
         buttonAdvanceConf = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        buttonRepair = new javax.swing.JButton();
         labelAdminPassword = new javax.swing.JLabel();
         jPasswordField1 = new javax.swing.JPasswordField();
 
@@ -81,8 +80,6 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
         jLabel2.setText(bundle.getString("LABEL_EDITMYSQLCNF")); // NOI18N
         jLabel2.setEnabled(false);
 
-        buttonRepair.setText(bundle.getString("LABEL_REPAIR")); // NOI18N
-
         java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/tray/Bundle"); // NOI18N
         labelAdminPassword.setText(bundle1.getString("LABEL_Admini_password")); // NOI18N
 
@@ -97,11 +94,10 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
                 .addComponent(labelAdminPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonRepair)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonAdvanceConf)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE))
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
                     .addComponent(jCheckBoxUserDir, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
@@ -122,9 +118,7 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdvanceConf)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(buttonRepair)
-                .addContainerGap(127, Short.MAX_VALUE))
+                .addContainerGap(163, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -154,7 +148,6 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdvanceConf;
-    private javax.swing.JButton buttonRepair;
     private javax.swing.JCheckBox jCheckBoxUserDir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
