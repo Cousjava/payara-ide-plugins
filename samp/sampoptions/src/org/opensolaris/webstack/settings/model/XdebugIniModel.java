@@ -92,8 +92,8 @@ public class XdebugIniModel extends Model {
     }
 
     public boolean isDebugMode() {
-        System.out.println("in debug called xdebugremote_enableKey="+xdebugremote_enableKey);
-        return (xdebugremote_enableKey != -1);// this key is present in the file
+      //  System.out.println("in debug called xdebugremote_enableKey="+xdebugremote_enableKey);
+        return (zend_extensionKey != -1);// this key is present in the file
     }
 
     public void setDebugMode(boolean debugmode) {

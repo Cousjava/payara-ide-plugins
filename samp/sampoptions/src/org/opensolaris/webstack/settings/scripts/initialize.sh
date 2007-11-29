@@ -25,9 +25,8 @@ echo " Please enter the root password in order to complete the installation of t
 su - root -c "/opt/webstack/bin/initializeasroot.sh ${CURRENTUSER}"
 fi
 
-echo "All done.  Press a key to continue." 
-
-read $answer
+echo "All done.  Press ENTER to continue." 
+read answer
 echo ""
 
 exit 0
