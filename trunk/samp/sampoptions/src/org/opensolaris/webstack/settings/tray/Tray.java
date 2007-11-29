@@ -61,7 +61,8 @@ public class Tray {
     private StartAction startAction;
     private StopAction stopAction;
     //olf the current icon color for server status
-    private String iconColor="";
+    private String iconColor = "";
+
     public void setIcon(String name) {
         iconColor = name;
         URL url = this.getClass().getResource("resources/server.png");
@@ -91,13 +92,13 @@ public class Tray {
                     setIcon("red");
                     startAction.setEnabled(true);
                     stopAction.setEnabled(false);
-                } else if (!iconColor.equals("yellow")){
+                } else if (!iconColor.equals("yellow")) {
                     setIcon("yellow");
                     startAction.setEnabled(true);
                     stopAction.setEnabled(true);
 
                 }
-                
+
             }
         });
     }
@@ -124,7 +125,7 @@ public class Tray {
                 }
 
                 public void mouseEntered(MouseEvent e) {
-                  //  System.out.println("Tray Icon - Mouse entered!");
+                //  System.out.println("Tray Icon - Mouse entered!");
                 }
 
                 @Override
@@ -285,13 +286,15 @@ public class Tray {
                 @Override
                 public void run() {
                     try {
+                        URL url = this.getClass().getResource("resources/server.png");
+
+                        Image image1 = new ImageIcon(url).getImage();
+                        TrayIcon dummy = new TrayIcon(image1, "", null);
+                        tray.add(dummy);
                         tray.add(trayIcon);
-                        tray.remove(trayIcon);
-                        Thread.sleep(1000);
-                        tray.add(trayIcon);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Tray.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (AWTException ex) {
+                        tray.remove(dummy);
+
+                    } catch (Exception ex) {
                         Logger.getLogger(Tray.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
