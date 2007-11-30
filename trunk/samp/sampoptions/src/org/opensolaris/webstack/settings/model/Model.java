@@ -95,7 +95,7 @@ public class Model {
             br = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
             String line = br.readLine();
             int i = 0;
-            System.out.println(" loading the file" + modelFile.getAbsolutePath());
+        //    System.out.println(" loading the file" + modelFile.getAbsolutePath());
             while (line != null) {
                 content.add(line);
                 lineAddedCallBack(line, i);
