@@ -24,7 +24,6 @@
  */
 package org.opensolaris.webstack.settings.tray;
 
-import java.awt.AWTException;
 import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Image;
@@ -39,11 +38,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
+import org.opensolaris.webstack.settings.execution.ProcessExecutor;
 import org.opensolaris.webstack.settings.execution.ServerStatus;
 import org.opensolaris.webstack.settings.execution.ServersManager;
 import org.opensolaris.webstack.settings.model.Environment;
@@ -184,70 +186,59 @@ public class Tray {
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("logs");
-                    Desktop desktop = null;
-                    // Before more Desktop API is used, first check
-                    // whether the API is supported by this particular
-                    // virtual machine (VM) on this particular host.
-                    if (Desktop.isDesktopSupported()) {
-                        desktop = Desktop.getDesktop();
-                    }
-                    if (desktop.isSupported(Desktop.Action.OPEN)) {
-                        try {
+                    String cmd[] = {
+                        "gnome-terminal",
+                        "--hide-menubar",
+                        "--title",
+                        "Apache2 Log File (CTRL-C to finish)",
+                        "--execute",
+                        "tail",
+                        "-20000f",
+                        Environment.getApachelog()
+                    };
 
-                            desktop.open(new File(Environment.getApachelog()));
-                        } catch (IOException ex) {
-                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+                    ProcessExecutor.executeCommand(cmd);
+
+
                 }
             });
-            //                        logsMenu.add(defaultItem = new MenuItem("PHP log"));
-//            defaultItem.setFont(defaultFont);
-//            defaultItem.addActionListener(new ActionListener() {
-//
-//                public void actionPerformed(ActionEvent e) {
-//                    System.out.println("logs");
-//                    Desktop desktop = null;
-//                    // Before more Desktop API is used, first check
-//                    // whether the API is supported by this particular
-//                    // virtual machine (VM) on this particular host.
-//                    if (Desktop.isDesktopSupported()) {
-//                        desktop = Desktop.getDesktop();
-//                    }
-//                    if (desktop.isSupported(Desktop.Action.OPEN)) {
-//                        try {
-//
-//                            desktop.open(new File(Environment.getPhplog()));
-//                        } catch (IOException ex) {
-//                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
-//                        }
-//                    }
-//                }
-//            });
+
+
             logsMenu.add(defaultItem = new MenuItem("MySql log"));
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("MySql logs");
-                    Desktop desktop = null;
-                    // Before more Desktop API is used, first check
-                    // whether the API is supported by this particular
-                    // virtual machine (VM) on this particular host.
-                    if (Desktop.isDesktopSupported()) {
-                        desktop = Desktop.getDesktop();
-                    }
-                    if (desktop.isSupported(Desktop.Action.OPEN)) {
-                        try {
-
-                            desktop.open(new File(Environment.getMysqllog()));
-                        } catch (IOException ex) {
-                            Logger.getLogger(ServersManager.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+                    String cmd[] = {
+                        "gnome-terminal",
+                        "--hide-menubar",
+                        "--title",
+                        "MySQL Log File (CTRL-C to finish)",
+                        "--execute",
+                        "tail",
+                        "-20000f",
+                        Environment.getMysqllog()
+                    };
+                    ProcessExecutor.executeCommand(cmd);
                 }
             });
+
+
+            popup.add(defaultItem = new MenuItem(" View Getting Started Guide"));
+            defaultItem.setFont(defaultFont);
+            defaultItem.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        URI uri = new URI("file:///opt/webstack/doc/html/index.html");
+                        Desktop.getDesktop().browse(uri);
+                    } catch (Exception ex) {
+                        Logger.getLogger(Tray.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+                });
+
             defaultItem = new MenuItem(" " + getBundle().getString("LABEL_Exit"));
             defaultItem.setFont(defaultFont);
             defaultItem.addActionListener(new ActionListener() {
