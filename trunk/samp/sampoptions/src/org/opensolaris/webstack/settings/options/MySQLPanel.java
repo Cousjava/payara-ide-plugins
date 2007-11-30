@@ -61,11 +61,10 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
         jLabel1 = new javax.swing.JLabel();
         buttonAdvanceConf = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        labelAdminPassword = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
         jCheckBoxUserDir.setText(bundle.getString("LABEL_REMOTE_ACCESS_MYSQL")); // NOI18N
+        jCheckBoxUserDir.setEnabled(false);
 
         jLabel1.setText(bundle.getString("LABEL_HELP_MYSQL")); // NOI18N
         jLabel1.setEnabled(false);
@@ -80,27 +79,19 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
         jLabel2.setText(bundle.getString("LABEL_EDITMYSQLCNF")); // NOI18N
         jLabel2.setEnabled(false);
 
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/tray/Bundle"); // NOI18N
-        labelAdminPassword.setText(bundle1.getString("LABEL_Admini_password")); // NOI18N
-
-        jPasswordField1.setText("jPasswordField1");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelAdminPassword)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonAdvanceConf)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE))
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                    .addComponent(jCheckBoxUserDir, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
+                    .addComponent(jCheckBoxUserDir, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -112,13 +103,9 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelAdminPassword))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdvanceConf)
                     .addComponent(jLabel2))
-                .addContainerGap(163, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -151,8 +138,6 @@ public class MySQLPanel extends javax.swing.JPanel implements PropertyChangeList
     private javax.swing.JCheckBox jCheckBoxUserDir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JLabel labelAdminPassword;
     // End of variables declaration//GEN-END:variables
     
 }
