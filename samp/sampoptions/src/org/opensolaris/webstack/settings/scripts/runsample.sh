@@ -24,5 +24,5 @@
 # Use is subject to license terms.
 #
 
-/usr/bin/firefox http://localhost/phpsample/index.php &
+/usr/bin/firefox http://localhost/phpsample &
 
