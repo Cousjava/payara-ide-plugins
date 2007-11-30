@@ -71,7 +71,7 @@ public class OptionsContainer extends javax.swing.JFrame {
         tabsPanel.addTab("MySQL", new MySQLPanel(mysqlmodel));
         // tabsPanel.addTab("FTP", new FTPPanel());
 
-
+        tabsPanel.setSelectedIndex(1);
         pack();
         setLocationRelativeTo(null);
         URL url = Main.class.getResource("resources/server.png");
