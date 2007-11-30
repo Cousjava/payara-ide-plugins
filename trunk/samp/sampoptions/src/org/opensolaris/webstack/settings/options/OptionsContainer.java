@@ -25,12 +25,7 @@
  */
 package org.opensolaris.webstack.settings.options;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.GradientPaint;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Paint;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -40,6 +35,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import org.opensolaris.webstack.settings.execution.ServerStatus;
 import org.opensolaris.webstack.settings.execution.ServersManager;
 import org.opensolaris.webstack.settings.model.HttpdConfModel;
 import org.opensolaris.webstack.settings.model.MySQLCnfModel;
@@ -59,6 +55,7 @@ public class OptionsContainer extends javax.swing.JFrame {
     private PHPIniModel phpmodel;
     private MySQLCnfModel mysqlmodel;
     private XdebugIniModel xdebugmodel;
+    private GeneralPanel generalTab;
 
     /** Creates new form OptionsContainer */
     public OptionsContainer(final HttpdConfModel model) {
@@ -68,9 +65,9 @@ public class OptionsContainer extends javax.swing.JFrame {
         xdebugmodel = new XdebugIniModel();
 
         initComponents();
-        tabsPanel.addTab("General", new GeneralPanel());
+        tabsPanel.addTab("General", generalTab=new GeneralPanel());
         tabsPanel.addTab("Apache 2", apacheTab = new Apache2Panel(model));
-        tabsPanel.addTab("PHP", phpTab = new PHPPanel(phpmodel, xdebugmodel));
+        tabsPanel.addTab("PHP", phpTab = new PHPPanel(model, phpmodel, xdebugmodel));
         tabsPanel.addTab("MySQL", new MySQLPanel(mysqlmodel));
         // tabsPanel.addTab("FTP", new FTPPanel());
 
@@ -113,13 +110,16 @@ public class OptionsContainer extends javax.swing.JFrame {
         });
 
     }
-
+    public void updateServerStatus(ServerStatus status){
+        generalTab.updateServerStatus(status);
+        
+    }
     public javax.swing.JTabbedPane getJTabbedPane() {
         return tabsPanel;
     }
 
     private void saveChanges() {
-        System.out.println(" save is CALLED " + model.isDirty());
+    //    System.out.println(" save is CALLED " + model.isDirty());
 
 
         apacheTab.UpdateModel();
@@ -158,39 +158,6 @@ public class OptionsContainer extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         return new JLabel(new ImageIcon(image));
-    }
-
-    private BufferedImage createReflection(BufferedImage image) {
-        int height = image.getHeight();
-
-        BufferedImage result = new BufferedImage(image.getWidth(), height * 2, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = result.createGraphics();
-
-        // Paints original image
-        g2.drawImage(image, 0, 0, null);
-
-        // Paints mirrored image
-        g2.scale(1.0, -1.0);
-        g2.drawImage(image, 0, -height - height, null);
-        g2.scale(1.0, -1.0);
-
-        // Move to the origin of the clone
-        g2.translate(0, height);
-
-        // Creates the alpha mask
-        GradientPaint mask;
-        mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, height / 2, new Color(1.0f, 1.0f, 1.0f, 0.0f));
-        Paint oldPaint = g2.getPaint();
-        g2.setPaint(mask);
-
-        // Sets the alpha composite
-        g2.setComposite(AlphaComposite.DstIn);
-
-        // Paints the mask
-        g2.fillRect(0, 0, image.getWidth(), height);
-
-        g2.dispose();
-        return result;
     }
 
     /** This method is called from within the constructor to

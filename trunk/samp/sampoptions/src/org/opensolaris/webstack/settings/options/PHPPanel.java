@@ -29,11 +29,19 @@ import java.awt.Desktop;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.opensolaris.webstack.settings.execution.ServerStatus;
+import org.opensolaris.webstack.settings.execution.ServersManager;
 import org.opensolaris.webstack.settings.model.Environment;
+import org.opensolaris.webstack.settings.model.HttpdConfModel;
+import org.opensolaris.webstack.settings.model.Model;
 import org.opensolaris.webstack.settings.model.PHPIniModel;
 import org.opensolaris.webstack.settings.model.XdebugIniModel;
 
@@ -46,57 +54,60 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
     java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/opensolaris/webstack/settings/options/Bundle"); // NOI18N
     PHPIniModel p;
     XdebugIniModel xdebugmodel;
+    HttpdConfModel model;
 
     /** Creates new form PHPPanel */
-    public PHPPanel(PHPIniModel phpmodel , XdebugIniModel xdebugmodel) {
+    public PHPPanel(HttpdConfModel model, PHPIniModel phpmodel, XdebugIniModel xdebugmodel) {
         p = phpmodel;
-        this.xdebugmodel= xdebugmodel;
+        this.model = model;
+        this.xdebugmodel = xdebugmodel;
         p.addPropertyChangeListener(this);
         initComponents();
         initFromModel();
 
-        
-   
+
+
 
     }
-    void initFromModel(){
+
+    void initFromModel() {
         jCheckBoxdebug.setSelected(xdebugmodel.isDebugMode());
         String error = p.getErrorReporting();
-       
-        jCheckBoxallErrors.setSelected((error.indexOf("E_ALL")>-1));
-        jCheckBoxRunTimeNotices.setSelected((error.indexOf("E_STRICT")>-1));
-        jCheckBoxRunTimeWarnings.setSelected((error.indexOf("E_WARNING")>-1));
-        jCheckBoxfatalRunTimeErrors.setSelected((error.indexOf("E_ERROR")>-1));        
+
+        jCheckBoxallErrors.setSelected((error.indexOf("E_ALL") > -1));
+        jCheckBoxRunTimeNotices.setSelected((error.indexOf("E_STRICT") > -1));
+        jCheckBoxRunTimeWarnings.setSelected((error.indexOf("E_WARNING") > -1));
+        jCheckBoxfatalRunTimeErrors.setSelected((error.indexOf("E_ERROR") > -1));
     }
 
     void UpdateModel() {
 
         xdebugmodel.setDebugMode(jCheckBoxdebug.isSelected());
         String error = "";
-        if (jCheckBoxallErrors.isSelected()){
-            if (error.length()>0){
-                error+=" & ";
+        if (jCheckBoxallErrors.isSelected()) {
+            if (error.length() > 0) {
+                error += " & ";
             }
-            error = error+ "E_ALL";
+            error = error + "E_ALL";
         }
-        if (jCheckBoxRunTimeNotices.isSelected()){
-            if (error.length()>0){
-                error+=" & ";
+        if (jCheckBoxRunTimeNotices.isSelected()) {
+            if (error.length() > 0) {
+                error += " & ";
             }
-            error = error+ "E_STRICT";
-        }    
-        if (jCheckBoxRunTimeWarnings.isSelected()){
-            if (error.length()>0){
-                error+=" & ";
-            }
-            error = error+ "E_WARNING";
+            error = error + "E_STRICT";
         }
-        if (jCheckBoxfatalRunTimeErrors.isSelected()){
-            if (error.length()>0){
-                error+=" & ";
+        if (jCheckBoxRunTimeWarnings.isSelected()) {
+            if (error.length() > 0) {
+                error += " & ";
             }
-            error = error+ "E_ERROR";
-        }    
+            error = error + "E_WARNING";
+        }
+        if (jCheckBoxfatalRunTimeErrors.isSelected()) {
+            if (error.length() > 0) {
+                error += " & ";
+            }
+            error = error + "E_ERROR";
+        }
         p.setErrorReporting(error);
     }
 
@@ -197,12 +208,11 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAdvanceConf)
                     .addComponent(jLabel3))
-                .addGap(36, 36, 36)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     private void buttonAdvanceConfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAdvanceConfActionPerformed
         Desktop desktop = null;
         // Before more Desktop API is used, first check
@@ -223,7 +233,66 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
     }//GEN-LAST:event_buttonAdvanceConfActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+
+
+        //1 check for the server running. If not, warn the user and stop
+        ServerStatus s = ServersManager.getRunningState();
+        if (!s.apacheRunning) {
+            JOptionPane.showMessageDialog(null, "Please, start the servers before viewing a phpinfo() page.");
+            return;
+        }
+        //2 create a temporary file under htdocs that contains phpinfo
+        File f = null;
+        String htdoc = model.getDocumentRoot();
+        try {
+            f = File.createTempFile("phpinfo", ".php", new File(htdoc));
+            FileWriter fout = null;
+
+            try {
+                fout = new FileWriter(f, false);
+                fout.write("<p>temporary generated page: do not reload...</p>");
+                fout.write("<?php phpinfo(); ?>");
+
+            } catch (Exception e) {
+                Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, e);
+            } finally {
+                try {
+                    fout.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            //3 display it
+            try {
+                // launch browser
+                URI uri = new URI("http://localhost:" + Environment.getApachePortNumber() + "/" + f.getName());
+                Desktop.getDesktop().browse(uri);
+            } catch (Exception ex) {
+                Logger.getLogger(PHPPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(PHPPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+        //4 delete it after a few seconds for security reason. Page reload will not work but we are secure.
+        if (f == null) {
+            return;
+        }
+        if (f.exists()) {
+            Timer timer = new Timer(true); //deamon
+            final File ff = f;
+            timer.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    ff.delete();
+                }
+            }, 5000);
+
+        }
+  
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

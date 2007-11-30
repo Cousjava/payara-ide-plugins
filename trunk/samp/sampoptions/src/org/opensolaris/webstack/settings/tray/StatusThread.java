@@ -39,6 +39,7 @@ public class StatusThread {
     static private int period = 5000;  // repeat every 5 sec.
     PropertyChangeSupport changeSupport;
     private ServerStatus currentStatus;
+
     public StatusThread(final Tray t) {
         currentStatus = ServersManager.getRunningState();
         changeSupport = new PropertyChangeSupport(this);
@@ -47,6 +48,7 @@ public class StatusThread {
         timer.scheduleAtFixedRate(new CheckChangeTask(t), delay, period);
 
     }
+
     public void addPropertyChangeListener(PropertyChangeListener l) {
         changeSupport.addPropertyChangeListener(l);
     }
@@ -54,6 +56,7 @@ public class StatusThread {
     public void removePropertyChangeListener(PropertyChangeListener l) {
         changeSupport.removePropertyChangeListener(l);
     }
+
     class CheckChangeTask extends TimerTask {
 
         Tray tray;
@@ -65,6 +68,14 @@ public class StatusThread {
 
         public void run() {
             final ServerStatus running = ServersManager.getRunningState();
+
+            if ((currentStatus.apacheRunning != running.apacheRunning) ||
+                    (currentStatus.mySqlRunning != running.mySqlRunning)) {
+                tray.updateIcon();
+            }
+            currentStatus=running;
+
+
             changeSupport.firePropertyChange("timeStamp", "a", "");
         }
         }

@@ -27,6 +27,7 @@ package org.opensolaris.webstack.settings.options;
 
 import java.util.ArrayList;
 import org.opensolaris.webstack.settings.execution.ProcessExecutor;
+import org.opensolaris.webstack.settings.execution.ServerStatus;
 
 /**
  *
@@ -39,14 +40,21 @@ public class GeneralPanel extends javax.swing.JPanel {
         initComponents();
         updatePanelContent();
     }
-
+    public void updateServerStatus(ServerStatus status){
+        updatePanelContent();
+        if (status.apacheRunning && status.mySqlRunning)
+        startStopButton.setText("Stop Servers");
+        else
+        startStopButton.setText("Start Servers");
+            
+    }
     public void updatePanelContent() {
         String cmd2[] = {"/usr/bin/svcs",  "apache22", "mysql"};
         String output="";
         ArrayList<String> a = ProcessExecutor.executeCommand(cmd2);
         output="/usr/bin/svcs apache22 mysql" + "\n";
         for (int i = 0; i < a.size(); i++) {
-            System.out.println(a.get(i));
+           // System.out.println(a.get(i));
             output+=a.get(i).replaceAll("\t", "y         ") + "\n";
         }
         jTextArea1.setText(output);
