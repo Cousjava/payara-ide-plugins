@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
-<title>Using Samples - A M P Development Getting Started Guide</title>
+<title>Getting Started - Web Stack Getting Started Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
 <meta name="date" content="2008-01-01">
@@ -82,7 +82,7 @@
 
 <!-- BEGIN BREADCRUMB -->
 <div id="breadcrumb">
-<?GenHTML ReferencePage >A M P Development Getting Started Guide<?GenHTML /ReferencePage>
+<?GenHTML ReferencePage >Web Stack Getting Started Guide<?GenHTML /ReferencePage>
 </div><br />
 <!-- END BREADCRUMB -->
 
@@ -100,7 +100,7 @@
 <td><a href="p4.html"><img style="padding-right: 3px" src="graphics/prev.gif" border="0">Previous</a></td>
 <td><a href="toc.html">Contents</a></td>
 <td></td>
-<td></td>
+<td><a href="p6.html">Next<img style="padding-left: 3px" src="graphics/next.gif" border="0"></a></td>
 </tr>
 </table>
 <!-- END PAGE CONTROL ROW -->
@@ -111,48 +111,81 @@
 
 <!--startindex-->
 <div class="maincontent">
-<a name="gfvej"></a>Chapter&nbsp;4<h3>Using Samples</h3><p>TBD</p>
+<a name="gfvee"></a>Chapter&nbsp;2<h3>Getting Started</h3><p>This chapter describes how to use the Web Stack developer tools for developing
+and deploying web applications.</p>
 
-<a name="gfver"></a><h3>Database Schema</h3>
-<p>The databases, tables, and columns within the MySQL database known as the <b>schema</b>
-can be manipulated using the web-based <tt>phpMyAdmin</tt> tool. These operations are typically
-done by a Database Administrator or a DBA who is familiar with SQL
-and the relational philosophy of data representation, storage, and querying.</p><p>To manipulate the databases, tables, and columns of the MySQL database, after initialization
-and starting Servers, click on the Launch menu, and select All Applications >
-Developer Tools > A.M.P. Web App Development > Administer Database. A web-based database
-management tool called <tt>phpMyAdmin</tt> opens in a web browser. This tool provides a
-visual interface to the Data Definition Language (DDL) -- the <b>schema</b> and the
-Data Manipulation Language (DML), that comprises of inserting, deleting, updating, and selecting or querying
-aspects of the Structured Query Language (SQL) that MySQL database supports. Using this
-tool, you can do the Data Definition tasks like creating databases and creating
-and editing tables for use by your applications. You can also do Data
-Manipulation tasks like viewing and manipulating data, to create test data, or diagnose
-problems.</p><p>For detailed information about the relational database concepts and SQL, see the 
- &lt;online website (...introduction to relational concepts...)  ></p><p>* book: chapters 4-12 of _MySQL: The Complete Reference_, by Vikram Vaswani </p>
+<a name="gfvda"></a><h3>Initializing the Development Environment</h3>
+<p>Before you can use the Solaris web application development environment, you must initialize
+the environment for your login. Every new user logged into the system must
+initialize their own environment.</p><p>To Initialize your Web Application Development environment, click on the Launch menu, and
+select All Applications > Developer Tools > Web Stack Admin > Initialize.</p><p>The first user who initializes must enter the system's root password as the
+first initialization process installs and configures various operating system services. Subsequent users who
+initialize are not prompted for the root password.</p>
+<hr><p><b>Note - </b>Changes to the Web Stack Admin options affects all users on the system.</p>
+<hr>
+<p>For more information about customizing the Web Stack Admin components, see <a href="p6.html#gfvly">Customizing Web Stack Components</a>.</p>
 
-<a name="gfvly"></a><h3>Customizing AMP Components</h3>
-<p> After Initialization, you can customize several aspects of the A.M.P. components.</p><p>From the Launch menu, select All Applications > Developer Tools > A.M.P. Web
-App Development > Options.</p><p>For example, to start the Servers to automatically at system start up, or
-each time when you log in, check the appropriate checkbox on the
-General tab of the Option panel.  Only a limited set of options
-are available in the Options panel. For more advanced options, click the Advanced
-button on the appropriate tab. Service configuration file for that component will be
-opened in a text editor, where you can edit the options. </p><p>Refer to the following sources for documentation on    
- </p><p>* Apache advanced configuration - httpd.conf file : see _this_  
-  </p><p>* PHP advanced configuration - php.ini file : see _this_  
-  </p><p>* MySQL advanced configuration - mysql.ini : see _this_</p>
+<a name="gfuat"></a><h3>Starting and Stopping Apache HTTPd and MySQL Servers</h3>
 
-<a name="gfvdl"></a><h3>Migrating From Development to Production</h3>
-<p>The easy User Interface provided from the Launch menu for rapid and easy-to-learn
-A.M.P. Web App Development is intended for development purposes. We do not recommend
-running mission-critical websites without customization and tuning for performance, scalability, and security. When
-you've developed and debugged a working app in this environment, we recommend transferring the
-database data and PHP files to a production-quality Solaris installation, running on high-availability
-Sun hardware, that's been carefully tuned to your mission-critical needs. </p><p>For public web sites, consider hosting your application using the Sun Hosted Blah
-Blah partnership with Joyent. This migration path enables you to rapidly and easily
-migrate applications developed here to a scalable, production-quality public internet platform ... blah
-blah, Sales pitch bla  ... insert Sales pitch here for high-availability Sun
-hardware.... and Sun Professional Services.</p>
+<hr><p><b>Note - </b>Before you start the components, you must initialize the development environment for your
+login account. </p>
+<hr>
+<p>To start or stop the servers on your development environment, click on the
+Launch menu, and select All Applications > Developer Tools > Web Stack Admin
+> Start Apache2/MySQL Servers or Stop Apache2/MySQL Severs.</p><p>You can configure the servers to be started automatically at system start up
+by customizing the start up options. For more information see <a href="p6.html#gfvly">Customizing Web Stack Components</a>.</p>
+
+<a name="gfxsv"></a><h3>Setting Up MySQL Database</h3>
+<p>MySQL 5.0.45  for Solaris includes files necessary to register with the Service
+Management Facility for the Java<sup>TM</sup> platform described in <tt>smf(5)</tt>. The procedure to register
+MySQL service with SMF and start the database server instance is described below.</p>
+
+<a name="gfxcd"></a><h4><img src="graphics/procedure.gif"> To Start the Database Server Instance</h4><h6>Before You Begin</h6><p>Make sure that a user by name <tt>mysql</tt> belonging to group <tt>mysql</tt> is
+created. If such a user does not exist, create a user and a
+group.</p><pre>example% /usr/sbin/groupadd mysql 
+example% /usr/sbin/useradd -g mysql mysql</pre><p>Make the user <tt>mysql</tt> the owner of database directory.</p><pre>example%chown -R mysql:mysql /var/mysql
+chmod -R 770 /var/mysql</pre><ol>
+<li><b>Check the status of the SMF service.</b><p>The <tt>mysql;version_50</tt> service is disabled by default.</p><pre>example% svcs mysql
+STATE         STIME     FMRI
+disabled      14:27:09  svc:/application/database/mysql:version_50</pre></li>
+<li><b>Enable the <tt>mysql:version_50</tt> service.</b><p><tt>example%svcadm  enable mysql:version_50</tt></p></li>
+<li><b>Check the status of the service. </b><pre>example% svcs mysql
+STATE          STIME    FMRI
+online         14:30:08 svc:/application/database/mysql:version_50</pre><p>The state of the service is <tt>online</tt>, and the database server is started
+successfully.</p>
+<hr><p><b>Note - </b>To shutdown the database instance and prevent automatic restart, disable the SMF service.</p><p><tt>example% svcadm disable mysql:version_50</tt></p>
+<hr>
+</li></ol>
+
+<a name="gfxrw"></a><h3>Setting Up PostgreSQL Database</h3>
+<p>This section describes how to set up the PostgreSQL database with NetBeans 6.0
+IDE.</p>
+
+<a name="gfxbc"></a><h4><img src="graphics/procedure.gif"> To Set Up PostgreSQL Database</h4><ol>
+<li><b>Create a user by name <tt>postgres</tt>.</b><pre>bash-3.2$ su
+Password: 
+# chown postgres:postgres /var/postgres/8.2/data 
+# su - postgres</pre></li>
+<li><b>Initialize the database.</b><pre>bash-3.2$/usr/postgres/8.2/bin/initdb -D /var/postgres/8.2/data</pre><p>The files belonging to this database system are owned by user <tt>postgres</tt>.
+This user must also own the server process.  The database cluster is
+initialized with locale C.</p></li>
+<li><b>Start the database server.</b><pre>bash-3.2$/usr/postgres/8.2/bin/postgres -D /var/postgres/8.2/data</pre><p>or</p><pre>bash 3.2$/usr/postgres/8.2/bin/pg_ctl -D /var/postgres/8.2/data -l logfile start</pre></li>
+<li><b>Enable PostgreSQL version 8.2.</b><pre>bash-3.2$ su
+Password: 
+# /usr/sbin/svcadm enable postgresql:version_82</pre></li>
+<li><b>Configure the PostgreSQL database with NetBeans IDE 6.0.</b><ol style="list-style-type: lower-alpha">
+				 
+<li><b>Create a New Database Connection.</b><p>In the New Connection Database dialog box, enter the following details:</p>
+<ul><li><p><tt>Name &mdash; PostgreSQL</tt></p></li>
+<li><p><tt>Driver &mdash; org.postgresql.Driver</tt></p></li>
+<li><p><tt>Database URL &mdash; jdbc.postgresql://localhost.5432/postgres</tt></p></li>
+<li><p><tt>User &mdash; postgres</tt></p></li>
+<li><p><tt>Password &mdash; ******</tt></p></li></ul>
+</li>
+<li><b>Click the Advanced tab.</b></li>
+<li><b>Select a Database Schema to use.</b></li>
+<li><b>Create a Table.</b></li>
+<li><b>View the Table Data.</b></li></ol></li></ol><h6>See Also</h6><p>For more information about configuring PostgreSQL database with NetBeans IDE, see &lt;link>.</p>
 </div>
 <!--stopindex-->
 
@@ -173,7 +206,7 @@ hardware.... and Sun Professional Services.</p>
 <td><a href="p4.html"><img style="padding-right: 3px" src="graphics/prev.gif" border="0">Previous</a></td>
 <td><a href="toc.html">Contents</a></td>
 <td></td>
-<td></td>
+<td><a href="p6.html">Next<img style="padding-left: 3px" src="graphics/next.gif" border="0"></a></td>
 </tr>
 </table>
 <!-- END PAGE CONTROL ROW -->
