@@ -73,7 +73,7 @@ public class Main {
         return model;
     }
 
-    public static void showOptions() {
+    public static OptionsContainer showOptions() {
         if (ui == null) {
             ui = new OptionsContainer(model);
         }
@@ -93,6 +93,7 @@ public class Main {
                 ui.toFront();
             }
         });
+        return ui;
     }
 
     private static void testSingleton() {

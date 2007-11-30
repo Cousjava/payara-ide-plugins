@@ -85,6 +85,8 @@ public class Tray {
             @Override
             public void run() {
                 final ServerStatus running = ServersManager.getRunningState();
+                 if (ui!=null)
+                    ui.updateServerStatus(running);
                 if (running.apacheRunning && running.mySqlRunning && !iconColor.equals("green")) {
                     setIcon("green");
                     startAction.setEnabled(false);
@@ -94,7 +96,7 @@ public class Tray {
                     setIcon("red");
                     startAction.setEnabled(true);
                     stopAction.setEnabled(false);
-                } else if (!iconColor.equals("yellow")) {
+                } else if ((!running.apacheRunning || !running.mySqlRunning )&&!iconColor.equals("yellow")) {
                     setIcon("yellow");
                     startAction.setEnabled(true);
                     stopAction.setEnabled(true);
@@ -121,7 +123,7 @@ public class Tray {
                     //  System.out.println
                     //( "Click at (" + e.getX() + ":" + e.getY() + ")" );
                     if (e.getClickCount() == 2) {
-                        Main.showOptions();
+                        ui = Main.showOptions();
                     }
 
                 }
@@ -164,7 +166,7 @@ public class Tray {
             defaultItem.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    Main.showOptions();
+                    ui = Main.showOptions();
                 }
             });
 
