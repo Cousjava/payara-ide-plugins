@@ -134,7 +134,7 @@ public class HttpdConfModel extends Model {
         if (changed == false) {
             changed = (portNumber != i);
         }
-        System.out.println("changed = (portNumber != i)" + changed + portNumber + "   " + i);
+    //    System.out.println("changed = (portNumber != i)" + changed + portNumber + "   " + i);
         portNumber = i;
         content.set(listenKey, LISTEN + " " + portNumber);
 
@@ -159,7 +159,7 @@ public class HttpdConfModel extends Model {
         if (!d.equals(initialDocRoot)) {
             docRoot = d;
             changed = true;
-            System.out.println("    doc root changed..." + d + initialDocRoot);
+//            System.out.println("    doc root changed..." + d + initialDocRoot);
             content.set(documentRootKey, DOCROOT + " \"" + d + "\"");
             if (directorydocumentRootKey != -1) {//we also need to change the corresponding <Directory Entry
                 content.set(directorydocumentRootKey, DIRECTORY + " \"" + d + "\">");
@@ -215,7 +215,7 @@ public class HttpdConfModel extends Model {
                         f.mkdir();
                         f = new File(f, "index.html");
                         f.createNewFile();
-                        System.out.println("f created"+f);
+         //               System.out.println("f created"+f);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                         Logger.getLogger(HttpdConfModel.class.getName()).log(Level.SEVERE, null, ex);

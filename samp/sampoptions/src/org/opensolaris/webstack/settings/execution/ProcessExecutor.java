@@ -47,26 +47,6 @@ public class ProcessExecutor {
     static ExecutorService pool = Executors.newFixedThreadPool(1); //1 process at a time
 
 
-    public static void main() {
-
-        for (int i = 0; i < 10; i++) {
-            final int j = i;
-            Future f = pool.submit(new Runnable() {
-
-                        public void run() {
-                            try {
-                                Thread.sleep(1000 / j);
-                                System.out.println("i" + j);
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(ProcessExecutor.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                    });
-            if (i == 3) {
-                f.cancel(true);
-            }
-        }
-    }
     /* execute a command 
      * @return a array of string form the output of the command
      * 

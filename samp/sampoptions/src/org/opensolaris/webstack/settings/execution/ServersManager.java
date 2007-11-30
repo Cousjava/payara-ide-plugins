@@ -32,15 +32,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.opensolaris.webstack.settings.model.Environment;
@@ -168,60 +162,7 @@ public class ServersManager {
             }
         }
     }
-    /** Return true if a Apache server is running on the specifed port */
 
-    public static boolean isApacheRunning(int port, int timeout) {
-        Socket socket = new Socket();
-        try {
-            try {
-                socket.connect(new InetSocketAddress("localhost", port), timeout); // NOI18N
-                socket.setSoTimeout(timeout);
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                try {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    try {
-                        // request
-                        out.println("HEAD /favicon.ico HTTP/1.1\nHost: localhost:" + port + "\n"); // NOI18N
-
-                        // response
-                        String text = in.readLine();
-                        //System.out.println("text="+text);
-                        if (text == null || !text.startsWith("HTTP/")) { // NOI18N
-                            return false; // not an http response
-                        }
-                        Map headerFileds = new HashMap();
-                        while ((text = in.readLine()) != null && text.length() > 0) {
-                            int colon = text.indexOf(':');
-                            if (colon <= 0) {
-                                return false; // not an http header
-                            }
-                            String name = text.substring(0, colon).trim();
-                            String value = text.substring(colon + 1).trim();
-                            // System.out.println("name"+name);
-                           // System.out.println("value"+value);
-                            if (name.equals("Server")) {
-                                if (value.contains("Apache/2.")) { // NOI18N
-                                    System.out.println("is running");
-                                    return true;
-
-                                }
-                            }
-                        }
-                        System.out.println(" not running");
-                        return false;
-                    } finally {
-                        in.close();
-                    }
-                } finally {
-                    out.close();
-                }
-            } finally {
-                socket.close();
-            }
-        } catch (Exception ioe) {
-            return false;
-        }
-    }
 
     public static ServerStatus getRunningState() {
         String[] s = {"/usr/bin/svcs", "apache22", "mysql"};
