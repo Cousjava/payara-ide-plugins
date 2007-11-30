@@ -37,17 +37,21 @@ echo "Installing global menus for the WebStack"
 /usr/bin/pkill panel
 CURRENTUSER=${USER}
 if [ ${CURRENTUSER} = root ]; then
-echo "root user is preconfigured."
+echo "making sure that the mysql user and group exists, and owns /var/mysql content."
+/usr/sbin/groupadd mysql
+/usr/sbin/useradd -g mysql mysql
+chown -R mysql:mysql /var/mysql
+
 else
 
 echo " The installation of the Web Stack needs to run a script as the root user."
-echo " This script will add the Apache2 and Mysql SMF privileges and modify the ACL of the apache and   PHP configuration files."
+echo " This script will add the Apache2 and Mysql SMF privileges and modify the ACL of the apache and PHP configuration files."
 echo " Please enter the root password in order to complete the installation of the Web Stack for user ${CURRENTUSER}, or CTRL-C to stop." 
 
 su - root -c "/opt/webstack/bin/initializeasroot.sh ${CURRENTUSER}"
 fi
 
-echo "All done.  Press ENTER to continue." 
+echo "Initialization done. Press ENTER to continue." 
 read answer
 echo ""
 

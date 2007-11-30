@@ -28,6 +28,7 @@ package org.opensolaris.webstack.settings.options;
 import java.util.ArrayList;
 import org.opensolaris.webstack.settings.execution.ProcessExecutor;
 import org.opensolaris.webstack.settings.execution.ServerStatus;
+import org.opensolaris.webstack.settings.execution.ServersManager;
 
 /**
  *
@@ -130,7 +131,14 @@ public class GeneralPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_viewDetailsButtonActionPerformed
 
     private void startStopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startStopButtonActionPerformed
-    // TODO add your handling code here:
+         ServerStatus running = ServersManager.getRunningState();
+        if (running.apacheRunning && running.mySqlRunning) {
+            ServersManager.StopServers();
+        }
+        else {
+            ServersManager.StartServers();
+        }
+               
     }//GEN-LAST:event_startStopButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
