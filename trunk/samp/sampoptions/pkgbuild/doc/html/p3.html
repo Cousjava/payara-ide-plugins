@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
-<title>Getting Started - A M P Development Getting Started Guide</title>
+<title>MySQL Database Files - Web Stack Getting Started Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
 <meta name="date" content="2008-01-01">
@@ -82,7 +82,7 @@
 
 <!-- BEGIN BREADCRUMB -->
 <div id="breadcrumb">
-<?GenHTML ReferencePage >A M P Development Getting Started Guide<?GenHTML /ReferencePage>
+<?GenHTML ReferencePage >Web Stack Getting Started Guide<?GenHTML /ReferencePage> > <a href="p2.html">1.&nbsp;&nbsp;About Web Stack</a> > <a href="p2.html#gfuap">File Layout of Web Stack Components</a>
 </div><br />
 <!-- END BREADCRUMB -->
 
@@ -111,92 +111,77 @@
 
 <!--startindex-->
 <div class="maincontent">
-<a name="gfvee"></a>Chapter&nbsp;2<h3>Getting Started</h3><p>This chapter describes the basic steps to get started with the developer tools
-to develop and deploy web applications. </p>
-
-<a name="gfvda"></a><h3>Initializing the Development Environment</h3>
-<p>Before you can use the Solaris Web application development environment, you must initialize
-the environment for your login. Every new user logged into the system must
-initialize their own environment.</p><p>To Initialize your Web Application Development environment, click on the Launch menu, and
-select All Applications > Developer Tools > A.M.P. Web App Development > Initialize.</p><p>The first user who initializes must enter the system's root password as the
-first initialization process installs and configures various operating system services. Subsequent users who
-initialize skips this step and thus will not be prompted for the root
-password.</p>
-<hr><p><b>Note - </b>Changes to the Web App Development options will affect all users on the
-system.</p>
-<hr>
 
 
-<a name="gfvdu"></a><h3>Starting and Stopping Web Stack Components</h3>
-<p>This section describes the steps to start and stop various Web App
-Development tools on the Solaris platform.</p>
-<hr><p><b>Note - </b>Before you start the components, you must initialize the development environment for your
-login account. </p>
-<hr>
+<a name="gfxcc"></a><h4>MySQL Database Files</h4>
+<p>The MySQL 5.0.45 software for Solaris is installed into a number of subdirectories
+of <tt>/usr/mysql/5.0</tt>. Symbolic links are created from all directories under <tt>/usr/mysql/5.0</tt> to <tt>/usr/mysql</tt>
+directories so that latest version of MySQL can also be accessed from <tt>/usr/mysql</tt>.</p><dl><dt><tt>usr/mysql/5.0/bin</tt></dt>
+<dd><p>Contains the binaries and scripts</p></dd>
+<dt><tt>/usr/mysql/5.0/lib</tt></dt>
+<dd><p>Contains the libraries for the client API.</p></dd>
+<dt><tt>/usr/mysql/5.0/include</tt></dt>
+<dd><p>Contains the header files for the client API. </p></dd>
+<dt><tt>/usr/mysql/5.0/test</tt></dt>
+<dd><p>Contains MySQL test programs.</p></dd>
+<dt><tt>/usr/mysql/5.0/share/mysql</tt></dt>
+<dd><p>Contains internationalization (I18N) files, sample configuration files, and utility scripts.</p></dd>
+<dt><tt>/var/mysql/5.0/data</tt></dt>
+<dd><p>Default database data directory.</p></dd>
+<dt><tt>/etc/mysql/5.0</tt></dt>
+<dd><p>Contains the MySQL configuration file.</p></dd>
+<dt><tt>/usr/sfw/bin/mysql</tt></dt>
+<dd><p>Client executable.</p></dd>
+<dt><tt>/usr/sfw/sbin/mysqld</tt></dt>
+<dd><p>Server executable.</p></dd>
+</dl>
 
 
-<a name="gfuat"></a><h4>Starting and Stopping Apache HTTPd Server</h4>
-<p>To Start the Servers on your A.M.P. Web App Development environment, click on
-the Launch menu, and select All Applications > Developer Tools > A.M.P. Web
-App Development > Start Servers (or Stop Servers). </p><p>You can configure the servers to be started automatically at system start up
-by customizing the start up options. For more information see the section on
-Customizing. </p>
+<a name="gfxtn"></a><h4>PHP 5.2.4 Files</h4>
+<p>The following list describes the file structure for PHP:</p><dl><dt><tt>/usr/php/5.2.4/bin</tt></dt>
+<dd><p>Contains the PHP configuration executables.</p></dd>
+<dt><tt>/etc/php5/5.2.4</tt></dt>
+<dd><p>Contains the configuration file (<tt>php.ini</tt>). <tt>php.ini</tt> is the loaded configuration file.</p></dd>
+<dt><tt>/etc/php5/5.2.4/conf.d</tt></dt>
+<dd><p>Contains additional configuration files.</p></dd>
+</dl>
 
-<a name="gfube"></a><h4>Starting MySQL Database</h4>
-<p>TBD</p>
 
-<a name="gfuci"></a><h4>Stopping MySQL Database</h4>
-<p>TBD</p>
+<a name="gfxun"></a><h4>PostgreSQL Database Files</h4>
+<p>The following list describes the file structure for the PostgreSQL database:</p><dl><dt><tt>/usr/postgres/8.2/bin</tt></dt>
+<dd><p>Contains the PostgreSQL executables.</p></dd>
+<dt><tt>/usr/postgres/8.2/etc</tt></dt>
+<dd><p>???</p></dd>
+<dt><tt>/usr/postgres/8.2/include</tt></dt>
+<dd><p>???</p></dd>
+<dt><tt>/usr/postgres/8.2/jdbc</tt></dt>
+<dd><p>???</p></dd>
+<dt><tt>/usr/postgres/8.2/lib</tt></dt>
+<dd><p>Contains ???</p></dd>
+<dt><tt>/usr/postgres/8.2/man</tt></dt>
+<dd><p>Contains the man pages for the commands.</p></dd>
+</dl>
 
-<a name="gfuet"></a><h4>Starting PostgreSQL Database</h4>
-<p>TBD</p>
 
-<a name="gfudm"></a><h4>Stopping PostgreSQL Database</h4>
-<p>TBD</p>
+<a name="gfxsf"></a><h4>Ruby Files</h4>
+<p>The following list describes the file structure for Ruby:</p><dl><dt>/<tt>var/ruby/1.8/gem_home</tt></dt>
+<dd><p>Contains the Rubygems repository. Configure the <tt>GEM_HOME</tt> environment variable to point to <tt>/var/ruby/1.8/gem_home</tt> to use this installation of Rubygems.</p></dd>
+<dt><tt>/usr/ruby/1.8/bin</tt></dt>
+<dd><p>Contains the Ruby executable as well as other utility programs, and Rubygems programs. These programs are linked from <tt>/usr/bin</tt>. For example: <tt>/usr/ruby/1.8/bin/ruby</tt> is linked from <tt>/usr/bin/ruby1.8</tt>, and may be linked from<tt> /usr/bin/ruby</tt> if 1.8 is the latest version of Ruby installed on this system.   </p></dd>
+</dl>
 
-<a name="gfudh"></a><h4>Configuring Ruby with Rails</h4>
-<p>TBD</p>
 
-<a name="gfvfd"></a><h4>Starting Ruby on Rails</h4>
-<p>TBD</p>
+<a name="gfxsd"></a><h5>Squid Files</h5>
+<p>The following list describes the file structure for Squid:</p><dl><dt><tt>/usr/squid/bin</tt></dt>
+<dd><p>Contains the executable for the Squid client and to run the cache.</p></dd>
+<dt><tt>/usr/squid/libexec</tt></dt>
+<dd><p>Contains the libraries?</p></dd>
+<dt><tt>/etc/squid/squid.conf</tt></dt>
+<dd><p>The main configuration file. Modify this file for Squid to work.</p></dd>
+<dt><tt>/etc/squid/squid.conf.default</tt></dt>
+<dd><p>Reference copy of the configuration file. Always kept up-to-date with the version of squid you are using. Use this to look up configuration syntax after upgrading.</p></dd>
+</dl>
 
-<a name="gfuaq"></a><h4>Starting memcached</h4>
-<p>TBD</p>
-
-<a name="gfvev"></a><h3>Testing the Web App Development Environment</h3>
-<p>To test whether the development environment you have set up is working fine,
-perform the following simple steps:</p>
-
-<a name="gfvnt"></a><h4><img src="graphics/procedure.gif"> To Test the Web App Development Environment</h4><h6>Before You Begin</h6>
-<ul><li><p>Make sure that you have initialized the environment for you login account.</p></li>
-<li><p>Make sure that the required components are started. </p></li></ul>
-<ol>
-<li><b>Create a simple web application. </b><p>Alternatively, you can copy the following code into a text file.</p><pre>&lt;DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-&lt;html xmlns="http://www.w3.org/1999/xhtml">
-&lt;head>
-    &lt;meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    &lt;title>My First Web App&lt;/title>
-	&lt;/head>
-&lt;body>
-&lt;b>Hello, World!&lt;/b>
-&lt;p>The date and time are &lt;?php echo date ("r"); ?> - isn't that nice? - isn't that nice?&lt;/p>
-&lt;/body>
->/html></pre></li>
-<li><b>Save the file to /usr/local/apache2/htdocs/myfirstwebapp.php.</b></li>
-<li><b>Open a web browser and enter the URL http://localhost/myfirstwebapp.php in the address bar.</b><p>The following message is displayed in the web browser, where the date and
-time reflects your system's current date and time:</p><p><b>Hello, world!</b></p><p>The date and time are Thu, 20 Dec 2007 16:01:07 +0200 -
-isn't that nice?</p></li></ol><h6>Next Steps</h6><p>Success! Note that the web page contents enclosed within the <tt>&lt;?php and ?></tt> delimiters
-were interpreted by the PHP interpreter at the time the Apache Web Server
-served up that page. The output of those PHP language statements were substituted
-into the HTML stream at that location. All other HTML content is served
-up to the web browser as in static web pages.</p><p>Now, reload your browser but make sure that your browser does not
-use its cache; in most browsers, you can reload the browser by holding
-down the ALT key while clicking the Reload button. You see the same
-result, but with a later time. Thus you can see that a PHP
-page gets executed every time it is displayed (barring local browser caching, which
-you can suppress through PHP directives), and that you, as a developer, can
-generate highly dynamic content.</p>
 </div>
 <!--stopindex-->
 
