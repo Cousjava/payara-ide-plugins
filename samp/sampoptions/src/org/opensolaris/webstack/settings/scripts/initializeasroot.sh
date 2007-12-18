@@ -26,10 +26,14 @@
 ROOT_PATH=""
 USERNAME=$1
 
-echo "making sure that the mysql user and group exists, and owns /var/mysql content"
-/usr/sbin/groupadd mysql
-/usr/sbin/useradd -g mysql mysql
-chown -R mysql:mysql /var/mysql
+#checking for the existence of the mysql user:
+grep "^mysql:" /etc/passwd >/dev/null 2>&1
+if  [ $? -ne 0 ]; then
+   echo "making sure that the mysql user and group exists, and owns /var/mysql content"
+   /usr/sbin/groupadd mysql
+   /usr/sbin/useradd -g mysql -d /var/mysql mysql
+   chown -R mysql:mysql /var/mysql
+fi
 
 echo "allowing RW access to httpd.conf, php.ini and my.cnf to user ${USERNAME}"
 

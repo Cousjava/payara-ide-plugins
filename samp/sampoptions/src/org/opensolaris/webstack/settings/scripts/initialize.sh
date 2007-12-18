@@ -37,18 +37,30 @@ echo "Installing global menus for the WebStack"
 /usr/bin/pkill panel
 CURRENTUSER=${USER}
 if [ ${CURRENTUSER} = root ]; then
-echo "making sure that the mysql user and group exists, and owns /var/mysql content."
-/usr/sbin/groupadd mysql
-/usr/sbin/useradd -g mysql mysql
-chown -R mysql:mysql /var/mysql
+#checking for the existence of the mysql user:
+grep "^mysql:" /etc/passwd >/dev/null 2>&1
+if  [ $? -ne 0 ]; then
+   echo "making sure that the mysql user and group exists, and owns /var/mysql content."
+   /usr/sbin/groupadd mysql
+   /usr/sbin/useradd -g mysql -d /var/mysql mysql
+   chown -R mysql:mysql /var/mysql
+fi
+
+
 
 else
 
 echo " The installation of the Web Stack needs to run a script as the root user."
 echo " This script will add the Apache2 and Mysql SMF privileges and modify the ACL of the apache and PHP configuration files."
-echo " Please enter the root password in order to complete the installation of the Web Stack for user ${CURRENTUSER}, or CTRL-C to stop." 
+echo " Please enter the root password in order to complete the installation of the Web Stack for user ${CURRENTUSER}" 
 
-su - root -c "/opt/webstack/bin/initializeasroot.sh ${CURRENTUSER}"
+SUCMD=`gksu --message " Please enter the root password in order to complete the installation of the Web Stack k for user ${CURRENTUSER}"  "/opt/webstack/bin/initializeasroot.sh ${CURRENTUSER}"`
+ if [ "$?" -ne "0"  ]; then
+        echo "gksu not ok" 
+else
+        echo "gksu ok"
+fi
+
 fi
 
 echo "Initialization done. Press ENTER to continue." 
