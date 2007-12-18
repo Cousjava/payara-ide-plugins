@@ -125,14 +125,15 @@ public class Environment {
         } else if (!testF.canWrite()) {
             errorMessage += "File: " + testF.getAbsolutePath() + " is not writable.\n";
         }
-        testF = new File(getApachelog());
-        if (!testF.exists()) {
-            errorMessage += "File: " + testF.getAbsolutePath() + " does not exist.\n";
-        }
-        testF = new File(getMysqllog());
-        if (!testF.exists()) {
-            errorMessage += "File: " + testF.getAbsolutePath() + " does not exist.\n";
-        }
+// files might not be availalbe yet...
+        //testF = new File(getApachelog());
+//        if (!testF.exists()) {
+//            errorMessage += "File: " + testF.getAbsolutePath() + " does not exist.\n";
+//        }
+//        testF = new File(getMysqllog());
+//        if (!testF.exists()) {
+//            errorMessage += "File: " + testF.getAbsolutePath() + " does not exist.\n";
+//        }
         if (!errorMessage.equals("")) {
 
 
