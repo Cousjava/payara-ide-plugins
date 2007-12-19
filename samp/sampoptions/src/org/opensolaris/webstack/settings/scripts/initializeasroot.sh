@@ -52,7 +52,14 @@ if  [ $? -ne 0 ]; then
     setfacl -m user:${USERNAME}:rwx /var/apache2/2.2/htdocs 
     setfacl -m mask:rwx  /var/apache2/2.2/htdocs
 else
-    echo" cannot run setfacl on a zfs filesystem"
+    echo "allowing RW access to httpd.conf, php.ini and my.cnf to user ${USERNAME}"
+    /usr/bin/chmod A+user:${USERNAME}:write_data:allow /etc/apache2/2.2/httpd.conf
+    /usr/bin/chmod A+user:${USERNAME}:write_data:allow /etc/php5/5.2.4/conf.d/xdebug.ini
+    /usr/bin/chmod A+user:${USERNAME}:write_data:allow /etc/mysql/5.0/my.cnf
+    /usr/bin/chmod A+user:${USERNAME}:write_data:allow /etc/php5/5.2.4/php.ini
+
+    /usr/bin/chmod A+user:${USERNAME}:add_file:allow /var/apache2/2.2/htdocs
+    /usr/bin/chmod A+user:${USERNAME}:add_subdirectory:allow /var/apache2/2.2/htdocs 
 fi
 
 A=`fgrep solaris.smf.manage.mysql /etc/security/prof_attr`
