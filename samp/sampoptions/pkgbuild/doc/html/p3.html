@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
-<title>MySQL Database Files - Web Stack Getting Started Guide</title>
+<title>Getting Started - Web Stack Getting Started Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
 <meta name="date" content="2008-01-01">
@@ -82,7 +82,7 @@
 
 <!-- BEGIN BREADCRUMB -->
 <div id="breadcrumb">
-<?GenHTML ReferencePage >Web Stack Getting Started Guide<?GenHTML /ReferencePage> > <a href="p2.html">1.&nbsp;&nbsp;About Web Stack</a> > <a href="p2.html#gfuap">File Layout of Web Stack Components</a>
+<?GenHTML ReferencePage >Web Stack Getting Started Guide<?GenHTML /ReferencePage>
 </div><br />
 <!-- END BREADCRUMB -->
 
@@ -97,7 +97,7 @@
 <tr>
 <td></td>
 <td style="width: 60%">&nbsp;</td>
-<td><a href="p2.html"><img style="padding-right: 3px" src="graphics/prev.gif" border="0">Previous</a></td>
+<td><a href="p2.html"><img style="padding-right: 3px" src="graphics/prev.gif" border="0" alt="">Previous</a></td>
 <td><a href="toc.html">Contents</a></td>
 <td></td>
 <td><a href="p4.html">Next<img style="padding-left: 3px" src="graphics/next.gif" border="0"></a></td>
@@ -111,77 +111,84 @@
 
 <!--startindex-->
 <div class="maincontent">
+<a name="gfvee"></a>Chapter&nbsp;2<h3>Getting Started</h3><a name="indexterm-21"></a><p>This chapter describes how to use the Web Stack developer tools for developing
+and deploying web applications.</p>
 
+<a name="gfvda"></a><h3>Initializing the Development Environment</h3>
+<a name="indexterm-22"></a><a name="indexterm-23"></a><p>Before you can use the Solaris web application development environment, you must initialize
+the environment for your login. Every new user logged into the system must
+initialize their own environment.</p>
+<hr><p><b>Note - </b>To use the Web Stack Admin user interface options, you must login to
+the GNOME desktop.</p>
+<hr>
+<p>To Initialize your Web Application Development environment, click on the Launch menu, and
+select All Applications > Developer Tools > Web Stack Admin > Initialize.</p>
+<hr><p><b>Note - </b>Changes to the Web Stack Admin options affects all users on the system.</p>
+<hr>
+<p>For more information about customizing the Web Stack Admin components, see <a href="p4.html#gfvly">Customizing Web Stack Components</a>.</p>
 
-<a name="gfxcc"></a><h4>MySQL Database Files</h4>
-<p>The MySQL 5.0.45 software for Solaris is installed into a number of subdirectories
-of <tt>/usr/mysql/5.0</tt>. Symbolic links are created from all directories under <tt>/usr/mysql/5.0</tt> to <tt>/usr/mysql</tt>
-directories so that latest version of MySQL can also be accessed from <tt>/usr/mysql</tt>.</p><dl><dt><tt>usr/mysql/5.0/bin</tt></dt>
-<dd><p>Contains the binaries and scripts</p></dd>
-<dt><tt>/usr/mysql/5.0/lib</tt></dt>
-<dd><p>Contains the libraries for the client API.</p></dd>
-<dt><tt>/usr/mysql/5.0/include</tt></dt>
-<dd><p>Contains the header files for the client API. </p></dd>
-<dt><tt>/usr/mysql/5.0/test</tt></dt>
-<dd><p>Contains MySQL test programs.</p></dd>
-<dt><tt>/usr/mysql/5.0/share/mysql</tt></dt>
-<dd><p>Contains internationalization (I18N) files, sample configuration files, and utility scripts.</p></dd>
-<dt><tt>/var/mysql/5.0/data</tt></dt>
-<dd><p>Default database data directory.</p></dd>
-<dt><tt>/etc/mysql/5.0</tt></dt>
-<dd><p>Contains the MySQL configuration file.</p></dd>
-<dt><tt>/usr/sfw/bin/mysql</tt></dt>
-<dd><p>Client executable.</p></dd>
-<dt><tt>/usr/sfw/sbin/mysqld</tt></dt>
-<dd><p>Server executable.</p></dd>
-</dl>
+<a name="gfuat"></a><h3>Starting and Stopping Apache HTTPd and MySQL Servers</h3>
+<a name="indexterm-24"></a>
+<hr><p><b>Note - </b>Before you start the components, you must initialize the development environment for your
+login account. </p>
+<hr>
+<p>To start or stop the servers on your development environment, click on the
+Launch menu, and select All Applications > Developer Tools > Web Stack Admin
+> Start Apache2/MySQL Servers or Stop Apache2/MySQL Severs.</p><p>This action starts the MySQL database and start the Apache 2 server.
+</p><p>You can configure the servers to be started automatically at system start up
+by customizing the start up options. For more information see <a href="p4.html#gfvly">Customizing Web Stack Components</a>.</p>
 
+<a name="gfxsv"></a><h3>Setting Up MySQL Database</h3>
+<a name="indexterm-25"></a><p>MySQL 5.0.45  for Solaris includes files necessary to register with the Service
+Management Facility for the Java<sup>TM</sup> platform described in <tt>smf(5)</tt>. The procedure to register
+MySQL service with SMF and start the database server instance is described below.</p>
 
-<a name="gfxtn"></a><h4>PHP 5.2.4 Files</h4>
-<p>The following list describes the file structure for PHP:</p><dl><dt><tt>/usr/php/5.2.4/bin</tt></dt>
-<dd><p>Contains the PHP configuration executables.</p></dd>
-<dt><tt>/etc/php5/5.2.4</tt></dt>
-<dd><p>Contains the configuration file (<tt>php.ini</tt>). <tt>php.ini</tt> is the loaded configuration file.</p></dd>
-<dt><tt>/etc/php5/5.2.4/conf.d</tt></dt>
-<dd><p>Contains additional configuration files.</p></dd>
-</dl>
+<a name="gfxcd"></a><h4><img src="graphics/procedure.gif" alt=""> To Start the Database Server Instance</h4><a name="indexterm-26"></a><h6>Before You Begin</h6><p>Make sure that a user by name <tt>mysql</tt> belonging to group <tt>mysql</tt> is
+created. If such a user does not exist, create a user and a
+group.</p><pre>example% /usr/sbin/groupadd mysql 
+example% /usr/sbin/useradd -g mysql -d /var/mysql mysql</pre><p>Make the user <tt>mysql</tt> the owner of database directory.</p><pre>example%chown -R mysql:mysql /var/mysql
+chmod -R 770 /var/mysql</pre><ol>
+<li><b>Check the status of the SMF service.</b><p>The <tt>mysql;version_50</tt> service is disabled by default.</p><pre>example% svcs mysql
+STATE         STIME     FMRI
+disabled      14:27:09  svc:/application/database/mysql:version_50</pre></li>
+<li><b>Enable the <tt>mysql:version_50</tt> service.</b><p><tt>example%svcadm enable mysql:version_50</tt></p></li>
+<li><b>Check the status of the service. </b><pre>example% svcs mysql
+STATE          STIME    FMRI
+online         14:30:08 svc:/application/database/mysql:version_50</pre><p>The state of the service is <tt>online</tt>, and the database server is started
+successfully.</p>
+<hr><p><b>Note - </b>To shutdown the database instance and prevent automatic restart, disable the SMF service.</p><p><tt>example% svcadm disable mysql:version_50</tt></p>
+<hr>
+</li></ol>
 
+<a name="gfxrw"></a><h3>Setting Up PostgreSQL Database</h3>
+<a name="indexterm-27"></a><p>This section describes how to set up the PostgreSQL database with NetBeans 6.0
+IDE.</p>
 
-<a name="gfxun"></a><h4>PostgreSQL Database Files</h4>
-<p>The following list describes the file structure for the PostgreSQL database:</p><dl><dt><tt>/usr/postgres/8.2/bin</tt></dt>
-<dd><p>Contains the PostgreSQL executables.</p></dd>
-<dt><tt>/usr/postgres/8.2/etc</tt></dt>
-<dd><p>???</p></dd>
-<dt><tt>/usr/postgres/8.2/include</tt></dt>
-<dd><p>???</p></dd>
-<dt><tt>/usr/postgres/8.2/jdbc</tt></dt>
-<dd><p>???</p></dd>
-<dt><tt>/usr/postgres/8.2/lib</tt></dt>
-<dd><p>Contains ???</p></dd>
-<dt><tt>/usr/postgres/8.2/man</tt></dt>
-<dd><p>Contains the man pages for the commands.</p></dd>
-</dl>
-
-
-<a name="gfxsf"></a><h4>Ruby Files</h4>
-<p>The following list describes the file structure for Ruby:</p><dl><dt>/<tt>var/ruby/1.8/gem_home</tt></dt>
-<dd><p>Contains the Rubygems repository. Configure the <tt>GEM_HOME</tt> environment variable to point to <tt>/var/ruby/1.8/gem_home</tt> to use this installation of Rubygems.</p></dd>
-<dt><tt>/usr/ruby/1.8/bin</tt></dt>
-<dd><p>Contains the Ruby executable as well as other utility programs, and Rubygems programs. These programs are linked from <tt>/usr/bin</tt>. For example: <tt>/usr/ruby/1.8/bin/ruby</tt> is linked from <tt>/usr/bin/ruby1.8</tt>, and may be linked from<tt> /usr/bin/ruby</tt> if 1.8 is the latest version of Ruby installed on this system.   </p></dd>
-</dl>
-
-
-<a name="gfxsd"></a><h5>Squid Files</h5>
-<p>The following list describes the file structure for Squid:</p><dl><dt><tt>/usr/squid/bin</tt></dt>
-<dd><p>Contains the executable for the Squid client and to run the cache.</p></dd>
-<dt><tt>/usr/squid/libexec</tt></dt>
-<dd><p>Contains the libraries?</p></dd>
-<dt><tt>/etc/squid/squid.conf</tt></dt>
-<dd><p>The main configuration file. Modify this file for Squid to work.</p></dd>
-<dt><tt>/etc/squid/squid.conf.default</tt></dt>
-<dd><p>Reference copy of the configuration file. Always kept up-to-date with the version of squid you are using. Use this to look up configuration syntax after upgrading.</p></dd>
-</dl>
-
+<a name="gfxbc"></a><h4><img src="graphics/procedure.gif" alt=""> To Set Up PostgreSQL Database</h4><ol>
+<li><b>Create a user by name <tt>postgres</tt>.</b><pre>bash-3.2$ su
+Password: 
+# chown postgres:postgres /var/postgres/8.2/data 
+# su - postgres</pre></li>
+<li><b>Initialize the database.</b><pre>bash-3.2$/usr/postgres/8.2/bin/initdb -D /var/postgres/8.2/data</pre><p>The files belonging to this database system are owned by user <tt>postgres</tt>.
+This user must also own the server process.  The database cluster is
+initialized with locale C.</p></li>
+<li><b>Start the database server.</b><pre>bash-3.2$/usr/postgres/8.2/bin/postgres -D /var/postgres/8.2/data</pre><p>or</p><pre>bash 3.2$/usr/postgres/8.2/bin/pg_ctl -D /var/postgres/8.2/data -l logfile start</pre></li>
+<li><b>Enable PostgreSQL version 8.2.</b><pre>bash-3.2$ su
+Password: 
+# /usr/sbin/svcadm enable postgresql:version_82</pre></li>
+<li><b>Configure the PostgreSQL database with NetBeans IDE 6.0.</b><ol style="list-style-type: lower-alpha">
+				 
+<li><b>Create a New Database Connection.</b><p>In the New Connection Database dialog box, enter the following details:</p>
+<ul><li><p><tt>Name &mdash; PostgreSQL</tt></p></li>
+<li><p><tt>Driver &mdash; org.postgresql.Driver</tt></p></li>
+<li><p><tt>Database URL &mdash; jdbc.postgresql://localhost.5432/postgres</tt></p></li>
+<li><p><tt>User &mdash; postgres</tt></p></li>
+<li><p><tt>Password &mdash; ******</tt></p></li></ul>
+</li>
+<li><b>Click the Advanced tab.</b></li>
+<li><b>Select a Database Schema to use.</b></li>
+<li><b>Create a Table.</b></li>
+<li><b>View the Table Data.</b></li></ol></li></ol><h6>See Also</h6><p>For more information about configuring PostgreSQL database with NetBeans IDE, see &lt;link>.</p>
 </div>
 <!--stopindex-->
 
@@ -199,7 +206,7 @@ directories so that latest version of MySQL can also be accessed from <tt>/usr/m
 <tr valign="bottom">
 <td></td>
 <td style="width: 60%"></td>
-<td><a href="p2.html"><img style="padding-right: 3px" src="graphics/prev.gif" border="0">Previous</a></td>
+<td><a href="p2.html"><img style="padding-right: 3px" src="graphics/prev.gif" border="0" alt="">Previous</a></td>
 <td><a href="toc.html">Contents</a></td>
 <td></td>
 <td><a href="p4.html">Next<img style="padding-left: 3px" src="graphics/next.gif" border="0"></a></td>
