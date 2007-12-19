@@ -35,18 +35,25 @@ if  [ $? -ne 0 ]; then
    chown -R mysql:mysql /var/mysql
 fi
 
-echo "allowing RW access to httpd.conf, php.ini and my.cnf to user ${USERNAME}"
 
-setfacl -m user:${USERNAME}:rw- /etc/apache2/2.2/httpd.conf
-setfacl -m mask:rw- /etc/apache2/2.2/httpd.conf     
-setfacl -m user:${USERNAME}:rw- /etc/php5/5.2.4/php.ini 
-setfacl -m mask:rw- /etc/php5/5.2.4/php.ini   
-setfacl -m user:${USERNAME}:rw- /etc/php5/5.2.4/conf.d/xdebug.ini 
-setfacl -m mask:rw- /etc/php5/5.2.4/conf.d/xdebug.ini 
-setfacl -m user:${USERNAME}:rw- /etc/mysql/5.0/my.cnf 
-setfacl -m mask:rw- /etc/mysql/5.0/my.cnf 
-setfacl -m user:${USERNAME}:rwx /var/apache2/2.2/htdocs 
-setfacl -m mask:rwx  /var/apache2/2.2/htdocs
+# check if the / file system is ufs (setfacl command does not work with zfs)
+mount -p | grep "/ ufs" >/dev/null 2>&1
+if  [ $? -ne 0 ]; then
+    echo "allowing RW access to httpd.conf, php.ini and my.cnf to user ${USERNAME}"
+
+    setfacl -m user:${USERNAME}:rw- /etc/apache2/2.2/httpd.conf
+    setfacl -m mask:rw- /etc/apache2/2.2/httpd.conf     
+    setfacl -m user:${USERNAME}:rw- /etc/php5/5.2.4/php.ini 
+    setfacl -m mask:rw- /etc/php5/5.2.4/php.ini   
+    setfacl -m user:${USERNAME}:rw- /etc/php5/5.2.4/conf.d/xdebug.ini 
+    setfacl -m mask:rw- /etc/php5/5.2.4/conf.d/xdebug.ini 
+    setfacl -m user:${USERNAME}:rw- /etc/mysql/5.0/my.cnf 
+    setfacl -m mask:rw- /etc/mysql/5.0/my.cnf 
+    setfacl -m user:${USERNAME}:rwx /var/apache2/2.2/htdocs 
+    setfacl -m mask:rwx  /var/apache2/2.2/htdocs
+else
+    echo" cannot run setfacl on a zfs filesystem"
+fi
 
 A=`fgrep solaris.smf.manage.mysql /etc/security/prof_attr`
 if [ "$?" -ne "0"  ]; then
