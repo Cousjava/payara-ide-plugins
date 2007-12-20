@@ -289,7 +289,7 @@ public class PHPPanel extends javax.swing.JPanel implements PropertyChangeListen
                 public void run() {
                     ff.delete();
                 }
-            }, 5000);
+            }, 15000);
 
         }
   
