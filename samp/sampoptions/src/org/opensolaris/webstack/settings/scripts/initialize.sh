@@ -25,16 +25,7 @@
 #
 
 SCRIPTS_DIR=/opt/webstack/menus
-echo "Installing global menus for the WebStack"
-/usr/bin/mkdir -p ${HOME}/.local/share/applications
-/usr/bin/cp  ${SCRIPTS_DIR}/.local/share/applications/*.desktop ${HOME}/.local/share/applications
 
-/usr/bin/mkdir -p ${HOME}/.local/share/desktop-directories
-/usr/bin/cp ${SCRIPTS_DIR}/.local/share/desktop-directories/*.directory ${HOME}/.local/share/desktop-directories
-/usr/bin/mkdir -p ${HOME}/.config/menus/applications-merged
-/usr/bin/cp  ${SCRIPTS_DIR}/.config/menus/applications-merged/*.menu ${HOME}/.config/menus/applications-merged
-
-/usr/bin/pkill panel
 CURRENTUSER=${USER}
 if [ ${CURRENTUSER} = root ]; then
 #checking for the existence of the mysql user:
@@ -56,9 +47,18 @@ echo " Please enter the root password in order to complete the installation of t
 
 SUCMD=`gksu --message " Please enter the root password in order to complete the installation of the Web Stack k for user ${CURRENTUSER}"  "/opt/webstack/bin/initializeasroot.sh ${CURRENTUSER}"`
  if [ "$?" -ne "0"  ]; then
-        echo "gksu not ok" 
+        echo "no password entered." 
 else
-        echo "gksu ok"
+    echo "Installing global menus for the WebStack"
+    /usr/bin/mkdir -p ${HOME}/.local/share/applications
+    /usr/bin/cp  ${SCRIPTS_DIR}/.local/share/applications/*.desktop ${HOME}/.local/share/applications
+
+    /usr/bin/mkdir -p ${HOME}/.local/share/desktop-directories
+    /usr/bin/cp ${SCRIPTS_DIR}/.local/share/desktop-directories/*.directory ${HOME}/.local/share/desktop-directories
+    /usr/bin/mkdir -p ${HOME}/.config/menus/applications-merged
+    /usr/bin/cp  ${SCRIPTS_DIR}/.config/menus/applications-merged/*.menu ${HOME}/.config/menus/applications-merged
+
+    /usr/bin/pkill panel
 fi
 
 fi
