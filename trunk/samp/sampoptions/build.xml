@@ -24,7 +24,7 @@
         </copy>
         <copy 
             todir="pkgbuild/webstack/sample"> 
-            <fileset dir="pkgbuild/sample" includes="*.*" />      
+            <fileset dir="pkgbuild/sample" includes="**/*.*" />      
         </copy>        
         <copy 
             todir="pkgbuild/webstack/bin"> 

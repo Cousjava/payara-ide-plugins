@@ -37,8 +37,8 @@ fi
 
 
 # check if the / file system is ufs (setfacl command does not work with zfs)
-mount -p | grep "/ ufs" >/dev/null 2>&1
-if  [ $? -ne 0 ]; then
+/usr/sbin/mount -p | grep "/ ufs" >/dev/null 2>&1
+if  [ $? -eq 0 ]; then
     echo "allowing RW access to httpd.conf, php.ini and my.cnf to user ${USERNAME}"
 
     setfacl -m user:${USERNAME}:rw- /etc/apache2/2.2/httpd.conf

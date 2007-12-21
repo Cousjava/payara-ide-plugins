@@ -24,4 +24,4 @@
 # Use is subject to license terms.
 #
 
-/usr/bin/firefox file:///opt/webstack/doc/html/p3.html &
+/usr/bin/firefox file:///opt/webstack/doc/html/p2.html &

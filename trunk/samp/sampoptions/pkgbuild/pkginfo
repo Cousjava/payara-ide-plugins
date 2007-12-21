@@ -3,11 +3,10 @@ BASEDIR=/opt
 TZ=PST
 PATH=/sbin:/usr/sbin:/usr/bin:/usr/sadm/install/bin
 PKG=WebStackTooling
-NAME=WebStackTooling
+NAME=Web Stack Options UI and Desktop Start Menus
 VERSION=1.0
 CATEGORY=system
-DESC=WebStack Tooling
-VENDOR=Ludovic Champenois, Sun Microsystems
-EMAIL=ludo@sun.com
+DESC=Web Stack Options UI and Desktop Start Menus
+VENDOR=Sun Microsystems, Inc.
 PKGSAV=/var/sadm/pkg/WebStackTooling/save
 
