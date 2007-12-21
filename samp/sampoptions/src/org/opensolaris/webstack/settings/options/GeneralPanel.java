@@ -39,7 +39,8 @@ public class GeneralPanel extends javax.swing.JPanel {
     /** Creates new form GeneralPanel */
     public GeneralPanel() {
         initComponents();
-        updatePanelContent();
+        ServerStatus running = ServersManager.getRunningState();
+        updateServerStatus(running);
     }
     public void updateServerStatus(ServerStatus status){
         updatePanelContent();
