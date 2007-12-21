@@ -45,7 +45,7 @@ echo " The installation of the Web Stack needs to run a script as the root user.
 echo " This script will add the Apache2 and Mysql SMF privileges and modify the ACL of the apache and PHP configuration files."
 echo " Please enter the root password in order to complete the installation of the Web Stack for user ${CURRENTUSER}" 
 
-SUCMD=`gksu --message " Please enter the root password in order to complete the installation of the Web Stack k for user ${CURRENTUSER}"  "/opt/webstack/bin/initializeasroot.sh ${CURRENTUSER}"`
+SUCMD=`gksu --message " Please enter the root password in order to complete the installation of the Web Stack for user ${CURRENTUSER}"  "/opt/webstack/bin/initializeasroot.sh ${CURRENTUSER}"`
  if [ "$?" -ne "0"  ]; then
         echo "no password entered." 
 else
