@@ -106,10 +106,10 @@
 	</start>
 	
     <stop>
-        <external>${sunappserver.rootdirectory}/bin/asadmin stop-domain ${sunappserver.domainname}</external>
-        <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat stop-domain ${sunappserver.domainname} </external>
-        <programArguments></programArguments>
-        <workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
+		<mainClass>com.sun.enterprise.admin.cli.AsadminMain</mainClass>
+		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
+		<programArguments>stop-domain</programArguments>
+		<classpathReference>sunapprsrv.admin</classpathReference>
     </stop>
         
     <publisher id="org.eclipse.jst.server.generic.antpublisher">
@@ -152,6 +152,9 @@
     <classpath id="sunappsrv.deploy" >
         <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-SNAPSHOT.jar" />
     </classpath>
+    <classpath id="sunapprsrv.admin">
+    	<archive path="${sunappserver.rootdirectory}/modules/admin-cli-10.0-SNAPSHOT.jar"/>
+	</classpath>
 
     <classpath id="sunappsrv.project" >
         <archive path="${sunappserver.rootdirectory}/modules/servlet-api-2.5.jar" />
