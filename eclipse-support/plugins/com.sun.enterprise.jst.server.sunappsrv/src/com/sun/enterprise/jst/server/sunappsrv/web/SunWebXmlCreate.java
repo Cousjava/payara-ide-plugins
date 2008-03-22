@@ -78,7 +78,7 @@ public class SunWebXmlCreate extends AbstractDataModelOperation  {
              is = new ByteArrayInputStream(getDefautSunWeb(moduleName).getBytes());
 
             deployPlanFile.create(is, false, null);
-            SunAppSrvPlugin.logMessage(getDefautSunWeb(moduleName));
+      //      SunAppSrvPlugin.logMessage(getDefautSunWeb(moduleName));
 
         } catch (Exception e) {
             

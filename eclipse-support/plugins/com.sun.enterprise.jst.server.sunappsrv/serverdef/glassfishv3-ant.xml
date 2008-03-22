@@ -95,9 +95,9 @@
   
     
     <target name="undeploy.j2ee.web">
-         <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/undeploy?name=${module.name}" dest="foo.html"/>
+         <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/undeploy?name=${module.name}" dest="result.html"/>
     	  <concat>
-    	    <fileset dir="." includes="foo.html"/>
+    	    <fileset dir="." includes="result.html"/>
     	  </concat>
     </target>
     
@@ -106,10 +106,9 @@
     	   <concat destfile="fooFile.properties">dirtodeploy=${project.working.dir}/${module.name}</concat>
     	   <replace file="fooFile.properties" token=" " value="%20"/>
     	  <property file="fooFile.properties"/>
-        <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/deploy?path=${dirtodeploy}" dest="foo.html"/>
-        <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/redeploy?name=${module.name}" dest="foo.html"/>
+        <get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/deploy?path=${dirtodeploy}?force=true" dest="result.html"/>
   	  <concat>
-  	    <fileset dir="." includes="foo.html"/>
+  	    <fileset dir="." includes="result.html"/>
   	  </concat>
 
 <!--        

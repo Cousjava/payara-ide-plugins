@@ -97,15 +97,17 @@
     </project>
 	
     <start>
-        <external  >${sunappserver.rootdirectory}/bin/asadmin start-domain ${sunappserver.domainname}</external>
+        <!-- This is not used at all-->
+        <external>${sunappserver.rootdirectory}/bin/asadmin start-domain --verbose=true ${sunappserver.domainname}</external>
         <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat start-domain   --verbose=true ${sunappserver.domainname} </external>
-        <programArguments>}</programArguments>
+        <programArguments></programArguments>
         <workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
         <debugPort>9009</debugPort>
 
     </start>
 
     <stop>
+        <!-- This is not used at all-->
         <external>${sunappserver.rootdirectory}/bin/asadmin stop-domain ${sunappserver.domainname}</external>
         <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat stop-domain ${sunappserver.domainname} </external>
         <programArguments></programArguments>
