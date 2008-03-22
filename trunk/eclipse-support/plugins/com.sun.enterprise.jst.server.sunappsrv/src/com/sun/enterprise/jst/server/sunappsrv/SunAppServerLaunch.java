@@ -69,28 +69,53 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         
     public void launch(ILaunchConfiguration configuration,  String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
         SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch launch");
-        String debugFlag="--debug=false";
-         if (mode.equals("debug")) {
-        	 debugFlag="--debug";
-         }
-        
+
+        String command[]=null;
         IServer server = ServerUtil.getServer(configuration);
         if (server == null) {
             abort("missing Server", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
        
         SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
-        String asadminCmd =  serverBehavior.getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+getScriptExtension();
-        String domain = serverBehavior.getDomainName();
-        String arr[] = { asadminCmd,
-            "start-domain",        
-            debugFlag,
-            "--verbose",
-           domain
-        };
- 
+        if (serverBehavior.isV3()==false){
+        	String asadminCmd =  serverBehavior.getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+getScriptExtension();	        
+	        String domain = serverBehavior.getDomainName();
+	        String debugFlag="--debug=false";
+	        if (mode.equals("debug")) {
+	       	 debugFlag="--debug";
+	        }
+	        String  v2command[] = { asadminCmd,
+	            "start-domain",        
+	            debugFlag,
+	            "--verbose",
+	           domain
+	        };
+	        command = v2command;
+        }
+        else {//we are V3
+        	String jdk=System.getProperty("java.home")+"/bin/java";
+        	String debug[]={
+        			jdk,
+        			"-Xdebug",
+        			"-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009",
+           			"-jar",
+           		    serverBehavior.getSunApplicationServerInstallationDirectory()+"/modules/glassfish-10.0-SNAPSHOT.jar"
+        			
+        	};
+        	String nodebug[]={
+        			jdk,
+            		"-jar",
+           		    serverBehavior.getSunApplicationServerInstallationDirectory()+"/modules/glassfish-10.0-SNAPSHOT.jar"
+        			
+        	};
+	        if (mode.equals("debug")) {
+	        	command=debug;
+	        } else {
+	        	command=nodebug;	        	
+	        }
+        }
         try {
-            Process process = Execute.launch(null, arr, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
+            Process process = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
             IProcess runtimeProcess = new RuntimeProcess(launch, process, "...", null);
             launch.addProcess(runtimeProcess);
             serverBehavior.setProcess(runtimeProcess);

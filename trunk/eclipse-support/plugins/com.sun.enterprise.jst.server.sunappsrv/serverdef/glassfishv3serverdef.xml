@@ -98,6 +98,7 @@
     </project>
 	
 	<start>
+        <!-- This is not used at all-->
 		<mainClass>com.sun.enterprise.glassfish.bootstrap.Main</mainClass>
 		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
 		<programArguments></programArguments>
@@ -106,6 +107,7 @@
 	</start>
 	
     <stop>
+        <!-- This is not used at all-->
 		<mainClass>com.sun.enterprise.admin.cli.AsadminMain</mainClass>
 		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
 		<programArguments>stop-domain</programArguments>
