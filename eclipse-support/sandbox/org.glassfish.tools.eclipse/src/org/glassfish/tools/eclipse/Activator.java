@@ -53,6 +53,7 @@ public class Activator extends AbstractUIPlugin implements BundleActivator {
 
 	// CHANGE ME
 	private final static String LOC = "/Users/ludo/glassfish-10.0-SNAPSHOT/glassfish";
+	// private final static String LOC = "/home/kohsuke/ws/gfv3/v3/distributions/web/glassfish";
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "Eclipse GlassFish V3 Embedded";
@@ -82,42 +83,47 @@ public class Activator extends AbstractUIPlugin implements BundleActivator {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-		String domainDir = LOC + "/domains/domain1";
+		try {
+			super.start(context);
+			plugin = this;
+			String domainDir = LOC + "/domains/domain1";
 
-		System.setProperty(INSTALL_ROOT_PROP_NAME, LOC);
-		System.setProperty(INSTANCE_ROOT_PROP_NAME, domainDir);
-		System.setProperty(DEFAULT_DOMAINS_DIR_PROPNAME, LOC + "/domains");
-		System.setProperty(INSTANCE_ROOT_PROP_NAME, LOC);
-		System.setProperty("com.sun.aas.installRootURI", "file://" + domainDir);
-		System.setProperty("org.jvnet.hk2.osgiadapter.contextrootdir", LOC
-				+ "/modules");
-		String aa = System.getProperty("org.osgi.framework.system.packages");
-		logMessage("Setting system properties");
-		System.setProperty("org.osgi.framework.system.packages", "sun.misc;"
-				+ aa);
+			System.setProperty(INSTALL_ROOT_PROP_NAME, LOC);
+			System.setProperty(INSTANCE_ROOT_PROP_NAME, domainDir);
+			System.setProperty(DEFAULT_DOMAINS_DIR_PROPNAME, LOC + "/domains");
+			System.setProperty(INSTANCE_ROOT_PROP_NAME, LOC);
+			System.setProperty("com.sun.aas.installRootURI", "file://" + domainDir);
+			System.setProperty("org.jvnet.hk2.osgiadapter.contextrootdir", LOC
+					+ "/modules");
+			String aa = System.getProperty("org.osgi.framework.system.packages");
+			logMessage("Setting system properties");
+			System.setProperty("org.osgi.framework.system.packages", "sun.misc;"
+					+ aa);
 
-		String[] hk2BundleLocations = {
-				"file://" + LOC + "/modules/auto-depends-0.2-SNAPSHOT.jar",
-				"file://" + LOC + "/modules/config-0.2-SNAPSHOT.jar",
-				"file://" + LOC + "/modules/hk2-core-0.2-SNAPSHOT.jar",
-				// "file://"+LOC+"/modules/hk2-0.2-SNAPSHOT.jar",
-				"file://" + LOC + "/modules/osgi-adapter-0.2-SNAPSHOT.jar", };
-		
-		Bundle b = null;
+			String[] hk2BundleLocations = {
+					"file://" + LOC + "/modules/stax-osgi-0.2-SNAPSHOT.jar",
+					"file://" + LOC + "/modules/auto-depends-0.2-SNAPSHOT.jar",
+					"file://" + LOC + "/modules/config-0.2-SNAPSHOT.jar",
+					"file://" + LOC + "/modules/hk2-core-0.2-SNAPSHOT.jar",
+					// "file://"+LOC+"/modules/hk2-0.2-SNAPSHOT.jar",
+					"file://" + LOC + "/modules/osgi-adapter-0.2-SNAPSHOT.jar", };
+			
+			Bundle b = null;
 
-		for (String l : hk2BundleLocations) {
-			b = context.installBundle(l);
-			// b.start();
+			for (String l : hk2BundleLocations) {
+				b = context.installBundle(l);
+				// b.start();
 
-			logMessage("install Bundle =" + l + "\n");
+				logMessage("install Bundle =" + l + "\n");
+			}
+			gfMgmtBundle = b; // b is osgi-adapter since this was the last one in
+								// our array
+			gfMgmtBundle.start();
+			logMessage("gfMgmtBundle started =" + b);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
-		gfMgmtBundle = b; // b is osgi-adapter since this was the last one in
-							// our array
-		gfMgmtBundle.start();
-		logMessage("gfMgmtBundle started =" + b);
-
 	}
 
 	/*
@@ -154,6 +160,7 @@ public class Activator extends AbstractUIPlugin implements BundleActivator {
 	}
 
 	public static void logMessage(String mess) {
+		System.err.println(mess);
 		final Status status = new Status(IStatus.INFO, PLUGIN_ID, 1,
 				"GlassFish: " + mess, null);
 		getDefault().getLog().log(status);
