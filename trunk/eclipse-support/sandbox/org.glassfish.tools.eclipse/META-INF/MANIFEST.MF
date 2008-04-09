@@ -7,6 +7,7 @@ Bundle-Activator: org.glassfish.tools.eclipse.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
 Eclipse-LazyStart: true
-Eclipse-BuddyPolicy: registered
-Export-Package: org.glassfish.tools.eclipse;uses:="org.osgi.framework,org.eclipse.ui.plugin,org.eclipse.jface.resource",
- org.glassfish.tools.eclipse.actions;uses:="org.eclipse.jface.viewers,org.eclipse.jface.action,org.eclipse.ui"
+Export-Package: org.glassfish.tools.eclipse;
+ uses:="org.osgi.framework,org.eclipse.ui.plugin,org.eclipse.jface.resource",
+ org.glassfish.tools.eclipse.actions;
+ uses:="org.eclipse.jface.viewers,org.eclipse.jface.action,org.eclipse.ui"
