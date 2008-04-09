@@ -18,11 +18,11 @@
          <action
                label="&amp;Sample Action"
                icon="icons/sample.gif"
-               class="v3eclipse.actions.RunV3Action"
+               class="org.glassfish.tools.eclipse.actions.RunV3Action"
                tooltip="Hello, Eclipse world"
                menubarPath="sampleMenu/sampleGroup"
                toolbarPath="sampleGroup"
-               id="v3eclipse.actions.RunV3Action">
+               id="org.glassfish.tools.eclipse.actions.RunV3Action">
          </action>
       </actionSet>
    </extension>

@@ -36,6 +36,8 @@
 
 package org.glassfish.tools.eclipse;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -52,7 +54,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin implements BundleActivator {
 
 	// CHANGE ME
-	private final static String LOC = "/Users/ludo/glassfish-10.0-SNAPSHOT/glassfish";
+	private final static String LOC1 = "C:\\glassfish";
 	// private final static String LOC = "/home/kohsuke/ws/gfv3/v3/distributions/web/glassfish";
 
 	// The plug-in ID
@@ -86,32 +88,26 @@ public class Activator extends AbstractUIPlugin implements BundleActivator {
 		try {
 			super.start(context);
 			plugin = this;
-			String domainDir = LOC + "/domains/domain1";
-
-			System.setProperty(INSTALL_ROOT_PROP_NAME, LOC);
+			String domainDir = LOC1 + "/domains/domain1";
+			logMessage("GFV3EclipseModule Starting...");
+			System.setProperty(INSTALL_ROOT_PROP_NAME, LOC1);
 			System.setProperty(INSTANCE_ROOT_PROP_NAME, domainDir);
-			System.setProperty(DEFAULT_DOMAINS_DIR_PROPNAME, LOC + "/domains");
-			System.setProperty(INSTANCE_ROOT_PROP_NAME, LOC);
-			System.setProperty("com.sun.aas.installRootURI", "file://" + domainDir);
-			System.setProperty("org.jvnet.hk2.osgiadapter.contextrootdir", LOC
+			System.setProperty(DEFAULT_DOMAINS_DIR_PROPNAME, LOC1 + "/domains");
+		//	System.setProperty(INSTANCE_ROOT_PROP_NAME, LOC1);
+			System.setProperty("com.sun.aas.installRootURI", ""+(new File(domainDir)).toURI().toURL());
+			System.setProperty("org.jvnet.hk2.osgiadapter.contextrootdir", LOC1
 					+ "/modules");
-			String aa = System.getProperty("org.osgi.framework.system.packages");
-			logMessage("Setting system properties");
-			System.setProperty("org.osgi.framework.system.packages", "sun.misc;"
-					+ aa);
 
 			String[] hk2BundleLocations = {
-					"file://" + LOC + "/modules/stax-osgi-0.2-SNAPSHOT.jar",
-					"file://" + LOC + "/modules/auto-depends-0.2-SNAPSHOT.jar",
-					"file://" + LOC + "/modules/config-0.2-SNAPSHOT.jar",
-					"file://" + LOC + "/modules/hk2-core-0.2-SNAPSHOT.jar",
-					// "file://"+LOC+"/modules/hk2-0.2-SNAPSHOT.jar",
-					"file://" + LOC + "/modules/osgi-adapter-0.2-SNAPSHOT.jar", };
-			
+					 LOC1 + "/modules/auto-depends-0.2-SNAPSHOT.jar",
+					 LOC1 + "/modules/config-0.2-SNAPSHOT.jar",
+					 LOC1 + "/modules/hk2-core-0.2-SNAPSHOT.jar",
+					 LOC1 + "/modules/osgi-adapter-0.2-SNAPSHOT.jar" };
 			Bundle b = null;
 
 			for (String l : hk2BundleLocations) {
-				b = context.installBundle(l);
+				File f= new File(l);
+				b = context.installBundle(""+f.toURI().toURL());
 				// b.start();
 
 				logMessage("install Bundle =" + l + "\n");
@@ -134,6 +130,9 @@ public class Activator extends AbstractUIPlugin implements BundleActivator {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
+		logMessage("V3eclipse uninstall " );
+		gfMgmtBundle.uninstall();
+		logMessage("V3eclipse STOPPED " );
 		gfMgmtBundle.stop(); // this will stop every module that was started
 								// as part of GlassFish
 	}

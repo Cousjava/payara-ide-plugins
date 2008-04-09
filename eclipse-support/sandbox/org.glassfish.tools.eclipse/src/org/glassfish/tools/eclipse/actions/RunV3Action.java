@@ -41,7 +41,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.glassfish.tools.eclipse.Activator;
+//import org.glassfish.tools.eclipse.Activator;
 
 
 /**
@@ -79,7 +79,7 @@ public class RunV3Action implements IWorkbenchWindowActionDelegate {
 		MessageDialog.openInformation(
 			window.getShell(),
 			"V3Eclipse Plug-in",
-			"Message is:"+Activator.message+"'");
+			"Message is:");//+Activator.message+"'");
 	}
 
 	/**
