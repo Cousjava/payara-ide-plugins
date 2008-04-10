@@ -100,6 +100,7 @@ public class Activator extends AbstractUIPlugin implements BundleActivator {
 
 			String[] hk2BundleLocations = {
 					 LOC1 + "/modules/auto-depends-0.2-SNAPSHOT.jar",
+					 LOC1 + "/modules/tiger-types-osgi-0.2-SNAPSHOT.jar",
 					 LOC1 + "/modules/config-0.2-SNAPSHOT.jar",
 					 LOC1 + "/modules/hk2-core-0.2-SNAPSHOT.jar",
 					 LOC1 + "/modules/osgi-adapter-0.2-SNAPSHOT.jar" };

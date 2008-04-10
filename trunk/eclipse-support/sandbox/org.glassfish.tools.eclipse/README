@@ -14,7 +14,6 @@ Then copy the exported plugin in the plugins dir of your eclipse and restart it.
 
 Edit your Eclipse eclipse/configuration/config.ini file and add:
 org.osgi.framework.system.packages=\
-org.jvnet.tiger_types; \
 sun.misc; \
 javax.net.ssl; \
 javax.crypto; \
