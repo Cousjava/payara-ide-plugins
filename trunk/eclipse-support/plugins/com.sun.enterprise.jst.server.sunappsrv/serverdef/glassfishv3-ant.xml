@@ -61,7 +61,7 @@
             <arg line=" --port ${sunappserver.adminserverportnumber}" />
             <arg line=" --user ${sunappserver.adminname}" />
             <arg line=" --passwordfile passw" />
-            <arg line="${module.name}" />
+            <arg line="'${module.name}'" />
         </exec> 
     </target>
 

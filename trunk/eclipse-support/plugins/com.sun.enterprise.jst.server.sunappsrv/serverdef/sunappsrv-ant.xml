@@ -61,7 +61,7 @@
             <arg line=" --port ${sunappserver.adminserverportnumber}" />
             <arg line=" --user ${sunappserver.adminname}" />
             <arg line=" --passwordfile passw" />
-            <arg line="${module.name}" />
+            <arg line="'${module.name}'" />
         </exec> 
     </target>
 
@@ -86,7 +86,7 @@
             <arg line=" --force=true "/>
             <arg line=" --upload=true "/>
 
-            <arg line="${app.module}" />
+            <arg line="'${app.module}'" />
         </exec>
         <antcall target="deploy-url-message"/>
     </target>
@@ -127,7 +127,7 @@
         <property name="app.module" value="${module.name}.jar"/>
         <antcall target="undeploy"/>
     </target>
-    <target name="undeploy.j2ee.ear">
+	<target name="undeploy.j2ee.ear">
         <property name="app.module" value="${module.name}.ear"/>
         <antcall target="undeploy"/>
     </target>
@@ -145,7 +145,7 @@
            <antcall target="deploy"/>
 
     </target>
-    
+ 
     <target name="deploy.j2ee.web">
 
         <property name="app.module" value="${module.name}.war"/>
