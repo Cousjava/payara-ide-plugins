@@ -1,1 +1,1 @@
-http://java.net/download/javaee5/v3/releases/preview/glassfish-snapshot-v3-preview1.zip
+http://java.net/download/javaee5/v3/releases/preview/glassfish-snapshot-v3-preview-20_04_2008.zip
