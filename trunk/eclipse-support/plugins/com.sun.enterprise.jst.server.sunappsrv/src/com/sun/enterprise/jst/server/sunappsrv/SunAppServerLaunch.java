@@ -24,6 +24,7 @@
 package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +50,8 @@ import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 
 public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate {
     
+    public static final String GFV3_MODULES_DIR_NAME = "modules"; // NOI18N
+    public static final String GFV3_PREFIX_JAR_NAME = "glassfish-10.0"; // NOI18N"
 
     
     public SunAppServerLaunch(){
@@ -93,19 +96,20 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 	        command = v2command;
         }
         else {//we are V3
+        	String jarName= getJarName(serverBehavior.getSunApplicationServerInstallationDirectory(),GFV3_PREFIX_JAR_NAME).getAbsolutePath();
         	String jdk=System.getProperty("java.home")+"/bin/java";
         	String debug[]={
         			jdk,
         			"-Xdebug",
         			"-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009",
            			"-jar",
-           		    serverBehavior.getSunApplicationServerInstallationDirectory()+"/modules/glassfish-10.0-SNAPSHOT.jar"
+           			jarName
         			
         	};
         	String nodebug[]={
         			jdk,
             		"-jar",
-           		    serverBehavior.getSunApplicationServerInstallationDirectory()+"/modules/glassfish-10.0-SNAPSHOT.jar"
+            		jarName
         			
         	};
 	        if (mode.equals("debug")) {
@@ -159,6 +163,37 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
     }
  
+     /**
+     * Returns the fqn jar name with the correct version 
+     * If jarNamePrefix is ""glassfish-10.0" the the return value
+     * will be INSTALL/modules/glassfish-10.0-SNAPSHOT.jar"
+     * 
+     * @return the File with full path of the jar or null
+     */
+   public static File getJarName(String AppServerInstallDir, String jarNamePrefix) {
+        File modulesDir = new File(AppServerInstallDir + File.separatorChar + GFV3_MODULES_DIR_NAME);
+        File candidates[] = modulesDir.listFiles(new VersionFilter(jarNamePrefix));
+        
+        if(candidates != null && candidates.length > 0) {
+            return candidates[0]; // the first one
+        } else {
+            return null;
+        }
+    }
+   
+    private static class VersionFilter implements FileFilter {
+       
+        private String nameprefix;
+        
+        public VersionFilter(String nameprefix) {
+            this.nameprefix = nameprefix;
+        }
+        
+        public boolean accept(File file) {
+            return file.getName().startsWith(nameprefix);
+        }
+        
+    }
     
     
 }
