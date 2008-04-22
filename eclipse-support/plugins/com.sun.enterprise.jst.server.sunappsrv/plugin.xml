@@ -64,7 +64,20 @@
             class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
         </runtimeType>
-        
+        <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.glassfishv3snapshot"
+            name="%runtimeTypeNameglassfishv3snapshot" description="%runtimeTypeDescriptionv3snapshot"
+            vendor="%runtimeTypeGlassFishVendor" version="10.0-SNAPSHOT"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
+        </runtimeType>
+         <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.glassfishv3tp2"
+            name="%runtimeTypeNameglassfishv3tp2" description="%runtimeTypeDescriptionv3tp2"
+            vendor="%runtimeTypeGlassFishVendor" version="10-tp-2"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
+        </runtimeType>               
         <!-- GlassFish V1 server -->
 
         <runtimeType
@@ -137,8 +150,36 @@
             hasConfiguration="false"
             launchModes="run,debug">         
         </serverType> 
-        
-        
+         <serverType
+            id="com.sun.enterprise.jst.server.glassfishv3snapshot"
+            name="%serverTypeNameglassfishv3snapshot"
+            description="%serverTypeDescriptionglassfishv3snapshot"
+            runtime="true"
+            class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
+            initialState="stopped"
+            supportsRemoteHosts="false"
+            runtimeTypeId="com.sun.enterprise.jst.server.runtime.glassfishv3snapshot"
+              launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
+            startBeforePublish="true"
+            hasConfiguration="false"
+            launchModes="run,debug">         
+        </serverType>        
+         <serverType
+            id="com.sun.enterprise.jst.server.glassfishv3tp2"
+            name="%serverTypeNameglassfishv3tp2"
+            description="%serverTypeDescriptionglassfishv3tp2"
+            runtime="true"
+            class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
+            initialState="stopped"
+            supportsRemoteHosts="false"
+            runtimeTypeId="com.sun.enterprise.jst.server.runtime.glassfishv3tp2"
+              launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
+            startBeforePublish="true"
+            hasConfiguration="false"
+            launchModes="run,debug">         
+        </serverType>        
         <!-- GlassFish v1 server -->
 
         <serverType
@@ -225,7 +266,14 @@
         <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv92" 
                           definitionfile="/serverdef/glassfishv3serverdef.xml">
         </serverdefinition>
+          <serverdefinition id="com.sun.enterprise.jst.server.runtime.glassfishv3tp2" 
+                          definitionfile="/serverdef/glassfishv3tp2serverdef.xml">
+        </serverdefinition>
+         <serverdefinition id="com.sun.enterprise.jst.server.runtime.glassfishv3snapshot" 
+                          definitionfile="/serverdef/glassfishv3snapshotserverdef.xml">
+        </serverdefinition>
         
+               
         <!-- GlassFish v1 server -->
         <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv90" 
                           definitionfile="/serverdef/sunappsrv9serverdef.xml">
@@ -235,6 +283,7 @@
                           definitionfile="/serverdef/sunappsrv91serverdef.xml">
         </serverdefinition>
         
+
         
     </extension>
     
@@ -274,6 +323,21 @@
         <fragment id="org.eclipse.jst.server.generic.server"
                   typeIds="com.sun.enterprise.jst.server.sunappsrv92"
                   class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+ 
+         <fragment id="org.eclipse.jst.server.generic.runtime"
+                  typeIds="com.sun.enterprise.jst.server.runtime.glassfishv3snapshot"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+        <fragment id="org.eclipse.jst.server.generic.server"
+                  typeIds="com.sun.enterprise.jst.server.glassfishv3snapshot"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+ 
+         <fragment id="org.eclipse.jst.server.generic.runtime"
+                  typeIds="com.sun.enterprise.jst.server.runtime.glassfishv3tp2"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+        <fragment id="org.eclipse.jst.server.generic.server"
+                  typeIds="com.sun.enterprise.jst.server.glassfishv3tp2"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+ 
         
     </extension>
     
@@ -318,6 +382,22 @@
         <image id="org.eclipse.jst.server.generic.image"
                icon="icons/obj16/glassfishserver.gif"
                typeIds="com.sun.enterprise.jst.server.sunappsrv92"/>
+        
+         <image id="org.eclipse.jst.server.generic.image"
+               icon="icons/obj16/glassfishserver.gif"
+               typeIds="com.sun.enterprise.jst.server.runtime.glassfishv3tp2"/>
+        
+        <image id="org.eclipse.jst.server.generic.image"
+               icon="icons/obj16/glassfishserver.gif"
+               typeIds="com.sun.enterprise.jst.server.glassfishv3tp2"/>
+        
+         <image id="org.eclipse.jst.server.generic.image"
+               icon="icons/obj16/glassfishserver.gif"
+               typeIds="com.sun.enterprise.jst.server.runtime.glassfishv3snapshot"/>
+        
+        <image id="org.eclipse.jst.server.generic.image"
+               icon="icons/obj16/glassfishserver.gif"
+               typeIds="com.sun.enterprise.jst.server.glassfishv3snapshot"/>
         
         
     </extension>
@@ -406,6 +486,8 @@
         <runtime-component-version type="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.0"/>
         <runtime-component-version type="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.1"/>
         <runtime-component-version type="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.2"/>
+        <runtime-component-version type="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="10.0"/>
+        <runtime-component-version type="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="10.0"/>
         <adapter>
             <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv"/>
             <factory class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
@@ -456,6 +538,16 @@
             <facet id="sun.facet" version="9"/>
             <facet id="jst.web" version="2.2,2.3,2.4,2.5"/> 
         </supported>
+        <supported>
+            <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="10.0"/>
+            <facet id="sun.facet" version="9"/>
+            <facet id="jst.web" version="2.2,2.3,2.4,2.5"/> 
+        </supported>
+        <supported>
+            <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="10.0"/>
+            <facet id="sun.facet" version="9"/>
+            <facet id="jst.web" version="2.2,2.3,2.4,2.5"/> 
+        </supported>
         
     </extension>
     
@@ -470,6 +562,10 @@
                              runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.1"/>
         <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv92"
                              runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.2"/>
+        <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.glassfishv3snapshot"
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="10.0"/>
+        <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.glassfishv3tp2"
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="10.0"/>
     </extension>    
     
     
@@ -529,7 +625,26 @@
         </default-facets>        
         
     </extension>
-    
+    <extension id="sunappsrv.defaultFacetsglassfishv3tp2"
+               name="%sunfacetlabel"
+               point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+        
+        <default-facets>
+            <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="10.0"/>
+            <facet id="sun.facet" version="9" />
+        </default-facets>        
+        
+    </extension>
+     <extension id="sunappsrv.defaultFacetsglassfishv3snapshot"
+               name="%sunfacetlabel"
+               point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+        
+        <default-facets>
+            <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="10.0"/>
+            <facet id="sun.facet" version="9" />
+        </default-facets>        
+        
+    </extension>       
     <extension point = "org.eclipse.wst.xml.core.catalogContributions">
         <catalogContribution id="default">
             
