@@ -5,6 +5,8 @@ com.sun.enterprise.jst.server.sunappsrv_1.0.0.zip
 .metadata
 src.zip
 bin
+com.sun.enterprise.jst.server.sunappsrv_1.0.2.jar
 plugins
+com.sun.enterprise.jst.server.sunappsrv_1.0.1.jar
 com.sun.enterprise.jst.server.sunappsrv_1.0.0.jar
 dist
