@@ -92,7 +92,7 @@
             <moduleType types="jst.utility"  versions="1.0"/>
         </runtimeType>
         
-        <!-- GlassFish V3 server -->
+        <!-- GlassFish V2 server -->
         <runtimeType
             id="com.sun.enterprise.jst.server.runtime.sunappsrv91"
             name="%runtimeTypeName91" description="%runtimeTypeDescription91"
@@ -818,6 +818,21 @@
                  typeIds="com.sun.enterprise.jst.server.sunappsrv*"
                  class="com.sun.enterprise.jst.server.sunappsrv.editorsections.ServerSection">
         </section>
+    </extension>
+    <extension
+          point="org.eclipse.ui.newWizards">
+       <category
+             id="com.sun.enterprise.jst.server.sunappsrv"
+             name="%sunappserver.wizardcategory">
+       </category>
+       <wizard
+             category="com.sun.enterprise.jst.server.sunappsrv"
+             class="com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.JDBCWizard"
+             icon="icons/obj16/glassfishserver.gif"
+             id="com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.JDBCWizard"
+             name="%sunappserver.sunresourceslabel">
+       <selection class="org.eclipse.core.resources.IResource"/>
+       </wizard>
     </extension>
     
     
