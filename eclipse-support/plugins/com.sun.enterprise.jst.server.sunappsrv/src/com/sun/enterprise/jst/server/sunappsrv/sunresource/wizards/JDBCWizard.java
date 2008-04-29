@@ -1,0 +1,264 @@
+// <editor-fold defaultstate="collapsed" desc="CDDL Licence">
+/*
+ * The contents of this file are subject to the terms
+ * of the Common Development and Distribution License
+ * (the "License").  You may not use this file except
+ * in compliance with the License.
+ *
+ * You can obtain a copy of the license at
+ * glassfishplugins/www/license/CDDLv1.0.txt or
+ * https://glassfish.dev.java.net/public/CDDLv1.0.html.
+ * See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL
+ * HEADER in each file and include the License file at
+ * glassfishplugins/www/license/CDDLv1.0.txt.  If applicable,
+ * add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your
+ * own identifying information: Portions Copyright [yyyy]
+ * [name of copyright owner]
+ */
+// </editor-fold>
+
+package com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.util.regex.Pattern;
+
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
+
+import com.sun.enterprise.jst.server.sunappsrv.sunresource.JDBCInfo;
+
+/**
+ * This is a wizard that creates a new JDBC resource.
+ */
+
+public class JDBCWizard extends Wizard implements INewWizard {
+	private static final String RESOURCE_FILE_TEMPLATE = "../templates/sun-resources-xml-template.resource"; //$NON-NLS-1$
+	private static final String RESOURCE_FILE_NAME = "sun-resources.xml"; //$NON-NLS-1$
+	private static final String SETUP_DIR_NAME = "setup"; //$NON-NLS-1$
+	
+	private JDBCResourceWizardPage page;
+	private ISelection selection;
+
+	/**
+	 * Constructor for JDBC Wizard.
+	 */
+	public JDBCWizard() {
+		super();
+		setNeedsProgressMonitor(true);
+	}
+
+	/**
+	 * Adding the page to the wizard.
+	 */
+
+	public void addPages() {
+		page = new JDBCResourceWizardPage();
+		addPage(page);
+	}
+
+	/**
+	 * This method is called when 'Finish' button is pressed in
+	 * the wizard. We will create an operation and run it
+	 * using wizard as execution context.
+	 */
+	public boolean performFinish() {
+		final String jndiName = page.getJNDIName();
+		final JDBCInfo jdbcInfo = page.getJDBCInfo();
+		IRunnableWithProgress op = new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException {
+				try {
+					doFinish(jndiName, jdbcInfo, monitor);
+				} catch (CoreException e) {
+					throw new InvocationTargetException(e);
+				} finally {
+					monitor.done();
+				}
+			}
+		};
+		try {
+			getContainer().run(true, false, op);
+		} catch (InterruptedException e) {
+			return false;
+		} catch (InvocationTargetException e) {
+			Throwable realException = e.getTargetException();
+			String message = realException.getMessage();
+			if (message == null) {
+				message = "Unknown error creating file";
+			}
+			MessageDialog.openError(getShell(), "Error", message);
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * The worker method. It will find the container, create the
+	 * file if missing or just replace its contents, and open
+	 * the editor on the newly created file.
+	 */
+
+	private void doFinish(String jndiName, JDBCInfo jdbcInfo,
+		IProgressMonitor monitor) throws CoreException {
+		// TODO deal with the case the file already exists
+		// it is really done, but would be best to do this much earlier
+		// AND, comment above says it will be replaced - need to 
+		// make comment and behavior consistent
+		monitor.beginTask("Creating " + RESOURCE_FILE_NAME, 2);
+		IContainer containerResource = getContainerResource();
+
+		final IFolder folder = containerResource.getFolder(new Path(SETUP_DIR_NAME));
+		final IFile file = folder.getFile(new Path(RESOURCE_FILE_NAME));
+if (file.exists()) {
+	IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK,
+			"File already exists", null);
+	throw new CoreException(status);
+}
+		try {
+			InputStream stream = openContentStream(jndiName, jdbcInfo);
+			if (!folder.exists()) {
+				folder.create(true, true, monitor);
+			}
+			if (file.exists()) {
+				file.setContents(stream, true, true, monitor);
+			} else {
+				file.create(stream, true, monitor);
+			}
+			stream.close();
+		} catch (IOException e) {
+		}
+		monitor.worked(1);
+		monitor.setTaskName("Opening file for editing...");
+		getShell().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage page =
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				try {
+					IDE.openEditor(page, file, true);
+				} catch (PartInitException e) {
+				}
+			}
+		});
+		monitor.worked(1);
+	}
+
+	/**
+	 * Initialize the file contents to contents of the given resource.
+	 */
+	public static InputStream openContentStream(String jndiName, JDBCInfo jdbcInfo)
+		throws CoreException {
+
+		/* We want to be truly OS-agnostic */
+		final String newline = System.getProperty("line.separator"); //$NON-NLS-1$
+
+		String line;
+		StringBuffer sb = new StringBuffer();
+		final String serverName = jdbcInfo.getServerName();
+		final String portNumber = jdbcInfo.getPort();
+		final String databaseName = jdbcInfo.getDatabaseName();
+		final String poolName = jdbcInfo.getDatabaseVendor() + "_pool";
+		final String driverClass = jdbcInfo.getDriverClass();
+		final String user = jdbcInfo.getUserName();
+		final String password = jdbcInfo.getUserPassword();
+		final String url = jdbcInfo.getURL();
+
+		try {
+			InputStream input = JDBCWizard.class.getResourceAsStream(RESOURCE_FILE_TEMPLATE);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					input));
+			try {
+				while ((line = reader.readLine()) != null) {
+					line = line.replaceAll("\\$\\{jndiName\\}", jndiName); //$NON-NLS-1$
+					line = line.replaceAll("\\$\\{poolName\\}", poolName); //$NON-NLS-1$
+					line = replaceOrRemove(line, "\\$\\{serverName\\}", serverName); //$NON-NLS-1$
+					line = replaceOrRemove(line, "\\$\\{port\\}", portNumber); //$NON-NLS-1$
+					line = replaceOrRemove(line, "\\$\\{databaseName\\}", databaseName); //$NON-NLS-1$
+					line = replaceOrRemove(line, "\\$\\{driverClass\\}", driverClass); //$NON-NLS-1$
+					line = replaceOrRemove(line, "\\$\\{user\\}", user); //$NON-NLS-1$
+					line = replaceOrRemove(line, "\\$\\{password\\}", password); //$NON-NLS-1$
+					line = replaceOrRemove(line, "\\$\\{url\\}", url); //$NON-NLS-1$
+					if (line != null) {
+						sb.append(line);
+						sb.append(newline);
+					}
+				}
+
+			} finally {
+				reader.close();
+			}
+
+		} catch (IOException ioe) {
+			IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK,
+					ioe.getLocalizedMessage(), null);
+			throw new CoreException(status);
+		}
+
+		return new ByteArrayInputStream(sb.toString().getBytes());
+
+	}
+	
+	private static String replaceOrRemove(String originalLine, String pattern, String value) {
+		String containsPattern = ".*" + pattern + ".*"; //$NON-NLS-1$
+		if ((originalLine != null) && Pattern.matches(containsPattern, originalLine)) {
+			return (((value == null) || (value.length() == 0)) ? null : 
+				originalLine.replaceAll(pattern, value));
+		}
+		return originalLine;
+	}
+
+	private IContainer getContainerResource() {
+		if (selection != null && selection.isEmpty() == false
+				&& selection instanceof IStructuredSelection) {
+			IStructuredSelection ssel = (IStructuredSelection) selection;
+			if (ssel.size() > 1)
+				return null;
+			Object obj = ssel.getFirstElement();
+			if (obj instanceof IResource) {
+				IContainer containerResource;
+				if (obj instanceof IContainer)
+					containerResource = (IContainer) obj;
+				else
+					containerResource = ((IResource) obj).getParent();
+				
+				return ((containerResource != null) ? containerResource.getProject() : null);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * We will accept the selection in the workbench to see if
+	 * we can initialize from it.
+	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
+	 */
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		this.selection = selection;
+	}
+}

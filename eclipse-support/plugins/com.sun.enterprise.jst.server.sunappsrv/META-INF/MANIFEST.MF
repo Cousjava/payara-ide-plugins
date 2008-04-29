@@ -43,7 +43,9 @@ Require-Bundle: org.apache.xerces,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.edit.ui,
  org.eclipse.wst.common.environment,
- org.eclipse.jst.common.project.facet.core
+ org.eclipse.jst.common.project.facet.core,
+ org.eclipse.datatools.connectivity,
+ org.eclipse.datatools.connectivity.ui
 Eclipse-LazyStart: true
 Export-Package: com.sun.enterprise.jst.server.sunappsrv;x-friends:="com.sun.enterprise.jst.server.sunappsrv.ui"
 
