@@ -57,23 +57,23 @@
     <extension point="org.eclipse.wst.server.core.runtimeTypes">
         <!-- GlassFish V3 server -->
 
-        <runtimeType
+        <!--runtimeType
             id="com.sun.enterprise.jst.server.runtime.sunappsrv92"
             name="%runtimeTypeName92" description="%runtimeTypeDescription92"
             vendor="%runtimeTypeGlassFishVendor" version="9.2"
             class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
-        </runtimeType>
+        </runtimeType-->
         <runtimeType
             id="com.sun.enterprise.jst.server.runtime.glassfishv3snapshot"
-            name="%runtimeTypeNameglassfishv3snapshot" description="%runtimeTypeDescriptionv3snapshot"
+            name="%runtimeTypeNameglassfishv3snapshot" description="%runtimeTypeDescriptionglassfishv3snapshot"
             vendor="%runtimeTypeGlassFishVendor" version="10.0-SNAPSHOT"
             class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
         </runtimeType>
          <runtimeType
             id="com.sun.enterprise.jst.server.runtime.glassfishv3tp2"
-            name="%runtimeTypeNameglassfishv3tp2" description="%runtimeTypeDescriptionv3tp2"
+            name="%runtimeTypeNameglassfishv3tp2" description="%runtimeTypeDescriptionglassfishv3tp2"
             vendor="%runtimeTypeGlassFishVendor" version="10-tp-2"
             class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
