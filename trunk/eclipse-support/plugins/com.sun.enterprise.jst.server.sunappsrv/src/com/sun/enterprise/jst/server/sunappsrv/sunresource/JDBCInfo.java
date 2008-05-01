@@ -24,9 +24,20 @@
 package com.sun.enterprise.jst.server.sunappsrv.sunresource;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
-
+//workaround for older DTP and the constants class not present
+//import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCDriverDefinitionConstants;
+//end workaround
 public class JDBCInfo {
+	//workaround for older DTP and the constants class not present
+	public static final String PROP_PREFIX = "org.eclipse.datatools.connectivity.db."; //$NON-NLS-1$
+	public static final String USERNAME_PROP_ID = PROP_PREFIX + "username"; //$NON-NLS-1$
+	public static final String DRIVER_CLASS_PROP_ID = PROP_PREFIX + "driverClass"; //$NON-NLS-1$
+	public static final String URL_PROP_ID = PROP_PREFIX + "URL"; //$NON-NLS-1$
+	public static final String PASSWORD_PROP_ID = PROP_PREFIX + "password"; //$NON-NLS-1$
+	public static final String DATABASE_VENDOR_PROP_ID = PROP_PREFIX + "vendor"; //$NON-NLS-1$
+	public static final String DATABASE_NAME_PROP_ID = PROP_PREFIX + "databaseName"; //$NON-NLS-1$
+	//end workaround
+
 	private IConnectionProfile connectionProfile;
 	private UrlData urlDataParser;
 
@@ -47,23 +58,38 @@ public class JDBCInfo {
 		return null;
 	}	
 	public String getUserName() {
-		return getProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID);
+//workaround for older DTP and the constants class not present
+//		return getProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID);
+		return getProperty(USERNAME_PROP_ID);
+//end workaround
 	}
 
 	public String getUserPassword() {
-		return getProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID);
+//workaround for older DTP and the constants class not present
+//		return getProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID);
+		return getProperty(PASSWORD_PROP_ID);
+//end workaround
 	}
 
 	public String getURL() {
-		return getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID);
+//workaround for older DTP and the constants class not present
+//		return getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID);
+		return getProperty(URL_PROP_ID);
+//end workaround
 	}
 
 	public String getDriverClass() {
-		return getProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID);
+//workaround for older DTP and the constants class not present
+//		return getProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID);
+		return getProperty(DRIVER_CLASS_PROP_ID);
+//end workaround
 	}
 
 	public String getDatabaseVendor() {
-		return getProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID);
+//workaround for older DTP and the constants class not present
+//		return getProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID);
+		return getProperty(DATABASE_VENDOR_PROP_ID);
+//end workaround
 	}
 
 	public String getPort() {
@@ -75,6 +101,9 @@ public class JDBCInfo {
 	}
 
 	public String getDatabaseName() {
-		return getProperty(IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID);
+//workaround for older DTP and the constants class not present
+//		return getProperty(IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID);
+		return getProperty(DATABASE_NAME_PROP_ID);
+//end workaround
 	}
 }
