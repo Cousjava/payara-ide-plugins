@@ -46,11 +46,20 @@
     
     <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
         
-        <launchConfigurationTabGroup
+        <!-- the fact that we need to provide our own tabgroup is a workaround for issue 238693-->
+        <!-- here's what it said before-->
+        <!--launchConfigurationTabGroup
             id="org.eclipse.jst.server.generic.ui.internal.launchConfigurationTabGroup"
             type="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
             class="org.eclipse.jst.server.generic.ui.internal.GenericLaunchConfigurationTabGroup">
+        </launchConfigurationTabGroup-->
+        <launchConfigurationTabGroup
+            id="com.sun.enterprise.jst.server.runtime.sunappsrv.launchConfigurationTabGroup"
+            type="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            class="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationTabGroup">
         </launchConfigurationTabGroup>
+        <!-- end workaround-->
+        
     </extension>
     
     

@@ -27,11 +27,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
@@ -58,16 +56,6 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
      */
     public  SunAppServer getSunAppServer(){
     	     return (SunAppServer)getServer().getAdapter(SunAppServer.class);
-    }
-    /* stub this public method from parent since we are not using <start> class definition in the serverdef.
-     * This was called and created a npe four our special case.
-     * Not needed
-     * 
-    (non-Javadoc)
-     * @see org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour#setupLaunchConfiguration(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
-   //do nothing...to prevent a NPE in wtp2.0.2 winter edition
     }
     
     protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
