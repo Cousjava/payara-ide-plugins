@@ -227,11 +227,12 @@
             description="%serverTypeDescription91"
             runtime="true"
             class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
+            initialState="stopped"
             supportsRemoteHosts="false"
             runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv91"
-             launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
-           startBeforePublish="true"
+            startBeforePublish="true"
             hasConfiguration="false"
             launchModes="run,debug">         
         </serverType> 
@@ -243,6 +244,7 @@
             description="%serverTypeDescriptionSailfin1"
             runtime="true"
             class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
+            initialState="stopped"
             supportsRemoteHosts="false"
             runtimeTypeId="com.sun.enterprise.jst.server.runtime.sailfin1"
             launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
