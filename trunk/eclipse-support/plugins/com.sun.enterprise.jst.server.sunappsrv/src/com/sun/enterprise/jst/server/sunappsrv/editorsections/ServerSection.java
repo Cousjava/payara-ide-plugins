@@ -142,7 +142,7 @@ public class ServerSection extends ServerEditorSection {
         password.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
         password.addModifyListener(new ModifyListener() {
             public void modifyText(ModifyEvent e) {
-                execute(new SunAppServerCommands(server, sunserver.getAdminPassword(),SunAppServer.ADMINPASSWORD));
+                execute(new SunAppServerCommands(server, password.getText(),SunAppServer.ADMINPASSWORD));
             }
         });
         
