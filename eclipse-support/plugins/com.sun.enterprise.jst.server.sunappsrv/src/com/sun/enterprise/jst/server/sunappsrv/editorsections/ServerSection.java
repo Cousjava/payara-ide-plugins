@@ -90,8 +90,11 @@ public class ServerSection extends ServerEditorSection {
         
    //     SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
    //     String loc =  serverBehavior.getSunApplicationServerInstallationDirectory();
-       String loc="";
-        section.setDescription(Messages.wizardSectionDescription +" ("+ loc+")");
+        // this is not used, so comment it out until it is
+        // should probably use formatters instead of concat as well
+        // String loc="";
+        //section.setDescription(Messages.wizardSectionDescription +" ("+ loc+")");
+        section.setDescription(Messages.wizardSectionDescription);
         section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
         
         Composite comp = toolkit.createComposite(section);
