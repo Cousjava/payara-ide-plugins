@@ -877,7 +877,7 @@
     <extension point="org.eclipse.wst.server.ui.editorPageSections">
         <section id="com.sun.enterprise.jst.server.runtime.sunappsrv" order="10"
                  insertionId="org.eclipse.wst.server.editor.overview.left"
-                 typeIds="com.sun.enterprise.jst.server.sunappsrv*"
+                 typeIds="com.sun.enterprise.jst.server.sunappsrv*,com.sun.enterprise.jst.server.glassfish*,com.sun.enterprise.jst.server.sailfin*"
                  class="com.sun.enterprise.jst.server.sunappsrv.editorsections.ServerSection">
         </section>
     </extension>
