@@ -7,7 +7,5 @@ dist
 .settings
 build
 src.zip
-com.sun.enterprise.jst.server.sunappsrv_1.0.3.jar
-com.sun.enterprise.jst.server.sunappsrv_1.0.2.jar
+com.sun.enterprise.jst.server.sunappsrv_*.jar
 plugins
-com.sun.enterprise.jst.server.sunappsrv_1.0.0.jar
