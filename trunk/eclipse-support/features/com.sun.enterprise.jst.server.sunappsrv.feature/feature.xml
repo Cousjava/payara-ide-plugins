@@ -2,7 +2,7 @@
 <feature
       id="com.sun.enterprise.jst.server.sunappsrv.feature"
       label="GlassFish Java EE 5 Server"
-      version="1.0.3"
+      version="1.0.4"
       provider-name="java.net"
       image="glassfish.gif">
 
@@ -225,7 +225,7 @@ This Agreement is the entire agreement between you and Sun relating to its subje
          id="com.sun.enterprise.jst.server.sunappsrv"
          download-size="2000"
          install-size="2000"
-         version="1.0.3"
+         version="1.0.4"
          unpack="false"/>
 
 </feature>
