@@ -149,17 +149,17 @@
 
 
     <classpath id="sunappsrv.server" >
-        <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-tp-2.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-tp-2-SNAPSHOT.jar" />
     </classpath>
     <classpath id="sunappsrv.deploy" >
-        <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-tp-2.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-tp-2-SNAPSHOT.jar" />
     </classpath>
     <classpath id="sunapprsrv.admin">
-    	<archive path="${sunappserver.rootdirectory}/modules/admin-cli-10.0-tp-2.jar"/>
+    	<archive path="${sunappserver.rootdirectory}/modules/admin-cli-10.0-tp-2-SNAPSHOT.jar"/>
 	</classpath>
 
     <classpath id="sunappsrv.project" >
-        <archive path="${sunappserver.rootdirectory}/modules/javax.javaee-10.0-tp-2.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.javaee-10.0-tp-2-SNAPSHOT.jar" />
 
 
     </classpath>
