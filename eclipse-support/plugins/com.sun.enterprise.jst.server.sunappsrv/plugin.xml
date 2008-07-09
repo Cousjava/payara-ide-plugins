@@ -535,7 +535,7 @@
     
     <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
         <runtimeClasspathProvider  id="com.sun.enterprise.jst.server.runtimeTarget"
-                                   runtimeTypeIds="com.sun.enterprise.jst.server.runtime.sunappsrv*"
+                                   runtimeTypeIds="com.sun.enterprise.jst.server.runtime.sunappsrv*,com.sun.enterprise.jst.server.runtime.glassfish*,com.sun.enterprise.jst.server.runtime.sailfin*"
                                    class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>
     </extension>
     
