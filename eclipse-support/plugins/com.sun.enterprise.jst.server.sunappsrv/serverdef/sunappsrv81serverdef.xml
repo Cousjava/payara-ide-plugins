@@ -33,7 +33,7 @@
     <property id="sunappserver.rootdirectory"  label="%sunappserver.rootdirectory"
     type="directory"
     context="runtime"
-    default="C:/sun/AppServer81" />
+    default="" />
     
 
     <property id="sunappserver.serveraddress"  label="%sunappserver.serveraddress"
