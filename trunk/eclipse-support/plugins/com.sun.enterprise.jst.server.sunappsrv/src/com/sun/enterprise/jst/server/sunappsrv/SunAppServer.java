@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.internal.Server;
 
 
 
@@ -117,6 +118,16 @@ public class SunAppServer extends GenericServer {
         return sunserver;
     }
     
+    /* (non-Javadoc)
+     * @see org.eclipse.jst.server.generic.core.internal.GenericServer#setDefaults(org.eclipse.core.runtime.IProgressMonitor)
+     * This implementation overrides the automatic publishing option to disable it by default.
+     */
+    @Override
+    public void setDefaults(IProgressMonitor monitor) {
+        setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, Server.AUTO_PUBLISH_DISABLE);
+        super.setDefaults(monitor);
+    }
+
     /**
      * 
      * @param host 
