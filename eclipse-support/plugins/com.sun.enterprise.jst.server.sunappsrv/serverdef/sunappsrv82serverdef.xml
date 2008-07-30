@@ -147,6 +147,8 @@
         <archive path="${sunappserver.rootdirectory}/lib/j2ee.jar" />
         <archive path="${sunappserver.rootdirectory}/lib/mail.jar" />
         <archive path="${sunappserver.rootdirectory}/lib/jsf-api.jar" />
+        <!--  impl jar needed for tld files (html_basic and jsf_core) -->
+        <archive path="${sunappserver.rootdirectory}/lib/jsf-impl.jar" />
         <archive path="${sunappserver.rootdirectory}/lib/appserv-jstl.jar" />
         <archive path="${sunappserver.rootdirectory}/lib/appserv-tags.jar" />
         <archive path="${sunappserver.rootdirectory}/lib/activation.jar" />
