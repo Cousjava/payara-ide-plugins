@@ -160,7 +160,8 @@
 
     <classpath id="sunappsrv.project" >
         <archive path="${sunappserver.rootdirectory}/modules/javax.javaee-10.0-tp-2-SNAPSHOT.jar" />
-
+        <!--  jar needed for tld files (html_basic and jsf_core) -->
+        <archive path="${sunappserver.rootdirectory}/modules/web/jsf-connector-10.0-tp-2-SNAPSHOT.jar" />
 
     </classpath>
 	
