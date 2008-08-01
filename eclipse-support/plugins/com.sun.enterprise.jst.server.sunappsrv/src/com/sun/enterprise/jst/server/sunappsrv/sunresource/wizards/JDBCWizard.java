@@ -60,7 +60,7 @@ import com.sun.enterprise.jst.server.sunappsrv.sunresource.JDBCInfo;
  */
 
 public class JDBCWizard extends Wizard implements INewWizard {
-	private static final String RESOURCE_FILE_TEMPLATE = "../templates/sun-resources-xml-template.resource"; //$NON-NLS-1$
+	private static final String RESOURCE_FILE_TEMPLATE = "templates/sun-resources-xml-template.resource"; //$NON-NLS-1$
 	private static final String RESOURCE_FILE_NAME = "sun-resources.xml"; //$NON-NLS-1$
 	private static final String SETUP_DIR_NAME = "setup"; //$NON-NLS-1$
 	
@@ -190,7 +190,7 @@ if (file.exists()) {
 		final String url = jdbcInfo.getURL();
 
 		try {
-			InputStream input = JDBCWizard.class.getResourceAsStream(RESOURCE_FILE_TEMPLATE);
+			InputStream input = JDBCInfo.class.getResourceAsStream(RESOURCE_FILE_TEMPLATE);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					input));
 			try {
