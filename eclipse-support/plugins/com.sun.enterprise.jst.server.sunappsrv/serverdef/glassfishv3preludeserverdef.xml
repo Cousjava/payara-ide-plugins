@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/*
+ * The contents of this file are subject to the terms 
+ * of the Common Development and Distribution License 
+ * (the "License").  You may not use this file except 
+ * in compliance with the License.
+ * 
+ * You can obtain a copy of the license at 
+ * glassfishplugins/www/license/CDDLv1.0.txt or 
+ * https://glassfish.dev.java.net/public/CDDLv1.0.html. 
+ * See the License for the specific language governing 
+ * permissions and limitations under the License.
+ * 
+ * When distributing Covered Code, include this CDDL 
+ * HEADER in each file and include the License file at 
+ * glassfishplugins/www/license/CDDLv1.0.txt.  If applicable, 
+ * add the following below this CDDL HEADER, with the 
+ * fields enclosed by brackets "[]" replaced with your 
+ * own identifying information: Portions Copyright [yyyy] 
+ * [name of copyright owner]
+ */
+-->
+
+<tns:ServerRuntime
+    xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
+    name="GlassFish V3 SNAPSHOT" version="v0.1">
+    
+    
+    <property id="sunappserver.rootdirectory"  label="%sunappserver.rootdirectory"
+    type="directory"
+    context="runtime"
+    default=""
+    />
+    
+   <property id="sunappserver.serveraddress"  label="%sunappserver.serveraddress"
+    type="string"
+    context="server"
+    default="localhost" />
+    
+    <property id="sunappserver.serverportnumber" label="%sunappserver.serverportnumber"
+    type="string"
+    context="server"
+    default="8080" />
+    
+    <property id="sunappserver.adminserverportnumber" label="%sunappserver.adminserverportnumber"
+    type="string"
+    context="server"
+    default="4848" />
+    
+    <property id="sunappserver.domainname"  label="%sunappserver.domainname"
+    type="string"
+    context="server"
+    default="domain1" />
+
+    <property id="sunappserver.adminname"  label="%sunappserver.adminname"
+    type="string"
+    context="server"
+    default="admin" />
+    
+    <property id="sunappserver.adminpassword" label="%sunappserver.adminpassword"
+    type="string"
+    context="server"
+    default="adminadmin" />
+    
+
+
+    <port>
+        <no>${sunappserver.serverportnumber}</no>
+        <name>Http</name>
+        <protocol>http</protocol>
+    </port>
+
+    <module>
+        <type>jst.web</type>
+        <publishDir>${sunappserver.rootdirectory}/domains/${sunappserver.domainname}/autodeploy</publishDir>
+        <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+    </module>
+
+    <module>
+        <type>jst.ejb</type>
+        <publishDir>${sunappserver.rootdirectory}/domains/${sunappserver.domainname}/autodeploy</publishDir>
+        <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+    </module>
+
+    <module>
+        <type>jst.ear</type>
+        <publishDir>${sunappserver.rootdirectory}/domains/${sunappserver.domainname}/autodeploy</publishDir>
+        <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+    </module>
+
+
+    <project>
+        <classpathReference>sunappsrv.project</classpathReference>
+    </project>
+	
+	<start>
+        <!-- This is not used at all-->
+		<mainClass>com.sun.enterprise.glassfish.bootstrap.Main</mainClass>
+		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
+		<programArguments></programArguments>
+		<vmParameters>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009</vmParameters>
+		<classpathReference>sunappsrv.server</classpathReference>
+	</start>
+	
+    <stop>
+        <!-- This is not used at all-->
+		<mainClass>com.sun.enterprise.admin.cli.AsadminMain</mainClass>
+		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
+		<programArguments>stop-domain</programArguments>
+		<classpathReference>sunapprsrv.admin</classpathReference>
+    </stop>
+        
+    <publisher id="org.eclipse.jst.server.generic.antpublisher">
+        <publisherdata>
+            <dataname>build.file</dataname>
+            <datavalue>/serverdef/glassfishv3-ant.xml</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.publish.jst.web</dataname>
+            <datavalue>deploy.j2ee.web</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.publish.jst.ejb</dataname>
+            <datavalue>deploy.j2ee.ejb</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.publish.jst.ear</dataname>
+            <datavalue>deploy.j2ee.ear</datavalue>
+        </publisherdata>
+        
+        <publisherdata>
+            <dataname>target.unpublish.jst.web</dataname>
+            <datavalue>undeploy.j2ee.web</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.unpublish.jst.ejb</dataname>
+            <datavalue>undeploy.j2ee.ejb</datavalue>
+        </publisherdata>			
+        <publisherdata>
+            <dataname>target.unpublish.jst.ear</dataname>
+            <datavalue>undeploy.j2ee.ear</datavalue>
+        </publisherdata>
+    </publisher>
+
+
+
+    <classpath id="sunappsrv.server" >
+        <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-SNAPSHOT.jar" />
+    </classpath>
+    <classpath id="sunappsrv.deploy" >
+        <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-SNAPSHOT.jar" />
+    </classpath>
+    <classpath id="sunapprsrv.admin">
+    	<archive path="${sunappserver.rootdirectory}/modules/admin-cli-10.0-SNAPSHOT.jar"/>
+	</classpath>
+
+    <classpath id="sunappsrv.project" >
+    	<!--  this jar has an OSGI style manifest which does not help for compilation/code completion -->
+        <archive path="${sunappserver.rootdirectory}/modules/javax.javaee-10.0-SNAPSHOT.jar" />
+        <!--  so, we explicitly also add these jars to the classpath (expanded from Class-Path in -->
+        <!--  MANIFEST.MF of jar above -->
+        <archive path="${sunappserver.rootdirectory}/modules/javax.faces-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.jms-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.soap-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.persistence-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.ws-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.resource-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.rpc-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.security.jacc-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.ejb-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.stream-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.activation-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.jws-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jsp.jstl-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.security.auth.message-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jsp-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.transaction-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.management.j2ee-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.enterprise.deploy-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.mail-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.annotation-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.bind-10.0-SNAPSHOT.jar" />
+    	<!--  jar needed for tld files (html_basic and jsf_core) -->
+    	<archive path="${sunappserver.rootdirectory}/modules/web/jsf-connector-10.0-SNAPSHOT.jar" />
+
+
+    </classpath>
+	
+    <jndiConnection>
+        <providerUrl>jnp://${sunappserver.serveraddress}:1099</providerUrl>
+        <initialContextFactory>org.jnp.interfaces.NamingContextFactory</initialContextFactory>
+        <jndiProperty>
+            <name></name>
+            <value></value>
+        </jndiProperty>
+    </jndiConnection>
+</tns:ServerRuntime>
