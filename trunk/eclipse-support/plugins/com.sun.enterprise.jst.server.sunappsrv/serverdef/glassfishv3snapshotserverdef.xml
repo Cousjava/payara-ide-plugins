@@ -159,7 +159,31 @@
 	</classpath>
 
     <classpath id="sunappsrv.project" >
+    	<!--  this jar has an OSGI style manifest which does not help for compilation/code completion -->
         <archive path="${sunappserver.rootdirectory}/modules/javax.javaee-10.0-SNAPSHOT.jar" />
+        <!-- so, we explicitly also add these jars to the classpath -->
+        <!-- archive path="${sunappserver.rootdirectory}/modules/javax.faces-10.0-SNAPSHOT.jar" /-->
+        <archive path="${sunappserver.rootdirectory}/modules/javax.jms-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.soap-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.persistence-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.ws-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.resource-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.rpc-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.security.jacc-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.ejb-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.stream-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.activation-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.jws-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jsp.jstl-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.security.auth.message-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jsp-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.transaction-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.management.j2ee-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.enterprise.deploy-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.mail-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.annotation-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.bind-10.0-SNAPSHOT.jar" />
     	<!--  jar needed for tld files (html_basic and jsf_core) -->
     	<archive path="${sunappserver.rootdirectory}/modules/web/jsf-connector-10.0-SNAPSHOT.jar" />
 
