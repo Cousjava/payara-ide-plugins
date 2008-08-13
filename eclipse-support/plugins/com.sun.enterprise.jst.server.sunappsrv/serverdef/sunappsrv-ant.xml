@@ -146,9 +146,38 @@
 
     </target>
  
+	<target name="resourcesfile.check">
+		<!--echo message="subdirectory=${subdirectory}"/-->
+		<condition property="resourcesfile.run">
+			<and>
+				<available file="${module.dir}/${subdirectory}/sun-resources.xml"/>
+				<not>
+					<available file="result1.html"/>
+				</not>
+			</and>
+		</condition>
+	</target>
+
+	<target name="addresources" depends="resourcesfile.check, tools" if="resourcesfile.run">
+		<!--echo message="subdirectory=${subdirectory}"/-->
+		<concat destfile="fooFile1.properties">resourcesfile=${module.dir}/${subdirectory}/sun-resources.xml</concat>
+		<replace file="fooFile1.properties" token=" " value="%20" />
+		<property file="fooFile1.properties" />
+		<exec executable="${asadmin}" failonerror="${failonerror}">
+			<arg line=" add-resources "/>
+			<arg line=" ${resourcesfile}" />
+		</exec>
+		<concat>
+			<fileset dir="." includes="result1.html" />
+		</concat>
+	</target>
+
     <target name="deploy.j2ee.web">
 
         <property name="app.module" value="${module.name}.war"/>
+		<antcall target="addresources">
+			<param name="subdirectory" value="WEB-INF" />
+		</antcall>
         
 <!--echo message= "${project.working.dir}/${module.name}"/>
         <jar destfile="${module.name}.war"> 

@@ -62,6 +62,10 @@ public class JDBCInfo {
 		return getProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID);
 	}
 
+	public String getDatasourceClass() {
+		return DriverMaps.getDSClassName(getURL());
+	}
+
 	public String getDatabaseVendor() {
 		return getProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID);
 	}
@@ -76,5 +80,9 @@ public class JDBCInfo {
 
 	public String getDatabaseName() {
 		return getProperty(IJDBCDriverDefinitionConstants.DATABASE_NAME_PROP_ID);
+	}
+	
+	public String getAlternateDatabaseName() {
+		return urlDataParser.getAlternateDBName();
 	}
 }

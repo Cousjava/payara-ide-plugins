@@ -62,10 +62,11 @@ import com.sun.enterprise.jst.server.sunappsrv.sunresource.JDBCInfo;
 public class JDBCWizard extends Wizard implements INewWizard {
 	private static final String RESOURCE_FILE_TEMPLATE = "templates/sun-resources-xml-template.resource"; //$NON-NLS-1$
 	private static final String RESOURCE_FILE_NAME = "sun-resources.xml"; //$NON-NLS-1$
-	private static final String SETUP_DIR_NAME = "setup"; //$NON-NLS-1$
+	private static final String SETUP_DIR_NAME = "WebContent/WEB-INF"; //$NON-NLS-1$
 	
 	private JDBCResourceWizardPage page;
 	private ISelection selection;
+	private String dirName;
 
 	/**
 	 * Constructor for JDBC Wizard.
@@ -79,6 +80,7 @@ public class JDBCWizard extends Wizard implements INewWizard {
 	 * Adding the page to the wizard.
 	 */
 
+	@Override
 	public void addPages() {
 		page = new JDBCResourceWizardPage();
 		addPage(page);
@@ -89,6 +91,7 @@ public class JDBCWizard extends Wizard implements INewWizard {
 	 * the wizard. We will create an operation and run it
 	 * using wizard as execution context.
 	 */
+	@Override
 	public boolean performFinish() {
 		final String jndiName = page.getJNDIName();
 		final JDBCInfo jdbcInfo = page.getJDBCInfo();
@@ -131,10 +134,35 @@ public class JDBCWizard extends Wizard implements INewWizard {
 		// it is really done, but would be best to do this much earlier
 		// AND, comment above says it will be replaced - need to 
 		// make comment and behavior consistent
-		monitor.beginTask("Creating " + RESOURCE_FILE_NAME, 2);
+		//TODO - check here for project nature and then decide which
+		// directory to use
+		// would be nice to do this earlier (like in init) but it doesn't work
+		// for now, just force WebContent/WEB-INF
+		dirName = SETUP_DIR_NAME;
+		
+		/*
 		IContainer containerResource = getContainerResource();
+		IProject project = containerResource.getProject();
+		try {
+			IProjectDescription desc = project.getDescription();
+			String[] natures = desc.getNatureIds();
+			System.out.println("natures are");
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		IContainer containerResource = getContainerResource();
+		final IFolder folder = containerResource.getFolder(new Path(dirName));
+if (!folder.exists()) {
+	// TODO - more i18n here
+	IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK,
+			"Cannot create this type of resource in a project which does not contain a " + dirName + " folder", null);
+	throw new CoreException(status);
+}
 
-		final IFolder folder = containerResource.getFolder(new Path(SETUP_DIR_NAME));
+		monitor.beginTask("Creating " + RESOURCE_FILE_NAME, 2);
+
+//		final IFolder folder = containerResource.getFolder(new Path(SETUP_DIR_NAME));
 		final IFile file = folder.getFile(new Path(RESOURCE_FILE_NAME));
 if (file.exists()) {
 	IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK,
@@ -182,10 +210,12 @@ if (file.exists()) {
 		StringBuffer sb = new StringBuffer();
 		final String serverName = jdbcInfo.getServerName();
 		final String portNumber = jdbcInfo.getPort();
-		final String databaseName = jdbcInfo.getDatabaseName();
-		final String poolName = jdbcInfo.getDatabaseVendor() + "_pool";
-		final String driverClass = jdbcInfo.getDriverClass();
+		final String databaseName = getDatabaseName(jdbcInfo);
+		final String vendorName = jdbcInfo.getDatabaseVendor();
 		final String user = jdbcInfo.getUserName();
+		final String poolName = constructPoolName(vendorName, databaseName, user);
+		final String driverClass = jdbcInfo.getDriverClass();
+		final String datasourceClass = jdbcInfo.getDatasourceClass();
 		final String password = jdbcInfo.getUserPassword();
 		final String url = jdbcInfo.getURL();
 
@@ -201,6 +231,7 @@ if (file.exists()) {
 					line = replaceOrRemove(line, "\\$\\{port\\}", portNumber); //$NON-NLS-1$
 					line = replaceOrRemove(line, "\\$\\{databaseName\\}", databaseName); //$NON-NLS-1$
 					line = replaceOrRemove(line, "\\$\\{driverClass\\}", driverClass); //$NON-NLS-1$
+					line = replaceOrRemove(line, "\\$\\{datasourceClass\\}", datasourceClass); //$NON-NLS-1$
 					line = replaceOrRemove(line, "\\$\\{user\\}", user); //$NON-NLS-1$
 					line = replaceOrRemove(line, "\\$\\{password\\}", password); //$NON-NLS-1$
 					line = replaceOrRemove(line, "\\$\\{url\\}", url); //$NON-NLS-1$
@@ -223,7 +254,31 @@ if (file.exists()) {
 		return new ByteArrayInputStream(sb.toString().getBytes());
 
 	}
-	
+
+	private static String getDatabaseName(JDBCInfo jdbcInfo) {
+		String databaseName = jdbcInfo.getDatabaseName();
+		
+		if (databaseName == null) {
+			databaseName = jdbcInfo.getAlternateDatabaseName();
+		}
+
+		return databaseName;
+	}
+
+	private static String constructPoolName(String vendorName, String dbName, String userName) {
+		StringBuffer poolName = new StringBuffer(vendorName);
+		
+		if (dbName != null) {
+			poolName.append("_" + dbName); //$NON-NLS-1$
+		}
+		if (userName != null) {
+			poolName.append("_" + userName); //$NON-NLS-1$
+		}
+		poolName.append("Pool");
+
+		return poolName.toString();
+	}
+
 	private static String replaceOrRemove(String originalLine, String pattern, String value) {
 		String containsPattern = ".*" + pattern + ".*"; //$NON-NLS-1$
 		if ((originalLine != null) && Pattern.matches(containsPattern, originalLine)) {
