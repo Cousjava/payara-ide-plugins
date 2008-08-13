@@ -72,7 +72,7 @@
             vendor="%runtimeTypeGlassFishVendor" version="9.2"
             class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
-        </runtimeType>
+        </runtimeType-->
         <runtimeType
             id="com.sun.enterprise.jst.server.runtime.glassfishv3snapshot"
             name="%runtimeTypeNameglassfishv3snapshot" description="%runtimeTypeDescriptionglassfishv3snapshot"
@@ -80,13 +80,13 @@
             class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
         </runtimeType>
-         <runtimeType
+        <!--runtimeType
             id="com.sun.enterprise.jst.server.runtime.glassfishv3tp2"
             name="%runtimeTypeNameglassfishv3tp2" description="%runtimeTypeDescriptionglassfishv3tp2"
             vendor="%runtimeTypeGlassFishVendor" version="10-tp-2"
             class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
-        </runtimeType-->               
+         </runtimeType-->               
          <runtimeType
             id="com.sun.enterprise.jst.server.runtime.glassfishv3prelude"
             name="%runtimeTypeNameglassfishv3prelude" description="%runtimeTypeDescriptionglassfishv3prelude"
