@@ -95,7 +95,7 @@
 
 
 	<target name="undeploy.j2ee.web">
-		<get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/undeploy?name=${module.name}" dest="result.html"/>
+		<get src="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/undeploy?name=${module.name}" dest="result.html"/>
 		<concat>
 			<fileset dir="." includes="result.html"/>
 		</concat>
@@ -118,7 +118,7 @@
 		<concat destfile="fooFile1.properties">resourcesfile=${module.dir}/${subdirectory}/sun-resources.xml</concat>
 		<replace file="fooFile1.properties" token=" " value="%20" />
 		<property file="fooFile1.properties" />
-		<get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/add-resources?xml_file_name=${resourcesfile}" dest="result1.html" />
+		<get src="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/add-resources?xml_file_name=${resourcesfile}" dest="result1.html" />
 		<concat>
 			<fileset dir="." includes="result1.html" />
 		</concat>
@@ -131,7 +131,7 @@
 		<concat destfile="fooFile.properties">dirtodeploy=${project.working.dir}/${module.name}</concat>
 		<replace file="fooFile.properties" token=" " value="%20" />
 		<property file="fooFile.properties" />
-		<get src="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/__asadmin/deploy?path=${dirtodeploy}?force=true" dest="result.html" />
+		<get src="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/deploy?path=${dirtodeploy}?force=true" dest="result.html" />
 		<concat>
 			<fileset dir="." includes="result.html"/>
 		</concat>
