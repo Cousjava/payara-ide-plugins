@@ -48,6 +48,7 @@ public class SunAppServer extends GenericServer {
     public static final String SERVERPORT = "sunappserver.serverportnumber";
     public static final String ADMINSERVERPORT = "sunappserver.adminserverportnumber";
     public static final String DOMAINNAME = "sunappserver.domainname";
+    public static final String DOMAINDIR = "sunappserver.domaindir";
     public static final String ADMINNAME = "sunappserver.adminname";
     public static final String ADMINPASSWORD = "sunappserver.adminpassword";
     
@@ -79,11 +80,15 @@ public class SunAppServer extends GenericServer {
     public void setAdminName(String value) {
     	getProps().put(ADMINNAME, value);
     }
-    
-    
+        
     public String getdomainName() {
         return (String) getProps().get(DOMAINNAME);
     }
+     
+    public String getDomainDir() {
+        return (String) getProps().get(DOMAINDIR);
+    }
+
     public String getServerAddress() {
         return (String) getProps().get(ADDRESS);
     }

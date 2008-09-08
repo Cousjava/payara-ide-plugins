@@ -128,6 +128,14 @@ public class ServerSection extends ServerEditorSection {
             }
         });
         
+        createLabel(comp, Messages.DomainDirectory, toolkit);
+        final Text domaindir = toolkit.createText(comp, sunserver.getDomainDir(), SWT.BORDER);
+        domaindir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        // TODO - figure out how to allow scrolling to see this whole value and copy/paste
+        // according to docs, setEditabled(false) is supposed to do that, but does not (on Mac)
+        // setEnabled(false) grays it out, but does not accomplish that either
+        domaindir.setEditable(false);
+ 
         createLabel(comp, Messages.AdminName, toolkit);
         
         final Text username = toolkit.createText(comp, sunserver.getAdminName(), SWT.BORDER);

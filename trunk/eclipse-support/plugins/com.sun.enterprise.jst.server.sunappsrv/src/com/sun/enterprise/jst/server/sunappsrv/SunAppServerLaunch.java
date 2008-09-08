@@ -68,8 +68,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             }
         return ret;
     }
-        
-        
+
     public void launch(ILaunchConfiguration configuration,  String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
         SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch launch");
 
@@ -87,36 +86,39 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 	        if (mode.equals("debug")) {
 	       	 debugFlag="--debug";
 	        }
-	        String  v2command[] = { asadminCmd,
-	            "start-domain",        
-	            debugFlag,
-	            "--verbose",
-	           domain
-	        };
-	        command = v2command;
+	        command = new String[]{ asadminCmd,
+		           "start-domain",
+		           "--domaindir",
+		           serverBehavior.getDomainDir(), //SunAppServerBehaviour.quote(serverBehavior.getDomainDir()), 
+		           debugFlag,
+		           "--verbose",
+		           domain
+		        };
         }
         else {//we are V3
         	String jarName= getJarName(serverBehavior.getSunApplicationServerInstallationDirectory(),GFV3_PREFIX_JAR_NAME).getAbsolutePath();
         	String jdk=System.getProperty("java.home")+"/bin/java";
-        	String debug[]={
-        			jdk,
+        	if (mode.equals("debug")) {
+        		command = new String[]{jdk,
         			"-Xdebug",
         			"-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009",
            			"-jar",
-           			jarName
-        			
-        	};
-        	String nodebug[]={
-        			jdk,
-            		"-jar",
-            		jarName
-        			
-        	};
-	        if (mode.equals("debug")) {
-	        	command=debug;
-	        } else {
-	        	command=nodebug;	        	
-	        }
+           			jarName,
+           			"--domain",
+           			serverBehavior.getDomainName(),
+           			" --domaindir",
+           			serverBehavior.getDomainDirWithDomainName()//SunAppServerBehaviour.quote(serverBehavior.getDomainDirWithDomainName())
+        		};
+        	} else {
+        		command = new String[]{jdk,
+            				"-jar",
+            				jarName,
+                   			"--domain",
+                   			serverBehavior.getDomainName(),
+                   			"--domaindir",
+                   			serverBehavior.getDomainDirWithDomainName()//SunAppServerBehaviour.quote(serverBehavior.getDomainDirWithDomainName())
+                		};
+            }
         }
         try {
             Process process = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);

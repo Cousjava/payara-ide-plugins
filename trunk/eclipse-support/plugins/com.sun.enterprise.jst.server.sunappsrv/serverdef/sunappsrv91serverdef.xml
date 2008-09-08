@@ -55,6 +55,12 @@
     context="server"
     default="domain1" />
 
+    <!-- don't really want to show a default here, but "" results in invalid path errors -->
+    <property id="sunappserver.domaindir"  label="%sunappserver.domaindir"
+    type="directory"
+    context="server"
+    default="${sunappserver.rootdirectory}/domains" />
+
     <property id="sunappserver.adminname"  label="%sunappserver.adminname"
     type="string"
     context="server"
@@ -97,7 +103,8 @@
     </project>
 	
     <start>
-        <!-- This is not used at all-->
+        <!-- This is not used at all, but if/when it is again, use of args (like -->
+        <!-- domain dir) should be re-examined -->
         <external>${sunappserver.rootdirectory}/bin/asadmin start-domain --verbose=true ${sunappserver.domainname}</external>
         <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat start-domain   --verbose=true ${sunappserver.domainname} </external>
         <programArguments></programArguments>
@@ -107,7 +114,8 @@
     </start>
 
     <stop>
-        <!-- This is not used at all-->
+        <!-- This is not used at all, but if/when it is again, use of args (like -->
+        <!-- domain dir) should be re-examined -->
         <external>${sunappserver.rootdirectory}/bin/asadmin stop-domain ${sunappserver.domainname}</external>
         <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat stop-domain ${sunappserver.domainname} </external>
         <programArguments></programArguments>

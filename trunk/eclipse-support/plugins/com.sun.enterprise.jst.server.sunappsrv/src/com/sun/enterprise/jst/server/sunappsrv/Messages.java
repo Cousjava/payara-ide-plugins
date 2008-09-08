@@ -39,4 +39,5 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String wizardSectionTitle;
     public static String wizardSectionDescription;
     public static String DomainName;
+    public static String DomainDirectory;
 }
