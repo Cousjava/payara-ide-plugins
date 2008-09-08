@@ -42,6 +42,8 @@ import org.eclipse.wst.server.core.IServer;
  *
  */
 public class SunAppServerBehaviour extends GenericServerBehaviour {
+    private static final String DEFAULT_DOMAIN_DIR_NAME = "domains"; //$NON-NLS-N$
+    private static final String DEFAULT_DOMAIN_NAME = "domain1"; //$NON-NLS-N$
     
     /** Creates a new instance of SunAppServerBehaviour */
     public SunAppServerBehaviour() {
@@ -153,8 +155,28 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     public String getDomainName(){
         SunAppServer  sunserver = getSunAppServer();
         String d = sunserver.getdomainName();
+        if (isEmpty(d)) {
+        	d = DEFAULT_DOMAIN_NAME;
+        }
         SunAppSrvPlugin.logMessage("Domain Name is :"+d);
         return d;
+    }
+    public String getDomainDir(){
+        SunAppServer  sunserver = getSunAppServer();
+        String d = sunserver.getDomainDir();
+        if (isEmpty(d)) {
+        	d = getDefaultDomainDir();
+        }
+        SunAppSrvPlugin.logMessage("Domain Dir is :"+d);
+        return d;
+    }
+    private String getDefaultDomainDir() {
+    	return getSunApplicationServerInstallationDirectory() + File.separatorChar + 
+			DEFAULT_DOMAIN_DIR_NAME;
+    }
+
+    private boolean isEmpty(String testString) {
+        return ((testString == null) || (testString.trim().length() == 0));
     }
     public String getSunApplicationServerAdminPort(){
         //String port= (String)getRuntimeDelegate().getServerInstanceProperties().get(SunAppServer.ADMINSERVERPORT);
@@ -187,12 +209,13 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     private  void stopSunServer() {
         // set arguments to be passed to Runtime.exec
         String asadminCmd =  getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+ getScriptExtension();
-        String domain= getDomainName();
-
+         
         String arr[] = { asadminCmd,
-        "stop-domain",
-        domain
-        };
+		           "stop-domain",
+		           "--domaindir",
+		           getDomainDir(), //quote(getDomainDir()), 
+		           getDomainName()
+		        };
         
         // stop the SJSAS using Runtime.exec
         asyncExec(arr);
@@ -212,9 +235,6 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
         }
     }
 
-    
-    
-    
     public void startPingingThread(){
         // ping server to check for startup
         try {
@@ -243,8 +263,19 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
         }).start();
     }
     
-    
-    
+    protected String getDomainDirWithDomainName() {
+    	return getDomainDir().trim() + File.separatorChar + getDomainName();
+    }
+
+    // quote the string if it contains spaces.  Might want to expand to all
+    // white space (tabs, localized white space, etc.)
+    /* comment out for now - there are problems creating a domain
+     * to test this with
+     */
+    /* protected static final String quote(String path) {
+    	return path.indexOf(' ') == -1 ? path : "\"" + path + "\"";
+    }  */   
+
     protected String getConfigTypeID() {
         return SunAppSrvPlugin.SUNPLUGIN_ID + ".SunAppServerLaunchConfigurationType";
     }
