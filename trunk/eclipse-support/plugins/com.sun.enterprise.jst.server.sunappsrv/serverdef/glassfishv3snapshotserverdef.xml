@@ -187,7 +187,7 @@
         <archive path="${sunappserver.rootdirectory}/modules/javax.security.auth.message-10.0-SNAPSHOT.jar" />
         <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jsp-10.0-SNAPSHOT.jar" />
         <archive path="${sunappserver.rootdirectory}/modules/javax.transaction-10.0-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.management.j2ee-10.0-SNAPSHOT.jar" />
+        <!--  not in B23 anymore archive path="${sunappserver.rootdirectory}/modules/javax.management.j2ee-10.0-SNAPSHOT.jar" /-->
         <archive path="${sunappserver.rootdirectory}/modules/javax.enterprise.deploy-10.0-SNAPSHOT.jar" />
         <archive path="${sunappserver.rootdirectory}/modules/javax.mail-10.0-SNAPSHOT.jar" />
         <archive path="${sunappserver.rootdirectory}/modules/javax.annotation-10.0-SNAPSHOT.jar" />
