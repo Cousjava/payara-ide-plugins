@@ -104,8 +104,8 @@
     </project>
 	
 	<start>
-        <!-- This is not used at all, but if/when it is again, use of args (like -->
-        <!-- domain dir) should be re-examined -->
+		<!-- This is not used at all, but if/when it is again, use of args (like -->
+		<!-- domain & domain dir) should be re-examined -->
 		<mainClass>com.sun.enterprise.glassfish.bootstrap.Main</mainClass>
 		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
 		<programArguments></programArguments>
@@ -115,7 +115,7 @@
 	
     <stop>
         <!-- This is not used at all, but if/when it is again, use of args (like -->
-        <!-- domain dir) should be re-examined -->
+        <!-- domain & domain dir) should be re-examined -->
 		<mainClass>com.sun.enterprise.admin.cli.AsadminMain</mainClass>
 		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
 		<programArguments>stop-domain</programArguments>
@@ -156,21 +156,17 @@
 
 
 
+    <!-- This classpath is only used in the start task above (which is not used) -->
     <classpath id="sunappsrv.server" >
-        <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-    </classpath>
-    <classpath id="sunappsrv.deploy" >
         <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
     </classpath>
     <classpath id="sunapprsrv.admin">
     	<archive path="${sunappserver.rootdirectory}/modules/admin-cli-10.0-V3-PRELUDE-M1-SNAPSHOT.jar"/>
 	</classpath>
 
+    <!-- with the switch to an OSGI style manifest which does not help for compilation/code completion -->
+    <!-- this list is constantly changing -->
     <classpath id="sunappsrv.project" >
-    	<!--  this jar has an OSGI style manifest which does not help for compilation/code completion -->
-        <archive path="${sunappserver.rootdirectory}/modules/javax.javaee-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <!--  so, we explicitly also add these jars to the classpath -->
-        <!--  archive path="${sunappserver.rootdirectory}/modules/javax.faces-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" /-->
         <archive path="${sunappserver.rootdirectory}/modules/javax.jms-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
         <archive path="${sunappserver.rootdirectory}/modules/javax.xml.soap-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
         <archive path="${sunappserver.rootdirectory}/modules/javax.persistence-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
@@ -194,8 +190,6 @@
         <archive path="${sunappserver.rootdirectory}/modules/javax.xml.bind-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
     	<!--  jar needed for tld files (html_basic and jsf_core) -->
     	<archive path="${sunappserver.rootdirectory}/modules/web/jsf-connector-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-
-
     </classpath>
 	
     <jndiConnection>
