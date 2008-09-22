@@ -213,7 +213,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
         String arr[] = { asadminCmd,
 		           "stop-domain",
 		           "--domaindir",
-		           getDomainDir(), //quote(getDomainDir()), 
+		           getDomainDir(), 
 		           getDomainName()
 		        };
         
@@ -266,15 +266,6 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     protected String getDomainDirWithDomainName() {
     	return getDomainDir().trim() + File.separatorChar + getDomainName();
     }
-
-    // quote the string if it contains spaces.  Might want to expand to all
-    // white space (tabs, localized white space, etc.)
-    /* comment out for now - there are problems creating a domain
-     * to test this with
-     */
-    /* protected static final String quote(String path) {
-    	return path.indexOf(' ') == -1 ? path : "\"" + path + "\"";
-    }  */   
 
     protected String getConfigTypeID() {
         return SunAppSrvPlugin.SUNPLUGIN_ID + ".SunAppServerLaunchConfigurationType";
