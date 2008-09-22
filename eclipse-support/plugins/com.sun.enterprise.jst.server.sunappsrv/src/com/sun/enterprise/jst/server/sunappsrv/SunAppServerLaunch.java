@@ -89,7 +89,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 	        command = new String[]{ asadminCmd,
 		           "start-domain",
 		           "--domaindir",
-		           serverBehavior.getDomainDir(), //SunAppServerBehaviour.quote(serverBehavior.getDomainDir()), 
+		           serverBehavior.getDomainDir(), 
 		           debugFlag,
 		           "--verbose",
 		           domain
@@ -107,7 +107,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
            			"--domain",
            			serverBehavior.getDomainName(),
            			" --domaindir",
-           			serverBehavior.getDomainDirWithDomainName()//SunAppServerBehaviour.quote(serverBehavior.getDomainDirWithDomainName())
+           			serverBehavior.getDomainDirWithDomainName()
         		};
         	} else {
         		command = new String[]{jdk,
@@ -116,7 +116,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                    			"--domain",
                    			serverBehavior.getDomainName(),
                    			"--domaindir",
-                   			serverBehavior.getDomainDirWithDomainName()//SunAppServerBehaviour.quote(serverBehavior.getDomainDirWithDomainName())
+                   			serverBehavior.getDomainDirWithDomainName()
                 		};
             }
         }
