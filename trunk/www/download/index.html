@@ -67,7 +67,98 @@ run on GlassFish.</li>
 
 <h3><a name="Previous_builds"></a>Milestone
 binary builds for the Eclipse IDE</h3>
+<h3>Eclipse 3.3 and newer</h3>
+Here are the <a href="https://ajax.dev.java.net/eclipse/releasenotes.html">release notes</a> to help you choose which version to use.
+<ul>
+    <li>The best way to install the glassfish plugin for eclipse is from within Eclipse itself.  Open the New Server 
+        wizard, then click the Download additional server adapters link.  See <a href="https://glassfishplugins.dev.java.net/eclipse33/index.html">this page</a>
+        for more details.</li>
+    <li>If you already have a version of the plugin installed, you can update to a newer version in one of two ways:
+        <ol>
+            <li>Use the New Server wizard again, and choose the Download additional Server adapters again - this will download the latest version
+            <li>Use the Help->Software Updates menu item.  The update site for the glassfish plugin is automatically added to the list of managed sites once
+            you install the plugin, but it is not automatically checked as active.  See <a href="https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=45">Issue 45</a>
+            for more details.  Note that the Software Updates wizard in Eclipse 3.4 allows you to set an option which shows you older versions of updates (Turn
+            off the "Show only the latest versions of available software" checkbox).
+        </ol>
+    <li>If you need to install an older version of the plugin, and the Software Updates wizard doesn't work for you, you can choose to install it manually.
+        <ol>
+            <li>Choose a version from this table</li>
+            <li>Download both the plugin and feature jar files</li>
+            <li>Quit Eclipse, then copy the unzipped contents of the first into the plugins directory and 
+            the second into the features directory of your Eclipse installation.</li>
+            <li>Restart Eclipse and you should be ready to go.</li>
+        </ol>
+        <table border="1">
+            <thead>
+                <th>Version</th>
+                <th>Plugin jar</th>
+                <th>Feature jar</th>
+                <th>Notes</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1.0.10</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.10.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.10.jar">Feature jar</a></td>
+                </tr>
+                <tr>
+                    <td>1.0.9</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.9.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.9.jar">Feature jar</a></td>
+                </tr>
+                <tr>
+                    <td>1.0.8</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.8.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.8.jar">Feature jar</a></td>
+                </tr>
+                <tr>
+                    <td>1.0.7</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.7.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.7.jar">Feature jar</a></td>
+                </tr>
+                <tr>
+                    <td>1.0.6</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.6.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.6.jar">Feature jar</a></td>
+                </tr>
+                <tr>
+                    <td>1.0.5</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.5.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.5.jar">Feature jar</a></td>
+                </tr>
+                <tr>
+                    <td>1.0.4</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.4.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.4.jar">Feature jar</a></td>
+                    <td>Starting from this plugin version, Eclipse 3.4 is required</td>
+                </tr>
+                <tr>
+                    <td>1.0.3</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.3.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.3.jar">Feature jar</a></td>
+                </tr>
+                <tr>
+                    <td>1.0.2</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.2.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.2.jar">Feature jar</a></td>
+                </tr>
+                <tr>
+                    <td>1.0.1</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.1.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.1.jar">Feature jar</a></td>
+                </tr>
+                <tr>
+                    <td>1.0.0</td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/plugins/com.sun.enterprise.jst.server.sunappsrv_1.0.0.jar">Plugin jar</a></td>
+                    <td><a href="https://ajax.dev.java.net/eclipse/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.0.jar">Feature jar</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
+</ul>
 
+<h3>Eclipse 3.2 and older</h3>
 <ul>
 
   <li><a href="https://glassfishplugins.dev.java.net/files/documents/3651/49026/glassfish-eclipse-plugin_0_4.zip">Milestone
@@ -89,11 +180,8 @@ binary builds for the Eclipse IDE</h3>
 2006.<br>
 
   </li>
-
-</ul>
-
-<h3><a name="Instructions_to_unbundle_and_configure"></a>
-Instructions to unbundle and configure The GlassFish Eclipse plugin</h3>
+<h4><a name="Instructions_to_unbundle_and_configure"></a>
+Instructions to unbundle and configure The GlassFish Eclipse plugin</h4>
 
 GlasssFish Eclipse Plugin installation
 requires JDK 1.4 or 5, and an existing <a href="http://www.eclipse.org/">Eclipse and WTP 1.0
@@ -124,6 +212,9 @@ button: the plugin is installed.<br>
   </li>
 
 </ol>
+</ul>
+
+
 
 <p>
 Read the <a href="https://glassfishplugins.dev.java.net/specifications/introduction.html">GlassFish
