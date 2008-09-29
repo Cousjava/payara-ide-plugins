@@ -64,7 +64,11 @@ public class SunAppServer extends GenericServer {
   }
     
   public String getKeepSessions() {
-      return  getProps().get(KEEPSESSIONS);
+	  String s =getProps().get(KEEPSESSIONS);
+	  if (s==null){
+		  s = "true";
+	  }
+      return  s;
   }
   public void setKeepSessions(String value) {
   	getProps().put(KEEPSESSIONS, value);
