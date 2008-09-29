@@ -67,17 +67,16 @@
     context="server"
     default="admin" />
     
-     <property id="ssunappserver.keepSessions" label="%sunappserver.keepSessions"
-    type="boolean"
-    context="server"
-    default="true" />
     
        <property id="sunappserver.adminpassword" label="%sunappserver.adminpassword"
     type="string"
     context="server"
     default="adminadmin" />
     
-
+     <property id="sunappserver.keepSessions" label="%sunappserver.keepSessions"
+    type="boolean"
+    context="server"
+    default="true" />
     
 
 
