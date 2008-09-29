@@ -37,8 +37,8 @@ public class SunAppSrvPlugin extends Plugin {
     private static SunAppSrvPlugin singleton;
     
     public SunAppSrvPlugin() {
-        singleton = this;
-        
+        singleton = this; 
+
 
         
     }

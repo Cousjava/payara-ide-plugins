@@ -67,10 +67,17 @@
     context="server"
     default="admin" />
     
-    <property id="sunappserver.adminpassword" label="%sunappserver.adminpassword"
+     <property id="ssunappserver.keepSessions" label="%sunappserver.keepSessions"
+    type="boolean"
+    context="server"
+    default="true" />
+    
+       <property id="sunappserver.adminpassword" label="%sunappserver.adminpassword"
     type="string"
     context="server"
     default="adminadmin" />
+    
+
     
 
 
@@ -158,38 +165,37 @@
 
     <!-- This classpath is only used in the start task above (which is not used) -->
     <classpath id="sunappsrv.server" >
-        <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/glassfish.jar" />
     </classpath>
     <classpath id="sunapprsrv.admin">
-    	<archive path="${sunappserver.rootdirectory}/modules/admin-cli-10.0-V3-PRELUDE-M1-SNAPSHOT.jar"/>
+    	<archive path="${sunappserver.rootdirectory}/modules/admin-cli.jar"/>
 	</classpath>
 
     <!-- with the switch to an OSGI style manifest which does not help for compilation/code completion -->
     <!-- this list is constantly changing -->
     <classpath id="sunappsrv.project" >
-        <archive path="${sunappserver.rootdirectory}/modules/javax.jms-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.soap-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.persistence-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.ws-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.resource-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.rpc-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.security.jacc-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.ejb-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.stream-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.activation-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.jws-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jsp.jstl-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.security.auth.message-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jsp-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.transaction-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.management.j2ee-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.enterprise.deploy-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.mail-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.annotation-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.bind-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
+    	    <fileset dir="${sunappserver.rootdirectory}">
+	       <include name="modules/javax.*.jar" />
+	       <include name="modules/web/javax.*.jar" />
+	       <include name="modules/ejb/javax.*.jar" />
+	       </fileset>
+       <!--  archive path="${sunappserver.rootdirectory}/modules/javax.jms.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.persistence.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.resource.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.security.jacc.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.stream.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.activation.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/web/javax.servlet.jsp.jstl.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.security.auth.message.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jsp.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.transaction.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.mail.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/javax.annotation.jar" /-->
     	<!--  jar needed for tld files (html_basic and jsf_core) -->
-    	<archive path="${sunappserver.rootdirectory}/modules/web/jsf-connector-10.0-V3-PRELUDE-M1-SNAPSHOT.jar" />
+    	<archive path="${sunappserver.rootdirectory}/modules/jsf-api.jar" />
+    	<!--  jar needed for tld files (html_basic and jsf_core) -->
+     	<archive path="${sunappserver.rootdirectory}/modules/web/jsf-impl.jar" />
     </classpath>
 	
     <jndiConnection>

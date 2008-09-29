@@ -174,6 +174,16 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
      */
    public static File getJarName(String AppServerInstallDir, String jarNamePrefix) {
         File modulesDir = new File(AppServerInstallDir + File.separatorChar + GFV3_MODULES_DIR_NAME);
+ 
+                File postb25 = new File(AppServerInstallDir + File.separatorChar + GFV3_MODULES_DIR_NAME+ File.separatorChar +"glassfish.jar");
+                if (postb25.exists()){
+                    if (jarNamePrefix.equals(GFV3_PREFIX_JAR_NAME)){
+                        return postb25;
+                    }
+                    else {
+                        jarNamePrefix.replaceFirst("-10.0", "");
+                    }
+                }        
         File candidates[] = modulesDir.listFiles(new VersionFilter(jarNamePrefix));
         
         if(candidates != null && candidates.length > 0) {
