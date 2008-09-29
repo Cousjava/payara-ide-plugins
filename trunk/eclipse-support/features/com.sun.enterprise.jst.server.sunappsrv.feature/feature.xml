@@ -2,16 +2,17 @@
 <feature
       id="com.sun.enterprise.jst.server.sunappsrv.feature"
       label="GlassFish Java EE 5 Server"
-      version="1.0.10"
+      version="1.0.11"
       provider-name="java.net"
       image="glassfish.gif">
 
    <description url="https://glassfishplugins.dev.java.net">
-      Provides development and publishing tools for GlassFish Java EE 5 Server (versions v1, v2, and v3 preview)
+      Provides development and publishing tools for GlassFish Java
+EE 5 Server (versions v1, v2, and v3 Prelude)
    </description>
 
    <copyright url="http://www.example.com/copyright">
-      Copyright 2007 Sun Microsystems, Inc. All rights reserved.
+      Copyright 2008 Sun Microsystems, Inc. All rights reserved.
    </copyright>
 
    <license url="https://glassfish.dev.java.net/public/CDDLv1.0.html">
@@ -218,14 +219,14 @@ This Agreement is the entire agreement between you and Sun relating to its subje
    </license>
 
    <url>
-      <discovery label="Ajax jMaki site" url="https://ajax.dev.java.net/eclipse/"/>
+      <discovery label="jMaki and GlassFish Application Server Eclipse Update Center" url="https://ajax.dev.java.net/eclipse/"/>
    </url>
 
    <plugin
          id="com.sun.enterprise.jst.server.sunappsrv"
          download-size="2000"
          install-size="2000"
-         version="1.0.10"
+         version="1.0.11"
          unpack="false"/>
 
 </feature>
