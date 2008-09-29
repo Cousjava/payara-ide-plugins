@@ -32,6 +32,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -64,7 +65,7 @@ public class ServerSection extends ServerEditorSection {
     public ServerSection() {
         SunAppSrvPlugin.logMessage("In  public ServerSection()" );
     }
-    
+
     
     public void init(IEditorSite site, IEditorInput input) {
         SunAppSrvPlugin.logMessage("In  ServerSection  init()" );
@@ -177,7 +178,23 @@ public class ServerSection extends ServerEditorSection {
                 execute(new SunAppServerCommands(server, adminServerPortNumber.getText(),SunAppServer.ADMINSERVERPORT));
             }
         });
-        
+
+        //createLabel(comp, Messages.keepSessions, toolkit);
+       
+        final Button keepSessions = new Button(comp, SWT.CHECK);
+        keepSessions.setText(Messages.keepSessions);
+        keepSessions.setSelection(sunserver.getKeepSessions().equals("true"));
+       keepSessions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+       keepSessions.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+    	   public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+    	   //Determines if the checkBox is checked or not
+    	   boolean selected = keepSessions.getSelection();
+           execute(new SunAppServerCommands(server, ""+selected,SunAppServer.KEEPSESSIONS));
+    	   }
+    	   });
+
+       
+       
     }
     
     protected Label createLabel(Composite parent, String text, FormToolkit toolkit) {

@@ -51,6 +51,8 @@ public class SunAppServer extends GenericServer {
     public static final String DOMAINDIR = "sunappserver.domaindir";
     public static final String ADMINNAME = "sunappserver.adminname";
     public static final String ADMINPASSWORD = "sunappserver.adminpassword";
+    public static final String KEEPSESSIONS = "sunappserver.keepSessions";
+       
     
     public SunAppServer(){
     }
@@ -61,7 +63,14 @@ public class SunAppServer extends GenericServer {
 	  return getServerInstanceProperties();
   }
     
-    public String getServerPort() {
+  public String getKeepSessions() {
+      return  getProps().get(KEEPSESSIONS);
+  }
+  public void setKeepSessions(String value) {
+  	getProps().put(KEEPSESSIONS, value);
+  }
+  
+  public String getServerPort() {
         return (String) getProps().get(SERVERPORT);
     }
     public void setServerPort(String value) {

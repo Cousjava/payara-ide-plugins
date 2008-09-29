@@ -131,7 +131,7 @@
 		<concat destfile="fooFile.properties">dirtodeploy=${project.working.dir}/${module.name}</concat>
 		<replace file="fooFile.properties" token=" " value="%20" />
 		<property file="fooFile.properties" />
-		<get src="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/deploy?path=${dirtodeploy}&amp;force=true" dest="result.html" />
+		<get src="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/deploy?path=${dirtodeploy}&amp;force=true&amp;properties=KeepSessions=${sunappserver.keepSessions}" dest="result.html" />
 		<concat>
 			<fileset dir="." includes="result.html"/>
 		</concat>
