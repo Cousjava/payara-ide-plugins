@@ -106,7 +106,7 @@ public class ServerSection extends ServerEditorSection {
         gl.horizontalSpacing = 15;
         gl.marginHeight = 5;
         comp.setLayout(gl);
-        comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
         section.setClient(comp);
         
         createLabel(comp, Messages.MachineName, toolkit);
@@ -179,12 +179,12 @@ public class ServerSection extends ServerEditorSection {
             }
         });
 
-        //createLabel(comp, Messages.keepSessions, toolkit);
+        createLabel(comp, "   ", toolkit);
        
         final Button keepSessions = new Button(comp, SWT.CHECK);
         keepSessions.setText(Messages.keepSessions);
         keepSessions.setSelection(sunserver.getKeepSessions().equals("true"));
-       keepSessions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+       keepSessions.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false));
        keepSessions.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
     	   public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
     	   //Determines if the checkBox is checked or not
