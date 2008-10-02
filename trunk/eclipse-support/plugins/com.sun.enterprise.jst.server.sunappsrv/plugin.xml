@@ -851,7 +851,71 @@
        <selection class="org.eclipse.core.resources.IResource"/>
        </wizard>
     </extension>
+ 
+ 
+    <extension point="org.eclipse.ui.popupMenus">
+        <objectContribution
+                adaptable="true"
+                id="com.sun.enterprise.jst.server.ui.serveractions"
+                objectClass="org.eclipse.wst.server.core.IServer">
+            <enablement>
+                <test forcePluginActivation="true"
+                property="org.eclipse.wst.server.ui.serverType"
+                value="com.sun.enterprise.*" />
+            </enablement>
+      
+            <menu
+                id="org.eclipse.ui.articles.action.contribution.navigator.subMenu"
+                label="GlassFish V3 Prelude"
+                path="additions">
+                <separator name="group1"/>
+                <separator name="group2"/>
+                <separator name="group3"/>
+            </menu>
+      
+ 
+      
+            <action
+                label="Register V3 Prelude"
+                enablesFor="1"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction"
+                menubarPath="org.eclipse.ui.articles.action.contribution.navigator.subMenu/group2"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction">
+            </action>
+            <action
+                label="V3 Prelude Update Center"
+                enablesFor="1"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction"
+                tooltip="V3 Prelude Update Center"
+                menubarPath="org.eclipse.ui.articles.action.contribution.navigator.subMenu/group3"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction">
+            </action>
+        </objectContribution>
     
     
-    
-</plugin>
+
+    </extension>
+  
+    <extension point="org.eclipse.ui.editors">
+        <editor
+            class="com.sun.enterprise.jst.server.sunappsrv.v3.Register"
+            contributorClass="com.sun.enterprise.jst.server.sunappsrv.v3.BrowserEditorContributor"
+            extensions="xml"
+            icon="icons/obj16/glassfishserver.gif"
+            id="com.sun.enterprise.jst.server.sunappsrv.v3.Register"
+            name="V3 Register">
+        </editor>
+        <editor
+            class="com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter"
+            contributorClass="com.sun.enterprise.jst.server.sunappsrv.v3.BrowserEditorContributor"
+            extensions="jjjxml"
+            icon="icons/obj16/glassfishserver.gif"
+            id="com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter"
+            name="V3 Update Center">
+        </editor>
+    </extension>
+     
+
+    </plugin>
