@@ -41,10 +41,12 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
 import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerCommands;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
@@ -89,7 +91,7 @@ public class ServerSection extends ServerEditorSection {
         section.setText(Messages.wizardSectionTitle);
        /// String loc = sunserver.getRootDir();
         
-   //     SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
+        SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
    //     String loc =  serverBehavior.getSunApplicationServerInstallationDirectory();
         // this is not used, so comment it out until it is
         // should probably use formatters instead of concat as well
@@ -179,19 +181,33 @@ public class ServerSection extends ServerEditorSection {
             }
         });
 
+        if (serverBehavior.isV3()) {
+            createLabel(comp, "   ", toolkit);
+	        final Button useAnonymousConnection = new Button(comp, SWT.CHECK);
+	        useAnonymousConnection.setText(Messages.UseAnonymousConnection);
+	        useAnonymousConnection.setSelection(sunserver.getUseAnonymousConnections().equals("true"));
+	        useAnonymousConnection.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false));
+	        useAnonymousConnection.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+	    	   public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+	    	   //Determines if the checkBox is checked or not
+	    	   boolean selected = useAnonymousConnection.getSelection();
+	           execute(new SunAppServerCommands(server, ""+selected,SunAppServer.USEANONYMOUSCONNECTIONS));
+	    	   }
+	    	});
+        }
+
         createLabel(comp, "   ", toolkit);
-       
         final Button keepSessions = new Button(comp, SWT.CHECK);
         keepSessions.setText(Messages.keepSessions);
         keepSessions.setSelection(sunserver.getKeepSessions().equals("true"));
-       keepSessions.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false));
-       keepSessions.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+        keepSessions.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false));
+        keepSessions.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
     	   public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
     	   //Determines if the checkBox is checked or not
     	   boolean selected = keepSessions.getSelection();
            execute(new SunAppServerCommands(server, ""+selected,SunAppServer.KEEPSESSIONS));
     	   }
-    	   });
+    	});
 
        
        

@@ -67,13 +67,17 @@
     context="server"
     default="admin" />
     
-    
-       <property id="sunappserver.adminpassword" label="%sunappserver.adminpassword"
+    <property id="sunappserver.adminpassword" label="%sunappserver.adminpassword"
     type="string"
     context="server"
     default="adminadmin" />
     
-     <property id="sunappserver.keepSessions" label="%sunappserver.keepSessions"
+    <property id="sunappserver.useAnonymousConnection" label="%sunappserver.useAnonymousConnection"
+    type="boolean"
+    context="server"
+    default="true" />
+
+    <property id="sunappserver.keepSessions" label="%sunappserver.keepSessions"
     type="boolean"
     context="server"
     default="true" />

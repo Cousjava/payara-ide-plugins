@@ -95,7 +95,10 @@
 
 
 	<target name="undeploy.j2ee.web">
-		<get src="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/undeploy?name=${module.name}" dest="result.html"/>
+		<antcall target="get.if.else">
+			<param name="srcUrl" value="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/undeploy?name=${module.name}" />
+			<param name="destFileName" value="result.html"/>
+		</antcall>
 		<concat>
 			<fileset dir="." includes="result.html"/>
 		</concat>
@@ -118,10 +121,32 @@
 		<concat destfile="fooFile1.properties">resourcesfile=${module.dir}/${subdirectory}/sun-resources.xml</concat>
 		<replace file="fooFile1.properties" token=" " value="%20" />
 		<property file="fooFile1.properties" />
-		<get src="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/add-resources?xml_file_name=${resourcesfile}" dest="result1.html" />
+		<antcall target="get.if.else">
+			<param name="srcUrl" value="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/add-resources?xml_file_name=${resourcesfile}" />
+			<param name="destFileName" value="result1.html"/>
+		</antcall>
 		<concat>
 			<fileset dir="." includes="result1.html" />
 		</concat>
+	</target>
+
+	<target name="get.without.password" if="useAnonymous">
+		<get src="${srcUrl}" dest="${destFileName}" />
+	</target>
+	
+	<target name="get.with.password" unless="useAnonymous">
+		<get src="${srcUrl}" dest="${destFileName}" username="${sunappserver.adminname}" password="${sunappserver.adminpassword}"/>
+	</target>
+
+	<target name="get.if.else">
+		<!--echo message="sunappserver.useAnonymousConnection=${sunappserver.useAnonymousConnection}"/>
+		<echo message="srcUrl=${srcUrl}"/>
+		<echo message="destFileName=${destFileName}"/-->
+		<condition property="useAnonymous">
+			<istrue value="${sunappserver.useAnonymousConnection}"/>
+		</condition>
+		<antcall target="get.without.password"/>
+		<antcall target="get.with.password"/>
 	</target>
 
 	<target name="deploy.j2ee.web">
@@ -131,7 +156,10 @@
 		<concat destfile="fooFile.properties">dirtodeploy=${project.working.dir}/${module.name}</concat>
 		<replace file="fooFile.properties" token=" " value="%20" />
 		<property file="fooFile.properties" />
-		<get src="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/deploy?path=${dirtodeploy}&amp;force=true&amp;properties=KeepSessions=${sunappserver.keepSessions}" dest="result.html" />
+		<antcall target="get.if.else">
+			<param name="srcUrl" value="http://${sunappserver.serveraddress}:${sunappserver.adminserverportnumber}/__asadmin/deploy?path=${dirtodeploy}&amp;force=true&amp;properties=KeepSessions=${sunappserver.keepSessions}" />
+			<param name="destFileName" value="result.html"/>
+		</antcall>
 		<concat>
 			<fileset dir="." includes="result.html"/>
 		</concat>
