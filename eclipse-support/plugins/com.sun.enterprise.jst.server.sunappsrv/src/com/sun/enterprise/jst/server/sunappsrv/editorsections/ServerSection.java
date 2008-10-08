@@ -111,16 +111,6 @@ public class ServerSection extends ServerEditorSection {
         comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
         section.setClient(comp);
         
-        createLabel(comp, Messages.MachineName, toolkit);
-        
-        final Text hostname = toolkit.createText(comp, sunserver.getServerAddress(), SWT.BORDER);
-        hostname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        hostname.addModifyListener(new ModifyListener() {
-            public void modifyText(ModifyEvent e) {
-                execute(new SunAppServerCommands(server, hostname.getText(),SunAppServer.SERVERPORT));
-            }
-        });
-        
         createLabel(comp, Messages.DomainName, toolkit);
         
         final Text domainname = toolkit.createText(comp, sunserver.getdomainName(), SWT.BORDER);

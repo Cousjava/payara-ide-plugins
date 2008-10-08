@@ -31,7 +31,6 @@ public class Messages extends org.eclipse.osgi.util.NLS {
                 "com.sun.enterprise.jst.server.sunappsrv.Messages", Messages.class);
     }
     
-    public static String MachineName;
     public static String AdminName;
     public static String AdminPassword;
     public static String ServerPortNumber;

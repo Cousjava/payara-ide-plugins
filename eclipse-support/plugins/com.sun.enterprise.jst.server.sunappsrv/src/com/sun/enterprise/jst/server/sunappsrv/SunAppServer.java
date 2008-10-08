@@ -44,6 +44,8 @@ import org.eclipse.wst.server.core.internal.Server;
 public class SunAppServer extends GenericServer {
     
     public static final String ROOTDIR = "sunappserver.rootdirectory";
+    // This property does not come from serverdef, but is used there and in the ant files
+    // so we set it by synchronizing it with the value from the generic server framework
     public static final String ADDRESS = "sunappserver.serveraddress";
     public static final String SERVERPORT = "sunappserver.serverportnumber";
     public static final String ADMINSERVERPORT = "sunappserver.adminserverportnumber";
@@ -57,9 +59,17 @@ public class SunAppServer extends GenericServer {
     
     public SunAppServer(){
     }
-    
 	
 	
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.model.ServerDelegate#initialize()
+     */
+    @Override
+    protected void initialize() {
+        super.initialize();
+        syncHostValues();
+    }
+
   public Map<String, String> getProps(){
 	  return getServerInstanceProperties();
   }
@@ -114,12 +124,19 @@ public class SunAppServer extends GenericServer {
         return (String) getProps().get(DOMAINDIR);
     }
 
-    public String getServerAddress() {
-        return (String) getProps().get(ADDRESS);
+    private void syncHostValues() {
+    	Map<String, String> props = getProps();
+    	String currentHostValue = (String) props.get(ADDRESS);
+    	String genericHostValue = getServer().getHost();
+
+    	if ((currentHostValue == null) || !currentHostValue.equals(genericHostValue)) {
+    		props.put(ADDRESS, genericHostValue);
+    	}    	
     }
-    
+
     public void  saveConfiguration(IProgressMonitor m) throws CoreException  {
         SunAppSrvPlugin.logMessage("in Save SunAppServer ");
+        syncHostValues();
         super.saveConfiguration(m);
     }
     
@@ -168,7 +185,7 @@ public class SunAppServer extends GenericServer {
 
         
         try {
-            InetSocketAddress isa = new InetSocketAddress(getServerAddress(), Integer.parseInt(getServerPort()));
+            InetSocketAddress isa = new InetSocketAddress(getServer().getHost(), Integer.parseInt(getServerPort()));
             Socket socket = new Socket();
             socket.connect(isa, 1);
             socket.close();
