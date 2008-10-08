@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- 
- Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
- 
- The contents of this file are subject to the terms of either the GNU
- General Public License Version 2 only ("GPL") or the Common Development
- and Distribution License("CDDL") (collectively, the "License").  You
- may not use this file except in compliance with the License. You can obtain
- a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
- or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
- language governing permissions and limitations under the License.
- 
- When distributing the software, include this License Header Notice in each
- file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
- Sun designates this particular file as subject to the "Classpath" exception
- as provided by Sun in the GPL Version 2 section of the License file that
- accompanied this code.  If applicable, add the following below the License
- Header, with the fields enclosed by brackets [] replaced by your own
- identifying information: "Portions Copyrighted [year]
- [name of copyright owner]"
- 
- Contributor(s):
- 
- If you wish your version of this file to be governed by only the CDDL or
- only the GPL Version 2, indicate your decision by adding "[Contributor]
- elects to include this software in this distribution under the [CDDL or GPL
- Version 2] license."  If you don't indicate a single choice of license, a
- recipient has the option to distribute your version of this file under
- either the CDDL, the GPL Version 2 or to extend the choice of license to
- its licensees as provided above.  However, if you add GPL Version 2 code
- and therefore, elected the GPL Version 2 license, then the option applies
- only if the new code is made subject to such option by the copyright
- holder.
--->
+<!--  
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common Development
+and Distribution License("CDDL") (collectively, the "License").  You
+may not use this file except in compliance with the License. You can obtain
+a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+language governing permissions and limitations under the License.
+
+When distributing the software, include this License Header Notice in each
+file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+Sun designates this particular file as subject to the "Classpath" exception
+as provided by Sun in the GPL Version 2 section of the License file that
+accompanied this code.  If applicable, add the following below the License
+Header, with the fields enclosed by brackets [] replaced by your own
+identifying information: "Portions Copyrighted [year]
+[name of copyright owner]"
+
+Contributor(s):
+If you wish your version of this file to be governed by only the CDDL or
+only the GPL Version 2, indicate your decision by adding "[Contributor]
+elects to include this software in this distribution under the [CDDL or GPL
+Version 2] license."  If you don't indicate a single choice of license, a
+recipient has the option to distribute your version of this file under
+either the CDDL, the GPL Version 2 or to extend the choice of license to
+its licensees as provided above.  However, if you add GPL Version 2 code
+and therefore, elected the GPL Version 2 license, then the option applies
+only if the new code is made subject to such option by the copyright
+holder.-->
+<!--  
+  A domain configuration instance document is validated against this DTD. -->
 <!-- ENTITIES -->
 <!-- boolean
 
@@ -42,7 +41,7 @@
     application-ref, availability-service, cluster, config,           
     connector-connection-pool, connector-module, connector-resource,  
     custom-resource, das-config, diagnostic-service,                  
-    ejb-container-availability, ejb-module, event,                    
+    ejb-container-availability, ejb-module, event, extension-module,  
     external-jndi-resource, http-access-log, http-file-cache,         
     http-listener, http-protocol, iiop-listener, iiop-service,        
     j2ee-application, java-config, jdbc-connection-pool,              
@@ -85,8 +84,9 @@
 
   Used in:
     admin-object-resource, connector-module, connector-resource,      
-    custom-resource, ejb-module, external-jndi-resource,              
-    j2ee-application, jdbc-resource, mail-resource, mbean,            
+    custom-resource, ejb-module, extension-module,                    
+    external-jndi-resource, j2ee-application, jdbc-resource,          
+    lifecycle-module, mail-resource, mbean,                           
     persistence-manager-factory-resource, resource-adapter-config,    
     web-module                                                        
 -->
@@ -116,14 +116,6 @@
 -->
 <!ENTITY % monitoring-level "(OFF | LOW | HIGH)">
 
-<!-- persistence-type
-    SE/EE related ENTITIES                                            
-
-  Used in:
-    web-container-availability                                        
--->
-<!ENTITY % persistence-type "(memory | file | ha)">
-
 <!-- session-save-frequency
 
   Used in:
@@ -139,13 +131,6 @@
 <!ENTITY % session-save-scope
     "(session | modified-session | modified-attribute)">                       
 
-
-<!-- sfsb-persistence-type
-
-  Used in:
-    ejb-container-availability                                        
--->
-<!ENTITY % sfsb-persistence-type "(file | ha)">
 
 <!-- apply-to-type
 
@@ -275,7 +260,7 @@
 -->
 <!ELEMENT applications
     ((lifecycle-module | j2ee-application | ejb-module | web-module |          
-    connector-module | appclient-module | mbean)*)>                            
+    connector-module | appclient-module | mbean | extension-module)*)>         
 
 
 
@@ -314,6 +299,7 @@
     classpath CDATA #IMPLIED
     load-order CDATA #IMPLIED
     is-failure-fatal %boolean; "false"
+    object-type %object-type; "user"
     enabled %boolean; "true">
 
 
@@ -422,13 +408,8 @@
         in RFC 1738 which can be found at:                            
         http://www.w3.org/Addressing/rfc1738.txt. This is flattened   
         to the following regular expression in XML Schema's pattern   
-        language:                                                     
-        ([a-zA-Z0-9$\-_.+!*'(),]|%[0-9A-Fa-f][0-9A-Fa-f]|;|:|&|=)*(/([
-        -zA-Z0-9$\-_.+!*'(),]|%[0-9A-Fa-f][0-9A-Fa-f]|;|:|&|=)*)*     
-        Note that this includes the null or empty context root and    
-        permits but does not require a context root to start with the 
-        '/' character (including a context root which is simply the   
-        '/' character).                                               
+        language: The validation process however, does not impose any 
+        restrictions on the choice of context-root.                   
     directory-deployed                                                         
         This attribute indicates whether the application has been     
         deployed to a directory or not                                
@@ -514,11 +495,11 @@
   Used in:
     admin-object-resource, appclient-module,                          
     connector-connection-pool, connector-module, connector-resource,  
-    custom-resource, ejb-module, event, external-jndi-resource,       
-    j2ee-application, jdbc-connection-pool, jdbc-resource,            
-    lifecycle-module, mail-resource, management-rule, mbean,          
-    persistence-manager-factory-resource, property, system-property,  
-    web-module                                                        
+    custom-resource, ejb-module, event, extension-module,             
+    external-jndi-resource, j2ee-application, jdbc-connection-pool,   
+    jdbc-resource, lifecycle-module, mail-resource, management-rule,  
+    mbean, persistence-manager-factory-resource, property,            
+    system-property, web-module                                       
 -->
 <!ELEMENT description (#PCDATA)>
 
@@ -936,12 +917,10 @@
     ssl3-tls-ciphers                                                           
         A comma-separated list of the SSL3 ciphers used, with the     
         prefix + to enable or - to disable, for example               
-        +SSL_RSA_WITH_RC4_128_MD5. Allowed SSL3/TLS values are        
-        SSL_RSA_WITH_RC4_128_MD5, SSL_RSA_WITH_3DES_EDE_CBC_SHA,      
-        SSL_RSA_WITH_DES_CBC_SHA, SSL_RSA_EXPORT_WITH_RC4_40_MD5,     
-        SSL_RSA_WITH_NULL_MD5, SSL_RSA_WITH_RC4_128_SHA,              
-        SSL_RSA_WITH_NULL_SHA. If no value is specified, all          
-        supported ciphers are assumed to be enabled.                  
+        +SSL_RSA_WITH_RC4_128_MD5. Allowed SSL3/TLS values are those  
+        that are supported by the JVM for the given security provider 
+        and security service configuration. If no value is specified, 
+        all supported ciphers are assumed to be enabled.              
     tls-enabled                                                                
         Determines whether TLS is enabled.                            
     tls-rollback-enabled                                                       
@@ -1034,7 +1013,7 @@
   attributes
     iponly                                                                     
         if the IP address of the user agent should be specified or a  
-        DNL lookup should be done                                     
+        DNS lookup should be done                                     
     log-directory                                                              
         location of the access logs specified as a directory.This     
         defaults to the domain.log-root, which by default is          
@@ -1136,6 +1115,8 @@
 
   attributes
     default-response-type                                                      
+        This attribute is deprecated. Use default-type instead.       
+    default-type                                                               
         Setting the default response-type. Specified as a semi-colon  
         delimited string consisting of content-type, encoding,        
         language, charset                                             
@@ -1143,6 +1124,8 @@
         If the DNS name for a particular ip address from which the    
         request originates needs to be looked up.                     
     forced-response-type                                                       
+        This attribute is deprecated. Use forced-type instead.        
+    forced-type                                                                
         The response type to be forced if the content served cannot   
         be matched by any of the MIME mappings for extensions.        
         Specified as a semi-colon delimited string consisting of      
@@ -1160,8 +1143,10 @@
 <!ATTLIST http-protocol
     version CDATA "HTTP/1.1"
     dns-lookup-enabled %boolean; "false"
-    forced-response-type CDATA "text/html; charset=iso-8859-1"
-    default-response-type CDATA "text/html; charset=iso-8859-1"
+    forced-type CDATA "text/html; charset=iso-8859-1"
+    default-type CDATA "text/html; charset=iso-8859-1"
+    forced-response-type CDATA "AttributeDeprecated"
+    default-response-type CDATA "AttributeDeprecated"
     ssl-enabled %boolean; "true">
 
 
@@ -1942,7 +1927,7 @@
         mapped-principal-class). This behavior is similar to that of  
         Tomcat servlet container. It is off by default.               
     anonymous-role                                                             
-        Used as role name for default/anonymous role.                 
+        This attribute is deprecated.                                 
     audit-enabled                                                              
         If true, additional access logging is performed to provide    
         audit information.                                            
@@ -1986,7 +1971,7 @@
     default-realm CDATA "file"
     default-principal CDATA #IMPLIED
     default-principal-password CDATA #IMPLIED
-    anonymous-role CDATA "ANYONE"
+    anonymous-role CDATA "AttributeDeprecated"
     audit-enabled %boolean; "false"
     jacc CDATA "default"
     audit-modules CDATA "default"
@@ -2501,8 +2486,9 @@
         store-healthcheck-enabled attribute in the                    
         availability-service element.                                 
     persistence-type                                                           
-        The persistence type used by the session persistence          
-        framework.                                                    
+        Specifies the session persistence mechanism for web           
+        applications that have availability enabled. Default is       
+        "memory".                                                     
     sso-failover-enabled                                                       
         This controls whether Single-Sign-On state will be made       
         available for failover.                                       
@@ -2514,7 +2500,7 @@
 
 <!ATTLIST web-container-availability
     availability-enabled %boolean; #IMPLIED
-    persistence-type %persistence-type; "memory"
+    persistence-type CDATA "memory"
     persistence-frequency %session-save-frequency; #IMPLIED
     persistence-scope %session-save-scope; #IMPLIED
     persistence-store-health-check-enabled %boolean; "false"
@@ -2541,8 +2527,11 @@
     sfsb-ha-persistence-type                                                   
         The persistence type used by the EJB Stateful Session Bean    
         Container for checkpointing and passivating                   
-        availability-enabled beans' state. Values may be "file" or    
-        "ha". Default is "ha".                                        
+        availability-enabled beans' state. Default is "ha".           
+    sfsb-persistence-type                                                      
+        Specifies the passivation mechanism for stateful session      
+        beans that do not have availability enabled. Default is       
+        "file".                                                       
     sfsb-quick-checkpoint-enabled                                              
         This attribute is deprecated and will be ignored if present.  
     sfsb-store-pool-name                                                       
@@ -2560,8 +2549,8 @@
 
 <!ATTLIST ejb-container-availability
     availability-enabled %boolean; #IMPLIED
-    sfsb-ha-persistence-type %sfsb-persistence-type; "ha"
-    sfsb-persistence-type %sfsb-persistence-type; "file"
+    sfsb-ha-persistence-type CDATA "ha"
+    sfsb-persistence-type CDATA "file"
     sfsb-checkpoint-enabled %boolean; #IMPLIED
     sfsb-quick-checkpoint-enabled %boolean; #IMPLIED
     sfsb-store-pool-name CDATA #IMPLIED>
@@ -2638,6 +2627,33 @@
         obtained by non-component callers are not automatically       
         cleaned at the end of a transaction by the container. They    
         need to be explicitly closed by the the caller.               
+    associate-with-thread                                                      
+        Associate a connection with the thread such that when the     
+        same thread is in need of a connection, it can reuse the      
+        connection already associated with that thread, thereby not   
+        incurring the overhead of getting a connection from the pool. 
+        Default value is false.                                       
+    connection-creation-retry-attempts                                         
+        The number of attempts to create a new connection. Default is 
+        0, which implies no retries.                                  
+    connection-creation-retry-interval-in-seconds                              
+        The time interval between retries while attempting to create  
+        a connection. Default is 10 seconds. Effective when           
+        connection-creation-retry-attempts is greater than 0.         
+    connection-leak-reclaim                                                    
+        If enabled, connection will be reusable (put back into pool)  
+        after connection-leak-timeout-in-seconds occurs. Default      
+        value is false.                                               
+    connection-leak-timeout-in-seconds                                         
+        To aid user in detecting potential connection leaks by the    
+        application. When a connection is not returned back to the    
+        pool by the application within the specified period, it is    
+        assumed to be a potential leak and stack trace of the caller  
+        will be logged. Default is 0, which implies there is no leak  
+        detection, by default. A positive non-zero value turns on     
+        leak detection. Note however that, this attribute only        
+        detects if there is a connection leak. The connection can be  
+        reclaimed only if connection-leak-reclaim is set to true.     
     connection-validation-method                                               
         specifies the type of validation to be performed when         
         is-connection-validation-required is true. The following      
@@ -2682,6 +2698,29 @@
         by that administrator when they are certain that the          
         application does not change the isolation level before        
         returning the connection.                                     
+    lazy-connection-association                                                
+        Connections are lazily associated when an operation is        
+        performed on them. Also, they are disassociated when the      
+        transaction is completed and a component method ends, which   
+        helps reuse of the physical connections. Default value is     
+        false.                                                        
+    lazy-connection-enlistment                                                 
+        Enlist a resource to the transaction only when it is actually 
+        used in a method, which avoids enlistment of connections that 
+        are not used in a transaction. This also prevents unnecessary 
+        enlistment of connections cached in the calling components.   
+        Default value is false.                                       
+    match-connections                                                          
+        To switch on/off connection matching for the pool. It can be  
+        set to false if the administrator knows that the connections  
+        in the pool will always be homogeneous and hence a connection 
+        picked from the pool need not be matched by the resource      
+        adapter. Default value is false.                              
+    max-connection-usage-count                                                 
+        When specified, connections will be re-used by the pool for   
+        the specified number of times after which it will be closed.  
+        This is useful for instance, to avoid statement-leaks.        
+        Default value is 0, which implies the feature is not enabled. 
     max-pool-size                                                              
         maximum number of conections that can be created              
     max-wait-time-in-millis                                                    
@@ -2709,6 +2748,10 @@
         produced when this attribute has a legal value and the        
         indicated interface is not implemented by the datasource      
         class. This attribute has no default value.                   
+    statement-timeout-in-seconds                                               
+        Sets the timeout property of a connection to enable           
+        termination of abnormally long running queries. Default value 
+        of -1 implies that it is not enabled.                         
     steady-pool-size                                                           
         minimum and initial number of connections maintained in the   
         pool.                                                         
@@ -2724,6 +2767,10 @@
         programmatically, risk polluting the pool and this could lead to       
         program errors. Also see: is-isolation-level-guaranteed                
 
+    validate-atmost-once-period-in-seconds                                     
+        Used to set the time-interval within which a connection is    
+        validated atmost once. Default is 0 which implies that it is  
+        not enabled. TBD: Documentation is to be corrected.           
     validation-table-name                                                      
         specifies the table name to be used to perform a query to     
         validate a connection. This parameter is mandatory, if        
@@ -2731,6 +2778,10 @@
         accessing a user specified table may become necessary for     
         connection validation, particularly if database driver caches 
         calls to setAutoCommit() and getMetaData().                   
+    wrap-jdbc-objects                                                          
+        When set to true, application will get wrapped jdbc objects   
+        for Statement, PreparedStatement, CallableStatement,          
+        ResultSet, DatabaseMetaData. Defaults to false.               
 
   Used in:
     resources                                                         
@@ -2753,7 +2804,19 @@
     validation-table-name CDATA #IMPLIED
     fail-all-connections %boolean; "false"
     non-transactional-connections %boolean; "false"
-    allow-non-component-callers %boolean; "false">
+    allow-non-component-callers %boolean; "false"
+    validate-atmost-once-period-in-seconds CDATA "0"
+    connection-leak-timeout-in-seconds CDATA "0"
+    connection-leak-reclaim %boolean; "false"
+    connection-creation-retry-attempts CDATA "0"
+    connection-creation-retry-interval-in-seconds CDATA "10"
+    statement-timeout-in-seconds CDATA "-1"
+    lazy-connection-enlistment %boolean; "false"
+    lazy-connection-association %boolean; "false"
+    associate-with-thread %boolean; "false"
+    match-connections %boolean; "false"
+    max-connection-usage-count CDATA "0"
+    wrap-jdbc-objects %boolean; "false">
 
 
 <!-- connector-connection-pool
@@ -2783,9 +2846,36 @@
 
 
   attributes
+    associate-with-thread                                                      
+        Associate a connection with the thread such that when the     
+        same thread is in need of a connection, it can reuse the      
+        connection already associated with that thread, thereby not   
+        incurring the overhead of getting a connection from the pool. 
+        Default value is false.                                       
+    connection-creation-retry-attempts                                         
+        The number of attempts to create a new connection. Default is 
+        0, which implies no retries.                                  
+    connection-creation-retry-interval-in-seconds                              
+        The time interval between retries while attempting to create  
+        a connection. Default is 10 seconds. Effective when           
+        connection-creation-retry-attempts is greater than 0.         
     connection-definition-name                                                 
         unique name, identifying one connection-definition in a       
         Resource Adapter. Currently this is ConnectionFactory type.   
+    connection-leak-reclaim                                                    
+        If enabled, connection will be reusable (put back into pool)  
+        after connection-leak-timeout-in-seconds occurs. Default      
+        value is false.                                               
+    connection-leak-timeout-in-seconds                                         
+        To aid user in detecting potential connection leaks by the    
+        application. When a connection is not returned back to the    
+        pool by the application within the specified period, it is    
+        assumed to be a potential leak and stack trace of the caller  
+        will be logged. Default is 0, which implies there is no leak  
+        detection, by default. A positive non-zero value turns on     
+        leak detection. Note however that, this attribute only        
+        detects if there is a connection leak. The connection can be  
+        reclaimed only if connection-leak-reclaim is set to true.     
     fail-all-connections                                                       
         indicates if all connections in the pool must be closed       
         should a single connection fail validation. The default is    
@@ -2803,6 +2893,29 @@
     is-connection-validation-required                                          
         This attribute specifies if the connection that is about to   
         be returned is to be validated by the container,              
+    lazy-connection-association                                                
+        Connections are lazily associated when an operation is        
+        performed on them. Also, they are disassociated when the      
+        transaction is completed and a component method ends, which   
+        helps reuse of the physical connections. Default value is     
+        false.                                                        
+    lazy-connection-enlistment                                                 
+        Enlist a resource to the transaction only when it is actually 
+        used in a method, which avoids enlistment of connections that 
+        are not used in a transaction. This also prevents unnecessary 
+        enlistment of connections cached in the calling components.   
+        Default value is false.                                       
+    match-connections                                                          
+        To switch on/off connection matching for the pool. It can be  
+        set to false if the administrator knows that the connections  
+        in the pool will always be homogeneous and hence a connection 
+        picked from the pool need not be matched by the resource      
+        adapter. Default value is true.                               
+    max-connection-usage-count                                                 
+        When specified, connections will be re-used by the pool for   
+        the specified number of times after which it will be closed.  
+        This is useful for instance, to avoid statement-leaks.        
+        Default value is 0, which implies the feature is not enabled. 
     max-pool-size                                                              
         maximum number of conections that can be created              
     max-wait-time-in-millis                                                    
@@ -2831,6 +2944,10 @@
         Adapter in a downward compatible way, i.e it can support a    
         lower/equal transaction level than specified in the RA, but   
         not a higher level.                                           
+    validate-atmost-once-period-in-seconds                                     
+        Used to set the time-interval within which a connection is    
+        validated atmost once. Default is 0 which implies that it is  
+        not enabled. TBD: Documentation is to be corrected.           
 
   Used in:
     resources                                                         
@@ -2848,7 +2965,17 @@
     idle-timeout-in-seconds CDATA "300"
     fail-all-connections %boolean; "false"
     transaction-support (XATransaction | LocalTransaction | NoTransaction) #IMPLIED
-    is-connection-validation-required %boolean; "false">
+    is-connection-validation-required %boolean; "false"
+    validate-atmost-once-period-in-seconds CDATA "0"
+    connection-leak-timeout-in-seconds CDATA "0"
+    connection-leak-reclaim %boolean; "false"
+    connection-creation-retry-attempts CDATA "0"
+    connection-creation-retry-interval-in-seconds CDATA "10"
+    lazy-connection-enlistment %boolean; "false"
+    lazy-connection-association %boolean; "false"
+    associate-with-thread %boolean; "false"
+    match-connections %boolean; "true"
+    max-connection-usage-count CDATA "0">
 
 
 <!-- security-map
@@ -2946,14 +3073,14 @@
     connector-resource, custom-resource, das-config,                  
     diagnostic-service, domain, ejb-container,                        
     ejb-container-availability, ejb-module, ejb-timer-service, event, 
-    external-jndi-resource, filter-config, group-management-service,  
-    http-listener, http-service, iiop-listener, j2ee-application,     
-    jacc-provider, java-config, jdbc-connection-pool, jdbc-resource,  
-    jms-availability, jms-host, jms-service, jmx-connector,           
-    lb-config, lifecycle-module, listener-config, load-balancer,      
-    log-service, mail-resource, manager-properties, mbean,            
-    mdb-container, module-log-levels, module-monitoring-levels,       
-    monitoring-service, node-agent, orb,                              
+    extension-module, external-jndi-resource, filter-config,          
+    group-management-service, http-listener, http-service,            
+    iiop-listener, j2ee-application, jacc-provider, java-config,      
+    jdbc-connection-pool, jdbc-resource, jms-availability, jms-host,  
+    jms-service, jmx-connector, lb-config, lifecycle-module,          
+    listener-config, load-balancer, log-service, mail-resource,       
+    manager-properties, mbean, mdb-container, module-log-levels,      
+    module-monitoring-levels, monitoring-service, node-agent, orb,    
     persistence-manager-factory-resource, profiler, provider-config,  
     resource-adapter-config, security-service, server,                
     session-properties, store-properties, transaction-service,        
@@ -3104,9 +3231,9 @@
 <!ATTLIST cluster
     name CDATA #REQUIRED
     config-ref CDATA #REQUIRED
-    heartbeat-port CDATA #REQUIRED
-    heartbeat-address CDATA #REQUIRED
-    heartbeat-enabled %boolean; "true">
+    heartbeat-enabled %boolean; "true"
+    heartbeat-port CDATA #IMPLIED
+    heartbeat-address CDATA #IMPLIED>
 
 
 <!-- server-ref
@@ -3442,8 +3569,8 @@
 
   attributes
     jbi-enabled                                                                
-        when false, it disables the visibility of this endoint as a   
-        service in JBI                                                
+        when true, it enables the visibility of this endoint as a     
+        service in JBI.                                               
     max-history-size                                                           
         maximum number of monitoring records stored in history for    
         this end point                                                
@@ -3466,7 +3593,7 @@
     name CDATA #REQUIRED
     monitoring %monitoring-level; "OFF"
     max-history-size CDATA "25"
-    jbi-enabled %boolean; "true">
+    jbi-enabled %boolean; "false">
 
 
 <!-- registry-location
@@ -3589,6 +3716,47 @@
     impl-class-name CDATA #REQUIRED
     object-name CDATA #IMPLIED
     enabled %boolean; "true">
+
+
+<!-- extension-module
+
+  attributes
+    availability-enabled                                                       
+        The exact semantics of availability being enabled for an      
+        extension module are undefined at this time. If this          
+        attribute is missing, it defaults to "false".                 
+    directory-deployed                                                         
+        This attribute indicates whether the application has been     
+        deployed to a directory or not                                
+    libraries                                                                  
+        System dependent path separator [: for Unix/Solaris/Linux and 
+        ; for Windows] separated list of jar paths. These paths could 
+        be either relative [relative to                               
+        {com.sun.aas.instanceRoot}/lib/applibs] or absolute paths.    
+        These dependencies appears *after* the libraries defined in   
+        classpath-prefix in the java-config and *before* the          
+        application server provided over-rideable jar set. The        
+        libraries would be made available to the application in the   
+        order in which they were specified.                           
+    module-type                                                                
+        String representing the module type. This module type will be 
+        used by the runtime to find the appropriate extension         
+        container.                                                    
+
+  Used in:
+    applications                                                      
+-->
+<!ELEMENT extension-module (description?, property*)>
+
+<!ATTLIST extension-module
+    name CDATA #REQUIRED
+    location CDATA #REQUIRED
+    module-type CDATA #REQUIRED
+    object-type %object-type; "user"
+    enabled %boolean; "true"
+    libraries CDATA #IMPLIED
+    availability-enabled %boolean; "false"
+    directory-deployed %boolean; "false">
 
 
 <!-- jms-availability
