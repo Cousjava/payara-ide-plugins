@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
@@ -59,7 +60,22 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
     public  SunAppServer getSunAppServer(){
     	     return (SunAppServer)getServer().getAdapter(SunAppServer.class);
     }
-    
+
+    /* stub this public method from parent since we are not using <start> class definition in the serverdef.
+     * This was called and created a NPE for our special case.
+     * Note that this workaround was here before (added in plugin version 1.0.3) but
+     * caused issue 33, so it was removed.  It is now causing the NPE again sometimes, 
+     * and testing issue 33 is successful, so it is being put back.  We need to keep an
+     * eye on it, though.
+     * Not needed
+     *
+       (non-Javadoc)
+     * @see org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour#setupLaunchConfiguration(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
+        //do nothing...to prevent a NPE in wtp2.0.2 winter edition
+    }
+
     protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
         int state = getServer().getServerState();
         SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setupLaunch state=" +state);
