@@ -36,11 +36,6 @@
     default=""
     />
     
-   <property id="sunappserver.serveraddress"  label="%sunappserver.serveraddress"
-    type="string"
-    context="server"
-    default="localhost" />
-    
     <property id="sunappserver.serverportnumber" label="%sunappserver.serverportnumber"
     type="string"
     context="server"
@@ -177,6 +172,9 @@
 
     </classpath>
 	
+    <!-- Note: This is not currently used, but it uses the property sunappserver.serveraddress -->
+    <!-- which does not come from the props above, but is set by synchronizing it with the value -->
+    <!-- from the generic server framework in SunAppServer.java -->
     <jndiConnection>
         <providerUrl>jnp://${sunappserver.serveraddress}:1099</providerUrl>
         <initialContextFactory>org.jnp.interfaces.NamingContextFactory</initialContextFactory>

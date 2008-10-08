@@ -36,11 +36,6 @@
     default=""
     />
     
-   <property id="sunappserver.serveraddress"  label="%sunappserver.serveraddress"
-    type="string"
-    context="server"
-    default="localhost" />
-    
     <property id="sunappserver.serverportnumber" label="%sunappserver.serverportnumber"
     type="string"
     context="server"
@@ -71,17 +66,17 @@
     type="string"
     context="server"
     default="adminadmin" />
-    
+
     <property id="sunappserver.useAnonymousConnection" label="%sunappserver.useAnonymousConnection"
     type="boolean"
     context="server"
     default="true" />
-
+    
     <property id="sunappserver.keepSessions" label="%sunappserver.keepSessions"
     type="boolean"
     context="server"
     default="true" />
-    
+
 
 
     <port>
@@ -177,30 +172,20 @@
     <!-- with the switch to an OSGI style manifest which does not help for compilation/code completion -->
     <!-- this list is constantly changing -->
     <classpath id="sunappsrv.project" >
-    	    <fileset dir="${sunappserver.rootdirectory}">
-	       <include name="modules/javax.*.jar" />
-	       <include name="modules/web/javax.*.jar" />
-	       <include name="modules/ejb/javax.*.jar" />
-	       </fileset>
-       <!--  archive path="${sunappserver.rootdirectory}/modules/javax.jms.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.persistence.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.resource.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.security.jacc.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.xml.stream.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.activation.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/web/javax.servlet.jsp.jstl.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.security.auth.message.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.servlet.jsp.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.transaction.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.mail.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/javax.annotation.jar" /-->
-    	<!--  jar needed for tld files (html_basic and jsf_core) -->
-    	<archive path="${sunappserver.rootdirectory}/modules/jsf-api.jar" />
-    	<!--  jar needed for tld files (html_basic and jsf_core) -->
-     	<archive path="${sunappserver.rootdirectory}/modules/web/jsf-impl.jar" />
+	<fileset dir="${sunappserver.rootdirectory}">
+		<include name="modules/javax.*.jar" />
+		<include name="modules/web/javax.*.jar" />
+		<include name="modules/ejb/javax.*.jar" />
+	</fileset>
+	<!-- leave at least one generic jar as an archive so that validation works -->
+	<archive path="${sunappserver.rootdirectory}/modules/jsf-api.jar" />
+	<!--  jar needed for tld files (html_basic and jsf_core) -->
+	<archive path="${sunappserver.rootdirectory}/modules/web/jsf-impl.jar" />
     </classpath>
 	
+    <!-- Note: This is not currently used, but it uses the property sunappserver.serveraddress -->
+    <!-- which does not come from the props above, but is set by synchronizing it with the value -->
+    <!-- from the generic server framework in SunAppServer.java -->
     <jndiConnection>
         <providerUrl>jnp://${sunappserver.serveraddress}:1099</providerUrl>
         <initialContextFactory>org.jnp.interfaces.NamingContextFactory</initialContextFactory>
