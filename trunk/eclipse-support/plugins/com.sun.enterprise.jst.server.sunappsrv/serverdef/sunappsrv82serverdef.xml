@@ -35,15 +35,7 @@
     context="runtime"
     default="" />
     
-    <property id="sunappserver.serverportnumber" label="%sunappserver.serverportnumber"
-    type="string"
-    context="server"
-    default="8080" />
-    
-    <property id="sunappserver.adminserverportnumber" label="%sunappserver.adminserverportnumber"
-    type="string"
-    context="server"
-    default="4848" />
+
     
     <property id="sunappserver.domainname"  label="%sunappserver.domainname"
     type="string"

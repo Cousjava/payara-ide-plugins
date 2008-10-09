@@ -27,7 +27,7 @@
     xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
-    name="GlassFish V3" version="v0.1">
+    name="GlassFish v3" version="v0.1">
     
     
     <property id="sunappserver.rootdirectory"  label="%sunappserver.rootdirectory"
@@ -36,15 +36,7 @@
     default=""
     />
     
-    <property id="sunappserver.serverportnumber" label="%sunappserver.serverportnumber"
-    type="string"
-    context="server"
-    default="8080" />
-    
-    <property id="sunappserver.adminserverportnumber" label="%sunappserver.adminserverportnumber"
-    type="string"
-    context="server"
-    default="4848" />
+
     
     <property id="sunappserver.domainname"  label="%sunappserver.domainname"
     type="string"
