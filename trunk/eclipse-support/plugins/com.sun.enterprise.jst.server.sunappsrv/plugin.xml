@@ -744,6 +744,10 @@
                     uri="dtds/sun-connector_1_0-0.dtd" 
                     webURL="http://www.sun.com/software/appserver/dtds/sun-connector_1_0-0.dtd" />
             
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 Connector 1.5//EN" 
+                    uri="dtds/sun-connector_1_5-0.dtd" 
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-connector_1_5-0.dtd" />
+            
             
             <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 Servlet 2.3//EN"
                     uri="dtds/sun-web-app_2_3-0.dtd" 
@@ -820,6 +824,15 @@
                     webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_1.dtd" />
             
             
+              <public publicId="-//Sun Microsystems Inc.//DTD Application Server 9.0 Domain//EN"
+                    uri="dtds/sun-domain_1_1.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_2.dtd" />
+            
+             <public publicId="-//Sun Microsystems Inc.//DTD Application Server 9.1 Domain//EN"
+                    uri="dtds/sun-domain_1_1.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_3.dtd" />
+            
+            
             
             
             
@@ -836,6 +849,16 @@
                  class="com.sun.enterprise.jst.server.sunappsrv.editorsections.ServerSection">
         </section>
     </extension>
+ 
+    <extension point="org.eclipse.wst.server.ui.editorPages">
+      <page
+         id="com.sun.enterprise.jst.server.sunappsrv.editorsections.uc"
+         order="20"
+         name="Update Center"
+         typeIds="com.sun.enterprise.jst.server.glassfish*"
+        class="com.sun.enterprise.jst.server.sunappsrv.editorsections.UpdateCenterEditorPage">
+      </page>
+   </extension>
     <extension
           point="org.eclipse.ui.newWizards">
        <category
