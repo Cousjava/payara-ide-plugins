@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -70,10 +71,11 @@ public class SunAppServer extends GenericServer {
     public static final String USEANONYMOUSCONNECTIONS = "sunappserver.useAnonymousConnection";
     
     //Default values
-    String serverPortNumber="8080";
-    String adminServerPortNumber="4848";
+    String serverPortNumber="1118080";
+    String adminServerPortNumber="1114848";
     
     public SunAppServer(){
+        SunAppSrvPlugin.logMessage("in SunAppServer CTOR");
     }
 	
 	
@@ -82,7 +84,8 @@ public class SunAppServer extends GenericServer {
      */
     @Override
     protected void initialize() {
-        super.initialize();
+        SunAppSrvPlugin.logMessage("in SunAppServer initialize");
+       super.initialize();
         syncHostValues();
         readServerConfiguration(new File(getDomainDir()+File.separator+getdomainName()+"/config/domain.xml"));
     }
@@ -190,6 +193,19 @@ public class SunAppServer extends GenericServer {
         super.setDefaults(monitor);
     }
 
+	public ServerPort[] getServerPorts() {
+
+		
+		try {
+			ServerPort[] sp = new ServerPort[2];
+			sp[0] = new ServerPort("adminserver", "Admin Server Port", Integer.parseInt(adminServerPortNumber), "HTTP");
+			sp[1] = new ServerPort("server", "Server Port", Integer.parseInt(serverPortNumber), "HTTP");
+
+			return sp;
+		} catch (Exception e) {
+			return new ServerPort[0]; 
+		}
+	}
     /**
      * 
      * @param host 
@@ -198,15 +214,24 @@ public class SunAppServer extends GenericServer {
      */
     public  boolean isRunning() {
 
-        
+        if (adminServerPortNumber.equals("1114848")){
+            SunAppSrvPlugin.logMessage("catastrophic state where adminServerPortNumber is not initialize is null in SunAppServer.java");
+            SunAppSrvPlugin.logMessage("catastrophic Only thing to do is restart Eclipse");
+
+                              	
+        }
         try {
             InetSocketAddress isa = new InetSocketAddress(getServer().getHost(), Integer.parseInt(getServerPort()));
+            SunAppSrvPlugin.logMessage("in isRunning"+getServer().getHost()+ Integer.parseInt(getServerPort()));
+           
             Socket socket = new Socket();
             socket.connect(isa, 1);
             socket.close();
+            SunAppSrvPlugin.logMessage("in isRunning=true");
             return true;
         } catch (Exception e) {
-            return false;
+            SunAppSrvPlugin.logMessage("in isRunning=false" +e.getMessage());
+           return false;
         }
     }
     
