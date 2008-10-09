@@ -79,6 +79,16 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         }
        
         SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
+
+        SunAppServer sunserver = serverBehavior.getSunAppServer();
+        if (sunserver.isRunning()) {
+            if (serverBehavior.isV3()) {
+                SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch Forcing a STOP!!!!");
+                serverBehavior.stop(true);
+            }
+        }
+
+
         if (serverBehavior.isV3()==false){
         	String asadminCmd =  serverBehavior.getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+getScriptExtension();	        
 	        String domain = serverBehavior.getDomainName();
@@ -133,7 +143,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             try {
                 Thread.sleep(2000);//2 secs
                               
-                SunAppServer  sunserver = serverBehavior.getSunAppServer();
+          //      SunAppServer  sunserver = serverBehavior.getSunAppServer();
                 if (sunserver.isRunning()){
                 	
                     serverBehavior.startPingingThread();       
