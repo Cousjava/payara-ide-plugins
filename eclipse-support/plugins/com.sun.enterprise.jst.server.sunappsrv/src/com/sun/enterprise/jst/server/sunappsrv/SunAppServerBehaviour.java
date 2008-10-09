@@ -74,7 +74,9 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
      */
     public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
         //do nothing...to prevent a NPE in wtp2.0.2 winter edition
-    }
+        SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setupLaunchConfiguration doing nothing");
+        		
+           }
 
     protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
         int state = getServer().getServerState();
@@ -205,10 +207,10 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
         
         resetStatus(getServer().getServerState());
         int state = getServer().getServerState();
-        if (state == IServer.STATE_STOPPED){
+  /*      if (state == IServer.STATE_STOPPED){
             SunAppSrvPlugin.logMessage("in SunAppServerBehaviour ALREADY STOPPED...Wierd");
                       return;
-        }
+        }*/
         
         ///shutdown(state);
         stopSunServer();
