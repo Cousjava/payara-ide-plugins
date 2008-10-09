@@ -884,7 +884,7 @@
             <enablement>
                 <test forcePluginActivation="true"
                 property="org.eclipse.wst.server.ui.serverType"
-                value="com.sun.enterprise.*" />
+                value="com.sun.enterprise.jst.server.glassfishv3*" />
             </enablement>
       
             <menu
