@@ -128,6 +128,7 @@ public class ServerSection extends ServerEditorSection {
         // according to docs, setEditabled(false) is supposed to do that, but does not (on Mac)
         // setEnabled(false) grays it out, but does not accomplish that either
         domaindir.setEditable(false);
+        domaindir.setEnabled(false);
  
         createLabel(comp, Messages.AdminName, toolkit);
         
@@ -150,26 +151,23 @@ public class ServerSection extends ServerEditorSection {
             }
         });
         
-        createLabel(comp, Messages.ServerPortNumber, toolkit);
+       createLabel(comp, Messages.ServerPortNumber, toolkit);
         
         final Text serverPortNumber = toolkit.createText(comp, sunserver.getServerPort(), SWT.BORDER);
         
         serverPortNumber.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        serverPortNumber.addModifyListener(new ModifyListener() {
-            public void modifyText(ModifyEvent e) {
-                execute(new SunAppServerCommands(server, serverPortNumber.getText(),SunAppServer.SERVERPORT));
-            }
-        });
+        serverPortNumber.setEditable(false);
+        serverPortNumber.setEnabled(false);
+
         
         createLabel(comp, Messages.AdminServerPortNumber, toolkit);
         
         final Text adminServerPortNumber = toolkit.createText(comp, sunserver.getAdminServerPort(), SWT.BORDER);
         adminServerPortNumber.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-        adminServerPortNumber.addModifyListener(new ModifyListener() {
-            public void modifyText(ModifyEvent e) {
-                execute(new SunAppServerCommands(server, adminServerPortNumber.getText(),SunAppServer.ADMINSERVERPORT));
-            }
-        });
+        adminServerPortNumber.setEditable(false);
+        adminServerPortNumber.setEnabled(false);
+
+        
 
         if (serverBehavior.isV3()) {
             createLabel(comp, "   ", toolkit);
