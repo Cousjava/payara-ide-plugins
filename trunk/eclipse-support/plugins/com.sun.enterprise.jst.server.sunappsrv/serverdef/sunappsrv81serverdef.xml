@@ -54,11 +54,6 @@
     
 
 
-    <port>
-        <no>${sunappserver.serverportnumber}</no>
-        <name>Http</name>
-        <protocol>http</protocol>
-    </port>
 
     <module>
         <type>jst.web</type>
