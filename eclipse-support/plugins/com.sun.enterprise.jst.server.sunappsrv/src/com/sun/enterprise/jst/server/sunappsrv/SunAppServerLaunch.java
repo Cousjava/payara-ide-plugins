@@ -145,7 +145,13 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                               
           //      SunAppServer  sunserver = serverBehavior.getSunAppServer();
                 if (sunserver.isRunning()){
-                	
+                    if (serverBehavior.isV3()) {
+                        if (!sunserver.isV3Ready(false)){
+                            SunAppSrvPlugin.logMessage("V3 not ready");
+
+                        	continue;
+                        }
+                    }               	
                     serverBehavior.startPingingThread();       
                     setDefaultSourceLocator(launch, configuration);
                     monitor.worked(1);
