@@ -41,57 +41,57 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
  */
 public class AppServerContextAction implements IObjectActionDelegate {
 
-    private IWorkbenchPart targetPart;
-    private IServer selectedServer;
-    private IModule selectedModule;
+	private IWorkbenchPart targetPart;
+	protected IServer selectedServer;
+	protected IModule selectedModule;
 
-    /**
-     * Constructor for CleanWorkDirAction.
-     */
-    public AppServerContextAction() {
-        super();
-    }
+	/**
+	 * Constructor for CleanWorkDirAction.
+	 */
+	public AppServerContextAction() {
+		super();
+	}
 
-    /**
-     * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
-     */
-    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        this.targetPart = targetPart;
-    }
+	/**
+	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
+	 */
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+		this.targetPart = targetPart;
+	}
 
-    /**
-     * @see org.eclipse.ui.IActionDelegate#run(IAction)
-     */
-    public void run(IAction action) {
-        Shell s = targetPart.getSite().getShell();
+	/**
+	 * @see org.eclipse.ui.IActionDelegate#run(IAction)
+	 */
+	public void run(IAction action) {
+		Shell s = targetPart.getSite().getShell();
 
 
-        SunAppServerBehaviour sab = (SunAppServerBehaviour) selectedServer.loadAdapter(
-                SunAppServerBehaviour.class, null);
+		SunAppServerBehaviour sab = (SunAppServerBehaviour) selectedServer.loadAdapter(
+				SunAppServerBehaviour.class, null);
 
-        SunAppSrvPlugin.logMessage(
-                "Message is:" + action + sab.getDomainDir() + selectedServer + selectedModule);//+Activator.message+"'");
-    }
+		SunAppSrvPlugin.logMessage(
+				"Message is:" + action + sab.getDomainDir() + selectedServer + selectedModule);//+Activator.message+"'");
+	}
 
-    /**
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
-     */
-    public void selectionChanged(IAction action, ISelection selection) {
-        selectedServer = null;
-        selectedModule = null;
-        if (!selection.isEmpty()) {
-            if (selection instanceof IStructuredSelection) {
-                Object obj = ((IStructuredSelection) selection).getFirstElement();
-                if (obj instanceof IServer) {
-                    selectedServer = (IServer) obj;
-                } else if (obj instanceof ModuleServer) {
-                    ModuleServer ms = (ModuleServer) obj;
-                    selectedModule = ms.module[ms.module.length - 1];
-                    if (selectedModule != null) {
-                        selectedServer = ms.server;
-                    }
-                }
-            }
-        }
-    }
+	/**
+	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
+	 */
+	public void selectionChanged(IAction action, ISelection selection) {
+		selectedServer = null;
+		selectedModule = null;
+		if (!selection.isEmpty()) {
+			if (selection instanceof IStructuredSelection) {
+				Object obj = ((IStructuredSelection) selection).getFirstElement();
+				if (obj instanceof IServer) {
+					selectedServer = (IServer) obj;
+				} else if (obj instanceof ModuleServer) {
+					ModuleServer ms = (ModuleServer) obj;
+					selectedModule = ms.module[ms.module.length - 1];
+					if (selectedModule != null) {
+						selectedServer = ms.server;
+					}
+				}
+			}
+		}
+	}
 }
