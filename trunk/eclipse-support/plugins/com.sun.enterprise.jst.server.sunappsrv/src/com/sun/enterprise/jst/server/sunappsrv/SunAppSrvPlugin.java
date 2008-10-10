@@ -49,7 +49,11 @@ public class SunAppSrvPlugin extends Plugin {
     }
     
     public static void logMessage(String mess){
-        final Status status = new Status(IStatus.INFO, SUNPLUGIN_ID, 1,"Sun App Server: "+mess,null);        
+        final Status status = new Status(IStatus.INFO, SUNPLUGIN_ID, 1,"GlassFish: "+mess,null);        
+        getInstance().getLog().log(status);
+    }
+    public static void logMessage(String mess, Exception e){
+        final Status status = new Status(IStatus.ERROR, SUNPLUGIN_ID, 1,"GlassFish: "+mess,e);        
         getInstance().getLog().log(status);
     }
 }
