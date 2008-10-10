@@ -77,9 +77,10 @@
          <runtimeType
             id="com.sun.enterprise.jst.server.runtime.glassfishv3prelude"
             name="%runtimeTypeNameglassfishv3prelude" description="%runtimeTypeDescriptionglassfishv3prelude"
-            vendor="%runtimeTypeGlassFishVendor" version="10-prelude"
+            vendor="%runtimeTypeGlassFishVendor" version="10.0"
             class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
+            <moduleType types="jst.utility"  versions="1.0"/>
         </runtimeType>               
         <!-- GlassFish V1 server -->
 
@@ -875,8 +876,8 @@
        </wizard>
     </extension>
  
- 
-    <extension point="org.eclipse.ui.popupMenus">
+
+    <!--extension point="org.eclipse.ui.popupMenus">
         <objectContribution
                 adaptable="true"
                 id="com.sun.enterprise.jst.server.ui.serveractions"
@@ -890,20 +891,28 @@
             <menu
                 id="org.eclipse.ui.articles.action.contribution.navigator.subMenu"
                 label="GlassFish v3 Prelude"
+                icon="icons/obj16/glassfishserver.gif"
                 path="additions">
                 <separator name="group1"/>
-                <separator name="group2"/>
-                <separator name="group3"/>
+
             </menu>
       
- 
+             <action
+                label="Open Web Browser"
+                enablesFor="1"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.OpenBrowserAction"
+                tooltip="Open Web Browser"
+                menubarPath="org.eclipse.ui.articles.action.contribution.navigator.subMenu/group1"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.OpenBrowserAction">
+            </action>
       
             <action
                 label="Register v3 Prelude"
                 enablesFor="1"
                 icon="icons/obj16/glassfishserver.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction"
-                menubarPath="org.eclipse.ui.articles.action.contribution.navigator.subMenu/group2"
+                menubarPath="org.eclipse.ui.articles.action.contribution.navigator.subMenu/group1"
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction">
             </action>
             <action
@@ -912,7 +921,7 @@
                 icon="icons/obj16/glassfishserver.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction"
                 tooltip="v3 Prelude Update Center"
-                menubarPath="org.eclipse.ui.articles.action.contribution.navigator.subMenu/group3"
+                menubarPath="org.eclipse.ui.articles.action.contribution.navigator.subMenu/group1"
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction">
             </action>
         </objectContribution>
@@ -941,4 +950,71 @@
     </extension>
      
 
+
+
+    <extension point="org.eclipse.ui.popupMenus">
+        <objectContribution
+                adaptable="true"
+                id="com.sun.enterprise.jst.server.ui.serveractionsModule"
+                objectClass="org.eclipse.wst.server.core.IModule">
+            <enablement>
+                <test forcePluginActivation="true"
+                property="org.eclipse.wst.server.ui.serverType"
+                value="com.sun.enterprise.jst.server.glassfishv3*" />
+            </enablement>
+      
+            <menu
+                id="org.eclipse.ui.articles.action.contribution.navigator.subMenuModule"
+                label="GlassFish v3 Prelude"
+                path="additions">
+                <separator name="group1"/>
+
+            </menu>
+      
+             <action
+                label="Open Web Browser"
+                enablesFor="1"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.OpenBrowserAction"
+                tooltip="Open Web Browser"
+                menubarPath="org.eclipse.ui.articles.action.contribution.navigator.subMenuModule/group1"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.OpenBrowserActionModule">
+            </action>
+      
+            <action
+                label="Register v3 Prelude"
+                enablesFor="1"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction"
+                menubarPath="org.eclipse.ui.articles.action.contribution.navigator.subMenuModule/group1"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationActionModule">
+            </action>
+            <action
+                label="v3 Prelude Update Center"
+                enablesFor="1"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction"
+                tooltip="v3 Prelude Update Center"
+                menubarPath="org.eclipse.ui.articles.action.contribution.navigator.subMenuModule/group1"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterActionModule">
+            </action>
+        </objectContribution>
+        </extension>
+    <extension point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            id="GlassFishLibraries"
+            class="com.sun.enterprise.jst.server.sunappsrv.GlassFishClasspathContainerInitializer"/>
+   </extension>
+   <extension
+          point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            class="com.sun.enterprise.jst.server.sunappsrv.GlassFishContainerPage"
+             id="com.sun.enterprise.jst.server.sunappsrv.GlassFishContainerPage"
+             name="GlassFish Libraries">
+       </classpathContainerPage>
+    </extension-->  
+    
+
+    
+    
     </plugin>
