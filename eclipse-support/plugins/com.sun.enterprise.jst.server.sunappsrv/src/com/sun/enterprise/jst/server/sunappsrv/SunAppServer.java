@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,6 +45,10 @@ import org.eclipse.wst.server.core.internal.Server;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
+import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
+import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
+import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
 
 
@@ -59,10 +65,10 @@ public class SunAppServer extends GenericServer {
     // so we set it by synchronizing it with the value from the generic server framework
     public static final String ADDRESS = "sunappserver.serveraddress";
     
-/* now we read these props from domain.xml
+// now we read these props from domain.xml
     public static final String SERVERPORT = "sunappserver.serverportnumber";
     public static final String ADMINSERVERPORT = "sunappserver.adminserverportnumber";
-*/
+
     public static final String DOMAINNAME = "sunappserver.domainname";
     public static final String DOMAINDIR = "sunappserver.domaindir";
     public static final String ADMINNAME = "sunappserver.adminname";
@@ -86,8 +92,9 @@ public class SunAppServer extends GenericServer {
     protected void initialize() {
         SunAppSrvPlugin.logMessage("in SunAppServer initialize");
        super.initialize();
-        syncHostValues();
-        readServerConfiguration(new File(getDomainDir()+File.separator+getdomainName()+"/config/domain.xml"));
+       readServerConfiguration(new File(getDomainDir()+File.separator+getdomainName()+"/config/domain.xml"));
+       
+       syncHostAndPortsValues();
     }
 
   public Map<String, String> getProps(){
@@ -142,19 +149,28 @@ public class SunAppServer extends GenericServer {
         return (String) getProps().get(DOMAINDIR);
     }
 
-    private void syncHostValues() {
+    private void syncHostAndPortsValues() {
     	Map<String, String> props = getProps();
     	String currentHostValue = (String) props.get(ADDRESS);
     	String genericHostValue = getServer().getHost();
 
     	if ((currentHostValue == null) || !currentHostValue.equals(genericHostValue)) {
     		props.put(ADDRESS, genericHostValue);
+    	}
+
+    	String currentServerPortValue = (String) props.get(SERVERPORT);
+    	if ((currentServerPortValue == null) || !currentServerPortValue.equals(serverPortNumber)) {
+    		props.put(SERVERPORT, serverPortNumber);
+    	}
+    	String currentServerAdminPortValue = (String) props.get(ADMINSERVERPORT);
+    	if ((currentServerAdminPortValue == null) || !currentServerAdminPortValue.equals(adminServerPortNumber)) {
+    		props.put(ADMINSERVERPORT, adminServerPortNumber);
     	}    	
     }
 
     public void  saveConfiguration(IProgressMonitor m) throws CoreException  {
         SunAppSrvPlugin.logMessage("in Save SunAppServer ");
-        syncHostValues();
+        syncHostAndPortsValues();
         super.saveConfiguration(m);
     }
     
@@ -222,20 +238,74 @@ public class SunAppServer extends GenericServer {
         }
         try {
             InetSocketAddress isa = new InetSocketAddress(getServer().getHost(), Integer.parseInt(getServerPort()));
-            SunAppSrvPlugin.logMessage("in isRunning"+getServer().getHost()+ Integer.parseInt(getServerPort()));
            
             Socket socket = new Socket();
             socket.connect(isa, 1);
             socket.close();
-            SunAppSrvPlugin.logMessage("in isRunning=true");
             return true;
         } catch (Exception e) {
-            SunAppSrvPlugin.logMessage("in isRunning=false" +e.getMessage());
            return false;
         }
     }
+ 
+    public boolean isV3ReallyRunning() {
+        return isRunning() && isV3Ready(false);
+    }
+
+    public boolean isV3Ready(boolean retry) {
+        boolean isReady = false;
+        int maxtries = retry ? 3 : 1;
+        int tries = 0;
+
+        while(!isReady && tries++ < maxtries) {
+            long start = System.nanoTime();
+           Commands.LocationCommand command = new Commands.LocationCommand();
+           try {
+                Future<OperationState> result = execute(command);
+               if(result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED) {
+                   long end = System.nanoTime();
+                    Logger.getLogger("glassfish").log(Level.FINE, command.getCommand() +
+                            " responded in " + (end - start)/1000000 + "ms");
+                    String installRoot = this.getDomainDir()+File.separator+this.getdomainName();
+                    String targetInstallRoot = command.getDomainRoot();
+                    //SunAppSrvPlugin.logMessage("IsReady is targetInstallRoot="+targetInstallRoot );
+                    //SunAppSrvPlugin.logMessage("IsReady is installRoot="+installRoot );
+                   if(installRoot != null && targetInstallRoot != null) {
+                        File installDir = new File(installRoot);
+                        File targetInstallDir = new File(targetInstallRoot);
+                        isReady = installDir.equals(targetInstallDir);
+                   } else {
+                        isReady = false;
+                    }
+                    break;
+                } else if(!command.retry()) {
+                    // !PW temporary while some server versions support __locations
+                    // and some do not but are still V3 and might the ones the user
+                    // is using.
+                    result = execute(new Commands.VersionCommand());
+                    isReady = result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED;
+                    break;
+                } else {
+                    long end = System.nanoTime();
+                    SunAppSrvPlugin.logMessage("V3 not ready yet" );
+                   Logger.getLogger("glassfish").log(Level.FINE, command.getCommand() +
+                            " timed out inside server after " + (end - start)/1000000 + "ms");
+                }
+            } catch(Exception ex) {
+                SunAppSrvPlugin.logMessage("IsReady is failing=",ex );
+               Logger.getLogger("glassfish").log(Level.FINE, command.getCommand() + " timed out.", ex);
+                isReady = false;
+                break;
+            }
+        }
+
+        return isReady;
+    }    
     
-    
+    public Future<OperationState> execute(ServerCommand command) {
+        CommandRunner mgr = new CommandRunner(this);
+        return mgr.execute(command);
+    }   
      boolean readServerConfiguration(File domainXml) {
         boolean result = false;
         final Map<String, HttpData> httpMap = new LinkedHashMap<String, HttpData>();
