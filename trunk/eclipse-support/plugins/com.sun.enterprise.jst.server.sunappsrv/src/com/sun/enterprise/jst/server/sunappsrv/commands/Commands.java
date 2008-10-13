@@ -434,5 +434,14 @@ public class Commands {
             return true;
         }
     }
+    
+    public static final class AddResourcesCommand extends ServerCommand {
+
+        public AddResourcesCommand(String sunResourcesXmlPath) {
+            super("add-resources"); // NOI18N
+            query = "xml_file_name=" + sunResourcesXmlPath; // NOI18N
+        }
+        
+    }
 }
 
