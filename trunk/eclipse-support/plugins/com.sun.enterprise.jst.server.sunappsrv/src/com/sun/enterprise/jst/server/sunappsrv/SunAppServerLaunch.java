@@ -51,11 +51,10 @@ import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate {
     
     public static final String GFV3_MODULES_DIR_NAME = "modules"; // NOI18N
-    public static final String GFV3_PREFIX_JAR_NAME = "glassfish-10.0"; // NOI18N"
 
     
     public SunAppServerLaunch(){
-         SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch ctor");
+        // SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch ctor");
     }
     protected void abort(String message, Throwable exception, int code) throws CoreException {
         throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, code, message, exception));
@@ -106,8 +105,10 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 		        };
         }
         else {//we are V3
-        	String jarName= getJarName(serverBehavior.getSunApplicationServerInstallationDirectory(),GFV3_PREFIX_JAR_NAME).getAbsolutePath();
-        	String jdk=System.getProperty("java.home")+"/bin/java";
+            File postb25 = new File(serverBehavior.getSunApplicationServerInstallationDirectory() + File.separatorChar + GFV3_MODULES_DIR_NAME+ File.separatorChar +"glassfish.jar");
+        	String jarName= postb25.getAbsolutePath();
+
+            String jdk=System.getProperty("java.home")+"/bin/java";
         	if (mode.equals("debug")) {
         		command = new String[]{jdk,
         			"-Xdebug",
@@ -139,9 +140,9 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             abort("error Launching Executable", ioe,  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
 
-        for (int i=0;i<30;i++){//max 60 seconds for start.
+        for (int i=0;i<120;i++){//max 60 seconds for start.
             try {
-                Thread.sleep(2000);//2 secs
+                Thread.sleep(500);//1/2 secs
                               
           //      SunAppServer  sunserver = serverBehavior.getSunAppServer();
                 if (sunserver.isRunning()){
@@ -175,53 +176,10 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 	return;
                 }
             } catch (InterruptedException ex) {}
-            }
-
-               
+            }               
 
     }
  
-     /**
-     * Returns the fqn jar name with the correct version 
-     * If jarNamePrefix is ""glassfish-10.0" the the return value
-     * will be INSTALL/modules/glassfish-10.0-SNAPSHOT.jar"
-     * 
-     * @return the File with full path of the jar or null
-     */
-   public static File getJarName(String AppServerInstallDir, String jarNamePrefix) {
-        File modulesDir = new File(AppServerInstallDir + File.separatorChar + GFV3_MODULES_DIR_NAME);
  
-                File postb25 = new File(AppServerInstallDir + File.separatorChar + GFV3_MODULES_DIR_NAME+ File.separatorChar +"glassfish.jar");
-                if (postb25.exists()){
-                    if (jarNamePrefix.equals(GFV3_PREFIX_JAR_NAME)){
-                        return postb25;
-                    }
-                    else {
-                        jarNamePrefix.replaceFirst("-10.0", "");
-                    }
-                }        
-        File candidates[] = modulesDir.listFiles(new VersionFilter(jarNamePrefix));
-        
-        if(candidates != null && candidates.length > 0) {
-            return candidates[0]; // the first one
-        } else {
-            return null;
-        }
-    }
-   
-    private static class VersionFilter implements FileFilter {
-       
-        private String nameprefix;
-        
-        public VersionFilter(String nameprefix) {
-            this.nameprefix = nameprefix;
-        }
-        
-        public boolean accept(File file) {
-            return file.getName().startsWith(nameprefix);
-        }
-        
-    }
-    
     
 }
