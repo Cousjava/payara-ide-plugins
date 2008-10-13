@@ -273,7 +273,6 @@ public class CommandRunner extends BasicTask<OperationState> {
             return fireOperationStateChanged(OperationState.FAILED, "MSG_ServerCmdException",
                     serverCmd.toString(), instanceName, ex.getLocalizedMessage());
         }
-        SunAppSrvPlugin.logMessage("trying to execute "+commandUrl );
        
         int retries = 1; // disable ("version".equals(cmd) || "__locations".equals(cmd)) ? 1 : 3;
         Logger.getLogger("glassfish").log(Level.FINEST, 
@@ -361,7 +360,7 @@ public class CommandRunner extends BasicTask<OperationState> {
         } catch(MalformedURLException ex) {
             Logger.getLogger("glassfish").log(Level.WARNING, ex.getLocalizedMessage(), ex);
         }
-        SunAppSrvPlugin.logMessage("donetrying to execute "+commandSucceeded +serverCmd.toString());
+        SunAppSrvPlugin.logMessage("done executing: "+commandSucceeded +" "+serverCmd.toString());
        
         if(commandSucceeded) {
             return fireOperationStateChanged(OperationState.COMPLETED, "MSG_ServerCmdCompleted", // NOI18N
