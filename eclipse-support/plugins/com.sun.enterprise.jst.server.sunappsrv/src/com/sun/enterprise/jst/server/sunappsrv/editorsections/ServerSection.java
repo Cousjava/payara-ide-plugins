@@ -65,12 +65,10 @@ public class ServerSection extends ServerEditorSection {
      *
      */
     public ServerSection() {
-        SunAppSrvPlugin.logMessage("In  public ServerSection()" );
     }
 
     
     public void init(IEditorSite site, IEditorInput input) {
-        SunAppSrvPlugin.logMessage("In  ServerSection  init()" );
        super.init(site, input);
         sunserver = SunAppServer.getSunAppServer(server);
     }
