@@ -444,7 +444,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions);
 			try {
 				Future<OperationState> result = getSunAppServer().execute(command);
-				if(result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED) {
+				if(result.get(30, TimeUnit.SECONDS) != OperationState.COMPLETED) {
 					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
 							"cannot Deploy "+module[0].getName(), null));
 				}
@@ -452,9 +452,24 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			} catch(Exception ex) {
 				SunAppSrvPlugin.logMessage("deploy is failing=",ex );
 				throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-						"cannot Deploy "+module[0].getName(), ex));	            }
+						"cannot Deploy "+module[0].getName(), ex));	            
+			}
+			File sunResource = new File(spath,"WEB-INF/sun-resources.xml");
+			if (sunResource.exists()){
+				Commands.AddResourcesCommand register = new Commands.AddResourcesCommand(sunResource.getAbsolutePath());
+				try {
+					Future<OperationState> result = getSunAppServer().execute(register);
+					if(result.get(30, TimeUnit.SECONDS) != OperationState.COMPLETED) {
+						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+								"cannot register sun-resource.xml for "+module[0].getName(), null));
+					}
 
-
+				} catch(Exception ex) {
+					SunAppSrvPlugin.logMessage("deploy of sun-resources is failing ",ex );
+					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+							"cannot register sun-resource.xml for "+module[0].getName(), ex));	            
+				}				
+			}			
 			p.put(module[0].getId(), path.toOSString());
 		}
 	}
