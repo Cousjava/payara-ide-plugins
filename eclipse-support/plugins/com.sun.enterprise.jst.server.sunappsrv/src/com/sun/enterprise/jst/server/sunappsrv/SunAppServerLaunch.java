@@ -88,49 +88,22 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         }
 
 
-        if (serverBehavior.isV3()==false){
-        	String asadminCmd =  serverBehavior.getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+getScriptExtension();	        
-	        String domain = serverBehavior.getDomainName();
-	        String debugFlag="--debug=false";
-	        if (mode.equals("debug")) {
-	       	 debugFlag="--debug";
-	        }
-	        command = new String[]{ asadminCmd,
-		           "start-domain",
-		           "--domaindir",
-		           serverBehavior.getDomainDir(), 
-		           debugFlag,
-		           "--verbose",
+    	String asadminCmd =  serverBehavior.getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+getScriptExtension();	        
+        String domain = serverBehavior.getDomainName();
+        String debugFlag="--debug=false";
+        if (mode.equals("debug")) {
+       	 debugFlag="--debug";
+        }
+        command = new String[]{ asadminCmd,
+	           "start-domain",
+	           "--domaindir",
+	           serverBehavior.getDomainDir(), 
+	           debugFlag,
+	           "--verbose",
 		           domain
 		        };
-        }
-        else {//we are V3
-            File postb25 = new File(serverBehavior.getSunApplicationServerInstallationDirectory() + File.separatorChar + GFV3_MODULES_DIR_NAME+ File.separatorChar +"glassfish.jar");
-        	String jarName= postb25.getAbsolutePath();
-
-            String jdk=System.getProperty("java.home")+"/bin/java";
-        	if (mode.equals("debug")) {
-        		command = new String[]{jdk,
-        			"-Xdebug",
-        			"-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009",
-           			"-jar",
-           			jarName,
-           			"--domain",
-           			serverBehavior.getDomainName(),
-           			" --domaindir",
-           			serverBehavior.getDomainDirWithDomainName()
-        		};
-        	} else {
-        		command = new String[]{jdk,
-            				"-jar",
-            				jarName,
-                   			"--domain",
-                   			serverBehavior.getDomainName(),
-                   			"--domaindir",
-                   			serverBehavior.getDomainDirWithDomainName()
-                		};
-            }
-        }
+ 
+        
         try {
             Process process = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
             IProcess runtimeProcess = new RuntimeProcess(launch, process, "...", null);
@@ -143,19 +116,20 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         for (int i=0;i<120;i++){//max 60 seconds for start.
             try {
                 Thread.sleep(500);//1/2 secs
-                              
-          //      SunAppServer  sunserver = serverBehavior.getSunAppServer();
+                monitor.worked(1);
+                             
                 if (sunserver.isRunning()){
                     if (serverBehavior.isV3()) {
                         if (!sunserver.isV3Ready(false)){
                             SunAppSrvPlugin.logMessage("V3 not ready");
-
                         	continue;
                         }
-                    }               	
+                    } else { //V2: wait a little bit more to make sure V2 admin is initialized
+                        Thread.sleep(1500);//1.5 secs
+                    	
+                    }
                     serverBehavior.startPingingThread();       
                     setDefaultSourceLocator(launch, configuration);
-                    monitor.worked(1);
                     if (mode.equals("debug")) {
 
                    Map<String, String> argMap = new HashMap<String , String>();
