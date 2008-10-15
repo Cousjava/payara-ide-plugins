@@ -38,7 +38,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
 
 /**
  * @author Ludo
@@ -59,11 +60,18 @@ public class Register extends MultiPageEditorPart implements IResourceChangeList
      */
     public Register() {
         super();
-        SunAppSrvPlugin.logMessage("REGISTER");
 
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-        //TODO need to calculate locahost and port number from server props
-        URLtoShow = "http://localhost:4848/sysnet/registration.jsf";
+        if (AppServerContextAction.selectedServer!=null){
+    		SunAppServerBehaviour sab = (SunAppServerBehaviour) AppServerContextAction.selectedServer.loadAdapter(
+    				SunAppServerBehaviour.class, null);
+    		String hostName = sab.getSunAppServer().getServer().getHost();
+    		URLtoShow ="http://"+hostName+":"+sab.getSunAppServer().getAdminServerPort()+"/sysnet/registration.jsf";
+        }
+        else {
+            URLtoShow = "http://localhost:4848/sysnet/registration.jsf";
+
+        }
     }
 
     /**

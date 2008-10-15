@@ -22,9 +22,12 @@
 // </editor-fold>
 package com.sun.enterprise.jst.server.sunappsrv.v3;
 
+
 import org.eclipse.core.resources.ResourcesPlugin;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
 
 
 /**
@@ -36,10 +39,18 @@ public class UpdateCenter extends Register {
 
     public UpdateCenter() {
         super();
-        SunAppSrvPlugin.logMessage("Update Center Action");
+        SunAppSrvPlugin.logMessage("Update Center Action...with "+AppServerContextAction.selectedServer);
 
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-        //TODO need to calculate locahost and port number from server props
-        URLtoShow = "http://localhost:4848/updateCenter/addOn.jsf";
+        if (AppServerContextAction.selectedServer!=null){
+    		SunAppServerBehaviour sab = (SunAppServerBehaviour) AppServerContextAction.selectedServer.loadAdapter(
+    				SunAppServerBehaviour.class, null);
+    		String hostName = sab.getSunAppServer().getServer().getHost();
+    		URLtoShow ="http://"+hostName+":"+sab.getSunAppServer().getAdminServerPort()+"/updateCenter/addOn.jsf";     
+        
+        }else{
+        	URLtoShow = "http://localhost:4848/updateCenter/addOn.jsf";
+        
+        }
     }
 }
