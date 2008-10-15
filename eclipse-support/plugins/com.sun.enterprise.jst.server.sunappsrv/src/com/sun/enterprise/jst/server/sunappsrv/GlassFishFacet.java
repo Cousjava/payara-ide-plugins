@@ -42,6 +42,7 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.core.commands.ExecutionException;
 
 import com.sun.enterprise.jst.server.sunappsrv.ejbjar.SunEjbJarXmlCreate;
+import com.sun.enterprise.jst.server.sunappsrv.web.IndexJSPCreate;
 import com.sun.enterprise.jst.server.sunappsrv.web.SunWebXmlCreate;
 
 public class GlassFishFacet implements IDelegate {
@@ -63,6 +64,9 @@ public class GlassFishFacet implements IDelegate {
         if (IModuleConstants.JST_WEB_MODULE.equals(type)) {
             SunWebXmlCreate swa= new SunWebXmlCreate(model,"9.x");
             swa.execute(monitor,null);
+            IndexJSPCreate i= new IndexJSPCreate(model);
+            i.execute(monitor,null);
+            
         } else if (IModuleConstants.JST_EJB_MODULE.equals(type)) {
             SunEjbJarXmlCreate sej= new SunEjbJarXmlCreate(model,"9.x");
             sej.execute(monitor,null);
