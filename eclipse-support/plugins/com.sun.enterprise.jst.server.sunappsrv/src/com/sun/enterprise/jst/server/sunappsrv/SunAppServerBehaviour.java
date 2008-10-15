@@ -439,7 +439,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			String spath =""+ path;
 			String name =module[0].getName();
 			String contextRoot =name;
-			Boolean preserveSessions=true;
+			Boolean preserveSessions=getSunAppServer().getKeepSessions().equals("true");
 
 			Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions);
 			try {
