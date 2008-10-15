@@ -217,8 +217,8 @@ public class CommandRunner extends BasicTask<OperationState> {
                 computePreserveSessions()));
     }
 
-    private static Boolean computePreserveSessions() {
-        return true;//TODO ludo
+    private  Boolean computePreserveSessions() {
+        return server.getKeepSessions().equals("true");
     }
     
     public Future<OperationState> undeploy(String moduleName) {
@@ -372,7 +372,7 @@ public class CommandRunner extends BasicTask<OperationState> {
     }
     
     private String constructCommandUrl(final String cmd, final String query) throws URISyntaxException {
-        String host = "localhost";//TODO Ludo
+        String host = server.getServer().getHost();
         int port = Integer.parseInt(server.getAdminServerPort());
         URI uri = new URI("http", null, host, port, "/__asadmin/" + cmd, query, null); // NOI18N
         return uri.toASCIIString();
