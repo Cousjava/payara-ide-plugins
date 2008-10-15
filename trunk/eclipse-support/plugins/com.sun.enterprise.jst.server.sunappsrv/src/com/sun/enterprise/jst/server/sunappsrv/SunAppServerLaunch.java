@@ -24,7 +24,6 @@
 package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,7 +86,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             }
         }
 
-
+        
     	String asadminCmd =  serverBehavior.getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+getScriptExtension();	        
         String domain = serverBehavior.getDomainName();
         String debugFlag="--debug=false";
