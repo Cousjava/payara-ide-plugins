@@ -30,7 +30,7 @@ public class OpenBrowserAction extends AppServerContextAction {
 			
 			IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
 			IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
-			browser.openURL(new URL("http://"+sab.getSunAppServer().getAdminServerPort()+":"+sab.getSunAppServer().getAdminServerPort()));
+			browser.openURL(new URL("http://"+sab.getSunAppServer().getServer().getHost()+":"+sab.getSunAppServer().getAdminServerPort()));
 		} catch (Exception e) {
 	           SunAppSrvPlugin.logMessage("Error opening browser: "+e.getMessage());
 
