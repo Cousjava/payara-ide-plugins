@@ -3,13 +3,14 @@ package com.sun.enterprise.jst.server.sunappsrv.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IObjectActionDelegate;
+
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.wst.server.core.IServer;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 /**
@@ -18,19 +19,25 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
  *
  * @author Ludovic.Champenois@Sun.COM
  */
-public class PreludeUpdateCenterAction extends AppServerContextAction implements IObjectActionDelegate {
+public class PreludeUpdateCenterAction extends AppServerContextAction {
 
     /**
      * The constructor.
      */
     public PreludeUpdateCenterAction() {
+    	super ("GlassFish Update Center...",getImageDescriptorFromlocalImage("icons/obj16/updateCenter.png"));
     }
 
-    public void run(IAction action) {
 
+    public void execute(IServer server) {
+    	
+		if (accept(server)==false){
+			showMessageDialog();
+			return;
+		}
         IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         try {
-            SunAppSrvPlugin.logMessage("PreludeUpdateCenterAction run");
+            SunAppSrvPlugin.logMessage("PreludeUpdateCenterAction run for " +server);
             IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("icons/obj16/sunappsrv.gif"));
             page.openEditor(new FileEditorInput(file), "com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter");
         } catch (Exception e) {
@@ -45,4 +52,8 @@ public class PreludeUpdateCenterAction extends AppServerContextAction implements
         }
 
     }
+	public boolean accept(IServer server) {
+        SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
+		return sab.getSunAppServer().isRunning();
+	}
 }

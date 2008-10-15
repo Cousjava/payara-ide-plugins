@@ -23,6 +23,9 @@
 // </editor-fold>package com.sun.enterprise.jst.server.sunappsrv.actions;
 package com.sun.enterprise.jst.server.sunappsrv.actions;
 
+import java.io.File;
+
+import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -32,26 +35,47 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.wst.server.core.IServer;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 /**
  *
  * @author Ludovic.Champenois@Sun.COM
  */
-public class PreludeRegistrationAction extends AppServerContextAction implements IObjectActionDelegate {
+public class PreludeRegistrationAction extends AppServerContextAction  {
 
     /**
      * The constructor.
      */
     public PreludeRegistrationAction() {
+    	super ("Register your GlassFish Enterprise Server...",getImageDescriptorFromlocalImage("icons/obj16/registration.png"));
     }
 
-    public void run(IAction action) {
-
+    public void execute (IServer server) {
+    	    	
+      	
+    	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
+    	if (sab.isV3()==false){//V2 only
+    		String[] command = new String[]{
+    				sab.getSunAppServer().getDomainDir()+"/../../updatetool/bin/updatetool"
+    		}; 
+    		try {
+    			Execute.launch(null, command, null, new File(sab.getSunApplicationServerInstallationDirectory()), true);
+    			return;
+    		} catch (Exception ioe) {
+    			SunAppSrvPlugin.logMessage("error Launching Executable", ioe);
+    		} 
+    	}
+      	     	
+		if (accept(server)==false){
+			showMessageDialog();
+			return;
+		}
         IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         try {
-            SunAppSrvPlugin.logMessage("PreludeRegistrationAction run");
+            SunAppSrvPlugin.logMessage("PreludeRegistrationAction run"+server);
             IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("icons/obj16/sunappsrvs.gif"));
             page.openEditor(new FileEditorInput(file), "com.sun.enterprise.jst.server.sunappsrv.v3.Register");
         } catch (Exception e) {
@@ -66,4 +90,8 @@ public class PreludeRegistrationAction extends AppServerContextAction implements
         }
 
     }
+	public boolean accept(IServer server) {
+        SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
+		return sab.getSunAppServer().isRunning();
+	}
 }
