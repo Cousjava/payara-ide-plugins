@@ -65,7 +65,7 @@ public class AppServerContextAction extends SelectionProviderAction implements I
 		
 	}
 		public AppServerContextAction(String name, ImageDescriptor image) {
-		super(getView("org.eclipse.wst.server.ui.ServersView").getViewSite().getSelectionProvider(), name);
+		super(getSelectionProvider("org.eclipse.wst.server.ui.ServersView"), name);
 
 		viewPArt = getView("org.eclipse.wst.server.ui.ServersView");
 		if (viewPArt==null){
@@ -112,13 +112,27 @@ public class AppServerContextAction extends SelectionProviderAction implements I
 	}
 
 
-	public static IViewPart getView(String id) {
+	public static ISelectionProvider getSelectionProvider(String id) {
+		IViewPart vp =getView( id);
+		if (vp!=null){
+			return vp.getViewSite().getSelectionProvider();
+		}
+		return null;
+	
+	}
+		public static IViewPart getView(String id) {
+		try{
 		IViewReference viewReferences[] = PlatformUI.getWorkbench()
 		.getActiveWorkbenchWindow().getActivePage().getViewReferences();
 		for (int i = 0; i < viewReferences.length; i++) {
 			if (id.equals(viewReferences[i].getId())) {
 				return viewReferences[i].getView(false);
 			}
+		}
+		}
+		catch (Exception e)
+		{
+			return null;
 		}
 		return null;
 	}	
