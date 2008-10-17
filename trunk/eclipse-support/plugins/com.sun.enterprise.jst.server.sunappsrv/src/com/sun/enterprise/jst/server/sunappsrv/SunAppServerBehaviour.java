@@ -276,7 +276,11 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 
 					return;
 				}
-			} catch (InterruptedException ex) {}
+			} catch (Exception ex) {
+				
+				SunAppSrvPlugin.logMessage("Error in SunAppServerBehaviour being stopped",ex);
+				
+			}
 		}
 	}
 
