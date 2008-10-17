@@ -55,7 +55,7 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
     public static void logMessage(String mess){
 
     	IPreferenceStore store = getInstance().getPreferenceStore();
-    	boolean trace= store.getDefaultBoolean(PreferenceConstants.ENABLE_LOG);
+    	boolean trace= store.getBoolean(PreferenceConstants.ENABLE_LOG);
     	if(trace){
     		Status status = new Status(IStatus.INFO, SUNPLUGIN_ID, 1,"GlassFish: "+mess,null);        
     		getInstance().getLog().log(status);
