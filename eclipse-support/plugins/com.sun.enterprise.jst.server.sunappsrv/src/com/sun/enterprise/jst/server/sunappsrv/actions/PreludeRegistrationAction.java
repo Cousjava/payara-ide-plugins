@@ -28,6 +28,7 @@ import java.io.File;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IObjectActionDelegate;
@@ -92,6 +93,9 @@ public class PreludeRegistrationAction extends AppServerContextAction  {
     }
 	public boolean accept(IServer server) {
         SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
-		return sab.getSunAppServer().isRunning();
-	}
+		try {
+			return sab.getSunAppServer().isRunning();
+		} catch (CoreException e) {
+			return false;
+		}	}
 }

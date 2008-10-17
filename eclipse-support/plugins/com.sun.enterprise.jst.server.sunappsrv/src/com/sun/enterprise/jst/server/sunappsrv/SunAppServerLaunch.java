@@ -79,12 +79,43 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
 
         SunAppServer sunserver = serverBehavior.getSunAppServer();
+        SunAppServer.ServerStatus status =SunAppServer.ServerStatus.CONNEXTION_ERROR ;
         if (sunserver.isRunning()) {
-            if (serverBehavior.isV3()) {
-                SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch Forcing a STOP!!!!");
-                serverBehavior.stop(true);
-            }
-        }
+			if (serverBehavior.isV3()) {
+				SunAppSrvPlugin
+						.logMessage("in SUN SunAppServerLaunch Forcing a STOP!!!!");
+				status = sunserver.getV3ServerStatus();
+			} else { // V2
+				SunAppSrvPlugin
+						.logMessage("in SUN SunAppServerLaunch Forcing a STOP!!!!");
+				status = sunserver.getV3ServerStatus();
+			}
+			if (status == SunAppServer.ServerStatus.DOMAINDIR_MATCHING) {
+				// we are really to the server we know about, so that we can
+				// stop it and restart it to get the log file
+				serverBehavior.stop(true);
+                try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					//e.printStackTrace();
+				}
+
+			} else if (status == SunAppServer.ServerStatus.DOMAINDIR_NOT_MATCHING) {
+				abort(
+						"Please, check the other GlassFish Application Server process and stop it.",
+						new RuntimeException(
+								"A GlassFish Enterprise Server is running on this port, but with a different root installation..."),
+						IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+
+			} else {
+				abort(
+						"Port conflict: Please stop the process using the same port as the one used by the Application Server.",
+						new RuntimeException(
+								"An unknow process is already running on this port."),
+						IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+
+			}
+		}
 
         
     	String asadminCmd =  serverBehavior.getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+getScriptExtension();	        
@@ -119,12 +150,15 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                              
                 if (sunserver.isRunning()){
                     if (serverBehavior.isV3()) {
-                        if (!sunserver.isV3Ready(false)){
+                        if (sunserver.getV3ServerStatus()!=SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
                             SunAppSrvPlugin.logMessage("V3 not ready");
                         	continue;
                         }
                     } else { //V2: wait a little bit more to make sure V2 admin is initialized
-                        Thread.sleep(1500);//1.5 secs
+                        if (sunserver.getV2ServerStatus()!=SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
+                            SunAppSrvPlugin.logMessage("V2 not ready");
+                        	continue;
+                        }                       
                     	
                     }
                     serverBehavior.startPingingThread();       

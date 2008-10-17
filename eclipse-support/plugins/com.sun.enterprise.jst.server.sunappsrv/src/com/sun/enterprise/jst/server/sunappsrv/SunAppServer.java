@@ -24,9 +24,11 @@
 package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +37,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerPort;
@@ -79,12 +90,13 @@ public class SunAppServer extends GenericServer {
     //Default values
     String serverPortNumber="1118080";
     String adminServerPortNumber="1114848";
-    
+    String jmxPort = "8686";//For V2 only, the jmx port to issue some MBeans call that return server loc
+
     public SunAppServer(){
-        SunAppSrvPlugin.logMessage("in SunAppServer CTOR");
+        SunAppSrvPlugin.logMessage("in SunAppServer CTOR"); 
     }
 	
-	
+		
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerDelegate#initialize()
      */
@@ -181,7 +193,6 @@ public class SunAppServer extends GenericServer {
     }
     public void setAdminPassword(String value) {
     	getProps().put(ADMINPASSWORD, value); 
-        SunAppSrvPlugin.logMessage("In  setAdminPassword)"+ value);
         try {
             //this.saveConfiguration(new NullProgressMonitor());
             this.configurationChanged();
@@ -205,10 +216,21 @@ public class SunAppServer extends GenericServer {
      */
     @Override
     public void setDefaults(IProgressMonitor monitor) {
-        setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, Server.AUTO_PUBLISH_DISABLE);
+        SunAppSrvPlugin.logMessage("In  setDefaults)" +isV3());
+        if (isV3()){
+           	setAttribute(Server.PROP_AUTO_PUBLISH_TIME, "0");
+        }
+        else{
+           	setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, Server.AUTO_PUBLISH_DISABLE);
+                    	
+        }
         super.setDefaults(monitor);
     }
-
+	public boolean isV3(){
+		String loc=(String) getProps().get(ROOTDIR);
+		return new File(loc+"/modules").exists();
+	}
+	
 	public ServerPort[] getServerPorts() {
 
 		
@@ -224,17 +246,20 @@ public class SunAppServer extends GenericServer {
 	}
     /**
      * 
-     * @param host 
-     * @param port 
-     * @return 
+     * @return true if we can ping to the server
+     * @throws CoreException 
      */
-    public  boolean isRunning() {
+    public  boolean isRunning() throws CoreException {
 
-        if (adminServerPortNumber.equals("1114848")){
-            SunAppSrvPlugin.logMessage("catastrophic state where adminServerPortNumber is not initialize is null in SunAppServer.java");
-            SunAppSrvPlugin.logMessage("catastrophic Only thing to do is restart Eclipse");
+    	if (adminServerPortNumber.equals("1114848")){
+    		SunAppSrvPlugin.logMessage("catastrophic state where adminServerPortNumber is not initialize is null in SunAppServer.java");
+    		SunAppSrvPlugin.logMessage("catastrophic Only thing to do is restart Eclipse");
+    		throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, 
+    				IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR, 
+    				"Error where adminServerPortNumber is not initialized and null in GlassFish Plugin. Restart Eclipse IDE", 
+    				new RuntimeException ("Restart Eclipse. Internal State corrupted...")));
 
-                              	
+
         }
         try {
             InetSocketAddress isa = new InetSocketAddress(getServer().getHost(), Integer.parseInt(getServerPort()));
@@ -248,24 +273,26 @@ public class SunAppServer extends GenericServer {
         }
     }
  
-    public boolean isV3ReallyRunning() {
-        return isRunning() && isV3Ready(false);
+    enum ServerStatus {
+       	DOMAINDIR_MATCHING,
+       	DOMAINDIR_NOT_MATCHING,
+    	CONNEXTION_ERROR,
+    	MBEAN_ERROR,
+    	WRONG_SERVER_TYPE
+    	
     }
+    /**
+     * 
+     * @return ServerStatus for possible V3 server. If server is not a V3 one, we will know
+     *  If the server is a V3 server but with a different install location that this one, we can also detect 
+     *  this
+     */
+    public ServerStatus getV3ServerStatus() {
 
-    public boolean isV3Ready(boolean retry) {
-        boolean isReady = false;
-        int maxtries = retry ? 3 : 1;
-        int tries = 0;
-
-        while(!isReady && tries++ < maxtries) {
-            long start = System.nanoTime();
            Commands.LocationCommand command = new Commands.LocationCommand();
            try {
                 Future<OperationState> result = execute(command);
                if(result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED) {
-                   long end = System.nanoTime();
-                    Logger.getLogger("glassfish").log(Level.FINE, command.getCommand() +
-                            " responded in " + (end - start)/1000000 + "ms");
                     String installRoot = this.getDomainDir()+File.separator+this.getdomainName();
                     String targetInstallRoot = command.getDomainRoot();
                     //SunAppSrvPlugin.logMessage("IsReady is targetInstallRoot="+targetInstallRoot );
@@ -273,35 +300,83 @@ public class SunAppServer extends GenericServer {
                    if(installRoot != null && targetInstallRoot != null) {
                         File installDir = new File(installRoot);
                         File targetInstallDir = new File(targetInstallRoot);
-                        isReady = installDir.equals(targetInstallDir);
+                        if (installDir.equals(targetInstallDir)){
+                        	return ServerStatus.DOMAINDIR_MATCHING;
+
+                        }
+                        else {
+                        	return ServerStatus.DOMAINDIR_NOT_MATCHING;
+                       	
+                        }
                    } else {
-                        isReady = false;
+                   	return ServerStatus.DOMAINDIR_NOT_MATCHING;
                     }
-                    break;
-                } else if(!command.retry()) {
-                    // !PW temporary while some server versions support __locations
-                    // and some do not but are still V3 and might the ones the user
-                    // is using.
-                    result = execute(new Commands.VersionCommand());
-                    isReady = result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED;
-                    break;
-                } else {
-                    long end = System.nanoTime();
-                    SunAppSrvPlugin.logMessage("V3 not ready yet" );
-                   Logger.getLogger("glassfish").log(Level.FINE, command.getCommand() +
-                            " timed out inside server after " + (end - start)/1000000 + "ms");
+                } else  {
+                   	return ServerStatus.CONNEXTION_ERROR;
+
+
                 }
             } catch(Exception ex) {
                 SunAppSrvPlugin.logMessage("IsReady is failing=",ex );
-               Logger.getLogger("glassfish").log(Level.FINE, command.getCommand() + " timed out.", ex);
-                isReady = false;
-                break;
+               	return ServerStatus.CONNEXTION_ERROR;
             }
-        }
+      
 
-        return isReady;
     }    
-    
+    /**
+     * 
+     * @return ServerStatus for possible V2 server. If server is not a V2 one, we will know
+     *  If the server is a V2 server but with a different install location that this one, we can also detect 
+     *  this
+     */   
+    public ServerStatus getV2ServerStatus(){
+    	JMXConnector jmxc = null;
+    	try{
+
+    		// Create an RMI connector client
+    		//
+    		JMXServiceURL url = new JMXServiceURL(
+    		"service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi");
+    		HashMap env = new HashMap();
+    		env.put(JMXConnector.CREDENTIALS, new String[]{ getAdminName(), getAdminPassword()});
+    		jmxc = JMXConnectorFactory.connect(url, env);
+    		MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();
+    		ObjectName on = new ObjectName("com.sun.appserv:type=domain,category=config");
+
+    		Object o = mbsc.invoke(on, "getConfigDir", null, null);
+    		if (o != null) {
+    			File domainDir=new File(""+o).getParentFile();
+                File knownDomainRoot = new File(this.getDomainDir()+File.separator+this.getdomainName());
+                if (domainDir.equals(knownDomainRoot)){
+                	return ServerStatus.DOMAINDIR_MATCHING;
+                }else {
+                	return ServerStatus.DOMAINDIR_NOT_MATCHING;
+               	
+                }
+    		}
+    		else {
+                SunAppSrvPlugin.logMessage("V2 not ready yet: o=null" );
+            	return ServerStatus.MBEAN_ERROR;
+   		}
+   		
+
+    	} catch (Exception e) {
+            SunAppSrvPlugin.logMessage("V2 not ready yet:",e );
+           	return ServerStatus.CONNEXTION_ERROR;
+            
+    	} finally {
+    		if (jmxc!=null){
+        		try {
+					jmxc.close();
+				} catch (IOException e) {
+					// what can we do there
+					
+				}
+   			
+    		}
+    	}
+
+    }   
     public Future<OperationState> execute(ServerCommand command) {
         CommandRunner mgr = new CommandRunner(this);
         return mgr.execute(command);
@@ -312,6 +387,19 @@ public class SunAppServer extends GenericServer {
         
         if (domainXml.exists()) {
             List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
+            pathList.add(new TreeParser.Path("/domain/configs/config/admin-service/jmx-connector",
+                    new TreeParser.NodeReader() {
+                @Override
+                public void readAttributes(String qname, Attributes attributes) throws SAXException {
+ /*
+        <admin-service type="das-and-server" system-jmx-connector-name="system">
+        <jmx-connector ..... port="8686" />
+  */
+                    jmxPort = attributes.getValue("port");
+                    SunAppSrvPlugin.logMessage("JMX Port is "+jmxPort );
+                    
+                }
+            }));
             pathList.add(new TreeParser.Path("/domain/configs/config/http-service/http-listener",
                     new TreeParser.NodeReader() {
                 @Override
@@ -422,7 +510,8 @@ public class SunAppServer extends GenericServer {
             return "{ " + id + ", " + port + ", " + secure + " }";
         }
         
-    }
+    }   
+    
 }       
     
 
