@@ -26,12 +26,16 @@ package com.sun.enterprise.jst.server.sunappsrv;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+
+import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
 
 
 /**
  *Sun Servers Plugin
  */
-public class SunAppSrvPlugin extends Plugin {
+public class SunAppSrvPlugin extends AbstractUIPlugin {
     
     protected static final String SUNPLUGIN_ID = "com.sun.enterprise.jst.server.sunappsrv";
     private static SunAppSrvPlugin singleton;
@@ -49,8 +53,13 @@ public class SunAppSrvPlugin extends Plugin {
     }
     
     public static void logMessage(String mess){
-        final Status status = new Status(IStatus.INFO, SUNPLUGIN_ID, 1,"GlassFish: "+mess,null);        
-        getInstance().getLog().log(status);
+
+    	IPreferenceStore store = getInstance().getPreferenceStore();
+    	boolean trace= store.getDefaultBoolean(PreferenceConstants.ENABLE_LOG);
+    	if(trace){
+    		Status status = new Status(IStatus.INFO, SUNPLUGIN_ID, 1,"GlassFish: "+mess,null);        
+    		getInstance().getLog().log(status);
+    	}
     }
     public static void logMessage(String mess, Exception e){
         final Status status = new Status(IStatus.ERROR, SUNPLUGIN_ID, 1,"GlassFish: "+mess,e);        
