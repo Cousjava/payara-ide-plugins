@@ -999,6 +999,23 @@
                   
         </viewContribution>
     </extension>
+    <extension
+          point="org.eclipse.ui.preferenceTransfer">
+    </extension>
+    <extension
+          point="org.eclipse.ui.preferencePages">
+       <page
+             class="com.sun.enterprise.jst.server.sunappsrv.preferences.GlassFishPreferencePage"
+             id="com.sun.enterprise.jst.server.sunappsrv.preferences.GlassFishPreferencePage"
+             name="GlassFish Preferences">
+       </page>
+    </extension>
+    <extension
+          point="org.eclipse.core.runtime.preferences">
+       <initializer
+             class="com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceInitializer">
+       </initializer>
+    </extension>
         
 
 
