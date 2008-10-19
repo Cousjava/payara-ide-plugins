@@ -1017,6 +1017,20 @@
        </initializer>
     </extension>
         
+<extension point="org.eclipse.ui.actionSets">
+	<actionSet
+		id="org.eclipse.help.internal.ui.HelpActionSet"
+		label="%help"
+		visible="true">
+			
+	<action id="org.eclipse.help.internal.ui.HelpActiondddd"
+		menubarPath="help/helpEnd"
+		label="sdasdsd"
+		class="org.eclipse.help.ui.internal.HelpContentsAction"
+		helpContextId="org.eclipse.help.ui.helpContentsMenukl"
+		tooltip="dsdsds"/>
+		</actionSet>
+</extension>
 
 
 
