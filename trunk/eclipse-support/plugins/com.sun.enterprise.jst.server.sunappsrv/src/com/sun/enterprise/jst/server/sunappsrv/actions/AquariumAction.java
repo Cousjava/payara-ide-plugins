@@ -31,6 +31,8 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.wst.server.core.IServer;
@@ -42,7 +44,7 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
  *
  * @author Ludovic.Champenois@Sun.COM
  */
-public class AquariumAction implements IObjectActionDelegate ,IViewActionDelegate  {
+public class AquariumAction implements IObjectActionDelegate ,IViewActionDelegate ,IWorkbenchWindowActionDelegate {
 
     /**
      * The constructor.
@@ -79,6 +81,22 @@ public class AquariumAction implements IObjectActionDelegate ,IViewActionDelegat
 	public void init(IViewPart arg0) {
 		
 		SunAppSrvPlugin.logMessage("INIT aq"+arg0);
+		
+	}
+
+
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void init(IWorkbenchWindow arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 
