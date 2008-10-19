@@ -86,7 +86,6 @@ public class AquariumAction implements IObjectActionDelegate ,IViewActionDelegat
 
 
 
-	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
@@ -94,7 +93,6 @@ public class AquariumAction implements IObjectActionDelegate ,IViewActionDelegat
 
 
 
-	@Override
 	public void init(IWorkbenchWindow arg0) {
 		// TODO Auto-generated method stub
 		
