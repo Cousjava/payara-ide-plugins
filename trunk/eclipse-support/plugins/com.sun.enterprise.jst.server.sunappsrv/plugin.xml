@@ -1022,13 +1022,32 @@
 		id="org.eclipse.help.internal.ui.HelpActionSet"
 		label="%help"
 		visible="true">
-			
-	<action id="org.eclipse.help.internal.ui.HelpActiondddd"
-		menubarPath="help/helpEnd"
-		label="sdasdsd"
-		class="org.eclipse.help.ui.internal.HelpContentsAction"
-		helpContextId="org.eclipse.help.ui.helpContentsMenukl"
-		tooltip="dsdsds"/>
+            <menu
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu"
+                label="%menu.glassfishtopmenu"
+                icon="icons/obj16/glassfishserver.gif"
+                path="help/helpEnd">
+                
+                <separator name="group1"/>
+
+            </menu>	
+               <action
+                label="%menu.theaquarium"
+                icon="icons/obj16/resources.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
+		helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelp">
+            </action>   
+             <action
+                label="%menu.glassfish.getsupport"
+                icon="icons/obj16/sunappsrv.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
+ 		helpContextId="org.eclipse.help.ui.helpContentsMenusupport"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportActionHelp">
+            </action>              		
+
 		</actionSet>
 </extension>
 
