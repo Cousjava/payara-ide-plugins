@@ -855,7 +855,7 @@
       <page
          id="com.sun.enterprise.jst.server.sunappsrv.editorsections.uc"
          order="20"
-         name="Update Center"
+         name="%menu.updatecenter"
          typeIds="com.sun.enterprise.jst.server.glassfish*"
         class="com.sun.enterprise.jst.server.sunappsrv.editorsections.UpdateCenterEditorPage">
       </page>
@@ -896,7 +896,7 @@
       
             <menu
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu"
-                label="GlassFish Enterprise Server"
+                label="%menu.glassfishtopmenu"
                 icon="icons/obj16/glassfishserver.gif"
                 path="additions">
                 <separator name="group1"/>
@@ -904,7 +904,7 @@
             </menu>
       
              <action
-                label="View Admin Console"
+                label="%menu.viewadminconsole"
                 icon="icons/obj16/glassfishserver.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.OpenBrowserAction"
                 tooltip="View GlassFish Admin Console"
@@ -912,7 +912,7 @@
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.OpenBrowserAction">
             </action>
               <action
-                label="The Aquarium: News From the GlassFish Community"
+                label="%menu.theaquarium"
                 enablesFor="1"
                 icon="icons/obj16/resources.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction"
@@ -920,7 +920,7 @@
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction">
             </action>   
              <action
-                label="Get Support for GlassFish Enteprise Server"
+                label="%menu.glassfish.getsupport"
                 enablesFor="1"
                 icon="icons/obj16/sunappsrv.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction"
@@ -928,7 +928,7 @@
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction">
             </action>     
             <action
-                label="Register GlassFish Enteprise Server"
+                label="%menu.registerglassfish"
                 enablesFor="1"
                 icon="icons/obj16/registration.png"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction"
@@ -936,7 +936,7 @@
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction">
             </action>
             <action
-                label="GlassFish Update Center"
+                label="%menu.updatecenter"
                 enablesFor="1"
                 icon="icons/obj16/updateCenter.png"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction"
@@ -958,7 +958,7 @@
             extensions="xml"
             icon="icons/obj16/glassfishserver.gif"
             id="com.sun.enterprise.jst.server.sunappsrv.v3.Register"
-            name="v3 Register">
+            name="%menu.registerglassfish">
         </editor>
         <editor
             class="com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter"
@@ -966,7 +966,7 @@
             extensions="jjjxml"
             icon="icons/obj16/glassfishserver.gif"
             id="com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter"
-            name="v3 Update Center">
+            name="%menu.updatecenter">
         </editor>
     </extension>
      
@@ -976,13 +976,13 @@
                 targetID="org.eclipse.wst.server.ui.ServersView">
             <menu
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenuModule"
-                label="GlassFishXXX"
+                label="GlassFish"
                 path="additions">
                 <separator name="group1"/>
 
             </menu>
             <action
-                label="The Aquarium: News From the GlassFish Community"
+                label="%menu.theaquarium"
                 icon="icons/obj16/resources.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction"
  				toolbarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenuModule/group1"
@@ -990,7 +990,7 @@
             </action>
             
             <action
-                label="Get Support for GlassFish Enteprise Server"
+                label="%menu.glassfish.getsupport"
                 icon="icons/obj16/sunappsrv.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction"
                 toolbarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
