@@ -42,6 +42,8 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.SelectionProviderAction;
 import org.eclipse.wst.server.core.IServer;
@@ -54,7 +56,8 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
  * @author Ludo
  *
  */
-public class AppServerContextAction extends SelectionProviderAction implements IObjectActionDelegate ,IViewActionDelegate{
+public class AppServerContextAction extends SelectionProviderAction implements IObjectActionDelegate ,IViewActionDelegate,
+IWorkbenchWindowActionDelegate {
 
 	private IWorkbenchPart targetPart;
 	private IViewPart viewPArt;
@@ -244,6 +247,11 @@ public class AppServerContextAction extends SelectionProviderAction implements I
 		message.open();
 	}
 	public void init(IViewPart arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void init(IWorkbenchWindow arg0) {
 		// TODO Auto-generated method stub
 		
 	}

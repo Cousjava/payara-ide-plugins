@@ -1031,12 +1031,104 @@
                 <separator name="group1"/>
 
             </menu>	
-               <action
+            <menu
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2"
+                label="%menu.v2.documentation"
+                icon="icons/obj16/glassfishserver.gif"
+                path="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1">                
+                <separator name="group1"/>
+
+            </menu>	
+            <menu
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3"
+                label="%menu.v3.documentation"
+                icon="icons/obj16/glassfishserver.gif"
+                path="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1">                
+                <separator name="group1"/>
+
+            </menu>
+            
+           <action
+                label="%menu.v3.quickstart"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$QuickStartGuideV3"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv3">
+            </action>            
+            <action
+                label="%menu.v3.adminguide"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$AdminGuideV3"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv3">
+            </action>
+            <action
+                label="%menu.v3.devguide"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$DevGuideV3"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv3">
+            </action> 
+             <action
+                label="%menu.v3.appdeployguide"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$AppDeployGuideV3"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv3">
+            </action>           
+            
+            <action
+                label="%menu.v2.quickstart"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$QuickStartGuideV2"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2/group1"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv2">
+            </action>            
+            <action
+                label="%menu.v2.adminguide"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$AdminGuideV2"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2/group1"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv2">
+            </action>
+            <action
+                label="%menu.v2.devguide"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$DevGuideV2"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2/group1"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv2">
+            </action> 
+             <action
+                label="%menu.v2.appdeployguide"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$AppDeployGuideV2"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2/group1"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv2">
+            </action>   
+             <action
+                label="%menu.v2.deployplanning"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$DeployPlanningGuideV2"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2/group1"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv2">
+            </action>             
+            
+                                  
+           <action
                 label="%menu.theaquarium"
                 icon="icons/obj16/resources.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-		helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelp">
             </action>   
              <action

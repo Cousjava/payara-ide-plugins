@@ -23,79 +23,18 @@
 // </editor-fold>package com.sun.enterprise.jst.server.sunappsrv.actions;
 package com.sun.enterprise.jst.server.sunappsrv.actions;
 
-import java.net.URL;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 /**
  *
  * @author Ludovic.Champenois@Sun.COM
  */
-public class AquariumAction implements IObjectActionDelegate ,IViewActionDelegate ,IWorkbenchWindowActionDelegate {
+public class AquariumAction extends ShowURLAction {
 
     /**
      * The constructor.
      */
     public AquariumAction() {
-        SunAppSrvPlugin.logMessage("AquariumAction CTOR aq");
+        super("http://blogs.sun.com/theaquarium/");
    }
-
- 
-
-	public void setActivePart(IAction arg0, IWorkbenchPart arg1) {
-        SunAppSrvPlugin.logMessage("setActivePart aq"+arg0+arg1);
-		
-	}
-
-	public void run(IAction arg0) {
-		try {
-
-			
-			IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
-			IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
-			browser.openURL(new URL("http://blogs.sun.com/theaquarium/"));
-		} catch (Exception e) {
-	           SunAppSrvPlugin.logMessage("Error opening browser: "+e.getMessage());
-
-		}		
-	}
-
-	public void selectionChanged(IAction arg0, ISelection arg1) {
-        SunAppSrvPlugin.logMessage("selectionChanged aq"+arg0+arg1);
-		
-	}
-
-	public void init(IViewPart arg0) {
-		
-		SunAppSrvPlugin.logMessage("INIT aq"+arg0);
-		
-	}
-
-
-
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-
-	public void init(IWorkbenchWindow arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
