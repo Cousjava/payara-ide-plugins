@@ -1,3 +1,4 @@
+
 // <editor-fold defaultstate="collapsed" desc="CDDL Licence">
 /*
  * The contents of this file are subject to the terms
@@ -25,47 +26,62 @@ package com.sun.enterprise.jst.server.sunappsrv.actions;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
-public class OpenBrowserAction extends AppServerContextAction {
+/**
+ *
+ * @author Ludovic.Champenois@Sun.COM
+ */
+public class ShowURLAction implements IObjectActionDelegate ,IViewActionDelegate ,IWorkbenchWindowActionDelegate {
 
-	public OpenBrowserAction() {
-		super("Open GlassFish Admin Console...",getImageDescriptorFromlocalImage("icons/obj16/glassfishserver.gif"));
+	private String url;
+
+    public ShowURLAction(String url) {
+        this.url = url;
+   }
+ 
+
+	public void setActivePart(IAction arg0, IWorkbenchPart arg1) {
+		
 	}
 
-
-	public void execute(IServer server) {
-		
-		if (accept(server)==false){
-			showMessageDialog();
-			return;
-		}
+	public void run(IAction arg0) {
 		try {
-	        SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter(
-	                SunAppServerBehaviour.class, null);
-			
+
 			
 			IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
 			IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
-			browser.openURL(new URL("http://"+sab.getSunAppServer().getServer().getHost()+":"+sab.getSunAppServer().getAdminServerPort()));
+			browser.openURL(new URL(url));
 		} catch (Exception e) {
 	           SunAppSrvPlugin.logMessage("Error opening browser: "+e.getMessage());
 
-		}
+		}		
 	}
-	public boolean accept(IServer server) {
-        SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
-		try {
-			return sab.getSunAppServer().isRunning();
-		} catch (CoreException e) {
-			return false;
-		}
+
+	public void selectionChanged(IAction arg0, ISelection arg1) {		
 	}
+
+	public void init(IViewPart arg0) {
+				
+	}
+
+	public void dispose() {		
+	}
+
+	public void init(IWorkbenchWindow arg0) {		
+	}
+
 }
