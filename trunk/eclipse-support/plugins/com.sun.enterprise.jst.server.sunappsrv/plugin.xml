@@ -175,7 +175,7 @@
             description="%serverTypeDescriptionglassfishv3prelude"
             runtime="true"
             class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
-            initialState="stopped"
+            
             supportsRemoteHosts="false"
             runtimeTypeId="com.sun.enterprise.jst.server.runtime.glassfishv3prelude"
               launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
@@ -903,6 +903,14 @@
 
             </menu>
       
+              <action
+                label="View Log File"
+                icon="icons/obj16/logfile.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.ViewLogAction"
+                tooltip="View GlassFish Log File"
+                menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.ViewLogAction">
+            </action>
              <action
                 label="%menu.viewadminconsole"
                 icon="icons/obj16/glassfishserver.gif"
@@ -1054,7 +1062,7 @@
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$QuickStartGuideV3"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
 				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv3">
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.quickstartActionHelpv3">
             </action>            
             <action
                 label="%menu.v3.adminguide"
@@ -1062,7 +1070,7 @@
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$AdminGuideV3"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
 				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv3">
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.adminguideActionHelpv3">
             </action>
             <action
                 label="%menu.v3.devguide"
@@ -1070,7 +1078,7 @@
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$DevGuideV3"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
 				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv3">
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.devguideActionHelpv3">
             </action> 
              <action
                 label="%menu.v3.appdeployguide"
@@ -1078,7 +1086,7 @@
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$AppDeployGuideV3"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
 				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv3">
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.appdeployguideActionHelpv3">
             </action>           
             
             <action
@@ -1087,7 +1095,7 @@
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$QuickStartGuideV2"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2/group1"
 				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv2">
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.quickstartActionHelpv2">
             </action>            
             <action
                 label="%menu.v2.adminguide"
@@ -1095,7 +1103,7 @@
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$AdminGuideV2"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2/group1"
 				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv2">
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.adminguideActionHelpv2">
             </action>
             <action
                 label="%menu.v2.devguide"
@@ -1103,7 +1111,7 @@
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$DevGuideV2"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2/group1"
 				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv2">
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.devguideActionHelpv2">
             </action> 
              <action
                 label="%menu.v2.appdeployguide"
@@ -1111,7 +1119,7 @@
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$AppDeployGuideV2"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2/group1"
 				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv2">
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.appdeployguideActionHelpv2">
             </action>   
              <action
                 label="%menu.v2.deployplanning"
@@ -1119,7 +1127,7 @@
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$DeployPlanningGuideV2"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV2/group1"
 				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelpv2">
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.deployplanningActionHelpv2">
             </action>             
             
                                   
@@ -1141,6 +1149,32 @@
             </action>              		
 
 		</actionSet>
+</extension>
+<extension
+      point="org.eclipse.ui.views">
+   <category
+         id="com.sun.enterprise.jst.server.sunappsrv.logview"
+         name="GlassFish Log Viewer">
+   </category>
+   <view
+         category="com.sun.enterprise.jst.server.sunappsrv.logview"
+         class="com.sun.enterprise.jst.server.sunappsrv.log.LogView"
+         icon="icons/obj16/glassfishserver.gif"
+         id="com.sun.enterprise.jst.server.sunappsrv.log.LogView"
+         name="GlassFish Log Viewer">
+   </view>
+</extension>
+<extension
+      point="org.eclipse.ui.perspectiveExtensions">
+   <perspectiveExtension
+         targetID="org.eclipse.jst.j2ee.J2EEPerspective">
+      <view
+            id="com.sun.enterprise.jst.server.sunappsrv.log.LogView"
+            ratio="0.5"
+            relationship="right"
+            relative="org.eclipse.wst.server.ui.ServersView">
+      </view>
+   </perspectiveExtension>
 </extension>
 
 
