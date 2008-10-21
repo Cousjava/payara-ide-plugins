@@ -41,9 +41,16 @@ import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMConnector;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+
+import com.sun.enterprise.jst.server.sunappsrv.log.LogView;
 
 
 
@@ -76,7 +83,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             abort("missing Server", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
        
-        SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
+        final SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
 
         SunAppServer sunserver = serverBehavior.getSunAppServer();
         SunAppServer.ServerStatus status =SunAppServer.ServerStatus.CONNEXTION_ERROR ;
@@ -129,7 +136,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 	           "--domaindir",
 	           serverBehavior.getDomainDir(), 
 	           debugFlag,
-	           "--verbose",
+	          // "--verbose",
 		           domain
 		        };
  
@@ -137,17 +144,47 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         try {
             Process process = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
             IProcess runtimeProcess = new RuntimeProcess(launch, process, "...", null);
-            launch.addProcess(runtimeProcess);
-            serverBehavior.setProcess(runtimeProcess);
+     //       launch.addProcess(runtimeProcess);
+     //       serverBehavior.setProcess(runtimeProcess);
         } catch (IOException ioe) {
             abort("error Launching Executable", ioe,  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
-
+        boolean viewLog=false;
         for (int i=0;i<120;i++){//max 60 seconds for start.
             try {
                 Thread.sleep(500);//1/2 secs
                 monitor.worked(1);
-                             
+                if (viewLog==false){
+                	viewLog = true;//view it only once.
+                	try {
+                		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+                			public void run() {
+                				IWorkbench iw =PlatformUI.getWorkbench();
+                				IWorkbenchPage page = iw.
+                				getActiveWorkbenchWindow().
+                				getActivePage();
+                				try {
+                					LogView lv = (LogView)page.showView("com.sun.enterprise.jst.server.sunappsrv.log.LogView");
+                				   	String logFile =  serverBehavior.getDomainDirWithDomainName()+"/logs/server.log";	        
+                				    
+                					lv.init(new File(logFile));
+								} catch (PartInitException e) {
+									// TODO Auto-generated catch block
+	                				SunAppSrvPlugin.logMessage("page.showView",e);
+								}
+                				SunAppSrvPlugin.logMessage("page.showView");
+                			}
+                		});
+
+
+
+                	}catch (Exception e){
+                        SunAppSrvPlugin.logMessage("page.showView",e);
+                		
+                	}
+
+
+                }
                 if (sunserver.isRunning()){
                     if (serverBehavior.isV3()) {
                         if (sunserver.getV3ServerStatus()!=SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
@@ -161,7 +198,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                         }                       
                     	
                     }
-                    serverBehavior.startPingingThread();       
+                    serverBehavior.setStartedState();
+///////startPingingThread();       
                     setDefaultSourceLocator(launch, configuration);
                     if (mode.equals("debug")) {
 
