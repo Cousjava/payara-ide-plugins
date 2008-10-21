@@ -69,8 +69,38 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		//       SunAppSrvPlugin.logMessage("in SunAppServerBehaviour CTOR ");
 
 	}
+	protected void initialize(IProgressMonitor monitor){
+		super.initialize(monitor);
+		SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize" );
+		SunAppServer  sunserver = getSunAppServer();
+		try {
+			if (sunserver.isRunning()){
+				SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize is running!!" );
 
+				if (isV3()) {
+					if (sunserver.getV3ServerStatus()==SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
+						SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize V3 DOMAINDIR_MATCHING"  );
+						setStartedState();
 
+						return;
+					}
+				} else { 
+					if (sunserver.getV2ServerStatus()==SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
+						SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize V2 DOMAINDIR_MATCHING"  );
+						setStartedState();
+						return;
+					}
+				}
+			}
+			SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize STOP by Default..."  );
+			setServerState(IServer.STATE_STOPPED);
+			resetStatus(IServer.STATE_STOPPED);	
+			} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	/* get the correct adapter for  the GlassFish server
 	 * 
@@ -104,8 +134,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		if (sunserver.isRunning()){
 			SunAppSrvPlugin.logMessage("in SunAppServerBehaviour CTOR after sunserver it is running!!!");
 			setMode(ILaunchManager.RUN_MODE);
-			setServerState(IServer.STATE_STARTED);
-			resetStatus(IServer.STATE_STARTED);
+			setStartedState();
+
 
 		} 
 		state = getServer().getServerState();
@@ -117,15 +147,17 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 
 				SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setupLaunch  ALREADY STARTED!!!!!!");
 				setMode(ILaunchManager.RUN_MODE);
-				setServerState(IServer.STATE_STARTED);
-				resetStatus(IServer.STATE_STARTED);
+				setStartedState();
 				return;
 			}
 		}
 		resetStatus(state);
 	}
 
-
+	public void setStartedState(){
+		setServerState(IServer.STATE_STARTED);
+		resetStatus(IServer.STATE_STARTED);		
+	}
 	public void publishModule(int kind, int deltaKind, IModule[] module,
 			IProgressMonitor monitor) throws CoreException {
 
@@ -312,7 +344,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		}).start();
 	}
 
-	protected String getDomainDirWithDomainName() {
+	public String getDomainDirWithDomainName() {
 		return getDomainDir().trim() + File.separatorChar + getDomainName();
 	}
 
@@ -373,7 +405,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 
 	}
 	private void publishJarFile(int kind, int deltaKind,Properties p,  IModule[] module, IProgressMonitor monitor) throws CoreException {
-		// Remove if requested or if previously published and are now serving without publishing
+		//first try to see if we need to undeploy:
+		
 		if (deltaKind == ServerBehaviourDelegate.REMOVED ) {
 			try {
 				String publishPath = (String) p.get(module[1].getId());
@@ -388,9 +421,9 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			if (!path.toFile().exists()) {
 				path.toFile().mkdirs();
 			} else {
-				// If file still exists and we are not forcing a new one to be built
+				// force a delta publish
 				if (jarPath.toFile().exists() && kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {
-					// avoid changes if no changes to module since last publish
+
 					IModuleResourceDelta[] delta = getPublishedResourceDelta(module);
 					if (delta == null || delta.length == 0)
 						return;
@@ -427,7 +460,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 					File pub = new File(publishPath);
 					if (pub.exists()) {
 						IStatus[] stat = PublishUtil.deleteDirectory(pub, monitor);
-						analyseReturnedStatus(stat);
+						/////analyseReturnedStatus(stat);
 					}
 				} catch (Exception e) {
 					throw new CoreException(new Status(IStatus.WARNING, SunAppSrvPlugin.SUNPLUGIN_ID, 0,"cannot remove "+module[0].getName(), e));
@@ -438,7 +471,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			IPath path = new Path (getDomainDirWithDomainName()+"/eclipseApps/"+module[0].getName());
 			IModuleResource[] mr = getResources(module);
 			IStatus[] stat = PublishUtil.publishSmart(mr, path, monitor);
-			analyseReturnedStatus(stat);
+			/////analyseReturnedStatus(stat);
 
 			String spath =""+ path;
 			String name =module[0].getName();
