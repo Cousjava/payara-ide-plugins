@@ -24,10 +24,10 @@
 package com.sun.enterprise.jst.server.sunappsrv;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
 
@@ -42,10 +42,15 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
     
     public SunAppSrvPlugin() {
         singleton = this; 
-
-
-        
     }
+
+    public void stop(BundleContext v) throws Exception {
+    	logMessage("STOP IS CALLED!!!!!!!!!!!!!!!!");
+
+    	super.stop(v);
+
+    }
+
     
     
     public static SunAppSrvPlugin getInstance() {
