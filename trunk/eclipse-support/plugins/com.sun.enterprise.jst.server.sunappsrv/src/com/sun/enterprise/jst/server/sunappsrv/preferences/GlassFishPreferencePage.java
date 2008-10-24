@@ -64,11 +64,22 @@ public class GlassFishPreferencePage extends FieldEditorPreferencePage
 	public void createFieldEditors() {
 	//	addField(new DirectoryFieldEditor(PreferenceConstants.P_PATH, 
 	//			"&Directory preference:", getFieldEditorParent()));
+		
 		addField(
-			new BooleanFieldEditor(
-				PreferenceConstants.ENABLE_LOG,
-				"&Enable GlassFish Plugin Log information in IDE log file",
-				getFieldEditorParent()));
+				new BooleanFieldEditor(
+					PreferenceConstants.ENABLE_LOG,
+					"&Enable GlassFish Plugin Log information in IDE log file",
+					getFieldEditorParent()));
+		addField(
+				new BooleanFieldEditor(
+					PreferenceConstants.ENABLE_START_JAVADB,
+					"&Start the JavaDB database process when Starting GlassFish Server",
+					getFieldEditorParent()));
+		addField(
+				new BooleanFieldEditor(
+					PreferenceConstants.ENABLE_START_VERBOSE,
+					"&Start the GlassFish Enterprise Server in verbose mode (Eclipse console can be used)",
+					getFieldEditorParent()));
 
 	/*	addField(new RadioGroupFieldEditor(
 				PreferenceConstants.P_CHOICE,
