@@ -42,7 +42,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = SunAppSrvPlugin.getInstance().getPreferenceStore();
 		store.setDefault(PreferenceConstants.ENABLE_LOG, false);
-	//	store.setDefault(PreferenceConstants.P_CHOICE, "choice2");
+		store.setDefault(PreferenceConstants.ENABLE_START_JAVADB, false);
+		store.setDefault(PreferenceConstants.ENABLE_START_VERBOSE, false);
+			//	store.setDefault(PreferenceConstants.P_CHOICE, "choice2");
 	//	store.setDefault(PreferenceConstants.P_STRING,
 		//		"Default value");
 	}
