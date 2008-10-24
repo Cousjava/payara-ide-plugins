@@ -128,9 +128,10 @@ public class LogThread extends Thread{
 						line = filter.process((char) reader.read());
 						if (line!=null){
 							line = stripNewline(line);
-							updated = true;
-							ringBuffer.add(line);
-
+							if (!line.startsWith("FINE: UTIL6049")){//strip useless log entry (v3 bug I think)
+								updated = true;
+								ringBuffer.add(line);								
+							}
 						}
 					}
 				}
