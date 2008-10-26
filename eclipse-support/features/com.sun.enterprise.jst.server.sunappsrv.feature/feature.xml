@@ -2,7 +2,7 @@
 <feature
       id="com.sun.enterprise.jst.server.sunappsrv.feature"
       label="GlassFish Java EE 5 Server"
-      version="1.0.12"
+      version="1.0.13"
       provider-name="java.net"
       image="glassfish.gif">
 
@@ -48,7 +48,7 @@ C. Any new file that is contributed or otherwise made available under the terms 
 
 1.11. Patent Claims means any patent claim(s), now owned or hereafter acquired, including without limitation, method, process, and apparatus claims, in any patent Licensable by grantor.
 
-1.12. Source Code means (a) the common form of computer software code in which modifications are made and (b) associated documentation included in or with such code.
+1.13. Source Code means (a) the common form of computer software code in which modifications are made and (b) associated documentation included in or with such code.
 
 1.13. You (or Your) means an individual or a legal entity exercising rights under, and complying with all of the terms of, this License. For legal entities, You includes any entity which controls, is controlled by, or is under common control with You. For purposes of this definition, control means (a)·the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (b)·ownership of more than fifty percent (50%) of the outstanding shares or beneficial ownership of such entity.
 
@@ -250,7 +250,7 @@ This Agreement is the entire agreement between you and Sun relating to its subje
          id="com.sun.enterprise.jst.server.sunappsrv"
          download-size="2000"
          install-size="2000"
-         version="1.0.12"
+         version="1.0.13"
          unpack="false"/>
 
 </feature>
