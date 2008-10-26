@@ -46,6 +46,7 @@ import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMConnector;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -55,6 +56,7 @@ import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 
 import com.sun.enterprise.jst.server.sunappsrv.log.LogView;
+import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
 
 
 
@@ -127,6 +129,9 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
 			}
 		}
+    	IPreferenceStore store = SunAppSrvPlugin.getInstance().getPreferenceStore();
+    	boolean verboseMode= store.getBoolean(PreferenceConstants.ENABLE_START_VERBOSE);
+        String verboseFlag="--verbose="+verboseMode;
 
         
     	String asadminCmd =  serverBehavior.getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+getScriptExtension();	        
@@ -140,7 +145,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 	           "--domaindir",
 	           serverBehavior.getDomainDir(), 
 	           debugFlag,
-	          // "--verbose",
+	           verboseFlag,
 		           domain
 		        };
  
@@ -150,10 +155,25 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             IProcess runtimeProcess = new RuntimeProcess(launch, process, "...", null);
      //       launch.addProcess(runtimeProcess);
      //       serverBehavior.setProcess(runtimeProcess);
+            SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(serverBehavior.getStopCommand());
         } catch (IOException ioe) {
             abort("error Launching Executable", ioe,  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
+    	boolean javaDBStart= store.getBoolean(PreferenceConstants.ENABLE_START_JAVADB);
+    	if(javaDBStart){
+            command = new String[]{ asadminCmd,
+     	           "start-database"};    		
+            try {
+				Process process = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
+		        SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(new String[]{ asadminCmd, "stop-database"});
+		           			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+   	}
+
         boolean viewLog=false;
+
         for (int i=0;i<120;i++){//max 60 seconds for start.
             try {
                 Thread.sleep(500);//1/2 secs
@@ -248,10 +268,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 		}
                 	};
                 	DebugPlugin.getDefault().addDebugEventListener(processListener);                   
-
-
-
-                	return;
                 }
             } catch (InterruptedException ex) {}
         }               
