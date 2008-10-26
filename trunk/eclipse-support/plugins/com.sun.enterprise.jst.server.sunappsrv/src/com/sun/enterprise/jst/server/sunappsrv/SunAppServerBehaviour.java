@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
@@ -261,6 +262,30 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		//	SunAppSrvPlugin.logMessage("sunappserver.adminserverportnumber we are looking for this prop value:"+sunserver.getServerPort());
 		return sunserver.getServerPort();
 	}
+
+	
+	public void restart(final String launchMode) throws CoreException {
+		SunAppSrvPlugin.logMessage("in SunAppServerBehaviour restart");
+		stop(true);
+		Thread thread = new Thread("Synchronous server start") {
+			public void run() {
+				try {
+					//SunAppSrvPlugin.logMessage("in !!!!!!!SunAppServerBehaviour restart");
+					getServer().start(launchMode, new NullProgressMonitor());
+					SunAppSrvPlugin.logMessage("in SunAppServerBehaviour restart done");
+					setServerState(IServer.STATE_STARTED);
+
+				} catch (Exception e) {
+					SunAppSrvPlugin.logMessage("in SunAppServerBehaviour restart",e);
+				}
+			}
+		};
+		thread.setDaemon(true);
+		thread.start();
+
+	    }	
+	
+	
 	public void stop(boolean force) {
 		SunAppSrvPlugin.logMessage("in SunAppServerBehaviour stop");
 
