@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -45,7 +44,6 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
-import org.eclipse.jst.server.generic.core.internal.PingThread;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleResource;
@@ -107,7 +105,12 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 	 * 
 	 */
 	public  SunAppServer getSunAppServer(){
-		return (SunAppServer)getServer().getAdapter(SunAppServer.class);
+		//	return (SunAppServer)getServer().getAdapter(SunAppServer.class);
+		SunAppServer  sunserver = (SunAppServer) getServer().getAdapter(SunAppServer.class);
+		if (sunserver == null) {
+			sunserver = (SunAppServer) getServer().loadAdapter(SunAppServer.class, new NullProgressMonitor());
+		}
+		return sunserver;
 	}
 
 	/* stub this public method from parent since we are not using <start> class definition in the serverdef.
@@ -307,18 +310,21 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		}
 		return ret;
 	}
-
-	private  void stopSunServer() {
-		// set arguments to be passed to Runtime.exec
+	public String[] getStopCommand(){
 		String asadminCmd =  getSunApplicationServerInstallationDirectory()+"/bin/asadmin"+ getScriptExtension();
 
-		String arr[] = { asadminCmd,
+		String stop[] = { asadminCmd,
 				"stop-domain",
 				"--domaindir",
 				getDomainDir(), 
 				getDomainName()
-		};
+		};	
+		return stop;
+	}
+	private  void stopSunServer() {
+		// set arguments to be passed to Runtime.exec
 
+		String arr[] = getStopCommand();
 		// stop the SJSAS using Runtime.exec
 		asyncExec(arr);
 		for (int i=0;i<30;i++){//max 30 seconds for stop.
@@ -341,7 +347,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		}
 	}
 
-	public void startPingingThread(){
+	/*public void startPingingThread(){
 		// ping server to check for startup
 		try {
 			setServerState(IServer.STATE_STARTING);
@@ -354,6 +360,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		}
 
 	}
+	*/
 	private void asyncExec(final String[] arr) {
 		new Thread(new Runnable() {
 			public void run() {
@@ -457,6 +464,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 
 			IModuleResource[] mr = getResources(module);
 			IStatus[] stat = PublishUtil.publishZip(mr, jarPath, monitor);
+			SunAppSrvPlugin.logMessage("PublishUtil.publishZip called "+jarPath);
 			analyseReturnedStatus(stat);
 			p.put(module[1].getId(), jarPath.toOSString());
 		}
@@ -484,8 +492,9 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 				try {
 					File pub = new File(publishPath);
 					if (pub.exists()) {
+						SunAppSrvPlugin.logMessage("PublishUtil.deleteDirectory called");
 						IStatus[] stat = PublishUtil.deleteDirectory(pub, monitor);
-						/////analyseReturnedStatus(stat);
+						analyseReturnedStatus(stat);
 					}
 				} catch (Exception e) {
 					throw new CoreException(new Status(IStatus.WARNING, SunAppSrvPlugin.SUNPLUGIN_ID, 0,"cannot remove "+module[0].getName(), e));
@@ -496,7 +505,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			IPath path = new Path (getDomainDirWithDomainName()+"/eclipseApps/"+module[0].getName());
 			IModuleResource[] mr = getResources(module);
 			IStatus[] stat = PublishUtil.publishSmart(mr, path, monitor);
-			/////analyseReturnedStatus(stat);
+			SunAppSrvPlugin.logMessage("PublishUtil.publishSmart called");
+			analyseReturnedStatus(stat);
 
 			String spath =""+ path;
 			String name =module[0].getName();
@@ -543,12 +553,16 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		if (status == null || status.length == 0){
 			return;
 		}
-		if (status.length == 1) {
+	/*	if (status.length == 1) {
 			throw new CoreException(status[0]);
 		}
 		String message = "GlassFish: Error Deploying";
 		MultiStatus ms = new MultiStatus(SunAppSrvPlugin.SUNPLUGIN_ID, 0, status, message, null);
-		throw new CoreException(ms);
+		throw new CoreException(ms);*/
+		for (IStatus s: status){
+			SunAppSrvPlugin.logMessage("analyseReturnedStatus: "+s.getMessage() );
+			
+		}
 	}
 
 
