@@ -240,34 +240,37 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 		}      
                 		// connect to VM
                 		connector.connect(arg, monitor, launch);
-                	}
-                	IDebugEventSetListener processListener = new IDebugEventSetListener() {
-                		public void handleDebugEvents(DebugEvent[] events) {
-                			if (events != null) {
-                				int size = events.length;
-                				for (int i = 0; i < size; i++) {
-                					if (events[i].getSource() instanceof JDIDebugTarget){
-                						JDIDebugTarget dt = (JDIDebugTarget)events[i].getSource();
-                						try {
 
-                							SunAppSrvPlugin.logMessage("JDIDebugTarget="+dt.getName());
-                							if ((dt.getName().indexOf("localhost:9009")!=-1) && events[i].getKind() == DebugEvent.TERMINATE) {
-                								DebugPlugin.getDefault().removeDebugEventListener(this);
-                								serverBehavior.stop(true);
+                		IDebugEventSetListener processListener = new IDebugEventSetListener() {
+                			public void handleDebugEvents(DebugEvent[] events) {
+                				if (events != null) {
+                					int size = events.length;
+                					for (int i = 0; i < size; i++) {
+                						if (events[i].getSource() instanceof JDIDebugTarget){
+                							JDIDebugTarget dt = (JDIDebugTarget)events[i].getSource();
+                							try {
+
+                								SunAppSrvPlugin.logMessage("JDIDebugTarget="+dt.getName());
+                								if ((dt.getName().indexOf("localhost:9009")!=-1) && events[i].getKind() == DebugEvent.TERMINATE) {
+                									DebugPlugin.getDefault().removeDebugEventListener(this);
+                									serverBehavior.stop(true);
+                								}
+                							} catch (DebugException e) {
+                								// TODO Auto-generated catch block
+                								e.printStackTrace();
                 							}
-                						} catch (DebugException e) {
-                							// TODO Auto-generated catch block
-                							e.printStackTrace();
+
+
                 						}
 
-
                 					}
-
                 				}
                 			}
-                		}
-                	};
-                	DebugPlugin.getDefault().addDebugEventListener(processListener);                   
+                		};
+
+                		DebugPlugin.getDefault().addDebugEventListener(processListener);
+                	}
+                	return;
                 }
             } catch (InterruptedException ex) {}
         }               
