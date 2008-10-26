@@ -33,10 +33,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.RuntimeProcess;
+import org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMConnector;
@@ -48,7 +53,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
 import com.sun.enterprise.jst.server.sunappsrv.log.LogView;
 
@@ -153,7 +157,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         for (int i=0;i<120;i++){//max 60 seconds for start.
             try {
                 Thread.sleep(500);//1/2 secs
-                monitor.worked(1);
+                monitor.worked(i);
                 if (viewLog==false){
                 	viewLog = true;//view it only once.
                 	try {
@@ -172,7 +176,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 									// TODO Auto-generated catch block
 	                				SunAppSrvPlugin.logMessage("page.showView",e);
 								}
-                				SunAppSrvPlugin.logMessage("page.showView");
                 			}
                 		});
 
@@ -186,45 +189,74 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
                 }
                 if (sunserver.isRunning()){
-                    if (serverBehavior.isV3()) {
-                        if (sunserver.getV3ServerStatus()!=SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
-                            SunAppSrvPlugin.logMessage("V3 not ready");
-                        	continue;
-                        }
-                    } else { //V2: wait a little bit more to make sure V2 admin is initialized
-                        if (sunserver.getV2ServerStatus()!=SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
-                            SunAppSrvPlugin.logMessage("V2 not ready");
-                        	continue;
-                        }                       
-                    	
-                    }
-                    serverBehavior.setStartedState();
-///////startPingingThread();       
-                    setDefaultSourceLocator(launch, configuration);
-                    if (mode.equals("debug")) {
+                	if (serverBehavior.isV3()) {
+                		if (sunserver.getV3ServerStatus()!=SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
+                			SunAppSrvPlugin.logMessage("V3 not ready");
+                			continue;
+                		}
+                	} else { //V2: wait a little bit more to make sure V2 admin is initialized
+                		if (sunserver.getV2ServerStatus()!=SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
+                			SunAppSrvPlugin.logMessage("V2 not ready");
+                			continue;
+                		}                       
 
-                   Map<String, String> argMap = new HashMap<String , String>();
-                    
-                   argMap.put("hostname", "localhost"); 
-                   argMap.put("port", "9009");  
-                   argMap.put("timeout", "25000");  
-                    String connectorId = getVMConnectorId(configuration);
-                    IVMConnector connector = null;
-                    if (connectorId == null) {
-                        connector = JavaRuntime.getDefaultVMConnector();
-                    } else {
-                        connector = JavaRuntime.getVMConnector(connectorId);
-                    }      
-                    // connect to remote VM
-                    connector.connect(argMap, monitor, launch);
-                    }
+                	}
+                	serverBehavior.setStartedState();
+                	///////startPingingThread();       
+                	setDefaultSourceLocator(launch, configuration);
+                	if (mode.equals("debug")) {
+
+                		Map<String, String> arg = new HashMap<String , String>();
+
+                		arg.put("hostname", "localhost"); 
+                		arg.put("port", "9009");  
+                		arg.put("timeout", "25000");  
+                		String connectorId = getVMConnectorId(configuration);
+                		IVMConnector connector = null;
+                		if (connectorId == null) {
+                			connector = JavaRuntime.getDefaultVMConnector();
+                		} else {
+                			connector = JavaRuntime.getVMConnector(connectorId);
+                		}      
+                		// connect to VM
+                		connector.connect(arg, monitor, launch);
+                	}
+                	IDebugEventSetListener processListener = new IDebugEventSetListener() {
+                		public void handleDebugEvents(DebugEvent[] events) {
+                			if (events != null) {
+                				int size = events.length;
+                				for (int i = 0; i < size; i++) {
+                					if (events[i].getSource() instanceof JDIDebugTarget){
+                						JDIDebugTarget dt = (JDIDebugTarget)events[i].getSource();
+                						try {
+
+                							SunAppSrvPlugin.logMessage("JDIDebugTarget="+dt.getName());
+                							if ((dt.getName().indexOf("localhost:9009")!=-1) && events[i].getKind() == DebugEvent.TERMINATE) {
+                								DebugPlugin.getDefault().removeDebugEventListener(this);
+                								serverBehavior.stop(true);
+                							}
+                						} catch (DebugException e) {
+                							// TODO Auto-generated catch block
+                							e.printStackTrace();
+                						}
+
+
+                					}
+
+                				}
+                			}
+                		}
+                	};
+                	DebugPlugin.getDefault().addDebugEventListener(processListener);                   
+
+
+
                 	return;
                 }
             } catch (InterruptedException ex) {}
-            }               
-
+        }               
     }
- 
- 
+
+
     
 }
