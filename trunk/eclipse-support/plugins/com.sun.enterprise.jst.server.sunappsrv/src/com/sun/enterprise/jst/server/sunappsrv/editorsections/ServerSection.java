@@ -30,9 +30,9 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -48,7 +48,6 @@ import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerCommands;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 
 
@@ -171,13 +170,18 @@ public class ServerSection extends ServerEditorSection {
             createLabel(comp, "   ", toolkit);
 	        final Button useAnonymousConnection = new Button(comp, SWT.CHECK);
 	        useAnonymousConnection.setText(Messages.UseAnonymousConnection);
-	        useAnonymousConnection.setSelection(sunserver.getUseAnonymousConnections().equals("true"));
+	        boolean useAnon=sunserver.getUseAnonymousConnections().equals("true");
+	        useAnonymousConnection.setSelection(useAnon);
+	        username.setEnabled(!useAnon);
+	        password.setEnabled(!useAnon);
 	        useAnonymousConnection.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false));
 	        useAnonymousConnection.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 	    	   public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 	    	   //Determines if the checkBox is checked or not
 	    	   boolean selected = useAnonymousConnection.getSelection();
-	           execute(new SunAppServerCommands(server, ""+selected,SunAppServer.USEANONYMOUSCONNECTIONS));
+		        username.setEnabled(!selected);
+		        password.setEnabled(!selected);
+		        execute(new SunAppServerCommands(server, ""+selected,SunAppServer.USEANONYMOUSCONNECTIONS));
 	    	   }
 	    	});
 
