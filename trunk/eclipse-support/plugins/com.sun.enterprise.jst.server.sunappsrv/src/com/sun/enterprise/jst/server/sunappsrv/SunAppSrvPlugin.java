@@ -23,6 +23,11 @@
 
 package com.sun.enterprise.jst.server.sunappsrv;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -39,14 +44,23 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
     
     protected static final String SUNPLUGIN_ID = "com.sun.enterprise.jst.server.sunappsrv";
     private static SunAppSrvPlugin singleton;
-    
+    private static HashSet<String[]> commandsToExecuteAtExit = new HashSet<String[]>();
     public SunAppSrvPlugin() {
         singleton = this; 
     }
 
     public void stop(BundleContext v) throws Exception {
     	logMessage("STOP IS CALLED!!!!!!!!!!!!!!!!");
-
+    	for (String[] command: commandsToExecuteAtExit){
+    		try {
+    			BufferedReader input = new BufferedReader(new InputStreamReader(Runtime.getRuntime().exec(command).getInputStream()));
+    			String line = null;
+    			while ((line = input.readLine()) != null) logMessage(">>> " + line);
+    			input.close();
+    		} catch (Exception ex) {
+    			logMessage("Error executing process:\n" + ex);
+    		}
+    		}
     	super.stop(v);
 
     }
@@ -56,7 +70,17 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
     public static SunAppSrvPlugin getInstance() {
         return singleton;
     }
-    
+    public void addCommandToExecuteAtExit(String command[]){
+       	for (String[] com: commandsToExecuteAtExit){
+    		if ( Arrays.equals(com, command)){
+    	    	logMessage("Command already there");
+   			
+    			return;
+    		}
+       	}
+       	commandsToExecuteAtExit.add(command);
+    	logMessage("addCommandToExecuteAtExit size="+commandsToExecuteAtExit.size());
+    }
     public static void logMessage(String mess){
 
     	IPreferenceStore store = getInstance().getPreferenceStore();
@@ -70,4 +94,5 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
         final Status status = new Status(IStatus.ERROR, SUNPLUGIN_ID, 1,"GlassFish: "+mess,e);        
         getInstance().getLog().log(status);
     }
+    
 }
