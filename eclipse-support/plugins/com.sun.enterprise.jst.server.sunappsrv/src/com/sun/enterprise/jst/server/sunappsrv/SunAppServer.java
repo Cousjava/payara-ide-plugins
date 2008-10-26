@@ -277,6 +277,7 @@ public class SunAppServer extends GenericServer {
        	DOMAINDIR_MATCHING,
        	DOMAINDIR_NOT_MATCHING,
     	CONNEXTION_ERROR,
+    	CREDENTIAL_ERROR,
     	MBEAN_ERROR,
     	WRONG_SERVER_TYPE
     	
@@ -312,7 +313,8 @@ public class SunAppServer extends GenericServer {
                    	return ServerStatus.DOMAINDIR_NOT_MATCHING;
                     }
                 } else  {
-                   	return ServerStatus.CONNEXTION_ERROR;
+                    SunAppSrvPlugin.logMessage("apparently CREDENTIAL_ERROR" );
+                 	return ServerStatus.CREDENTIAL_ERROR;
 
 
                 }
