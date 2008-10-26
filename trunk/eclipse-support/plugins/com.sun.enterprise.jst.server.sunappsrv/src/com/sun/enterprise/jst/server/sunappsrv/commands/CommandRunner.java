@@ -47,6 +47,8 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.osgi.internal.signedcontent.Base64;
+
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
@@ -302,14 +304,14 @@ public class CommandRunner extends BasicTask<OperationState> {
                             hconn.setRequestProperty("Content-Type", contentType);
                         }
                         hconn.setRequestProperty("User-Agent", "hk2-agent"); // NOI18N
-
+                        if (!server.getUseAnonymousConnections().equals("true")){
 //                        // Set up an authorization header with our credentials
 //                        Hk2Properties tp = tm.getHk2Properties();
-//                        String input = tp.getUsername () + ":" + tp.getPassword ();
-//                        String auth = new String(Base64.encode(input.getBytes()));
-//                        hconn.setRequestProperty("Authorization", // NOI18N
-//                                                 "Basic " + auth); // NOI18N
-
+                        String input = server.getAdminName() + ":" + server.getAdminPassword();
+                        String auth = new String(Base64.encode(input.getBytes()));
+                        hconn.setRequestProperty("Authorization", // NOI18N
+                                                 "Basic " + auth); // NOI18N
+                    }
                         // Establish the connection with the server
                         hconn.connect();
                         int respCode = hconn.getResponseCode();
