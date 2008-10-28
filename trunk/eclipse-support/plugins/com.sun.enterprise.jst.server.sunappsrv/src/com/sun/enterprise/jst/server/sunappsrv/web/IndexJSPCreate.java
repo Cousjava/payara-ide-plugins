@@ -59,25 +59,29 @@ public class IndexJSPCreate extends AbstractDataModelOperation  {
 	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
 		IVirtualComponent comp = ComponentCore.createComponent(getProject());
-		IFile ifile = getIndexJSP(comp);
+		final IFile ifile = getIndexJSP(comp);
 		createIndexJSP(ifile);
-		
-		IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-	    if (window==null){
-	    	return Status.OK_STATUS;
-	    }		
-		IWorkbenchPage page = window.getActivePage();
-	    if (page==null){
-	    	return Status.OK_STATUS;
-	    }
-	    IEditorDescriptor desc = PlatformUI.getWorkbench().
-		        getEditorRegistry().getDefaultEditor(ifile.getName());
-		try {
-			page.openEditor(new FileEditorInput(ifile), desc.getId());
-		} catch (PartInitException e) {
-			// TODO Auto-generated catch block
-			SunAppSrvPlugin.logMessage("error opening index.jsp ",e);
-		}		
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {		
+				IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if (window==null){
+					return ;
+				}		
+				IWorkbenchPage page = window.getActivePage();
+				if (page==null){
+					return ;
+				}
+				IEditorDescriptor desc = PlatformUI.getWorkbench().
+				getEditorRegistry().getDefaultEditor(ifile.getName());
+				try {
+					page.openEditor(new FileEditorInput(ifile), desc.getId());
+				} catch (PartInitException e) {
+					// TODO Auto-generated catch block
+					SunAppSrvPlugin.logMessage("error opening index.jsp ",e);
+				}
+			}
+		}
+		);
 		return Status.OK_STATUS;
 	}
 
