@@ -43,6 +43,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jst.server.generic.ui.internal.SWTUtil;
 
 import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
@@ -99,38 +101,32 @@ public class ServerSection extends ServerEditorSection {
         
         Composite comp = toolkit.createComposite(section);
         GridLayout gl = new GridLayout();
-        gl.numColumns = 2;
+        gl.numColumns = 3;
         gl.verticalSpacing = 5;
         gl.marginWidth = 10;
-        gl.horizontalSpacing = 15;
         gl.marginHeight = 5;
         comp.setLayout(gl);
         comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
         section.setClient(comp);
+        GridDataFactory txtGDF = GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(50, SWT.DEFAULT);
         
         createLabel(comp, Messages.DomainName, toolkit);
-        
+
         final Text domainname = toolkit.createText(comp, sunserver.getdomainName(), SWT.BORDER);
-        domainname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        txtGDF.applyTo(domainname);
         domainname.addModifyListener(new ModifyListener() {
             public void modifyText(ModifyEvent e) {
                 execute(new SunAppServerCommands(server, domainname.getText(),SunAppServer.DOMAINNAME));
             }
         });
         
-        createLabel(comp, Messages.DomainDirectory, toolkit);
-        final Text domaindir = toolkit.createText(comp, sunserver.getDomainDir(), SWT.BORDER);
-        domaindir.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        // TODO - figure out how to allow scrolling to see this whole value and copy/paste
-        // according to docs, setEditabled(false) is supposed to do that, but does not (on Mac)
-        // setEnabled(false) grays it out, but does not accomplish that either
-        domaindir.setEditable(false);
-        domaindir.setEnabled(false);
- 
+        final Text domaindir = SWTUtil.createLabeledPath(Messages.DomainDirectory, sunserver.getDomainDir(), comp, toolkit);
+        txtGDF.align(SWT.FILL, SWT.CENTER).span(1, 1).applyTo(domaindir);
+
         createLabel(comp, Messages.AdminName, toolkit);
         
         final Text username = toolkit.createText(comp, sunserver.getAdminName(), SWT.BORDER);
-        username.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        txtGDF.align(SWT.FILL, SWT.CENTER).span(2, 1).applyTo(username);
         username.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
                 execute(new SunAppServerCommands(server, username.getText(),SunAppServer.ADMINNAME));
@@ -141,18 +137,18 @@ public class ServerSection extends ServerEditorSection {
         
         final Text password = toolkit.createText(comp,sunserver.getAdminPassword(), SWT.BORDER);
         password.setEchoChar('*');
-        password.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+        txtGDF.applyTo(password);
         password.addModifyListener(new ModifyListener() {
             public void modifyText(ModifyEvent e) {
                 execute(new SunAppServerCommands(server, password.getText(),SunAppServer.ADMINPASSWORD));
             }
         });
         
-       createLabel(comp, Messages.ServerPortNumber, toolkit);
+        createLabel(comp, Messages.ServerPortNumber, toolkit);
         
         final Text serverPortNumber = toolkit.createText(comp, sunserver.getServerPort(), SWT.BORDER);
-        
-        serverPortNumber.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+        txtGDF.applyTo(serverPortNumber);
         serverPortNumber.setEditable(false);
         serverPortNumber.setEnabled(false);
 
@@ -160,21 +156,20 @@ public class ServerSection extends ServerEditorSection {
         createLabel(comp, Messages.AdminServerPortNumber, toolkit);
         
         final Text adminServerPortNumber = toolkit.createText(comp, sunserver.getAdminServerPort(), SWT.BORDER);
-        adminServerPortNumber.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+        txtGDF.applyTo(adminServerPortNumber);
         adminServerPortNumber.setEditable(false);
         adminServerPortNumber.setEnabled(false);
 
         
 
         if (serverBehavior.isV3()) {
-            createLabel(comp, "   ", toolkit);
 	        final Button useAnonymousConnection = new Button(comp, SWT.CHECK);
 	        useAnonymousConnection.setText(Messages.UseAnonymousConnection);
 	        boolean useAnon=sunserver.getUseAnonymousConnections().equals("true");
 	        useAnonymousConnection.setSelection(useAnon);
 	        username.setEnabled(!useAnon);
 	        password.setEnabled(!useAnon);
-	        useAnonymousConnection.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false));
+	        txtGDF.span(3, 1).indent(45, 0).applyTo(useAnonymousConnection);
 	        useAnonymousConnection.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 	    	   public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 	    	   //Determines if the checkBox is checked or not
@@ -185,11 +180,10 @@ public class ServerSection extends ServerEditorSection {
 	    	   }
 	    	});
 
-	        createLabel(comp, "   ", toolkit);
 	        final Button keepSessions = new Button(comp, SWT.CHECK);
 	        keepSessions.setText(Messages.keepSessions);
 	        keepSessions.setSelection(sunserver.getKeepSessions().equals("true"));
-	        keepSessions.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, false, false));
+	        txtGDF.applyTo(keepSessions);
 	        keepSessions.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 	    	   public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 	    	   //Determines if the checkBox is checked or not
