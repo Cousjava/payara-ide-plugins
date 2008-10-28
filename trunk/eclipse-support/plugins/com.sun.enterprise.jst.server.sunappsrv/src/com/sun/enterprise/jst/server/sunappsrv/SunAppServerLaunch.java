@@ -101,7 +101,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 			} else { // V2
 				SunAppSrvPlugin
 						.logMessage("in SUN SunAppServerLaunch Forcing a STOP!!!!");
-				status = sunserver.getV3ServerStatus();
+				status = sunserver.getV2ServerStatus();
 			}
 			if (status == SunAppServer.ServerStatus.DOMAINDIR_MATCHING) {
 				// we are really to the server we know about, so that we can
