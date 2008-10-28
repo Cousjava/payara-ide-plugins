@@ -35,7 +35,10 @@
     context="runtime"
     default="" />
     
-
+    <property id="sunappserver.domaindir"  label="%sunappserver.domaindir"
+    type="directory"
+    context="server"
+    default="${sunappserver.rootdirectory}/domains" />
     
     <property id="sunappserver.domainname"  label="%sunappserver.domainname"
     type="string"
