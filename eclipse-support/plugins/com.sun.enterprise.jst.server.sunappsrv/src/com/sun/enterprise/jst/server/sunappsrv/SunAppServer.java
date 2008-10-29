@@ -49,10 +49,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
+import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
+import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
+import org.eclipse.jst.server.generic.servertype.definition.Property;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -102,11 +109,13 @@ public class SunAppServer extends GenericServer {
      */
     @Override
     protected void initialize() {
-        SunAppSrvPlugin.logMessage("in SunAppServer initialize");
+        SunAppSrvPlugin.logMessage("in SunAppServer initialize"+this.getServer().getName());
        super.initialize();
-       readServerConfiguration(new File(getDomainDir()+File.separator+getdomainName()+"/config/domain.xml"));
-       
-       syncHostAndPortsValues();
+       if ((getDomainDir()!=null)&&(!getDomainDir().startsWith("${"))){ //only if we are correctly setup...
+    	   readServerConfiguration(new File(getDomainDir()+File.separator+getdomainName()+"/config/domain.xml"));
+    	   SunAppSrvPlugin.logMessage("in SunAppServer initialize done readServerConfiguration");
+    	   syncHostAndPortsValues();
+       }
     }
 
   public Map<String, String> getProps(){
@@ -216,19 +225,22 @@ public class SunAppServer extends GenericServer {
      */
     @Override
     public void setDefaults(IProgressMonitor monitor) {
-        SunAppSrvPlugin.logMessage("In  setDefaults)" +isV3());
+         SunAppSrvPlugin.logMessage("In  setDefaults for " +this.getServer().getServerType().getName());
         if (isV3()){
-           	setAttribute(Server.PROP_AUTO_PUBLISH_TIME, "0");
+    		setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, Server.AUTO_PUBLISH_OVERRIDE);
+           	setAttribute(Server.PROP_AUTO_PUBLISH_TIME, 0);
         }
         else{
            	setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, Server.AUTO_PUBLISH_DISABLE);
                     	
         }
         super.setDefaults(monitor);
+        
+        
     }
 	public boolean isV3(){
-		String loc=(String) getProps().get(ROOTDIR);
-		return new File(loc+"/modules").exists();
+		//test the server name to contain GlassFish v3
+		return (this.getServer().getServerType().getName().indexOf("GlassFish v3")!=-1);
 	}
 	
 	public ServerPort[] getServerPorts() {
@@ -254,11 +266,12 @@ public class SunAppServer extends GenericServer {
     	if (adminServerPortNumber.equals("1114848")){
     		SunAppSrvPlugin.logMessage("catastrophic state where adminServerPortNumber is not initialize is null in SunAppServer.java");
     		SunAppSrvPlugin.logMessage("catastrophic Only thing to do is restart Eclipse");
-    		throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, 
+    		initialize();
+    		/*throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, 
     				IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR, 
     				"Error where adminServerPortNumber is not initialized and null in GlassFish Plugin. Restart Eclipse IDE", 
     				new RuntimeException ("Restart Eclipse. Internal State corrupted...")));
-
+			*/
 
         }
         try {
@@ -293,34 +306,37 @@ public class SunAppServer extends GenericServer {
            Commands.LocationCommand command = new Commands.LocationCommand();
            try {
                 Future<OperationState> result = execute(command);
-               if(result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED) {
-                    String installRoot = this.getDomainDir()+File.separator+this.getdomainName();
-                    String targetInstallRoot = command.getDomainRoot();
-                    //SunAppSrvPlugin.logMessage("IsReady is targetInstallRoot="+targetInstallRoot );
-                    //SunAppSrvPlugin.logMessage("IsReady is installRoot="+installRoot );
-                   if(installRoot != null && targetInstallRoot != null) {
-                        File installDir = new File(installRoot);
-                        File targetInstallDir = new File(targetInstallRoot);
-                        if (installDir.equals(targetInstallDir)){
-                        	return ServerStatus.DOMAINDIR_MATCHING;
+                if(result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED) {
+                	String installRoot = this.getDomainDir()+File.separator+this.getdomainName();
+                	String targetInstallRoot = command.getDomainRoot();
+                	//SunAppSrvPlugin.logMessage("IsReady is targetInstallRoot="+targetInstallRoot );
+                	//SunAppSrvPlugin.logMessage("IsReady is installRoot="+installRoot );
+                	if(installRoot != null && targetInstallRoot != null) {
+                		File installDir = new File(installRoot);
+                		File targetInstallDir = new File(targetInstallRoot);
+                		if (installDir.equals(targetInstallDir)){
+                			SunAppSrvPlugin.logMessage("getV3ServerStatus DOMAINDIR_MATCHING" );
+                			return ServerStatus.DOMAINDIR_MATCHING;
 
-                        }
-                        else {
-                        	return ServerStatus.DOMAINDIR_NOT_MATCHING;
-                       	
-                        }
-                   } else {
-                   	return ServerStatus.DOMAINDIR_NOT_MATCHING;
-                    }
+                		}
+                		else {
+                			SunAppSrvPlugin.logMessage("getV3ServerStatus DOMAINDIR_NOT_MATCHING" );
+                			return ServerStatus.DOMAINDIR_NOT_MATCHING;
+
+                		}
+                	} else {
+                		SunAppSrvPlugin.logMessage("getV3ServerStatus 3 DOMAINDIR_NOT_MATCHING" );
+                		return ServerStatus.DOMAINDIR_NOT_MATCHING;
+                	}
                 } else  {
-                    SunAppSrvPlugin.logMessage("apparently CREDENTIAL_ERROR" );
-                 	return ServerStatus.CREDENTIAL_ERROR;
-
+                	SunAppSrvPlugin.logMessage("apparently CREDENTIAL_ERROR" );
+                	return ServerStatus.CREDENTIAL_ERROR;
 
                 }
             } catch(Exception ex) {
                 SunAppSrvPlugin.logMessage("IsReady is failing=",ex );
-               	return ServerStatus.CONNEXTION_ERROR;
+                SunAppSrvPlugin.logMessage("getV3ServerStatus 2 CONNEXTION_ERROR" );
+              	return ServerStatus.CONNEXTION_ERROR;
             }
       
 
@@ -341,12 +357,15 @@ public class SunAppServer extends GenericServer {
     		"service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi");
     		HashMap env = new HashMap();
     		env.put(JMXConnector.CREDENTIALS, new String[]{ getAdminName(), getAdminPassword()});
+            SunAppSrvPlugin.logMessage("service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi" );
     		jmxc = JMXConnectorFactory.connect(url, env);
+    		SunAppSrvPlugin.logMessage("after JMXConnectorFactory");
     		MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();
-    		ObjectName on = new ObjectName("com.sun.appserv:type=domain,category=config");
+   			ObjectName on = new ObjectName("com.sun.appserv:type=domain,category=config");
 
     		Object o = mbsc.invoke(on, "getConfigDir", null, null);
-    		if (o != null) {
+    		SunAppSrvPlugin.logMessage("mbsc.invoke="+o);
+   		if (o != null) {
     			File domainDir=new File(""+o).getParentFile();
                 File knownDomainRoot = new File(this.getDomainDir()+File.separator+this.getdomainName());
                 if (domainDir.equals(knownDomainRoot)){
@@ -397,8 +416,15 @@ public class SunAppServer extends GenericServer {
         <admin-service type="das-and-server" system-jmx-connector-name="system">
         <jmx-connector ..... port="8686" />
   */
-                    jmxPort = attributes.getValue("port");
-                    SunAppSrvPlugin.logMessage("JMX Port is "+jmxPort );
+                	String jmxAttr= attributes.getValue("port");
+                	try{
+                		int port = Integer.parseInt(jmxAttr);
+                		jmxPort = ""+port;
+                		SunAppSrvPlugin.logMessage("JMX Port is "+jmxPort );
+                	} catch(NumberFormatException ex) {
+                        SunAppSrvPlugin.logMessage("error reading one jmx port"+ex );
+
+                	}
                     
                 }
             }));
@@ -413,22 +439,25 @@ public class SunAppServer extends GenericServer {
                     //   server-name="" blocking-enabled="false" acceptor-threads="1">
                     try {
                         String id = attributes.getValue("id");
-                        if(id != null && id.length() > 0) {
+                       if(id != null && id.length() > 0) {
                             int port = Integer.parseInt(attributes.getValue("port"));
-                            boolean secure = "true".equals(attributes.getValue("security-enabled"));
+                            SunAppSrvPlugin.logMessage("PORT is "+port );
+                           boolean secure = "true".equals(attributes.getValue("security-enabled"));
                             boolean enabled = !"false".equals(attributes.getValue("enabled"));
-                            if(enabled) {
+                            SunAppSrvPlugin.logMessage("secure "+secure );
+                           if(enabled) {
                                 HttpData data = new HttpData(id, port, secure);
-                                Logger.getLogger("glassfish").log(Level.FINER, " Adding " + data);
+                                SunAppSrvPlugin.logMessage(" Adding " + data );
                                 httpMap.put(id, data);
                             } else {
-                                Logger.getLogger("glassfish").log(Level.FINER, "http-listener " + id + " is not enabled and won't be used.");
+                                SunAppSrvPlugin.logMessage("http-listener " + id + " is not enabled and won't be used." );
                             }
                         } else {
-                            Logger.getLogger("glassfish").log(Level.FINEST, "http-listener found with no name");
+                            SunAppSrvPlugin.logMessage("http-listener found with no name" );
                         }
                     } catch(NumberFormatException ex) {
-                        throw new SAXException(ex);
+                        SunAppSrvPlugin.logMessage("http-listener error reading this"+ex );
+                      // throw new SAXException(ex);
                     }
                 }
             }));
@@ -477,7 +506,7 @@ public class SunAppServer extends GenericServer {
                 
                 result = httpPort != -1;
             } catch(IllegalStateException ex) {
-                Logger.getLogger("glassfish").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                SunAppSrvPlugin.logMessage("error IllegalStateException ",ex);
             }
         }
         return result;
@@ -512,7 +541,7 @@ public class SunAppServer extends GenericServer {
             return "{ " + id + ", " + port + ", " + secure + " }";
         }
         
-    }   
+    }
     
 }       
     
