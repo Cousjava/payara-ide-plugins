@@ -215,7 +215,7 @@ public class SunAppServer extends GenericServer {
     public void setDefaults(IProgressMonitor monitor) {
          SunAppSrvPlugin.logMessage("In  setDefaults for " +this.getServer().getServerType().getName());
         if (isV3()){
-    		setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, Server.AUTO_PUBLISH_OVERRIDE);
+    		setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, 2/*Server.AUTO_PUBLISH_OVERRIDE*/);
            	setAttribute(Server.PROP_AUTO_PUBLISH_TIME, 0);
         }
         else{
