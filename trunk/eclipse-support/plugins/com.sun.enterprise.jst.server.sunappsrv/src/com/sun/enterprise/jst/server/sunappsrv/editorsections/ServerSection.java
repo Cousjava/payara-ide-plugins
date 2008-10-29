@@ -122,6 +122,11 @@ public class ServerSection extends ServerEditorSection {
         
         final Text domaindir = SWTUtil.createLabeledPath(Messages.DomainDirectory, sunserver.getDomainDir(), comp, toolkit);
         txtGDF.align(SWT.FILL, SWT.CENTER).span(1, 1).applyTo(domaindir);
+        domaindir.addModifyListener(new ModifyListener() {
+            public void modifyText(ModifyEvent e) {
+                execute(new SunAppServerCommands(server, domaindir.getText(),SunAppServer.DOMAINDIR));
+            }
+        });
 
         createLabel(comp, Messages.AdminName, toolkit);
         
