@@ -34,8 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -45,21 +43,11 @@ import javax.management.remote.JMXServiceURL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
-import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
-import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
-import org.eclipse.jst.server.generic.servertype.definition.Property;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
