@@ -46,7 +46,6 @@ public class LogThread extends Thread{
 	}
 
 	private File logFile = null;
-	private BufferedReader reader = null;
 	private int sleepTime = 500; // ms
 
 	private int numLines = 100;
@@ -65,7 +64,6 @@ public class LogThread extends Thread{
 		logFile = file;
 		sleepTime = interval;
 		this.numLines = numLines;
-		reader = new BufferedReader(new FileReader(logFile));
 	}
 
 	/**
@@ -92,6 +90,8 @@ public class LogThread extends Thread{
 	}
 
 	public void run()	{
+		BufferedReader reader = null;
+
 		isThreadActive = true;
 		ringBuffer = new Ring(numLines);
 		V3LogFilter.Filter filter =  new V3LogFilter.LogFileFilter(new V3LogFilter().getLevelMap()) ;
@@ -100,7 +100,23 @@ public class LogThread extends Thread{
 		while (isThreadActive) {
 			boolean updated = false;
 			boolean truncated = false;
-
+			while (reader==null){
+				if (logFile.exists()){
+					try {
+						reader = new BufferedReader(new FileReader(logFile));
+					} catch (FileNotFoundException e) {
+						SunAppSrvPlugin.logMessage("Error reading from log file", e);
+					}
+					
+				}
+				try {
+					sleep(sleepTime);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+	
 			//Test if file is truncated...
 			truncated = false;
 			if (logFile.length() < size) {
