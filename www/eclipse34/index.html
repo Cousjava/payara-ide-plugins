@@ -454,7 +454,9 @@ right will show each response.<br>
 <h2><a name="7"></a>Adding a Servlet and using
 Session Preservation feature</h2>
 
-<br>
+Select the New Servlet category to create a new Servlet. Enter a
+package name (apkg for example), and a servler name (MyServlet for
+example).<br>
 
 &nbsp;<br>
 
@@ -463,60 +465,44 @@ Session Preservation feature</h2>
 <img alt="1" src="ishot-91.png"> <br>
 
 <br>
-<br>
-Here is&nbsp; <a href="MyServlet.java">the source content&nbsp; for the MyServlet.java</a>. You can copy paste most of the code.<br>
-<br>
+In the Eclipse editor, add more logic to your servlet.&nbsp;<br>
+As an example of a servlet code dealing with Sessions, you can use <a href="MyServlet.java">the source content for the MyServlet.java</a>. You can copy paste most of the code.<br>
+Save your servlet file, and go the to Browser window to activate the
+servlet page (http://localhost:8080/MyFirstWebApp/MyServlet). You
+should see something similar to:<br>
 
 <br>
 
 <img alt="1" src="ishot-92.png"> <br>
 
 <br>
-
-......
+Reload the serlvet web page a few times: you'll see the Number of
+Previous Accesses field growing (as seen above, we clicked 4 times on
+the page). This counter is stored in the Servlet Session data. We want
+now to modify the Servlet source code, and redeploy the web application
+to GlassFish v3 Prelude (remember, by default, the "Deploy On Save"
+mode is enable, so you just need to save the servlet source file and go
+the browser page and click the reload button to see the updated page.<br>
 <br>
+In our test we just add some text in the servlet as shown below: (<span style="font-weight: bold;">Update Servlet!!!</span>)<br>
 
-<br>
-
-<img alt="1" src="ishot-93.png"> <br>
-
-<br>
-
-......
-<br>
-
-<br>
+&nbsp;<br>
 
 <img alt="1" src="ishot-94.png"> <br>
 
 <br>
-
-......
-<br>
+See the update page: the servlet has been redeployed, we see the (<span style="font-weight: bold;">Update Servlet!!!</span>)
+change we did in the source editor, and the field "Number of Previous
+Accesses" is now 5, meaning that the Servlet Session Data was preserved
+during redeployment.<br>
+This is a very coo feature for GlassFish v3 Prelude, critical when you
+are developing/debugging complex Web Applications with complex Session
+management (Shopping Cart,...) and you want to keep the information of
+your Sessions across redeployments.<br>
 
 <br>
 
 <img alt="1" src="ishot-95.png"> <br>
-
-<br>
-
-......
-<br>
-
-<br>
-
-<img alt="1" src="ishot-96.png"> <br>
-
-<br>
-
-......
-<br>
-
-<br>
-
-<img alt="1" src="ishot-97.png"> <br>
-
-<br>
 
 <br>
 
@@ -525,13 +511,14 @@ Here is&nbsp; <a href="MyServlet.java">the source content&nbsp; for the MyServle
 <h2><a name="8"></a>Using the Debugger to
 debug a Servlet with GlassFish</h2>
 
-You can set breakpoints on any class (servlet, helper classes) of a Web
-Application, or on JSP pages (with some Java code fragments), using the
-popup menu available in the vertical grey bar of the Eclipse Editor,
-and selecting the first menu item named "Toggle BreakPoint". If Eclipse
-can set up a break point on this selected line, a smal icon will appear
-on the bar. Otherwise, Eclipse will notify that a breakpoint cannot be
-set on this line (For example, in HTML fragments of a JSP file).<br>
+You can set breakpoints on any Java class (servlet, helper classes,
+JPA, Web Services,...) of a Web Application, or on JSP pages (which
+contain Java code fragments), using the popup menu available in the
+vertical grey bar of the Eclipse Editor (on the left side), and
+selecting the first menu item named "Toggle BreakPoint". If Eclipse can
+set up a break point on this selected line, a small icon will appear on
+the bar. Otherwise, Eclipse will notify that a breakpoint cannot be set
+on this line (For example, in HTML fragments of a JSP file).<br>
 <br>
 
 <br>
@@ -540,8 +527,8 @@ set on this line (For example, in HTML fragments of a JSP file).<br>
 
 <br>
 Once a breakpoint is declared, and that GlassFish server has been
-started in debug mode via the Servers views "Debug" button, Eclispe
-will swich to the Debug Perspective as soon as you active the Web Page
+started in debug mode via the Servers views "Debug" button, Eclipse
+will swich to the Debug Perspective as soon as you activate a Web Page
 where a break point has been set:<br>
 
 <br>
@@ -563,7 +550,7 @@ Admin Console from Eclipse</h2>
 
 <br>
 
-There are many adminstrative features you cannot perform with the
+There are many administrative features you cannot perform with the
 Eclipse IDE. but are available via the GlassFish Admin Console
 accessible from the IDE. The Admin console can be launched using the
 GlassFish entries in the GlassFish popup menu on the GlassFish server
@@ -577,7 +564,7 @@ fully initialized:<br>
 <img alt="1" src="ishot-101.png"> <br>
 
 <br>
-Here is the view of a fully functioanl GlassFish Adminstration Console
+Here is the view of a fully functional GlassFish Administration Console
 running in the Eclipse default Web Brower. Of course it assumes that
 the GlassFish server is up and running.<br>
 
