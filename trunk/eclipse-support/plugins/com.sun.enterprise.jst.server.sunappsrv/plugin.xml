@@ -1171,7 +1171,7 @@
       <view
             id="com.sun.enterprise.jst.server.sunappsrv.log.LogView"
             ratio="0.5"
-            relationship="right"
+            relationship="stack"
             relative="org.eclipse.wst.server.ui.ServersView">
       </view>
    </perspectiveExtension>
