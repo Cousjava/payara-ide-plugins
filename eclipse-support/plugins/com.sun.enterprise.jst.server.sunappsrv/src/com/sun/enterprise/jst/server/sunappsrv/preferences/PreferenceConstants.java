@@ -33,6 +33,7 @@ public class PreferenceConstants {
 	public static final String ENABLE_LOG = "EnableLogPreference";
 	public static final String ENABLE_START_JAVADB = "EnableStartJavaDBPreference";
 	public static final String ENABLE_START_VERBOSE = "EnableStartVerboseModePreference";
+	public static final String ENABLE_COLORS_CONSOLE = "EnableColorsInConsolePreference";
 
 	//public static final String P_CHOICE = "choicePreference";
 

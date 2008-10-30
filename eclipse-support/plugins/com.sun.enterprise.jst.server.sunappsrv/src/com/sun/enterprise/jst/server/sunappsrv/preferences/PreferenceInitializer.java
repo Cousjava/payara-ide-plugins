@@ -44,6 +44,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.ENABLE_LOG, false);
 		store.setDefault(PreferenceConstants.ENABLE_START_JAVADB, false);
 		store.setDefault(PreferenceConstants.ENABLE_START_VERBOSE, false);
+		store.setDefault(PreferenceConstants.ENABLE_COLORS_CONSOLE, true);
 			//	store.setDefault(PreferenceConstants.P_CHOICE, "choice2");
 	//	store.setDefault(PreferenceConstants.P_STRING,
 		//		"Default value");
