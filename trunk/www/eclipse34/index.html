@@ -251,6 +251,14 @@ State in the view: "Started" and Syncronized":<br>
 <h2><a name="3"></a>Creating a new Web
 Application project targeting GlassFish Server</h2>
 
+With the File | New | Projects... menu item, find the "Dynamic Web Project" category to create a new Web Application.<br>
+<br>
+Enter a Project Name in the first field: MyFirstWebApp.<br>
+Notice that the "GlassFish v3 Prelude" Target Runtime is selected. If
+not, use the combo-box to select it. This will add all the necessary
+jar files in the project path so that you can compile with selected
+Java EE APIs.Just use the default settings for now and select the
+"Finish" button.<br>
 <br>
 
 <br>
@@ -258,18 +266,20 @@ Application project targeting GlassFish Server</h2>
 <img alt="1" src="ishot-75.png"> <br>
 
 <br>
-
-......
-<br>
+The project is now created and visisble in the Project Explorer view.
+The GlassFish plugin creates a default index.jsp page and opens it in
+the JSP editor.<br>
 
 <br>
 
 <img alt="1" src="ishot-76.png"> <br>
 
 <br>
-
-......
 <br>
+Select the "Run" Menu or toolbar icon, and pick the "Run On Server"
+option. Select GlassFish as the server you want to run this application
+(You can select the "Always use this server when running this project"
+check box to streamline further run invocations.<br>
 
 <br>
 
@@ -279,10 +289,13 @@ Application project targeting GlassFish Server</h2>
 
 <br>
 
-<br>
-
-......
-<br>
+The Web application is then deployed to GlassFish v3 Prelude, as shown
+in the server log (it took 100ms to deploy), and the index.jsp page
+appears in the Eclipse default Web Browser.<br>
+You can now switch back and forth between the index.jsp editor and the
+Web Browser view. Each time you save the JSP, the application is
+redeployed on Save, and you can reload the page (small yellow icon on
+the Broswer view) to see the changes immediately.<br>
 
 <br>
 
@@ -295,16 +308,45 @@ Application project targeting GlassFish Server</h2>
 <h2><a name="4"></a>Changing Global
 Preferences for the GlassFish Server</h2>
 
-<br>
+The GlassFish Plugin for Eclipse has some global preferences you can
+twick. Use the "Preferences" Menu item and select the GlassFish
+Preferences category:<br>
 
 <br>
 
 <img alt="1" src="ishot-80.png"> <br>
 
 <br>
-
-......
 <br>
+Using the "GlassFish Preferences" category, you can modify the followinf flags:<br>
+<ul>
+  <li>Enable GlassFish Plugin Log information in IDE log file</li>
+  <ul>
+    <li>This is more for the plugin debugging purpose than anything
+else. Turn on this option to see additional traces in the Eclipse log
+file specific to the GlassFish Plugin. This option is OFF by default.</li>
+  </ul>
+  <li>Start the JavaDB database process when Starting GlassFish Server</li>
+  <ul>
+    <li>GlassFish Server includes Java DB Database and this option
+allows you to start it automatically when the server is started. It is
+very convenient to do when you work with JPA applications. The options
+is ON by default.</li>
+  </ul>
+  <li>Start the GlassFish Enterprise Server in verbose mode (Eclipse console can be used)</li>
+  <ul>
+    <li>Using this flag will send all the output log of the Server
+inside the Eclipse console as well. This options is OFF by default as
+there is a GlassFish specific log view.&nbsp;</li>
+  </ul>
+  <li>Enable colored rendering in the GlassFish Log Viewer</li>
+  <ul>
+    <li>For color bling people, you can turn this option OFF.
+Otherwise, INFO level messages will be black, WARNING messages will be
+yellow, SEVERE messages will be red, and multiple line entries will be
+Italic.</li>
+  </ul>
+</ul>
 
 <br>
 
@@ -317,7 +359,14 @@ Preferences for the GlassFish Server</h2>
 <h2><a name="5"></a>Using the Help menu for
 GlassFish</h2>
 
+You have access to all the Online Documentation books for GlassFish v2
+and GlassFish v3 Prelude via the Eclipse Help menu, under the
+"GlassFish Enterprise Server" &nbsp;menu item. Pleas take the time to
+read these official documents for learning how to use, administer or
+deploy with the GlassFish server. These books are opened in the Eclipse
+default Web Browser.<br>
 <br>
+You can also get to the <a href="http://www.sun.com/service/applicationserversubscriptions/">GlassFish Enterprise Server Support page</a> easily from there.<br>
 
 <br>
 
@@ -332,7 +381,11 @@ GlassFish</h2>
 <h2><a name="6"></a>TCP/IP Monitoring Web
 Applications with GlassFish</h2>
 
-<br>
+TCP/IP monitoring a nice Eclipse feature that is enable for the
+GlassFish application server. It allows to trace HTTP requests made to
+your web application. You need first to configure the monitoring by
+selecting the server popup menu item named "Monitoring | Properties" as
+below:<br>
 
 <br>
 
@@ -341,53 +394,49 @@ Applications with GlassFish</h2>
 <img alt="1" src="ishot-83.png"> <br>
 
 <br>
-
-......
-<br>
+In the Monitoring properties, select the "Add..." button on the right side:<br>
 
 <br>
 
 <img alt="1" src="ishot-84.png"> <br>
 
 <br>
-
-......
 <br>
+And select the "Server Port" which is the http port used by the
+GlassFish server. In our case, it is 8080. The port that will be used
+to actually do the monitoring is 8081 as specified in the Monitor Port
+field. (Change this port as you need).<br>
 
 <br>
 
 <img alt="1" src="ishot-85.png"> <br>
 
 <br>
-
-......
-<br>
+Last step to do is to click on the "Start" button on the right side to start the monitoring on the port 8080 via the port 8081:<br>
 
 <br>
 
 <img alt="1" src="ishot-86.png"> <br>
 
 <br>
-
-......
 <br>
+You should see a "Started" status in the Status column. You are now all set to play with the monitoring feature.<br>
+Select "Apply" button and "OK".<br>
 
 <br>
 
 <img alt="1" src="ishot-87.png"> <br>
 
 <br>
-
-......
 <br>
+Now, assuming&nbsp; the GlassFish server is started, access a web page using the port 8081 instead of the regular port 8080.<br>
 
-<br>
-
-<img alt="1" src="ishot-88.png"> <br>
-
-<br>
-
-......
+The TCP/IP monitor view should appear below, and fill up with the
+traffic between your Web browser and your web application. When you
+select each request in the tree at the top left, information about the
+request/response is shown, the bottom left of the view will display the
+HTTP request that was made to your web application, and the bottom
+right will show each response.<br>
 <br>
 
 <br>

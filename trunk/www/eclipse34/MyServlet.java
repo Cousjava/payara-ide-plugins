@@ -1,4 +1,4 @@
-package foo;
+package apkg;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,10 +26,8 @@ public class MyServlet extends HttpServlet {
         HttpSession session = request.getSession(true);
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        String title = "Searching the Web";
         String heading;
         Integer accessCount = new Integer(0);
-        ;
         if (session.isNew()) {
             heading = "Welcome, Newcomer";
         } else {
