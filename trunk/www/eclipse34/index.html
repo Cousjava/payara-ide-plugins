@@ -525,8 +525,13 @@ Here is&nbsp; <a href="MyServlet.java">the source content&nbsp; for the MyServle
 <h2><a name="8"></a>Using the Debugger to
 debug a Servlet with GlassFish</h2>
 
-<br>
-
+You can set breakpoints on any class (servlet, helper classes) of a Web
+Application, or on JSP pages (with some Java code fragments), using the
+popup menu available in the vertical grey bar of the Eclipse Editor,
+and selecting the first menu item named "Toggle BreakPoint". If Eclipse
+can set up a break point on this selected line, a smal icon will appear
+on the bar. Otherwise, Eclipse will notify that a breakpoint cannot be
+set on this line (For example, in HTML fragments of a JSP file).<br>
 <br>
 
 <br>
@@ -534,9 +539,10 @@ debug a Servlet with GlassFish</h2>
 <img alt="1" src="ishot-98.png"> <br>
 
 <br>
-
-......
-<br>
+Once a breakpoint is declared, and that GlassFish server has been
+started in debug mode via the Servers views "Debug" button, Eclispe
+will swich to the Debug Perspective as soon as you active the Web Page
+where a break point has been set:<br>
 
 <br>
 
@@ -546,6 +552,10 @@ debug a Servlet with GlassFish</h2>
 
 <br>
 
+You can now use the feature-rich Eclipse debugger on you Web
+Applications or Java EE applications running on the GlassFish
+Application Server.<br>
+<br>
 <br>
 
 <h2><a name="9"></a>Viewing the GlassFish
@@ -553,7 +563,12 @@ Admin Console from Eclipse</h2>
 
 <br>
 
-<br>
+There are many adminstrative features you cannot perform with the
+Eclipse IDE. but are available via the GlassFish Admin Console
+accessible from the IDE. The Admin console can be launched using the
+GlassFish entries in the GlassFish popup menu on the GlassFish server
+node. It takes a few seconds to start, so please wait until the page is
+fully initialized:<br>
 
 <br>
 
@@ -562,9 +577,9 @@ Admin Console from Eclipse</h2>
 <img alt="1" src="ishot-101.png"> <br>
 
 <br>
-
-......
-<br>
+Here is the view of a fully functioanl GlassFish Adminstration Console
+running in the Eclipse default Web Brower. Of course it assumes that
+the GlassFish server is up and running.<br>
 
 <br>
 
