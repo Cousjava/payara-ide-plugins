@@ -2,11 +2,10 @@
 <html>
 <head>
 
-  
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>GlassFish and Eclipse 3.4</title>
 
-  
-  <title>GlassFish and Eclipse 3.3</title>
+
 </head>
 
 
@@ -16,8 +15,8 @@
 
 <br>
 
-Download the Eclipse IDE for Java EE Developers (as of August 2008, Ganymede - 
-Windows 162Mb eclipse-jee-ganymede-win32.zip)
+Download the Eclipse IDE for Java EE Developers (as of August 2008,
+Ganymede - Windows 162Mb eclipse-jee-ganymede-win32.zip)
 (tools for Java Developers creating JEE and Web applications, including
 a Java IDE, tools for JEE and JSF, Mylyn and others...:<br>
 
@@ -31,63 +30,119 @@ a Java IDE, tools for JEE and JSF, Mylyn and others...:<br>
 
 Install the IDE and start it, close the "Welcome" page, Then:<br>
 
+<br>
+
+If you're behind a firewall, make sure you have set an SSL proxy: Bring
+up Preferences, then expand General, Network Connections and fill in
+the values for your SSL proxy. If you don't have a SSL proxy but a you
+have a plain http proxy, be sure to check the checkbox Use this proxy
+server for SSL <br>
 
 <br>
 
-      If you're behind a firewall, make sure you have set an SSL proxy:
-      Bring up Preferences, then expand General, Network Connections and fill in 
-      the values for your SSL proxy.  If you don't have a SSL proxy but a you 
-      have a plain http proxy, be sure to check the checkbox Use this proxy server for SSL <br>
-<br>
 Table of Content:<br>
+
 <ul>
-  <li><a href="#1">Registering a GlassFish server to Eclipse</a></li>
-  <li><a href="#2">GlassFish Server Usage from the IDE</a></li>
-  <li><a href="#3">Creating a new Web Application project targeting GlassFish Server</a></li>
-  <li><a href="#4">Changing Global Preferences for the GlassFish Server</a></li>
+
+  <li><a href="#1">Registering a GlassFish server to
+Eclipse</a></li>
+
+  <li><a href="#2">GlassFish Server Usage from the
+IDE</a></li>
+
+  <li><a href="#3">Creating a new Web Application
+project targeting GlassFish Server</a></li>
+
+  <li><a href="#4">Changing Global Preferences for
+the GlassFish Server</a></li>
+
   <li><a href="#5">Using the Help menu for GlassFish</a></li>
-  <li><a href="#6">TCP/IP Monitoring Web Applications with GlassFish</a></li>
-  <li><a href="#7">Adding a Servlet and using Session Preservation feature</a></li>
-  <li><a href="#8">Using the Debugger to debug a Servlet with GlassFish</a></li>
-  <li><a href="#9">Viewing the GlassFish Admin Console from Eclipse</a></li>
-  <li><a href="#10">Using the GlassFish v3 Prelude Update Center from Eclipse</a></li>
-  <li><a href="#11">Registrating your GlassFish installation</a></li>
-  <li><a href="#12">Adding a new Data Source and registering it to GlassFish</a></li>
+
+  <li><a href="#6">TCP/IP Monitoring Web
+Applications with GlassFish</a></li>
+
+  <li><a href="#7">Adding a Servlet and using
+Session Preservation feature</a></li>
+
+  <li><a href="#8">Using the Debugger to debug a
+Servlet with GlassFish</a></li>
+
+  <li><a href="#9">Viewing the GlassFish Admin
+Console from Eclipse</a></li>
+
+  <li><a href="#10">Using the GlassFish v3 Prelude
+Update Center from Eclipse</a></li>
+
+  <li><a href="#11">Registrating your GlassFish
+installation</a></li>
+
+  <li><a href="#12">Adding a new Data Source and
+registering it to GlassFish</a></li>
+
 </ul>
-<h2><a name="1"></a>Registering a GlassFish server to Eclipse</h2>
+
+<h2><a name="1"></a>Registering a GlassFish
+server to Eclipse</h2>
+
 <br>
+
 Once you have installed the GlassFish Plugin for Eclipse, you can
 register a GlassFish server to the IDE. This is assuming you have on
 your system an installation of this server. If you do not have a
 GlassFish server installer, you can download one from:<br>
+
 <br>
+
 <br>
+
 In the "Servers" view, select the popup menu "New | Server &nbsp;":<br>
+
 <br>
- <img alt="1" src="ishot-65.png"> <br>
+
+<img alt="1" src="ishot-65.png"> <br>
+
 <br>
+
 <br>
+
 Navigate to the GlassFish category and select GlassFish v3 Prelude (If
 you have another server type, select it. Currently, GlassFish v1,
 GlassFish v2, GlassFish v3 Prelude and Sailfin v1 application servers
 are supported with the Eclipse plugin).<br>
-Once the correct server is selected, press the "Next button of the wizard to enter the server location on disk.<br>
+
+Once the correct server is selected, press the "Next button of the
+wizard to enter the server location on disk.<br>
+
 <br>
- <img alt="1" src="ishot-66.png"> <br>
+
+<img alt="1" src="ishot-66.png"> <br>
+
 <br>
-In this step, you need to enter a correct GlassFish installation directory. For example, in the demo case, the location is<br>
+
+In this step, you need to enter a correct GlassFish installation
+directory. For example, in the demo case, the location is<br>
+
 <br>
+
 C:/Program Files/glassfishv2-prelude/glassfish.<br>
+
 <br>
+
 Notice that the location C:/Program Files/glassfishv2-prelude contains
 more than the glassfish application server. It contains as well JavaDB,
 the Update Tool and its repository meta-data. So make sure you select
 the subdirectory called "glassfish:" under C:/Program
 Files/glassfishv2-prelude.<br>
-Once a correct server location is entered, the "Next" button of the wizard is enable.<br>
+
+Once a correct server location is entered, the "Next" button of the
+wizard is enable.<br>
+
 <br>
- <img alt="1" src="ishot-67.png"> <br>
+
+<img alt="1" src="ishot-67.png"> <br>
+
 <br>
+
 The following step of the wizard has many good default values (that can
 be modified later on). By default, the domain named "domain1" in the
 standard domain directory is selected. Change the user name/password if
@@ -95,34 +150,53 @@ you have installed the GlassFish v3 Prelude with this option. Notice
 the "Preserver Sessions Accross Redeployment" option is turned on by
 default. This is a nice new feature of the GlassFish v3 Prelude
 application server.<br>
+
 <br>
- <img alt="1" src="ishot-68.png"> <br>
+
+<img alt="1" src="ishot-68.png"> <br>
+
 <br>
-<h2><a name="2"></a>GlassFish Server Usage from the IDE</h2>
-Once a new GlassFish is registered to the Eclipse IDE, &nbsp;you'll see
-a new entry in the "Servers" view of the IDE. A popup menu is available
-on this node, as well as a toolbar for useful actions like "Start",
-"Debug" , " Monitor". Double clicking on the server node will also open
-the Server Editor where more options can be modified.<br>
+
+<h2><a name="2"></a>GlassFish Server Usage
+from the IDE</h2>
+
+Once a new GlassFish is registered to the Eclipse IDE, &nbsp;you'll
+see a new entry in the "Servers" view of the IDE. A popup menu is
+available on this node, as well as a toolbar for useful actions like
+"Start", "Debug" , " Monitor". Double clicking on the server node will
+also open the Server Editor where more options can be modified.<br>
+
 Notice the "GlassFish Enterprise Server" popup menu entry that allows a
 quick access to the GlassFish Update Center UI, the registration page,
 the Aquarium Web site, The Admin console page and the log viewer for
 this application server.<br>
+
 the GlassFish Update Center UI, the registration page and The Admin
 console page will require the GlassFish server to be up and running in
 order to be seen.<br>
+
 <br>
+
 <br>
- <img alt="1" src="ishot-69.png"> <br>
+
+<img alt="1" src="ishot-69.png"> <br>
+
 <br>
-Here is the Aquarium page viewed in the default Eclipse browser (which is an embedded browser inside Eclipse Editor).<br>
+
+Here is the Aquarium page viewed in the default Eclipse browser (which
+is an embedded browser inside Eclipse Editor).<br>
+
 <br>
- <img alt="1" src="ishot-70.png"> <br>
+
+<img alt="1" src="ishot-70.png"> <br>
+
 <br>
+
 If you double click on the server node in the "Servers" view, the
 server editor window is showing up. You can fine tune some parameters
 like "Publishing". By default for GlassFish v3 Prelude, the
 "Publishing" is setp to "Automatic with a 0 interval delay.<br>
+
 What is means is that the GlassFish plugin will an automatic
 redeployment of the Web Application project as soon as you save a file
 within this application. This can be a servlet change or a JSP change,
@@ -131,312 +205,516 @@ called "Deploy on Save" and for most of the web applications, this can
 be very fast (less than a second) with GlassFish v3 Prelude. If this is
 not the behaviour you want, just select the "Never publish
 automaticall" option and save your settings.<br>
+
 <br>
-You can also point to a different existing domain or modify the "Session Preservation" feature of GlassFish v3 Prelude.<br>
-The second tab called "GlassFish Update Center" is active only when the server is up and running.<br>
+
+You can also point to a different existing domain or modify the
+"Session Preservation" feature of GlassFish v3 Prelude.<br>
+
+The second tab called "GlassFish Update Center" is active only when the
+server is up and running.<br>
+
 <br>
- <img alt="1" src="ishot-71.png"> <br>
+
+<img alt="1" src="ishot-71.png"> <br>
+
 <br>
+
 Let's click on the "Start" button (green arrow on the Servers view
 toolbar) (or popup menu action) to start the GlassFish v3 Prelude
 server. A new Eclipse view named "GlassFish Log Viewer" should show up.
 It contains many tabs, one per server instance started by the Eclipse
 IDE. The tab is called "server.log" and you can see the server log
 location in the tooltip on this tab name.<br>
-<br>
- <img alt="1" src="ishot-72.png"> <br>
-<br>
-Once the server is started, the "Servers" view will display the correct State in the view: "Started" and Syncronized":<br>
-<br>
-<br>
- <img alt="1" src="ishot-73.png"> <br>
+
 <br>
 
- &nbsp;<br>
-<br>
-<h2><a name="3"></a>Creating a new Web Application project targeting GlassFish Server</h2>
-<br>
-<br>
- <img alt="1" src="ishot-75.png"> <br>
+<img alt="1" src="ishot-72.png"> <br>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-76.png"> <br>
+Once the server is started, the "Servers" view will display the correct
+State in the view: "Started" and Syncronized":<br>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-77.png"> <br>
 <br>
 
- <br>
+<img alt="1" src="ishot-73.png"> <br>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-79.png"> <br>
-<br>
-<br>
-<h2><a name="4"></a>Changing Global Preferences for the GlassFish Server</h2>
-<br>
-<br>
- <img alt="1" src="ishot-80.png"> <br>
-<br>
-
- ......
-<br>
-<br>
- <img alt="1" src="ishot-81.png"> <br>
-<br>
-<br>
-<h2><a name="5"></a>Using the Help menu for GlassFish</h2>
-<br>
-<br>
- <img alt="1" src="ishot-82.png"> <br>
-<br>
-<br>
-<br>
-<h2><a name="6"></a>TCP/IP Monitoring Web Applications with GlassFish</h2>
-<br>
-<br>
-<br>
- <img alt="1" src="ishot-83.png"> <br>
-<br>
-
- ......
-<br>
-<br>
- <img alt="1" src="ishot-84.png"> <br>
-<br>
-
- ......
-<br>
-<br>
- <img alt="1" src="ishot-85.png"> <br>
-<br>
-
- ......
-<br>
-<br>
- <img alt="1" src="ishot-86.png"> <br>
-<br>
-
- ......
-<br>
-<br>
- <img alt="1" src="ishot-87.png"> <br>
-<br>
-
- ......
-<br>
-<br>
- <img alt="1" src="ishot-88.png"> <br>
-<br>
-
- ......
-<br>
-<br>
- <img alt="1" src="ishot-89.png"> <br>
-<br>
-<br>
-<br>
-<h2><a name="7"></a>Adding a Servlet and using Session Preservation feature</h2>
-<br>
 &nbsp;<br>
-<br>
- <img alt="1" src="ishot-91.png"> <br>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-92.png"> <br>
+<h2><a name="3"></a>Creating a new Web
+Application project targeting GlassFish Server</h2>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-93.png"> <br>
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-94.png"> <br>
+<img alt="1" src="ishot-75.png"> <br>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-95.png"> <br>
+......
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-96.png"> <br>
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-97.png"> <br>
-<br>
-<br>
-<br>
-<h2><a name="8"></a>Using the Debugger to debug a Servlet with GlassFish</h2>
-<br>
-<br>
-<br>
- <img alt="1" src="ishot-98.png"> <br>
+<img alt="1" src="ishot-76.png"> <br>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-99.png"> <br>
-<br>
-<br>
-<br>
-<h2><a name="9"></a>Viewing the GlassFish Admin Console from Eclipse</h2>
-<br>
-<br>
-<br>
-<br>
- <img alt="1" src="ishot-101.png"> <br>
+......
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-102.png"> <br>
-<br>
-<br>
-<br>
-<h2><a name="10"></a>Using the GlassFish v3 Prelude Update Center from Eclipse</h2>
-<br>
-<br>
-<br>
- <img alt="1" src="ishot-103.png"> <br>
-<br>
-<br>
-<br>
-<h2><a name="11"></a>Registrating your GlassFish installation</h2>
-<br>
-<br>
-<br>
- <img alt="1" src="ishot-104.png"> <br>
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-105.png"> <br>
+<img alt="1" src="ishot-77.png"> <br>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-106.png"> <br>
-<br>
-<br>
-<br>
-<h2><a name="12"></a>Adding a new Data Source and registering it to GlassFish</h2>
-<br>
-<br>
-<br>
- <img alt="1" src="ishot-107.png"> <br>
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-108.png"> <br>
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-109.png"> <br>
+......
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-110.png"> <br>
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-111.png"> <br>
+<img alt="1" src="ishot-79.png"> <br>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-112.png"> <br>
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-113.png"> <br>
+<h2><a name="4"></a>Changing Global
+Preferences for the GlassFish Server</h2>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-114.png"> <br>
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-115.png"> <br>
+<img alt="1" src="ishot-80.png"> <br>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-116.png"> <br>
+......
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-117.png"> <br>
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-118.png"> <br>
+<img alt="1" src="ishot-81.png"> <br>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-119.png"> <br>
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-120.png"> <br>
+<h2><a name="5"></a>Using the Help menu for
+GlassFish</h2>
+
 <br>
 
- ......
-<br>
-<br>
- <img alt="1" src="ishot-121.png"> <br>
 <br>
 
+<img alt="1" src="ishot-82.png"> <br>
 
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="6"></a>TCP/IP Monitoring Web
+Applications with GlassFish</h2>
+
+<br>
+
+<br>
+
+<br>
+
+<img alt="1" src="ishot-83.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-84.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-85.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-86.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-87.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-88.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-89.png"> <br>
+
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="7"></a>Adding a Servlet and using
+Session Preservation feature</h2>
+
+<br>
+
+&nbsp;<br>
+
+<br>
+
+<img alt="1" src="ishot-91.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-92.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-93.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-94.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-95.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-96.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-97.png"> <br>
+
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="8"></a>Using the Debugger to
+debug a Servlet with GlassFish</h2>
+
+<br>
+
+<br>
+
+<br>
+
+<img alt="1" src="ishot-98.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-99.png"> <br>
+
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="9"></a>Viewing the GlassFish
+Admin Console from Eclipse</h2>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<img alt="1" src="ishot-101.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-102.png"> <br>
+
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="10"></a>Using the GlassFish v3
+Prelude Update Center from Eclipse</h2>
+
+<br>
+
+<br>
+
+<br>
+
+<img alt="1" src="ishot-103.png"> <br>
+
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="11"></a>Registrating your
+GlassFish installation</h2>
+
+<br>
+
+<br>
+
+<br>
+
+<img alt="1" src="ishot-104.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-105.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-106.png"> <br>
+
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="12"></a>Adding a new Data Source
+and registering it to GlassFish</h2>
+
+<br>
+
+<br>
+
+<br>
+
+<img alt="1" src="ishot-107.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-108.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-109.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-110.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-111.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-112.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-113.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-114.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-115.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-116.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-117.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-118.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-119.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-120.png"> <br>
+
+<br>
+
+......
+<br>
+
+<br>
+
+<img alt="1" src="ishot-121.png"> <br>
+
+<br>
 
 </body>
 </html>
