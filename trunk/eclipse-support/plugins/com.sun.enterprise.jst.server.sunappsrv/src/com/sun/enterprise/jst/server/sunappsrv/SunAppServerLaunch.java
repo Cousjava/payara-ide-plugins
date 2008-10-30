@@ -124,7 +124,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 				abort(
 						"Port conflict: Please stop the process using the same port as the one used by the Application Server.",
 						new RuntimeException(
-								"An unknow process is already running on this port."),
+								"An unknown process is already running on this port."),
 						IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 
 			}
