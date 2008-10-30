@@ -81,6 +81,12 @@ public class GlassFishPreferencePage extends FieldEditorPreferencePage
 					"&Start the GlassFish Enterprise Server in verbose mode (Eclipse console can be used)",
 					getFieldEditorParent()));
 
+		addField(
+				new BooleanFieldEditor(
+					PreferenceConstants.ENABLE_COLORS_CONSOLE,
+					"Enable colored rendering in the GlassFish Log Viewer",
+					getFieldEditorParent()));
+
 	/*	addField(new RadioGroupFieldEditor(
 				PreferenceConstants.P_CHOICE,
 			"An example of a multiple-choice preference",
