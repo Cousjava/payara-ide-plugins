@@ -889,7 +889,7 @@
                 	value="com.sun.enterprise.jst.server.sunappsrv*" />
                 	<test forcePluginActivation="true"
                 	property="org.eclipse.wst.server.ui.serverType"
-                	value="com.sun.enterprise.jst.server.glassfishv3*" />
+                	value="com.sun.enterprise.jst.server.*" />
 
                 </or>
             </enablement>
