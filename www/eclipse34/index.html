@@ -13,6 +13,8 @@
 
 <h1>Eclipse 3.4 and GlassFish v3 Prelude integration</h1>
 
+Maintained by <a href="mailto:ludo@dev.java.net">Ludovic Champenois</a>.<br>
+10/30/2008.<br>
 <br>
 
 Download the Eclipse IDE for Java EE Developers (as of August 2008,
@@ -35,7 +37,7 @@ Install the IDE and start it, close the "Welcome" page, Then:<br>
 If you're behind a firewall, make sure you have set an SSL proxy: Bring
 up Preferences, then expand General, Network Connections and fill in
 the values for your SSL proxy. If you don't have a SSL proxy but a you
-have a plain http proxy, be sure to check the checkbox Use this proxy
+have a plain http proxy, be sure to check the check box Use this proxy
 server for SSL <br>
 
 <br>
@@ -110,7 +112,7 @@ you have another server type, select it. Currently, GlassFish v1,
 GlassFish v2, GlassFish v3 Prelude and Sailfin v1 application servers
 are supported with the Eclipse plugin).<br>
 
-Once the correct server is selected, press the "Next button of the
+Once the correct server is selected, press the "Next" button of the
 wizard to enter the server location on disk.<br>
 
 <br>
@@ -147,7 +149,7 @@ The following step of the wizard has many good default values (that can
 be modified later on). By default, the domain named "domain1" in the
 standard domain directory is selected. Change the user name/password if
 you have installed the GlassFish v3 Prelude with this option. Notice
-the "Preserver Sessions Accross Redeployment" option is turned on by
+the "Preserver Sessions Across Redeployment" option is turned on by
 default. This is a nice new feature of the GlassFish v3 Prelude
 application server.<br>
 
@@ -195,16 +197,16 @@ is an embedded browser inside Eclipse Editor).<br>
 If you double click on the server node in the "Servers" view, the
 server editor window is showing up. You can fine tune some parameters
 like "Publishing". By default for GlassFish v3 Prelude, the
-"Publishing" is setp to "Automatic with a 0 interval delay.<br>
+"Publishing" is setup to "Automatic with a 0 interval delay.<br>
 
 What is means is that the GlassFish plugin will an automatic
 redeployment of the Web Application project as soon as you save a file
 within this application. This can be a servlet change or a JSP change,
-ot any class or web artifact in this application. This feature is also
+or any class or web artifact in this application. This feature is also
 called "Deploy on Save" and for most of the web applications, this can
 be very fast (less than a second) with GlassFish v3 Prelude. If this is
-not the behaviour you want, just select the "Never publish
-automaticall" option and save your settings.<br>
+not the behavior you want, just select the "Never publish
+automatically" option and save your settings.<br>
 
 <br>
 
@@ -234,7 +236,7 @@ location in the tooltip on this tab name.<br>
 <br>
 
 Once the server is started, the "Servers" view will display the correct
-State in the view: "Started" and Syncronized":<br>
+State in the view: "Started" and Synchronized":<br>
 
 <br>
 
@@ -266,7 +268,7 @@ Java EE APIs.Just use the default settings for now and select the
 <img alt="1" src="ishot-75.png"> <br>
 
 <br>
-The project is now created and visisble in the Project Explorer view.
+The project is now created and visible in the Project Explorer view.
 The GlassFish plugin creates a default index.jsp page and opens it in
 the JSP editor.<br>
 
@@ -295,7 +297,7 @@ appears in the Eclipse default Web Browser.<br>
 You can now switch back and forth between the index.jsp editor and the
 Web Browser view. Each time you save the JSP, the application is
 redeployed on Save, and you can reload the page (small yellow icon on
-the Broswer view) to see the changes immediately.<br>
+the Browser view) to see the changes immediately.<br>
 
 <br>
 
@@ -309,7 +311,7 @@ the Broswer view) to see the changes immediately.<br>
 Preferences for the GlassFish Server</h2>
 
 The GlassFish Plugin for Eclipse has some global preferences you can
-twick. Use the "Preferences" Menu item and select the GlassFish
+tweak. Use the "Preferences" Menu item and select the GlassFish
 Preferences category:<br>
 
 <br>
@@ -318,7 +320,7 @@ Preferences category:<br>
 
 <br>
 <br>
-Using the "GlassFish Preferences" category, you can modify the followinf flags:<br>
+Using the "GlassFish Preferences" category, you can modify the following flags:<br>
 <ul>
   <li>Enable GlassFish Plugin Log information in IDE log file</li>
   <ul>
@@ -341,7 +343,7 @@ there is a GlassFish specific log view.&nbsp;</li>
   </ul>
   <li>Enable colored rendering in the GlassFish Log Viewer</li>
   <ul>
-    <li>For color bling people, you can turn this option OFF.
+    <li>For color blind people, you can turn this option OFF.
 Otherwise, INFO level messages will be black, WARNING messages will be
 yellow, SEVERE messages will be red, and multiple line entries will be
 Italic.</li>
