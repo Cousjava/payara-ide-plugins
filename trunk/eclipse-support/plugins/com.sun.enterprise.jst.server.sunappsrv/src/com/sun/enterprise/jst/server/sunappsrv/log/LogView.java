@@ -25,47 +25,43 @@ package com.sun.enterprise.jst.server.sunappsrv.log;
 
 
 import java.io.File;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
-import java.util.Vector;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.SWT;
-
-
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
-import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.custom.LineStyleListener;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.ViewPart;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
 
 
 /**
@@ -120,7 +116,7 @@ public class LogView extends ViewPart {
 			return;
 		}
 		filesViewed.add(fn);
-		setupLogViewer( file, 500, 200, true);
+		setupLogViewer( file, 500, 1000, true);
 		
 	}
 
@@ -262,12 +258,15 @@ public class LogView extends ViewPart {
 					public void run(){
 						try{
 							StyledText tw = viewer.getTextWidget();
-							
+							tw.addLineStyleListener(new LogStyle ());
 							if (tw==null){
-								SunAppSrvPlugin.logMessage("Error display Logview is null");
+								SunAppSrvPlugin.logMessage("Error display Log view is null");
 								return;
 							}
-							tw.append(list.getCompleteDocument());
+
+							String b =list.getCompleteDocument();
+							tw.append(b);
+
 							// Scroll to the bottom
 							viewer.setTopIndex(doc.getNumberOfLines());
 						}catch (Exception e){
@@ -280,6 +279,51 @@ public class LogView extends ViewPart {
 			}
 		});
 	}	
-	
-	
+
+	private static class LogStyle implements LineStyleListener{
+
+		Display display = Display.getCurrent();
+
+		IPreferenceStore store = SunAppSrvPlugin.getInstance().getPreferenceStore();
+		boolean colorInConsole= store.getBoolean(PreferenceConstants.ENABLE_COLORS_CONSOLE);
+
+		public void lineGetStyle(LineStyleEvent event) {
+			
+			String buf = event.lineText;
+
+			// collection for the StyleRanges
+			List styles = new ArrayList();
+
+			StyleRange styleRange=null;
+			
+			if (colorInConsole){
+				if (buf.indexOf ("WARNING:")!=-1){
+					styleRange = new StyleRange();
+					styleRange.start = event.lineOffset;
+					styleRange.length = buf.length();
+					styleRange.foreground = display.getSystemColor(SWT.COLOR_DARK_YELLOW);
+				}else if (buf.indexOf ("SEVERE:")!=-1){
+					styleRange = new StyleRange();
+					styleRange.start = event.lineOffset;
+					styleRange.length = buf.length();
+					styleRange.fontStyle = SWT.BOLD;
+					styleRange.foreground = display.getSystemColor(SWT.COLOR_RED);
+				}else if (buf.indexOf ("INFO:")!=-1){
+				}else {
+					styleRange = new StyleRange();
+					styleRange.start = event.lineOffset;
+					styleRange.length = buf.length();
+					styleRange.fontStyle = SWT.ITALIC;
+				}
+
+				if (styleRange!=null){
+					styles.add(styleRange);
+
+					// Set the styles for the line
+					event.styles = (StyleRange[]) styles.toArray(new StyleRange[0]);
+				}
+			}			
+		}
+
+	}	
 }
