@@ -113,7 +113,7 @@ public class LogThread extends Thread{
 					sleep(sleepTime);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//nothing to report on
 				}
 			}
 	
