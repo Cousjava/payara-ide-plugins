@@ -204,7 +204,7 @@ public final class TreeParser extends DefaultHandler {
 
     @Override
     public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {
-        LOGGER.log(Level.INFO, "Requested Entity: public id = " + publicId + ", system id = " + systemId);
+        LOGGER.log(Level.FINER, "Requested Entity: public id = " + publicId + ", system id = " + systemId);
 
         // We only expect a few entries here so use linear search directly.  If
         // this changes, considering caching using HashMap<String, String>
