@@ -43,8 +43,11 @@ import javax.management.remote.JMXServiceURL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
+import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
@@ -86,10 +89,11 @@ public class SunAppServer extends GenericServer {
     String serverPortNumber="1118080";
     String adminServerPortNumber="1114848";
     String jmxPort = "8686";//For V2 only, the jmx port to issue some MBeans call that return server loc
-
+    boolean initializedCalled = false;
+    
     public SunAppServer(){
-        SunAppSrvPlugin.logMessage("in SunAppServer CTOR"); 
-    }
+        SunAppSrvPlugin.logMessage("in SunAppServer CTOR");
+     }
 	
 		
     /* (non-Javadoc)
@@ -97,19 +101,59 @@ public class SunAppServer extends GenericServer {
      */
     @Override
     protected void initialize() {
-        SunAppSrvPlugin.logMessage("in SunAppServer initialize"+this.getServer().getName());
-       super.initialize();
-       if ((getDomainDir()!=null)&&(!getDomainDir().startsWith("${"))){ //only if we are correctly setup...
-    	   readServerConfiguration(new File(getDomainDir()+File.separator+getdomainName()+"/config/domain.xml"));
-    	   SunAppSrvPlugin.logMessage("in SunAppServer initialize done readServerConfiguration");
-    	   syncHostAndPortsValues();
-       }
+    	SunAppSrvPlugin.logMessage("in SunAppServer initialize"+this.getServer().getName());
+    	super.initialize();
+    	SunInitialize();
+
+    }
+
+    private void SunInitialize(){
+    	if (initializedCalled){
+    		return;
+    	}
+    	SunAppSrvPlugin.logMessage("in SunAppServer SunInitialize domain is"+getDomainDir());
+    	if ((getDomainDir()!=null)&&(!getDomainDir().startsWith("${"))){ //only if we are correctly setup...
+    		readServerConfiguration(new File(getDomainDir()+File.separator+getdomainName()+"/config/domain.xml"));
+    		SunAppSrvPlugin.logMessage("in SunAppServer initialize done readServerConfiguration");
+    		syncHostAndPortsValues();
+    		initializedCalled = true;
+    	}    	
     }
 
   public Map<String, String> getProps(){
 	  return getServerInstanceProperties();
   }
-    
+  
+  /* overide needed to store the admin server port  and server port immediately at server creation
+   * (non-Javadoc)
+   * @see org.eclipse.jst.server.generic.core.internal.GenericServer#setServerInstanceProperties(java.util.Map)
+   */
+  public void setServerInstanceProperties(Map map) {
+	  String domdir = (String)map.get(DOMAINDIR);
+	  if ((domdir!=null)&&(!domdir.startsWith("${"))){ //only if we are correctly setup...
+		  SunInitialize();
+		  map.put(ADMINSERVERPORT, adminServerPortNumber);
+		  map.put(SERVERPORT, serverPortNumber);
+	  }
+	  SunAppSrvPlugin.logMessage("in SunAppServer setServerInstanceProperties new MAP IS"+map);
+	  setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, map);
+  } 
+ 
+  /* not yet, ui nor working well for generic validation
+   * public IStatus validate() {
+   
+   	   SunAppSrvPlugin.logMessage("in SunAppServer -------validate"+getDomainDir()+getdomainName());
+		IStatus s= super.validate();
+		
+		File f= new File(getDomainDir()+File.separator+getdomainName());
+		if (!f.exists()){
+			IStatus i= new Status(IStatus.ERROR,  "Glassfish",f.getAbsolutePath()+" does not exist" );
+			return i;
+		}
+ 		return s;
+ 	}	
+ 	*/
+  
   public String getKeepSessions() {
 	  String s =getProps().get(KEEPSESSIONS);
 	  if (s==null){
@@ -174,13 +218,19 @@ public class SunAppServer extends GenericServer {
     	String currentServerAdminPortValue = (String) props.get(ADMINSERVERPORT);
     	if ((currentServerAdminPortValue == null) || !currentServerAdminPortValue.equals(adminServerPortNumber)) {
     		props.put(ADMINSERVERPORT, adminServerPortNumber);
-    	}    	
-    }
+    	}
+	}
 
     public void  saveConfiguration(IProgressMonitor m) throws CoreException  {
-        SunAppSrvPlugin.logMessage("in Save SunAppServer ");
+        SunAppSrvPlugin.logMessage("in Save SunAppServer " +initializedCalled);
+        if (initializedCalled==false){
+        	SunInitialize(); 
+            SunAppSrvPlugin.logMessage("in Save SunAppServer done" );
+       }
         syncHostAndPortsValues();
+
         super.saveConfiguration(m);
+
     }
     
     
