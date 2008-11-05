@@ -122,9 +122,9 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
 			} else {
 				abort(
-						"Port conflict: Please stop the process using the same port as the one used by the Application Server.",
+						"Port conflict: Please stop the server process using the same port as the one used by the Application Server.",
 						new RuntimeException(
-								"An unknown process is already running on this port."),
+								"A server process is already running on this port but we cannot determined if it's a GlassFish process (lack of info or credentials)"),
 						IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 
 			}
@@ -210,7 +210,14 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 }
                 if (sunserver.isRunning()){
                 	if (serverBehavior.isV3()) {
-                		if (sunserver.getV3ServerStatus()!=SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
+                		SunAppServer.ServerStatus s=sunserver.getV3ServerStatus();
+                		if (s==SunAppServer.ServerStatus.CREDENTIAL_ERROR){
+                            
+                            abort("Wrong user name or password.", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+                			return;
+                		}
+                		if (s!=SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
+             
                 			SunAppSrvPlugin.logMessage("V3 not ready");
                 			continue;
                 		}
