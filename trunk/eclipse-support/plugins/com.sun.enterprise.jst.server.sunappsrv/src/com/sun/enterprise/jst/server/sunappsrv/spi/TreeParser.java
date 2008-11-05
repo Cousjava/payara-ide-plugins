@@ -199,6 +199,7 @@ public final class TreeParser extends DefaultHandler {
     private static final String TypeToURLMap[] = {
         "-//Sun Microsystems Inc.//DTD Application Server 8.0 Domain//EN", "sun-domain_1_1.dtd",
         "-//Sun Microsystems Inc.//DTD Application Server 8.1 Domain//EN", "sun-domain_1_1.dtd",
+        "-//Sun Microsystems Inc.//DTD Application Server 9.0 Domain//EN", "sun-domain_1_2.dtd",
         "-//Sun Microsystems Inc.//DTD Application Server 9.1 Domain//EN", "sun-domain_1_3.dtd"
     };
 
@@ -210,15 +211,22 @@ public final class TreeParser extends DefaultHandler {
         // this changes, considering caching using HashMap<String, String>
         //
         InputSource source = null;
+        
+        //temp patch until sailfin uses the correct doc type. Currently using the one from Gf V2
+        if (systemId.indexOf("sun-domain_1_4.dtd")!=-1){
+			source = new InputSource(this.getClass().getResourceAsStream("/dtds/sun-domain_1_4.dtd"));
 
-        for (int i = 0; i < TypeToURLMap.length; i = i + 2) {
-            if (publicId.equals(TypeToURLMap[i])) {
-                //	SunAppSrvPlugin.logMessage("-----resource as stream is"+this.getClass().getResourceAsStream("/dtds/"+TypeToURLMap[i+1]));
-                source = new InputSource(this.getClass().getResourceAsStream("/dtds/" + TypeToURLMap[i + 1]));
-                // SunAppSrvPlugin.logMessage("-----publicId is"+publicId);
-                break;
-            }
+        }
+        else{
+        	for (int i = 0; i < TypeToURLMap.length; i = i + 2) {
+        		if (publicId.equals(TypeToURLMap[i])) {
+        			//	SunAppSrvPlugin.logMessage("-----resource as stream is"+this.getClass().getResourceAsStream("/dtds/"+TypeToURLMap[i+1]));
+        			source = new InputSource(this.getClass().getResourceAsStream("/dtds/" + TypeToURLMap[i + 1]));
+        			// SunAppSrvPlugin.logMessage("-----publicId is"+publicId);
+        			break;
+        		}
 
+        	}
         }
 
 
