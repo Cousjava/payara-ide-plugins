@@ -826,12 +826,16 @@
             
             
               <public publicId="-//Sun Microsystems Inc.//DTD Application Server 9.0 Domain//EN"
-                    uri="dtds/sun-domain_1_1.dtd"
+                    uri="dtds/sun-domain_1_2.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_2.dtd" />
             
              <public publicId="-//Sun Microsystems Inc.//DTD Application Server 9.1 Domain//EN"
-                    uri="dtds/sun-domain_1_1.dtd"
+                    uri="dtds/sun-domain_1_3.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_3.dtd" />
+            
+            <public publicId="-//Sun Microsystems Inc.//DTD Application Server 9.1.1 Domain//EN"
+                    uri="dtds/sun-domain_1_4.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_4.dtd" />
             
             
             
