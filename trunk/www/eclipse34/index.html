@@ -19,7 +19,12 @@ Champenois</a>.<br>
 11/05/2008.<br>
 
 <br>
-
+Prerequisite:<br>
+<br>
+Download and install GlassFish v3 Prelude Application server from <a href="https://glassfish.dev.java.net/downloads/v3-prelude.html">this page</a>.
+(make sure the JDK is defined in your path, otherwise GlassFish might
+use a JRE for its JVM and JSP compilation steps would fail).<br>
+<br>
 Download the Eclipse IDE for Java EE Developers (Based on Eclipse
 3.4.1, as of October 2008,
 Ganymede - Windows 163Mb eclipse-jee-ganymede-win32.zip)
@@ -76,7 +81,7 @@ Console from Eclipse</a></li>
   <li><a href="#10">Using the GlassFish v3 Prelude
 Update Center from Eclipse</a></li>
 
-  <li><a href="#11">Registrating your GlassFish
+  <li><a href="#11">Registering your GlassFish
 installation</a></li>
 
   <li><a href="#12">Adding a new Data Source and
@@ -167,7 +172,7 @@ Accept the license (CDDL v1.0):<br>
 
 <br>
 Eclipse will then download the plugin and restart it self. Remember
-that this Plugin download step only dowloads the Eclipse plugin, not
+that this Plugin download step only downloads the Eclipse plugin, not
 the GlassFish application server itself. If you do not have one
 installed, get it from <a href="https://glassfish.dev.java.net/downloads/v3-prelude.html">https://glassfish.dev.java.net/downloads/v3-prelude.html</a>.<br>
 <br>
@@ -216,16 +221,16 @@ In this step, you need to enter a correct GlassFish installation
 directory. For example, in the demo case, the location is<br>
 
 <br>
-
-C:/Program Files/glassfishv3-prelude/glassfish.<br>
+<span style="font-style: italic;">
+C:/Program Files/glassfishv3-prelude/glassfish</span>.<br>
 
 <br>
 
-Notice that the location C:/Program Files/glassfishv3-prelude contains
+Notice that the location <span style="font-style: italic;">C:/Program Files/glassfishv3-prelude</span> contains
 more than the glassfish application server. It contains as well JavaDB,
 the Update Tool and its repository meta-data. So make sure you select
-the subdirectory called "glassfish:" under C:/Program
-Files/glassfishv3-prelude.<br>
+the subdirectory called "<span style="font-style: italic;">glassfish</span>:" under<span style="font-style: italic;"> C:/Program
+Files/glassfishv3-prelude</span>.<br>
 
 Once a correct server location is entered, the "Next" button of the
 wizard is enable.<br>
