@@ -24,7 +24,7 @@ Maintained by <a href="mailto:ludo@dev.java.net">Ludovic Champenois</a>.<br>
 <br>
 
 
-Download the Eclipse IDE for Java EE Developers (as of August 2008,
+Download the Eclipse IDE for Java EE Developers (as of October 2008,
 Ganymede - Windows 162Mb eclipse-jee-ganymede-win32.zip)
 (tools for Java Developers creating JEE and Web applications, including
 a Java IDE, tools for JEE and JSF, Mylyn and others...:<br>
@@ -74,6 +74,7 @@ Table of Content:<br>
 <ul>
 
 
+  <li><a href="#getting">Getting the GlassFish Pluign for Eclipse</a></li>
   <li><a href="#1">Registering a GlassFish server to
 Eclipse</a></li>
 
@@ -122,6 +123,49 @@ registering it to GlassFish</a></li>
 
 
 </ul>
+<br>
+<h2><a name="getting"></a>Getting the GlassFish Plugin for Eclipse&nbsp;</h2>
+<br>
+<span style="font-weight: bold;">Preliminary note</span>: &nbsp;If you're behind a firewall, make sure you have set an SSL proxy:
+      Bring up Preferences, then expand General, Network Connections and fill in 
+      the values for your SSL proxy.  If you don't have a SSL proxy but a you 
+      have a plain http proxy, be sure to check the checkbox <b>Use this proxy server for SSL<br>
+<br>
+</b><img style="width: 622px; height: 540px;" alt="1" src="ishot-77-.png"><br>
+<br>
+<br>
+
+Install the IDE and start it, close the "Welcome" page:<br>
+<br>
+<img style="width: 620px; height: 494px;" alt="1" src="ishot-72-.png"><br>
+<br>
+<br>
+<br>
+Go to the Java EE perspective (should be the default one) and right
+click in the Servers view to select the New-&gt;Server menu item:<br>
+<br>
+<br>
+<img style="width: 618px; height: 490px;" alt="2" src="ishot-73-.png"><br>
+<br>
+<br>
+In the following dialog, click on the link called "<span style="font-weight: bold;">Download additional server adapters</span>": <br>
+<br>
+<br>
+<img style="width: 494px; height: 554px;" alt="4" src="ishot-74-.png"><br>
+<br>
+<br>
+After a while (Internet timing specific), select the GlassFish Category in the list of additional server adapters:<br>
+<br>
+<br>
+<img style="width: 498px; height: 487px;" alt="1" src="ishot-75-.png"><br>
+<br>
+<br>
+Accept the license (CDDL v1.0):<br>
+<br>
+<img style="width: 495px; height: 489px;" alt="l" src="ishot-76-.png"><br>
+<br>
+<br>
+Eclipse will then download the plugin and restart it self. You are now ready to register a GlassFish server to the IDE.<br>
 
 
 <h2><a name="1"></a>Registering a GlassFish
