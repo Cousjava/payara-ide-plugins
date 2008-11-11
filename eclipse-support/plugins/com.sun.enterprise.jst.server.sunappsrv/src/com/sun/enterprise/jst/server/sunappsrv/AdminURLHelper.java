@@ -20,19 +20,29 @@
  * [name of copyright owner]
  */
 // </editor-fold>
-package com.sun.enterprise.jst.server.sunappsrv.v3;
+package com.sun.enterprise.jst.server.sunappsrv;
 
+import org.eclipse.wst.server.core.IServer;
 
-import com.sun.enterprise.jst.server.sunappsrv.Messages;
+public class AdminURLHelper {
+	private static final String fallbackHost = "localhost";  //$NON-NLS-1$
+	private static final String fallbackPort = "4848";       //$NON-NLS-1$
 
-/**
- * @author Ludo
- *
- */
+	private AdminURLHelper() {
+		super();
+	}
 
-public class UpdateCenter extends Register {
+	public static String getURL(String urlSuffix, IServer server) {
+		String hostName = fallbackHost;
+		String portNumber = fallbackPort;
 
-    public UpdateCenter() {
-        super("/updateCenter/addOn.jsf", Messages.updateCenter);
-    }
+	    if (server != null){
+			SunAppServerBehaviour sab = (SunAppServerBehaviour)server.loadAdapter(
+					SunAppServerBehaviour.class, null);
+			SunAppServer sunserver = sab.getSunAppServer();
+			hostName = sunserver.getServer().getHost();
+			portNumber = sunserver.getAdminServerPort();
+	    }
+	    return "http://" + hostName + ":" + portNumber + urlSuffix; //$NON-NLS-1$
+	}
 }

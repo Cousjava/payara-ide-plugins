@@ -38,7 +38,9 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.Messages;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+import com.sun.enterprise.jst.server.sunappsrv.AdminURLHelper;
 import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
 
 /**
@@ -54,24 +56,21 @@ public class Register extends MultiPageEditorPart implements IResourceChangeList
     private Browser browser;
     Composite parent;
     String URLtoShow;
+    String pageTextTitle;
 
     /**
      *
      */
     public Register() {
+        this("/sysnet/registration.jsf", Messages.register);
+    }
+
+    protected Register(String urlSuffix, String pageText) {
         super();
-
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-        if (AppServerContextAction.selectedServer!=null){
-    		SunAppServerBehaviour sab = (SunAppServerBehaviour) AppServerContextAction.selectedServer.loadAdapter(
-    				SunAppServerBehaviour.class, null);
-    		String hostName = sab.getSunAppServer().getServer().getHost();
-    		URLtoShow ="http://"+hostName+":"+sab.getSunAppServer().getAdminServerPort()+"/sysnet/registration.jsf";
-        }
-        else {
-            URLtoShow = "http://localhost:4848/sysnet/registration.jsf";
-
-        }
+        SunAppSrvPlugin.logMessage(this.getClass() + " Action...with "+AppServerContextAction.selectedServer);
+        URLtoShow = AdminURLHelper.getURL(urlSuffix, AppServerContextAction.selectedServer);
+        pageTextTitle = pageText;
     }
 
     /**
@@ -97,7 +96,7 @@ public class Register extends MultiPageEditorPart implements IResourceChangeList
             }
         });
         int index = addPage(browser);
-        setPageText(index, "Register");
+        setPageText(index, pageTextTitle);
     }
 
     /**

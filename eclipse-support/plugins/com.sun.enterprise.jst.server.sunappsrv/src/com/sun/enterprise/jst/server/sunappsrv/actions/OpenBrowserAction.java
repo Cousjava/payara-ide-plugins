@@ -33,13 +33,13 @@ import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+import com.sun.enterprise.jst.server.sunappsrv.AdminURLHelper;
 
 public class OpenBrowserAction extends AppServerContextAction {
 
 	public OpenBrowserAction() {
 		super("Open GlassFish Admin Console...",getImageDescriptorFromlocalImage("icons/obj16/glassfishserver.gif"));
 	}
-
 
 	public void execute(IServer server) {
 		
@@ -48,13 +48,9 @@ public class OpenBrowserAction extends AppServerContextAction {
 			return;
 		}
 		try {
-	        SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter(
-	                SunAppServerBehaviour.class, null);
-			
-			
 			IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
 			IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
-			browser.openURL(new URL("http://"+sab.getSunAppServer().getServer().getHost()+":"+sab.getSunAppServer().getAdminServerPort()));
+			browser.openURL(new URL(AdminURLHelper.getURL("", server)));
 		} catch (Exception e) {
 	           SunAppSrvPlugin.logMessage("Error opening browser: "+e.getMessage());
 

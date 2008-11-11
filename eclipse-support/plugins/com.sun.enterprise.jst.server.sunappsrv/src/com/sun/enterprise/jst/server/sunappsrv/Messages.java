@@ -41,4 +41,7 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String DomainDirectory;
     public static String UseAnonymousConnection;
     public static String keepSessions;
+    
+    public static String register;
+    public static String updateCenter;
 }
