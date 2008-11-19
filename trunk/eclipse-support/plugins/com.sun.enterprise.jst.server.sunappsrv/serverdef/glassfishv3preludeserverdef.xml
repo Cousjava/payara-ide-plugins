@@ -169,6 +169,7 @@
 	<archive path="${sunappserver.rootdirectory}/modules/jsf-api.jar" />
 	<!--  jar needed for tld files (html_basic and jsf_core) -->
 	<archive path="${sunappserver.rootdirectory}/modules/web/jsf-impl.jar" />
+	<archive path="${sunappserver.rootdirectory}/modules/web/jstl-impl.jar" />
     </classpath>
 	
     <!-- Note: This is not currently used, but it uses the property sunappserver.serveraddress -->
