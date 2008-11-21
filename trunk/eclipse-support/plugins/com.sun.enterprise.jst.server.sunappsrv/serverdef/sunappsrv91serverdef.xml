@@ -157,7 +157,12 @@
         <archive path="${sunappserver.rootdirectory}/lib/activation.jar" />
         <!--  impl jar needed for tld files (html_basic and jsf_core) -->
         <archive path="${sunappserver.rootdirectory}/lib/jsf-impl.jar" />
-
+        <!--  jars needed for integration with JPA tools (eclipselink) -->
+        <fileset dir="${sunappserver.rootdirectory}">
+            <include name="lib/appserv-admin.jar" />
+            <include name="lib/install/applications/jmsra/imqjmsra.jar" />
+            <include name="lib/eclipselink*.jar" />
+        </fileset>
     </classpath>
 	
     <!-- Note: This is not currently used, but it uses the property sunappserver.serveraddress -->
