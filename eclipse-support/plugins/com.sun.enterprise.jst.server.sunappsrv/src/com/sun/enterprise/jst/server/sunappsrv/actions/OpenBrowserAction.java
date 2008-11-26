@@ -25,13 +25,11 @@ package com.sun.enterprise.jst.server.sunappsrv.actions;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.AdminURLHelper;
 
@@ -56,12 +54,9 @@ public class OpenBrowserAction extends AppServerContextAction {
 
 		}
 	}
+
+	@Override
 	public boolean accept(IServer server) {
-        SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
-		try {
-			return sab.getSunAppServer().isRunning();
-		} catch (CoreException e) {
-			return false;
-		}
+		return acceptIfServerRunning(server);
 	}
 }

@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
@@ -169,6 +170,19 @@ IWorkbenchWindowActionDelegate {
 	 */
 	public boolean accept(IServer server) {
 		return true;
+	}
+
+	protected boolean acceptIfServerRunning(IServer server) {
+		SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter(
+				SunAppServerBehaviour.class, null);
+		if (sab != null) {
+			try {
+				return sab.getSunAppServer().isRunning();
+			} catch (CoreException e) {
+				return false;
+			}
+		}
+		return false;
 	}
 
 	/**
