@@ -25,7 +25,6 @@ package com.sun.enterprise.jst.server.sunappsrv.actions;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 
 import org.eclipse.ui.IWorkbenchPage;
@@ -34,7 +33,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.server.core.IServer;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 /**
@@ -76,12 +74,9 @@ public class PreludeUpdateCenterAction extends AppServerContextAction {
         }
 
     }
+
+    @Override
     public boolean accept(IServer server) {
-    	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
-    	try {
-    		return sab.getSunAppServer().isRunning();
-    	} catch (CoreException e) {
-    		return false;
-    	}
+        return acceptIfServerRunning(server);
     }
 }

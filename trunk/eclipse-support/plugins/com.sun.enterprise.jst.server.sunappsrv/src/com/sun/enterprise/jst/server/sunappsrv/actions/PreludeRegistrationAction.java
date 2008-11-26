@@ -28,10 +28,7 @@ import java.io.File;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -54,7 +51,7 @@ public class PreludeRegistrationAction extends AppServerContextAction  {
     	super ("Register your GlassFish Enterprise Server...",getImageDescriptorFromlocalImage("icons/obj16/registration.png"));
     }
 
-    public void execute (IServer server) {
+ 	public void execute (IServer server) {
     	    	
       	
     	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
@@ -91,11 +88,9 @@ public class PreludeRegistrationAction extends AppServerContextAction  {
         }
 
     }
+
+	@Override
 	public boolean accept(IServer server) {
-        SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
-		try {
-			return sab.getSunAppServer().isRunning();
-		} catch (CoreException e) {
-			return false;
-		}	}
+		return acceptIfServerRunning(server);
+	}
 }
