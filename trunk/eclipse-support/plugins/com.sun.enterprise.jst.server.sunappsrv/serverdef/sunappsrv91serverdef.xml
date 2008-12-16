@@ -157,6 +157,11 @@
         <archive path="${sunappserver.rootdirectory}/lib/activation.jar" />
         <!--  impl jar needed for tld files (html_basic and jsf_core) -->
         <archive path="${sunappserver.rootdirectory}/lib/jsf-impl.jar" />
+        <!--  jar needed for integration with built in JPA (toplink) ddl generation -->
+        <!--  note that toplink essentials ships with this version of glassfish, so -->
+        <!--  it is intentially included here *before* eclipselink which would need -->
+        <!--  to be installed separately by a user -->
+        <archive path="${sunappserver.rootdirectory}/lib/toplink-essentials.jar" />
         <!--  jars needed for integration with JPA tools (eclipselink) -->
         <fileset dir="${sunappserver.rootdirectory}">
             <include name="lib/appserv-admin.jar" />
