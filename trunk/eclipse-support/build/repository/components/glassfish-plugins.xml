@@ -49,10 +49,6 @@
                         force a clean build by deleting the work folder.
                         This is cleaner for the Cruise Control build
                     -->
-                    <echo>${gfplugins.work.folder}
-                    </echo>
-                    <echo>${gfplugins.download.folder}
-                    </echo>
                     <mkdir dir="${gfplugins.work.folder}" />
                     <delete dir="${gfplugins.work.folder}" />
                     <mkdir dir="${gfplugins.work.folder}" />
@@ -66,7 +62,7 @@
                     <copy todir="${gfplugins.work.folder}/features">
                         <fileset
                             dir="${gfplugins.download.folder}/glassfishplugins/eclipse-support/features"
-                            excludes="*configurator*/**" />
+                            includes="*configurator*/**" />
                     </copy>
                     <!-- this value should be set by the main build.xml -->
                     <build-feature-from-sources-with-base
