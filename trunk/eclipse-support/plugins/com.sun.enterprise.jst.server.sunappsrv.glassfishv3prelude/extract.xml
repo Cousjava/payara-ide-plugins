@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project
+    default="extract">
+    <property
+        name="targetZip"
+        value="glassfish-v3-prelude.zip" />
+    <target
+        name="testExists">
+        <available
+            file="${targetZip}"
+            property="zipExists" />
+    </target>
+    <target
+        name="downloadGlassfish"
+        depends="testExists"
+        unless="zipExists">
+        <get
+            src="http://download.java.net/glassfish/v3-prelude/release/glassfish-v3-prelude.zip"
+            dest="${targetZip}" />
+    </target>
+    <target
+        name="extract"
+        depends="downloadGlassfish">
+        <delete
+            dir="glassfishv3-prelude" />
+        <unzip
+            src="${targetZip}"
+            dest="." />
+		<!-- Unzip loses all executable info :( -->
+        <chmod
+            perm="a+x">
+            <fileset
+                dir=".">
+                <include
+                    name="**/bin/*" />
+                <include
+                    name="**/*.jar" />
+            </fileset>
+        </chmod>
+    </target>
+</project>
