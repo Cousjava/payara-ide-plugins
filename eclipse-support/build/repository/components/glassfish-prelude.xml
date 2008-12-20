@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="GlassFish v3 Prelude" releaseDate="2008-12-03"
+<component name="GlassFish v3 Prelude wrapperplugin" releaseDate="2008-12-03"
     version="0.0.1">
     <package no-download="no">
         <size os="win32">TODO</size>
         <size os="macosx">TODO</size>
         <size os="linux">TODO</size>
     </package>
-    <shortdescription>v3</shortdescription>
+    <shortdescription>Eclipse wrapper for GlassFish V3 Prelude</shortdescription>
     <status>packaged</status>
     <eclipse-help>don't know</eclipse-help>
     <description />
@@ -38,7 +38,7 @@
 
                 <target name="updateGlassfishv3" depends="fetch-gfplugins">
                     <ant antfile="extract.xml"
-                        dir="/Users/ludo/acvs/glassfishplugins/eclipse-support/plugins/com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude"
+                        dir="${gfplugins.download.folder}/glassfishplugins/eclipse-support/plugins/com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude"
                         inheritall="false" target="extract" />
                 </target>
 
@@ -74,17 +74,6 @@
                         buildDirectory="${glassfish.work.folder}"
                         featureId="com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude.feature"
                         qualifier="dev" />
-                    <!--
-                        <property name="glassfish.dest.folder"
-                        value="${components.dist.folder}/${component.id}-${component.version}"/>
-                        <mkdir dir="${glassfish.dest.folder}"/> <mkdir
-                        dir="${glassfish.dest.folder}/eclipse"/> <mkdir
-                        dir="${glassfish.dest.folder}/eclipse/plugins"/>
-                        <copy file="${zipFile}"
-                        todir="${glassfish.dest.folder}/eclipse/plugins/"/>
-                        <echo> File location ${zipFile}</echo> <echo>
-                        ${glassfish.dest.folder}" </echo>
-                    -->
                 </target>
             </project>
         </antscript>
