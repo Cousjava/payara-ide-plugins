@@ -72,7 +72,7 @@
                     </copy>
                     <build-feature-from-sources
                         buildDirectory="${glassfish.work.folder}"
-                        featureId="com.sun.enterprise.jst.server.sunappsrv.build.feature"
+                        featureId="com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude.feature"
                         qualifier="dev" />
                     <!--
                         <property name="glassfish.dest.folder"
