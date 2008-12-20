@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="GlasFish Configurator Plugin" releaseDate="2008-12-16"
+    version="0.0.1">
+    <package no-download="no">
+        <size os="win32">TODO</size>
+        <size os="macosx">TODO</size>
+        <size os="linux">TODO</size>
+    </package>
+    <shortdescription>Configures glassfish for workspace.
+    </shortdescription>
+    <status>packaged</status>
+    <eclipse-help>don't know</eclipse-help>
+    <description />
+    <getting-started />
+    <changelog release="1.2.2">
+        <entry date="2008-12-16" type="creation" />
+    </changelog>
+    <build patched="no" type="binary">
+        <antscript target="process-gfplugins">
+            <project>
+                <target name="fetch-gfplugins" unless="gfplugins-already-fetched">
+
+                    <property name="gfplugins.download.folder"
+                        value="${components.download.folder}/glassfish-cvs" />
+
+                    <mkdir dir="${gfplugins.download.folder}" />
+
+                    <cvs cvsRoot=":pserver:${cvs.user}@cvs.dev.java.net:/cvs"
+                        package="glassfishplugins/eclipse-support" dest="${gfplugins.download.folder}" />
+
+                    <!--
+                        only fetch once per build, to ensure that all
+                        the build is done on the same code...
+                    -->
+                    <property name="gfplugins-already-fetched"
+                        value="true" />
+                </target>
+                <target depends="fetch-gfplugins" name="process-gfplugins">
+                    <property name="gfplugins.download.folder"
+                        value="${components.download.folder}/glassfish-cvs" />
+                    <!--
+                        we can't use
+                        ${components.work.folder}/${component.id}-${component.version}
+                        because it's already used by the EE build !
+                    -->
+                    <property name="gfplugins.work.folder"
+                        value="${components.work.folder}/sourcebuild-${component.id}-${component.version}" />
+                    <!--
+                        force a clean build by deleting the work folder.
+                        This is cleaner for the Cruise Control build
+                    -->
+                    <echo>${gfplugins.work.folder}
+                    </echo>
+                    <echo>${gfplugins.download.folder}
+                    </echo>
+                    <mkdir dir="${gfplugins.work.folder}" />
+                    <delete dir="${gfplugins.work.folder}" />
+                    <mkdir dir="${gfplugins.work.folder}" />
+                    <mkdir dir="${gfplugins.work.folder}/plugins" />
+                    <mkdir dir="${gfplugins.work.folder}/features" />
+                    <copy todir="${gfplugins.work.folder}/plugins">
+                        <fileset
+                            dir="${gfplugins.download.folder}/glassfishplugins/eclipse-support/plugins/"
+                            includes="*configurator*/**" />
+                    </copy>
+                    <copy todir="${gfplugins.work.folder}/features">
+                        <fileset
+                            dir="${gfplugins.download.folder}/glassfishplugins/eclipse-support/features"
+                            excludes="*configurator*/**" />
+                    </copy>
+                    <!-- this value should be set by the main build.xml -->
+                    <build-feature-from-sources-with-base
+                        builddirectory="${gfplugins.work.folder}"
+                        componentId="${component.id}" distributionName="${dist.name}"
+                        featureId="com.sun.enterprise.jst.server.sunappsrv.configurator.feature"
+                        qualifier="dev" />
+                </target>
+            </project>
+        </antscript>
+    </build>
+    <copyright>Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.</copyright>
+    <license style="Not open source">
+        <terms />
+        DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common Development
+and Distribution License("CDDL") (collectively, the "License").  You
+may not use this file except in compliance with the License. You can obtain
+a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+language governing permissions and limitations under the License.
+
+When distributing the software, include this License Header Notice in each
+file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+Sun designates this particular file as subject to the "Classpath" exception
+as provided by Sun in the GPL Version 2 section of the License file that
+accompanied this code.  If applicable, add the following below the License
+Header, with the fields enclosed by brackets [] replaced by your own
+identifying information: "Portions Copyrighted [year]
+[name of copyright owner]"
+
+Contributor(s):
+
+If you wish your version of this file to be governed by only the CDDL or
+only the GPL Version 2, indicate your decision by adding "[Contributor]
+elects to include this software in this distribution under the [CDDL or GPL
+Version 2] license."  If you don't indicate a single choice of license, a
+recipient has the option to distribute your version of this file under
+either the CDDL, the GPL Version 2 or to extend the choice of license to
+its licensees as provided above.  However, if you add GPL Version 2 code
+and therefore, elected the GPL Version 2 license, then the option applies
+only if the new code is made subject to such option by the copyright
+holder.
+    </license>
+    <dependencies>
+        <component id="glassfish-eclipse" />
+        <assembly id="eclipse-tools" />
+        <component id="eclipse-wtp-web" />
+        <assembly id="eclipse-wtp-j2ee" />
+        <component id="eclipse-dtp" />
+    </dependencies>
+</component>
