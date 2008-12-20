@@ -41,7 +41,7 @@ only if the new code is made subject to such option by the copyright holder.
    </license>
 
    <plugin
-         id="com.sun.enterprise.jst.server.sunappsrv"
+         id="com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
