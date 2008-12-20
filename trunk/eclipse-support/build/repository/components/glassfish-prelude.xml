@@ -68,7 +68,7 @@
                     <copy todir="${glassfish.work.folder}/features">
                         <fileset
                             dir="${gfplugins.download.folder}/glassfishplugins/eclipse-support/features"
-                            excludes="*glassfishv3prelude*/**" />
+                            includes="*glassfishv3prelude*/**" />
                     </copy>
                     <build-feature-from-sources
                         buildDirectory="${glassfish.work.folder}"
