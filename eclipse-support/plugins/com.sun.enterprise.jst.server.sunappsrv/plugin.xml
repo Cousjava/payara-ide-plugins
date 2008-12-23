@@ -367,12 +367,11 @@
         <fragment id="org.eclipse.jst.server.generic.server"
                   typeIds="com.sun.enterprise.jst.server.sunappsrv92"
                   class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
- 
 
- 
-         <fragment id="org.eclipse.jst.server.generic.runtime"
+     	<!--the fact that we need to provide our own wizard fragment is a workaround for issue 222688-->
+        <fragment id="org.eclipse.jst.server.generic.runtime"
                   typeIds="com.sun.enterprise.jst.server.runtime.glassfishv3prelude"
-                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+                  class="com.sun.enterprise.jst.server.sunappsrv.InstallableRuntimeServerRuntimeWizardFragment"/>           
         <fragment id="org.eclipse.jst.server.generic.server"
                   typeIds="com.sun.enterprise.jst.server.glassfishv3prelude"
                   class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
@@ -1196,6 +1195,13 @@
    </perspectiveExtension>
 </extension>
 
+    <extension point="org.eclipse.wst.server.core.installableRuntimes">
+    	<runtime
+           archiveUrl="http://download.java.net/glassfish/v3-prelude/release/glassfish-v3-prelude.zip" 		   
+           licenseUrl="https://glassfishplugins.dev.java.net/license/CDDL+GPL+3rdPartyEPL.txt"
+           id="com.sun.enterprise.jst.server.runtime.glassfishv3prelude">
+    	</runtime>
+    </extension>
 
 
     <!--extension point="org.eclipse.jdt.core.classpathContainerInitializer">
