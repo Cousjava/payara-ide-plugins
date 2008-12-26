@@ -100,7 +100,7 @@ public class GlassFishConfigurator {
             }
 
             IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
-            wc.setName(runtime.getName() + " default instance");
+            wc.setName("Bundled "+ runtime.getName() );
 
             SunAppServer sunAppServer = (SunAppServer) wc.getAdapter(SunAppServer.class);
 
