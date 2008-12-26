@@ -24,7 +24,7 @@
                         value="${components.download.folder}/glassfish-cvs" />
 
                     <mkdir dir="${gfplugins.download.folder}" />
-
+<echo message=":pserver:${cvs.user}@cvs.dev.java.net:/cvs"/>
                     <cvs cvsRoot=":pserver:${cvs.user}@cvs.dev.java.net:/cvs"
                         package="glassfishplugins/eclipse-support" dest="${gfplugins.download.folder}" />
 

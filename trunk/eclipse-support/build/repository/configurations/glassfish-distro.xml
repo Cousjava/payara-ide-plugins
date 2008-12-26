@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- first release 2008-11-27 -->
-<configuration name="Glassfish Eclipse distribution"
+<configuration name="Tools Bundle"
 	releaseDate="2008-12-09" version="0.1.0.5">
-	<!--
-		Copyright (c) 2003-2008 by nexB, Inc. http://www.nexb.com/ - All
-		rights reserved. This software is licensed under the terms of the Open
-		Software License version 2.1. A copy of the license is available at
-		http://opensource.org/licenses/osl-2.1.php
-	-->
-	<shortdescription>Minimal distribution to run the GlassFish
-		plugins</shortdescription>
+
+	<shortdescription>GlassFish Tools Bundle for Eclipse.</shortdescription>
 	<description />
 	<include>
-		<component id="sun-java-5-win32-x86" />
-		<component id="sun-java-5-linux-x86" />
+		<component id="sun-jdk-5-win32-x86" />
+		<component id="sun-jdk-5-linux-x86" />
 		<component id="eclipse-platform" />
 		<component id="eclipse-jdt" />
 		<component id="eclipse-wtp" />
@@ -26,10 +20,10 @@
 		<component id="glassfish-wtp-plugin" />
 		<component id="glassfish-prelude" />
 		<component id="glassfish-plugins" />
-<!--
-missing:
-Glassfish server v2
--->
+		<component id="glassfish-v2-mac" />
+		<component id="glassfish-v2-linux-x86" />
+		<component id="glassfish-v2-win32-x86" />
+
 	</include>
 	<package>
 		<size os="win32">166M</size>
