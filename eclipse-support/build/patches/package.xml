@@ -1,0 +1,1477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="package" basedir="." default="package-dummy">
+	<!--
+  Copyright (c) 2003-2008 by nexB, Inc. http://www.nexb.com/ - All rights reserved.
+  This software is licensed under the terms of the Open Software License version 2.1.
+  A copy of the license is available at http://opensource.org/licenses/osl-2.1.php
+-->
+
+	<import file="macro-utils.xml" />
+	<import file="versions.xml" />
+	<import file="install-extra-ant-tasks.xml" />
+	<import file="installer/macos/build.xml" />
+	<import file="installer/win32/build.xml" />
+
+
+	<macrodef name="set-app-name"
+	          description="PRIVATE: find the app name to use for installation location. Workaround to Python bug, that must be installed without spaces">
+		<attribute name="id" />
+		<attribute name="dist.display.name" />
+		<sequential>
+
+			<if>
+				<or>
+					<equals arg1="@{id}" arg2="lamp" />
+					<equals arg1="@{id}" arg2="python" />
+					<equals arg1="@{id}" arg2="plugin-warrior" />
+					<equals arg1="@{id}" arg2="glassfish-distro" />
+				</or>
+				<then>
+					<propertyregex property="distro.install.folder"
+					               input="@{dist.display.name}"
+					               regexp="[\ ]+"
+					               replace="-" />
+				</then>
+				<else>
+					<var name="distro.install.folder"
+					     value="@{dist.display.name}" />
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<target name="package-dummy" >
+	</target>
+
+	<property name="ALL_PLATFORMS" value="win32,linux,macosx" />
+
+	<property name="release.plugin.folder"
+	          value="${build.folder}/plugin-releases" />
+
+	<property name="release.configuration.folder"
+	          value="${build.folder}/distro-releases" />
+
+	<macrodef name="package-configuration">
+		<attribute name="dist.folder" />
+		<attribute name="id" />
+		<attribute name="repository.folder" />
+		<sequential>
+			<gather-properties id="@{id}"
+			                   repository.folder="@{repository.folder}" />
+			<compose-configuration-license id="@{id}"
+			                               repository.folder="@{repository.folder}"
+			                               dist.folder="@{dist.folder}/${dist.@{id}.name}" 
+						       product.name="${dist.@{id}.shortname}"/>
+
+			<!-- Put the license at a place where it will be picked up
+				by all installers for inclusion in the release... -->
+			<copy file="@{dist.folder}/${dist.@{id}.name}/license-@{id}.txt"
+			      tofile="@{dist.folder}/${dist.@{id}.name}/eclipse/LICENSE.TXT" />
+
+			<mkdir dir="${release.configuration.folder}" />
+
+			<for list="${ALL_PLATFORMS}" param="platform">
+				<sequential>
+
+			<if>
+                <equals arg1="${use.patched.branding}" arg2="true" />
+			  <then>
+                    <update-and-brand-org.eclipse.platform 
+                        platform.dist.folder="@{dist.folder}/${dist.@{id}.name}/@{platform}_ONLY" id="@{id}"/>
+			  </then>
+			</if>
+		    
+		    <update-launchers 
+                platform.dist.folder="@{dist.folder}/${dist.@{id}.name}/@{platform}_ONLY" 
+                repository.folder="@{repository.folder}" 
+                id="@{id}" />
+		    
+            <update-root-files 
+                platform.dist.folder="@{dist.folder}/${dist.@{id}.name}/@{platform}_ONLY" 
+                repository.folder="@{repository.folder}" 
+                id="@{id}" />
+
+		    <update-p2-cache-location 
+			platform.dist.folder="@{dist.folder}/${dist.@{id}.name}/@{platform}_ONLY" 
+			/>
+				</sequential>
+			</for>
+
+			<update-eclipse.ini platform.dist.folder="@{dist.folder}/${dist.@{id}.name}"
+					    dist.name="${distributions.installer.prefix}-${dist.@{id}.name}"/>
+
+		    <invoke-config-ant-script
+               dist.folder="@{dist.folder}" 
+               repository.folder="@{repository.folder}" 
+               id="@{id}"/>
+	
+		    <create-distro-installers 
+	               dist.folder="@{dist.folder}" 
+	               repository.folder="@{repository.folder}" 
+	               id="@{id}"/>
+
+		    <echo>create.runable.distro is ${create.runable.distro}</echo>
+		    <if>
+		      <isset property="create.runable.distro"/>
+			<then>
+			  <create-runable-distro 
+			      id="@{id}" 
+			      dist.folder="@{dist.folder}" />
+			</then>
+		    </if>
+
+
+		</sequential>
+	</macrodef>
+    
+    <macrodef name="update-launchers">
+        <attribute name="id" />
+        <attribute name="platform.dist.folder" />
+        <attribute name="repository.folder" />
+        <sequential>
+		<copy overwrite="true"
+		      todir="@{platform.dist.folder}/eclipse/">
+			<fileset dir="${branding.folder}/launchers"
+			         includes="icon.xpm,eclipse.exe" />
+		</copy>
+		<copy overwrite="true"
+		      todir="@{platform.dist.folder}/eclipse/Eclipse.app/Contents/Resources">
+			<fileset dir="${branding.folder}/launchers"
+			         includes="Eclipse.icns" />
+		</copy>
+        </sequential>
+    </macrodef>
+    
+    <macrodef name="update-root-files">
+        <attribute name="id" />
+        <attribute name="platform.dist.folder" />
+        <attribute name="repository.folder" />
+        <sequential>
+            <!-- get common base root files from a well known folder 
+            overwrite any files that would have been created before-->
+            <if>
+               <available file="@{repository.folder}/base-root-files"/>
+               <then>
+                   <copy overwrite="true" todir="@{platform.dist.folder}/">
+                       <fileset dir="@{repository.folder}/base-root-files"
+                                includes="**/*" />
+                   </copy>
+               </then>
+            </if>
+            
+            <!-- get root files from a folder named after the configuration
+            overwrite any files that would have been created before-->
+            <if>
+               <available file="@{repository.folder}/@{id}" />
+               <then>
+                   <copy overwrite="true" todir="@{platform.dist.folder}/">
+                       <fileset dir="@{repository.folder}/@{id}"
+                                includes="**/*" />
+                   </copy>
+               </then>
+            </if>
+        </sequential>
+    </macrodef>
+    
+    
+    <macrodef name="update-p2-cache-location"> 
+        <attribute name="platform.dist.folder" />
+        <sequential>
+	  <var name="platform.dist.config.ini" value="@{platform.dist.folder}/eclipse/configuration/config.ini"/>
+ 	  <replace file="${platform.dist.config.ini}"
+		   token="eclipse.p2.data.area=@@config.dir/../p2"
+		   value="eclipse.p2.data.area=@@config.dir/p2" />
+	  <var name="temp.eclipse.p2.data.area" unset="true"/>
+	  <property file="${platform.dist.config.ini}" prefix="temp."/>
+	  <echo>Updated the P2 cache location to ${temp.eclipse.p2.data.area} in file ${platform.dist.config.ini}</echo>
+	  <fail message="The P2 cache is not defined in ${platform.dist.config.ini}, the package scripts need to be updated !!">
+	    <condition>
+	      <not>
+		<equals arg1="${temp.eclipse.p2.data.area}" arg2="@@config.dir/p2"/>
+	      </not>
+	    </condition>
+	  </fail>
+        </sequential>
+    </macrodef>
+    
+    
+    <target name="test-update-p2-cache-location">
+      <update-p2-cache-location platform.dist.folder="/tmp"/>
+    </target>
+    
+    <macrodef name="update-eclipse.ini"> 
+        <attribute name="platform.dist.folder" />
+	<attribute name="dist.name"/>
+        <sequential>
+ 	  <replace dir="@{platform.dist.folder}" includes="**/eclipse.ini">
+	    <replacetoken><![CDATA[-showsplash]]></replacetoken>
+	    <replacevalue><![CDATA[-configuration
+@@user.home/.@{dist.name}
+-showsplash]]></replacevalue>
+	  </replace>
+        </sequential>
+    </macrodef>
+    
+    
+    <target name="test-update-eclipse.ini">
+      <update-eclipse.ini platform.dist.folder="/tmp/subdir" dist.name="easyeclipse-expertjava-1.4.0"/>
+    </target>
+    
+    <macrodef name="invoke-config-ant-script">
+        <attribute name="id" />
+        <attribute name="dist.folder" />
+        <attribute name="repository.folder" />
+        <sequential>
+            <!-- ********************************* -->
+            <!-- Execute  additional Ant target as post-processing, to get a chance to fix stuffs-->
+            <!-- ********************************* -->
+
+            <!-- extract Ant stuff and shallow-import -->
+            <echo>
+            &lt;mkdir dir=&quot;${configurations.work.folder}/@{id}&quot;/&gt;
+            &lt;xslt style=&quot;antify-configuration.xsl&quot;
+                    in=&quot;@{repository.folder}/@{id}.xml&quot;
+                    out=&quot;${configurations.work.folder}/@{id}/@{id}.xml&quot; /&gt;
+            &lt;nexb.shallowimport file=&quot;${configurations.work.folder}/@{id}/@{id}.xml&quot; /&gt;
+            </echo>
+            
+            <mkdir dir="${configurations.work.folder}/@{id}"/>
+            <xslt style="antify-configuration.xsl"
+                    in="@{repository.folder}/@{id}.xml"
+                    out="${configurations.work.folder}/@{id}/@{id}.xml" />
+            <nexb.shallowimport file="${configurations.work.folder}/@{id}/@{id}.xml" />
+            <!--FIXME  NEED TO USE A UNIQUE FILE NAME, as there can be several ANT sections....!!!!!-->
+
+            <nexb.xpath file="@{repository.folder}/@{id}.xml"
+                        expression="/configuration/build/antscript/@target"
+                        outputproperty="configuration.ant.target"
+                        defaultvalue="" />
+            <echo>*******BUILDING CONFIGURATION ANTSCRIPT(s): ${configuration.ant.target}</echo>
+            <for list="${configuration.ant.target}" param="f.at">
+                <sequential>
+                    <ant antfile="${configurations.work.folder}/@{id}/@{id}.xml"
+                         target="@{f.at}"
+                         inheritRefs="true"
+                         dir="${releng.basedir}">
+                        <property name="id" value="@{id}" />
+                        <property name="dist.folder" value="@{dist.folder}" />
+                        <property name="repository.folder" value="@{repository.folder}" />
+                        <property name="dist.name" value="${dist.name}" />
+                    </ant>
+                </sequential>
+            </for>
+        </sequential>
+    </macrodef>
+    
+    
+    <macrodef name="update-and-brand-org.eclipse.platform">
+        <attribute name="id" />
+        <attribute name="platform.dist.folder" />
+        <sequential>
+
+	 <var name="dir.found" unset="true" />
+	 <delete includeEmptyDirs="true">
+	   <fileset dir="@{platform.dist.folder}/eclipse/plugins/">
+	     <include name="org.eclipse.platform_*-branded/**" />
+	   </fileset>
+	 </delete>
+
+    <for param="dir">
+      <path>
+        <dirset dir="@{platform.dist.folder}/eclipse/plugins/">
+          <include name="org.eclipse.platform_*" />
+          <exclude name="*-branded*" />
+        </dirset>
+      </path>
+      <sequential>
+        <!-- if we are here there should ONLY one dir.... but check in any case
+        -->
+	<fail if="dir.found">there should be only one &quot;org.eclipse.platform&quot; in @{dist.folder}/eclipse/plugins, can't do the branding if there are two</fail>
+	<!-- 
+          Let's find out its name, which is the last segment
+	  -->
+	<property name="dir.found" value="true"/>
+        <get-last-segment path="@{dir}" var="platform.plugin.dir"/>
+        <propertyregex property="branding.plugin.version"
+                               input="${platform.plugin.dir}"
+                               regexp="org.eclipse.platform_(.*)"
+                               select="\1"
+                               override="true" />
+        <echo>branding.plugin.version: ${branding.plugin.version}</echo>
+      </sequential>
+    </for>
+	<fail unless="dir.found">No org.eclipse.platform found in @{platform.dist.folder}/eclipse/plugins</fail>
+			<var name="branding.plugin.version.branded" unset="true"/>
+			<var name="branding.dist.plugin" unset="true"/>
+			<var name="branding.source.dir" unset="true"/>
+
+			<property name="branding.plugin.version.branded"
+			          value="${branding.plugin.version}-branded" />
+
+			<property name="branding.dist.plugin"
+			          value="@{platform.dist.folder}/eclipse/plugins/org.eclipse.platform_${branding.plugin.version}" />
+			<property name="branding.source.dir"
+			          value="${branding.folder}/org.eclipse.platform" />
+
+			<!-- in configuration/config.ini
+# The comma-separated list of locations to search for the splash screen file (splash.bmp).
+# For each list element a subdirectory structure based on the pattern nl/<locale> is searched.
+# The system binds to the first matching file.  There is no default value.
+osgi.splashPath = platform:/base/plugins/org.eclipse.platform
+			-->
+			<copy overwrite="true" todir="${branding.dist.plugin}/">
+				<fileset dir="${branding.folder}/org.eclipse.platform"
+				         includes="*.*" />
+			</copy>
+
+
+			<delete file="${branding.dist.plugin}/META-INF/ECLIPSE.RSA"/>
+			<delete file="${branding.dist.plugin}/META-INF/ECLIPSE.SF"/>
+			<delete file="${branding.dist.plugin}/META-INF/eclipse.inf"/>
+
+			<delete file="${branding.dist.plugin}/META-INF/MANIFEST.MF"/>
+			<!-- here, we removed the checksum stuff. We should have it as a task... -->
+
+			<!-- ### WHEN UPDATING THE PLATFOM, CHECK THE MANIFEST LATER BELOW ### -->
+
+			<echo file="${branding.dist.plugin}/META-INF/MANIFEST.MF">Manifest-Version: 1.0<![CDATA[
+Bundle-RequiredExecutionEnvironment: J2SE-1.4,CDC-1.0/Foundation-1.0,J
+ 2SE-1.3
+Bundle-SymbolicName: org.eclipse.platform; singleton:=true
+Import-Package: javax.xml.parsers,org.xml.sax,org.xml.sax.helpers
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-Name: %pluginName
+Bundle-Version: ${branding.plugin.version.branded}
+Bundle-ClassPath: platform.jar
+Bundle-Vendor: %providerName
+Require-Bundle: org.eclipse.ui.intro;bundle-version="[3.2.0,4.0.0)",or
+ g.eclipse.ui.cheatsheets;bundle-version="[3.2.0,4.0.0)";resolution:=o
+ ptional,org.eclipse.ui.forms;bundle-version="[3.2.0,4.0.0)";resolutio
+ n:=optional,org.eclipse.ui;bundle-version="[3.2.0,4.0.0)";resolution:
+ =optional,org.eclipse.update.ui;bundle-version="[3.1.0,4.0.0)";resolu
+ tion:=optional,org.eclipse.ui.intro.universal;bundle-version="[3.2.0,
+ 4.0.0)",org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",org.e
+ clipse.ui.ide.application;bundle-version="[1.0.0,2.0.0)"
+]]>Export-Package: org.eclipse.platform.internal;x-internal:=true
+</echo>
+
+			<delete file="${branding.dist.plugin}/plugin.properties" />
+			<echo file="${branding.dist.plugin}/plugin.properties">###############################################################################<![CDATA[
+# Copyright (c) 2000, 2008 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#     IBM Corporation - initial API and implementation
+#     nexB, Inc - customization for EasyEclipse and other distributions
+###############################################################################
+pluginName=Eclipse Platform
+providerName=Eclipse.org
+
+productName=${dist.@{id}.display.name}
+productBlurb=${dist.@{id}.display.name}\n\
+\n\
+Version: ${dist.@{id}.version}\n\
+Based on Eclipse build id: {0}\n\
+\n\
+(c) Copyright Eclipse contributors and others 2000, 2008.  All rights reserved.\n\
+The assembly is (c) Copyright ${company.name} 2008 ${provider.website}.\n\
+\n\
+This product includes software developed by the\n\
+Apache Software Foundation http://www.apache.org/
+
+cheatsheet.actionset = Cheat Sheets
+cheatsheet.item = &Cheat Sheets...
+cheatsheet.category.team = Team/CVS
+cheatsheet.cvs.checkout.name= Check out a CVS project
+cheatsheet.cvs.checkout.desc= Learn how to connect to a CVS repository and check out a project.
+cheatsheet.cvs.merge.name= Merge CVS branches
+cheatsheet.cvs.merge.desc= Follow the steps for merging changes from one CVS branch into another.
+shortcut.overview.tooltip = Overview
+shortcut.tutorials.tooltip = Tutorials
+shortcut.samples.tooltip = Samples
+shortcut.whatsnew.tooltip = What's New
+
+introCustomizationPreference.name = Welcome
+
+productIntroTitle = Welcome to ${dist.@{id}.display.name} ${dist.@{id}.version} (built on Eclipse 3.4)
+productIntroBrandingText = Eclipse Project
+introDescription-overview = ${product.description}
+# rather have nothing than a debilitating, incorrect text
+introDescription-tutorials =
+]]>introDescription-samples =
+</echo>
+			<delete file="${branding.dist.plugin}/about.properties" />
+			<echo file="${branding.dist.plugin}/about.properties">###############################################################################<![CDATA[
+# Copyright (c) 2000, 2008 IBM Corporation and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#     IBM Corporation - initial API and implementation
+###############################################################################
+# about.properties
+# contains externalized strings for about.ini
+# java.io.Properties file (ISO 8859-1 with "\" escapes)
+# fill-ins are supplied by about.mappings
+# This file should be translated.
+#
+# Do not translate any values surrounded by {}
+
+blurb=${dist.@{id}.display.name}\n\
+\n\
+Version: ${dist.@{id}.version}\n\
+Based on Eclipse build id: {0}\n\
+\n\
+(c) Copyright Eclipse contributors and others 2000, 2008.  All rights reserved.\n\
+The assembly is (c) Copyright ${company.name} 2008 ${provider.website}.\n\
+\n\
+This product includes software developed by the\n\
+]]>Apache Software Foundation http://www.apache.org/
+</echo>
+			<!--
+# Property "featureImage" contains path to feature image (32x32)
+featureImage=eclipse32.png
+
+# Property "welcomePage" contains path to welcome page (special XML-based format)
+# ($nl$/ prefix to permit locale-specific translations of entire file)
+welcomePage=$nl$/welcome.xml
+			-->
+			<replace file="${branding.dist.plugin}/plugin.xml"
+			         token="&quot;Eclipse&quot;"
+			         value="&quot;${dist.@{id}.shortname}&quot;" />
+			<!-- in plugins/org.eclipse.platform_3.2.0.v20060601/plugin.xml :
+			      <product name="%productName" application="org.eclipse.ui.ide.workbench" description="%productBlurb">
+          <property name="windowImages" value="eclipse.gif,eclipse32.gif,eclipse48.gif,eclipse.png,eclipse32.png,eclipse48.png"/>
+          <property name="aboutImage" value="eclipse_lg.gif"/>
+          <property name="aboutText" value="%productBlurb"/>
+          <property name="appName" value="Eclipse"/>
+          <property name="preferenceCustomization" value="plugin_customization.ini"/>
+          <property
+                name="startupForegroundColor"
+                value="C8D5EA"/>
+          <property
+                name="startupMessageRect"
+                value="7,220,441,20"/>
+          <property
+                name="startupProgressRect"
+                value="0,280,455,15"/>
+         <property
+          		name="introTitle"
+          		value="%productIntroTitle"/>
+          <property
+          		name="introBrandingImage"
+          		value="product:intro-eclipse.png"/>
+          <property
+          		name="introBrandingImageText"
+          		value="%productIntroBrandingText"/>
+		  <property
+				name="introDescription-overview"
+				value="%introDescription-overview"/>
+		  <property
+				name="introDescription-tutorials"
+				value="%introDescription-tutorials"/>
+		  <property
+				name="introDescription-samples"
+				value="%introDescription-samples"/>
+			-->
+
+			<var name="branding.dist.plugin.branded" unset="true"/>
+			<property name="branding.dist.plugin.branded"
+			          value="@{platform.dist.folder}/eclipse/plugins/org.eclipse.platform_${branding.plugin.version.branded}" />
+
+			<delete failonerror="false" dir="${branding.dist.plugin.branded}"/>
+
+			<move file="${branding.dist.plugin}" tofile="${branding.dist.plugin.branded}"/>
+
+			<!--
+			    ## ALSO UPDADE THE FEATURE with the following regexp:
+			    (<plugin[^>]*id=\"org.eclipse.platform\"[^>]*version=\"[^"]*)"
+			    
+			    Only one feature should have a match to this regexp.
+			-->
+			
+			<replaceregexp flags="m"
+				       match="(&lt;plugin[^&gt;]*id=\&quot;org.eclipse.platform\&quot;[^&gt;]*version=\&quot;[^&quot;]*)"
+				       replace="\1-branded">
+			  <fileset dir="@{platform.dist.folder}/eclipse/features/">
+			    <include name="**/feature.xml" />
+			  </fileset>
+			</replaceregexp>
+			<replace-platform-version oldversion="${branding.plugin.version}" newversion="${branding.plugin.version.branded}" dir="@{platform.dist.folder}"/>
+        </sequential>
+    </macrodef>
+				       
+
+    <macrodef name="create-runable-distro" description="PRIVATE: this is used for the source build to create a distro that can run, based on which platform we are on">
+        <attribute name="id" />
+        <attribute name="dist.folder" />
+        <sequential>
+	  <check-current-os/>
+	  <echo>create-runable-distro: on.win is ${on.win}, on.mac is ${on.mac}, on.linux is ${on.linux}</echo>
+	  <if>
+	    <isset property="on.win" />
+	    <then>
+	      <copy todir="@{dist.folder}/${dist.@{id}.name}">
+		<fileset dir="@{dist.folder}/${dist.@{id}.name}/win32_ONLY">
+		  <include name="**" />
+		</fileset>
+	      </copy>
+	    </then>
+	  </if>
+	  <if>
+	    <isset property="on.mac" />
+	    <then>
+	      <copy todir="@{dist.folder}/${dist.@{id}.name}">
+		<fileset dir="@{dist.folder}/${dist.@{id}.name}/macosx_ONLY">
+		  <include name="**" />
+		</fileset>
+	      </copy>
+	      <create-mac-launcher-link dir="@{dist.folder}/${dist.@{id}.name}/eclipse"/>
+	    </then>
+	  </if>
+	  <if>
+	    <isset property="on.linux" />
+	    <then>
+	      <copy todir="@{dist.folder}/${dist.@{id}.name}">
+		<fileset dir="@{dist.folder}/${dist.@{id}.name}/linux_ONLY">
+		  <include name="**" />
+		</fileset>
+	      </copy>
+	    </then>
+	  </if>
+	</sequential>
+    </macrodef>
+
+    <macrodef name="create-mac-launcher-link">
+        <attribute name="dir" />
+        <sequential>
+	      <delete file="@{dir}/eclipse"/>
+	      <exec dir="@{dir}"
+		    executable="ln"
+		    failonerror="true">
+		<arg value="-s" />
+		<arg value="Eclipse.app/Contents/MacOS/eclipse" />
+	      </exec>
+	</sequential>
+    </macrodef>
+
+    <macrodef name="create-distro-installers">
+        <attribute name="id" />
+        <attribute name="dist.folder" />
+        <attribute name="repository.folder" />
+        <sequential>
+			<property name="installer.@{id}.folder"
+			          value="@{dist.folder}/../${installer.folder.name}/${dist.@{id}.name}" />
+
+			<echo>##### Platforms for @{id} are ${dist.@{id}.platforms}</echo>
+
+			<!-- BUILD LINUX on all platforms -->
+			<if>
+				<equals arg1="${create.distro.installers}" arg2="true" />
+				<then>
+					<package-linux-configuration-tar dist.name="${dist.@{id}.name}"
+					                                 dist.folder="@{dist.folder}"
+					                                 archive="${release.configuration.folder}/${distributions.installer.prefix}-${dist.@{id}.name}.tar.gz" />
+					<checksum file="${release.configuration.folder}/${distributions.installer.prefix}-${dist.@{id}.name}.tar.gz" />
+				</then>
+			</if>
+
+
+			<set-app-name id="@{id}"
+			              dist.display.name="${dist.@{id}.display.name} ${dist.@{id}.version}" />
+
+
+			<!-- BUILD WINDOWS on all platform: if you create installers, you'll have to find a way to use NSIS by hand (VM or network) -->
+			<if>
+				<contains string="${dist.@{id}.platforms}" substring="win32" />
+				<then>
+					<if>
+						<equals arg1="${create.distro.installers}"
+						        arg2="true" />
+						<then>
+							<prepare-win32-configuration-installer dist.folder="@{dist.folder}"
+							                                       dist.name="${dist.@{id}.name}"
+							                                       installer.folder="${installer.@{id}.folder}/win32" />
+
+
+							<create-win32-installer dist.display.name="${dist.@{id}.display.name}"
+							                        distro.install.folder="${distro.install.folder}"
+							                        installer.folder="${installer.@{id}.folder}/win32"
+										distro.name="${dist.@{id}.shortname}"
+							                        dist.name="${dist.@{id}.name}"
+							                        output.folder="${release.configuration.folder}"
+							                        version="${dist.@{id}.version}"
+							                        licensefile="@{dist.folder}/${dist.@{id}.name}/license-@{id}.txt"
+							                        installerfile="installer/win32/easyeclipse.nsi"
+							                        output.file.prefix="${distributions.installer.prefix}" />
+							<!-- creation of the checksum is in the installer build -->
+						</then>
+					</if>
+				</then>
+			</if>
+
+			<!-- BUILD MAC on mac only -->
+			<echo>Ready to build the Mac installer....</echo>
+			<if>
+				<and>
+					<isset property="on.mac" />
+					<contains string="${dist.@{id}.platforms}"
+					          substring="macosx" />
+					<equals arg1="${create.distro.installers}" arg2="true" />
+				</and>
+				<then>
+
+					<echo>... now building the Mac installer.</echo>
+
+					<echo>### Appname is ${distro.install.folder}</echo>
+					<prepare-macosx-configuration-installer dist.folder="@{dist.folder}"
+					                                        dist.name="${dist.@{id}.name}"
+					                                        dist.display.name="${dist.@{id}.display.name}"
+					                                        distro.install.folder="${distro.install.folder}"
+					                                        installer.folder="${installer.@{id}.folder}/macosx"
+					                                        version="${dist.@{id}.version}" />
+
+					<create-macos-installer dist.display.name="${dist.@{id}.display.name}"
+					                        distro.install.folder="${distro.install.folder}"
+					                        dist.folder="${installer.@{id}.folder}/macosx"
+					                        dist.name="${dist.@{id}.name}"
+					                        version="${dist.@{id}.version}"
+					                        licensefile.txt="@{dist.folder}/${dist.@{id}.name}/license-@{id}.txt"
+					                        output.folder="${release.configuration.folder}" />
+
+					<package-macos-installer dist.display.name="${dist.@{id}.display.name}"
+					                         dist.name="${dist.@{id}.name}"
+					                         version="${dist.@{id}.version}"
+					                         dist.folder="${release.configuration.folder}"
+					                         output.file.prefix="${distributions.installer.prefix}" />
+
+					<checksum file="${release.configuration.folder}/${distributions.installer.prefix}-${dist.@{id}.name}.dmg" />
+				</then>
+			</if>
+
+		</sequential>
+	</macrodef>
+
+	<macrodef name="package-for-configuration"
+	          description="PUBLIC: macro to package a component or an assembly for use in a configuration">
+		<attribute name="dist.folder" />
+		<attribute name="id" />
+		<attribute name="repository.folder" />
+		<attribute name="output.folder" />
+		<attribute name="compose-feature" default="true"/>
+		<sequential>
+			<gather-properties id="@{id}"
+			                   repository.folder="@{repository.folder}" />
+
+
+			<mkdir dir="@{dist.folder}/${dist.@{id}.name}/eclipse/features"/>
+			<if>
+			  <!-- TODO: have a specific flag on whether a feature is needed. Then, put the same code below in the "package" macro
+			  (currently it's not needed, since if no-download is yes, then no packaging is done -->
+			  <and>
+			    <equals arg1="@{compose-feature}" arg2="true" />
+			    <equals arg1="${dist.@{id}.no-download}" arg2="no" />
+			  </and>
+			  <then>
+			    <delete includeEmptyDirs="true">
+			      <fileset dir="@{dist.folder}/${dist.@{id}.name}/eclipse/features">
+				<include name="**" />
+				<!-- HACK to support the RCP Delta Pack, that needs this feature to be present
+				     (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=152034 ) -->
+				<exclude name="org.eclipse.equinox.executable_*/**"/>
+			      </fileset>
+			    </delete>
+			    <compose-feature dist.folder="@{dist.folder}"
+					     id="@{id}"
+					     repository.folder="@{repository.folder}" />
+			  </then>
+			  <else>
+			    <echo>NOT generating feature for component @{id}</echo>
+			  </else>
+			</if>
+
+			<for list="${ALL_PLATFORMS}" param="platform">
+				<sequential>
+					<mkdir dir="@{output.folder}/@{platform}_ONLY/eclipse" />
+				</sequential>
+			</for>
+			<echo>##### Platforms for @{id} are ${dist.@{id}.platforms}, no-download is ${dist.@{id}.no-download}</echo>
+
+			<var unset="true" name="subfolder"/>
+			<condition property="subfolder" value="eclipse/dropins/${dist.@{id}.name}" else="">
+			  <and>
+			    <!-- hack: for source build base, we have problem with P2. Just put all plugins in the plugins folder...-->
+			    <not>
+			      <isset property="create.runable.distro"/>
+			    </not>
+			    <equals arg1="${dist.@{id}.no-download}" arg2="no" />
+			  </and>
+			</condition>
+			<if>
+			  <equals arg1="${dist.@{id}.platforms}" arg2="${ALL_PLATFORMS}" />
+			  <then>
+			    <!-- package for all platform... -->
+			    <copy-plugin-for-package todir="@{output.folder}/${subfolder}"
+						     fromdir="@{dist.folder}/${dist.@{id}.name}" />
+			  </then>
+			  <else>
+			    <!-- or only packaged for the specified platforms... -->
+			    <for list="${dist.@{id}.platforms}" param="platform">
+			      <sequential>
+				<verify-valid-plaform platform="@{platform}" />
+				<copy-plugin-for-package todir="@{output.folder}/@{platform}_ONLY/${subfolder}"
+							 fromdir="@{dist.folder}/${dist.@{id}.name}" />
+			      </sequential>
+			    </for>
+			  </else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="verify-valid-plaform"
+	          description="PRIVATE: verifies that a platform name is valid">
+		<attribute name="platform" />
+		<sequential>
+			<if>
+				<not>
+					<or>
+						<equals arg1="@{platform}" arg2="linux" />
+						<equals arg1="@{platform}" arg2="macosx" />
+						<equals arg1="@{platform}" arg2="win32" />
+					</or>
+				</not>
+				<then>
+					<fail>Component or assembly has unknown platform: @{platform}</fail>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+
+	<macrodef name="copy-plugin-for-package"
+	          description="PRIVATE: just a helper to copy files">
+		<attribute name="todir" />
+		<attribute name="fromdir" />
+		<sequential>
+			<copy todir="@{todir}">
+				<fileset dir="@{fromdir}">
+				  <include name="**"/>
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+
+
+	<macrodef name="package-source"
+	          description="PUBLIC: main macro to package a component or an assembly source. Simply zipping for now">
+		<attribute name="dist.folder" />
+		<attribute name="id" />
+		<attribute name="repository.folder" />
+		<sequential>
+			<mkdir dir="${release.plugin.folder}" />
+
+			<gather-properties id="@{id}"
+			                   repository.folder="@{repository.folder}" />
+
+			<zip destfile="${release.plugin.folder}/${plugins.installer.prefix}-${dist.@{id}.name}-src.zip">
+				<zipfileset dir="@{dist.folder}/${dist.@{id}.name}"
+				            prefix="${plugins.installer.prefix}-${dist.@{id}.name}-src">
+					<include name="**" />
+				</zipfileset>
+			</zip>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="package"
+	          description="PUBLIC: main macro to package a component or an assembly">
+		<attribute name="dist.folder" />
+		<attribute name="id" />
+		<attribute name="repository.folder" />
+		<sequential>
+
+			<mkdir dir="${release.plugin.folder}" />
+
+			<!-- this sets the dist.@{id}.version, dist.@{id}.display.name dist.@{id}.feature.dir properties,
+			and a few others -->
+			<gather-properties id="@{id}"
+			                   repository.folder="@{repository.folder}" />
+			
+			<mkdir dir="@{dist.folder}/${dist.@{id}.name}/eclipse/features"/>
+			<if>
+			  <!-- TODO: have a specific flag on whether a feature is needed. Then, put the same code below in the "package" macro
+			  (currently it's not needed, since if no-download is yes, then no packaging is done -->
+			  <equals arg1="${dist.@{id}.no-download}" arg2="no" />
+			  <then>
+			    <delete includeEmptyDirs="true">
+			      <fileset dir="@{dist.folder}/${dist.@{id}.name}/eclipse/features">
+				<include name="**" />
+				<!-- HACK to support the RCP Delta Pack, that needs this feature to be present
+				     (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=152034 ) -->
+				<exclude name="org.eclipse.equinox.executable_*/**"/>
+			      </fileset>
+			    </delete>
+			    <compose-feature dist.folder="@{dist.folder}"
+					     id="@{id}"
+					     repository.folder="@{repository.folder}" />
+			  </then>
+			  <else>
+			    <echo>NOT generating feature for component @{id}</echo>
+			  </else>
+			</if>
+
+			<compose-plugin-license dist.folder="@{dist.folder}"
+			                        id="@{id}"
+			                        repository.folder="@{repository.folder}" />
+
+			<compose-plugin-welcome dist.folder="@{dist.folder}"
+			                        id="@{id}"
+			                        repository.folder="@{repository.folder}" />
+
+			<var unset="true" name="installer.source.folder"/>
+			<var name="installer.source.folder"
+			     value="@{dist.folder}/../${installer.folder.name}" />
+			<var unset="true" name="installer.@{id}.folder"/>
+			<property name="installer.@{id}.folder"
+			          value="@{dist.folder}/../${installer.folder.name}/${dist.@{id}.name}" />
+
+			<mkdir dir="${installer.@{id}.folder}" />
+
+			<copy todir="${installer.@{id}.folder}">
+				<fileset dir="@{dist.folder}/${dist.@{id}.name}">
+					<include name="eclipse/plugins/**" />
+					<include name="eclipse/features/${features.domain}.*/**" />
+						<!-- HACK to support the RCP Delta Pack, that needs this feature to be present
+						(see https://bugs.eclipse.org/bugs/show_bug.cgi?id=152034 ) -->
+						<include name="eclipse/features/org.eclipse.equinox.executable_*/**"/>
+				</fileset>
+			</copy>
+			<!-- Put the license at a place where it will be picked up
+				by all installers for inclusion in the release... -->
+			<copy file="@{dist.folder}/license-@{id}.txt"
+			      tofile="@{dist.folder}/${dist.@{id}.name}/eclipse/LICENSE.TXT" />
+
+			<!-- BUILD LINUX on all platform, even if the plugin isn't shipped -->
+			<if>
+				<equals arg1="${create.plugin.linux.installers}" arg2="true" />
+				<then>
+					<tar tarfile="${release.plugin.folder}/${plugins.installer.prefix}-${dist.@{id}.name}.tar.gz"
+					     compression="gzip"
+					     longfile="gnu">
+						<tarfileset dir="${installer.source.folder}">
+							<include name="${dist.@{id}.name}/**" />
+						</tarfileset>
+						<!-- ... and the installer script -->
+						<tarfileset dir="${installer.directory}/linux"
+						            prefix="${dist.@{id}.name}"
+						            mode="755">
+							<include name="install.sh" />
+						</tarfileset>
+					</tar>
+				</then>
+				<!-- ... and NO installer script when no installers are needed-->
+				<else>
+					<tar tarfile="${release.plugin.folder}/${plugins.installer.prefix}-${dist.@{id}.name}.tar.gz"
+					     compression="gzip"
+					     longfile="gnu">
+						<tarfileset dir="${installer.source.folder}">
+							<include name="${dist.@{id}.name}/**" />
+						</tarfileset>
+					</tar>
+				</else>
+			</if>
+
+			<checksum file="${release.plugin.folder}/${plugins.installer.prefix}-${dist.@{id}.name}.tar.gz" />
+
+			<!-- BUILD WINDOWS on all platform: if you create installers, you'll have to find a way to use NSIS by hand (VM or network) -->
+			<if>
+				<and>
+					<contains string="${dist.@{id}.platforms}"
+					          substring="win32" />
+					<equals arg1="${create.plugin.win32.installers}"
+					        arg2="true" />
+				</and>
+				<then>
+					<create-win32-installer dist.display.name="${dist.@{id}.display.name}"
+					                        distro.install.folder="NOT USED"
+					                        installer.folder="${installer.@{id}.folder}"
+								distro.name="${dist.@{id}.shortname}"
+					                        dist.name="${dist.@{id}.name}"
+					                        output.folder="${release.plugin.folder}"
+					                        version="${dist.@{id}.version}"
+					                        licensefile="@{dist.folder}/license-@{id}.txt"
+					                        installerfile="installer/win32/eclipseextension.nsi"
+					                        output.file.prefix="${plugins.installer.prefix}" />
+				</then>
+				<!-- creation of the checksum file is in the installer -->
+			</if>
+
+			<!-- BUILD MAC on Mac only -->
+			<if>
+				<and>
+					<isset property="on.mac" />
+					<contains string="${dist.@{id}.platforms}"
+					          substring="macosx" />
+					<equals arg1="${create.plugin.mac.installers}"
+					        arg2="true" />
+				</and>
+				<then>
+					<!-- Note that this value (${product.prefix}/${product.version}) is duplicated in the
+					  build.xml of the installer -->
+					<if>
+						<equals arg1="${dist.@{id}.display.name}"
+						        arg2="EasyEclipse PyDev" />
+						<then>
+							<var name="install.subfolder.dir"
+							     value="${installer.@{id}.folder}/${product.prefix}/${product.version}/EasyEclipse-PyDev-${dist.@{id}.version}" />
+						</then>
+						<else>
+							<var name="install.subfolder.dir"
+							     value="${installer.@{id}.folder}/${product.prefix}/${product.version}/${dist.@{id}.display.name} ${dist.@{id}.version}" />
+						</else>
+					</if>
+					<move file="${installer.@{id}.folder}/eclipse"
+					      todir="${install.subfolder.dir}" />
+					<trycatch property="fail.property"
+					          reference="fail.reference">
+						<try>
+							<create-macos-installer dist.display.name="${dist.@{id}.display.name}"
+							                        distro.install.folder="${dist.@{id}.display.name}"
+							                        dist.folder="${installer.@{id}.folder}"
+							                        dist.name="${dist.@{id}.name}"
+							                        output.folder="${release.plugin.folder}"
+							                        version="${dist.@{id}.version}"
+							                        licensefile.txt="@{dist.folder}/license-@{id}.txt"
+							                        welcomefile.txt="@{dist.folder}/welcome-@{id}.txt"
+							                        is.extension="true" />
+						</try>
+						<catch>
+							<fail>${fail.property}</fail>
+						</catch>
+						<finally>
+							<move file="${install.subfolder.dir}"
+							      tofile="${installer.@{id}.folder}" />
+							<delete dir="${installer.@{id}.folder}/${product.prefix}" />
+						</finally>
+					</trycatch>
+					<package-macos-installer dist.display.name="${dist.@{id}.display.name}"
+					                         dist.name="${dist.@{id}.name}"
+					                         version="${dist.@{id}.version}"
+					                         dist.folder="${release.plugin.folder}"
+					                         output.file.prefix="${plugins.installer.prefix}" />
+
+					<checksum file="${release.plugin.folder}/${plugins.installer.prefix}-${dist.@{id}.name}.dmg" />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="package-linux-configuration-tar"
+	          description="PRIVATE: package a configuration archive on Linux">
+		<attribute name="dist.folder" />
+		<attribute name="dist.name" />
+		<attribute name="archive" />
+		<sequential>
+			<chmod file="@{dist.folder}/@{dist.name}/linux_ONLY/eclipse/eclipse"
+			       perm="ugo+rx" />
+			<tar tarfile="@{archive}" compression="gzip" longfile="gnu">
+				<tarfileset dir="@{dist.folder}/@{dist.name}/eclipse"
+				            prefix="${distributions.installer.prefix}-@{dist.name}">
+					<include name="**" />
+				</tarfileset>
+				<tarfileset dir="@{dist.folder}/@{dist.name}/linux_ONLY/eclipse"
+				            prefix="${distributions.installer.prefix}-@{dist.name}">
+					<include name="**" />
+					<exclude name="Eclipse.app/**" />
+					<exclude name="eclipse.exe" />
+					<exclude name="eclipsec.exe" />
+					<exclude name="eclipse" />
+					<exclude name="jre/bin/*" />
+				</tarfileset>
+				<tarfileset dir="@{dist.folder}/@{dist.name}/linux_ONLY/eclipse"
+				            prefix="${distributions.installer.prefix}-@{dist.name}"
+				            mode="755">
+					<include name="eclipse" />
+					<include name="jre/bin/*" />
+				</tarfileset>
+			</tar>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="package-windows-configuration-tar"
+	          description="PRIVATE: package a configuration archive on Windows. TODO: this has not been tested in 1.4">
+		<attribute name="dist.folder" />
+		<attribute name="dist.name" />
+		<attribute name="archive" />
+		<sequential>
+			<chmod file="@{dist.folder}/@{dist.name}/eclipse/eclipse"
+			       perm="ugo+rx" />
+			<tar tarfile="@{archive}" compression="gzip" longfile="gnu">
+				<tarfileset dir="@{dist.folder}/@{dist.name}/eclipse"
+				            prefix="@{dist.name}">
+					<include name="**" />
+					<exclude name="Eclipse.app/**" />
+					<exclude name="eclipse.exe" />
+					<exclude name="eclipsec.exe" />
+					<exclude name="eclipse" />
+					<!-- no need to exclude, they are in the parent directory...
+					     <exclude name="win32_ONLY/**" />
+					     <exclude name="linux_ONLY/**" />
+					     <exclude name="macosx_ONLY/**" />
+					-->
+				</tarfileset>
+				<tarfileset dir="@{dist.folder}/@{dist.name}/win32_ONLY/eclipse"
+				            prefix="@{dist.name}"
+				            mode="755">
+					<include name="eclipse.exe" />
+				</tarfileset>
+				<tarfileset dir="@{dist.folder}/@{dist.name}/win32_ONLY/eclipse"
+				            prefix="@{dist.name}">
+					<include name="**" />
+					<exclude name="jre/**" />
+					<exclude name="Eclipse.app/**" />
+					<exclude name="eclipse.exe" />
+          <exclude name="eclipsec.exe" />
+					<exclude name="eclipse" />
+				</tarfileset>
+				<!--no jre for ol
+                <tarfileset dir="@{dist.folder}/@{dist.name}/win32_ONLY/eclipse"
+                            prefix="@{dist.name}"
+                            mode="755">
+                    <include name="jre/**" />
+                </tarfileset>
+                -->
+			</tar>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="prepare-win32-configuration-installer"
+	          description="PRIVATE: installer configuration on Windows">
+		<attribute name="dist.folder" />
+		<attribute name="dist.name" />
+		<attribute name="installer.folder" />
+		<sequential>
+			<mkdir dir="@{installer.folder}" />
+			<copy todir="@{installer.folder}">
+				<fileset dir="@{dist.folder}/@{dist.name}">
+					<include name="**" />
+					<exclude name="win32_ONLY/**" />
+					<exclude name="linux_ONLY/**" />
+					<exclude name="macosx_ONLY/**" />
+					<!-- the ones below are probably not useful anymore: but better safe than sorry -->
+					<exclude name="eclipse/Eclipse.app/**" />
+					<exclude name="eclipse/eclipse" />
+					<exclude name="eclipse/icon.xpm" />
+					<exclude name="eclipse/libcairo-swt.so" />
+				</fileset>
+				<fileset dir="@{dist.folder}/@{dist.name}/win32_ONLY">
+					<include name="**" />
+					<exclude name="eclipse/Eclipse.app/**" />
+					<exclude name="eclipse/eclipse" />
+					<exclude name="eclipse/icon.xpm" />
+					<exclude name="eclipse/libcairo-swt.so" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="prepare-macosx-configuration-installer"
+	          description="PRIVATE: installer configuration on MacOSX">
+		<attribute name="dist.folder" />
+		<attribute name="dist.name" />
+		<attribute name="dist.display.name" />
+		<attribute name="installer.folder" />
+		<attribute name="distro.install.folder" />
+		<attribute name="version" />
+
+		<sequential>
+			<mkdir dir="@{installer.folder}/@{distro.install.folder}.app" />
+			<copy todir="@{installer.folder}/@{distro.install.folder}.app">
+				<fileset dir="@{dist.folder}/@{dist.name}/macosx_ONLY/eclipse/Eclipse.app">
+					<include name="**" />
+				</fileset>
+			</copy>
+			<copy todir="@{installer.folder}/@{distro.install.folder}.app/Contents/MacOS">
+				<fileset dir="@{dist.folder}/@{dist.name}/eclipse">
+					<include name="**" />
+					<!-- on the contrary ! we include it
+					     <exclude name="Eclipse.app/**" />
+					-->
+					<!-- the ones below are probably not useful anymore: but better safe than sorry -->
+					<exclude name="eclipse" />
+					<exclude name="eclipse.ini" />
+					<exclude name="eclipse.exe" />
+					<exclude name="eclipsec.exe" />
+					<exclude name="icon.xpm" />
+					<exclude name="libcairo-swt.so" />
+					<!--
+					not needed, it's at the parent level
+					<exclude name="win32_ONLY/**" />
+					<exclude name="linux_ONLY/**" />
+					<exclude name="macosx_ONLY/**" />
+					-->
+				</fileset>
+				<!-- TODO: this has not been tested -->
+				<fileset dir="@{dist.folder}/@{dist.name}/macosx_ONLY/eclipse">
+					<include name="**" />
+					<include name="**" />
+					<!-- on the contrary ! we include it
+					     <exclude name="Eclipse.app/**" />
+					-->
+					<exclude name="eclipse" />
+					<exclude name="eclipse.ini" />
+					<exclude name="eclipse.exe" />
+					<exclude name="eclipsec.exe" />
+					<exclude name="icon.xpm" />
+					<exclude name="libcairo-swt.so" />
+				</fileset>
+			</copy>
+			
+			<create-mac-launcher-link dir="@{installer.folder}/@{distro.install.folder}.app/Contents/MacOS"/>
+
+			<var unset="true" name="info.plist" />
+			<property name="info.plist"
+			          value="@{installer.folder}/@{distro.install.folder}.app/Contents/Info.plist" />
+			<replace file="${info.plist}" token="@INFO@" value="@{dist.display.name} @{version}. Copyright nexB Inc, Eclipse Foundation, IBM Corp. and others, 2002-2008. All rights reserved" />
+      <replace file="${info.plist}" token="@IDENTIFIER@" value="${features.domain}.@{dist.name}" />
+      <replace file="${info.plist}" token="@SHORTVERSION@" value="@{version}" />
+      <replace file="${info.plist}" token="@VERSION@" value="@{version}" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="gather-properties"
+	          description="PRIVATE: prepares all the properties.  **** SIDE EFFECT: properties dist.@{id}.name, dist.@{id}.feature.dir, dist.@{id}.version and dist.@{id}.display.name are set.">
+		<attribute name="id" />
+		<attribute name="repository.folder" />
+		<sequential>
+			<get-version property="dist.@{id}.version" id="@{id}" repository="@{repository.folder}" />
+
+			<!-- while at it, check that this is a valid version number -->
+			<propertyregex property="version-@{id}-check"
+				       input="${dist.@{id}.version}"
+				       regexp="^[0-9]+\.[0-9]+(\.[0-9]+(\.[0-9A-Za-z][0-9A-Za-z\-\_]*)?)?$"
+				       select="\0" />
+
+			<fail unless="version-@{id}-check">Incorrect version number for @{id}: ${dist.@{id}.version}. Versions must be number.number[.number[.stringstartingwithletterornumber_-]]</fail>
+
+
+
+			<nexb.xpath file="@{repository.folder}/@{id}.xml"
+			            expression="/*/@name"
+			            outputproperty="dist.@{id}.display.name.temp" />
+
+			<property name="dist.@{id}.display.name"
+			          value="${product.prefix} ${dist.@{id}.display.name.temp}" />
+
+			<if>
+			  <isset property="use-prefix-as-distro-name"/>
+			  <then>
+			    <property name="dist.@{id}.shortname"  value="${product.prefix}"/>
+			  </then>
+			  <else>
+			    <property name="dist.@{id}.shortname"  value="${dist.@{id}.display.name}"/>
+			  </else>
+			</if>
+			    
+			<echo>!!!! SETING dist.@{id}.shortname: ${dist.@{id}.shortname}</echo>
+			<property name="dist.@{id}.name"
+			          value="@{id}-${dist.@{id}.version}" />
+
+			<nexb.xpath file="@{repository.folder}/@{id}.xml"
+			            expression="/*/package/platform/os/text()"
+			            outputproperty="dist.@{id}.platforms"
+			            defaultvalue="${ALL_PLATFORMS}" />
+			<nexb.xpath file="@{repository.folder}/@{id}.xml"
+				    expression="/*/package/@no-download[.='yes']"
+				    outputproperty="dist.@{id}.no-download"
+				    defaultvalue="no" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="compose-configuration-license"
+	          description="PRIVATE: Creates two license files (text and html) and puts them under @{dist.folder}/license-@{id}.html and @{dist.folder}/license-@{id}.txt">
+		<attribute name="id" />
+		<attribute name="repository.folder" />
+		<attribute name="dist.folder" />
+		<attribute name="product.name"/>
+		<sequential>
+			<!-- first get a list of the licensed components -->
+			<xslt style="distribution-license.xsl"
+			      in="@{repository.folder}/@{id}.xml"
+			      out="@{dist.folder}/@{id}-summary.xml">
+				<param name="product.name" expression="@{product.name}" />
+				<param name="id" expression="@{id}" />
+			    <param name="repo.folder" expression="${repository.root.folder}" />
+			</xslt>
+
+			<!-- then output it as HTML, grouping by license type etc -->
+			<xslt style="distribution-license-html.xsl"
+			      in="@{dist.folder}/@{id}-summary.xml"
+			      out="@{dist.folder}/license-@{id}.html">
+				<param name="id" expression="@{id}" />
+				<param name="distribution.license.file"
+				       expression="${branding.folder}/distribution-license.xhtml" />
+				<param name="product.name" expression="@{product.name}" />
+                <param name="repo.folder" expression="${repository.root.folder}" />
+			</xslt>
+
+			<!--
+			flags
+				g : Global replacement. Replace all occurrences found
+				s : Singleline. Treat the string as a single line of input, using "." to match any character, including a newline, which normally, it would not match.
+			-->
+			<!--
+			<copy file="@{dist.folder}/license-@{id}.html"
+			      tofile="@{dist.folder}/license-@{id}.tmp" />
+
+			<replaceregexp file="@{dist.folder}/license-@{id}.tmp"
+			               match="\s+"
+			               replace=" "
+			               flags="sg" />
+-->
+			<xslt style="html-to-txt.xsl"
+			      in="@{dist.folder}/license-@{id}.html"
+			      out="@{dist.folder}/license-@{id}.txt"/>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="compose-plugin-license"
+	          description="PRIVATE: Creates two license files (text and html) and puts them under @{dist.folder}/license-@{id}.html and @{dist.folder}/license-@{id}.txt">
+		<attribute name="id" />
+		<attribute name="repository.folder" />
+		<attribute name="dist.folder" />
+		<sequential>
+			<get-version property="dist.@{id}.temp_version" id="@{id}" repository="@{repository.folder}" />
+
+			<xslt style="plugin-license-html.xsl"
+			      in="@{repository.folder}/@{id}.xml"
+			      out="@{dist.folder}/license-@{id}.html">
+				<param name="id" expression="@{id}" />
+				<param name="version" expression="${dist.@{id}.temp_version}"/>
+                <param name="repo.folder" expression="${repository.root.folder}" />
+			</xslt>
+			<!-- we take the HTML version
+				as input to the txt version -->
+			<xslt style="html-to-txt.xsl"
+			      in="@{dist.folder}/license-@{id}.html"
+			      out="@{dist.folder}/license-@{id}.txt">
+				<param name="id" expression="@{id}" />
+			</xslt>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="compose-plugin-welcome"
+	          description="PRIVATE: Creates two welcome files (text and html) and puts them under @{dist.folder}/welcome-@{id}.html and @{dist.folder}/welcome-@{id}.txt">
+		<attribute name="id" />
+		<attribute name="repository.folder" />
+		<attribute name="dist.folder" />
+		<sequential>
+			<get-version property="dist.@{id}.temp_version" id="@{id}" repository="@{repository.folder}" />
+
+			<xslt style="plugin-welcome-html.xsl"
+			      in="@{repository.folder}/@{id}.xml"
+			      out="@{dist.folder}/welcome-@{id}.html">
+				<param name="id" expression="@{id}" />
+				<param name="version" expression="${dist.@{id}.temp_version}"/>
+			</xslt>
+			<!-- we take the HTML version
+				as input to the txt version -->
+			<xslt style="html-to-txt.xsl"
+			      in="@{dist.folder}/welcome-@{id}.html"
+			      out="@{dist.folder}/welcome-@{id}.txt"/>
+		</sequential>
+	</macrodef>
+
+
+	<macrodef name="compose-feature"
+	          description="PRIVATE: Creates a feature.xml from the parameter passed. *** MUST CALL gather-property before calling this one">
+		<attribute name="id" />
+		<attribute name="dist.folder" />
+		<attribute name="repository.folder" />
+		<sequential>
+
+		  <var unset="true" name="dist.@{id}.feature.dir"/>
+			<property name="dist.@{id}.feature.dir"
+			          value="@{dist.folder}/${dist.@{id}.name}/eclipse/features/${features.domain}.@{id}_${dist.@{id}.version}" />
+
+			<mkdir dir="${dist.@{id}.feature.dir}" />
+
+			<mkdir dir="@{dist.folder}/temp" />
+			<var unset="true" name="dist.@{id}.temp_feature"/>
+			<tempfile prefix="temp_"
+			          suffix="_feature.xml"
+			          property="dist.@{id}.temp_feature"
+			          destdir="@{dist.folder}/temp" />
+
+			<get-version property="dist.@{id}.temp_version" id="@{id}" repository="@{repository.folder}" />
+
+		    <echo>basedir=${basedir}</echo>
+			<xslt style="featurize.xsl"
+			      in="@{repository.folder}/@{id}.xml"
+			      out="${dist.@{id}.temp_feature}">
+				<param name="id" expression="@{id}" />
+				<param name="version" expression="${dist.@{id}.temp_version}" />
+				<param name="features.domain" expression="${features.domain}" />
+				<param name="features.updatesite"
+				       expression="${features.updatesite}" />
+			    <param name="repo.folder" expression="${repository.root.folder}"/>
+			</xslt>
+<echo><![CDATA[
+			<nexb.composefeature template="${dist.@{id}.temp_feature}"
+			                     output="${dist.@{id}.feature.dir}/feature.xml"
+			                     withsizeinfo="${compose.feature.with.size}"
+			                     tempdir="@{dist.folder}/temp">
+
+				<pluginset dir="@{dist.folder}/${dist.@{id}.name}/eclipse/plugins">
+					<include name="*" />
+				</pluginset>
+			</nexb.composefeature>
+]]></echo>
+			<nexb.composefeature template="${dist.@{id}.temp_feature}"
+			                     output="${dist.@{id}.feature.dir}/feature.xml"
+			                     withsizeinfo="${compose.feature.with.size}"
+			                     tempdir="@{dist.folder}/temp">
+
+				<pluginset dir="@{dist.folder}/${dist.@{id}.name}/eclipse/plugins">
+					<include name="*" />
+				</pluginset>
+			</nexb.composefeature>
+
+		</sequential>
+	</macrodef>
+
+	<!-- FIXME: should not depend on DU for that, but be platform independent -->
+	<macrodef name="get-file-size">
+		<attribute name="file" />
+		<attribute name="property" />
+		<sequential>
+			<var unset="true" name="get-file-size-temp" />
+			<exec executable="du"
+			      failonerror="true"
+			      outputproperty="get-file-size-temp">
+				<arg value="-h" />
+				<arg value="@{file}" />
+			</exec>
+
+			<propertyregex property="@{property}"
+			               input="${get-file-size-temp}"
+			               regexp="\s*(\S*)"
+			               select="\1" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="gather-one-size">
+		<attribute name="repository.file" />
+		<attribute name="release.file" />
+		<attribute name="platform" />
+		<sequential>
+			<var unset="true" name="size" />
+			<var unset="true" name="oldsize" />
+			<trycatch>
+				<try>
+					<!-- first verify that the value exists already...-->
+					<nexb.xpath file="@{repository.file}"
+					            expression="/*/package/size[@os='@{platform}']/text()"
+					            outputproperty="oldsize" />
+					<fail unless="oldsize" />
+
+					<get-file-size file="@{release.file}" property="size" />
+					<replaceregexp file="@{repository.file}"
+					               flags="s"
+					               match="\&lt;size[\s]+os\=\&quot;@{platform}\&quot;[\s]*\&gt;[^\&lt;]*"
+					               replace="&lt;size os=&quot;@{platform}\&quot;&gt;${size}" />
+					<echo>Updated size for @{platform} file @{release.file} is ${size}, updated in @{repository.file}</echo>
+				</try>
+				<catch>
+					<echo>**** Failed to update size for file @{release.file}, please check if the file exists, and that the property is already set in the conf file.</echo>
+				</catch>
+			</trycatch>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="gather-sizes">
+		<attribute name="repository.folder" />
+		<attribute name="id" />
+		<attribute name="distro" default="no" />
+		<sequential>
+		  <if>
+		    <available file="@{repository.folder}/@{id}.xml"/>
+		    <then>
+			<gather-properties id="@{id}"
+			                   repository.folder="@{repository.folder}" />
+			<var unset="true" name="release.@{id}.prefix"/>
+			<if>
+				<equals arg1="@{distro}" arg2="no" />
+				<then>
+					<property name="release.@{id}.prefix"
+					          value="${release.plugin.folder}/${plugins.installer.prefix}-${dist.@{id}.name}" />
+				</then>
+				<else>
+					<property name="release.@{id}.prefix"
+					          value="${release.configuration.folder}/${distributions.installer.prefix}-${dist.@{id}.name}" />
+				</else>
+			</if>
+
+			<gather-one-size release.file="${release.@{id}.prefix}.dmg"
+			                 repository.file="@{repository.folder}/@{id}.xml"
+			                 platform="macosx" />
+			<gather-one-size release.file="${release.@{id}.prefix}.exe"
+			                 repository.file="@{repository.folder}/@{id}.xml"
+			                 platform="win32" />
+			<gather-one-size release.file="${release.@{id}.prefix}.tar.gz"
+			                 repository.file="@{repository.folder}/@{id}.xml"
+			                 platform="linux" />
+
+		    </then>
+		    <else>
+		      <echo>@{id} not found in repository @{repository.folder}, skipping size update...</echo>
+		    </else>
+		  </if>
+		</sequential>
+	</macrodef>
+
+
+<macrodef name="replace-platform-version">
+  <attribute name="oldversion"/>
+  <attribute name="newversion"/>
+  <attribute name="dir"/>
+  <sequential>
+    <replaceregexp flags="g"
+		   match="org.eclipse.platform([^.])(.*)@{oldversion}([^-])(.*)org.eclipse.platform([^.])(.*)@{oldversion}([^-])"
+		   replace="org.eclipse.platform\1\2@{newversion}\3\4org.eclipse.platform\5\6@{newversion}\7">
+      <fileset dir="@{dir}"/>
+    </replaceregexp>
+    <replaceregexp flags="g"
+		   match="org.eclipse.platform([^.])(.*)@{oldversion}([^-])(.*)@{oldversion}([^-])"
+		   replace="org.eclipse.platform\1\2@{newversion}\3\4@{newversion}\5">
+      <fileset dir="@{dir}"/>
+    </replaceregexp>
+    <replaceregexp flags="g"
+		   match="org.eclipse.platform([^.])(.*)@{oldversion}([^-])"
+		   replace="org.eclipse.platform\1\2@{newversion}\3">
+      <fileset dir="@{dir}"/>
+    </replaceregexp>
+  </sequential>
+</macrodef>
+<target name="test">
+
+<mkdir dir="/tmp/repl"/>
+<echo file="/tmp/repl/a.txt"><![CDATA[
+eclipse/artifacts.xml:641:    <artifact classifier='osgi.bundle' id='org.eclipse.platform' version='3.3.100.v200806172000'>
+eclipse/configuration/org.eclipse.equinox.simpleconfigurator/bundles.info:93:org.eclipse.platform,3.3.100.v200806172000,file:plugins/org.eclipse.platform_3.3.100.v200806172000/,4,false
+eclipse/p2/org.eclipse.equinox.p2.engine/profileRegistry/PlatformProfile.profile/1213756867789.profile:3866:        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.platform' range='[3.3.100.v200806172000,3.3.100.v200806172000]'/>
+eclipse/p2/org.eclipse.equinox.p2.engine/profileRegistry/PlatformProfile.profile/1213756867789.profile:6992:    <unit id='org.eclipse.platform' version='3.3.100.v200806172000'>
+eclipse/p2/org.eclipse.equinox.p2.engine/profileRegistry/PlatformProfile.profile/1213756867789.profile:6993:      <update id='org.eclipse.platform' range='[0.0.0,3.3.100.v200806172000)' severity='0'/>
+eclipse/p2/org.eclipse.equinox.p2.engine/profileRegistry/PlatformProfile.profile/1213756867789.profile:7001:        <provided namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.platform' version='3.3.100.v200806172000'/>
+eclipse/p2/org.eclipse.equinox.p2.engine/profileRegistry/PlatformProfile.profile/1213756867789.profile:7002:        <provided namespace='osgi.bundle' name='org.eclipse.platform' version='3.3.100.v200806172000'/>
+eclipse/p2/org.eclipse.equinox.p2.engine/profileRegistry/PlatformProfile.profile/1213756867789.profile:7021:        <artifact classifier='osgi.bundle' id='org.eclipse.platform' version='3.3.100.v200806172000'/>
+]]></echo>
+<property name="branding.plugin.version" value="3.3.100.v200806172000"/>
+<replace-platform-version oldversion="${branding.plugin.version}" newversion="${branding.plugin.version}-branded" dir="/tmp/repl"/>
+</target>
+</project>
