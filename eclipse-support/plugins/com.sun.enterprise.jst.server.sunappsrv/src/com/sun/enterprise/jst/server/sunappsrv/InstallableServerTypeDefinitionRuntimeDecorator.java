@@ -209,11 +209,16 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 				boolean isInvalid = validate();
 				if (isInvalid) {
 			        String glassfishDir = path + File.separatorChar + fInstallDirName;
+			        String unzipDirName = getInternalDirectoryName(path);
 
 			        if(pathExist(glassfishDir)){
 						fLastMessage = NLS.bind(Messages.possibleInstallExists,fInstallDirName);
 			        	fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
-			        	installButton.setEnabled(false);			        	
+			        	installButton.setEnabled(false);
+			        } else if (pathExist(unzipDirName)) {
+						fLastMessage = NLS.bind(Messages.possibleInstallExists,UNZIP_DIR_NAME + File.separatorChar + fInstallDirName);
+			        	fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
+			        	installButton.setEnabled(false);
 			        } else {
 						fLastMessage = Messages.canInstallPath;
 			        	fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
