@@ -28,6 +28,7 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
 public class V2Configurator {
@@ -105,8 +106,10 @@ public class V2Configurator {
 				count = Integer.parseInt(in.readLine()) + 1;
 				in.close();
 			} catch (IOException e) {
+                SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
 				e.printStackTrace();
 			} catch (NumberFormatException e) {
+                SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
 				e.printStackTrace();
 			}
 		}
@@ -117,8 +120,10 @@ public class V2Configurator {
 			out.write("" + count);
 			out.close();
 		} catch (IOException e) {
+            SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
+            SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
 			e.printStackTrace();
 		}
 		// We use ant for creating a domain for V2 installation as ant is
@@ -152,6 +157,7 @@ public class V2Configurator {
 
 			ant.run();
 		} catch (IOException e) {
+            SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
 			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getLocalizedMessage()));
 		}
 		return domainName;
