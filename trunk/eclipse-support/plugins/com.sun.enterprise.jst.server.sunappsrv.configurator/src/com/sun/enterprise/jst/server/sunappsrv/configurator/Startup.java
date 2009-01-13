@@ -46,6 +46,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.internal.IStartup;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+
 @SuppressWarnings("restriction")
 public class Startup implements IStartup {
 
@@ -64,6 +66,9 @@ public class Startup implements IStartup {
 								GlassFishConfigurator.createV2Server(progressMonitor);
 								GlassFishConfigurator.createV3Server(progressMonitor);
 							} catch (CoreException e) {
+							    e.printStackTrace();
+							     SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
+
 								org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
 										.getLocalizedMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
 										.getLocalizedMessage()));
@@ -73,6 +78,7 @@ public class Startup implements IStartup {
 					ProgressMonitorDialog pmd = new ProgressMonitorDialog(shell);
 					pmd.run(true, false, op);
 				} catch (Exception e) {
+                    SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
 					org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
 							.getLocalizedMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
 							.getLocalizedMessage()));
