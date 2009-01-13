@@ -31,7 +31,7 @@ its licensees as provided above.  However, if you add GPL Version 2 code
 and therefore, elected the GPL Version 2 license, then the option applies
 only if the new code is made subject to such option by the copyright
 holder.
-*/
+ */
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
 import java.io.File;
@@ -52,6 +52,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -74,149 +75,156 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 @SuppressWarnings("restriction")
 public class GlassFishConfigurator {
 
-    public static ServerPort getPortForId(ServerPort[] serverPorts, String id) {
-        for (ServerPort serverPort : serverPorts) {
-            if (serverPort.getId().equals(id)) {
-                return serverPort;
-            }
-        }
-        return null;
-    }
+	public static ServerPort getPortForId(ServerPort[] serverPorts, String id) {
+		for (ServerPort serverPort : serverPorts) {
+			if (serverPort.getId().equals(id)) {
+				return serverPort;
+			}
+		}
+		return null;
+	}
 
-    public static void createServer() {
-        System.out.println("trying to create a server");
-        try {
-            IServerType st = ServerCore.findServerType(Constants.SERVER_PRELUDE_ID);// v3
-            IRuntime runtime = createRuntime();
-            IServer[] servers = ServerCore.getServers();
+	public static void createV2Server(IProgressMonitor progressMonitor) throws CoreException {
+		progressMonitor.setTaskName("Creating Glassfish V2 server configuration.");
+		V2Configurator.configure(progressMonitor);
+	}
 
-            for (IServer server : servers) {
-                if (server.getRuntime() == null) {
-                    server.delete();
-                }
-                if (runtime != null && server != null && runtime.equals(server.getRuntime())) {
-                    return;
-                }
-            }
+	public static void createV3Server(IProgressMonitor progressMonitor) {
+		progressMonitor.setTaskName("Creating Glassfish V3 prelude server configuration.");
+		try {
+			IServerType st = ServerCore.findServerType(Constants.SERVER_PRELUDE_ID);// v3
+			IRuntime runtime = createRuntime();
+			IServer[] servers = ServerCore.getServers();
 
-            IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
-            wc.setName("Bundled "+ runtime.getName() );
+			for (IServer server : servers) {
+				if (server.getRuntime() == null) {
+					server.delete();
+				}
+				if (runtime != null && server != null && runtime.equals(server.getRuntime())) {
+					return;
+				}
+			}
 
-            SunAppServer sunAppServer = (SunAppServer) wc.getAdapter(SunAppServer.class);
+			IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
+			wc.setName("Bundled " + runtime.getName());
 
-            String domainLocation = Platform.getLocation().append(".metadata").append("com.sun.enterprise.jst.server.sunappsrv")
-                    .toOSString();
-            copyDomain(domainLocation);
-            setPortsForDomain(new Path(domainLocation).append("domain1").append("config").append("domain.xml").toOSString(), 18080, 14848);
-            Map<String, String> configuration = sunAppServer.getProps();
-            configuration.put(SunAppServer.DOMAINDIR, domainLocation);
-            sunAppServer.setServerInstanceProperties(configuration);
+			SunAppServer sunAppServer = (SunAppServer) wc.getAdapter(SunAppServer.class);
 
-            wc.save(true, null);
+			String domainLocation = Platform.getLocation().append(".metadata").append(".plugins").append(
+					Constants.SERVER_PRELUDE_ID).toOSString();
+			copyDomain(domainLocation);
+			setPortsForDomain(new Path(domainLocation).append("domain1").append("config").append("domain.xml")
+					.toOSString(), 18080, 14848);
+			Map<String, String> configuration = sunAppServer.getProps();
+			configuration.put(SunAppServer.DOMAINDIR, domainLocation);
+			sunAppServer.setServerInstanceProperties(configuration);
 
-            // startServer(sunAppServer);
-        } catch (CoreException e) {
-            e.printStackTrace();
-        }
-    }
+			wc.save(true, null);
 
-    @SuppressWarnings("unchecked")
-    public static IRuntime createRuntime() {
-        try {
-            IServerType st = ServerCore.findServerType(Constants.SERVER_PRELUDE_ID);
-            IRuntime[] runtimes = ServerCore.getRuntimes();
-            for (IRuntime runtime : runtimes) {
-                if (runtime != null && runtime.getRuntimeType().equals(st.getRuntimeType())) {
-                    // System.out.println("LPS runtime exists");
-                    return runtime;
-                }
-            }
+			// startServer(sunAppServer);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
 
-            IRuntimeWorkingCopy wc;
-            wc = st.getRuntimeType().createRuntime(null, null);
+	@SuppressWarnings("unchecked")
+	public static IRuntime createRuntime() {
+		try {
+			IServerType st = ServerCore.findServerType(Constants.SERVER_PRELUDE_ID);
+			IRuntime[] runtimes = ServerCore.getRuntimes();
+			for (IRuntime runtime : runtimes) {
+				if (runtime != null && runtime.getRuntimeType().equals(st.getRuntimeType())) {
+					return runtime;
+				}
+			}
 
-            GenericServerRuntime gRun = (GenericServerRuntime) wc.loadAdapter(GenericServerRuntime.class, new NullProgressMonitor());
+			IRuntimeWorkingCopy wc;
+			wc = st.getRuntimeType().createRuntime(null, null);
 
-            HashMap map = new HashMap();
-            map.put(SunAppServer.ROOTDIR, Constants.getGlassFishLocation().toOSString());
-            gRun.setServerDefinitionId(gRun.getRuntime().getRuntimeType().getId());
-            gRun.setServerInstanceProperties(map);
+			GenericServerRuntime gRun = (GenericServerRuntime) wc.loadAdapter(GenericServerRuntime.class,
+					new NullProgressMonitor());
 
-            wc.setLocation(Constants.getGlassFishLocation());
-            return wc.save(true, null);
-        } catch (CoreException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+			HashMap map = new HashMap();
+			map.put(SunAppServer.ROOTDIR, Constants.getGlassFishLocation().toOSString());
+			gRun.setServerDefinitionId(gRun.getRuntime().getRuntimeType().getId());
+			gRun.setServerInstanceProperties(map);
 
-    public static void copyDomain(String toDir) throws CoreException {
-        String srcDir = getDomainsDir();
-        File destDir = new File(toDir);
-        if (destDir.exists()) {
-            throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator",
-                    "Domain destination directory exists"));
-        }
-        destDir.mkdirs();
-        copyDir(new File(srcDir), destDir);
+			wc.setLocation(Constants.getGlassFishLocation());
+			return wc.save(true, null);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-    }
+	public static void copyDomain(String toDir) throws CoreException {
+		String srcDir = getDomainsDir();
+		File destDir = new File(toDir);
+		if (destDir.exists()) {
+			throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator",
+					"Domain destination directory exists"));
+		}
+		destDir.mkdirs();
+		copyDir(new File(srcDir), destDir);
 
-    private static void copyDir(File srcDir, File destDir) throws CoreException {
-        if (srcDir.isDirectory()) {
-            File[] listFiles = srcDir.listFiles();
-            for (File file : listFiles) {
-                File newFile = new File(destDir, file.getName());
-                if (file.isDirectory()) {
-                    newFile.mkdir();
-                    copyDir(file, newFile);
-                } else {
-                    FileInputStream fis;
-                    FileOutputStream fos;
-                    try {
-                        fis = new FileInputStream(file);
-                        fos = new FileOutputStream(newFile);
-                        FileUtil.copy(fis, fos);
-                        fis.close();
-                        fos.close();
-                    } catch (Exception e) {
-                        throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator",
-                                "File copying failed due to: " + e));
-                    }
-                }
-            }
-        }
-    }
+	}
 
-    public static String getDomainsDir() throws CoreException {
-        return Constants.getGlassFishLocation().append("domains").toOSString();
-    }
+	private static void copyDir(File srcDir, File destDir) throws CoreException {
+		if (srcDir.isDirectory()) {
+			File[] listFiles = srcDir.listFiles();
+			for (File file : listFiles) {
+				File newFile = new File(destDir, file.getName());
+				if (file.isDirectory()) {
+					newFile.mkdir();
+					copyDir(file, newFile);
+				} else {
+					FileInputStream fis;
+					FileOutputStream fos;
+					try {
+						fis = new FileInputStream(file);
+						fos = new FileOutputStream(newFile);
+						FileUtil.copy(fis, fos);
+						fis.close();
+						fos.close();
+					} catch (Exception e) {
+						throw new CoreException(new Status(IStatus.ERROR,
+								"com.sun.enterprise.jst.server.sunappsrv.configurator", "File copying failed due to: "
+										+ e));
+					}
+				}
+			}
+		}
+	}
 
-    public static void setPortsForDomain(String domainXml, int i, int j) throws CoreException {
-        try {
-            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-            domFactory.setNamespaceAware(true);
-            DocumentBuilder builder = domFactory.newDocumentBuilder();
-            Document doc = builder.parse(domainXml);
+	public static String getDomainsDir() throws CoreException {
+		return Constants.getGlassFishLocation().append("domains").toOSString();
+	}
 
-            XPathFactory factory = XPathFactory.newInstance();
-            XPath xpath = factory.newXPath();
-            XPathExpression expr = xpath.compile("//http-listener[@id='http-listener-1']");
-            Node node = (Node) expr.evaluate(doc, XPathConstants.NODE);
-            Node port = node.getAttributes().getNamedItem("port");
-            port.setNodeValue("" + i);
+	public static void setPortsForDomain(String domainXml, int i, int j) throws CoreException {
+		try {
+			DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+			domFactory.setNamespaceAware(true);
+			DocumentBuilder builder = domFactory.newDocumentBuilder();
+			Document doc = builder.parse(domainXml);
 
-            expr = xpath.compile("//http-listener[@id='admin-listener']");
-            node = (Node) expr.evaluate(doc, XPathConstants.NODE);
-            port = node.getAttributes().getNamedItem("port");
-            port.setNodeValue("" + j);
+			XPathFactory factory = XPathFactory.newInstance();
+			XPath xpath = factory.newXPath();
+			XPathExpression expr = xpath.compile("//http-listener[@id='http-listener-1']");
+			Node node = (Node) expr.evaluate(doc, XPathConstants.NODE);
+			Node port = node.getAttributes().getNamedItem("port");
+			port.setNodeValue("" + i);
 
-            Transformer xformer = TransformerFactory.newInstance().newTransformer();
-            xformer.transform(new DOMSource(doc), new StreamResult(new File(domainXml)));
+			expr = xpath.compile("//http-listener[@id='admin-listener']");
+			node = (Node) expr.evaluate(doc, XPathConstants.NODE);
+			port = node.getAttributes().getNamedItem("port");
+			port.setNodeValue("" + j);
 
-        } catch (Exception e) {
-            throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator",
-                    "Configuration of ports failed because of: " + e));
-        }
-    }
+			Transformer xformer = TransformerFactory.newInstance().newTransformer();
+			xformer.transform(new DOMSource(doc), new StreamResult(new File(domainXml)));
+
+		} catch (Exception e) {
+			throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator",
+					"Configuration of ports failed because of: " + e));
+		}
+	}
 }

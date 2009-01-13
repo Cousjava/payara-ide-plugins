@@ -31,16 +31,57 @@ its licensees as provided above.  However, if you add GPL Version 2 code
 and therefore, elected the GPL Version 2 license, then the option applies
 only if the new code is made subject to such option by the copyright
 holder.
-*/
+ */
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.internal.IStartup;
 
 @SuppressWarnings("restriction")
 public class Startup implements IStartup {
 
-    public void startup() {
-        GlassFishConfigurator.createServer();
-    }
+	public void startup() {
+		// In startup you have to explicitly get to UI thread.
+		Display.getDefault().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				final Shell shell = new Shell(Display.getDefault());
+				try {
+					IRunnableWithProgress op = new IRunnableWithProgress() {
+						@Override
+						public void run(IProgressMonitor progressMonitor) throws InvocationTargetException,
+								InterruptedException {
+							try {
+								progressMonitor.setTaskName("Creating Glassfish servers instances");
+								GlassFishConfigurator.createV2Server(progressMonitor);
+								GlassFishConfigurator.createV3Server(progressMonitor);
+							} catch (CoreException e) {
+								org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
+										.getLocalizedMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
+										.getLocalizedMessage()));
+							}
+						}
+					};
+					ProgressMonitorDialog pmd = new ProgressMonitorDialog(shell);
+					pmd.run(true, false, op);
+				} catch (Exception e) {
+					org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
+							.getLocalizedMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
+							.getLocalizedMessage()));
+				}
+
+			}
+		});
+	}
 
 }
