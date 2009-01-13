@@ -53,12 +53,10 @@ public class Startup implements IStartup {
 		// In startup you have to explicitly get to UI thread.
 		Display.getDefault().asyncExec(new Runnable() {
 
-			@Override
 			public void run() {
 				final Shell shell = new Shell(Display.getDefault());
 				try {
 					IRunnableWithProgress op = new IRunnableWithProgress() {
-						@Override
 						public void run(IProgressMonitor progressMonitor) throws InvocationTargetException,
 								InterruptedException {
 							try {
