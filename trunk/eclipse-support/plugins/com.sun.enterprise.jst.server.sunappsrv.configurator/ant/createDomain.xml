@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project default="create.domain">
+
+	<property name="adminpassfile" value="${glassfish_dir}/passfile" />
+	<!-- <property name="admin.port" value="4848" /> 
+	<property name="instance.port" value="8080" /> 
+	<property name="orb.port" value="3700" />
+	<property name="imq.port" value="7676" />
+	<property name="https.port" value="8181" /> 8181 -->
+
+	<target name="setup.init">
+		<tstamp>
+			<format property="start.time" pattern="MM/dd/yyyy hh:mm aa" />
+		</tstamp>
+		<echo>${os.arch} ${os.name} ${os.version}</echo>
+		<condition property="windows">
+			<os family="windows" />
+		</condition>
+		<condition property="unix">
+			<os family="unix" />
+		</condition>
+		<condition property="solaris">
+			<equals arg1="${os.name}" arg2="SunOS" />
+		</condition>
+		<condition property="solaris-sparc">
+			<os name="SunOS" arch="sparc" />
+		</condition>
+		<condition property="solaris-x86">
+			<os name="SunOS" arch="x86" />
+		</condition>
+		<condition property="linux">
+			<equals arg1="${os.name}" arg2="Linux" />
+		</condition>
+		<condition property="darwin">
+			<os name="Mac OS X" />
+		</condition>
+		<echo>${unix}</echo>
+		<echo file="${adminpassfile}" append="false">
+			AS_ADMIN_ADMINPASSWORD=${admin_password}</echo>
+	</target>
+
+	<target name="set.env" depends="setup.init,set.env.win,set.env.unix" />
+	<target name="set.env.win" if="windows">
+		<property name="ASADMIN" value="${glassfish_dir}/bin/asadmin.bat" />
+	</target>
+	<target name="set.env.unix" if="unix">
+		<property name="ASADMIN" value="${glassfish_dir}/bin/asadmin" />
+	</target>
+
+	<!--Taken from Glassfish V2 setup.xml and modified-->
+	<target name="create.domain" depends="set.env">
+		<echo>Is unix = ${unix}</echo>
+		<exec executable="${ASADMIN}" failonerror="true">
+			<arg line="create-domain" />
+			<arg line="--adminport ${admin.port}" />
+			<arg line="--instanceport ${instance.port}" />
+			<arg line="--user ${admin_username}" />
+			<arg line="--domaindir ${domain.dir}" />
+			<arg line="--passwordfile &quot;${adminpassfile}&quot;" />
+			<arg line="--domainproperties orb.listener.port=${orb.port}:jms.port=${imq.port}:http.ssl.port=${https.port}" />
+			<arg line="--savelogin" />
+			<arg line="${domain_name}" />
+		</exec>
+		<delete file="${adminpassfile}" />
+	</target>
+</project>

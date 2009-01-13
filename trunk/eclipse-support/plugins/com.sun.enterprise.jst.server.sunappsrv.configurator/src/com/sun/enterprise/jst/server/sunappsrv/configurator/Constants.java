@@ -31,7 +31,7 @@ its licensees as provided above.  However, if you add GPL Version 2 code
 and therefore, elected the GPL Version 2 license, then the option applies
 only if the new code is made subject to such option by the copyright
 holder.
-*/
+ */
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
 import java.io.IOException;
@@ -47,27 +47,39 @@ import org.eclipse.core.runtime.Status;
 
 public abstract class Constants {
 
-    public final static String GLASSFISH3_BUNDLE = "com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude";
-    public final static String SERVER_GLASSFISH_2_ID = "com.sun.enterprise.jst.server.sunappsrv91";
-    public final static String SERVER_PRELUDE_ID = "com.sun.enterprise.jst.server.glassfishv3prelude";
-    private static IPath glassFishLocation;
+	public final static String GLASSFISH3_BUNDLE = "com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude";
+	public final static String SERVER_GLASSFISH_2_ID = "com.sun.enterprise.jst.server.sunappsrv91";
+	public final static String SERVER_PRELUDE_ID = "com.sun.enterprise.jst.server.glassfishv3prelude";
 
-    public static IPath getGlassFishLocation() throws CoreException {
-        if (glassFishLocation == null) {
-            try {
-                URL entry = Platform.getBundle(GLASSFISH3_BUNDLE).getEntry("glassfishv3-prelude/glassfish");
-                if (entry == null)
-                    throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator",
-                            "Glassfish server not found"));
-                String file = FileLocator.toFileURL(entry).getFile();
-                Path path = new Path(file);
-                glassFishLocation = path.removeTrailingSeparator();
+	public final static String ADMIN_PORT = "admin.port";
+	public final static String INSTANCE_PORT = "instance.port";
+	public final static String HTTPS_PORT = "https.port";
+	public final static String ORB_PORT = "orb.port";
+	public final static String IMQ_PORT = "imq.port";
+	public final static String GLASSFISH_DIR = "glassfish_dir";
+	public final static String ADMIN_USERNAME = "admin_username";
+	public final static String ADMIN_PASSWORD = "admin_password";
+	public final static String DOMAIN_NAME = "domain_name";
+	public final static String DOMAIN_DIR = "domain.dir";
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return glassFishLocation;
-    }
+	private static IPath glassFishLocation;
+
+	public static IPath getGlassFishLocation() throws CoreException {
+		if (glassFishLocation == null) {
+			try {
+				URL entry = Platform.getBundle(GLASSFISH3_BUNDLE).getEntry("glassfishv3-prelude/glassfish");
+				if (entry == null)
+					throw new CoreException(new Status(IStatus.ERROR,
+							"com.sun.enterprise.jst.server.sunappsrv.configurator", "Glassfish server not found"));
+				String file = FileLocator.toFileURL(entry).getFile();
+				Path path = new Path(file);
+				glassFishLocation = path.removeTrailingSeparator();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return glassFishLocation;
+	}
 
 }
