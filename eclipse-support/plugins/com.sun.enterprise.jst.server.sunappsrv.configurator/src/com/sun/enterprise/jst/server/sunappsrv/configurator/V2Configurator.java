@@ -33,29 +33,41 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 @SuppressWarnings("restriction")
 public class V2Configurator {
 
+	// FIXME turn this flag into a property.
+	private static final boolean workspace = false;
+
 	private static final String INSTANCE_PORT = "8081";
 	private static final String ADMIN_PORT = "4849";
 	private static final String HTTPS_PORT = "8182";
 	private static final String AUSER = "admin";
 	private static final String APASS = "adminadmin";
 
-	public static void configure(IProgressMonitor progressMonitor) throws CoreException {
+	public static void configure(IProgressMonitor progressMonitor)
+			throws CoreException {
+
 		String glassfishLoc = "";
-		try {
-			// Get the eclipse installation location and from it V2 installation
-			// directory.
-			glassfishLoc = FileLocator.toFileURL(Platform.getInstallLocation().getURL()).getFile() + File.pathSeparator
-					+ "glassfishv2";
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		if (workspace) {
+			// FIXME overriding for testing purposes. Installation directory
+			// while running from workspace is target platforms location. It's
+			// better if we use some other dir for V2. Also this path is
+			// suitable only for *nix platforms.
+			glassfishLoc = "/tmp/v2/glassfishv2";
+
+		} else {
+			try {
+				// Get the eclipse installation location and from it V2
+				// installation directory.
+				glassfishLoc = FileLocator.toFileURL(
+						Platform.getInstallLocation().getURL()).getFile()
+						+ File.pathSeparator + "glassfishv2";
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
-		// FIXME overriding for testing purposes. Installation directory while
-		// running from workspace is target platforms location. It's better if
-		// we use some other dir for V2.
-		glassfishLoc = "/tmp/v2/glassfishv2";
 		progressMonitor.subTask("Creating runtime ...");
 
-		IServerType st = ServerCore.findServerType(Constants.SERVER_GLASSFISH_2_ID);// v3
+		IServerType st = ServerCore
+				.findServerType(Constants.SERVER_GLASSFISH_2_ID);// v3
 		IRuntime runtime = createRuntime(glassfishLoc);
 		IServer[] servers = ServerCore.getServers();
 
@@ -65,7 +77,8 @@ public class V2Configurator {
 			if (server.getRuntime() == null) {
 				server.delete();
 			}
-			if (runtime != null && server != null && runtime.equals(server.getRuntime())) {
+			if (runtime != null && server != null
+					&& runtime.equals(server.getRuntime())) {
 				return;
 			}
 		}
@@ -77,10 +90,12 @@ public class V2Configurator {
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
 		wc.setName("Bundled " + runtime.getName());
 
-		SunAppServer sunAppServer = (SunAppServer) wc.getAdapter(SunAppServer.class);
+		SunAppServer sunAppServer = (SunAppServer) wc
+				.getAdapter(SunAppServer.class);
 
-		String domainLocation = Platform.getLocation().append(".metadata").append(".plugins").append(
-				Constants.SERVER_GLASSFISH_2_ID).toOSString();
+		String domainLocation = Platform.getLocation().append(".metadata")
+				.append(".plugins").append(Constants.SERVER_GLASSFISH_2_ID)
+				.toOSString();
 		Map<String, String> configuration = sunAppServer.getProps();
 		configuration.put(SunAppServer.DOMAINDIR, domainLocation);
 		configuration.put(SunAppServer.ADMINNAME, AUSER);
@@ -96,34 +111,41 @@ public class V2Configurator {
 
 	}
 
-	private static String createDomain(String glassfishLoc) throws CoreException {
+	private static String createDomain(String glassfishLoc)
+			throws CoreException {
 		// created domain count, we read that from the .installed file so that
 		// we wouldn't create duplicate domains for different workspaces
 		int count = 0;
 		if (new File(glassfishLoc + File.separator + ".installed").exists()) {
 			try {
-				BufferedReader in = new BufferedReader(new FileReader(glassfishLoc + File.separator + ".installed"));
+				BufferedReader in = new BufferedReader(new FileReader(
+						glassfishLoc + File.separator + ".installed"));
 				count = Integer.parseInt(in.readLine()) + 1;
 				in.close();
 			} catch (IOException e) {
-                SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
+				SunAppSrvPlugin.logMessage(
+						"error in startup config for glassfish", e);
 				e.printStackTrace();
 			} catch (NumberFormatException e) {
-                SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
+				SunAppSrvPlugin.logMessage(
+						"error in startup config for glassfish", e);
 				e.printStackTrace();
 			}
 		}
 
 		// Read the how many domains have been created.
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc + File.separator + ".installed"));
+			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc
+					+ File.separator + ".installed"));
 			out.write("" + count);
 			out.close();
 		} catch (IOException e) {
-            SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
+			SunAppSrvPlugin.logMessage("error in startup config for glassfish",
+					e);
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
-            SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
+			SunAppSrvPlugin.logMessage("error in startup config for glassfish",
+					e);
 			e.printStackTrace();
 		}
 		// We use ant for creating a domain for V2 installation as ant is
@@ -141,11 +163,13 @@ public class V2Configurator {
 		map.put(Constants.GLASSFISH_DIR, glassfishLoc);
 		String domainName = "bdomain" + count;
 		map.put(Constants.DOMAIN_NAME, domainName);
-		map.put(Constants.DOMAIN_DIR, Platform.getLocation().append(".metadata").append(".plugins").append(
-				Constants.SERVER_GLASSFISH_2_ID).toOSString());
+		map.put(Constants.DOMAIN_DIR, Platform.getLocation()
+				.append(".metadata").append(".plugins").append(
+						Constants.SERVER_GLASSFISH_2_ID).toOSString());
 
 		try {
-			URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource("ant/createDomain.xml");
+			URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource(
+					"ant/createDomain.xml");
 			String antFile = FileLocator.toFileURL(xml).getFile();
 
 			ant.setBuildFileLocation(antFile);
@@ -157,18 +181,23 @@ public class V2Configurator {
 
 			ant.run();
 		} catch (IOException e) {
-            SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
-			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getLocalizedMessage()));
+			SunAppSrvPlugin.logMessage("error in startup config for glassfish",
+					e);
+			throw new CoreException(new Status(IStatus.ERROR,
+					Activator.PLUGIN_ID, e.getLocalizedMessage()));
 		}
 		return domainName;
 	}
 
 	@SuppressWarnings("unchecked")
-	public static IRuntime createRuntime(String glassfishLocation) throws CoreException {
-		IServerType st = ServerCore.findServerType(Constants.SERVER_GLASSFISH_2_ID);
+	public static IRuntime createRuntime(String glassfishLocation)
+			throws CoreException {
+		IServerType st = ServerCore
+				.findServerType(Constants.SERVER_GLASSFISH_2_ID);
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		for (IRuntime runtime : runtimes) {
-			if (runtime != null && runtime.getRuntimeType().equals(st.getRuntimeType())) {
+			if (runtime != null
+					&& runtime.getRuntimeType().equals(st.getRuntimeType())) {
 				return runtime;
 			}
 		}
@@ -176,8 +205,8 @@ public class V2Configurator {
 		IRuntimeWorkingCopy wc;
 		wc = st.getRuntimeType().createRuntime(null, null);
 
-		GenericServerRuntime gRun = (GenericServerRuntime) wc.loadAdapter(GenericServerRuntime.class,
-				new NullProgressMonitor());
+		GenericServerRuntime gRun = (GenericServerRuntime) wc.loadAdapter(
+				GenericServerRuntime.class, new NullProgressMonitor());
 
 		HashMap map = new HashMap();
 		map.put(SunAppServer.ROOTDIR, glassfishLocation);

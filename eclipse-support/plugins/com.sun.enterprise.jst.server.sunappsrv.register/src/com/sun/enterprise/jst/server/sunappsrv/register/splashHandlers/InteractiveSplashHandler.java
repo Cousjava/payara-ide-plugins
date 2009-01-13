@@ -25,7 +25,7 @@ import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
 public class InteractiveSplashHandler extends AbstractSplashHandler {
 
 	// FIXME convert to property, so it could be given at runtime.
-	private static final boolean debug = false;
+	private static final boolean workspace = false;
 
 	public InteractiveSplashHandler() {
 	}
@@ -73,11 +73,11 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	}
 
 	private String getLocation() {
-		if (debug) {
+		if (workspace) {
 			// Overriding for testing purposes. Installation directory while
 			// running from workspace is target platforms location. It's better
-			// if
-			// we use some other dir for V2.
+			// if we use some other dir for V2. Also this path is
+			// suitable only for *nix platforms.
 			return "/tmp/v2/glassfishv2";
 		} else {
 			try {
