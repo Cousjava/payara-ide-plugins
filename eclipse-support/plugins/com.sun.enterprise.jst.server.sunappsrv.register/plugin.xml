@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.splashHandlers">
+      <splashHandler
+            class="com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers.InteractiveSplashHandler"
+            id="com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers.interactive">
+      </splashHandler>
+      <splashHandlerProductBinding
+            productId="org.eclipse.platform.ide"
+            splashId="com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers.interactive">
+      </splashHandlerProductBinding>
+   </extension>
+</plugin>
