@@ -57,10 +57,15 @@ public class V2Configurator {
 			try {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
-				glassfishLoc = FileLocator.toFileURL(
-						Platform.getInstallLocation().getURL()).getFile()
-						+ File.pathSeparator + "glassfishv2";
-			} catch (IOException e1) {
+				//glassfishLoc = FileLocator.toFileURL(
+                //		Platform.getInstallLocation().getURL()).getFile()
+                //		+ File.pathSeparator + "glassfishv2";
+				URL url = FileLocator.toFileURL(Platform.getInstallLocation().getURL());
+                File file = new File(url.toURI());
+                glassfishLoc = new File(file, "glassfishv2").getAbsolutePath();
+                SunAppSrvPlugin.logMessage("glassfishLoc =" + glassfishLoc);
+
+            } catch (Exception e1) {
 				e1.printStackTrace();
 			}
 		}
