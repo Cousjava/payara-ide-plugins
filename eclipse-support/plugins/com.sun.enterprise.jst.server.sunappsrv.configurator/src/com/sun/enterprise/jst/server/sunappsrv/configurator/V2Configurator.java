@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.tools.ant.listener.TimestampedLogger;
 import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -181,8 +182,8 @@ public class V2Configurator {
 			ant.addUserProperties(map);
 			// FIXME in production remove those lines, no need for the user to
 			// see that much info
-			// ant.setArguments("-Dmessage=Building -verbose");
-			// ant.addBuildLogger(TimestampedLogger.class.getName());
+			 ant.setArguments("-Dmessage=Building -verbose");
+			 ant.addBuildLogger(TimestampedLogger.class.getName());
 
 			ant.run();
 		} catch (IOException e) {
