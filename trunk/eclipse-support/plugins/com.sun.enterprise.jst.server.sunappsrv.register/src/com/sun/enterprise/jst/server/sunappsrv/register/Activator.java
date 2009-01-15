@@ -1,5 +1,7 @@
 package com.sun.enterprise.jst.server.sunappsrv.register;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -52,5 +54,8 @@ public class Activator extends AbstractUIPlugin {
 	public static Activator getDefault() {
 		return plugin;
 	}
-
+    public static void logMessage(String mess, Exception e){
+        final Status status = new Status(IStatus.ERROR, PLUGIN_ID, 1,"GlassFish: "+mess,e);        
+        getDefault().getLog().log(status);
+    }
 }

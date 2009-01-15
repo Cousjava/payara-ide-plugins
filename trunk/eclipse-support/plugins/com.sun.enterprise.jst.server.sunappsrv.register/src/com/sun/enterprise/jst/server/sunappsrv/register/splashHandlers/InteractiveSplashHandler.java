@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.splash.AbstractSplashHandler;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
 
 /**
@@ -65,7 +64,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					ProgressMonitorDialog pmd = new ProgressMonitorDialog(shell);
 					pmd.run(true, false, op);
 				} catch (Exception e) {
-					SunAppSrvPlugin.logMessage("error",e);
+					Activator.logMessage("error",e);
 					org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
 							.getLocalizedMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
 							.getLocalizedMessage()));
@@ -92,10 +91,10 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
                 File file = new File(url.toURI());
                 return new File(file, "glassfishv2").getAbsolutePath();
 			} catch (IOException e1) {
-				SunAppSrvPlugin.logMessage("error",e1);
+				Activator.logMessage("error",e1);
 				e1.printStackTrace();
 			} catch (URISyntaxException e) {
-				SunAppSrvPlugin.logMessage("error",e);
+				Activator.logMessage("error",e);
 				e.printStackTrace();
 			}
 		}
