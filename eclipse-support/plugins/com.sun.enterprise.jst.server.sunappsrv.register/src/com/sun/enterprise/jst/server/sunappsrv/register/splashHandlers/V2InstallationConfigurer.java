@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
 
 public class V2InstallationConfigurer {
@@ -61,11 +60,11 @@ public class V2InstallationConfigurer {
 
 			ant.run();
 		} catch (CoreException e) {
-			SunAppSrvPlugin.logMessage("error",e);
+			Activator.logMessage("error",e);
 			e.printStackTrace();
 			return;
 		} catch (IOException e) {
-			SunAppSrvPlugin.logMessage("error",e);
+			Activator.logMessage("error",e);
 			e.printStackTrace();
 			return;
 		}
