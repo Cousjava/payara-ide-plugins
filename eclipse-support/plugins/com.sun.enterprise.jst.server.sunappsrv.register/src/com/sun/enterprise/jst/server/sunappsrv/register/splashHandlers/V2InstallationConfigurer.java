@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
 
 public class V2InstallationConfigurer {
@@ -42,8 +43,8 @@ public class V2InstallationConfigurer {
 		map.put(V2InstallationConfigurer.GLASSFISH_INSTALL, glassfishLoc);
 		map.put(V2InstallationConfigurer.INSTALL_HOME, glassfishLoc);
 		map.put(V2InstallationConfigurer.INSTALL_HOME_F, glassfishLoc + File.separator);
-		map.put(V2InstallationConfigurer.ADMIN_USERNAME, "auser");
-		map.put(V2InstallationConfigurer.ADMIN_PASSWORD, "apassword");
+		map.put(V2InstallationConfigurer.ADMIN_USERNAME, "admin");
+		map.put(V2InstallationConfigurer.ADMIN_PASSWORD, "adminadmin");
 
 		map.put(V2InstallationConfigurer.JAVA_HOME, jdkFolder);
 		map.put(V2InstallationConfigurer.JAVA_HOME_F, jdkFolder + File.separator);
@@ -60,9 +61,11 @@ public class V2InstallationConfigurer {
 
 			ant.run();
 		} catch (CoreException e) {
+			SunAppSrvPlugin.logMessage("error",e);
 			e.printStackTrace();
 			return;
 		} catch (IOException e) {
+			SunAppSrvPlugin.logMessage("error",e);
 			e.printStackTrace();
 			return;
 		}
@@ -77,6 +80,11 @@ public class V2InstallationConfigurer {
 	}
 
 	public static String getJDKDir() {
+		String lcOSName = System.getProperty("os.name").toLowerCase();
+		boolean mac = lcOSName.startsWith("mac os x");
+		if (mac){
+			return System.getProperty("java.home");			
+		}
 		String file = "";
 		String message = "";
 		do {
