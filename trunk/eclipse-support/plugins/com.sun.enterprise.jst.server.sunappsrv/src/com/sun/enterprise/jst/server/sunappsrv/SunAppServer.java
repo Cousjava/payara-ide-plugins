@@ -58,9 +58,7 @@ import javax.management.remote.JMXServiceURL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -196,11 +194,22 @@ public class SunAppServer extends GenericServer {
     }
 
 
-    public String getAdminServerPort() {
-        return adminServerPortNumber;
+    /* (non-Javadoc)
+     * Override this method to provide our server port for the http port
+     * Called by getModuleRootURL in the superclass, which returns 8080 if it 
+     * doesn't find something else.  The override of getServerPorts() 
+     * implementation which provides our server port as an http port 
+     * is not used by the superclass' method, so we must override this as well.
+     * @see org.eclipse.jst.server.generic.core.internal.GenericServer#getHttpPort()
+     */
+    @Override
+    protected int getHttpPort() {
+	    return Integer.parseInt(serverPortNumber);
     }
 
-
+	public String getAdminServerPort() {
+        return adminServerPortNumber;
+    }
     
     public String getAdminName() {
         return (String) getProps().get(ADMINNAME);
