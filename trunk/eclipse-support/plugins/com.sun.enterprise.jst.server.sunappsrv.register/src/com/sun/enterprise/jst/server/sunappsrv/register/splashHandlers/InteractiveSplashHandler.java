@@ -35,10 +35,7 @@ holder.
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -77,7 +74,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		super.init(splash);
 		// showWizard(splash);
 
-		final String glassfishLoc = getLocation();
+		final String glassfishLoc = getGlassfishLocation();
 
 		if (new File(glassfishLoc + File.separator + ".installed").exists())
 			return;
@@ -108,32 +105,39 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		});
 
 	}
-
-	private String getLocation() {
-		if (workspace) {
-			// Overriding for testing purposes. Installation directory while
-			// running from workspace is target platforms location. It's better
-			// if we use some other dir for V2. Also this path is
-			// suitable only for *nix platforms.
-			return "/tmp/v2/glassfishv2";
+	
+	private static String getGlassfishLocation() {
+		String property = System.getProperty("gf2location");
+		String glassfishLoc = null;
+		if (property != null) {
+			glassfishLoc = property;
 		} else {
 			try {
 				// Get the eclipse installation location and from it V2
-				// installation
-				// directory.
-				URL url = FileLocator.toFileURL(Platform.getInstallLocation().getURL());
-                File file = new File(url.toURI());
-                return new File(file, "glassfishv2").getAbsolutePath();
-			} catch (IOException e1) {
-				Activator.logMessage("error",e1);
+				// installation directory.
+				glassfishLoc = FileLocator.toFileURL(
+						Platform.getInstallLocation().getURL()).getFile()
+						+ File.separator + "glassfishv2";
+
+				// Following solution causes java.net.URISyntaxException: if the
+				// path contains spaces ('Program Files' for example), reverting
+				// to old and uglier solution
+
+				// URL url =
+				// FileLocator.toFileURL(Platform.getInstallLocation().
+				// getURL());
+				// File file = new File(url.toURI());
+				// glassfishLoc = new File(file,
+				// "glassfishv2").getAbsolutePath();
+				Activator.logMessage("glassfishLoc =" + glassfishLoc, null);
+			} catch (Exception e1) {
 				e1.printStackTrace();
-			} catch (URISyntaxException e) {
-				Activator.logMessage("error",e);
-				e.printStackTrace();
 			}
 		}
-		return null;
+		return glassfishLoc;
 	}
+
+
 
 	/**
 	 * Show registration dialog.

@@ -1,14 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project default="create.domain">
 
-	<property name="adminpassfile" value="${glassfish_dir}/passfile" />
-	<!-- <property name="admin.port" value="4848" /> 
-	<property name="instance.port" value="8080" /> 
-	<property name="orb.port" value="3700" />
-	<property name="imq.port" value="7676" />
-	<property name="https.port" value="8181" /> 8181 -->
-
 	<target name="setup.init">
+		<property name="adminpassfile" value="${glassfish_dir}/passfile" />
 		<tstamp>
 			<format property="start.time" pattern="MM/dd/yyyy hh:mm aa" />
 		</tstamp>
@@ -49,17 +43,22 @@
 
 	<!--Taken from Glassfish V2 setup.xml and modified-->
 	<target name="create.domain" depends="set.env">
-		<echo>Is unix = ${unix}</echo>
 		<exec executable="${ASADMIN}" failonerror="true">
-			<arg line="create-domain" />
-			<arg line="--adminport ${admin.port}" />
-			<arg line="--instanceport ${instance.port}" />
-			<arg line="--user ${admin_username}" />
-			<arg line="--domaindir ${domain.dir}" />
-			<arg line="--passwordfile &quot;${adminpassfile}&quot;" />
-			<arg line="--domainproperties orb.listener.port=${orb.port}:jms.port=${imq.port}:http.ssl.port=${https.port}" />
-			<arg line="--savelogin" />
-			<arg line="${domain_name}" />
+			<arg value="create-domain" />
+			<arg value="--adminport" />
+			<arg value="${admin.port}" />
+			<arg value="--instanceport" />
+			<arg value="${instance.port}" />
+			<arg value="--user" />
+			<arg value="${admin_username}" />
+			<arg value="--domaindir" />
+			<arg value="${domain.dir}" />
+			<arg value="--passwordfile" />
+			<arg value="${adminpassfile}" />
+			<arg value="--domainproperties" />
+			<arg value="orb.listener.port=${orb.port}:jms.port=${imq.port}:http.ssl.port=${https.port}" />
+			<arg value="--savelogin" />
+			<arg value="${domain_name}" />
 		</exec>
 		<delete file="${adminpassfile}" />
 	</target>
