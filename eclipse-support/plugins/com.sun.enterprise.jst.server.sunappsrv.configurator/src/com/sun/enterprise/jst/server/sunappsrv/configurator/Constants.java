@@ -62,24 +62,4 @@ public abstract class Constants {
 	public final static String DOMAIN_NAME = "domain_name";
 	public final static String DOMAIN_DIR = "domain.dir";
 
-	private static IPath glassFishLocation;
-
-	public static IPath getGlassFishLocation() throws CoreException {
-		if (glassFishLocation == null) {
-			try {
-				URL entry = Platform.getBundle(GLASSFISH3_BUNDLE).getEntry("glassfishv3-prelude/glassfish");
-				if (entry == null)
-					throw new CoreException(new Status(IStatus.ERROR,
-							"com.sun.enterprise.jst.server.sunappsrv.configurator", "Glassfish server not found"));
-				String file = FileLocator.toFileURL(entry).getFile();
-				Path path = new Path(file);
-				glassFishLocation = path.removeTrailingSeparator();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return glassFishLocation;
-	}
-
 }

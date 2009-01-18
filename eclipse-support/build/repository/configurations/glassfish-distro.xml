@@ -17,7 +17,7 @@
 		<component id="subclipse" />
 		<component id="eclipse-cvs" />
 		<component id="glassfish-wtp-plugin" />
-		<component id="glassfish-prelude" />
+		<component id="glassfish-prelude-root" />
 		<component id="glassfish-plugins" />
 		<component id="glassfish-register" />
 		<component id="glassfish-v2-mac" />

@@ -40,6 +40,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.tools.ant.listener.TimestampedLogger;
 import org.eclipse.ant.core.AntRunner;
@@ -94,11 +95,11 @@ public class V2InstallationConfigurer {
 
 			ant.run();
 		} catch (CoreException e) {
-			Activator.logMessage("error",e);
+			Activator.logMessage("error", e);
 			e.printStackTrace();
 			return;
 		} catch (IOException e) {
-			Activator.logMessage("error",e);
+			Activator.logMessage("error", e);
 			e.printStackTrace();
 			return;
 		}
@@ -113,12 +114,14 @@ public class V2InstallationConfigurer {
 	}
 
 	public static String getJDKDir() {
-		String lcOSName = System.getProperty("os.name").toLowerCase();
-		boolean mac = lcOSName.startsWith("mac os x");
-		if (mac){
-			return System.getProperty("java.home");			
+
+		String file = getSystemJDKDir();
+		if (file != null) {
+			return file;
+		} else {
+			file = "";
 		}
-		String file = "";
+
 		String message = "";
 		do {
 			Shell shell = new Shell(Display.getDefault());
@@ -133,8 +136,7 @@ public class V2InstallationConfigurer {
 			}
 			shell.close();
 			shell.dispose();
-			File jarFile = new File("" + file + File.separator + "lib" + File.separator + "tools.jar");
-			if (!jarFile.exists()) {
+			if (!isJDKDir(file)) {
 				message = "Directory \"" + file + "\" doesn't contain Java SDK installation";
 			} else
 				break;
@@ -142,4 +144,40 @@ public class V2InstallationConfigurer {
 		return file;
 	}
 
+	/**
+	 * Check if the path given contains lib/tools.jar, if yes, then we presume
+	 * it's a jdk location.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	private static boolean isJDKDir(String path) {
+		File jarFile = new File("" + path + File.separator + "lib" + File.separator + "tools.jar");
+		boolean exists = jarFile.exists();
+		return exists;
+	}
+
+	/**
+	 * Check if system property "java.home" or environment variable "JAVA_HOME"
+	 * points to a JDK
+	 * 
+	 * @return location of JDK
+	 */
+	private static String getSystemJDKDir() {
+		// First we check if java.home property points to JDK
+		String property = System.getProperty("java.home");
+		if (isJDKDir(property)) {
+			return property;
+		}
+
+		// If java.home fails we try to get JAVA_HOME environment variable
+		Map<String, String> env = System.getenv();
+		String javaHome = env.get("JAVA_HOME");
+		if (javaHome != null && !javaHome.equals("") && isJDKDir(javaHome)) {
+			return javaHome;
+		}
+
+		return null;
+
+	}
 }
