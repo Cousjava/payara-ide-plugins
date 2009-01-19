@@ -130,18 +130,8 @@ public class V3Configurator {
 				// installation directory.
 				glassfishLocation = FileLocator.toFileURL(
 						Platform.getInstallLocation().getURL()).getFile()
-						+ File.separator + "glassfishv3";
+						+ File.separator + "glassfishv3" + File.separator + "glassfish";
 
-				// Following solution causes java.net.URISyntaxException: if the
-				// path contains spaces ('Program Files' for example), reverting
-				// to old and uglier solution
-
-				// URL url =
-				// FileLocator.toFileURL(Platform.getInstallLocation().
-				// getURL());
-				// File file = new File(url.toURI());
-				// glassfishLoc = new File(file,
-				// "glassfishv2").getAbsolutePath();
 				SunAppSrvPlugin.logMessage("glassfishV3Loc =" + glassfishLocation);
 				return glassfishLocation;
 			} catch (Exception e1) {
@@ -222,7 +212,7 @@ public class V3Configurator {
 	}
 
 	public static String getDomainsDir() throws CoreException {
-		return new Path(getGlassfishLocation()).append("glassfish").append("domains").toOSString();
+		return new Path(getGlassfishLocation()).append("domains").toOSString();
 	}
 
 	public static void setPortsForDomain(String domainXml, int i, int j) throws CoreException {
