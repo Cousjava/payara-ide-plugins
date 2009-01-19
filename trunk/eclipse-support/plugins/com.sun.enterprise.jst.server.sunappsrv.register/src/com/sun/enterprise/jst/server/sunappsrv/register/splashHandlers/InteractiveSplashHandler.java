@@ -119,16 +119,6 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 						Platform.getInstallLocation().getURL()).getFile()
 						+ File.separator + "glassfishv2";
 
-				// Following solution causes java.net.URISyntaxException: if the
-				// path contains spaces ('Program Files' for example), reverting
-				// to old and uglier solution
-
-				// URL url =
-				// FileLocator.toFileURL(Platform.getInstallLocation().
-				// getURL());
-				// File file = new File(url.toURI());
-				// glassfishLoc = new File(file,
-				// "glassfishv2").getAbsolutePath();
 				Activator.logMessage("glassfishLoc =" + glassfishLoc, null);
 			} catch (Exception e1) {
 				e1.printStackTrace();
