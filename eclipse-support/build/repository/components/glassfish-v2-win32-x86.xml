@@ -8,22 +8,24 @@
 	<build patched="no" type="binary">
 		<antscript target="getGlassfishV2">
 			<project>
-				<target name="getGlassfishV2" >
-				<property name="gfplugins.download.folder"
-					value="${components.download.folder}/glassfish-v2-win" />
+				<target name="getGlassfishV2">
+					<property name="gfplugins.download.folder"
+						value="${components.download.folder}/glassfish-v2-win" />
 
 					<mkdir dir="${gfplugins.download.folder}" />
 
 					<get
 						src="https://glassfishplugins.dev.java.net/files/documents/3651/121296/appserver_install_image-windows-b04.zip"
-						dest="${gfplugins.download.folder}/appserver_install_image-windows-b04.zip" verbose="true" usetimestamp="true"/>
+						dest="${gfplugins.download.folder}/appserver_install_image-windows-b04.zip"
+						verbose="true" usetimestamp="true" />
 
+					<mkdir dir="${components.dist.folder}/${dist.name}/eclipse/glassfishv2" />
 					<exec executable="unzip">
-						<arg value="${gfplugins.download.folder}/appserver_install_image-windows-b04.zip"/>
-						<arg value="-d"/>
-						<arg value="${components.dist.folder}/${dist.name}/eclipse/glassfishv2"/>
+						<arg
+							value="${gfplugins.download.folder}/appserver_install_image-windows-b04.zip" />
+						<arg value="-d" />
+						<arg value="${components.dist.folder}/${dist.name}/eclipse/glassfishv2" />
 					</exec>
-					
 				</target>
 			</project>
 		</antscript>
