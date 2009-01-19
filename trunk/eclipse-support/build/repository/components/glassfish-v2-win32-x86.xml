@@ -21,7 +21,7 @@
 					<exec executable="unzip">
 						<arg value="${gfplugins.download.folder}/appserver_install_image-windows-b04.zip"/>
 						<arg value="-d"/>
-						<arg value="${components.dist.folder}/${dist.name}/glassfishv2"/>
+						<arg value="${components.dist.folder}/${dist.name}/eclipse/glassfishv2"/>
 					</exec>
 					
 				</target>
