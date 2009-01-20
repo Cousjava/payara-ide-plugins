@@ -72,7 +72,6 @@ import org.w3c.dom.Node;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers.InteractiveSplashHandler;
 
 @SuppressWarnings("restriction")
 public class V3Configurator {
@@ -120,7 +119,26 @@ public class V3Configurator {
 	}
 
 	private static String getGlassfishLocation() {
-		return InteractiveSplashHandler.getGlassfishLocation(false);
+		String property = System.getProperty("gf3location");
+		String glassfishLocation = null;
+		if (property != null) {
+			glassfishLocation = property;
+
+		} else {
+			try {
+				// Get the eclipse installation location and from it V2
+				// installation directory.
+				glassfishLocation = new Path(
+						Platform.getInstallLocation().getURL().getFile()).toPortableString()
+						+ "/glassfishv2";
+
+				SunAppSrvPlugin.logMessage("glassfishV3Loc =" + glassfishLocation);
+				return glassfishLocation;
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		return glassfishLocation;
 	}
 
 	@SuppressWarnings("unchecked")
