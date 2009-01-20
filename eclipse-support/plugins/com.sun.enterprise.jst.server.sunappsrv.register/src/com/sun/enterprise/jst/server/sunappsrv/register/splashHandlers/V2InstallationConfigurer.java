@@ -114,7 +114,11 @@ public class V2InstallationConfigurer {
 	}
 
 	public static String getJDKDir() {
-
+		String lcOSName = System.getProperty("os.name").toLowerCase();
+		boolean mac = lcOSName.startsWith("mac os x");
+		if (mac){
+			return System.getProperty("java.home");
+		}
 		String file = getSystemJDKDir();
 		if (file != null) {
 			return file;
