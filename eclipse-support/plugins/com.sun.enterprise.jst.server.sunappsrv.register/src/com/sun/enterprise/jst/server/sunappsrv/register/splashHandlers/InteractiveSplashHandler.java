@@ -75,7 +75,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		super.init(splash);
 		// showWizard(splash);
 
-		final String glassfishLoc = getGlassfishLocation(true);
+		final String glassfishLoc = getGlassfishLocation();
 
 		if (new File(glassfishLoc + File.separator + ".installed").exists())
 			return;
@@ -96,7 +96,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					ProgressMonitorDialog pmd = new ProgressMonitorDialog(shell);
 					pmd.run(true, false, op);
 				} catch (Exception e) {
-					Activator.logMessage("error", e);
+					Activator.logMessage("error",e);
 					org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
 							.getLocalizedMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
 							.getLocalizedMessage()));
@@ -106,10 +106,9 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		});
 
 	}
-
-	public static String getGlassfishLocation(boolean getV2) {
-
-		String property = System.getProperty(getV2 ? "gf2location" : "gf3location");
+	
+	public static String getGlassfishLocation() {
+		String property = System.getProperty("gf2location");
 		String glassfishLoc = null;
 		if (property != null) {
 			glassfishLoc = property;
@@ -117,16 +116,19 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			try {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
-				glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
-						+ (getV2 ? "/glassfishv2" : "/glassfishv3");
+				glassfishLoc = new Path(
+						Platform.getInstallLocation().getURL().getFile()).toPortableString()
+						+ "/glassfishv2";
 
-				Activator.logMessage("glassfishLoc(" + (getV2 ? 2 : 3) + ") =" + glassfishLoc, null);
+				Activator.logMessage("glassfishLoc =" + glassfishLoc, null);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 		}
 		return glassfishLoc;
 	}
+
+
 
 	/**
 	 * Show registration dialog.
