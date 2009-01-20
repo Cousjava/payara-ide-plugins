@@ -51,7 +51,6 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
@@ -64,6 +63,7 @@ import org.eclipse.wst.server.core.ServerCore;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+import com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers.InteractiveSplashHandler;
 
 @SuppressWarnings("restriction")
 public class V2Configurator {
@@ -77,7 +77,7 @@ public class V2Configurator {
 	public static void configure(IProgressMonitor progressMonitor)
 			throws CoreException {
 
-		String glassfishLoc = getGlassfishLocation();
+		String glassfishLoc = InteractiveSplashHandler.getGlassfishLocation(true);
 
 		progressMonitor.subTask("Creating runtime ...");
 
@@ -122,28 +122,6 @@ public class V2Configurator {
 
 		// startServer(sunAppServer);
 
-	}
-
-	private static String getGlassfishLocation() {
-		String property = System.getProperty("gf2location");
-		String glassfishLoc = null;
-		if (property != null) {
-			glassfishLoc = property;
-
-		} else {
-			try {
-				// Get the eclipse installation location and from it V2
-				// installation directory.
-				glassfishLoc = FileLocator.toFileURL(
-						Platform.getInstallLocation().getURL()).getFile()
-						+ File.separator + "glassfishv2";
-
-				SunAppSrvPlugin.logMessage("glassfishLoc =" + glassfishLoc);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		}
-		return glassfishLoc;
 	}
 
 	private static String createDomain(String glassfishLoc)
