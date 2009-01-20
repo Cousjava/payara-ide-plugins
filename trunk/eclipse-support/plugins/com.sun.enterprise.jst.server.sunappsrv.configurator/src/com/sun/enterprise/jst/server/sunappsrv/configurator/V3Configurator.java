@@ -130,7 +130,7 @@ public class V3Configurator {
 				// installation directory.
 				glassfishLocation = new Path(
 						Platform.getInstallLocation().getURL().getFile()).toPortableString()
-						+ "/glassfishv2";
+						+ "/glassfish/glassfishv3";
 
 				SunAppSrvPlugin.logMessage("glassfishV3Loc =" + glassfishLocation);
 				return glassfishLocation;
