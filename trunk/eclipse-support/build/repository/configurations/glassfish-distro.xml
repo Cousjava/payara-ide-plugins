@@ -30,4 +30,11 @@
 		<size os="macosx">146M</size>
 		<size os="linux">172M</size>
 	</package>
+        <mac-postflight-script>
+
+# Don't forget the quotes, there could be a space...
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv2"
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv3"
+
+    </mac-postflight-script>
 </configuration>

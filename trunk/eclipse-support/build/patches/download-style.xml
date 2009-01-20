@@ -172,6 +172,9 @@
 					<exclude name="samples" />
 					<exclude name="updatecenter" />
 					<exclude name="jbi" />
+					<exclude name="glassfish" />
+					<exclude name="pkg" />
+					<exclude name=".org.opensolaris,pkg" />
 
 				</dirset>
 			</path>
