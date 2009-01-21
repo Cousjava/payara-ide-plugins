@@ -71,8 +71,8 @@ public class Startup implements IStartup {
 							     SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
 
 								org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
-										.getLocalizedMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
-										.getLocalizedMessage()));
+										.getMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
+										.getMessage()));
 							}
 						}
 					};
@@ -81,8 +81,8 @@ public class Startup implements IStartup {
 				} catch (Exception e) {
                     SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
 					org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
-							.getLocalizedMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
-							.getLocalizedMessage()));
+							.getMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
+							.getMessage()));
 				}
 
 			}
