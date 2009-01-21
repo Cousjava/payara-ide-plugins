@@ -63,7 +63,7 @@ public class Startup implements IStartup {
 								InterruptedException {
 							try {
 								progressMonitor.setTaskName("Creating Glassfish servers instances");
-//								GlassFishConfigurator.createV2Server(progressMonitor);
+								GlassFishConfigurator.createV2Server(progressMonitor);
 								String domainXml = GlassFishConfigurator.createV3Server(progressMonitor);
 								GlassFishConfigurator.createDerbyDB(progressMonitor,domainXml);
 							} catch (CoreException e) {
