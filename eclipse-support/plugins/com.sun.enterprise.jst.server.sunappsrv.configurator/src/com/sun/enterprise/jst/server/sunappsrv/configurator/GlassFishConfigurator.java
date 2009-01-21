@@ -34,9 +34,39 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
+import java.io.File;
+import java.util.Iterator;
+import java.util.Properties;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.datatools.connectivity.ConnectionProfileConstants;
+import org.eclipse.datatools.connectivity.ConnectionProfileException;
+import org.eclipse.datatools.connectivity.ProfileManager;
+import org.eclipse.datatools.connectivity.drivers.DriverInstance;
+import org.eclipse.datatools.connectivity.drivers.DriverManager;
+import org.eclipse.datatools.connectivity.internal.InternalProfileManager;
 import org.eclipse.wst.server.core.ServerPort;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
 public class GlassFishConfigurator {
@@ -57,11 +87,155 @@ public class GlassFishConfigurator {
 		V2Configurator.configure(progressMonitor);
 	}
 
-	public static void createV3Server(IProgressMonitor progressMonitor)
+	public static String createV3Server(IProgressMonitor progressMonitor)
 			throws CoreException {
 		progressMonitor
 				.setTaskName("Creating Glassfish V3 prelude server configuration.");
-		V3Configurator.configure(progressMonitor);
+		return V3Configurator.configure(progressMonitor);
+	}
+
+	public static void createDerbyDB(IProgressMonitor progressMonitor,
+			String domainXml) throws CoreException {
+		Properties properties = new Properties();
+
+		String profileName = "Sample Derby database";
+		DriverInstance di = DriverManager
+				.getInstance()
+				.createNewDriverInstance(
+						"org.eclipse.datatools.connectivity.db.derby102.clientDriver",
+						"DerbyForSampleDB", getJarLocation());
+		readProperties(domainXml, properties);
+		properties.setProperty(
+				ConnectionProfileConstants.PROP_DRIVER_DEFINITION_ID, di
+						.getId());
+		try {
+			ProfileManager
+					.getInstance()
+					.createProfile(
+							profileName,
+							"",
+							"org.eclipse.datatools.connectivity.db.derby.embedded.connectionProfile",
+							properties);
+		} catch (ConnectionProfileException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void readProperties(String domainXml, Properties properties)
+			throws CoreException {
+		String db = "";
+		String pass = "";
+		String user = "";
+		int port = -1;
+		String server = "";
+		String conAttrib = "";
+
+		try {
+			DocumentBuilderFactory domFactory = DocumentBuilderFactory
+					.newInstance();
+			domFactory.setNamespaceAware(true);
+			DocumentBuilder builder = domFactory.newDocumentBuilder();
+			Document doc = builder.parse(domainXml);
+
+			XPathFactory factory = XPathFactory.newInstance();
+			XPath xpath = factory.newXPath();
+			XPathExpression expr = xpath
+					.compile("//jdbc-connection-pool[@datasource-classname='org.apache.derby.jdbc.ClientDataSource']/property");
+			NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+
+			for (int i = 0; i < nl.getLength(); i++) {
+				Node node = nl.item(i);
+				if (node.getAttributes().getNamedItem("name").getNodeValue().equals(
+						"PortNumber")) {
+					port = Integer.parseInt(node.getAttributes().getNamedItem(
+							"value").getNodeValue());
+
+				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals(
+						"Password")) {
+					pass = node.getAttributes().getNamedItem("value")
+							.getNodeValue();
+				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals(
+						"User")) {
+					user = node.getAttributes().getNamedItem("value")
+							.getNodeValue();
+				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals(
+						"serverName")) {
+					server = node.getAttributes().getNamedItem("value")
+							.getNodeValue();
+				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals(
+						"DatabaseName")) {
+					db = node.getAttributes().getNamedItem("value")
+							.getNodeValue();
+				} else if (node.getAttributes().getNamedItem("name").getNodeValue(). equals(
+						"connectionAttributes")) {
+					conAttrib = node.getAttributes().getNamedItem("value")
+							.getNodeValue();
+				}
+
+			}
+
+		} catch (Exception e) {
+			throw new CoreException(new Status(IStatus.ERROR,
+					"com.sun.enterprise.jst.server.sunappsrv.configurator",
+					"Configuration of ports failed because of: " + e));
+		}
+
+		properties.setProperty(
+				"org.eclipse.datatools.connectivity.db.connectionProperties",
+				"");
+		properties.setProperty("org.eclipse.datatools.connectivity.db.savePWD",
+				"true");
+		properties.setProperty(
+				"org.eclipse.datatools.connectivity.drivers.defnType",
+				"org.eclipse.datatools.connectivity.db.derby102.clientDriver");
+		properties.setProperty("jarList", getJarLocation());
+		properties.setProperty(
+				"org.eclipse.datatools.connectivity.db.username", user);
+		properties.setProperty(
+				"org.eclipse.datatools.connectivity.db.driverClass",
+				"org.apache.derby.jdbc.ClientDriver");
+		properties
+				.setProperty(
+						"org.eclipse.datatools.connectivity.driverDefinitionID",
+						"DriverDefn.org.eclipse.datatools.connectivity.db.derby102.clientDriver.Derby Client JDBC Driver");
+		properties.setProperty(
+				"org.eclipse.datatools.connectivity.db.databaseName", db);
+		properties.setProperty(
+				"org.eclipse.datatools.connectivity.db.password", pass);
+		properties.setProperty("org.eclipse.datatools.connectivity.db.URL",
+				"jdbc:derby://" + server + ":" + port + "/" + db + conAttrib);
+		properties.setProperty("org.eclipse.datatools.connectivity.db.version",
+				"10.2");
+		properties.setProperty("org.eclipse.datatools.connectivity.db.vendor",
+				"Derby");
+
+	}
+
+	public static String getJarLocation() {
+		String property = System.getProperty("gf3location");
+		String glassfishLocation = null;
+		if (property != null) {
+			glassfishLocation = new Path(property).append("javadb").append(
+					"lib").append("derbyclient.jar").toPortableString();
+
+		} else {
+			try {
+				// Get the eclipse installation location and from it V2
+				// installation directory.
+				glassfishLocation = new Path(Platform.getInstallLocation()
+						.getURL().getFile()).append("glassfishv3").append(
+						"javadb").append("lib").append("derbyclient.jar")
+						.toPortableString();
+
+				SunAppSrvPlugin.logMessage("glassfishV3Loc ="
+						+ glassfishLocation);
+				return glassfishLocation;
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		return glassfishLocation;
 	}
 
 }

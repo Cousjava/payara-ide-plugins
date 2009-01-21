@@ -52,7 +52,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -77,10 +76,11 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 public class V3Configurator {
 
 
-	public static void configure(IProgressMonitor progressMonitor)
+	public static String configure(IProgressMonitor progressMonitor)
 			throws CoreException {
 		progressMonitor.setTaskName("Creating Glassfish V3 prelude server configuration.");
 		String glassfishLocation = getGlassfishLocation();
+		String domainXml = null;
 		try {
 			IServerType st = ServerCore.findServerType(Constants.SERVER_PRELUDE_ID);// v3
 			IRuntime runtime = createRuntime(glassfishLocation);
@@ -91,7 +91,7 @@ public class V3Configurator {
 					server.delete();
 				}
 				if (runtime != null && server != null && runtime.equals(server.getRuntime())) {
-					return;
+					return null;
 				}
 			}
 
@@ -103,8 +103,9 @@ public class V3Configurator {
 			String domainLocation = Platform.getLocation().append(".metadata").append(".plugins").append(
 					Constants.SERVER_PRELUDE_ID).toOSString();
 			copyDomain(domainLocation);
-			setPortsForDomain(new Path(domainLocation).append("domain1").append("config").append("domain.xml")
-					.toOSString(), 18080, 14848);
+			domainXml = new Path(domainLocation).append("domain1").append("config").append("domain.xml")
+					.toOSString();
+			setPortsForDomain(domainXml, 18080, 14848);
 			Map<String, String> configuration = sunAppServer.getProps();
 			configuration.put(SunAppServer.DOMAINDIR, domainLocation);
 			sunAppServer.setServerInstanceProperties(configuration);
@@ -115,14 +116,15 @@ public class V3Configurator {
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-		
+
+		return domainXml;
 	}
 
-	private static String getGlassfishLocation() {
+	public static String getGlassfishLocation() {
 		String property = System.getProperty("gf3location");
 		String glassfishLocation = null;
 		if (property != null) {
-			glassfishLocation = property;
+			glassfishLocation = property+"/glassfish";
 
 		} else {
 			try {
