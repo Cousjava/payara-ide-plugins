@@ -63,6 +63,7 @@ only if the new code is made subject to such option by the copyright holder.
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.jst.server.generic.core"/>
       <import plugin="com.sun.enterprise.jst.server.sunappsrv.register"/>
+      <import plugin="org.eclipse.datatools.connectivity"/>
    </requires>
 
    <plugin
