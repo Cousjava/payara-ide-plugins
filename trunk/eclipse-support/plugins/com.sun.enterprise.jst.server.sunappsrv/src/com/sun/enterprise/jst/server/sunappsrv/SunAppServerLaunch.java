@@ -62,15 +62,12 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMConnector;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 
-import com.sun.enterprise.jst.server.sunappsrv.log.LogView;
+import com.sun.enterprise.jst.server.sunappsrv.log.GlassFishConsole;
 import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
 
 
@@ -198,19 +195,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 	try {
                 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
                 			public void run() {
-                				IWorkbench iw =PlatformUI.getWorkbench();
-                				IWorkbenchPage page = iw.
-                				getActiveWorkbenchWindow().
-                				getActivePage();
-                				try {
-                					LogView lv = (LogView)page.showView("com.sun.enterprise.jst.server.sunappsrv.log.LogView");
-                				   	String logFile =  serverBehavior.getDomainDirWithDomainName()+"/logs/server.log";	        
-                				    
-                					lv.init(new File(logFile));
-								} catch (PartInitException e) {
-									// TODO Auto-generated catch block
-	                				SunAppSrvPlugin.logMessage("page.showView",e);
-								}
+            				   	String logFile =  serverBehavior.getDomainDirWithDomainName()+"/logs/server.log";	        
+                  				GlassFishConsole.showConsole(new File(logFile));
                 			}
                 		});
 

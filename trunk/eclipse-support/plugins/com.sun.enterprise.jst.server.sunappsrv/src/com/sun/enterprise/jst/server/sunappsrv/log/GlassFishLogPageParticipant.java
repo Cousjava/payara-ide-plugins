@@ -36,40 +36,41 @@
  */
 // </editor-fold>
 
-package com.sun.enterprise.jst.server.sunappsrv.actions;
+package com.sun.enterprise.jst.server.sunappsrv.log;
 
-import java.io.File;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.IConsolePageParticipant;
+import org.eclipse.ui.part.IPageBookViewPage;
 
-import org.eclipse.wst.server.core.IServer;
+public class GlassFishLogPageParticipant implements IConsolePageParticipant {
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.log.GlassFishConsole;
-/**
- * @author: ludovic champenois
- */
+	public void activated() {
+		// TODO Auto-generated method stub
 
-public class ViewLogAction extends AppServerContextAction{
-	public ViewLogAction() {
-		super("View Log File",getImageDescriptorFromlocalImage("icons/obj16/logfile.gif"));
 	}
 
+	public void deactivated() {
+		// TODO Auto-generated method stub
 
-	public void execute(IServer server) {
-		
+	}
 
-		try {
-	        SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter(
-	                SunAppServerBehaviour.class, null);
-		   	String logFile =  sab.getDomainDirWithDomainName()+"/logs/server.log";	        		    
-			GlassFishConsole.showConsole(new File(logFile));
+	public void dispose() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void init(IPageBookViewPage page, IConsole console) {
+		if(page.getControl() instanceof StyledText) {
+			StyledText viewer = (StyledText)(page.getControl());
 			
-		} catch (Exception e) {
-	           SunAppSrvPlugin.logMessage("Error opening browser: "+e.getMessage());
-
+			viewer.addLineStyleListener(new LogStyle());
 		}
 	}
-	public boolean accept(IServer server) {
-        return true;
+
+	public Object getAdapter(Class adapter) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 }
