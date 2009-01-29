@@ -68,21 +68,13 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 @SuppressWarnings("restriction")
 public class V2Configurator {
 
-	private static final String INSTANCE_PORT = "8081";
-	private static final String ADMIN_PORT = "4849";
-	private static final String HTTPS_PORT = "8182";
-	private static final String AUSER = "admin";
-	private static final String APASS = "adminadmin";
-
-	public static void configure(IProgressMonitor progressMonitor)
-			throws CoreException {
+	public static void configure(IProgressMonitor progressMonitor) throws CoreException {
 
 		String glassfishLoc = getGlassfishLocation();
 
 		progressMonitor.subTask("Creating runtime ...");
 
-		IServerType st = ServerCore
-				.findServerType(Constants.SERVER_GLASSFISH_2_ID);
+		IServerType st = ServerCore.findServerType(Constants.SERVER_GLASSFISH_2_ID);
 		IRuntime runtime = createRuntime(glassfishLoc);
 		IServer[] servers = ServerCore.getServers();
 
@@ -92,8 +84,7 @@ public class V2Configurator {
 			if (server.getRuntime() == null) {
 				server.delete();
 			}
-			if (runtime != null && server != null
-					&& runtime.equals(server.getRuntime())) {
+			if (runtime != null && server != null && runtime.equals(server.getRuntime())) {
 				return;
 			}
 		}
@@ -102,25 +93,21 @@ public class V2Configurator {
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
 		wc.setName("Bundled " + runtime.getName());
 
-		SunAppServer sunAppServer = (SunAppServer) wc
-				.getAdapter(SunAppServer.class);
+		SunAppServer sunAppServer = (SunAppServer) wc.getAdapter(SunAppServer.class);
 
-		String domainLocation = Platform.getLocation().append(".metadata")
-				.append(".plugins").append(Constants.SERVER_GLASSFISH_2_ID)
-				.toOSString();
+		String domainLocation = Platform.getLocation().append(".metadata").append(".plugins").append(
+				Constants.SERVER_GLASSFISH_2_ID).toOSString();
 
 		Map<String, String> configuration = sunAppServer.getProps();
 		configuration.put(SunAppServer.DOMAINDIR, domainLocation);
-		configuration.put(SunAppServer.ADMINNAME, AUSER);
-		configuration.put(SunAppServer.ADMINPASSWORD, APASS);
+		configuration.put(SunAppServer.ADMINNAME, Constants.V2_USER);
+		configuration.put(SunAppServer.ADMINPASSWORD, Constants.V2_PASS);
 		configuration.put(SunAppServer.DOMAINNAME, createDomain(glassfishLoc));
-		configuration.put(SunAppServer.SERVERPORT, INSTANCE_PORT);
-		configuration.put(SunAppServer.ADMINSERVERPORT, ADMIN_PORT);
+		configuration.put(SunAppServer.SERVERPORT, Constants.V2_INSTANCE_PORT);
+		configuration.put(SunAppServer.ADMINSERVERPORT, Constants.V2_ADMIN_PORT);
 		sunAppServer.setServerInstanceProperties(configuration);
 
 		wc.save(true, null);
-
-		// startServer(sunAppServer);
 
 	}
 
@@ -134,21 +121,20 @@ public class V2Configurator {
 			try {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
-				glassfishLoc = new Path(
-						Platform.getInstallLocation().getURL().getFile()).toPortableString()
+				glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
 						+ "/glassfishv2";
 
-
-				SunAppSrvPlugin.logMessage("glassfishLoc =" + glassfishLoc);
-			} catch (Exception e1) {
-				e1.printStackTrace();
+				Activator.getDefault().getLog().log(
+						new Status(IStatus.INFO, Activator.PLUGIN_ID, "glassfishV2Loc =" + glassfishLoc));
+			} catch (Exception e) {
+				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e), e
+						.getMessage(), "Exception occurred");
 			}
 		}
 		return glassfishLoc;
 	}
 
-	private static String createDomain(String glassfishLoc)
-			throws CoreException {
+	private static String createDomain(String glassfishLoc) throws CoreException {
 		int count = getDomainCount(glassfishLoc);
 		String domainName = "v2domain" + count;
 
@@ -160,8 +146,7 @@ public class V2Configurator {
 		HashMap<String, String> map = configureDomain(glassfishLoc, domainName);
 
 		try {
-			URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource(
-					"ant/createDomain.xml");
+			URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource("ant/createDomain.xml");
 			String antFile = FileLocator.toFileURL(xml).getFile();
 
 			ant.setBuildFileLocation(antFile);
@@ -171,34 +156,32 @@ public class V2Configurator {
 
 			ant.run();
 		} catch (IOException e) {
-			SunAppSrvPlugin.logMessage("error in startup config for glassfish",
-					e);
-			throw new CoreException(new Status(IStatus.ERROR,
-					Activator.PLUGIN_ID, e.getMessage()));
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+					"Error in startup config for glassfish: " + e.getMessage(), e), e.getMessage(),
+					"Exception occurred");
 		}
 		return domainName;
 	}
 
-	private static HashMap<String, String> configureDomain(String glassfishLoc,
-			String domainName) {
+	private static HashMap<String, String> configureDomain(String glassfishLoc, String domainName) {
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put(Constants.HTTPS_PORT, HTTPS_PORT);
-		map.put(Constants.ADMIN_PORT, ADMIN_PORT);
-		map.put(Constants.INSTANCE_PORT, INSTANCE_PORT);
+		map.put(Constants.HTTPS_PORT, Constants.V2_HTTPS_PORT);
+		map.put(Constants.ADMIN_PORT, Constants.V2_ADMIN_PORT);
+		map.put(Constants.INSTANCE_PORT, Constants.V2_INSTANCE_PORT);
 		map.put(Constants.IMQ_PORT, "7677");
 		map.put(Constants.ORB_PORT, "3701");
-		map.put(Constants.ADMIN_PASSWORD, APASS);
-		map.put(Constants.ADMIN_USERNAME, AUSER);
+		map.put(Constants.ADMIN_PASSWORD, Constants.V2_PASS);
+		map.put(Constants.ADMIN_USERNAME, Constants.V2_USER);
 		map.put(Constants.GLASSFISH_DIR, glassfishLoc);
 		map.put(Constants.DOMAIN_NAME, domainName);
-		map.put(Constants.DOMAIN_DIR, Platform.getLocation()
-				.append(".metadata").append(".plugins").append(
-						Constants.SERVER_GLASSFISH_2_ID).toOSString());
+		map.put(Constants.DOMAIN_DIR, Platform.getLocation().append(".metadata").append(".plugins").append(
+				Constants.SERVER_GLASSFISH_2_ID).toOSString());
 		return map;
 	}
 
 	/**
 	 * Read number of domains already created from file ".installed".
+	 * 
 	 * @param glassfishLoc
 	 * @return
 	 */
@@ -207,18 +190,13 @@ public class V2Configurator {
 		int count = 0;
 		if (new File(glassfishLoc + File.separator + ".installed").exists()) {
 			try {
-				BufferedReader in = new BufferedReader(new FileReader(
-						glassfishLoc + File.separator + ".installed"));
+				BufferedReader in = new BufferedReader(new FileReader(glassfishLoc + File.separator + ".installed"));
 				count = Integer.parseInt(in.readLine()) + 1;
 				in.close();
-			} catch (IOException e) {
-				SunAppSrvPlugin.logMessage(
-						"error in startup config for glassfish", e);
-				e.printStackTrace();
-			} catch (NumberFormatException e) {
-				SunAppSrvPlugin.logMessage(
-						"error in startup config for glassfish", e);
-				e.printStackTrace();
+			} catch (Exception e) {
+				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+						"Error in startup config for glassfish: " + e.getMessage(), e), e.getMessage(),
+						"Exception occurred");
 			}
 		}
 		return count;
@@ -227,30 +205,22 @@ public class V2Configurator {
 	private static void increaseDomainCount(String glassfishLoc, int count) {
 		// Increase the number of domains created in the file.
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc
-					+ File.separator + ".installed"));
-			out.write(""+count);
+			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc + File.separator + ".installed"));
+			out.write("" + count);
 			out.close();
-		} catch (IOException e) {
-			SunAppSrvPlugin.logMessage("error in startup config for glassfish",
-					e);
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
-			SunAppSrvPlugin.logMessage("error in startup config for glassfish",
-					e);
-			e.printStackTrace();
+		} catch (Exception e) {
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+					"Error in startup config for glassfish: " + e.getMessage(), e), e.getMessage(),
+					"Exception occurred");
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public static IRuntime createRuntime(String glassfishLocation)
-			throws CoreException {
-		IServerType st = ServerCore
-				.findServerType(Constants.SERVER_GLASSFISH_2_ID);
+	private static IRuntime createRuntime(String glassfishLocation) throws CoreException {
+		IServerType st = ServerCore.findServerType(Constants.SERVER_GLASSFISH_2_ID);
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		for (IRuntime runtime : runtimes) {
-			if (runtime != null
-					&& runtime.getRuntimeType().equals(st.getRuntimeType())) {
+			if (runtime != null && runtime.getRuntimeType().equals(st.getRuntimeType())) {
 				return runtime;
 			}
 		}
@@ -258,15 +228,15 @@ public class V2Configurator {
 		IRuntimeWorkingCopy wc;
 		wc = st.getRuntimeType().createRuntime(null, null);
 
-		GenericServerRuntime gRun = (GenericServerRuntime) wc.loadAdapter(
-				GenericServerRuntime.class, new NullProgressMonitor());
+		GenericServerRuntime gRun = (GenericServerRuntime) wc.loadAdapter(GenericServerRuntime.class,
+				new NullProgressMonitor());
 
 		HashMap map = new HashMap();
 		map.put(SunAppServer.ROOTDIR, glassfishLocation);
 		gRun.setServerDefinitionId(gRun.getRuntime().getRuntimeType().getId());
 		gRun.setServerInstanceProperties(map);
 
-//		wc.setLocation(new Path(glassfishLocation));
+		// wc.setLocation(new Path(glassfishLocation));
 		return wc.save(true, null);
 	}
 }

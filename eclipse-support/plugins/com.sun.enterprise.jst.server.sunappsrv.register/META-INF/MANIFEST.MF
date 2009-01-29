@@ -16,3 +16,6 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers
+Bundle-ClassPath: lib/registration-api.jar,
+ lib/registration-impl.jar,
+ .

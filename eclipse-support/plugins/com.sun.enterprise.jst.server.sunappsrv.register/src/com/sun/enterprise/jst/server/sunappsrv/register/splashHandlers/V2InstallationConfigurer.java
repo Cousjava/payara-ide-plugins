@@ -46,7 +46,9 @@ import org.apache.tools.ant.listener.TimestampedLogger;
 import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -95,12 +97,12 @@ public class V2InstallationConfigurer {
 
 			ant.run();
 		} catch (CoreException e) {
-			Activator.logMessage("error", e);
-			e.printStackTrace();
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
+					e.getMessage(), "Exception occurred");
 			return;
 		} catch (IOException e) {
-			Activator.logMessage("error", e);
-			e.printStackTrace();
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
+					e.getMessage(), "Exception occurred");
 			return;
 		}
 		try {
@@ -108,7 +110,8 @@ public class V2InstallationConfigurer {
 			out.write("1");
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
+					e.getMessage(), "Exception occurred");
 		}
 
 	}
@@ -116,7 +119,7 @@ public class V2InstallationConfigurer {
 	public static String getJDKDir() {
 		String lcOSName = System.getProperty("os.name").toLowerCase();
 		boolean mac = lcOSName.startsWith("mac os x");
-		if (mac){
+		if (mac) {
 			return System.getProperty("java.home");
 		}
 		String file = getSystemJDKDir();
@@ -136,6 +139,7 @@ public class V2InstallationConfigurer {
 			file = dd.open();
 			if (file == null) {
 				System.err.println("Installation cancelled");
+				Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Installation cancelled"));
 				System.exit(0);
 			}
 			shell.close();
