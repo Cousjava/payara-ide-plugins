@@ -38,6 +38,9 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.actions;
 
+import java.io.File;
+
+import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -48,6 +51,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.server.core.IServer;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 /**
@@ -67,27 +71,38 @@ public class PreludeUpdateCenterAction extends AppServerContextAction {
 
 
     public void execute(IServer server) {
-    	
-		if (accept(server)==false){
-			showMessageDialog();
-			return;
-		}
-        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        try {
-            SunAppSrvPlugin.logMessage("PreludeUpdateCenterAction run for " +server);
-            IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("icons/obj16/sunappsrv.gif"));
-            page.openEditor(new FileEditorInput(file), "com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter");
-        } catch (Exception e) {
-            SunAppSrvPlugin.logMessage("PreludeUpdateCenterAction " + e);
-            try {
-                page.openEditor(null, "com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter");
-            } catch (PartInitException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-            e.printStackTrace();
-        }
-
+    	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
+    	if (!sab.isV3()) { // V2 only
+    		String[] command = new String[]{
+    				sab.getSunAppServer().getDomainDir()+"/../updatecenter/bin/updatetool"
+    		}; 
+    		try {
+    			Execute.launch(null, command, null, new File(sab.getSunApplicationServerInstallationDirectory()), true);
+    			return;
+    		} catch (Exception ioe) {
+    			SunAppSrvPlugin.logMessage("error Launching Executable", ioe);
+    		}
+    	} else { // V3
+			if (accept(server)==false){
+				showMessageDialog();
+				return;
+			}
+	        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+	        try {
+	            SunAppSrvPlugin.logMessage("PreludeUpdateCenterAction run for " +server);
+	            IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("icons/obj16/sunappsrv.gif"));
+	            page.openEditor(new FileEditorInput(file), "com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter");
+	        } catch (Exception e) {
+	            SunAppSrvPlugin.logMessage("PreludeUpdateCenterAction " + e);
+	            try {
+	                page.openEditor(null, "com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter");
+	            } catch (PartInitException e1) {
+	                // TODO Auto-generated catch block
+	                e1.printStackTrace();
+	            }
+	            e.printStackTrace();
+	        }
+    	}
     }
 
     @Override
