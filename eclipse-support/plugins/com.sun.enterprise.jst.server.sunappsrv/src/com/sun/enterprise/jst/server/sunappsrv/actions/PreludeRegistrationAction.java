@@ -38,9 +38,6 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.actions;
 
-import java.io.File;
-
-import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -50,7 +47,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.server.core.IServer;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 /**
@@ -67,20 +63,11 @@ public class PreludeRegistrationAction extends AppServerContextAction  {
     }
 
  	public void execute (IServer server) {
-    	    	
-      	
-    	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
-    	if (sab.isV3()==false){//V2 only
-    		String[] command = new String[]{
-    				sab.getSunAppServer().getDomainDir()+"/../../updatetool/bin/updatetool"
-    		}; 
-    		try {
-    			Execute.launch(null, command, null, new File(sab.getSunApplicationServerInstallationDirectory()), true);
-    			return;
-    		} catch (Exception ioe) {
-    			SunAppSrvPlugin.logMessage("error Launching Executable", ioe);
-    		} 
-    	}
+ 		// for now, do registration through url whether v2 or v3
+ 		// once registration plugin is ready, consider using it (eclipse gui) instead
+ 		// if we do, we will need a plugin dependency on that module or to do some refactoring here
+ 		// if we do not, and continue to use code which is called v3 for both v2 & v3, 
+ 		// we should think about renaming this action and moving Register class out of v3 package
       	     	
 		if (accept(server)==false){
 			showMessageDialog();
