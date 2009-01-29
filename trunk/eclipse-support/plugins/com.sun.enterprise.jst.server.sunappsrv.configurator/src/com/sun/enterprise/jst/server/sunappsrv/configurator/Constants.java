@@ -34,16 +34,6 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
-import java.io.IOException;
-import java.net.URL;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 
 public abstract class Constants {
 
@@ -61,5 +51,16 @@ public abstract class Constants {
 	public final static String ADMIN_PASSWORD = "admin_password";
 	public final static String DOMAIN_NAME = "domain_name";
 	public final static String DOMAIN_DIR = "domain.dir";
+	
+	// V2 configuration constants
+	public static final String V2_INSTANCE_PORT = "8082";
+	public static final String V2_ADMIN_PORT = "4849";
+	public static final String V2_HTTPS_PORT = "8182";
+	public static final String V2_USER = "admin";
+	public static final String V2_PASS = "adminadmin";
+
+	// V3 Prelude configuration constants
+	public static final int V3_ADMIN_PORT = 4850;
+	public static final int V3_HTTP_PORT = 8083;
 
 }

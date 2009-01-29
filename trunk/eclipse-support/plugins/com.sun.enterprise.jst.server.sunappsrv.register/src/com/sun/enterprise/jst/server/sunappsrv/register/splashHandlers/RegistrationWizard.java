@@ -42,10 +42,12 @@ public class RegistrationWizard extends Wizard {
 	public void addPages() {
 		addPage(new RegistrationChoicePage("Choose registration method"));
 		addPage(new RegisterAccountPage("Register account"));
+		
 	}
 
 	@Override
 	public boolean performFinish() {
+		System.out.println("performing finish");
 		return false;
 	}
 

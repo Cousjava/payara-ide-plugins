@@ -75,9 +75,7 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 @SuppressWarnings("restriction")
 public class V3Configurator {
 
-
-	public static String configure(IProgressMonitor progressMonitor)
-			throws CoreException {
+	public static String configure(IProgressMonitor progressMonitor) throws CoreException {
 		progressMonitor.setTaskName("Creating Glassfish V3 prelude server configuration.");
 		String glassfishLocation = getGlassfishLocation();
 		String domainXml = null;
@@ -102,10 +100,12 @@ public class V3Configurator {
 
 			String domainLocation = Platform.getLocation().append(".metadata").append(".plugins").append(
 					Constants.SERVER_PRELUDE_ID).toOSString();
+			
 			copyDomain(domainLocation);
-			domainXml = new Path(domainLocation).append("domain1").append("config").append("domain.xml")
-					.toOSString();
-			setPortsForDomain(domainXml, 18080, 14848);
+			
+			domainXml = new Path(domainLocation).append("domain1").append("config").append("domain.xml").toOSString();
+			setPortsForDomain(domainXml, Constants.V3_HTTP_PORT, Constants.V3_ADMIN_PORT);
+			
 			Map<String, String> configuration = sunAppServer.getProps();
 			configuration.put(SunAppServer.DOMAINDIR, domainLocation);
 			sunAppServer.setServerInstanceProperties(configuration);
@@ -114,7 +114,9 @@ public class V3Configurator {
 
 			// startServer(sunAppServer);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+					"Error in startup config for glassfish: " + e.getMessage(), e), e.getMessage(),
+					"Exception occurred");
 		}
 
 		return domainXml;
@@ -124,20 +126,22 @@ public class V3Configurator {
 		String property = System.getProperty("gf3location");
 		String glassfishLocation = null;
 		if (property != null) {
-			glassfishLocation = property+"/glassfish";
+			glassfishLocation = property + "/glassfish";
 
 		} else {
 			try {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
-				glassfishLocation = new Path(
-						Platform.getInstallLocation().getURL().getFile()).toPortableString()
+				glassfishLocation = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
 						+ "/glassfishv3/glassfish";
-						    
-				SunAppSrvPlugin.logMessage("glassfishV3Loc =" + glassfishLocation);
+
+				Activator.getDefault().getLog().log(
+						new Status(IStatus.INFO, Activator.PLUGIN_ID, "glassfishV3Loc =" + glassfishLocation));
 				return glassfishLocation;
-			} catch (Exception e1) {
-				e1.printStackTrace();
+			} catch (Exception e) {
+				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+						"Error in startup config for glassfish: " + e.getMessage(), e), e.getMessage(),
+						"Exception occurred");
 			}
 		}
 		return glassfishLocation;
@@ -161,7 +165,7 @@ public class V3Configurator {
 					new NullProgressMonitor());
 
 			HashMap map = new HashMap();
-			
+
 			map.put(SunAppServer.ROOTDIR, glassfishLocation);
 			gRun.setServerDefinitionId(gRun.getRuntime().getRuntimeType().getId());
 			gRun.setServerInstanceProperties(map);
@@ -169,7 +173,9 @@ public class V3Configurator {
 			wc.setLocation(new Path(glassfishLocation));
 			return wc.save(true, null);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+					"Error in startup config for glassfish: " + e.getMessage(), e), e.getMessage(),
+					"Exception occurred");
 		}
 		return null;
 	}
@@ -204,9 +210,11 @@ public class V3Configurator {
 						fis.close();
 						fos.close();
 					} catch (Exception e) {
-						throw new CoreException(new Status(IStatus.ERROR,
+						Status status = new Status(IStatus.ERROR,
 								"com.sun.enterprise.jst.server.sunappsrv.configurator", "File copying failed due to: "
-										+ e));
+										+ e, e);
+						Activator.getDefault().getLog().log(status);
+						throw new CoreException(status);
 					}
 				}
 			}
@@ -217,7 +225,7 @@ public class V3Configurator {
 		return new Path(getGlassfishLocation()).append("domains").toOSString();
 	}
 
-	public static void setPortsForDomain(String domainXml, int i, int j) throws CoreException {
+	public static void setPortsForDomain(String domainXml, int http, int admin) throws CoreException {
 		try {
 			DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
 			domFactory.setNamespaceAware(true);
@@ -229,19 +237,21 @@ public class V3Configurator {
 			XPathExpression expr = xpath.compile("//http-listener[@id='http-listener-1']");
 			Node node = (Node) expr.evaluate(doc, XPathConstants.NODE);
 			Node port = node.getAttributes().getNamedItem("port");
-			port.setNodeValue("" + i);
+			port.setNodeValue("" + http);
 
 			expr = xpath.compile("//http-listener[@id='admin-listener']");
 			node = (Node) expr.evaluate(doc, XPathConstants.NODE);
 			port = node.getAttributes().getNamedItem("port");
-			port.setNodeValue("" + j);
+			port.setNodeValue("" + admin);
 
 			Transformer xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.transform(new DOMSource(doc), new StreamResult(new File(domainXml)));
 
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator",
-					"Configuration of ports failed because of: " + e));
+			Status status = new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator",
+					"Configuration of ports failed because of: " + e, e);
+			Activator.getDefault().getLog().log(status);
+			throw new CoreException(status);
 		}
 	}
 }

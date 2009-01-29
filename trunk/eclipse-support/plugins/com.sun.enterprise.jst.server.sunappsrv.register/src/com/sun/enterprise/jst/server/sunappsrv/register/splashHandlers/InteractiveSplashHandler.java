@@ -37,7 +37,6 @@ package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -58,9 +57,6 @@ import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
  */
 public class InteractiveSplashHandler extends AbstractSplashHandler {
 
-	// FIXME convert to property, so it could be given at runtime.
-	private static final boolean workspace = false;
-
 	public InteractiveSplashHandler() {
 	}
 
@@ -73,7 +69,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	 */
 	public void init(final Shell splash) {
 		super.init(splash);
-		// showWizard(splash);
+		showWizard(splash);
 
 		final String glassfishLoc = getGlassfishLocation();
 
@@ -96,17 +92,15 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					ProgressMonitorDialog pmd = new ProgressMonitorDialog(shell);
 					pmd.run(true, false, op);
 				} catch (Exception e) {
-					Activator.logMessage("error",e);
-					org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
-							.getLocalizedMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
-							.getLocalizedMessage()));
+					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
+							e.getMessage(), "Exception occurred");
 				}
 
 			}
 		});
 
 	}
-	
+
 	public static String getGlassfishLocation() {
 		String property = System.getProperty("gf2location");
 		String glassfishLoc = null;
@@ -116,19 +110,16 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			try {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
-				glassfishLoc = new Path(
-						Platform.getInstallLocation().getURL().getFile()).toPortableString()
+				glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
 						+ "/glassfishv2";
 
 				Activator.logMessage("glassfishLoc =" + glassfishLoc, null);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+			} catch (Exception e) {
+				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
+						e.getMessage(), "Exception occurred");			}
 		}
 		return glassfishLoc;
 	}
-
-
 
 	/**
 	 * Show registration dialog.

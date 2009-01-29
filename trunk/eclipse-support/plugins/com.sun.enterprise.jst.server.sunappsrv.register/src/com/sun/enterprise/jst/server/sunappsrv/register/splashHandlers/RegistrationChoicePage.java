@@ -65,6 +65,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		super(pageName);
 		setTitle("Personal Information");
 		setDescription("Please enter your personal information");
+		setPageComplete(false);
 	}
 
 	public void createControl(Composite comp) {
@@ -180,11 +181,9 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 
 	}
 
-	//
-	// @Override
-	// public boolean canFlipToNextPage() {
-	// return canFlip ;
-	// }
+	public boolean canFlipToNextPage() {
+		return canFlip;
+	}
 
 	public void widgetSelected(SelectionEvent se) {
 		Object src = se.getSource();
@@ -193,6 +192,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			if (bt.getSelection()) {
 				System.out.println("User doesn't have an account");
 				canFlip = true;
+				setPageComplete(false);
 			}
 		}
 		if (src.equals(account)) {
@@ -200,6 +200,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			if (bt.getSelection()) {
 				System.out.println("User has account");
 				canFlip = false;
+				setPageComplete(false);
 			}
 
 		}
@@ -208,8 +209,11 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			if (bt.getSelection()) {
 				System.out.println("User decided to skip registration");
 				canFlip = false;
+				setPageComplete(true);
 			}
 		}
+		
+		
 
 	}
 

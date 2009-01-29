@@ -36,6 +36,8 @@ package com.sun.enterprise.jst.server.sunappsrv.register;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -92,4 +94,22 @@ public class Activator extends AbstractUIPlugin {
         final Status status = new Status(IStatus.ERROR, PLUGIN_ID, 1,"GlassFish: "+mess,e);        
         getDefault().getLog().log(status);
     }
+    
+    /**
+	 * Shows given status in ErrorDialog and logs it through the Plugin API.
+	 * 
+	 * @param status
+	 *            status used for ErrorDialog and logging.
+	 * @param message
+	 *            message for the error dialog.
+	 * @param title
+	 *            title for the error dialog.
+	 */
+	public static void showErrorAndLog(IStatus status, String message, String title) {
+		getDefault().getLog().log(status);
+		Shell shell = new Shell(Display.getDefault());
+		org.eclipse.jface.dialogs.ErrorDialog.openError(shell, title, message, status);
+		shell.dispose();
+
+	}
 }

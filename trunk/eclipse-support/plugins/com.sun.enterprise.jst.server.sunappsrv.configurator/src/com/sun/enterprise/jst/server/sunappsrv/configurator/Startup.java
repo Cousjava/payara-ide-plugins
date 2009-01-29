@@ -46,8 +46,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.internal.IStartup;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-
 @SuppressWarnings("restriction")
 public class Startup implements IStartup {
 
@@ -56,6 +54,7 @@ public class Startup implements IStartup {
 		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
+
 				final Shell shell = new Shell(Display.getDefault());
 				try {
 					IRunnableWithProgress op = new IRunnableWithProgress() {
@@ -65,24 +64,18 @@ public class Startup implements IStartup {
 								progressMonitor.setTaskName("Creating Glassfish servers instances");
 								GlassFishConfigurator.createV2Server(progressMonitor);
 								String domainXml = GlassFishConfigurator.createV3Server(progressMonitor);
-								GlassFishConfigurator.createDerbyDB(progressMonitor,domainXml);
+								GlassFishConfigurator.createDerbyDB(progressMonitor, domainXml);
 							} catch (CoreException e) {
-							    e.printStackTrace();
-							     SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
-
-								org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
-										.getMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
-										.getMessage()));
+								Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+										e.getMessage(), e), e.getMessage(), "Exception occurred");
 							}
 						}
 					};
 					ProgressMonitorDialog pmd = new ProgressMonitorDialog(shell);
 					pmd.run(true, false, op);
 				} catch (Exception e) {
-                    SunAppSrvPlugin.logMessage("error in startup config for glassfish", e);
-					org.eclipse.jface.dialogs.ErrorDialog.openError(shell, "Exception occurred", e
-							.getMessage(), new Status(IStatus.ERROR, Activator.PLUGIN_ID, e
-							.getMessage()));
+					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e), e
+							.getMessage(), "Exception occurred");
 				}
 
 			}
