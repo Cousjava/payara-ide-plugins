@@ -33,8 +33,8 @@
         <mac-postflight-script>
 
 # Don't forget the quotes, there could be a space...
-chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv2"
-chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv3"
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv2.1"
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv3prelude"
 
     </mac-postflight-script>
 </configuration>
