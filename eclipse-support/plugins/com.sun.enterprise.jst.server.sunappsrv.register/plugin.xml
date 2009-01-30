@@ -8,7 +8,7 @@
             id="com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers.interactive">
       </splashHandler>
       <splashHandlerProductBinding
-            productId="org.eclipse.platform.ide"
+            productId="com.sun.enterprise.jst.server.sunappsrv.register.glassfishBundle"
             splashId="com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers.interactive">
       </splashHandlerProductBinding>
    </extension>
