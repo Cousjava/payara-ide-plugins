@@ -133,7 +133,7 @@ public class V3Configurator {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
 				glassfishLocation = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
-						+ "/glassfishv3/glassfish";
+						+ "/glassfishv3prelude/glassfish";
 
 				Activator.getDefault().getLog().log(
 						new Status(IStatus.INFO, Activator.PLUGIN_ID, "glassfishV3Loc =" + glassfishLocation));
