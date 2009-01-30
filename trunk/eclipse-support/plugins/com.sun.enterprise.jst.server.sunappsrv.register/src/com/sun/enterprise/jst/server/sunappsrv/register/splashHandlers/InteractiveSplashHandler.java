@@ -47,14 +47,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveRegistry;
-import org.eclipse.ui.IWindowListener;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchListener;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.splash.AbstractSplashHandler;
 
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
@@ -64,8 +56,6 @@ import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
  * 
  */
 public class InteractiveSplashHandler extends AbstractSplashHandler {
-
-	private static final String JEE_PERSPECTIVE = "org.eclipse.jst.j2ee.J2EEPerspective";
 
 	public InteractiveSplashHandler() {
 	}
@@ -108,8 +98,6 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 
 			}
 		});
-		IPerspectiveRegistry pReg = PlatformUI.getWorkbench().getPerspectiveRegistry();
-		pReg.setDefaultPerspective(JEE_PERSPECTIVE);
 		
 	}
 

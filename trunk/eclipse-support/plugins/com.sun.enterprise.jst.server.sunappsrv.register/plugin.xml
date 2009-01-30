@@ -12,4 +12,11 @@
             splashId="com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers.interactive">
       </splashHandlerProductBinding>
    </extension>
+          <extension
+           name="%productName"
+           point="org.eclipse.core.runtime.products"> 
+      <product name="%productName" application="org.eclipse.ui.ide.workbench" description="%productBlurb"> 
+          <property name="preferenceCustomization" value="plugin_customization.ini"/> 
+      </product> 
+   </extension>
 </plugin>
