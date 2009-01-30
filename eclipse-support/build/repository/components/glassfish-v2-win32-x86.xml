@@ -15,16 +15,16 @@
 					<mkdir dir="${gfplugins.download.folder}" />
 
 					<get
-						src="https://glassfishplugins.dev.java.net/files/documents/3651/121296/appserver_install_image-windows-b04.zip"
-						dest="${gfplugins.download.folder}/appserver_install_image-windows-b04.zip"
+						src="https://glassfishplugins.dev.java.net/files/documents/3651/124461/appserver_install_image-windows-b60e.zip"
+						dest="${gfplugins.download.folder}/appserver_install_image-windows-b60e.zip"
 						verbose="true" usetimestamp="true" />
 
-					<mkdir dir="${components.dist.folder}/${dist.name}/eclipse/glassfishv2" />
+					<mkdir dir="${components.dist.folder}/${dist.name}/eclipse/glassfishv2.1" />
 					<exec executable="unzip">
 						<arg
-							value="${gfplugins.download.folder}/appserver_install_image-windows-b04.zip" />
+							value="${gfplugins.download.folder}/appserver_install_image-windows-b60e.zip" />
 						<arg value="-d" />
-						<arg value="${components.dist.folder}/${dist.name}/eclipse/glassfishv2" />
+						<arg value="${components.dist.folder}/${dist.name}/eclipse/glassfishv2.1" />
 					</exec>
 				</target>
 			</project>

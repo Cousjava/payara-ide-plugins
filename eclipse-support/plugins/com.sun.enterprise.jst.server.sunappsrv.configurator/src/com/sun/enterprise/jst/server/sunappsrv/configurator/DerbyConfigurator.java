@@ -155,7 +155,7 @@ public class DerbyConfigurator {
 			try {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
-				glassfishLocation = new Path(Platform.getInstallLocation().getURL().getFile()).append("glassfishv3")
+				glassfishLocation = new Path(Platform.getInstallLocation().getURL().getFile()).append("glassfishv3prelude")
 						.append("javadb").append("lib").append("derbyclient.jar").toPortableString();
 
 				Activator.getDefault().getLog().log(

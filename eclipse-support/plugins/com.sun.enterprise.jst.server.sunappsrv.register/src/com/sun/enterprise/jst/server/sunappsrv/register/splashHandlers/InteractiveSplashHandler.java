@@ -111,7 +111,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
 				glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
-						+ "/glassfishv2";
+						+ "/glassfishv2.1";
 
 				Activator.logMessage("glassfishLoc =" + glassfishLoc, null);
 			} catch (Exception e) {
