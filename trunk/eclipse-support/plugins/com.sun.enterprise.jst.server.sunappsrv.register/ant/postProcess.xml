@@ -67,15 +67,7 @@
 			<fileset dir="${glassfish_dir}/lib/upgrade" />
 		</chmod>
 		<!-- javadb -->
-		<chmod perm="ugo+x">
-			<fileset dir="${glassfish_dir}/javadb/frameworks/NetworkServer/bin">
-				<include name="*.ksh" />
-				<!--
-					For Cygwin use the following: <include name="*.bat"/> <include
-					name="*.cmd"/>
-				-->
-			</fileset>
-		</chmod>
+
 		<!-- updatecenter -->
 		<chmod perm="ugo+x">
 			<fileset dir="${glassfish_dir}/updatecenter/bin" />
