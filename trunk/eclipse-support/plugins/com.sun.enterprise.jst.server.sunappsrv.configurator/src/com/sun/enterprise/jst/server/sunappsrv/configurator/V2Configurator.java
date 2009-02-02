@@ -63,7 +63,6 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
 public class V2Configurator {
@@ -127,8 +126,8 @@ public class V2Configurator {
 				Activator.getDefault().getLog().log(
 						new Status(IStatus.INFO, Activator.PLUGIN_ID, "glassfishV2Loc =" + glassfishLoc));
 			} catch (Exception e) {
-				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e), e
-						.getMessage(), "Exception occurred");
+				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
+						"Getting Glassfish V2 location encountered a problem: " + e.getMessage(), "Exception occurred");
 			}
 		}
 		return glassfishLoc;

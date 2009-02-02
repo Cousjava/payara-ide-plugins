@@ -37,14 +37,12 @@ package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.tools.ant.listener.TimestampedLogger;
 import org.eclipse.ant.core.AntRunner;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -96,22 +94,13 @@ public class V2InstallationConfigurer {
 			ant.addBuildLogger(TimestampedLogger.class.getName());
 
 			ant.run();
-		} catch (CoreException e) {
-			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-					e.getMessage(), "Exception occurred");
-			return;
-		} catch (IOException e) {
-			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-					e.getMessage(), "Exception occurred");
-			return;
-		}
-		try {
+
 			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc + File.separator + ".installed"));
 			out.write("1");
 			out.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-					e.getMessage(), "Exception occurred");
+					"Configuring Glassfish V2 encountered a problem: " + e.getMessage(), "Exception occurred");
 		}
 
 	}
@@ -139,7 +128,8 @@ public class V2InstallationConfigurer {
 			file = dd.open();
 			if (file == null) {
 				System.err.println("Installation cancelled");
-				Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Installation cancelled"));
+				Activator.getDefault().getLog().log(
+						new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Installation cancelled"));
 				System.exit(0);
 			}
 			shell.close();

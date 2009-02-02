@@ -34,7 +34,6 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
-
 public abstract class Constants {
 
 	public final static String GLASSFISH3_BUNDLE = "com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude";
@@ -51,7 +50,7 @@ public abstract class Constants {
 	public final static String ADMIN_PASSWORD = "admin_password";
 	public final static String DOMAIN_NAME = "domain_name";
 	public final static String DOMAIN_DIR = "domain.dir";
-	
+
 	// V2 configuration constants
 	public static final String V2_INSTANCE_PORT = "8082";
 	public static final String V2_ADMIN_PORT = "4849";

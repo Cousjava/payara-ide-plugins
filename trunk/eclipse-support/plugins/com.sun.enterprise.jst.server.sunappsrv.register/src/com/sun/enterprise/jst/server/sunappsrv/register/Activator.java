@@ -90,12 +90,13 @@ public class Activator extends AbstractUIPlugin {
 	public static Activator getDefault() {
 		return plugin;
 	}
-    public static void logMessage(String mess, Exception e){
-        final Status status = new Status(IStatus.ERROR, PLUGIN_ID, 1,"GlassFish: "+mess,e);        
-        getDefault().getLog().log(status);
-    }
-    
-    /**
+
+	public static void logMessage(String mess, Exception e) {
+		final Status status = new Status(IStatus.ERROR, PLUGIN_ID, 1, "GlassFish: " + mess, e);
+		getDefault().getLog().log(status);
+	}
+
+	/**
 	 * Shows given status in ErrorDialog and logs it through the Plugin API.
 	 * 
 	 * @param status
@@ -105,11 +106,17 @@ public class Activator extends AbstractUIPlugin {
 	 * @param title
 	 *            title for the error dialog.
 	 */
-	public static void showErrorAndLog(IStatus status, String message, String title) {
+	public static void showErrorAndLog(final IStatus status, final String message, final String title) {
 		getDefault().getLog().log(status);
-		Shell shell = new Shell(Display.getDefault());
-		org.eclipse.jface.dialogs.ErrorDialog.openError(shell, title, message, status);
-		shell.dispose();
+		Display.getDefault().asyncExec(new Runnable() {
+
+			public void run() {
+				final Shell shell = new Shell(Display.getDefault());
+				org.eclipse.jface.dialogs.ErrorDialog.openError(shell, title, message, status);
+				shell.dispose();
+
+			}
+		});
 
 	}
 }
