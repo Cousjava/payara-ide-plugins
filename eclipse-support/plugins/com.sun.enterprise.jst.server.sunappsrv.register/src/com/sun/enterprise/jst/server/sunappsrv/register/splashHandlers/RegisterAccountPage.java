@@ -34,14 +34,10 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
-import java.lang.reflect.InvocationTargetException;
-import java.net.ConnectException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -52,9 +48,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
@@ -165,7 +159,6 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 		}
 	}
 
-	@Override
 	public void modifyText(ModifyEvent arg0) {
 		updatePage();
 	}

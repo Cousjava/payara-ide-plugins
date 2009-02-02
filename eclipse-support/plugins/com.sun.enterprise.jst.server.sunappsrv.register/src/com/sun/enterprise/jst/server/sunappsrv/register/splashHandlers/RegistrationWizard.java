@@ -34,10 +34,6 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 
 public class RegistrationWizard extends Wizard {
@@ -54,7 +50,7 @@ public class RegistrationWizard extends Wizard {
 
 	}
 
-	@Override
+	
 	public boolean canFinish() {
 		boolean choicePageComplete = choicePage.isPageComplete();
 		boolean accountPageComplete = accountPage.isPageComplete();

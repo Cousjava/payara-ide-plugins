@@ -259,7 +259,6 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		return false;
 	}
 
-	@Override
 	public void modifyText(ModifyEvent arg0) {
 		updateFields();
 	}
