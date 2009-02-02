@@ -37,8 +37,10 @@ package com.sun.enterprise.jst.server.sunappsrv.configurator;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -61,6 +63,7 @@ public class Startup implements IStartup {
 						public void run(IProgressMonitor progressMonitor) throws InvocationTargetException,
 								InterruptedException {
 							try {
+								IProduct product = Platform.getProduct();
 								progressMonitor.setTaskName("Creating Glassfish servers instances");
 								GlassFishConfigurator.createV2Server(progressMonitor);
 								String domainXml = GlassFishConfigurator.createV3Server(progressMonitor);

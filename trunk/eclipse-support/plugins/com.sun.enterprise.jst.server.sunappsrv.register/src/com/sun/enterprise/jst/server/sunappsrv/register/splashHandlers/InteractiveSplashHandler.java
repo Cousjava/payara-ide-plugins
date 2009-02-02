@@ -50,6 +50,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.splash.AbstractSplashHandler;
 
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
+import com.sun.enterprise.jst.server.sunappsrv.register.service.RegisterService;
+import com.sun.enterprise.registration.RegistrationException;
+import com.sun.enterprise.registration.RegistrationService.RegistrationReminder;
 
 /**
  * @since 3.3
@@ -123,6 +126,18 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	 * @param splash
 	 */
 	public static void showWizard(final Shell splash) {
+		try {
+			RegistrationReminder reminder = RegisterService.getReminder(null, 0);
+			if (reminder.equals(RegistrationReminder.DONT_ASK_FOR_REGISTRATION))
+				return;
+			//
+			// if (RegisterService.isRegistered(loc, null, 0))
+			// return;
+		} catch (RegistrationException e) {
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
+					"Error getting registration status: " + e.getMessage(), "Exception occurred");
+		}
+
 		RegistrationWizard wizard = new RegistrationWizard();
 		WizardDialog dialog = new WizardDialog(splash, wizard);
 		dialog.open();

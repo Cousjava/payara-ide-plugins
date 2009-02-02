@@ -39,6 +39,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.Bullet;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -51,20 +53,29 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class RegistrationChoicePage extends WizardPage implements SelectionListener {
+import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
+import com.sun.enterprise.jst.server.sunappsrv.register.service.RegisterService;
+import com.sun.enterprise.registration.RegistrationException;
+
+public class RegistrationChoicePage extends WizardPage implements SelectionListener, ModifyListener {
 
 	private static final int FIELD_WIDTH = 150;
 	private static final int LABEL_WITDH = 80;
+	public static final int NO_ACCOUNT = 0;
+	public static final int ACCOUNT = 1;
+	public static final int SKIP = 2;
 	private StyledText styledText;
 	private Button noAccount;
 	private Button account;
 	private Button skip;
 	private boolean canFlip = true;
+	private int type;
+	private Text tPassword;
+	private Text tUser;
 
 	protected RegistrationChoicePage(String pageName) {
 		super(pageName);
 		setTitle("Personal Information");
-		setDescription("Please enter your personal information");
 		setPageComplete(false);
 	}
 
@@ -109,7 +120,8 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		userComposite.setLayoutData(formData);
 
 		Label l1 = new Label(userComposite, SWT.NONE);
-		Text t = new Text(userComposite, SWT.BORDER);
+		tUser = new Text(userComposite, SWT.BORDER);
+		tUser.addModifyListener(this);
 
 		l1.setText("User Name");
 		formData = new FormData();
@@ -120,7 +132,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		formData.width = FIELD_WIDTH;
 		formData.left = new FormAttachment(l1, 0, SWT.DEFAULT);
 		formData.top = new FormAttachment(l1, 0, SWT.TOP);
-		t.setLayoutData(formData);
+		tUser.setLayoutData(formData);
 
 		Composite passComposite = new Composite(composite, SWT.NONE);
 		FormLayout layout2 = new FormLayout();
@@ -131,7 +143,8 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		passComposite.setLayoutData(formData);
 
 		Label l2 = new Label(passComposite, SWT.NONE);
-		Text t2 = new Text(passComposite, SWT.BORDER | SWT.PASSWORD);
+		tPassword = new Text(passComposite, SWT.BORDER | SWT.PASSWORD);
+		tPassword.addModifyListener(this);
 
 		l2.setText("Password");
 		formData = new FormData();
@@ -142,7 +155,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		formData.width = FIELD_WIDTH;
 		formData.left = new FormAttachment(l2, 0, SWT.DEFAULT);
 		formData.top = new FormAttachment(l2, 0, SWT.TOP);
-		t2.setLayoutData(formData);
+		tPassword.setLayoutData(formData);
 
 		skip.setText("Skip registration.");
 		formData = new FormData();
@@ -190,31 +203,76 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		if (src.equals(noAccount)) {
 			Button bt = (Button) src;
 			if (bt.getSelection()) {
-				System.out.println("User doesn't have an account");
+				type = NO_ACCOUNT;
 				canFlip = true;
-				setPageComplete(false);
+				setMessage(null);
+				setErrorMessage(null);
+				setPageComplete(true);
 			}
 		}
 		if (src.equals(account)) {
 			Button bt = (Button) src;
 			if (bt.getSelection()) {
-				System.out.println("User has account");
+				type = ACCOUNT;
 				canFlip = false;
-				setPageComplete(false);
+				updateFields();
 			}
 
 		}
 		if (src.equals(skip)) {
 			Button bt = (Button) src;
 			if (bt.getSelection()) {
-				System.out.println("User decided to skip registration");
+				type = SKIP;
 				canFlip = false;
+				setMessage(null);
+				setErrorMessage(null);
 				setPageComplete(true);
 			}
 		}
-		
-		
+	}
 
+	public int getRegistrationType() {
+		return type;
+	}
+
+	public boolean skipRegistration() {
+		try {
+			RegisterService.skipRegister(null, 0);
+			return true;
+		} catch (RegistrationException e) {
+			Activator.logMessage("Skiping registration failed", e);
+			setErrorMessage(e.getMessage());
+		}
+		return false;
+
+	}
+
+	public boolean register() {
+		try {
+			RegisterService.validateAccountAndRegister(tUser.getText(), tPassword.getText(), null, 0);
+			return true;
+		} catch (Exception e) {
+			Activator.logMessage("Registration failed", e);
+			setErrorMessage(e.getMessage());
+		}
+
+		return false;
+	}
+
+	@Override
+	public void modifyText(ModifyEvent arg0) {
+		updateFields();
+	}
+
+	private void updateFields() {
+		if (tUser.getText().length() > 0 && tPassword.getText().length() > 0) {
+			setPageComplete(true);
+			setErrorMessage(null);
+			setMessage("Click finish to register Glassfish server");
+		} else{
+			setPageComplete(false);
+			setErrorMessage("Please insert username and password");
+		}
 	}
 
 }

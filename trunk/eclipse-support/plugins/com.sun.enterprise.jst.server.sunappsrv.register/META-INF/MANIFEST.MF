@@ -19,4 +19,6 @@ Bundle-ActivationPolicy: lazy
 Export-Package: com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers
 Bundle-ClassPath: lib/registration-api.jar,
  lib/registration-impl.jar,
- .
+ .,
+ lib/sysnet-registration-repackaged.jar,
+ lib/commons-codec-repackaged.jar
