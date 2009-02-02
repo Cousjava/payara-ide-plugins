@@ -34,20 +34,56 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 
 public class RegistrationWizard extends Wizard {
 
-	@Override
+	private RegistrationChoicePage choicePage;
+	private RegisterAccountPage accountPage;
+
 	public void addPages() {
-		addPage(new RegistrationChoicePage("Choose registration method"));
-		addPage(new RegisterAccountPage("Register account"));
-		
+		choicePage = new RegistrationChoicePage("Choose registration method");
+		accountPage = new RegisterAccountPage("Register account");
+
+		addPage(choicePage);
+		addPage(accountPage);
+
 	}
 
 	@Override
+	public boolean canFinish() {
+		boolean choicePageComplete = choicePage.isPageComplete();
+		boolean accountPageComplete = accountPage.isPageComplete();
+
+		switch (choicePage.getRegistrationType()) {
+		case RegistrationChoicePage.SKIP:
+			return true;
+		case RegistrationChoicePage.NO_ACCOUNT:
+			return choicePageComplete && accountPageComplete;
+		case RegistrationChoicePage.ACCOUNT:
+			return choicePageComplete;
+		default:
+			return false;
+		}
+	}
+
 	public boolean performFinish() {
-		System.out.println("performing finish");
+		boolean success = false;
+		switch (choicePage.getRegistrationType()) {
+		case RegistrationChoicePage.SKIP:
+			success  = choicePage.skipRegistration();
+		case RegistrationChoicePage.NO_ACCOUNT:
+			success = accountPage.registerUser();
+		case RegistrationChoicePage.ACCOUNT:
+			success = choicePage.register();
+		default:
+			break;
+		}
+
 		return false;
 	}
 

@@ -34,25 +34,45 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
+import java.lang.reflect.InvocationTargetException;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
+import java.util.List;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
-public class RegisterAccountPage extends WizardPage {
+import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
+import com.sun.enterprise.jst.server.sunappsrv.register.service.RegisterService;
+import com.sun.enterprise.registration.RegistrationException;
+
+public class RegisterAccountPage extends WizardPage implements ModifyListener {
 
 	private static final int FIELD_WIDTH = 150;
 	private static final int LABEL_WITDH = 80;
-	private Text tName;
-	private Text tSurname;
+	private Text tFirstName;
+	private Text tLastName;
 	private Text tEmail;
 	private Text tPassword;
 	private Text tConfirm;
 	private Text tCompanyName;
-	private Text tCountry;
+	private Combo tCountry;
+	private List countries;
 
 	protected RegisterAccountPage(String pageName) {
 		super(pageName);
@@ -60,6 +80,7 @@ public class RegisterAccountPage extends WizardPage {
 		setDescription("Please enter your personal information");
 	}
 
+	@SuppressWarnings("unchecked")
 	public void createControl(Composite comp) {
 		Composite composite = new Composite(comp, SWT.NONE);
 
@@ -69,26 +90,126 @@ public class RegisterAccountPage extends WizardPage {
 		composite.setLayout(layout);
 		setControl(composite);
 
-		createTextComposite(composite, "Email address", tEmail);
-		createTextComposite(composite, "Password", tPassword, SWT.PASSWORD);
-		createTextComposite(composite, "Retype password", tConfirm, SWT.PASSWORD);
-		createTextComposite(composite, "Name", tName);
-		createTextComposite(composite, "Last Name", tSurname);
-		createTextComposite(composite, "Company Name", tCompanyName);
-		createTextComposite(composite, "Country", tCountry);
+		tEmail = createTextComposite(composite, "Email address");
+		tPassword = createTextComposite(composite, "Password", SWT.PASSWORD);
+		tConfirm = createTextComposite(composite, "Retype password", SWT.PASSWORD);
+		tFirstName= createTextComposite(composite, "Name");
+		tLastName =createTextComposite(composite, "Last Name");
+		tCompanyName =createTextComposite(composite, "Company Name");
+		try {
+			tCountry = createListComposite(composite, "Country", 0);
+			countries = RegisterService.getCountries(null, 0);
+			List dispList = (List) countries.get(1);
+			for (Object c : dispList) {
+				tCountry.add(c.toString());
+			}
+		} catch (RegistrationException e) {
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Error getting Countries list: "
+					+ e.getMessage(), e), e.getMessage(), "Exception occurred");
+		}
 	}
 
-	public void createTextComposite(Composite c, String labelText, Text text) {
-		createTextComposite(c, labelText, text, 0);
+	public Text createTextComposite(Composite c, String labelText) {
+		return createTextComposite(c, labelText, 0);
 	}
 
-	public void createTextComposite(Composite c, String labelText, Text text, int i) {
+	public Text createTextComposite(Composite c, String labelText,  int i) {
 		Label l1 = new Label(c, SWT.NONE);
 		Text t = new Text(c, SWT.BORDER | i);
 		GridData gridData = new GridData();
 		gridData.widthHint = FIELD_WIDTH;
 		t.setLayoutData(gridData);
 		l1.setText(labelText);
-		text = t;
+		t.addModifyListener(this);
+		return t;
 	}
+
+	public Combo createListComposite(Composite c, String labelText,  int i) {
+		Label l1 = new Label(c, SWT.NONE);
+		Combo co = new Combo(c, SWT.READ_ONLY);
+		GridData gridData = new GridData();
+		gridData.widthHint = FIELD_WIDTH;
+		co.setLayoutData(gridData);
+		co.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent selectionevent) {
+				updatePage();
+			}
+
+			public void widgetSelected(SelectionEvent selectionevent) {
+				updatePage();
+			}
+		});
+
+		l1.setText(labelText);
+		return co;
+	}
+	
+	public String getActualCountry(String country){
+		List dispList = (List) countries.get(1);
+		for (int i = 0; i < dispList.size(); i++) {
+			if (dispList.get(i).toString().equals(country))
+				return (String) ((List)countries.get(0)).get(i);
+			
+		}
+		return null;
+	}
+
+	public boolean registerUser() {
+		try {
+			RegisterService.createSDNAccount(tEmail.getText(), tPassword.getText(), getActualCountry(tCountry.getText()), tFirstName.getText(), tLastName.getText(), tCompanyName.getText(), null, 0);
+			return true;
+		} catch (Exception e) {
+			Activator.logMessage("Creating an SDN account failed: ", e);
+			setErrorMessage(e.getMessage());
+			return false;
+		}
+	}
+
+	@Override
+	public void modifyText(ModifyEvent arg0) {
+		updatePage();
+	}
+
+	private void updatePage() {
+		if (tEmail.getText().length() <=0){
+			setErrorMessage("Please insert email adress");
+			setPageComplete(false);
+			return;
+		}
+		if (tPassword.getText().length() <=0){
+			setErrorMessage("Please insert password");
+			setPageComplete(false);
+			return;
+		}
+		if (!tPassword.getText().equals(tConfirm.getText())){
+			setErrorMessage("Passwords don't match");
+			setPageComplete(false);
+			return;
+		}
+		if (tFirstName.getText().length() <=0){
+			setErrorMessage("Please insert your first name");
+			setPageComplete(false);
+			return;
+		}
+		if (tLastName.getText().length() <=0){
+			setErrorMessage("Please insert your last name");
+			setPageComplete(false);
+			return;
+		}
+		if (tCompanyName.getText().length() <=0){
+			setErrorMessage("Please insert your company name");
+			setPageComplete(false);
+			return;
+		}
+		if (tCountry.getText().length() <=0){
+			setErrorMessage("Please insert your country");
+			setPageComplete(false);
+			return;
+		}
+		setErrorMessage(null);
+		setMessage("Click finish to register your account and register Glassfish");
+		setPageComplete(true);
+	}
+	
+
 }
