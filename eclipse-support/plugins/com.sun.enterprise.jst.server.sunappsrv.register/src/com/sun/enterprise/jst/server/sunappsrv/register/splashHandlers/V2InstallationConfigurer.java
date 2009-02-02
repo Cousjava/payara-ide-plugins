@@ -100,7 +100,7 @@ public class V2InstallationConfigurer {
 			out.close();
 		} catch (Exception e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-					"Configuring Glassfish V2 encountered a problem: " + e.getMessage(), "Exception occurred");
+					"Configuring Glassfish v2.1 encountered a problem: " + e.getMessage(), "Exception occurred");
 		}
 
 	}
@@ -122,7 +122,7 @@ public class V2InstallationConfigurer {
 		do {
 			Shell shell = new Shell(Display.getDefault());
 			DirectoryDialog dd = new DirectoryDialog(shell);
-			dd.setText("Please select Java SDK installation " + "location for Glassfish V2.");
+			dd.setText("Please select Java SDK installation " + "location for Glassfish v2.1");
 			dd.setFilterPath(file);
 			dd.setMessage(message);
 			file = dd.open();
