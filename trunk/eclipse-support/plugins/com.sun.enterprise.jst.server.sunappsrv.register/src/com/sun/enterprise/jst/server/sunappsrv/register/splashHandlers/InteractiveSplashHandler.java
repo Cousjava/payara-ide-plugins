@@ -88,7 +88,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					IRunnableWithProgress op = new IRunnableWithProgress() {
 						public void run(IProgressMonitor progressMonitor) throws InvocationTargetException,
 								InterruptedException {
-							progressMonitor.setTaskName("Configuring Glassfish V2 installation ...");
+							progressMonitor.setTaskName("Configuring Glassfish V2.1 installation ...");
 							V2InstallationConfigurer.configureV2(dir, glassfishLoc);
 						}
 					};
@@ -96,7 +96,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					pmd.run(true, false, op);
 				} catch (Exception e) {
 					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-							"Congiguring Glassfish V2 encountered a problem: " + e.getMessage(), "Exception occurred");
+							"Configuring Glassfish v2.1 encountered a problem: " + e.getMessage(), "Exception occurred");
 				}
 
 			}

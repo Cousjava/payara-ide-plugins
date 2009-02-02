@@ -88,9 +88,9 @@ public class V2Configurator {
 			}
 		}
 
-		progressMonitor.subTask("Creating domain ...");
+		progressMonitor.subTask("Creating GlassFish v2.1 domain in your workspace.. Please wait...");
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
-		wc.setName("Bundled " + runtime.getName());
+		wc.setName("Bundled GlassFish v2.1");
 
 		SunAppServer sunAppServer = (SunAppServer) wc.getAdapter(SunAppServer.class);
 
@@ -127,7 +127,7 @@ public class V2Configurator {
 						new Status(IStatus.INFO, Activator.PLUGIN_ID, "glassfishV2Loc =" + glassfishLoc));
 			} catch (Exception e) {
 				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-						"Getting Glassfish V2 location encountered a problem: " + e.getMessage(), "Exception occurred");
+						"Getting Glassfish v2.1 location encountered a problem: " + e.getMessage(), "Exception occurred");
 			}
 		}
 		return glassfishLoc;

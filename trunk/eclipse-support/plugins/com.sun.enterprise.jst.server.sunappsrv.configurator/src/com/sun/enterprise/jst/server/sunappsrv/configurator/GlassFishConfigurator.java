@@ -40,12 +40,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class GlassFishConfigurator {
 
 	public static void createV2Server(IProgressMonitor progressMonitor) throws CoreException {
-		progressMonitor.setTaskName("Creating Glassfish V2 server configuration.");
+		progressMonitor.setTaskName("Creating Glassfish v2.1 server configuration.");
 		V2Configurator.configure(progressMonitor);
 	}
 
 	public static String createV3Server(IProgressMonitor progressMonitor) throws CoreException {
-		progressMonitor.setTaskName("Creating Glassfish V3 prelude server configuration.");
+		progressMonitor.setTaskName("Creating Glassfish v3 prelude server configuration.");
 		return V3Configurator.configure(progressMonitor);
 	}
 
