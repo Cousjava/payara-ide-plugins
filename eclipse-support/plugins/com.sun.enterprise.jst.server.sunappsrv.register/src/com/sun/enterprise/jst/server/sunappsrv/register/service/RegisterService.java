@@ -1,13 +1,16 @@
 package com.sun.enterprise.jst.server.sunappsrv.register.service;
 
-import java.lang.*;
-import java.lang.reflect.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import com.sun.enterprise.registration.*;
-import com.sun.enterprise.registration.impl.*;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.sun.enterprise.registration.RegistrationAccount;
 import com.sun.enterprise.registration.RegistrationException;
+import com.sun.enterprise.registration.impl.SOAccount;
+import com.sun.enterprise.registration.impl.SysnetRegistrationService;
 
 @SuppressWarnings("unchecked")
 public class RegisterService {
@@ -17,8 +20,10 @@ public class RegisterService {
 	 * 
 	 * @param username
 	 * @param passwd
-	 * @param localRegistryPath = glassfish installHome + File.separator + "glassfish" + File.separator + "lib" + File.separator
-				+ "registration" + File.separator + "servicetag-registry.xml";
+	 * @param localRegistryPath
+	 *            = glassfish installHome + File.separator + "glassfish" +
+	 *            File.separator + "lib" + File.separator + "registration" +
+	 *            File.separator + "servicetag-registry.xml";
 	 * @param proxyHost
 	 * @param proxyPort
 	 * @throws ClassNotFoundException
@@ -65,8 +70,10 @@ public class RegisterService {
 	 * @param firstname
 	 * @param lastname
 	 * @param companyname
-	 * @param localRegistryPath = glassfish installHome + File.separator + "glassfish" + File.separator + "lib" + File.separator
-				+ "registration" + File.separator + "servicetag-registry.xml";
+	 * @param localRegistryPath
+	 *            = glassfish installHome + File.separator + "glassfish" +
+	 *            File.separator + "lib" + File.separator + "registration" +
+	 *            File.separator + "servicetag-registry.xml";
 	 * @param proxyHost
 	 * @param proxyPort
 	 * @throws RegistrationException

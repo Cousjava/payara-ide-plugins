@@ -100,11 +100,16 @@ public class Activator extends AbstractUIPlugin {
 	 * @param title
 	 *            title for the error dialog.
 	 */
-	public static void showErrorAndLog(IStatus status, String message, String title) {
+	public static void showErrorAndLog(final IStatus status, final String message, final String title) {
 		getDefault().getLog().log(status);
-		Shell shell = new Shell(Display.getDefault());
-		org.eclipse.jface.dialogs.ErrorDialog.openError(shell, title, message, status);
-		shell.dispose();
+		Display.getDefault().asyncExec(new Runnable() {
+
+			public void run() {
+				final Shell shell = new Shell(Display.getDefault());
+				org.eclipse.jface.dialogs.ErrorDialog.openError(shell, title, message, status);
+				shell.dispose();
+			}
+		});
 
 	}
 

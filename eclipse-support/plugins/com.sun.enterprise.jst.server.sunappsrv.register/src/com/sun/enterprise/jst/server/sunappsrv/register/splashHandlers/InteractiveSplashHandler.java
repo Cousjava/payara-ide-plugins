@@ -93,12 +93,12 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					pmd.run(true, false, op);
 				} catch (Exception e) {
 					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-							e.getMessage(), "Exception occurred");
+							"Congiguring Glassfish V2 encountered a problem: " + e.getMessage(), "Exception occurred");
 				}
 
 			}
 		});
-		
+
 	}
 
 	public static String getGlassfishLocation() {
@@ -107,16 +107,12 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		if (property != null) {
 			glassfishLoc = property;
 		} else {
-			try {
-				// Get the eclipse installation location and from it V2
-				// installation directory.
-				glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
-						+ "/glassfishv2.1";
+			// Get the eclipse installation location and from it V2
+			// installation directory.
+			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
+					+ "/glassfishv2.1";
 
-				Activator.logMessage("glassfishLoc =" + glassfishLoc, null);
-			} catch (Exception e) {
-				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-						e.getMessage(), "Exception occurred");			}
+			Activator.logMessage("glassfishLoc =" + glassfishLoc, null);
 		}
 		return glassfishLoc;
 	}

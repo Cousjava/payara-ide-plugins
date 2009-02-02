@@ -67,15 +67,17 @@ public class Startup implements IStartup {
 								GlassFishConfigurator.createDerbyDB(progressMonitor, domainXml);
 							} catch (CoreException e) {
 								Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-										e.getMessage(), e), e.getMessage(), "Exception occurred");
+										"Creating server configurations encountered a problem: " + e.getMessage(), e),
+										e.getMessage(), "Exception occurred");
 							}
 						}
 					};
 					ProgressMonitorDialog pmd = new ProgressMonitorDialog(shell);
 					pmd.run(true, false, op);
 				} catch (Exception e) {
-					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e), e
-							.getMessage(), "Exception occurred");
+					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
+							"Creating server configurations encountered a problem: " + e.getMessage(),
+							"Exception occurred");
 				}
 
 			}

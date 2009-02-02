@@ -70,7 +70,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
 public class V3Configurator {
@@ -100,12 +99,12 @@ public class V3Configurator {
 
 			String domainLocation = Platform.getLocation().append(".metadata").append(".plugins").append(
 					Constants.SERVER_PRELUDE_ID).toOSString();
-			
+
 			copyDomain(domainLocation);
-			
+
 			domainXml = new Path(domainLocation).append("domain1").append("config").append("domain.xml").toOSString();
 			setPortsForDomain(domainXml, Constants.V3_HTTP_PORT, Constants.V3_ADMIN_PORT);
-			
+
 			Map<String, String> configuration = sunAppServer.getProps();
 			configuration.put(SunAppServer.DOMAINDIR, domainLocation);
 			sunAppServer.setServerInstanceProperties(configuration);

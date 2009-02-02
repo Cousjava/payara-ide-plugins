@@ -61,14 +61,21 @@ import org.w3c.dom.NodeList;
 public class DerbyConfigurator {
 
 	static void configure(IProgressMonitor progressMonitor, String domainXml) throws CoreException {
+		DriverManager dm = DriverManager.getInstance();
+
+		DriverInstance sample = dm.getDriverInstanceByName("DerbyForSampleDB");
+		// if the sample is already configured we don't need to do anything
+		if (sample != null)
+			return;
+
 		Properties properties = new Properties();
 		readProperties(domainXml, properties);
 
 		String profileName = "Sample Derby database";
 		String description = "Profile for sample Derby database. NB! database must be started manually";
 
-		DriverInstance di = DriverManager.getInstance().createNewDriverInstance(
-				"org.eclipse.datatools.connectivity.db.derby102.clientDriver", "DerbyForSampleDB", getJarLocation());
+		DriverInstance di = dm.createNewDriverInstance("org.eclipse.datatools.connectivity.db.derby102.clientDriver",
+				"DerbyForSampleDB", getJarLocation());
 		properties.setProperty(ConnectionProfileConstants.PROP_DRIVER_DEFINITION_ID, di.getId());
 
 		try {
@@ -76,7 +83,7 @@ public class DerbyConfigurator {
 					"org.eclipse.datatools.connectivity.db.derby.embedded.connectionProfile", properties);
 		} catch (ConnectionProfileException e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-					e.getMessage(), "Exception occurred");
+					"Configuring sample Derby database encountered a problem: " + e.getMessage(), "Exception occurred");
 		}
 	}
 
@@ -155,8 +162,9 @@ public class DerbyConfigurator {
 			try {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
-				glassfishLocation = new Path(Platform.getInstallLocation().getURL().getFile()).append("glassfishv3prelude")
-						.append("javadb").append("lib").append("derbyclient.jar").toPortableString();
+				glassfishLocation = new Path(Platform.getInstallLocation().getURL().getFile()).append(
+						"glassfishv3prelude").append("javadb").append("lib").append("derbyclient.jar")
+						.toPortableString();
 
 				Activator.getDefault().getLog().log(
 						new Status(IStatus.INFO, Activator.PLUGIN_ID, "derbyJar =" + glassfishLocation));
