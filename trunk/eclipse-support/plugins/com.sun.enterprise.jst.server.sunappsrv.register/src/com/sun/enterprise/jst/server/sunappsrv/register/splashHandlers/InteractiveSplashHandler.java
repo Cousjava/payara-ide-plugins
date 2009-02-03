@@ -71,6 +71,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	 * .Shell)
 	 */
 	public void init(final Shell splash) {
+		Activator.logMessage("Initializing splash handler", null);
 		super.init(splash);
 		showWizard(splash);
 
