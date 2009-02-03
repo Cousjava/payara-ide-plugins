@@ -72,15 +72,18 @@ public class RegistrationWizard extends Wizard {
 		switch (choicePage.getRegistrationType()) {
 		case RegistrationChoicePage.SKIP:
 			success  = choicePage.skipRegistration();
+			break;
 		case RegistrationChoicePage.NO_ACCOUNT:
 			success = accountPage.registerUser();
+			break;
 		case RegistrationChoicePage.ACCOUNT:
 			success = choicePage.register();
+			break;
 		default:
 			break;
 		}
 
-		return false;
+		return success;
 	}
 
 }
