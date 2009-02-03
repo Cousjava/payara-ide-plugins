@@ -240,7 +240,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			RegisterService.skipRegister(null, 0);
 			return true;
 		} catch (RegistrationException e) {
-			Activator.logMessage("Skiping registration failed", e);
+			Activator.logErrorMessage("Skiping registration failed", e);
 			setErrorMessage(e.getMessage());
 		}
 		return false;
@@ -252,7 +252,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			RegisterService.validateAccountAndRegister(tUser.getText(), tPassword.getText(), null, 0);
 			return true;
 		} catch (Exception e) {
-			Activator.logMessage("Registration failed", e);
+			Activator.logErrorMessage("Registration failed", e);
 			setErrorMessage(e.getMessage());
 		}
 

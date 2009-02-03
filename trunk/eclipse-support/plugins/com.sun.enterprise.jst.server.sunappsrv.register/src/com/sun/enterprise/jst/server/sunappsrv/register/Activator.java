@@ -91,8 +91,12 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	public static void logMessage(String mess, Exception e) {
-		final Status status = new Status(IStatus.ERROR, PLUGIN_ID, 1, "GlassFish: " + mess, e);
+	public static void logErrorMessage(String mess, Exception e) {
+		logMessage(mess, e, IStatus.ERROR);
+	}
+
+	public static void logMessage(String mess, Exception e, int severity) {
+		final Status status = new Status(severity, PLUGIN_ID, 1, "GlassFish: " + mess, e);
 		getDefault().getLog().log(status);
 	}
 
