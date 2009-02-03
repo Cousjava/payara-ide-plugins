@@ -71,7 +71,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	 * .Shell)
 	 */
 	public void init(final Shell splash) {
-		Activator.logMessage("Initializing splash handler", null);
+		Activator.logMessage("Initializing splash handler", null,IStatus.INFO);
 		super.init(splash);
 		showWizard(splash);
 
@@ -116,7 +116,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
 					+ "/glassfishv2.1";
 
-			Activator.logMessage("glassfishLoc =" + glassfishLoc, null);
+			Activator.logMessage("glassfishLoc =" + glassfishLoc, null,IStatus.INFO);
 		}
 		return glassfishLoc;
 	}

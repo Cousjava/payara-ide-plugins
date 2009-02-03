@@ -153,7 +153,7 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 			RegisterService.createSDNAccount(tEmail.getText(), tPassword.getText(), getActualCountry(tCountry.getText()), tFirstName.getText(), tLastName.getText(), tCompanyName.getText(), null, 0);
 			return true;
 		} catch (Exception e) {
-			Activator.logMessage("Creating an SDN account failed: ", e);
+			Activator.logErrorMessage("Creating an SDN account failed: ", e);
 			setErrorMessage(e.getMessage());
 			return false;
 		}

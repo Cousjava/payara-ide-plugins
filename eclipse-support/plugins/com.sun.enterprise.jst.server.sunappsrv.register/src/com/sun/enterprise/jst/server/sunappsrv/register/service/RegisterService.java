@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 
@@ -34,7 +35,7 @@ public class RegisterService {
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
 					+ "/glassfishv3prelude";
 
-			Activator.logMessage("glassfishLoc =" + glassfishLoc, null);
+			Activator.logMessage("glassfishLoc =" + glassfishLoc, null,IStatus.INFO);
 		}
 		return glassfishLoc + File.separator + "glassfish" + File.separator + "lib" + File.separator + "registration"
 				+ File.separator + "servicetag-registry.xml";

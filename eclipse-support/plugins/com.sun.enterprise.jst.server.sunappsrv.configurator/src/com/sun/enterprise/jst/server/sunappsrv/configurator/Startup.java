@@ -53,6 +53,7 @@ public class Startup implements IStartup {
 
 	public void startup() {
 		// In startup you have to explicitly get to UI thread.
+		Activator.getDefault().getLog().log(new Status(IStatus.INFO,Activator.PLUGIN_ID,"Product id = " + Platform.getProduct().getId()));
 		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
