@@ -72,7 +72,7 @@ public class DerbyConfigurator {
 		readProperties(domainXml, properties);
 
 		String profileName = "Sample JavaDB Database";
-		String description = "Sample JavaDB database. Please, not that the database must be started manually.";
+		String description = "Sample JavaDB database. Please, note that the database must be started manually.";
 
 		DriverInstance di = dm.createNewDriverInstance("org.eclipse.datatools.connectivity.db.derby102.clientDriver",
 				"DerbyForSampleDB", getJarLocation());
