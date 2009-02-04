@@ -4,6 +4,7 @@ cvs  -d :pserver:anonymous@easyeclipse.cvs.sourceforge.net:/cvsroot/easyeclipse 
 cp -f patches/download-style.xml easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
 # Latest update to releng should make this patch obsolete. Needs confirmation.
 #cp -f patches/package.xml easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
+cp -r patches/Info.plist  easyeclipse/easyeclipse/org.nexb.easyeclipse.releng/repository/configurations/base-root-files/eclipse/Eclipse.app/Contents
 cp -f build.properties easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
 pushd easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
 ./build.sh glassfish-distro
