@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly
+name="Eclipse Webtools without server runtimes" releaseDate="2009-02-05" type="eclipse-plugin" version="3.0.3">
+    <!-- Copyright (c) 2003-2008 by nexB, Inc. http://www.nexb.com/ - All rights reserved. This software is licensed under the terms of the Open Software License version 2.1. A copy of the license is available at http://opensource.org/licenses/osl-2.1.php -->
+    <description> This plugin is classical WTP with no server runtimes included
+        </description>
+    <license type="epl-1.0">
+        <terms/>
+    </license>
+   <include>
+        <component id="eclipse-wtp" patternset="wtp-no-servers" version="3.0.3"/>
+    </include>
+    <build type="binary">
+        <antscript>
+            <project>
+                <patternset id="wtp-no-servers">
+                    <exclude name="eclipse/plugins/org.eclipse.jst.server.generic.jboss*/**"/>
+                    <exclude name="eclipse/plugins/org.eclipse.jst.server.generic.jonas*/**"/>
+                    <exclude name="eclipse/plugins/org.eclipse.jst.server.generic.oc4j*/**"/>
+                    <exclude name="eclipse/plugins/org.eclipse.jst.server.websphere*/**"/>
+                    <exclude name="eclipse/plugins/org.eclipse.jst.server.tomcat*"/>
+                </patternset>
+            </project>
+        </antscript>
+    </build>
+    <package no-download="no">
+        <size os="win32">14M</size>
+        <size os="macosx">15M</size>
+        <size os="linux">14M</size>
+    </package>
+    <shortdescription>WTP-</shortdescription>
+    <provider name="Eclipse Foundation"/>
+    <copyright>Copyright (c) Eclipse contributors and others. 2000-2008. All rights reserved.</copyright>
+    <link type="homepage" url="http://eclipse.org/webtools"/>
+    <link type="project-home" url="http://www.eclipse.org/webtools/wst/main.html"/>
+    <dependencies>
+      <assembly id="eclipse-tools"/>
+    </dependencies>
+    <changelog release="1.3.1">
+        <entry date="2008-04-09" type="creation" version="2.0.1"> </entry>
+    </changelog>
+    <provider email="yz~-~gs&gt;dvcPullltsq!opb" name="Eclipse Web Tools WST team" organization="Eclipse.org"/>
+    <eclipse-help>yes</eclipse-help>
+</assembly>
+

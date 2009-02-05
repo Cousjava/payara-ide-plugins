@@ -10,7 +10,7 @@
 		<component id="sun-jdk-5-linux-x86" />
 		<component id="eclipse-platform" />
 		<component id="eclipse-jdt" />
-		<component id="eclipse-wtp" />
+		<assembly id="eclipse-wtp-no-servers" />
 		<component id="eclipse-emf-sdo-xsd" />
 		<component id="eclipse-gef" />
 		<component id="eclipse-dtp" />
