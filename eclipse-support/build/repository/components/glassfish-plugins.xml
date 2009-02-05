@@ -64,18 +64,35 @@
                             dir="${gfplugins.download.folder}/glassfishplugins/eclipse-support/features"
                             includes="*configurator*/**" />
                     </copy>
+
+                    <copy todir="${gfplugins.work.folder}/plugins">
+                        <fileset
+                            dir="${gfplugins.download.folder}/glassfishplugins/eclipse-support/plugins/"
+                            includes="*help*/**" />
+                    </copy>
+                    <copy todir="${gfplugins.work.folder}/features">
+                        <fileset
+                            dir="${gfplugins.download.folder}/glassfishplugins/eclipse-support/features"
+                            includes="*help*/**" />
+                    </copy>
+
                     <!-- this value should be set by the main build.xml -->
                     <build-feature-from-sources-with-base
                         builddirectory="${gfplugins.work.folder}"
                         componentId="${component.id}" distributionName="${dist.name}"
                         featureId="com.sun.enterprise.jst.server.sunappsrv.configurator.feature"
                         qualifier="dev" />
-                </target>
+                    <build-feature-from-sources-with-base
+                        builddirectory="${gfplugins.work.folder}"
+                        componentId="${component.id}" distributionName="${dist.name}"
+                        featureId="com.sun.enterprise.jst.server.sunappsrv.help.feature"
+                        qualifier="dev" />
+                        </target>
             </project>
         </antscript>
     </build>
     <copyright>Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.</copyright>
-    <license style="Not open source">
+    <license style="open source">
         <terms />
         DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
