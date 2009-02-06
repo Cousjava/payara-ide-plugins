@@ -38,6 +38,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,16 +53,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
+import com.sun.enterprise.jst.server.sunappsrv.register.Messages;
 
 public class V2InstallationConfigurer {
 
-	public final static String GLASSFISH_INSTALL = "glassfish_dir";
-	public final static String INSTALL_HOME = "install_home";
-	public final static String INSTALL_HOME_F = "install_home_f";
-	public final static String JAVA_HOME = "java_home";
-	public final static String JAVA_HOME_F = "java_home_f";
-	public final static String ADMIN_USERNAME = "admin_username";
-	public final static String ADMIN_PASSWORD = "admin_password";
+	public final static String GLASSFISH_INSTALL = "glassfish_dir"; //$NON-NLS-1$
+	public final static String INSTALL_HOME = "install_home"; //$NON-NLS-1$
+	public final static String INSTALL_HOME_F = "install_home_f"; //$NON-NLS-1$
+	public final static String JAVA_HOME = "java_home"; //$NON-NLS-1$
+	public final static String JAVA_HOME_F = "java_home_f"; //$NON-NLS-1$
+	public final static String ADMIN_USERNAME = "admin_username"; //$NON-NLS-1$
+	public final static String ADMIN_PASSWORD = "admin_password"; //$NON-NLS-1$
 
 	public static void configureV2(String jdkFolder, String glassfishLoc) {
 		// We use ant for replacing properties within V2 installation as ant is
@@ -77,65 +79,65 @@ public class V2InstallationConfigurer {
 		map.put(V2InstallationConfigurer.GLASSFISH_INSTALL, glassfishLoc);
 		map.put(V2InstallationConfigurer.INSTALL_HOME, glassfishLoc);
 		map.put(V2InstallationConfigurer.INSTALL_HOME_F, glassfishLoc + File.separator);
-		map.put(V2InstallationConfigurer.ADMIN_USERNAME, "admin");
-		map.put(V2InstallationConfigurer.ADMIN_PASSWORD, "adminadmin");
+		map.put(V2InstallationConfigurer.ADMIN_USERNAME, "admin"); //$NON-NLS-1$
+		map.put(V2InstallationConfigurer.ADMIN_PASSWORD, "adminadmin"); //$NON-NLS-1$
 
 		map.put(V2InstallationConfigurer.JAVA_HOME, jdkFolder);
 		map.put(V2InstallationConfigurer.JAVA_HOME_F, jdkFolder + File.separator);
 		try {
-			URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource("ant/postProcess.xml");
+			URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource("ant/postProcess.xml"); //$NON-NLS-1$
 			String antFile = FileLocator.toFileURL(xml).getFile();
 
 			ant.setBuildFileLocation(antFile);
 			ant.addUserProperties(map);
 			// FIXME in production remove those lines, no need for the user to
 			// see that much info
-			ant.setArguments("-Dmessage=Building -verbose");
+			ant.setArguments("-Dmessage=Building -verbose"); //$NON-NLS-1$
 			ant.addBuildLogger(TimestampedLogger.class.getName());
 
 			ant.run();
 
-			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc + File.separator + ".installed"));
-			out.write("1");
+			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc + File.separator + ".installed")); //$NON-NLS-1$
+			out.write("1"); //$NON-NLS-1$
 			out.close();
 		} catch (Exception e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-					"Configuring Glassfish v2.1 encountered a problem: " + e.getMessage(), "Exception occurred");
+					MessageFormat.format(Messages.CONFIGURING_GLASSFISH_V2_1_ENCOUNTERED_A_PROBLEM_0, e.getMessage()), Messages.EXCEPTION_OCCURRED);
 		}
 
 	}
 
 	public static String getJDKDir() {
-		String lcOSName = System.getProperty("os.name").toLowerCase();
-		boolean mac = lcOSName.startsWith("mac os x");
+		String lcOSName = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
+		boolean mac = lcOSName.startsWith("mac os x"); //$NON-NLS-1$
 		if (mac) {
-			return System.getProperty("java.home");
+			return System.getProperty("java.home"); //$NON-NLS-1$
 		}
 		String file = getSystemJDKDir();
 		if (file != null) {
 			return file;
 		} else {
-			file = "";
+			file = ""; //$NON-NLS-1$
 		}
 
-		String message = "";
+		String message = ""; //$NON-NLS-1$
 		do {
 			Shell shell = new Shell(Display.getDefault());
 			DirectoryDialog dd = new DirectoryDialog(shell);
-			dd.setText("Please select Java SDK installation " + "location for Glassfish v2.1");
+			dd.setText(Messages.PLEASE_SELECT_JAVA_SDK_INSTALLATION_LOCATION_FOR_GLASSFISH_V2_1);
 			dd.setFilterPath(file);
 			dd.setMessage(message);
 			file = dd.open();
 			if (file == null) {
-				System.err.println("Installation cancelled");
+				System.err.println("Installation cancelled"); //$NON-NLS-1$
 				Activator.getDefault().getLog().log(
-						new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Installation cancelled"));
+						new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Installation cancelled")); //$NON-NLS-1$
 				System.exit(0);
 			}
 			shell.close();
 			shell.dispose();
 			if (!isJDKDir(file)) {
-				message = "Directory \"" + file + "\" doesn't contain Java SDK installation";
+				message = MessageFormat.format(Messages.DIRECTORY_0_DOESN_T_CONTAIN_JAVA_SDK_INSTALLATION, file);
 			} else
 				break;
 		} while (true);
@@ -150,7 +152,7 @@ public class V2InstallationConfigurer {
 	 * @return
 	 */
 	private static boolean isJDKDir(String path) {
-		File jarFile = new File("" + path + File.separator + "lib" + File.separator + "tools.jar");
+		File jarFile = new File("" + path + File.separator + "lib" + File.separator + "tools.jar"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		boolean exists = jarFile.exists();
 		return exists;
 	}
@@ -163,15 +165,15 @@ public class V2InstallationConfigurer {
 	 */
 	private static String getSystemJDKDir() {
 		// First we check if java.home property points to JDK
-		String property = System.getProperty("java.home");
+		String property = System.getProperty("java.home"); //$NON-NLS-1$
 		if (isJDKDir(property)) {
 			return property;
 		}
 
 		// If java.home fails we try to get JAVA_HOME environment variable
 		Map<String, String> env = System.getenv();
-		String javaHome = env.get("JAVA_HOME");
-		if (javaHome != null && !javaHome.equals("") && isJDKDir(javaHome)) {
+		String javaHome = env.get("JAVA_HOME"); //$NON-NLS-1$
+		if (javaHome != null && !javaHome.equals("") && isJDKDir(javaHome)) { //$NON-NLS-1$
 			return javaHome;
 		}
 

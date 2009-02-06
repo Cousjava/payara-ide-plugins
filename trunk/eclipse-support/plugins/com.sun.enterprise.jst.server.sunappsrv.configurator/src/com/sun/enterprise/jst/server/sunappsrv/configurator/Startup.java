@@ -35,6 +35,7 @@ holder.
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProduct;
@@ -53,7 +54,8 @@ public class Startup implements IStartup {
 
 	public void startup() {
 		// In startup you have to explicitly get to UI thread.
-		Activator.getDefault().getLog().log(new Status(IStatus.INFO,Activator.PLUGIN_ID,"Product id = " + Platform.getProduct().getId()));
+		Activator.getDefault().getLog().log(
+				new Status(IStatus.INFO, Activator.PLUGIN_ID, "Product id = " + Platform.getProduct().getId())); //$NON-NLS-1$
 		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
@@ -65,14 +67,14 @@ public class Startup implements IStartup {
 								InterruptedException {
 							try {
 								IProduct product = Platform.getProduct();
-								progressMonitor.setTaskName("Creating Glassfish servers instances");
+								progressMonitor.setTaskName(Messages.CreatingGlassfishServerInstances);
 								GlassFishConfigurator.createV2Server(progressMonitor);
 								String domainXml = GlassFishConfigurator.createV3Server(progressMonitor);
 								GlassFishConfigurator.createDerbyDB(progressMonitor, domainXml);
 							} catch (CoreException e) {
-								Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-										"Creating server configurations encountered a problem: " + e.getMessage(), e),
-										e.getMessage(), "Exception occurred");
+								Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat
+										.format(Messages.CreatingServerConfigurationsProblem, e.getMessage()), e), e
+										.getMessage(), Messages.EXCEPTION_OCCURRED);
 							}
 						}
 					};
@@ -80,8 +82,8 @@ public class Startup implements IStartup {
 					pmd.run(true, false, op);
 				} catch (Exception e) {
 					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-							"Creating server configurations encountered a problem: " + e.getMessage(),
-							"Exception occurred");
+							MessageFormat.format(Messages.CreatingServerConfigurationsProblem, e.getMessage()),
+							Messages.EXCEPTION_OCCURRED);
 				}
 
 			}

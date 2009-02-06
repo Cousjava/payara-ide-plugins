@@ -36,27 +36,27 @@ package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
 public abstract class Constants {
 
-	public final static String GLASSFISH3_BUNDLE = "com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude";
-	public final static String SERVER_GLASSFISH_2_ID = "com.sun.enterprise.jst.server.sunappsrv91";
-	public final static String SERVER_PRELUDE_ID = "com.sun.enterprise.jst.server.glassfishv3prelude";
+	public final static String GLASSFISH3_BUNDLE = "com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude"; //$NON-NLS-1$
+	public final static String SERVER_GLASSFISH_2_ID = "com.sun.enterprise.jst.server.sunappsrv91"; //$NON-NLS-1$
+	public final static String SERVER_PRELUDE_ID = "com.sun.enterprise.jst.server.glassfishv3prelude"; //$NON-NLS-1$
 
-	public final static String ADMIN_PORT = "admin.port";
-	public final static String INSTANCE_PORT = "instance.port";
-	public final static String HTTPS_PORT = "https.port";
-	public final static String ORB_PORT = "orb.port";
-	public final static String IMQ_PORT = "imq.port";
-	public final static String GLASSFISH_DIR = "glassfish_dir";
-	public final static String ADMIN_USERNAME = "admin_username";
-	public final static String ADMIN_PASSWORD = "admin_password";
-	public final static String DOMAIN_NAME = "domain_name";
-	public final static String DOMAIN_DIR = "domain.dir";
+	public final static String ADMIN_PORT = "admin.port"; //$NON-NLS-1$
+	public final static String INSTANCE_PORT = "instance.port"; //$NON-NLS-1$
+	public final static String HTTPS_PORT = "https.port"; //$NON-NLS-1$
+	public final static String ORB_PORT = "orb.port"; //$NON-NLS-1$
+	public final static String IMQ_PORT = "imq.port"; //$NON-NLS-1$
+	public final static String GLASSFISH_DIR = "glassfish_dir"; //$NON-NLS-1$
+	public final static String ADMIN_USERNAME = "admin_username"; //$NON-NLS-1$
+	public final static String ADMIN_PASSWORD = "admin_password"; //$NON-NLS-1$
+	public final static String DOMAIN_NAME = "domain_name"; //$NON-NLS-1$
+	public final static String DOMAIN_DIR = "domain.dir"; //$NON-NLS-1$
 
 	// V2 configuration constants
-	public static final String V2_INSTANCE_PORT = "8082";
-	public static final String V2_ADMIN_PORT = "4849";
-	public static final String V2_HTTPS_PORT = "8182";
-	public static final String V2_USER = "admin";
-	public static final String V2_PASS = "adminadmin";
+	public static final String V2_INSTANCE_PORT = "8082"; //$NON-NLS-1$
+	public static final String V2_ADMIN_PORT = "4849"; //$NON-NLS-1$
+	public static final String V2_HTTPS_PORT = "8182"; //$NON-NLS-1$
+	public static final String V2_USER = "admin"; //$NON-NLS-1$
+	public static final String V2_PASS = "adminadmin"; //$NON-NLS-1$
 
 	// V3 Prelude configuration constants
 	public static final int V3_ADMIN_PORT = 4850;

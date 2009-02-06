@@ -36,6 +36,7 @@ package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -50,6 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.splash.AbstractSplashHandler;
 
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
+import com.sun.enterprise.jst.server.sunappsrv.register.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.register.service.RegisterService;
 import com.sun.enterprise.registration.RegistrationException;
 import com.sun.enterprise.registration.RegistrationService.RegistrationReminder;
@@ -71,13 +73,13 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	 * .Shell)
 	 */
 	public void init(final Shell splash) {
-		Activator.logMessage("Initializing splash handler", null,IStatus.INFO);
+		Activator.logMessage(Messages.INITIALIZING_SPLASH_HANDLER, null,IStatus.INFO);
 		super.init(splash);
 		showWizard(splash);
 
 		final String glassfishLoc = getGlassfishLocation();
 
-		if (new File(glassfishLoc + File.separator + ".installed").exists())
+		if (new File(glassfishLoc + File.separator + ".installed").exists()) //$NON-NLS-1$
 			return;
 
 		final String dir = V2InstallationConfigurer.getJDKDir();
@@ -89,7 +91,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					IRunnableWithProgress op = new IRunnableWithProgress() {
 						public void run(IProgressMonitor progressMonitor) throws InvocationTargetException,
 								InterruptedException {
-							progressMonitor.setTaskName("Configuring Glassfish V2.1 installation ...");
+							progressMonitor.setTaskName(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION);
 							V2InstallationConfigurer.configureV2(dir, glassfishLoc);
 						}
 					};
@@ -97,7 +99,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					pmd.run(true, false, op);
 				} catch (Exception e) {
 					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-							"Configuring Glassfish v2.1 encountered a problem: " + e.getMessage(), "Exception occurred");
+							MessageFormat.format(Messages.CONFIGURING_GLASSFISH_V2_1_ENCOUNTERED_A_PROBLEM_0 , e.getMessage()), Messages.EXCEPTION_OCCURRED);
 				}
 
 			}
@@ -106,7 +108,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	}
 
 	public static String getGlassfishLocation() {
-		String property = System.getProperty("gf2location");
+		String property = System.getProperty("gf2location"); //$NON-NLS-1$
 		String glassfishLoc = null;
 		if (property != null) {
 			glassfishLoc = property;
@@ -114,9 +116,9 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			// Get the eclipse installation location and from it V2
 			// installation directory.
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
-					+ "/glassfishv2.1";
+					+ "/glassfishv2.1"; //$NON-NLS-1$
 
-			Activator.logMessage("glassfishLoc =" + glassfishLoc, null,IStatus.INFO);
+			Activator.logMessage("glassfishLoc =" + glassfishLoc, null,IStatus.INFO); //$NON-NLS-1$
 		}
 		return glassfishLoc;
 	}
@@ -136,7 +138,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			// return;
 		} catch (RegistrationException e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-					"Error getting registration status: " + e.getMessage(), "Exception occurred");
+					MessageFormat.format(Messages.ERROR_GETTING_REGISTRATION_STATUS , e.getMessage()), Messages.EXCEPTION_OCCURRED);
 		}
 
 		RegistrationWizard wizard = new RegistrationWizard();
