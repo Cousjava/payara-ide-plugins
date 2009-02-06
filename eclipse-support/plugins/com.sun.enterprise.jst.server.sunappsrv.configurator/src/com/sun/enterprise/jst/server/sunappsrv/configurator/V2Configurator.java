@@ -41,6 +41,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class V2Configurator {
 
 		String glassfishLoc = getGlassfishLocation();
 
-		progressMonitor.subTask("Creating runtime ...");
+		progressMonitor.subTask(Messages.CreatingRuntime);
 
 		IServerType st = ServerCore.findServerType(Constants.SERVER_GLASSFISH_2_ID);
 		IRuntime runtime = createRuntime(glassfishLoc);
@@ -88,13 +89,13 @@ public class V2Configurator {
 			}
 		}
 
-		progressMonitor.subTask("Creating GlassFish v2.1 domain in your workspace.. Please wait...");
+		progressMonitor.subTask(Messages.CreatingGlassFishV21Domain);
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
-		wc.setName("Bundled GlassFish v2.1");
+		wc.setName(Messages.BundledGlassFishV21);
 
 		SunAppServer sunAppServer = (SunAppServer) wc.getAdapter(SunAppServer.class);
 
-		String domainLocation = Platform.getLocation().append(".metadata").append(".plugins").append(
+		String domainLocation = Platform.getLocation().append(".metadata").append(".plugins").append( //$NON-NLS-1$ //$NON-NLS-2$
 				Constants.SERVER_GLASSFISH_2_ID).toOSString();
 
 		Map<String, String> configuration = sunAppServer.getProps();
@@ -111,7 +112,7 @@ public class V2Configurator {
 	}
 
 	private static String getGlassfishLocation() {
-		String property = System.getProperty("gf2location");
+		String property = System.getProperty("gf2location"); //$NON-NLS-1$
 		String glassfishLoc = null;
 		if (property != null) {
 			glassfishLoc = property;
@@ -121,13 +122,13 @@ public class V2Configurator {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
 				glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
-						+ "/glassfishv2.1";
+						+ "/glassfishv2.1"; //$NON-NLS-1$
 
 				Activator.getDefault().getLog().log(
-						new Status(IStatus.INFO, Activator.PLUGIN_ID, "glassfishV2Loc =" + glassfishLoc));
+						new Status(IStatus.INFO, Activator.PLUGIN_ID, "glassfishV2Loc =" + glassfishLoc)); //$NON-NLS-1$
 			} catch (Exception e) {
 				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-						"Getting Glassfish v2.1 location encountered a problem: " + e.getMessage(), "Exception occurred");
+						MessageFormat.format(Messages.GettingGlassfishV21LocationProblem, e.getMessage()), Messages.EXCEPTION_OCCURRED);
 			}
 		}
 		return glassfishLoc;
@@ -135,7 +136,7 @@ public class V2Configurator {
 
 	private static String createDomain(String glassfishLoc) throws CoreException {
 		int count = getDomainCount(glassfishLoc);
-		String domainName = "v2domain" + count;
+		String domainName = "v2domain" + count; //$NON-NLS-1$
 
 		increaseDomainCount(glassfishLoc, count);
 		// We use ant for creating a domain for V2 installation as ant is
@@ -145,19 +146,19 @@ public class V2Configurator {
 		HashMap<String, String> map = configureDomain(glassfishLoc, domainName);
 
 		try {
-			URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource("ant/createDomain.xml");
+			URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource("ant/createDomain.xml"); //$NON-NLS-1$
 			String antFile = FileLocator.toFileURL(xml).getFile();
 
 			ant.setBuildFileLocation(antFile);
 			ant.addUserProperties(map);
-			ant.setArguments("-Dmessage=Building -verbose");
+			ant.setArguments("-Dmessage=Building -verbose"); //$NON-NLS-1$
 			ant.addBuildLogger(TimestampedLogger.class.getName());
 
 			ant.run();
 		} catch (IOException e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-					"Error in startup config for glassfish: " + e.getMessage(), e), e.getMessage(),
-					"Exception occurred");
+					MessageFormat.format(Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(),
+					Messages.EXCEPTION_OCCURRED);
 		}
 		return domainName;
 	}
@@ -167,13 +168,13 @@ public class V2Configurator {
 		map.put(Constants.HTTPS_PORT, Constants.V2_HTTPS_PORT);
 		map.put(Constants.ADMIN_PORT, Constants.V2_ADMIN_PORT);
 		map.put(Constants.INSTANCE_PORT, Constants.V2_INSTANCE_PORT);
-		map.put(Constants.IMQ_PORT, "7677");
-		map.put(Constants.ORB_PORT, "3701");
+		map.put(Constants.IMQ_PORT, "7677"); //$NON-NLS-1$
+		map.put(Constants.ORB_PORT, "3701"); //$NON-NLS-1$
 		map.put(Constants.ADMIN_PASSWORD, Constants.V2_PASS);
 		map.put(Constants.ADMIN_USERNAME, Constants.V2_USER);
 		map.put(Constants.GLASSFISH_DIR, glassfishLoc);
 		map.put(Constants.DOMAIN_NAME, domainName);
-		map.put(Constants.DOMAIN_DIR, Platform.getLocation().append(".metadata").append(".plugins").append(
+		map.put(Constants.DOMAIN_DIR, Platform.getLocation().append(".metadata").append(".plugins").append( //$NON-NLS-1$ //$NON-NLS-2$
 				Constants.SERVER_GLASSFISH_2_ID).toOSString());
 		return map;
 	}
@@ -187,15 +188,15 @@ public class V2Configurator {
 	private static int getDomainCount(String glassfishLoc) {
 
 		int count = 0;
-		if (new File(glassfishLoc + File.separator + ".installed").exists()) {
+		if (new File(glassfishLoc + File.separator + ".installed").exists()) { //$NON-NLS-1$
 			try {
-				BufferedReader in = new BufferedReader(new FileReader(glassfishLoc + File.separator + ".installed"));
+				BufferedReader in = new BufferedReader(new FileReader(glassfishLoc + File.separator + ".installed")); //$NON-NLS-1$
 				count = Integer.parseInt(in.readLine()) + 1;
 				in.close();
 			} catch (Exception e) {
 				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-						"Error in startup config for glassfish: " + e.getMessage(), e), e.getMessage(),
-						"Exception occurred");
+						MessageFormat.format(Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(),
+						Messages.EXCEPTION_OCCURRED);
 			}
 		}
 		return count;
@@ -204,13 +205,13 @@ public class V2Configurator {
 	private static void increaseDomainCount(String glassfishLoc, int count) {
 		// Increase the number of domains created in the file.
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc + File.separator + ".installed"));
-			out.write("" + count);
+			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc + File.separator + ".installed")); //$NON-NLS-1$
+			out.write("" + count); //$NON-NLS-1$
 			out.close();
 		} catch (Exception e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-					"Error in startup config for glassfish: " + e.getMessage(), e), e.getMessage(),
-					"Exception occurred");
+					MessageFormat.format(Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(),
+					Messages.EXCEPTION_OCCURRED);
 		}
 	}
 

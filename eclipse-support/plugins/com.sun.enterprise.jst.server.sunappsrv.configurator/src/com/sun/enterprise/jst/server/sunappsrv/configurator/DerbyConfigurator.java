@@ -34,6 +34,7 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
+import java.text.MessageFormat;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -60,10 +61,14 @@ import org.w3c.dom.NodeList;
 
 public class DerbyConfigurator {
 
+	private static final String DERBY_PROVIDER_ID = "org.eclipse.datatools.connectivity.db.derby.embedded.connectionProfile"; //$NON-NLS-1$
+	private static final String DERBY_TEMPLATE_ID = "org.eclipse.datatools.connectivity.db.derby102.clientDriver"; //$NON-NLS-1$
+	private static final String DERBY_FOR_SAMPLE_DB = "DerbyForSampleDB"; //$NON-NLS-1$
+
 	static void configure(IProgressMonitor progressMonitor, String domainXml) throws CoreException {
 		DriverManager dm = DriverManager.getInstance();
 
-		DriverInstance sample = dm.getDriverInstanceByName("DerbyForSampleDB");
+		DriverInstance sample = dm.getDriverInstanceByName(DERBY_FOR_SAMPLE_DB);//$NON-NLS-1$
 		// if the sample is already configured we don't need to do anything
 		if (sample != null)
 			return;
@@ -71,29 +76,28 @@ public class DerbyConfigurator {
 		Properties properties = new Properties();
 		readProperties(domainXml, properties);
 
-		String profileName = "Sample JavaDB Database";
-		String description = "Sample JavaDB database. Please, note that the database must be started manually.";
+		String profileName = Messages.SAMPLE_JAVADB_DATABASE;
+		String description = Messages.SAMPLE_JAVADB_DATABASE_DESCRIPTION;
 
-		DriverInstance di = dm.createNewDriverInstance("org.eclipse.datatools.connectivity.db.derby102.clientDriver",
-				"DerbyForSampleDB", getJarLocation());
+		DriverInstance di = dm.createNewDriverInstance(DERBY_TEMPLATE_ID, DERBY_FOR_SAMPLE_DB, getJarLocation());
 		properties.setProperty(ConnectionProfileConstants.PROP_DRIVER_DEFINITION_ID, di.getId());
 
 		try {
-			ProfileManager.getInstance().createProfile(profileName, description,
-					"org.eclipse.datatools.connectivity.db.derby.embedded.connectionProfile", properties);
+			ProfileManager.getInstance().createProfile(profileName, description, DERBY_PROVIDER_ID, properties);
 		} catch (ConnectionProfileException e) {
-			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-					"Configuring sample Derby database encountered a problem: " + e.getMessage(), "Exception occurred");
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e), MessageFormat
+					.format(Messages.CONFIGURING_SAMPLE_DERBY_DATABASE_ENCOUNTERED_A_PROBLEM, e.getMessage()),
+					Messages.EXCEPTION_OCCURRED);
 		}
 	}
 
 	private static void readProperties(String domainXml, Properties properties) {
-		String db = "";
-		String pass = "";
-		String user = "";
+		String db = ""; //$NON-NLS-1$
+		String pass = ""; //$NON-NLS-1$
+		String user = ""; //$NON-NLS-1$
 		int port = -1;
-		String server = "";
-		String conAttrib = "";
+		String server = ""; //$NON-NLS-1$
+		String conAttrib = ""; //$NON-NLS-1$
 
 		try {
 			DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
@@ -104,58 +108,58 @@ public class DerbyConfigurator {
 			XPathFactory factory = XPathFactory.newInstance();
 			XPath xpath = factory.newXPath();
 			XPathExpression expr = xpath
-					.compile("//jdbc-connection-pool[@datasource-classname='org.apache.derby.jdbc.ClientDataSource']/property");
+					.compile("//jdbc-connection-pool[@datasource-classname='org.apache.derby.jdbc.ClientDataSource']/property"); //$NON-NLS-1$
 			NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node node = nl.item(i);
-				if (node.getAttributes().getNamedItem("name").getNodeValue().equals("PortNumber")) {
-					port = Integer.parseInt(node.getAttributes().getNamedItem("value").getNodeValue());
+				if (node.getAttributes().getNamedItem("name").getNodeValue().equals("PortNumber")) { //$NON-NLS-1$ //$NON-NLS-2$
+					port = Integer.parseInt(node.getAttributes().getNamedItem("value").getNodeValue()); //$NON-NLS-1$
 
-				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals("Password")) {
-					pass = node.getAttributes().getNamedItem("value").getNodeValue();
-				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals("User")) {
-					user = node.getAttributes().getNamedItem("value").getNodeValue();
-				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals("serverName")) {
-					server = node.getAttributes().getNamedItem("value").getNodeValue();
-				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals("DatabaseName")) {
-					db = node.getAttributes().getNamedItem("value").getNodeValue();
-				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals("connectionAttributes")) {
-					conAttrib = node.getAttributes().getNamedItem("value").getNodeValue();
+				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals("Password")) { //$NON-NLS-1$ //$NON-NLS-2$
+					pass = node.getAttributes().getNamedItem("value").getNodeValue(); //$NON-NLS-1$
+				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals("User")) { //$NON-NLS-1$ //$NON-NLS-2$
+					user = node.getAttributes().getNamedItem("value").getNodeValue(); //$NON-NLS-1$
+				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals("serverName")) { //$NON-NLS-1$ //$NON-NLS-2$
+					server = node.getAttributes().getNamedItem("value").getNodeValue(); //$NON-NLS-1$
+				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals("DatabaseName")) { //$NON-NLS-1$ //$NON-NLS-2$
+					db = node.getAttributes().getNamedItem("value").getNodeValue(); //$NON-NLS-1$
+				} else if (node.getAttributes().getNamedItem("name").getNodeValue().equals("connectionAttributes")) { //$NON-NLS-1$ //$NON-NLS-2$
+					conAttrib = node.getAttributes().getNamedItem("value").getNodeValue(); //$NON-NLS-1$
 				}
 
 			}
 
 		} catch (Exception e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-					"Configuration of ports failed because of: " + e.getMessage(), e), e.getMessage(),
-					"Exception occurred");
+					MessageFormat
+					.format(Messages.CONFIGURATION_OF_PORTS_FAILED_BECAUSE_OF , e.getMessage()), e), e.getMessage(),
+					Messages.EXCEPTION_OCCURRED);
 		}
 
-		properties.setProperty("org.eclipse.datatools.connectivity.db.connectionProperties", "");
-		properties.setProperty("org.eclipse.datatools.connectivity.db.savePWD", "true");
-		properties.setProperty("org.eclipse.datatools.connectivity.drivers.defnType",
-				"org.eclipse.datatools.connectivity.db.derby102.clientDriver");
-		properties.setProperty("jarList", getJarLocation());
-		properties.setProperty("org.eclipse.datatools.connectivity.db.username", user);
-		properties.setProperty("org.eclipse.datatools.connectivity.db.driverClass",
-				"org.apache.derby.jdbc.ClientDriver");
-		properties.setProperty("org.eclipse.datatools.connectivity.driverDefinitionID",
-				"DriverDefn.org.eclipse.datatools.connectivity.db.derby102.clientDriver.Derby Client JDBC Driver");
-		properties.setProperty("org.eclipse.datatools.connectivity.db.databaseName", db);
-		properties.setProperty("org.eclipse.datatools.connectivity.db.password", pass);
-		properties.setProperty("org.eclipse.datatools.connectivity.db.URL", "jdbc:derby://" + server + ":" + port + "/"
+		properties.setProperty("org.eclipse.datatools.connectivity.db.connectionProperties", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		properties.setProperty("org.eclipse.datatools.connectivity.db.savePWD", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+		properties.setProperty("org.eclipse.datatools.connectivity.drivers.defnType", DERBY_TEMPLATE_ID); //$NON-NLS-1$
+		properties.setProperty("jarList", getJarLocation()); //$NON-NLS-1$
+		properties.setProperty("org.eclipse.datatools.connectivity.db.username", user); //$NON-NLS-1$
+		properties.setProperty("org.eclipse.datatools.connectivity.db.driverClass", //$NON-NLS-1$
+				"org.apache.derby.jdbc.ClientDriver"); //$NON-NLS-1$
+		properties.setProperty("org.eclipse.datatools.connectivity.driverDefinitionID", //$NON-NLS-1$
+				"DriverDefn.org.eclipse.datatools.connectivity.db.derby102.clientDriver.Derby Client JDBC Driver"); //$NON-NLS-1$
+		properties.setProperty("org.eclipse.datatools.connectivity.db.databaseName", db); //$NON-NLS-1$
+		properties.setProperty("org.eclipse.datatools.connectivity.db.password", pass); //$NON-NLS-1$
+		properties.setProperty("org.eclipse.datatools.connectivity.db.URL", "jdbc:derby://" + server + ":" + port + "/" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				+ db + conAttrib);
-		properties.setProperty("org.eclipse.datatools.connectivity.db.version", "10.2");
-		properties.setProperty("org.eclipse.datatools.connectivity.db.vendor", "Derby");
+		properties.setProperty("org.eclipse.datatools.connectivity.db.version", "10.2"); //$NON-NLS-1$ //$NON-NLS-2$
+		properties.setProperty("org.eclipse.datatools.connectivity.db.vendor", "Derby"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
 
 	private static String getJarLocation() {
-		String property = System.getProperty("gf3location");
+		String property = System.getProperty("gf3location"); //$NON-NLS-1$
 		String glassfishLocation = null;
 		if (property != null) {
-			glassfishLocation = new Path(property).append("javadb").append("lib").append("derbyclient.jar")
+			glassfishLocation = new Path(property).append("javadb").append("lib").append("derbyclient.jar") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					.toPortableString();
 
 		} else {
@@ -163,16 +167,18 @@ public class DerbyConfigurator {
 				// Get the eclipse installation location and from it V2
 				// installation directory.
 				glassfishLocation = new Path(Platform.getInstallLocation().getURL().getFile()).append(
-						"glassfishv3prelude").append("javadb").append("lib").append("derbyclient.jar")
+						"glassfishv3prelude").append("javadb").append("lib").append("derbyclient.jar") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						.toPortableString();
 
 				Activator.getDefault().getLog().log(
-						new Status(IStatus.INFO, Activator.PLUGIN_ID, "derbyJar =" + glassfishLocation));
+						new Status(IStatus.INFO, Activator.PLUGIN_ID, "derbyJar =" + glassfishLocation)); //$NON-NLS-1$
 				return glassfishLocation;
 			} catch (Exception e) {
-				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-						"Problem getting derby jar location: " + e.getMessage(), e), e.getMessage(),
-						"Exception occurred");
+				Activator
+						.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+								MessageFormat
+								.format(Messages.PROBLEM_GETTING_DERBY_JAR_LOCATION, e.getMessage()), e), e.getMessage(),
+								Messages.EXCEPTION_OCCURRED);
 			}
 		}
 		return glassfishLocation;

@@ -36,14 +36,16 @@ package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
 import org.eclipse.jface.wizard.Wizard;
 
+import com.sun.enterprise.jst.server.sunappsrv.register.Messages;
+
 public class RegistrationWizard extends Wizard {
 
 	private RegistrationChoicePage choicePage;
 	private RegisterAccountPage accountPage;
 
 	public void addPages() {
-		choicePage = new RegistrationChoicePage("Choose registration method");
-		accountPage = new RegisterAccountPage("Register account");
+		choicePage = new RegistrationChoicePage(Messages.CHOOSE_REGISTRATION_METHOD);
+		accountPage = new RegisterAccountPage(Messages.REGISTER_ACCOUNT);
 
 		addPage(choicePage);
 		addPage(accountPage);

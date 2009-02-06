@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
+import com.sun.enterprise.jst.server.sunappsrv.register.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.register.service.RegisterService;
 import com.sun.enterprise.registration.RegistrationException;
 
@@ -75,7 +76,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 
 	protected RegistrationChoicePage(String pageName) {
 		super(pageName);
-		setTitle("Personal Information");
+		setTitle(Messages.PERSONAL_INFORMATION);
 		setPageComplete(false);
 	}
 
@@ -97,14 +98,14 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		account = new Button(composite, SWT.RADIO);
 		skip = new Button(composite, SWT.RADIO);
 
-		noAccount.setText("I don't have a Sun Online Account. Sign me up.");
+		noAccount.setText(Messages.I_DON_T_HAVE_A_SUN_ONLINE_ACCOUNT_SIGN_ME_UP);
 		FormData formData = new FormData();
 		formData.top = new FormAttachment(styledText);
 		noAccount.setLayoutData(formData);
 		noAccount.setSelection(true);
 		noAccount.addSelectionListener(this);
 
-		account.setText("I already have a Sun Online Account.");
+		account.setText(Messages.I_ALREADY_HAVE_A_SUN_ONLINE_ACCOUNT);
 		formData = new FormData();
 
 		formData.top = new FormAttachment(noAccount);
@@ -123,7 +124,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		tUser = new Text(userComposite, SWT.BORDER);
 		tUser.addModifyListener(this);
 
-		l1.setText("User Name");
+		l1.setText(Messages.USER_NAME);
 		formData = new FormData();
 		formData.width = LABEL_WITDH;
 		l1.setLayoutData(formData);
@@ -146,7 +147,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		tPassword = new Text(passComposite, SWT.BORDER | SWT.PASSWORD);
 		tPassword.addModifyListener(this);
 
-		l2.setText("Password");
+		l2.setText(Messages.PASSWORD);
 		formData = new FormData();
 		formData.width = LABEL_WITDH;
 		l2.setLayoutData(formData);
@@ -157,7 +158,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		formData.top = new FormAttachment(l2, 0, SWT.TOP);
 		tPassword.setLayoutData(formData);
 
-		skip.setText("Skip registration.");
+		skip.setText(Messages.SKIP_REGISTRATION);
 		formData = new FormData();
 		formData.top = new FormAttachment(passComposite);
 		skip.setLayoutData(formData);
@@ -172,10 +173,10 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		styledText.setLayoutData(formData);
 
 		StringBuffer text = new StringBuffer();
-		text.append("Why register? Gain convenient access " + "to benefits such as:\n\n");
-		text.append("Patch information and bug updates\n");
-		text.append("Screencasts and tutorials\n");
-		text.append("Support and training offering\n");
+		text.append(Messages.WHY_REGISTER_GAIN_CONVENIENT_ACCESS_TO_BENEFITS_SUCH_AS);
+		text.append(Messages.PATCH_INFORMATION_AND_BUG_UPDATES);
+		text.append(Messages.SCREENCASTS_AND_TUTORIALS);
+		text.append(Messages.SUPPORT_AND_TRAINING_OFFERING);
 
 		styledText.setText(text.toString());
 		try {
@@ -240,7 +241,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			RegisterService.skipRegister(null, 0);
 			return true;
 		} catch (RegistrationException e) {
-			Activator.logErrorMessage("Skiping registration failed", e);
+			Activator.logErrorMessage("Skiping registration failed", e); //$NON-NLS-1$
 			setErrorMessage(e.getMessage());
 		}
 		return false;
@@ -252,7 +253,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			RegisterService.validateAccountAndRegister(tUser.getText(), tPassword.getText(), null, 0);
 			return true;
 		} catch (Exception e) {
-			Activator.logErrorMessage("Registration failed", e);
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
 			setErrorMessage(e.getMessage());
 		}
 
@@ -267,10 +268,10 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		if (tUser.getText().length() > 0 && tPassword.getText().length() > 0) {
 			setPageComplete(true);
 			setErrorMessage(null);
-			setMessage("Click finish to register Glassfish server");
+			setMessage(Messages.CLICK_FINISH_TO_REGISTER_GLASSFISH_SERVER);
 		} else{
 			setPageComplete(false);
-			setErrorMessage("Please insert username and password");
+			setErrorMessage(Messages.PLEASE_INSERT_USERNAME_AND_PASSWORD);
 		}
 	}
 

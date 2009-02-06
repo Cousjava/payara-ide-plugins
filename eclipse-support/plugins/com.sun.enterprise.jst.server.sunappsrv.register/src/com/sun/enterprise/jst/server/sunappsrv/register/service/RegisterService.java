@@ -25,7 +25,7 @@ import com.sun.enterprise.registration.impl.SysnetRegistrationService;
 public class RegisterService {
 
 	public static String getPreludeLocation() {
-		String property = System.getProperty("gf3location");
+		String property = System.getProperty("gf3location"); //$NON-NLS-1$
 		String glassfishLoc = null;
 		if (property != null) {
 			glassfishLoc = property;
@@ -33,12 +33,12 @@ public class RegisterService {
 			// Get the eclipse installation location and from it V2
 			// installation directory.
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
-					+ "/glassfishv3prelude";
+					+ "/glassfishv3prelude"; //$NON-NLS-1$
 
-			Activator.logMessage("glassfishLoc =" + glassfishLoc, null,IStatus.INFO);
+			Activator.logMessage("glassfishLoc =" + glassfishLoc, null,IStatus.INFO); //$NON-NLS-1$
 		}
-		return glassfishLoc + File.separator + "glassfish" + File.separator + "lib" + File.separator + "registration"
-				+ File.separator + "servicetag-registry.xml";
+		return glassfishLoc + File.separator + "glassfish" + File.separator + "lib" + File.separator + "registration" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ File.separator + "servicetag-registry.xml"; //$NON-NLS-1$
 
 	}
 
@@ -122,7 +122,7 @@ public class RegisterService {
 		map.put(RegistrationAccount.FIRSTNAME, firstname);
 		map.put(RegistrationAccount.LASTNAME, lastname);
 		map.put(RegistrationAccount.COUNTRY, country);
-		map.put("company", companyname);
+		map.put("company", companyname); //$NON-NLS-1$
 		SOAccount soAccount = new SOAccount(map);
 
 		/* Create the Account */

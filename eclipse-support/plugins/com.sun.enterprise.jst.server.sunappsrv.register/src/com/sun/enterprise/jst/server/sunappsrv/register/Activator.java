@@ -47,7 +47,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "com.sun.enterprise.jst.server.sunappsrv.register";
+	public static final String PLUGIN_ID = "com.sun.enterprise.jst.server.sunappsrv.register"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
@@ -96,7 +96,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static void logMessage(String mess, Exception e, int severity) {
-		final Status status = new Status(severity, PLUGIN_ID, 1, "GlassFish: " + mess, e);
+		final Status status = new Status(severity, PLUGIN_ID, 1, "GlassFish: " + mess, e); //$NON-NLS-1$
 		getDefault().getLog().log(status);
 	}
 
