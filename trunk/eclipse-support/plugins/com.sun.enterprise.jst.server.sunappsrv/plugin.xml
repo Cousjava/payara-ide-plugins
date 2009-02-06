@@ -1188,6 +1188,16 @@
            id="com.sun.enterprise.jst.server.runtime.glassfishv3prelude">
     	</runtime>
     </extension>
+    <extension
+          point="org.eclipse.ui.intro">
+    </extension>
+    <extension
+          point="org.eclipse.ui.intro.configExtension">
+       <configExtension
+             configId="org.eclipse.ui.intro.universalConfig"
+             content="intro/glassfish.xml">
+       </configExtension>
+    </extension>
 
 
     <!--extension point="org.eclipse.jdt.core.classpathContainerInitializer">
