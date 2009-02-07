@@ -5,7 +5,7 @@
    id="com.sun.enterprise.jst.server.sunappsrv.help"
    name="GlassFish Plug-in Documentation for Eclipse"
    version="0.1"
-   provider-name="GlassFish">
+   provider-name="java.net">
 
   <runtime>
   </runtime>
