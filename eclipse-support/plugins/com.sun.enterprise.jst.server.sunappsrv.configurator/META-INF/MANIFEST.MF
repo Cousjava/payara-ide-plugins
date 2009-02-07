@@ -4,6 +4,7 @@ Bundle-Name: Glassfish Servers Configurator Plug-in
 Bundle-SymbolicName: com.sun.enterprise.jst.server.sunappsrv.configurator;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: com.sun.enterprise.jst.server.sunappsrv.configurator.Activator
+Bundle-Vendor: java.net
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.wst.server.core,

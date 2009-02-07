@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="GlasFish Configurator Plugin" releaseDate="2008-12-16"
+<component name="GlassFish Configurator Plugin" releaseDate="2008-12-16"
     version="0.0.1">
     <package no-download="no">
         <size os="win32">TODO</size>
         <size os="macosx">TODO</size>
         <size os="linux">TODO</size>
     </package>
-    <shortdescription>Configures glassfish for workspace.
+    <shortdescription>Configures Glassfish domains in your workspace.
     </shortdescription>
     <status>packaged</status>
     <eclipse-help>don't know</eclipse-help>
@@ -92,7 +92,7 @@
         </antscript>
     </build>
     <copyright>Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.</copyright>
-    <license style="open source">
+    <license style="Dual CDDL GPL V2">
         <terms />
         DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
