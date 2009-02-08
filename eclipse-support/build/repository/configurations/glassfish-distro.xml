@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- first release 2008-11-27 -->
-<configuration name="Tools Bundle"
+<configuration name="Glassfish Tools Bundle For Eclipse"
 	releaseDate="2008-12-09" version="0.1.0.7">
 
 	<shortdescription>GlassFish Tools Bundle for Eclipse.</shortdescription>
@@ -16,7 +16,7 @@
 		<component id="eclipse-dtp" />
 		<component id="subclipse" />
 		<component id="eclipse-cvs" />
-		<component id="glassfish-wtp-plugin" />
+		<component id="feature" />
 		<component id="glassfish-prelude-root" />
 		<component id="glassfish-plugins" />
 		<component id="glassfish-register" />
