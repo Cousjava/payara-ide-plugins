@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="GlassFish v2 for Linux" version="2.0.2">
+<component name="GlassFish v3 Prelude" version="2.0.2">
 
-    <copyright>Copyright 2008 Sun Microsystems, Inc., 4150 Network Circle, Santa Clara, California 95054, U.S.A. All rights reserved.</copyright>
+    <copyright>Copyright 2009 Sun Microsystems, Inc., 4150 Network Circle, Santa Clara, California 95054, U.S.A. All rights reserved.</copyright>
     <provider name="Sun Microsystems"/>
     <build type="binary" skip-packaging="yes">
         <archive destination="eclipse/glassfishv3prelude" url="http://download.java.net/glassfish/v3-prelude/release/glassfish-v3-prelude.zip"/>
@@ -13,7 +13,7 @@
     <link type="homepage" url="https://glassfish.dev.java.net"/>
     <status>easyoneo</status>
     <status>tested</status>
-    <shortdescription>GlassFish v2</shortdescription>
+    <shortdescription>GlassFish v3 Prelude</shortdescription>
     <package no-download="yes">
     </package>
     <todo>
