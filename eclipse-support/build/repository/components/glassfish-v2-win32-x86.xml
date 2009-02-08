@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="GlassFish v2 for Windows" version="2.0.2">
+<component name="GlassFish v2.1 for Windows" version="2.0.2">
 
 	<copyright>Copyright 2009 Sun Microsystems, Inc., 4150 Network
 		Circle, Santa Clara, California 95054, U.S.A. All rights reserved.
@@ -42,16 +42,16 @@
 	<link type="homepage" url="https://glassfish.dev.java.net" />
 	<status>easyoneo</status>
 	<status>tested</status>
-	<shortdescription>GlassFish v2</shortdescription>
+	<shortdescription>GlassFish v2.1</shortdescription>
 	<package no-download="yes">
 		<platform>
 			<os>win32</os>
 		</platform>
 	</package>
 	<todo>
-		GlassFish v2
+		GlassFish v2.1
     </todo>
-	<description>GlassFish v2
+	<description>GlassFish v2.1
         </description>
 
 	<changelog release="2.0.2">
