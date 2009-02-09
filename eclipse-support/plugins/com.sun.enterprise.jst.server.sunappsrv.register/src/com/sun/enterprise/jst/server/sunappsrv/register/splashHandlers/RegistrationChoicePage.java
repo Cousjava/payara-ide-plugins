@@ -76,7 +76,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 
 	protected RegistrationChoicePage(String pageName) {
 		super(pageName);
-		setTitle(Messages.PERSONAL_INFORMATION);
+		setTitle(pageName);
 		setPageComplete(false);
 	}
 
@@ -120,19 +120,20 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		formData.top = new FormAttachment(account);
 		userComposite.setLayoutData(formData);
 
-		Label l1 = new Label(userComposite, SWT.NONE);
+		Label lUser = new Label(userComposite, SWT.NONE);
 		tUser = new Text(userComposite, SWT.BORDER);
 		tUser.addModifyListener(this);
 
-		l1.setText(Messages.USER_NAME);
+		lUser.setText(Messages.USER_NAME);
 		formData = new FormData();
 		formData.width = LABEL_WITDH;
-		l1.setLayoutData(formData);
+		formData.left = new FormAttachment(0,35);
+		lUser.setLayoutData(formData);
 
 		formData = new FormData();
 		formData.width = FIELD_WIDTH;
-		formData.left = new FormAttachment(l1, 0, SWT.DEFAULT);
-		formData.top = new FormAttachment(l1, 0, SWT.TOP);
+		formData.left = new FormAttachment(lUser, 0, SWT.DEFAULT);
+		formData.top = new FormAttachment(lUser, 0, SWT.TOP);
 		tUser.setLayoutData(formData);
 
 		Composite passComposite = new Composite(composite, SWT.NONE);
@@ -143,19 +144,20 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		formData.top = new FormAttachment(userComposite);
 		passComposite.setLayoutData(formData);
 
-		Label l2 = new Label(passComposite, SWT.NONE);
+		Label lPass = new Label(passComposite, SWT.NONE);
 		tPassword = new Text(passComposite, SWT.BORDER | SWT.PASSWORD);
 		tPassword.addModifyListener(this);
 
-		l2.setText(Messages.PASSWORD);
+		lPass.setText(Messages.PASSWORD);
 		formData = new FormData();
 		formData.width = LABEL_WITDH;
-		l2.setLayoutData(formData);
+		formData.left = new FormAttachment(0,35);
+		lPass.setLayoutData(formData);
 
 		formData = new FormData();
 		formData.width = FIELD_WIDTH;
-		formData.left = new FormAttachment(l2, 0, SWT.DEFAULT);
-		formData.top = new FormAttachment(l2, 0, SWT.TOP);
+		formData.left = new FormAttachment(lPass, 0, SWT.DEFAULT);
+		formData.top = new FormAttachment(lPass, 0, SWT.TOP);
 		tPassword.setLayoutData(formData);
 
 		skip.setText(Messages.SKIP_REGISTRATION);
@@ -163,12 +165,16 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		formData.top = new FormAttachment(passComposite);
 		skip.setLayoutData(formData);
 		skip.addSelectionListener(this);
+		
+		tUser.setEnabled(false);
+		tPassword.setEnabled(false);
 	}
 
 	private void createText(Composite composite) {
 		Color background = composite.getBackground();
 		styledText = new StyledText(composite, SWT.FULL_SELECTION | SWT.WRAP);
 		styledText.setBackground(background);
+		styledText.setEditable(false);
 		FormData formData = new FormData();
 		styledText.setLayoutData(formData);
 
@@ -208,6 +214,8 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 				canFlip = true;
 				setMessage(null);
 				setErrorMessage(null);
+				tUser.setEnabled(false);
+				tPassword.setEnabled(false);
 				setPageComplete(true);
 			}
 		}
@@ -216,6 +224,8 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			if (bt.getSelection()) {
 				type = ACCOUNT;
 				canFlip = false;
+				tUser.setEnabled(true);
+				tPassword.setEnabled(true);
 				updateFields();
 			}
 
@@ -227,6 +237,8 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 				canFlip = false;
 				setMessage(null);
 				setErrorMessage(null);
+				tUser.setEnabled(false);
+				tPassword.setEnabled(false);
 				setPageComplete(true);
 			}
 		}
@@ -268,10 +280,8 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		if (tUser.getText().length() > 0 && tPassword.getText().length() > 0) {
 			setPageComplete(true);
 			setErrorMessage(null);
-			setMessage(Messages.CLICK_FINISH_TO_REGISTER_GLASSFISH_SERVER);
 		} else{
 			setPageComplete(false);
-			setErrorMessage(Messages.PLEASE_INSERT_USERNAME_AND_PASSWORD);
 		}
 	}
 

@@ -72,7 +72,7 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 
 	protected RegisterAccountPage(String pageName) {
 		super(pageName);
-		setTitle(Messages.PERSONAL_INFORMATION);
+		setTitle(pageName);
 		setDescription(Messages.PLEASE_ENTER_YOUR_PERSONAL_INFORMATION);
 	}
 
@@ -135,6 +135,9 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 				updatePage();
 			}
 		});
+		
+		// Seems to be listened only on windows.		
+		co.setVisibleItemCount(15);
 
 		l1.setText(labelText);
 		return co;
@@ -168,14 +171,15 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 	}
 
 	private void updatePage() {
+		
 		if (tEmail.getText().length() <= 0) {
-			setErrorMessage(Messages.PLEASE_INSERT_EMAIL_ADRESS);
 			setPageComplete(false);
+			setErrorMessage(null);
 			return;
 		}
 		if (tPassword.getText().length() <= 0) {
-			setErrorMessage(Messages.PLEASE_INSERT_PASSWORD);
 			setPageComplete(false);
+			setErrorMessage(null);
 			return;
 		}
 		if (!tPassword.getText().equals(tConfirm.getText())) {
@@ -184,23 +188,23 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 			return;
 		}
 		if (tFirstName.getText().length() <= 0) {
-			setErrorMessage(Messages.PLEASE_INSERT_YOUR_FIRST_NAME);
 			setPageComplete(false);
+			setErrorMessage(null);
 			return;
 		}
 		if (tLastName.getText().length() <= 0) {
-			setErrorMessage(Messages.PLEASE_INSERT_YOUR_LAST_NAME);
 			setPageComplete(false);
+			setErrorMessage(null);
 			return;
 		}
 		if (tCompanyName.getText().length() <= 0) {
-			setErrorMessage(Messages.PLEASE_INSERT_YOUR_COMPANY_NAME);
 			setPageComplete(false);
+			setErrorMessage(null);
 			return;
 		}
 		if (tCountry.getText().length() <= 0) {
-			setErrorMessage(Messages.PLEASE_INSERT_YOUR_COUNTRY);
 			setPageComplete(false);
+			setErrorMessage(null);
 			return;
 		}
 		setErrorMessage(null);
