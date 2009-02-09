@@ -34,7 +34,9 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import com.sun.enterprise.jst.server.sunappsrv.register.Messages;
 
@@ -42,11 +44,21 @@ public class RegistrationWizard extends Wizard {
 
 	private RegistrationChoicePage choicePage;
 	private RegisterAccountPage accountPage;
+	
+	public RegistrationWizard() {
+		super();
+		setWindowTitle(Messages.RegisterGlassfish);
+	}
 
 	public void addPages() {
 		choicePage = new RegistrationChoicePage(Messages.CHOOSE_REGISTRATION_METHOD);
 		accountPage = new RegisterAccountPage(Messages.REGISTER_ACCOUNT);
-
+		
+		ImageDescriptor image = AbstractUIPlugin.imageDescriptorFromPlugin(
+				"com.sun.enterprise.jst.server.sunappsrv.register", "icons/wizard.png");
+		choicePage.setImageDescriptor(image);
+		accountPage.setImageDescriptor(image);
+		
 		addPage(choicePage);
 		addPage(accountPage);
 

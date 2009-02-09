@@ -33,7 +33,7 @@ public class Messages extends NLS {
 	public static String PASSWORD;
 	public static String EMAIL_ADDRESS;
 	public static String PLEASE_ENTER_YOUR_PERSONAL_INFORMATION;
-	public static String PERSONAL_INFORMATION;
+	public static String RegisterGlassfish;
 	public static String PLEASE_INSERT_USERNAME_AND_PASSWORD;
 	public static String CLICK_FINISH_TO_REGISTER_GLASSFISH_SERVER;
 	public static String SUPPORT_AND_TRAINING_OFFERING;

@@ -131,6 +131,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	public static void showWizard(final Shell splash) {
 		try {
 			RegistrationReminder reminder = RegisterService.getReminder(null, 0);
+			Activator.logMessage("Registration reminder = " + reminder, null, IStatus.INFO);//$NON-NLS-1$
 			if (reminder.equals(RegistrationReminder.DONT_ASK_FOR_REGISTRATION))
 				return;
 			//
