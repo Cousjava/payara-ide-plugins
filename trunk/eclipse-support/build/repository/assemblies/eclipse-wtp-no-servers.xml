@@ -8,7 +8,7 @@ name="Eclipse Webtools without server runtimes" releaseDate="2009-02-05" type="e
         <terms/>
     </license>
    <include>
-        <component id="eclipse-wtp" patternset="wtp-no-servers" version="3.0.3"/>
+        <component id="eclipse-wtp" patternset="wtp-no-servers" version="3.0.2"/>
     </include>
     <build type="binary">
         <antscript>
@@ -36,8 +36,8 @@ name="Eclipse Webtools without server runtimes" releaseDate="2009-02-05" type="e
     <dependencies>
       <assembly id="eclipse-tools"/>
     </dependencies>
-    <changelog release="1.3.1">
-        <entry date="2008-04-09" type="creation" version="2.0.1"> </entry>
+    <changelog release="1.4.1">
+        <entry date="2009-02-09" type="creation" version="3.0.2"> </entry>
     </changelog>
     <provider email="yz~-~gs&gt;dvcPullltsq!opb" name="Eclipse Web Tools WST team" organization="Eclipse.org"/>
     <eclipse-help>yes</eclipse-help>
