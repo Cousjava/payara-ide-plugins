@@ -24,7 +24,7 @@
 					<equals arg1="@{id}" arg2="lamp" />
 					<equals arg1="@{id}" arg2="python" />
 					<equals arg1="@{id}" arg2="plugin-warrior" />
-					<equals arg1="@{id}" arg2="glassfish-distro" />
+					<equals arg1="@{id}" arg2="tools-bundle-for-eclipse" /><!-- for glassfish -->
 				</or>
 				<then>
 					<propertyregex property="distro.install.folder"
