@@ -55,7 +55,7 @@ public class RegistrationWizard extends Wizard {
 		accountPage = new RegisterAccountPage(Messages.REGISTER_ACCOUNT);
 		
 		ImageDescriptor image = AbstractUIPlugin.imageDescriptorFromPlugin(
-				"com.sun.enterprise.jst.server.sunappsrv.register", "icons/wizard.png");
+				"com.sun.enterprise.jst.server.sunappsrv.register", "icons/wizard75x66.png");
 		choicePage.setImageDescriptor(image);
 		accountPage.setImageDescriptor(image);
 		
