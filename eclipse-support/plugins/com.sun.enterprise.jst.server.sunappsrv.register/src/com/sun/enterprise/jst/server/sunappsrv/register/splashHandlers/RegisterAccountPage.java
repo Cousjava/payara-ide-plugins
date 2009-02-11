@@ -34,6 +34,7 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
+import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -69,11 +70,14 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 	private Text tCompanyName;
 	private Combo tCountry;
 	private List countries;
+	private Text tHost;
+	private Text tPort;
 
 	protected RegisterAccountPage(String pageName) {
 		super(pageName);
 		setTitle(pageName);
 		setDescription(Messages.PLEASE_ENTER_YOUR_PERSONAL_INFORMATION);
+		setPageComplete(false);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -81,8 +85,8 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 		Composite composite = new Composite(comp, SWT.NONE);
 
 		GridLayout layout = new GridLayout(2, false);
-		layout.marginWidth = 2;
-		layout.marginHeight = 2;
+		layout.marginWidth = 8;
+		layout.marginHeight = 8;
 		composite.setLayout(layout);
 		setControl(composite);
 
@@ -94,15 +98,20 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 		tCompanyName = createTextComposite(composite, Messages.COMPANY_NAME);
 		try {
 			tCountry = createListComposite(composite, Messages.COUNTRY, 0);
-			countries = RegisterService.getCountries(null, 0);
+			countries = RegisterService.getCountries();
 			List dispList = (List) countries.get(1);
 			for (Object c : dispList) {
 				tCountry.add(c.toString());
 			}
 		} catch (RegistrationException e) {
-			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,MessageFormat.format(Messages.ERROR_GETTING_COUNTRIES_LIST,
-				 e.getMessage()), e), e.getMessage(), Messages.EXCEPTION_OCCURRED);
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat.format(
+					Messages.ERROR_GETTING_COUNTRIES_LIST, e.getMessage()), e), e.getMessage(),
+					Messages.EXCEPTION_OCCURRED);
 		}
+		tHost = createTextComposite(composite, Messages.ProxyHost);
+		tPort = createTextComposite(composite, Messages.ProxyPort);
+		tPort.setTextLimit(5);
+		
 	}
 
 	public Text createTextComposite(Composite c, String labelText) {
@@ -135,8 +144,8 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 				updatePage();
 			}
 		});
-		
-		// Seems to be listened only on windows.		
+
+		// Seems to be listened only on windows.
 		co.setVisibleItemCount(15);
 
 		l1.setText(labelText);
@@ -155,15 +164,19 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 
 	public boolean registerUser() {
 		try {
+			RegisterService.setProxy(tHost.getText(), Integer.parseInt(tPort.getText()));
 			RegisterService.createSDNAccount(tEmail.getText(), tPassword.getText(),
 					getActualCountry(tCountry.getText()), tFirstName.getText(), tLastName.getText(), tCompanyName
-							.getText(), null, 0);
+							.getText());
 			return true;
+		}catch (UnknownHostException e){
+			Activator.logErrorMessage(Messages.CREATING_AN_SDN_ACCOUNT_FAILED, e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.HostNotFound,  e.getMessage()));
 		} catch (Exception e) {
 			Activator.logErrorMessage(Messages.CREATING_AN_SDN_ACCOUNT_FAILED, e);
 			setErrorMessage(e.getMessage());
-			return false;
 		}
+		return false;
 	}
 
 	public void modifyText(ModifyEvent arg0) {
@@ -171,16 +184,13 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 	}
 
 	private void updatePage() {
-		
+		boolean complete = true;
+		String error = null;
 		if (tEmail.getText().length() <= 0) {
-			setPageComplete(false);
-			setErrorMessage(null);
-			return;
+			complete = false;
 		}
 		if (tPassword.getText().length() <= 0) {
-			setPageComplete(false);
-			setErrorMessage(null);
-			return;
+			complete = false;
 		}
 		if (!tPassword.getText().equals(tConfirm.getText())) {
 			setErrorMessage(Messages.PASSWORDS_DON_T_MATCH);
@@ -188,28 +198,29 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 			return;
 		}
 		if (tFirstName.getText().length() <= 0) {
-			setPageComplete(false);
-			setErrorMessage(null);
-			return;
+			complete = false;
 		}
 		if (tLastName.getText().length() <= 0) {
-			setPageComplete(false);
-			setErrorMessage(null);
-			return;
+			complete = false;
 		}
 		if (tCompanyName.getText().length() <= 0) {
-			setPageComplete(false);
-			setErrorMessage(null);
-			return;
+			complete = false;
 		}
 		if (tCountry.getText().length() <= 0) {
-			setPageComplete(false);
-			setErrorMessage(null);
-			return;
+			complete = false;
 		}
-		setErrorMessage(null);
-		setMessage(Messages.CLICK_FINISH_TO_REGISTER_YOUR_ACCOUNT_AND_REGISTER_GLASSFISH);
-		setPageComplete(true);
+		try {
+			if (tPort.getText().length() > 0)
+				Integer.parseInt(tPort.getText());
+		} catch (NumberFormatException e) {
+			error = Messages.PleaseInsertCorrectPortNumber;
+		}
+		setErrorMessage(error);
+		if (complete)
+			setMessage(Messages.CLICK_FINISH_TO_REGISTER_YOUR_ACCOUNT_AND_REGISTER_GLASSFISH);
+		else
+			setMessage(Messages.PLEASE_ENTER_YOUR_PERSONAL_INFORMATION);
+		setPageComplete(complete && error == null);
 	}
 
 }
