@@ -74,6 +74,9 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropert
 
 /** 
  * Implementation of management task that provides info about progress
+ * NOTE: This is a copy of the file used in the NB V3 plugin, though it's 
+ * in a different package there and the Base64 library is used here and the 
+ * retry logic in the call() method is slightly different here.
  *
  * @author Peter Williams
  */
@@ -291,7 +294,7 @@ public class CommandRunner extends BasicTask<OperationState> {
                     serverCmd.toString(), instanceName, ex.getLocalizedMessage());
         }
        
-        int retries = 1; // disable ("version".equals(cmd) || "__locations".equals(cmd)) ? 1 : 3;
+        int retries = 5; // disable ("version".equals(cmd) || "__locations".equals(cmd)) ? 1 : 3;
         Logger.getLogger("glassfish").log(Level.FINEST, 
                 "CommandRunner.call(" + commandUrl + ") called on thread \"" + 
                 Thread.currentThread().getName() + "\"");
@@ -320,13 +323,13 @@ public class CommandRunner extends BasicTask<OperationState> {
                         }
                         hconn.setRequestProperty("User-Agent", "hk2-agent"); // NOI18N
                         if (!server.getUseAnonymousConnections().equals("true")){
-//                        // Set up an authorization header with our credentials
-//                        Hk2Properties tp = tm.getHk2Properties();
-                        String input = server.getAdminName() + ":" + server.getAdminPassword();
-                        String auth = new String(Base64.encode(input.getBytes()));
-                        hconn.setRequestProperty("Authorization", // NOI18N
-                                                 "Basic " + auth); // NOI18N
-                    }
+                        	// Set up an authorization header with our credentials
+                        	// Hk2Properties tp = tm.getHk2Properties();
+                        	String input = server.getAdminName() + ":" + server.getAdminPassword();
+                        	String auth = new String(Base64.encode(input.getBytes()));
+                        	hconn.setRequestProperty("Authorization", // NOI18N
+                        			"Basic " + auth); // NOI18N
+                        }
                         // Establish the connection with the server
                         hconn.connect();
                         int respCode = hconn.getResponseCode();
@@ -349,10 +352,13 @@ public class CommandRunner extends BasicTask<OperationState> {
 
                         // Process the response message
                         if(handleReceive(hconn)) {
-                            commandSucceeded = serverCmd.processResponse();
+                        	commandSucceeded = serverCmd.processResponse();
+                        	httpSucceeded = true;
+                        } else {
+                        	if (!serverCmd.retry()) {
+                        		httpSucceeded = true;
+                        	}
                         }
-                        
-                        httpSucceeded = true;
                     } else {
                         Logger.getLogger("glassfish").log(Level.INFO, "Unexpected connection type: " +
                                 urlToConnectTo);
