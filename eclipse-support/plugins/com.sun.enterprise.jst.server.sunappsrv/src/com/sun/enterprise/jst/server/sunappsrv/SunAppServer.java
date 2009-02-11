@@ -376,7 +376,7 @@ public class SunAppServer extends GenericServer {
                 	if(installRoot != null && targetInstallRoot != null) {
                 		File installDir = new File(installRoot);
                 		File targetInstallDir = new File(targetInstallRoot);
-                		if (installDir.equals(targetInstallDir)){
+                		if (installDir.getCanonicalPath().equals(targetInstallDir.getCanonicalPath())){
                 			SunAppSrvPlugin.logMessage("getV3ServerStatus DOMAINDIR_MATCHING" );
                 			return ServerStatus.DOMAINDIR_MATCHING;
 
@@ -430,7 +430,7 @@ public class SunAppServer extends GenericServer {
    		if (o != null) {
     			File domainDir=new File(""+o).getParentFile();
                 File knownDomainRoot = new File(this.getDomainDir()+File.separator+this.getdomainName());
-                if (domainDir.equals(knownDomainRoot)){
+                if (domainDir.getCanonicalPath().equals(knownDomainRoot.getCanonicalPath())){
                 	return ServerStatus.DOMAINDIR_MATCHING;
                 }else {
                 	return ServerStatus.DOMAINDIR_NOT_MATCHING;
