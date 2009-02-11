@@ -97,6 +97,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 						setStartedState();
 
 						return;
+					} else {
+						SunAppSrvPlugin.logMessage("***in SunAppServerBehaviour initialize V3 DOMAINDIR_NOT_MATCHING, will reset to stop shortly"  );
 					}
 				} else { 
 					if (sunserver.getV2ServerStatus()==SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
