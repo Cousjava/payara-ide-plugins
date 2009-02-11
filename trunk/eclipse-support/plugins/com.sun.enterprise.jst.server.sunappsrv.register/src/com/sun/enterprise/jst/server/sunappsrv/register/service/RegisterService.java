@@ -3,6 +3,11 @@ package com.sun.enterprise.jst.server.sunappsrv.register.service;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +25,13 @@ import com.sun.enterprise.registration.RegistrationService.RegistrationReminder;
 import com.sun.enterprise.registration.RegistrationService.RegistrationStatus;
 import com.sun.enterprise.registration.impl.SOAccount;
 import com.sun.enterprise.registration.impl.SysnetRegistrationService;
+import com.sun.scn.client.comm.RegSender;
 
 @SuppressWarnings("unchecked")
 public class RegisterService {
+
+	private static String proxyHost = null;
+	private static int proxyPort = 0;
 
 	public static String getPreludeLocation() {
 		String property = System.getProperty("gf3location"); //$NON-NLS-1$
@@ -35,7 +44,7 @@ public class RegisterService {
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
 					+ "/glassfishv3prelude"; //$NON-NLS-1$
 
-			Activator.logMessage("glassfishLoc =" + glassfishLoc, null,IStatus.INFO); //$NON-NLS-1$
+			Activator.logMessage("glassfishLoc =" + glassfishLoc, null, IStatus.INFO); //$NON-NLS-1$
 		}
 		return glassfishLoc + File.separator + "glassfish" + File.separator + "lib" + File.separator + "registration" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ File.separator + "servicetag-registry.xml"; //$NON-NLS-1$
@@ -47,8 +56,6 @@ public class RegisterService {
 	 * 
 	 * @param username
 	 * @param passwd
-	 * @param proxyHost
-	 * @param proxyPort
 	 * @throws ClassNotFoundException
 	 * @throws NoSuchMethodException
 	 * @throws IllegalAccessException
@@ -58,13 +65,13 @@ public class RegisterService {
 	 * @throws UnknownHostException
 	 * @throws ConnectException
 	 */
-	public static void validateAccountAndRegister(String username, String passwd, String proxyHost, int proxyPort)
-			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException,
-			InvocationTargetException, RegistrationException, UnknownHostException, ConnectException {
+	public static void validateAccountAndRegister(String username, String passwd) throws ClassNotFoundException,
+			NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException,
+			RegistrationException, UnknownHostException, ConnectException {
 
 		File regPath = new File(getPreludeLocation());
 		SysnetRegistrationService rs = null;
-		if (proxyHost == null || proxyHost.trim() == null || proxyHost.length() == 0 || proxyPort == 0)
+		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
 		else
 			rs = new SysnetRegistrationService(regPath, proxyHost, proxyPort);
@@ -80,7 +87,7 @@ public class RegisterService {
 
 		/* Register product with account */
 		rs.register(account);
-		
+
 		rs.setRegistrationReminder(RegistrationReminder.DONT_ASK_FOR_REGISTRATION);
 	}
 
@@ -93,8 +100,6 @@ public class RegisterService {
 	 * @param firstname
 	 * @param lastname
 	 * @param companyname
-	 * @param proxyHost
-	 * @param proxyPort
 	 * @throws RegistrationException
 	 * @throws ConnectException
 	 * @throws UnknownHostException
@@ -105,13 +110,13 @@ public class RegisterService {
 	 * @throws InvocationTargetException
 	 */
 	public static void createSDNAccount(String email, String passwd, String country, String firstname, String lastname,
-			String companyname, String proxyHost, int proxyPort) throws RegistrationException, ConnectException,
-			UnknownHostException, NoSuchMethodException, ClassNotFoundException, InstantiationException,
-			IllegalAccessException, InvocationTargetException {
+			String companyname) throws RegistrationException, ConnectException, UnknownHostException,
+			NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,
+			InvocationTargetException {
 
 		File regPath = new File(getPreludeLocation());
 		SysnetRegistrationService rs = null;
-		if (proxyHost == null || proxyHost.trim() == null || proxyHost.length() == 0 || proxyPort == 0)
+		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
 		else
 			rs = new SysnetRegistrationService(regPath, proxyHost, proxyPort);
@@ -134,22 +139,22 @@ public class RegisterService {
 		rs.setRegistrationReminder(RegistrationReminder.DONT_ASK_FOR_REGISTRATION);
 
 	}
-	
-	public static void remindLater(String proxyHost, int proxyPort) throws RegistrationException {
+
+	public static void remindLater() throws RegistrationException {
 		File regPath = new File(getPreludeLocation());
 		SysnetRegistrationService rs = null;
-		if (proxyHost == null || proxyHost.trim() == null || proxyHost.length() == 0 || proxyPort == 0)
+		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
 		else
 			rs = new SysnetRegistrationService(regPath, proxyHost, proxyPort);
 
 		rs.setRegistrationReminder(RegistrationReminder.REMIND_LATER);
 	}
-	
-	public static void skipRegister(String proxyHost, int proxyPort) throws RegistrationException {
+
+	public static void skipRegister() throws RegistrationException {
 		File regPath = new File(getPreludeLocation());
 		SysnetRegistrationService rs = null;
-		if (proxyHost == null || proxyHost.trim() == null || proxyHost.length() == 0 || proxyPort == 0)
+		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
 		else
 			rs = new SysnetRegistrationService(regPath, proxyHost, proxyPort);
@@ -157,10 +162,10 @@ public class RegisterService {
 		rs.setRegistrationReminder(RegistrationReminder.DONT_ASK_FOR_REGISTRATION);
 	}
 
-	public static boolean isRegistered(String proxyHost, int proxyPort) throws RegistrationException {
+	public static boolean isRegistered() throws RegistrationException {
 		File regPath = new File(getPreludeLocation());
 		SysnetRegistrationService rs = null;
-		if (proxyHost == null || proxyHost.trim() == null || proxyHost.length() == 0 || proxyPort == 0)
+		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
 		else
 			rs = new SysnetRegistrationService(regPath, proxyHost, proxyPort);
@@ -168,23 +173,31 @@ public class RegisterService {
 		return rs.getRegistrationStatus().equals(RegistrationStatus.REGISTERED);
 	}
 
-	public static RegistrationReminder getReminder(String proxyHost, int proxyPort) throws RegistrationException {
+	public static RegistrationReminder getReminder() throws RegistrationException {
 		File regPath = new File(getPreludeLocation());
 		SysnetRegistrationService rs = null;
-		if (proxyHost == null || proxyHost.trim() == null || proxyHost.length() == 0 || proxyPort == 0)
+		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
 		else
 			rs = new SysnetRegistrationService(regPath, proxyHost, proxyPort);
 		return rs.getRegistrationReminder();
 	}
 
-	public static List getCountries(String proxyHost, int proxyPort) throws RegistrationException {
+	public static List getCountries() throws RegistrationException {
 		File regPath = new File(getPreludeLocation());
 		SysnetRegistrationService rs = null;
-		if (proxyHost == null || proxyHost.trim() == null || proxyHost.length() == 0 || proxyPort == 0)
+		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
 		else
 			rs = new SysnetRegistrationService(regPath, proxyHost, proxyPort);
 		return rs.getAvailableCountries(Locale.getDefault());
+	}
+
+	public static void setProxy(String host, int port) {
+		if ("".equals(host)) {
+			proxyHost = null;
+		} else
+			proxyHost = host;
+		proxyPort = port;
 	}
 }

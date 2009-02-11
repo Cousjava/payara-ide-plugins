@@ -8,16 +8,16 @@
             id="com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers.interactive">
       </splashHandler>
       <splashHandlerProductBinding
-            productId="com.sun.enterprise.jst.server.sunappsrv.register.glassfishBundle"
+            productId="org.eclipse.platform.ide"
             splashId="com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers.interactive">
       </splashHandlerProductBinding>
    </extension>
-          <extension
+<!--          <extension
                 id="glassfishBundle"
                 name="%productName"
                 point="org.eclipse.core.runtime.products"> 
       <product name="%productName" application="org.eclipse.ui.ide.workbench" description="%productBlurb"> 
           <property name="preferenceCustomization" value="plugin_customization.ini"/> 
       </product> 
-   </extension>
+   </extension>-->
 </plugin>

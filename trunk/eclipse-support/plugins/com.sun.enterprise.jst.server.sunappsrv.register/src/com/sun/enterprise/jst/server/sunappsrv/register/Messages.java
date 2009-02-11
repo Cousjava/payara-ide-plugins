@@ -48,6 +48,11 @@ public class Messages extends NLS {
 	public static String PLEASE_SELECT_JAVA_SDK_INSTALLATION_LOCATION_FOR_GLASSFISH_V2_1;
 	public static String SKIP_REGISTRATION;
 	public static String USER_NAME;
+	public static String SelectRegistrationMethod;
+	public static String ProxyHost;
+	public static String ProxyPort;
+	public static String PleaseInsertCorrectPortNumber;
+	public static String HostNotFound;
 
 	private Messages() {
 	}

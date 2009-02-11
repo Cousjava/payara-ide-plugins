@@ -73,8 +73,10 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	 * .Shell)
 	 */
 	public void init(final Shell splash) {
-		Activator.logMessage(Messages.INITIALIZING_SPLASH_HANDLER, null,IStatus.INFO);
 		super.init(splash);
+		Activator.logMessage(Messages.INITIALIZING_SPLASH_HANDLER, null,IStatus.INFO);
+
+		
 		showWizard(splash);
 
 		final String glassfishLoc = getGlassfishLocation();
@@ -117,7 +119,6 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			// installation directory.
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
 					+ "/glassfishv2.1"; //$NON-NLS-1$
-
 			Activator.logMessage("glassfishLoc =" + glassfishLoc, null,IStatus.INFO); //$NON-NLS-1$
 		}
 		return glassfishLoc;
@@ -130,7 +131,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	 */
 	public static void showWizard(final Shell splash) {
 		try {
-			RegistrationReminder reminder = RegisterService.getReminder(null, 0);
+			RegistrationReminder reminder = RegisterService.getReminder();
 			Activator.logMessage("Registration reminder = " + reminder, null, IStatus.INFO);//$NON-NLS-1$
 			if (reminder.equals(RegistrationReminder.DONT_ASK_FOR_REGISTRATION))
 				return;
@@ -146,4 +147,5 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		WizardDialog dialog = new WizardDialog(splash, wizard);
 		dialog.open();
 	}
+	
 }

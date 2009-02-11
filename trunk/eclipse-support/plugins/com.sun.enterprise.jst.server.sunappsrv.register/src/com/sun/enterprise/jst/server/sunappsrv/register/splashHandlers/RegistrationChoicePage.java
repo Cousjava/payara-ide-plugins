@@ -34,6 +34,10 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
+import java.net.ConnectException;
+import java.net.UnknownHostException;
+import java.text.MessageFormat;
+
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.Bullet;
@@ -73,6 +77,8 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 	private int type;
 	private Text tPassword;
 	private Text tUser;
+	private Text tHost;
+	private Text tPort;
 
 	protected RegistrationChoicePage(String pageName) {
 		super(pageName);
@@ -84,13 +90,14 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		Composite composite = new Composite(comp, SWT.NONE);
 
 		FormLayout layout = new FormLayout();
-		layout.marginWidth = 5;
-		layout.marginHeight = 5;
+		layout.marginWidth = 8;
+		layout.marginHeight = 8;
 		composite.setLayout(layout);
 
 		setControl(composite);
 		createText(composite);
 		createOptions(composite);
+		setMessage(Messages.SelectRegistrationMethod);
 	}
 
 	private void createOptions(Composite composite) {
@@ -112,30 +119,80 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		account.setLayoutData(formData);
 		account.addSelectionListener(this);
 
-		Composite userComposite = new Composite(composite, SWT.NONE);
-		FormLayout layout1 = new FormLayout();
-		userComposite.setLayout(layout1);
+		Composite userComposite = createUser(composite);
+		Composite passComposite = createPass(composite, userComposite);
+		Composite hostComposite = createHost(composite, passComposite);
+		Composite portComposite = createPort(composite, hostComposite);
+
+		skip.setText(Messages.SKIP_REGISTRATION);
+		formData = new FormData();
+		formData.top = new FormAttachment(portComposite);
+		skip.setLayoutData(formData);
+		skip.addSelectionListener(this);
+
+	}
+	private Composite createPort(Composite composite, Composite userComposite) {
+		FormData formData;
+		Composite passComposite = new Composite(composite, SWT.NONE);
+		FormLayout layout2 = new FormLayout();
+		passComposite.setLayout(layout2);
 
 		formData = new FormData();
-		formData.top = new FormAttachment(account);
-		userComposite.setLayoutData(formData);
+		formData.top = new FormAttachment(userComposite);
+		passComposite.setLayoutData(formData);
 
-		Label lUser = new Label(userComposite, SWT.NONE);
-		tUser = new Text(userComposite, SWT.BORDER);
-		tUser.addModifyListener(this);
+		Label label = new Label(passComposite, SWT.NONE);
+		tPort = new Text(passComposite, SWT.BORDER);
+		tPort.setTextLimit(5);
+		tPort.addModifyListener(this);
 
-		lUser.setText(Messages.USER_NAME);
+		label.setText(Messages.ProxyPort);
 		formData = new FormData();
 		formData.width = LABEL_WITDH;
-		formData.left = new FormAttachment(0,35);
-		lUser.setLayoutData(formData);
+		formData.left = new FormAttachment(0, 35);
+		formData.top = new FormAttachment(0, 4);
+		label.setLayoutData(formData);
 
 		formData = new FormData();
 		formData.width = FIELD_WIDTH;
-		formData.left = new FormAttachment(lUser, 0, SWT.DEFAULT);
-		formData.top = new FormAttachment(lUser, 0, SWT.TOP);
-		tUser.setLayoutData(formData);
+		formData.left = new FormAttachment(label, 0, SWT.DEFAULT);
+		formData.top = new FormAttachment(label, 0, SWT.TOP);
+		tPort.setLayoutData(formData);
+		tPort.setEnabled(false);
+		return passComposite;
+	}
+	private Composite createHost(Composite composite, Composite userComposite) {
+		FormData formData;
+		Composite passComposite = new Composite(composite, SWT.NONE);
+		FormLayout layout2 = new FormLayout();
+		passComposite.setLayout(layout2);
 
+		formData = new FormData();
+		formData.top = new FormAttachment(userComposite);
+		passComposite.setLayoutData(formData);
+
+		Label label = new Label(passComposite, SWT.NONE);
+		tHost = new Text(passComposite, SWT.BORDER);
+		tHost.addModifyListener(this);
+
+		label.setText(Messages.ProxyHost);
+		formData = new FormData();
+		formData.width = LABEL_WITDH;
+		formData.left = new FormAttachment(0, 35);
+		formData.top = new FormAttachment(0, 4);
+		label.setLayoutData(formData);
+
+		formData = new FormData();
+		formData.width = FIELD_WIDTH;
+		formData.left = new FormAttachment(label, 0, SWT.DEFAULT);
+		formData.top = new FormAttachment(label, 0, SWT.TOP);
+		tHost.setLayoutData(formData);
+		tHost.setEnabled(false);
+		return passComposite;
+	}
+	
+	private Composite createPass(Composite composite, Composite userComposite) {
+		FormData formData;
 		Composite passComposite = new Composite(composite, SWT.NONE);
 		FormLayout layout2 = new FormLayout();
 		passComposite.setLayout(layout2);
@@ -151,7 +208,8 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		lPass.setText(Messages.PASSWORD);
 		formData = new FormData();
 		formData.width = LABEL_WITDH;
-		formData.left = new FormAttachment(0,35);
+		formData.left = new FormAttachment(0, 35);
+		formData.top = new FormAttachment(0, 4);
 		lPass.setLayoutData(formData);
 
 		formData = new FormData();
@@ -159,15 +217,38 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		formData.left = new FormAttachment(lPass, 0, SWT.DEFAULT);
 		formData.top = new FormAttachment(lPass, 0, SWT.TOP);
 		tPassword.setLayoutData(formData);
-
-		skip.setText(Messages.SKIP_REGISTRATION);
-		formData = new FormData();
-		formData.top = new FormAttachment(passComposite);
-		skip.setLayoutData(formData);
-		skip.addSelectionListener(this);
-		
-		tUser.setEnabled(false);
 		tPassword.setEnabled(false);
+		return passComposite;
+	}
+
+	private Composite createUser(Composite composite) {
+		FormData formData;
+		Composite userComposite = new Composite(composite, SWT.NONE);
+		FormLayout layout1 = new FormLayout();
+		userComposite.setLayout(layout1);
+
+		formData = new FormData();
+		formData.top = new FormAttachment(account);
+		userComposite.setLayoutData(formData);
+
+		Label lUser = new Label(userComposite, SWT.NONE);
+		tUser = new Text(userComposite, SWT.BORDER);
+		tUser.addModifyListener(this);
+
+		lUser.setText(Messages.USER_NAME);
+		formData = new FormData();
+		formData.width = LABEL_WITDH;
+		formData.left = new FormAttachment(0, 35);
+		formData.top = new FormAttachment(0, 4);
+		lUser.setLayoutData(formData);
+
+		formData = new FormData();
+		formData.width = FIELD_WIDTH;
+		formData.left = new FormAttachment(lUser, 0, SWT.DEFAULT);
+		formData.top = new FormAttachment(lUser, 0, SWT.TOP);
+		tUser.setLayoutData(formData);
+		tUser.setEnabled(false);
+		return userComposite;
 	}
 
 	private void createText(Composite composite) {
@@ -212,12 +293,15 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			if (bt.getSelection()) {
 				type = NO_ACCOUNT;
 				canFlip = true;
-				setMessage(null);
+				setMessage(Messages.SelectRegistrationMethod);
 				setErrorMessage(null);
 				tUser.setEnabled(false);
 				tPassword.setEnabled(false);
+				tHost.setEnabled(false);
+				tPort.setEnabled(false);
 				setPageComplete(true);
 			}
+			return;
 		}
 		if (src.equals(account)) {
 			Button bt = (Button) src;
@@ -226,8 +310,12 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 				canFlip = false;
 				tUser.setEnabled(true);
 				tPassword.setEnabled(true);
+				tHost.setEnabled(true);
+				tPort.setEnabled(true);
+				setMessage(Messages.PLEASE_INSERT_USERNAME_AND_PASSWORD);
 				updateFields();
 			}
+			return;
 
 		}
 		if (src.equals(skip)) {
@@ -235,12 +323,15 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			if (bt.getSelection()) {
 				type = SKIP;
 				canFlip = false;
-				setMessage(null);
+				setMessage(Messages.SelectRegistrationMethod);
 				setErrorMessage(null);
 				tUser.setEnabled(false);
 				tPassword.setEnabled(false);
+				tHost.setEnabled(false);
+				tPort.setEnabled(false);
 				setPageComplete(true);
 			}
+			return;
 		}
 	}
 
@@ -250,7 +341,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 
 	public boolean skipRegistration() {
 		try {
-			RegisterService.skipRegister(null, 0);
+			RegisterService.skipRegister();
 			return true;
 		} catch (RegistrationException e) {
 			Activator.logErrorMessage("Skiping registration failed", e); //$NON-NLS-1$
@@ -262,8 +353,12 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 
 	public boolean register() {
 		try {
-			RegisterService.validateAccountAndRegister(tUser.getText(), tPassword.getText(), null, 0);
+			RegisterService.setProxy(tHost.getText(), Integer.parseInt(tPort.getText()));
+			RegisterService.validateAccountAndRegister(tUser.getText(), tPassword.getText());
 			return true;
+		}catch (UnknownHostException e){
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.HostNotFound,  e.getMessage()));
 		} catch (Exception e) {
 			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
 			setErrorMessage(e.getMessage());
@@ -277,12 +372,19 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 	}
 
 	private void updateFields() {
+		String error = null;
 		if (tUser.getText().length() > 0 && tPassword.getText().length() > 0) {
 			setPageComplete(true);
-			setErrorMessage(null);
-		} else{
+		} else {
 			setPageComplete(false);
 		}
+		try{
+			if (tPort.getText().length() > 0)
+				Integer.parseInt(tPort.getText());
+		}catch (NumberFormatException e) {
+			error = Messages.PleaseInsertCorrectPortNumber;
+		}
+		setErrorMessage(error);
 	}
 
 }
