@@ -65,10 +65,20 @@ only if the new code is made subject to such option by the copyright holder.
       <import plugin="org.apache.ant"/>
       <import plugin="org.eclipse.datatools.connectivity"/>
       <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.swt"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.ui.workbench"/>
    </requires>
 
    <plugin
          id="com.sun.enterprise.jst.server.sunappsrv.configurator"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.sun.enterprise.jst.server.sunappsrv.register"
          download-size="0"
          install-size="0"
          version="0.0.0"
