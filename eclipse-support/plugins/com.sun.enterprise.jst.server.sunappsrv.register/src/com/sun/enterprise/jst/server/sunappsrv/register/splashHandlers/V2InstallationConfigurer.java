@@ -46,6 +46,7 @@ import org.apache.tools.ant.listener.TimestampedLogger;
 import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -108,40 +109,18 @@ public class V2InstallationConfigurer {
 	}
 
 	public static String getJDKDir() {
+		//way to override jdk
+		String property = System.getProperty("gfjava");
+		if(property != null)
+			return property;
+		
 		String lcOSName = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
 		boolean mac = lcOSName.startsWith("mac os x"); //$NON-NLS-1$
 		if (mac) {
 			return System.getProperty("java.home"); //$NON-NLS-1$
 		}
-		String file = getSystemJDKDir();
-		if (file != null) {
-			return file;
-		} else {
-			file = ""; //$NON-NLS-1$
-		}
-
-		String message = ""; //$NON-NLS-1$
-		do {
-			Shell shell = new Shell(Display.getDefault());
-			DirectoryDialog dd = new DirectoryDialog(shell);
-			dd.setText(Messages.PLEASE_SELECT_JAVA_SDK_INSTALLATION_LOCATION_FOR_GLASSFISH_V2_1);
-			dd.setFilterPath(file);
-			dd.setMessage(message);
-			file = dd.open();
-			if (file == null) {
-				System.err.println("Installation cancelled"); //$NON-NLS-1$
-				Activator.getDefault().getLog().log(
-						new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Installation cancelled")); //$NON-NLS-1$
-				System.exit(0);
-			}
-			shell.close();
-			shell.dispose();
-			if (!isJDKDir(file)) {
-				message = MessageFormat.format(Messages.DIRECTORY_0_DOESN_T_CONTAIN_JAVA_SDK_INSTALLATION, file);
-			} else
-				break;
-		} while (true);
-		return file;
+		
+		return new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()+"/jre";
 	}
 
 	/**
@@ -157,27 +136,5 @@ public class V2InstallationConfigurer {
 		return exists;
 	}
 
-	/**
-	 * Check if system property "java.home" or environment variable "JAVA_HOME"
-	 * points to a JDK
-	 * 
-	 * @return location of JDK
-	 */
-	private static String getSystemJDKDir() {
-		// First we check if java.home property points to JDK
-		String property = System.getProperty("java.home"); //$NON-NLS-1$
-		if (isJDKDir(property)) {
-			return property;
-		}
-
-		// If java.home fails we try to get JAVA_HOME environment variable
-		Map<String, String> env = System.getenv();
-		String javaHome = env.get("JAVA_HOME"); //$NON-NLS-1$
-		if (javaHome != null && !javaHome.equals("") && isJDKDir(javaHome)) { //$NON-NLS-1$
-			return javaHome;
-		}
-
-		return null;
-
-	}
+	
 }

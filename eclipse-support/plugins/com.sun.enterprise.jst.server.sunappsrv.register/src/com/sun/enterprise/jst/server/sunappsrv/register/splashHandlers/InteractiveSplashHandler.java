@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.splash.AbstractSplashHandler;
 
+import com.sun.enterprise.jst.server.sunappsrv.configurator.Startup;
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
 import com.sun.enterprise.jst.server.sunappsrv.register.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.register.service.RegisterService;
@@ -61,6 +62,8 @@ import com.sun.enterprise.registration.RegistrationService.RegistrationReminder;
  * 
  */
 public class InteractiveSplashHandler extends AbstractSplashHandler {
+
+	private boolean skipInstall = false;;
 
 	public InteractiveSplashHandler() {
 	}
@@ -74,15 +77,15 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	 */
 	public void init(final Shell splash) {
 		super.init(splash);
-		Activator.logMessage(Messages.INITIALIZING_SPLASH_HANDLER, null,IStatus.INFO);
 
-		
+		Activator.logMessage(Messages.INITIALIZING_SPLASH_HANDLER, null, IStatus.INFO);
+
 		showWizard(splash);
 
 		final String glassfishLoc = getGlassfishLocation();
 
 		if (new File(glassfishLoc + File.separator + ".installed").exists()) //$NON-NLS-1$
-			return;
+			skipInstall = true;
 
 		final String dir = V2InstallationConfigurer.getJDKDir();
 		Display.getDefault().asyncExec(new Runnable() {
@@ -94,14 +97,17 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 						public void run(IProgressMonitor progressMonitor) throws InvocationTargetException,
 								InterruptedException {
 							progressMonitor.setTaskName(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION);
-							V2InstallationConfigurer.configureV2(dir, glassfishLoc);
+							if (!skipInstall)
+								V2InstallationConfigurer.configureV2(dir, glassfishLoc);
+							Startup.mystartup(progressMonitor);
 						}
 					};
 					ProgressMonitorDialog pmd = new ProgressMonitorDialog(shell);
 					pmd.run(true, false, op);
 				} catch (Exception e) {
 					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-							MessageFormat.format(Messages.CONFIGURING_GLASSFISH_V2_1_ENCOUNTERED_A_PROBLEM_0 , e.getMessage()), Messages.EXCEPTION_OCCURRED);
+							MessageFormat.format(Messages.CONFIGURING_GLASSFISH_V2_1_ENCOUNTERED_A_PROBLEM_0, e
+									.getMessage()), Messages.EXCEPTION_OCCURRED);
 				}
 
 			}
@@ -119,7 +125,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			// installation directory.
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
 					+ "/glassfishv2.1"; //$NON-NLS-1$
-			Activator.logMessage("glassfishLoc =" + glassfishLoc, null,IStatus.INFO); //$NON-NLS-1$
+			Activator.logMessage("glassfishLoc =" + glassfishLoc, null, IStatus.INFO); //$NON-NLS-1$
 		}
 		return glassfishLoc;
 	}
@@ -139,13 +145,13 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			// if (RegisterService.isRegistered(loc, null, 0))
 			// return;
 		} catch (RegistrationException e) {
-			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-					MessageFormat.format(Messages.ERROR_GETTING_REGISTRATION_STATUS , e.getMessage()), Messages.EXCEPTION_OCCURRED);
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e), MessageFormat
+					.format(Messages.ERROR_GETTING_REGISTRATION_STATUS, e.getMessage()), Messages.EXCEPTION_OCCURRED);
 		}
 
 		RegistrationWizard wizard = new RegistrationWizard();
 		WizardDialog dialog = new WizardDialog(splash, wizard);
 		dialog.open();
 	}
-	
+
 }

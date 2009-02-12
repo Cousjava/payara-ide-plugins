@@ -34,6 +34,8 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
+import java.lang.reflect.InvocationTargetException;
+import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.List;
@@ -111,7 +113,7 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 		tHost = createTextComposite(composite, Messages.ProxyHost);
 		tPort = createTextComposite(composite, Messages.ProxyPort);
 		tPort.setTextLimit(5);
-		
+
 	}
 
 	public Text createTextComposite(Composite c, String labelText) {
@@ -164,17 +166,36 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 
 	public boolean registerUser() {
 		try {
-			RegisterService.setProxy(tHost.getText(), Integer.parseInt(tPort.getText()));
+			if (!tPort.getText().equals(""))
+				RegisterService.setProxy(tHost.getText(), Integer.parseInt(tPort.getText()));
 			RegisterService.createSDNAccount(tEmail.getText(), tPassword.getText(),
 					getActualCountry(tCountry.getText()), tFirstName.getText(), tLastName.getText(), tCompanyName
 							.getText());
 			return true;
-		}catch (UnknownHostException e){
-			Activator.logErrorMessage(Messages.CREATING_AN_SDN_ACCOUNT_FAILED, e); //$NON-NLS-1$
-			setErrorMessage(MessageFormat.format(Messages.HostNotFound,  e.getMessage()));
-		} catch (Exception e) {
-			Activator.logErrorMessage(Messages.CREATING_AN_SDN_ACCOUNT_FAILED, e);
-			setErrorMessage(e.getMessage());
+		} catch (UnknownHostException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.HostNotFound, e.getMessage()));
+		} catch (ConnectException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.ConnectionError, e.getMessage()));
+		} catch (ClassNotFoundException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.ClassNotFound, e.getMessage()));
+		} catch (NoSuchMethodException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.NoSuchMethod, e.getMessage()));
+		} catch (IllegalAccessException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.IllegalAccessException, e.getMessage()));
+		} catch (InstantiationException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.InstantiationException, e.getMessage()));
+		} catch (InvocationTargetException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.InvocationException, e.getMessage()));
+		} catch (RegistrationException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.RegistrationException, e.getMessage()));
 		}
 		return false;
 	}
