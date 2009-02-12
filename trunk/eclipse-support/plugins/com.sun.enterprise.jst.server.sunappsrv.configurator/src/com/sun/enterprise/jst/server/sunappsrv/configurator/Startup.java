@@ -40,10 +40,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.wst.server.core.internal.IStartup;
 
 @SuppressWarnings("restriction")
-public class Startup implements IStartup {
+public class Startup {
 
 	public static void mystartup(IProgressMonitor progressMonitor) {
 		try {
@@ -56,12 +55,6 @@ public class Startup implements IStartup {
 					Messages.CreatingServerConfigurationsProblem, e.getMessage()), e), e.getMessage(),
 					Messages.EXCEPTION_OCCURRED);
 		}
-	}
-
-	@Override
-	public void startup() {
-		// TODO Auto-generated method stub
-
 	}
 
 }
