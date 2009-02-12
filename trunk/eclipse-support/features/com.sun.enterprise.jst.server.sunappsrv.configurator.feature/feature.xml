@@ -3,7 +3,7 @@
       id="com.sun.enterprise.jst.server.sunappsrv.configurator.feature"
       label="Glassfish Servers Configuration Feature"
       version="0.0.1.qualifier"
-      provider-name="Glassfish ?">
+      provider-name="java.net">
 
    <copyright>
       Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.
@@ -68,6 +68,7 @@ only if the new code is made subject to such option by the copyright holder.
       <import plugin="org.eclipse.swt"/>
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.help"/>
    </requires>
 
    <plugin
@@ -79,6 +80,12 @@ only if the new code is made subject to such option by the copyright holder.
 
    <plugin
          id="com.sun.enterprise.jst.server.sunappsrv.register"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.sun.enterprise.jst.server.sunappsrv.help"
          download-size="0"
          install-size="0"
          version="0.0.0"
