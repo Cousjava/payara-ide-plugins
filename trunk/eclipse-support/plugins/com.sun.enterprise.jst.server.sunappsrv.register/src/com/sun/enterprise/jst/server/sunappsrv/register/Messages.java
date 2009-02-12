@@ -53,6 +53,13 @@ public class Messages extends NLS {
 	public static String ProxyPort;
 	public static String PleaseInsertCorrectPortNumber;
 	public static String HostNotFound;
+	public static String ConnectionError;
+	public static String ClassNotFound;
+	public static String NoSuchMethod;
+	public static String IllegalAccessException;
+	public static String InstantiationException;
+	public static String InvocationException;
+	public static String RegistrationException;
 
 	private Messages() {
 	}

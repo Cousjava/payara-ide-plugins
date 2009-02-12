@@ -34,6 +34,7 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.text.MessageFormat;
@@ -131,6 +132,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		skip.addSelectionListener(this);
 
 	}
+
 	private Composite createPort(Composite composite, Composite userComposite) {
 		FormData formData;
 		Composite passComposite = new Composite(composite, SWT.NONE);
@@ -161,6 +163,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		tPort.setEnabled(false);
 		return passComposite;
 	}
+
 	private Composite createHost(Composite composite, Composite userComposite) {
 		FormData formData;
 		Composite passComposite = new Composite(composite, SWT.NONE);
@@ -190,7 +193,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		tHost.setEnabled(false);
 		return passComposite;
 	}
-	
+
 	private Composite createPass(Composite composite, Composite userComposite) {
 		FormData formData;
 		Composite passComposite = new Composite(composite, SWT.NONE);
@@ -344,24 +347,44 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 			RegisterService.skipRegister();
 			return true;
 		} catch (RegistrationException e) {
-			Activator.logErrorMessage("Skiping registration failed", e); //$NON-NLS-1$
-			setErrorMessage(e.getMessage());
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.RegistrationException, e.getMessage()));
 		}
+
 		return false;
 
 	}
 
 	public boolean register() {
 		try {
-			RegisterService.setProxy(tHost.getText(), Integer.parseInt(tPort.getText()));
+			if (!tPort.getText().equals(""))
+				RegisterService.setProxy(tHost.getText(), Integer.parseInt(tPort.getText()));
 			RegisterService.validateAccountAndRegister(tUser.getText(), tPassword.getText());
 			return true;
-		}catch (UnknownHostException e){
+		} catch (UnknownHostException e) {
 			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
-			setErrorMessage(MessageFormat.format(Messages.HostNotFound,  e.getMessage()));
-		} catch (Exception e) {
+			setErrorMessage(MessageFormat.format(Messages.HostNotFound, e.getMessage()));
+		} catch (ConnectException e) {
 			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
-			setErrorMessage(e.getMessage());
+			setErrorMessage(MessageFormat.format(Messages.ConnectionError, e.getMessage()));
+		} catch (ClassNotFoundException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.ClassNotFound, e.getMessage()));
+		} catch (NoSuchMethodException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.NoSuchMethod, e.getMessage()));
+		} catch (IllegalAccessException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.IllegalAccessException, e.getMessage()));
+		} catch (InstantiationException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.InstantiationException, e.getMessage()));
+		} catch (InvocationTargetException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.InvocationException, e.getMessage()));
+		} catch (RegistrationException e) {
+			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
+			setErrorMessage(MessageFormat.format(Messages.RegistrationException, e.getMessage()));
 		}
 
 		return false;
@@ -378,10 +401,10 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 		} else {
 			setPageComplete(false);
 		}
-		try{
+		try {
 			if (tPort.getText().length() > 0)
 				Integer.parseInt(tPort.getText());
-		}catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			error = Messages.PleaseInsertCorrectPortNumber;
 		}
 		setErrorMessage(error);

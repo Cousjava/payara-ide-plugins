@@ -76,7 +76,7 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 public class V3Configurator {
 
 	public static String configure(IProgressMonitor progressMonitor) throws CoreException {
-		progressMonitor.setTaskName(Messages.CreatingGlassfishvv3PreludeConfiguration);
+		progressMonitor.subTask(Messages.CreatingGlassfishvv3PreludeConfiguration);
 		String glassfishLocation = getGlassfishLocation();
 		String domainXml = null;
 		try {
@@ -229,7 +229,7 @@ public class V3Configurator {
 			DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
 			domFactory.setNamespaceAware(true);
 			DocumentBuilder builder = domFactory.newDocumentBuilder();
-			Document doc = builder.parse(domainXml);
+			Document doc = builder.parse(new File(domainXml));
 
 			XPathFactory factory = XPathFactory.newInstance();
 			XPath xpath = factory.newXPath();
