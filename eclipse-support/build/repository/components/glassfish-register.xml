@@ -117,5 +117,6 @@ holder.
         <component id="eclipse-wtp-web" />
         <assembly id="eclipse-wtp-j2ee" />
         <component id="eclipse-dtp" />
+        <component id="glassfish-plugins" />
     </dependencies>
 </component>
