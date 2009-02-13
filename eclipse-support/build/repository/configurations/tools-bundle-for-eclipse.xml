@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- first release 2008-11-27 -->
 <configuration name="Tools Bundle For Eclipse"
-	releaseDate="2008-12-09" version="0.1.0.8">
+	releaseDate="2008-12-09" version="0.1.0.9">
 
 	<shortdescription>GlassFish Tools Bundle for Eclipse.</shortdescription>
 	<description />
@@ -19,7 +19,6 @@
 		<component id="feature" />
 		<component id="glassfish-prelude-root" />
 		<component id="glassfish-plugins" />
-<!--		<component id="glassfish-register" />-->
 		<component id="glassfish-v2-mac" />
 		<component id="glassfish-v2-linux-x86" />
 		<component id="glassfish-v2-win32-x86" />
