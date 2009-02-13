@@ -12,7 +12,7 @@
     <getting-started/>
     <build patched="no" type="binary">
         <updatesite url="https://ajax.dev.java.net/eclipse">
-            <feature id="com.sun.enterprise.jst.server.sunappsrv.feature" version="1.0.17"/>
+            <feature id="com.sun.enterprise.jst.server.sunappsrv.feature" version="1.0.18"/>
         </updatesite>
     </build>
     <copyright>Copyright 2009 Sun Microsystems, Inc. All rights reserved.</copyright>
