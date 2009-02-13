@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <projectDescription>
-	<name>org.apache.derby.plugin.doc</name>
+	<name>com.sun.enterprise.jst.server.sunappsrv.help</name>
 	<comment></comment>
 	<projects>
 	</projects>

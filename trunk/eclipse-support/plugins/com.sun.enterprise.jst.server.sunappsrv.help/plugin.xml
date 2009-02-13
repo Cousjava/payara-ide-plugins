@@ -17,4 +17,9 @@
     <toc file="toc.xml" primary="true">
     </toc>
   </extension>
-</plugin>
+  <extension point="org.eclipse.help.toc">
+    <toc file="v3preludedevguide/toc.xml" primary="true">
+    </toc>
+  </extension>
+
+  </plugin>
