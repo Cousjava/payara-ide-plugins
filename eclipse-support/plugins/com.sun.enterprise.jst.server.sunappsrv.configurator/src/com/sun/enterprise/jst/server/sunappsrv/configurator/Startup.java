@@ -40,16 +40,21 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 
 @SuppressWarnings("restriction")
 public class Startup {
 
 	public static void mystartup(IProgressMonitor progressMonitor) {
 		try {
+			ServerUIPreferences preferences = new ServerUIPreferences();
+			boolean showOnActivity = preferences.getShowOnActivity();
+			preferences.setShowOnActivity(false);
 			progressMonitor.setTaskName(Messages.CreatingGlassfishServerInstances);
 			GlassFishConfigurator.createV2Server(progressMonitor);
 			String domainXml = GlassFishConfigurator.createV3Server(progressMonitor);
 			GlassFishConfigurator.createDerbyDB(progressMonitor, domainXml);
+			preferences.setShowOnActivity(showOnActivity);
 		} catch (CoreException e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat.format(
 					Messages.CreatingServerConfigurationsProblem, e.getMessage()), e), e.getMessage(),
