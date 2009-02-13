@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -63,6 +64,7 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
     private static final String ADMIN_SCRIPT_NAME = "asadmin"; //$NON-NLS-1$
 	private String fInstallDirName;
 	private ServerRuntime fDefinition;
+    private Map fProperties;
 	private GenericServerRuntime fRuntime;
 	private Property serverDirProperty;
 	private Text path;
@@ -73,6 +75,7 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 		super(definition, initialProperties,wizard,runtime);
 		fInstallDirName = installDirName;
 		fDefinition = definition;
+		fProperties = initialProperties;
 		fRuntime = runtime;
 		serverDirProperty = getServerDirProperty(fDefinition.getProperty());
 	}
@@ -88,15 +91,17 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 	}
 
 	public void decorate(final GenericServerComposite composite) {
+		String pathText;
 		Dialog.applyDialogFont(composite);
 		path = SWTUtil.createLabeledPath(serverDirProperty.getLabel(),getPropertyValue(serverDirProperty),composite);
 		path.setData(serverDirProperty);
 		path.addModifyListener(new PathModifyListener());
+		pathText = path.getText();
 		final IInstallableRuntime ir = ServerPlugin
 				.findInstallableRuntime(fRuntime.getRuntime().getRuntimeType()
 						.getId());
 		installButton = SWTUtil.createButton(composite, GenericServerUIMessages.installServerButton);
-		installButton.setEnabled(path.getText().length() > 0);
+		installButton.setEnabled(pathText.length() > 0);
 		installButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent se) {
 				final String selectedDirectory = path.getText();
@@ -146,6 +151,11 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 				}
 			}
 		});
+		if (pathText.length() > 0) {
+			// has an initial value, probably opened from edit dialog...
+			// must do this after install button is created above
+			validatePath(pathText);
+		}
 	}
 
     private String getInternalDirectoryName(String installDir) {
@@ -171,9 +181,20 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 
     }
 
-	// copy and pare down the one from the superclass hierarchy since it is private
+	// copy the one from the superclass hierarchy since it is private
     private String getPropertyValue(Property property){	
-		return fDefinition.getResolver().resolveProperties(property.getDefault());	
+		if(fProperties!=null && fProperties.isEmpty()==false){
+			//user properties exist use those
+				return fDefinition.getResolver().resolveProperties((String)fProperties.get(property.getId()));
+			}	
+			if(Property.TYPE_SELECT_EDIT.equals(property.getType())){
+				StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
+				if( tokenizer.hasMoreTokens()){
+					return fDefinition.getResolver().resolveProperties(tokenizer.nextToken());
+				}
+				return ""; //$NON-NLS-1$
+			}
+			return fDefinition.getResolver().resolveProperties(property.getDefault());	
 	}
    
     /**
@@ -186,52 +207,56 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
  		propertyMap.put(serverDirProperty.getId(), path.getText());
      	return propertyMap;
      }
- 
+
+ 	private void validatePath(String path) {
+ 		if(path.length()<1)
+ 		{
+ 			fLastMessage = GenericServerUIMessages.emptyPath;
+ 			fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
+ 			installButton.setEnabled(false);
+ 		}
+ 		else if(!pathExist(path)){
+ 			fLastMessage = Messages.canInstallPath;
+ 			fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
+ 			installButton.setEnabled(true);
+ 		}else{
+ 			if(fLastMessage!=null && fLastMessage.equals(fWizard.getMessage())){
+ 				fLastMessage=null;
+ 				fWizard.setMessage(null,IMessageProvider.NONE);
+ 			}
+ 			boolean isInvalid = validate();
+ 			if (isInvalid) {
+ 				String glassfishDir = path + File.separatorChar + fInstallDirName;
+ 				String unzipDirName = getInternalDirectoryName(path);
+
+ 				if(pathExist(glassfishDir)){
+ 					fLastMessage = NLS.bind(Messages.possibleInstallExists,fInstallDirName);
+ 					fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
+ 					installButton.setEnabled(false);
+ 				} else if (pathExist(unzipDirName)) {
+ 					fLastMessage = NLS.bind(Messages.possibleInstallExists,UNZIP_DIR_NAME + File.separatorChar + fInstallDirName);
+ 					fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
+ 					installButton.setEnabled(false);
+ 				} else {
+ 					fLastMessage = Messages.canInstallPath;
+ 					fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
+ 					installButton.setEnabled(true);
+ 				}
+ 			} else {
+ 				installButton.setEnabled(false);
+ 			}
+ 		}
+ 	}
+	private boolean pathExist(String path){
+		File f = new File(path);
+		return f.exists();
+	}
+
+
 	private final class PathModifyListener implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			String path = ((Text) e.widget).getText();
-			
-			if(path.length()<1)
-			{
-				fLastMessage = GenericServerUIMessages.emptyPath;
-				fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
-				installButton.setEnabled(false);
-			}
-			else if(!pathExist(path)){
-				fLastMessage = Messages.canInstallPath;
-				fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
-				installButton.setEnabled(true);
-			}else{
-				if(fLastMessage!=null && fLastMessage.equals(fWizard.getMessage())){
-					fLastMessage=null;
-					fWizard.setMessage(null,IMessageProvider.NONE);
-				}
-				boolean isInvalid = validate();
-				if (isInvalid) {
-			        String glassfishDir = path + File.separatorChar + fInstallDirName;
-			        String unzipDirName = getInternalDirectoryName(path);
-
-			        if(pathExist(glassfishDir)){
-						fLastMessage = NLS.bind(Messages.possibleInstallExists,fInstallDirName);
-			        	fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
-			        	installButton.setEnabled(false);
-			        } else if (pathExist(unzipDirName)) {
-						fLastMessage = NLS.bind(Messages.possibleInstallExists,UNZIP_DIR_NAME + File.separatorChar + fInstallDirName);
-			        	fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
-			        	installButton.setEnabled(false);
-			        } else {
-						fLastMessage = Messages.canInstallPath;
-			        	fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
-			        	installButton.setEnabled(true);
-			        }
-				} else {
-					installButton.setEnabled(false);
-				}
-			}
-		}
-		private boolean pathExist(String path){
-			File f = new File(path);
-			return f.exists();
+			validatePath(path);
 		}
 	}
 }
