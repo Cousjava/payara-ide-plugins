@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Using the Java Persistence API - Sun GlassFish Enterprise Server v3 Prelude Developer's Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-10-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p10.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p12.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="gbxjk"></a>Chapter&#160;6<h3>Using the Java Persistence API</h3><a name="indexterm-168"></a><a name="indexterm-169"></a><p><a name="indexterm-170"></a><a name="indexterm-171"></a>Sun GlassFish Enterprise Server support for the Java Persistence API includes all required
+features described in the Java Persistence Specification. Although officially part of the Enterprise
+JavaBeans Specification v3.0, also known as <a href="http://jcp.org/en/jsr/detail?id=220">JSR 220</a>, the Java Persistence API can also be
+used with non-EJB components outside the EJB container.</p><p>The Java Persistence API provides an object/relational mapping facility to Java developers for
+managing relational data in Java applications. For basic information about the Java Persistence
+API, see &#8220;Part Four: Persistence&#8221; in the <a href="http://java.sun.com/javaee/5/docs/tutorial/doc/index.html">Java EE 5 Tutorial</a>.</p><p>This chapter contains Enterprise Server specific information on using the Java Persistence API
+in the following topics:</p>
+<ul><li><p><a href="#gbwmj">Specifying the Database</a></p></li>
+<li><p><a href="#gcnvb">Additional Database Properties</a></p></li>
+<li><p><a href="#gdpwv">Configuring the Cache</a></p></li>
+<li><p><a href="#gdpwu">Setting the Logging Level</a></p></li>
+<li><p><a href="#gertw">Using Lazy Loading</a></p></li>
+<li><p><a href="#gescc">Primary Key Generation Defaults</a></p></li>
+<li><p><a href="#gbwlh">Automatic Schema Generation</a></p></li>
+<li><p><a href="#gbzgp">Query Hints</a></p></li>
+<li><p><a href="#gdkwf">Changing the Persistence Provider</a></p></li>
+<li><p><a href="#gbxjh">Restrictions and Optimizations</a></p></li></ul>
+
+<hr><p><b>Note - </b><a name="indexterm-172"></a>The default persistence provider in the Enterprise Server is based on the EclipseLink Java
+Persistence API implementation. All configuration options in EclipseLink are available to applications that
+use the Enterprise Server's default persistence provider.</p>
+<hr>
+
+<hr><p><b>Note - </b>For GlassFish v3 Prelude, EJB modules are not supported unless the optional EJB container
+add-on component is downloaded from the Update Tool. For information about the Update
+Tool, see the <a href="http://docs.sun.com/doc/820-5968"><i>Sun GlassFish Enterprise Server v3 Prelude Installation Guide</i></a>.</p>
+<hr>
+
+
+<a name="gbwmj"></a><h3>Specifying the Database</h3>
+<a name="indexterm-173"></a><a name="indexterm-174"></a><a name="indexterm-175"></a><a name="indexterm-176"></a><p>The Enterprise Server uses the bundled Java DB (Derby) database by default. If
+the <tt>transaction-type</tt> element is omitted or specified as <tt>JTA</tt> and both the <tt>jta-data-source</tt>
+and <tt>non-jta-data-source</tt> elements are omitted in the <tt>persistence.xml</tt> file, Java DB is used as
+a JTA data source. If <tt>transaction-type</tt> is specified as <tt>RESOURCE_LOCAL</tt> and both <tt>jta-data-source</tt>
+and <tt>non-jta-data-source</tt> are omitted, Java DB is used as a non-JTA data source.</p><p>To use a non-default database, either specify a value for the <tt>jta-data-source</tt>
+element, or set the <tt>transaction-type</tt> element to <tt>RESOURCE_LOCAL</tt> and specify a value for
+the <tt>non-jta-data-source</tt> element.</p><p><a name="indexterm-177"></a>If you are using the default persistence provider, the provider attempts to automatically
+detect the database type based on the connection metadata. This database type is
+used to issue SQL statements specific to the detected database type's dialect. You
+can specify the optional <tt>eclipselink.target-database</tt> property to guarantee that the database type is correct.
+For example:</p><pre>&#60;?xml version="1.0" encoding="UTF-8"?>
+    &#60;persistence xmlns="http://java.sun.com/xml/ns/persistence">
+        &#60;persistence-unit name ="em1">
+            &#60;jta-data-source>jdbc/MyDB2DB&#60;/jta-data-source>
+            &#60;properties>
+                &#60;property name="eclipselink.target-database" 
+                    value="DB2"/>
+            &#60;/properties>
+        &#60;/persistence-unit>
+    &#60;/persistence></pre><p>The following <tt>eclipselink.target-database</tt> property values are allowed. Supported platforms have been tested with
+the Enterprise Server and are found to be Java EE compatible.</p><pre>//Supported platforms
+JavaDB
+Derby
+Oracle
+MySQL4
+//Others available
+SQLServer
+DB2
+Sybase
+PostgreSQL
+Informix
+TimesTen
+Attunity
+HSQL
+SQLAnyWhere
+DBase
+DB2Mainframe
+Cloudscape
+PointBase</pre><p>For more information about the <tt>eclipselink.target-database</tt> property, see <a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#Using_EclipseLink_JPA_Extensions_for_Session.2C_Target_Database_and_Target_Application_Server">Using EclipseLink JPA Extensions for Session, Target Database and Target Application Server</a>.</p><p>To use the Java Persistence API outside the EJB container (in Java SE
+mode), do not specify the <tt>jta-data-source</tt> or <tt>non-jta-data-source</tt> elements. Instead, specify the
+<tt>provider</tt> element and any additional properties required by the JDBC driver or the
+database. For example:</p><pre>&#60;?xml version="1.0" encoding="UTF-8"?>
+    &#60;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+        &#60;persistence-unit name ="em2">
+            &#60;provider>org.eclipse.persistence.jpa.PersistenceProvider&#60;/provider>
+            &#60;class>ejb3.war.servlet.JpaBean&#60;/class>
+            &#60;properties>
+                &#60;property name="eclipselink.target-database" 
+                    value="Derby"/>
+                &#60;!-- JDBC connection properties -->
+                &#60;property name="eclipselink.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
+                &#60;property name="eclipselink.jdbc.url" 
+value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage=true;create=true;"/>
+                &#60;property name="eclipselink.jdbc.user" value="APP"/>
+                &#60;property name="eclipselink.jdbc.password" value="APP"/>
+            &#60;/properties>
+        &#60;/persistence-unit>
+    &#60;/persistence></pre><p>For more information about <tt>eclipselink</tt> properties, see <a href="#gcnvb">Additional Database Properties</a>.</p><p>For a list of the JDBC drivers currently supported by the Enterprise
+Server, see the <a href="http://docs.sun.com/doc/820-4494"><i>Sun GlassFish Enterprise Server v3 Prelude Release Notes</i></a>. For configurations of supported and other drivers, see <a href="http://docs.sun.com/doc/820-4495/beamw?a=view">Configuration Specifics for JDBC Drivers in <i>Sun GlassFish Enterprise Server v3 Prelude Administration Guide</i></a>.</p><p>To change the persistence provider, see <a href="#gdkwf">Changing the Persistence Provider</a>.</p>
+
+<a name="gcnvb"></a><h3>Additional Database Properties</h3>
+<a name="indexterm-178"></a><a name="indexterm-179"></a><p>If you are using the default persistence provider, you can specify in the
+<tt>persistence.xml</tt> file the database properties listed at <a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#How_to_Use_EclipseLink_JPA_Extensions_for_JDBC_Connection_Communication">How to Use EclipseLink JPA Extensions for JDBC Connection Communication</a>. </p><p>For schema generation properties, see <a href="#gbwmk">Generation Options</a>. For query hints, see <a href="#gbzgp">Query Hints</a>.</p>
+
+<a name="gdpwv"></a><h3>Configuring the Cache</h3>
+<p>If you are using the default persistence provider, you can configure whether caching
+occurs, the type of caching, the size of the cache, and whether client
+sessions share the cache. Caching properties for the default persistence provider are described
+in detail at <a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#Using_EclipseLink_JPA_Extensions_for_Entity_Caching">Using EclipseLink JPA Extensions for Entity Caching</a>.</p>
+
+<a name="gdpwu"></a><h3>Setting the Logging Level</h3>
+<p>One of the default persistence provider's properties that you can set in the
+<tt>persistence.xml</tt> file is <tt>eclipselink.logging.level</tt>. For example, setting the logging level to <tt>FINE</tt>
+or higher logs all SQL statements. For details about this property, see <a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#Using_EclipseLink_JPA_Extensions_for_Logging">Using EclipseLink JPA Extensions for Logging</a>.</p>
+
+<a name="gertw"></a><h3>Using Lazy Loading</h3>
+<p>The default persistence provider treats only <tt>OneToOne</tt>, <tt>ManyToOne</tt>, <tt>OneToMany</tt>, and <tt>ManyToMany</tt> mappings
+specially when they are annotated as <tt>LAZY</tt>. <tt>OneToMany</tt> and <tt>ManyToMany</tt> mappings are loaded
+lazily by default in compliance with the Java Persistence Specification. Other mappings are
+always loaded eagerly.</p><p>For basic information about lazy loading, see <a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#What_You_May_Need_to_Know_About_EclipseLink_JPA_Lazy_Loading">What You May Need to Know About EclipseLink JPA Lazy Loading</a>.</p>
+
+<a name="gescc"></a><h3>Primary Key Generation Defaults</h3>
+<p>In the descriptions of the <tt>@GeneratedValue</tt>, <tt>@SequenceGenerator</tt>, and <tt>@TableGenerator</tt> annotations in the Java
+Persistence Specification, certain defaults are noted as specific to the persistence provider. The
+default persistence provider's primary key generation defaults are listed here.</p><p><tt>@GeneratedValue</tt> defaults are as follows:</p>
+<ul><li><p>Using <tt>strategy=AUTO</tt> (or no <tt>strategy</tt>) creates a <tt>@TableGenerator</tt> named <tt>SEQ_GEN</tt> with default settings. Specifying a <tt>generator</tt> has no effect.</p></li>
+<li><p>Using <tt>strategy=TABLE</tt> without specifying a <tt>generator</tt> creates a <tt>@TableGenerator</tt> named <tt>SEQ_GEN_TABLE</tt> with default settings. Specifying a <tt>generator</tt> but no <tt>@TableGenerator</tt> creates and names a <tt>@TableGenerator</tt> with default settings.</p></li>
+<li><p>Using <tt>strategy=IDENTITY</tt> or <tt>strategy=SEQUENCE</tt> produces the same results, which are database-specific.</p>
+<ul><li><p>For Oracle databases, not specifying a <tt>generator</tt> creates a <tt>@SequenceGenerator</tt> named <tt>SEQ_GEN_SEQUENCE</tt> with default settings. Specifying a <tt>generator</tt> but no <tt>@SequenceGenerator</tt> creates and names a <tt>@SequenceGenerator</tt> with default settings.</p></li>
+<li><p>For PostgreSQL databases, a <tt>SERIAL</tt> column named <i>entity-table</i><tt>_</tt><i>pk-column</i><tt>_SEQ</tt> is created.</p></li>
+<li><p>For MySQL databases, an <tt>AUTO_INCREMENT</tt> column is created.</p></li>
+<li><p>For other supported databases, an <tt>IDENTITY</tt> column is created.</p></li></ul>
+</li></ul>
+<p>The <tt>@SequenceGenerator</tt> annotation has one default specific to the default provider. The default
+<tt>sequenceName</tt> is the specified <tt>name</tt>.</p><p><tt>@TableGenerator</tt> defaults are as follows:</p>
+<ul><li><p>The default <tt>table</tt> is <tt>SEQUENCE</tt>.</p></li>
+<li><p>The default <tt>pkColumnName</tt> is <tt>SEQ_NAME</tt>.</p></li>
+<li><p>The default <tt>valueColumnName</tt> is <tt>SEQ_COUNT</tt>.</p></li>
+<li><p>The default <tt>pkColumnValue</tt> is the specified <tt>name</tt>, or the default <tt>name</tt> if no <tt>name</tt> is specified.</p></li></ul>
+
+
+<a name="gbwlh"></a><h3>Automatic Schema Generation</h3>
+<p>The automatic schema generation feature of the Enterprise Server defines database tables based
+on the fields or properties in entities and the relationships between the fields
+or properties. This insulates developers from many of the database related aspects of
+development, allowing them to focus on entity development. The resulting schema is usable as-is
+or can be given to a database administrator for tuning with respect to
+performance, security, and so on. This section covers the following topics:</p>
+<ul><li><p><a href="#gcjgl">Annotations</a></p></li>
+<li><p><a href="#gbwmk">Generation Options</a></p></li></ul>
+
+<hr><p><b>Note - </b>Automatic schema generation is supported on an all-or-none basis: it expects that no
+tables exist in the database before it is executed. It is not intended
+to be used as a tool to generate extra tables or constraints.</p><p>Deployment won't fail if all tables are not created, and undeployment won't fail
+if not all tables are dropped. Instead, an error is written to the
+server log. This is done to allow you to investigate the problem and
+fix it manually. You should not rely on the partially created database schema
+to be correct for running the application.</p><p>Schema generation occurs whenever an application is loaded. For example, schema generation occurs
+if the Enterprise Server is restarted with the application deployed.</p>
+<hr>
+
+
+<a name="gcjgl"></a><h4>Annotations</h4>
+<a name="indexterm-180"></a><a name="indexterm-181"></a><p>The following annotations are used in automatic schema generation: <tt>@AssociationOverride</tt>, <tt>@AssociationOverrides</tt>, <tt>@AttributeOverride</tt>,
+<tt>@AttributeOverrides</tt>, <tt>@Column</tt>, <tt>@DiscriminatorColumn</tt>, <tt>@DiscriminatorValue</tt>, <tt>@Embedded</tt>, <tt>@EmbeddedId</tt>, <tt>@GeneratedValue</tt>, <tt>@Id</tt>, <tt>@IdClass</tt>, <tt>@JoinColumn</tt>, <tt>@JoinColumns</tt>, <tt>@JoinTable</tt>,
+<tt>@Lob</tt>, <tt>@ManyToMany</tt>, <tt>@ManyToOne</tt>, <tt>@OneToMany</tt>, <tt>@OneToOne</tt>, <tt>@PrimaryKeyJoinColumn</tt>, <tt>@PrimaryKeyJoinColumns</tt>, <tt>@SecondaryTable</tt>, <tt>@SecondaryTables</tt>, <tt>@SequenceGenerator</tt>, <tt>@Table</tt>, <tt>@TableGenerator</tt>,
+<tt>@UniqueConstraint</tt>, and <tt>@Version</tt>. For information about these annotations, see the Java Persistence Specification.</p><p>For <tt>@Column</tt> annotations, the <tt>insertable</tt> and <tt>updatable</tt> elements are not used in automatic
+schema generation.</p><p>For <tt>@OneToMany</tt> and <tt>@ManyToOne</tt> annotations, no <tt>ForeignKeyConstraint</tt> is created in the resulting DDL files.</p>
+
+<a name="gbwmk"></a><h4>Generation Options</h4>
+<a name="indexterm-182"></a><a name="indexterm-183"></a><a name="indexterm-184"></a><p><a name="indexterm-185"></a>Optional schema generation properties control the automatic creation of database tables. You can specify
+them in the <tt>persistence.xml</tt> file. For more information, see <a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#Using_EclipseLink_JPA_Extensions_for_Schema_Generation">Using EclipseLink JPA Extensions for Schema Generation</a>.</p>
+
+<a name="gbzgp"></a><h3>Query Hints</h3>
+<a name="indexterm-186"></a><p>Query hints are additional, implementation-specific configuration settings. You can use hints in your
+queries in the following format:</p><pre>setHint("<i>hint-name</i>", <i>hint-value</i>)</pre><p>For example:</p><pre>Customer customer = (Customer)entityMgr.
+     createNamedQuery("findCustomerBySSN").
+     setParameter("SSN", "123-12-1234").
+     setHint("eclipselink.refresh", true).
+     getSingleResult();</pre><p>For more information about the query hints available with the default provider, see
+<a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#How_to_Use_EclipseLink_JPA_Query_Hints">How to Use EclipseLink JPA Query Hints</a>.</p>
+
+<a name="gdkwf"></a><h3>Changing the Persistence Provider</h3>
+<a name="indexterm-187"></a>
+<hr><p><b>Note - </b>The previous sections in this chapter apply only to the default persistence provider.
+If you change the provider for a module or application, the provider-specific database
+properties, query hints, and schema generation features described in this chapter do not
+apply.</p>
+<hr>
+<p>You can change the persistence provider for an application in the manner described
+in the Java Persistence API Specification.</p><p>First, install the provider. Copy the provider JAR files to the <i>domain-dir</i><tt>/lib</tt> directory,
+and restart the Enterprise Server. For more information about the <i>domain-dir</i><tt>/lib</tt> directory, see <a href="p6.html#beadj">Using the Common Class Loader</a>. The
+new persistence provider is now available to all modules and applications deployed on
+servers that share the same configuration. However, the <b>default</b> provider remains the
+same.</p><p>In your persistence unit, specify the provider and any properties the provider requires
+in the <tt>persistence.xml</tt> file. For example:</p><pre>&#60;?xml version="1.0" encoding="UTF-8"?>
+    &#60;persistence xmlns="http://java.sun.com/xml/ns/persistence">
+        &#60;persistence-unit name ="em3">
+            &#60;provider>com.company22.persistence.PersistenceProviderImpl&#60;/provider>
+            &#60;properties>
+                &#60;property name="company22.database.name" value="MyDB"/>
+            &#60;/properties>
+        &#60;/persistence-unit>
+    &#60;/persistence></pre><p><a name="indexterm-188"></a>To migrate from Oracle TopLink to EclipseLink, see <a href="http://wiki.eclipse.org/EclipseLink/Examples/MigratingFromOracleTopLink">Migrating from Oracle TopLink to EclipseLink</a>.</p>
+
+<a name="gbxjh"></a><h3>Restrictions and Optimizations</h3>
+<a name="indexterm-189"></a><p>This section discusses restrictions and performance optimizations that affect using the Java Persistence
+API.</p>
+<ul><li><p><a href="#ghdtr">Extended Persistence Context</a></p></li>
+<li><p><a href="#gezxw">Using @OrderBy with a Shared Session Cache</a></p></li>
+<li><p><a href="#gdwqi">Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver</a></p></li>
+<li><p><a href="#geqvh">Database Case Sensitivity</a></p></li>
+<li><p><a href="#gbxjg">Sybase Finder Limitation</a></p></li>
+<li><p><a href="#gbxjp">MySQL Database Restrictions</a></p></li></ul>
+
+
+<a name="ghdtr"></a><h4>Extended Persistence Context</h4>
+<p>If a stateful session bean is passivated, its extended persistence context could be lost
+when the stateful session bean is activated. In this environment, it is safe
+to store an extended persistence context in a stateful session bean only if
+you can safely disable stateful session bean passivation altogether. This is possible, but
+trade-offs in memory utilization must be carefully examined before choosing this option.</p><p>It is safe to store a reference to an extended persistence context in
+an <tt>HttpSession</tt>.</p>
+
+<a name="gezxw"></a><h4>Using @OrderBy with a Shared Session Cache</h4>
+<a name="indexterm-190"></a><a name="indexterm-191"></a><a name="indexterm-192"></a><p>Setting <tt>@OrderBy</tt> on a <tt>ManyToMany</tt> or <tt>OneToMany</tt> relationship field in which a
+<tt>List</tt> represents the Many side doesn't work if the session cache is shared.
+Use one of the following workarounds:</p>
+<ul><li><p>Have the application maintain the order so the <tt>List</tt> is cached properly.</p></li>
+<li><p>Refresh the session cache using <tt>EntityManager.refresh()</tt> if you don't want to maintain the order during creation or modification of the <tt>List</tt>.</p></li>
+<li><p>Disable session cache sharing in <tt>persistence.xml</tt> as follows:</p><pre>&#60;property name="eclipselink.cache.shared.default" value="false"/></pre></li></ul>
+
+
+<a name="gdwqi"></a><h4>Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver</h4>
+<p><a name="indexterm-193"></a><a name="indexterm-194"></a>To use BLOB or CLOB data types larger than 4 KB for persistence
+using the Inet Oraxo JDBC Driver for Oracle Databases, you must set the
+database's <tt>streamstolob</tt> property value to <tt>true</tt>.</p>
+
+<a name="geqvh"></a><h4>Database Case Sensitivity</h4>
+<p>Mapping references to column or table names must be in accordance with the
+expected column or table name case, and ensuring this is the programmer's responsibility.
+If column or table names are not explicitly specified for a field or
+entity, the Enterprise Server uses upper case column names by default, so any
+mapping references to the column or table names must be in upper case.
+If column or table names are explicitly specified, the case of all mapping
+references to the column or table names must be in accordance with the
+case used in the specified names.</p><p>The following are examples of how case sensitivity affects mapping elements that refer
+to columns or tables. Programmers must keep case sensitivity in mind when writing
+these mappings.</p>
+
+<a name="geqvc"></a><h5>Unique Constraints</h5>
+<p>If column names are not explicitly specified on a field, unique constraints and
+foreign key mappings must be specified using uppercase references. For example:</p><pre>@Table(name="Department", uniqueConstraints={ @UniqueConstraint ( columnNames= { "DEPTNAME" } ) } )</pre><p>The other way to handle this is by specifying explicit column names for
+each field with the required case. For example:</p><pre>@Table(name="Department", uniqueConstraints={ @UniqueConstraint ( columnNames= { "deptName" } ) } )
+public class Department{ @Column(name="deptName") private String deptName; }</pre><p>Otherwise, the <tt>ALTER TABLE</tt> statement generated by the Enterprise Server uses the incorrect case,
+and the creation of the unique constraint fails.</p>
+
+<a name="geqvk"></a><h5>Foreign Key Mapping</h5>
+<p>Use <tt>@OneToMany(mappedBy="COMPANY")</tt> or specify an explicit column name for the <tt>Company</tt> field on the
+<tt>Many</tt> side of the relationship.</p>
+
+<a name="geqvi"></a><h5>SQL Result Set Mapping</h5>
+<p>Use the following elements:</p><pre>&#60;sql-result-set-mapping name="SRSMName" >
+   &#60;entity-result entity-class="entities.someEntity" />
+   &#60;column-result name="UPPERCASECOLUMNNAME" />
+&#60;/sql-result-set-mapping></pre><p>Or specify an explicit column name for the <tt>upperCaseColumnName</tt> field.</p>
+
+<a name="geqvo"></a><h5>Named Native Queries and JDBC Queries</h5>
+<p>Column or table names specified in SQL queries must be in accordance with
+the expected case. For example, MySQL requires column names in the <tt>SELECT</tt> clause
+of JDBC queries to be uppercase, while PostgreSQL and Sybase require table names
+to be uppercase in all JDBC queries.</p>
+
+<a name="geqxc"></a><h5>PostgreSQL Case Sensitivity</h5>
+<p>PostgreSQL stores column and table names in lower case. JDBC queries on PostgreSQL
+retrieve column or table names in lowercase unless the names are quoted. For
+example:</p><pre>use aliases Select m.ID AS \"ID\" from Department m</pre><p>Use the backslash as an escape character in the class file, but not
+in the <tt>persistence.xml</tt> file.</p>
+
+<a name="gbxjg"></a><h4>Sybase Finder Limitation</h4>
+<a name="indexterm-195"></a><a name="indexterm-196"></a><p>If a finder method with an input greater than 255 characters is executed
+and the primary key column is mapped to a VARCHAR column, Sybase attempts
+to convert type VARCHAR to type TEXT and generates the following error:</p><pre>com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype 
+'TEXT' to 'VARCHAR' is not allowed.  Use the CONVERT function to run this 
+query.</pre><p>To avoid this error, make sure the finder method input is less than
+255 characters.</p>
+
+<a name="gbxjp"></a><h4>MySQL Database Restrictions</h4>
+<a name="indexterm-197"></a><p>The following restrictions apply when you use a MySQL database with the Enterprise
+Server for persistence.</p>
+<ul><li><p>MySQL treats <tt>int1</tt> and <tt>int2</tt> as reserved words. If you want to define <tt>int1</tt> and <tt>int2</tt> as fields in your table, use <tt>`int1`</tt> and <tt>`int2`</tt> field names in your SQL file. </p></li>
+<li><p>When <tt>VARCHAR</tt> fields get truncated, a warning is displayed instead of an error. To get an error message, start the MySQL database in strict SQL mode. </p></li>
+<li><p>The order of fields in a foreign key index must match the order in the explicitly created index on the primary table.</p></li>
+<li><p>The <tt>CREATE TABLE</tt> syntax in the SQL file must end with the following line.</p><pre>)  Engine=InnoDB;</pre><p><tt>InnoDB</tt> provides MySQL with a transaction-safe (ACID compliant) storage engine having commit, rollback, and crash recovery capabilities.</p></li>
+<li><p>For a <tt>FLOAT</tt> type field, the correct precision must be defined. By default, MySQL uses four bytes to store a <tt>FLOAT</tt> type that does not have an explicit precision definition. For example, this causes a number such as 12345.67890123 to be rounded off to 12345.7 during an <tt>INSERT</tt>. To prevent this, specify <tt>FLOAT(10,2)</tt> in the DDL file, which forces the database to use an eight-byte double-precision column. For more information, see <a href="http://dev.mysql.com/doc/mysql/en/numeric-types.html">http://dev.mysql.com/doc/mysql/en/numeric-types.html</a>.</p></li>
+<li><p>To use <tt>||</tt> as the string concatenation symbol, start the MySQL server with the <tt>--sql-mode="PIPES_AS_CONCAT"</tt> option. For more information, see <a href="http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html">http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html</a> and <a href="http://dev.mysql.com/doc/mysql/en/ansi-mode.html">http://dev.mysql.com/doc/mysql/en/ansi-mode.html</a>.</p></li>
+<li><p>MySQL always starts a new connection when <tt>autoCommit==true</tt> is set. This ensures that each SQL statement forms a single transaction on its own. If you try to rollback or commit an SQL statement, you get an error message.</p><pre>javax.transaction.SystemException: java.sql.SQLException: 
+Can't call rollback when autocommit=true</pre><pre>javax.transaction.SystemException: java.sql.SQLException: 
+Error open transaction is not closed</pre><p>To resolve this issue, add <tt>relaxAutoCommit=true</tt> to the JDBC URL. For more information, see <a href="http://forums.mysql.com/read.php?39,31326,31404">http://forums.mysql.com/read.php?39,31326,31404</a>.</p></li>
+<li><p>MySQL does not allow a <tt>DELETE</tt> on a row that contains a reference to itself. Here is an example that illustrates the issue.</p><pre>create table EMPLOYEE (
+        empId   int         NOT NULL,
+        salary  float(25,2) NULL,
+        mgrId   int         NULL,
+        PRIMARY KEY (empId),
+        FOREIGN KEY (mgrId) REFERENCES EMPLOYEE (empId)
+        ) ENGINE=InnoDB;
+
+        insert into Employee values (1, 1234.34, 1);
+        delete from Employee where empId = 1;</pre><p>This example fails with the following error message.</p><pre>ERROR 1217 (23000): Cannot delete or update a parent row: 
+a foreign key constraint fails</pre><p>To resolve this issue, change the table creation script to the following:</p><pre>create table EMPLOYEE (
+        empId   int         NOT NULL,
+        salary  float(25,2) NULL,
+        mgrId   int         NULL,
+        PRIMARY KEY (empId),
+        FOREIGN KEY (mgrId) REFERENCES EMPLOYEE (empId)
+        ON DELETE SET NULL
+        ) ENGINE=InnoDB;
+
+        insert into Employee values (1, 1234.34, 1);
+        delete from Employee where empId = 1;</pre><p>This can be done only if the foreign key field is allowed to be null. For more information, see <a href="http://bugs.mysql.com/bug.php?id=12449">http://bugs.mysql.com/bug.php?id=12449</a> and <a href="http://dev.mysql.com/doc/mysql/en/innodb-foreign-key-constraints.html">http://dev.mysql.com/doc/mysql/en/innodb-foreign-key-constraints.html</a>.</p></li></ul>
+
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p10.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p12.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+
