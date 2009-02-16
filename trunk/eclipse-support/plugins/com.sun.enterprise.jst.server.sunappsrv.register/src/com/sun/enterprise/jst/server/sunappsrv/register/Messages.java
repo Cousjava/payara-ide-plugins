@@ -60,6 +60,7 @@ public class Messages extends NLS {
 	public static String InstantiationException;
 	public static String InvocationException;
 	public static String RegistrationException;
+	public static String SETUP_GLASSFISH;
 
 	private Messages() {
 	}
