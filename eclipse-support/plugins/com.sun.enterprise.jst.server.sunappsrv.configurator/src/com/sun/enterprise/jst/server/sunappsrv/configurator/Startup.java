@@ -51,9 +51,13 @@ public class Startup {
 			boolean showOnActivity = preferences.getShowOnActivity();
 			preferences.setShowOnActivity(false);
 			progressMonitor.setTaskName(Messages.CreatingGlassfishServerInstances);
+			progressMonitor.worked(10);
 			GlassFishConfigurator.createV2Server(progressMonitor);
+            progressMonitor.worked(30);
 			String domainXml = GlassFishConfigurator.createV3Server(progressMonitor);
+            progressMonitor.worked(30);
 			GlassFishConfigurator.createDerbyDB(progressMonitor, domainXml);
+            progressMonitor.worked(30);
 			preferences.setShowOnActivity(showOnActivity);
 		} catch (CoreException e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat.format(

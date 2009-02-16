@@ -43,6 +43,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -93,7 +94,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			public void run() {
 				final Shell shell = new Shell(Display.getDefault());
 				try {
-					IRunnableWithProgress op = new IRunnableWithProgress() {
+				/*	IRunnableWithProgress op = new IRunnableWithProgress() {
 						public void run(IProgressMonitor progressMonitor) throws InvocationTargetException,
 								InterruptedException {
 							progressMonitor.setTaskName(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION);
@@ -104,6 +105,23 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					};
 					ProgressMonitorDialog pmd = new ProgressMonitorDialog(shell);
 					pmd.run(true, false, op);
+					*/
+					Job job = new Job(Messages.SETUP_GLASSFISH) {
+					    @Override
+					    protected IStatus run(IProgressMonitor monitor) {
+					        monitor.beginTask(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION, 100);
+					        // execute the task ...
+							if (!skipInstall)
+								V2InstallationConfigurer.configureV2(dir, glassfishLoc);
+							Startup.mystartup(monitor);
+							monitor.done();
+					        return Status.OK_STATUS;
+					    }
+					};
+					job.schedule();
+					
+					
+					
 				} catch (Exception e) {
 					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
 							MessageFormat.format(Messages.CONFIGURING_GLASSFISH_V2_1_ENCOUNTERED_A_PROBLEM_0, e
