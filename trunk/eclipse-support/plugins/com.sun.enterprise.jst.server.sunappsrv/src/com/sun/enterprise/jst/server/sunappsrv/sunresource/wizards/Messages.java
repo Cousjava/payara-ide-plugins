@@ -49,6 +49,13 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String Connection;
 	public static String Create;
 	public static String JNDIName;
+	public static String ProjectName;
     public static String wizardTitle;
     public static String wizardDescription;
+    public static String ErrorTitle;
+    public static String errorUnknown;
+    public static String errorFileExists;
+    public static String errorFolderMissing;
+    public static String errorProjectMissing;
+    public static String errorConnectionMissing;
 }

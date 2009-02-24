@@ -38,6 +38,11 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.datatools.connectivity.ICategory;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
@@ -47,6 +52,7 @@ import org.eclipse.datatools.connectivity.internal.ui.wizards.CPWizardNode;
 import org.eclipse.datatools.connectivity.internal.ui.wizards.NewCPWizard;
 import org.eclipse.datatools.connectivity.internal.ui.wizards.ProfileWizardProvider;
 import org.eclipse.datatools.connectivity.ui.wizards.IWizardCategoryProvider;
+import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.Viewer;
@@ -66,6 +72,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.JDBCInfo;
 
@@ -77,10 +84,11 @@ public class JDBCResourceWizardPage extends WizardPage {
 	private static final String DATABASE_CATEGORY_ID = "org.eclipse.datatools.connectivity.db.category"; //$NON-NLS-1$
 
 	private Text jndiText;
-	
 	private IConnectionProfile connectionProfile;
+	private IProject selectedProject;
 
 	private Combo combo;
+	private Combo projectNameCombo;
 
 	private NewCPWizard wizard;
 
@@ -91,10 +99,11 @@ public class JDBCResourceWizardPage extends WizardPage {
 	 * 
 	 * @param selection
 	 */
-	public JDBCResourceWizardPage() {
+	public JDBCResourceWizardPage(IProject project) {
 		super("wizardPage"); //$NON-NLS-1$
 		setTitle(Messages.wizardTitle);
 		setDescription(Messages.wizardDescription);
+		selectedProject = project;
 	}
 
 	/**
@@ -106,11 +115,32 @@ public class JDBCResourceWizardPage extends WizardPage {
 		layout.numColumns = 3;
 		container.setLayout(layout);
 		Label label = new Label(container, SWT.NULL);
+		label.setText(Messages.ProjectName);
+
+		projectNameCombo = new Combo(container, SWT.READ_ONLY | SWT.SINGLE);
+		GridDataFactory.defaultsFor(projectNameCombo).span(2, 1).applyTo(projectNameCombo);
+		projectNameCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetDefaultSelected( SelectionEvent e) {
+				widgetSelected(e);
+			}
+
+			@Override
+			public void widgetSelected( SelectionEvent e) {
+				String newSelection = projectNameCombo.getText();
+				if (newSelection != null) {
+					selectedProject = ProjectUtilities.getProject(newSelection);
+					updateStatus();
+				}
+			}
+		});
+		
+		label = new Label(container, SWT.NULL);
 		label.setText(Messages.JNDIName);
 
 		jndiText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridDataFactory.defaultsFor(jndiText).span(2, 1).applyTo(jndiText);
-		jndiText.setText("jdbc/myDatasource");
+		jndiText.setText("jdbc/myDatasource"); //$NON-NLS-1$
 
 		label = new Label(container, SWT.NULL);
 		label.setText(Messages.Connection);
@@ -159,20 +189,47 @@ public class JDBCResourceWizardPage extends WizardPage {
 	}
 
 	private void initialize() {
-		populateCombo();
+		populateCombos();
 		updateStatus();
 	}
 
 	private void updateStatus() {
 		boolean hasConnection = (combo.getSelectionIndex() != -1);
-		setPageComplete(hasConnection);
-		setErrorMessage(hasConnection ? null: "need to specify connection");
-		
+		boolean hasProject = (projectNameCombo.getSelectionIndex() != -1);
+		setPageComplete(hasProject && hasConnection);
+		if (!hasProject) {
+			setErrorMessage(Messages.errorProjectMissing);
+		} else if (!hasConnection) {
+			setErrorMessage(Messages.errorConnectionMissing);
+		} else {
+			setErrorMessage(null);
+		}		
 	}
 
 	public String getJNDIName() {
 		return jndiText.getText();
 	}
+
+	public IProject getSelectedProject() {
+		return selectedProject;
+	}
+
+	private List<IProject> getSunFacetIProjects() {
+		IProject[] allProjects = ProjectUtilities.getAllProjects();
+		List<IProject> returnProjects = new ArrayList<IProject>();
+	
+		for (IProject project2 : allProjects) {
+			try {
+				if (FacetedProjectFramework.hasProjectFacet(project2, "sun.facet")) { //$NON-NLS-1$
+					returnProjects.add(project2);
+				}
+			} catch (CoreException e) {
+				// just skip from list
+			}
+		}
+		return returnProjects;
+	}
+	
 
 	private IConnectionProfile showCPWizard () {
 		// Filter datasource category
@@ -214,7 +271,7 @@ public class JDBCResourceWizardPage extends WizardPage {
 		return ProfileManager.getInstance().getProfilesByCategory(DATABASE_CATEGORY_ID);
 	}
 
-	private void populateCombo() {
+	private void populateCombos() {
 		combo.removeAll();
 		for (IConnectionProfile profile : getConnectionProfiles()) {
 			if (connectionProfile == null) {
@@ -225,6 +282,24 @@ public class JDBCResourceWizardPage extends WizardPage {
 
 		if (combo.getItemCount() > 0) {
 			combo.select(0);
+		}
+
+		projectNameCombo.removeAll();
+		List<IProject> validProjects = getSunFacetIProjects();
+		String selectProjectName = ((selectedProject != null) ? selectedProject.getName() : null);
+		int selectionIndex = -1;
+		for (int i = 0; i < validProjects.size(); i++) {
+			IProject nextProject = validProjects.get(i);
+			String projectName = nextProject.getName();
+			projectNameCombo.add(projectName);
+			if (projectName.equals(selectProjectName)) {
+				selectionIndex = i;
+			}
+		}
+		if ((selectionIndex != -1) && (projectNameCombo.getItemCount() > 0)) {
+			projectNameCombo.select(selectionIndex);
+		} else { // selectedProject is not a valid candidate project
+			selectedProject = null;
 		}
 	}
 
