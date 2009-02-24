@@ -49,6 +49,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -60,6 +61,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -97,7 +99,9 @@ public class JDBCWizard extends Wizard implements INewWizard {
 
 	@Override
 	public void addPages() {
-		page = new JDBCResourceWizardPage();
+		IContainer containerResource = getContainerResource();
+		IProject selectedProject = ((containerResource != null) ? containerResource.getProject() : null);
+		page = new JDBCResourceWizardPage(selectedProject);
 		addPage(page);
 	}
 
@@ -110,10 +114,11 @@ public class JDBCWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		final String jndiName = page.getJNDIName();
 		final JDBCInfo jdbcInfo = page.getJDBCInfo();
+		final IProject selectedProject = page.getSelectedProject();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					doFinish(jndiName, jdbcInfo, monitor);
+					doFinish(jndiName, jdbcInfo, selectedProject, monitor);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -129,9 +134,9 @@ public class JDBCWizard extends Wizard implements INewWizard {
 			Throwable realException = e.getTargetException();
 			String message = realException.getMessage();
 			if (message == null) {
-				message = "Unknown error creating file";
+				message = Messages.errorUnknown;
 			}
-			MessageDialog.openError(getShell(), "Error", message);
+			MessageDialog.openError(getShell(), Messages.ErrorTitle, message);
 			return false;
 		}
 		return true;
@@ -139,39 +144,23 @@ public class JDBCWizard extends Wizard implements INewWizard {
 	
 	/**
 	 * The worker method. It will find the container, create the
-	 * file if missing or just replace its contents, and open
-	 * the editor on the newly created file.
+	 * file and open the editor on the newly created file.  If the 
+	 * file already exists, show an error
 	 */
 
-	private void doFinish(String jndiName, JDBCInfo jdbcInfo,
+	private void doFinish(String jndiName, JDBCInfo jdbcInfo, IProject selectedProject, 
 		IProgressMonitor monitor) throws CoreException {
-		// TODO deal with the case the file already exists
-		// it is really done, but would be best to do this much earlier
-		// AND, comment above says it will be replaced - need to 
-		// make comment and behavior consistent
-		//TODO - check here for project nature and then decide which
-		// directory to use
-		// would be nice to do this earlier (like in init) but it doesn't work
-		// for now, just force WebContent/WEB-INF
+		// TODO in the case the file already exists, it
+		// would be best to do this much earlier
+
+		//TODO - for now, just force WebContent/WEB-INF
 		dirName = SETUP_DIR_NAME;
 		
-		/*
-		IContainer containerResource = getContainerResource();
-		IProject project = containerResource.getProject();
-		try {
-			IProjectDescription desc = project.getDescription();
-			String[] natures = desc.getNatureIds();
-			System.out.println("natures are");
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		IContainer containerResource = getContainerResource();
+		IContainer containerResource = selectedProject;
 		final IFolder folder = containerResource.getFolder(new Path(dirName));
 if (!folder.exists()) {
-	// TODO - more i18n here
-	IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK,
-			"Cannot create this type of resource in a project which does not contain a " + dirName + " folder", null);
+	IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK, //$NON-NLS-1$
+			NLS.bind(Messages.errorFolderMissing, dirName), null);
 	throw new CoreException(status);
 }
 
@@ -180,8 +169,8 @@ if (!folder.exists()) {
 //		final IFolder folder = containerResource.getFolder(new Path(SETUP_DIR_NAME));
 		final IFile file = folder.getFile(new Path(RESOURCE_FILE_NAME));
 if (file.exists()) {
-	IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK,
-			"File already exists", null);
+	IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK, //$NON-NLS-1$
+			Messages.errorFileExists, null);
 	throw new CoreException(status);
 }
 		try {
@@ -261,7 +250,7 @@ if (file.exists()) {
 			}
 
 		} catch (IOException ioe) {
-			IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK,
+			IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK, //$NON-NLS-1$
 					ioe.getLocalizedMessage(), null);
 			throw new CoreException(status);
 		}
@@ -295,7 +284,7 @@ if (file.exists()) {
 	}
 
 	private static String replaceOrRemove(String originalLine, String pattern, String value) {
-		String containsPattern = ".*" + pattern + ".*"; //$NON-NLS-1$
+		String containsPattern = ".*" + pattern + ".*"; //$NON-NLS-1$ //$NON-NLS-2$
 		if ((originalLine != null) && Pattern.matches(containsPattern, originalLine)) {
 			return (((value == null) || (value.length() == 0)) ? null : 
 				originalLine.replaceAll(pattern, value));
