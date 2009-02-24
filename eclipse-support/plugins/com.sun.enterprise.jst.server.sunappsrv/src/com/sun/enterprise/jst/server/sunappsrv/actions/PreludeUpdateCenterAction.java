@@ -74,7 +74,7 @@ public class PreludeUpdateCenterAction extends AppServerContextAction {
     	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
     	if (!sab.isV3()) { // V2 only
     		String[] command = new String[]{
-    				sab.getSunAppServer().getDomainDir()+"/../updatecenter/bin/updatetool"
+    				sab.getSunApplicationServerInstallationDirectory()+"/updatecenter/bin/updatetool"
     		}; 
     		try {
     			Execute.launch(null, command, null, new File(sab.getSunApplicationServerInstallationDirectory()), true);
