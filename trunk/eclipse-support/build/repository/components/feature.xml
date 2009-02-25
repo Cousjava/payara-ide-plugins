@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="GlassFish Plugin" version="1.0.18">
+<component name="GlassFish Plugin" version="1.0.19">
     <package no-download="no">
         <size os="win32">TODO</size>
         <size os="macosx">TODO</size>
@@ -12,7 +12,7 @@
     <getting-started/>
     <build patched="no" type="binary">
         <updatesite url="https://ajax.dev.java.net/eclipse">
-            <feature id="com.sun.enterprise.jst.server.sunappsrv.feature" version="1.0.18"/>
+            <feature id="com.sun.enterprise.jst.server.sunappsrv.feature" version="1.0.19"/>
         </updatesite>
     </build>
     <copyright>Copyright 2009 Sun Microsystems, Inc. All rights reserved.</copyright>
