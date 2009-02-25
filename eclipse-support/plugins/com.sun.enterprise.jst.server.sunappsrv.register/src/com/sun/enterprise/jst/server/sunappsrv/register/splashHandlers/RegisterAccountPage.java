@@ -40,8 +40,10 @@ import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -74,6 +76,14 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 	private List countries;
 	private Text tHost;
 	private Text tPort;
+	private String email;
+	private String password;
+	private String firstName;
+	private String lastName;
+	private String companyName;
+	private String country;
+	private int port;
+	private String host;
 
 	protected RegisterAccountPage(String pageName) {
 		super(pageName);
@@ -166,11 +176,10 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 
 	public boolean registerUser() {
 		try {
-			if (!tPort.getText().equals(""))
-				RegisterService.setProxy(tHost.getText(), Integer.parseInt(tPort.getText()));
-			RegisterService.createSDNAccount(tEmail.getText(), tPassword.getText(),
-					getActualCountry(tCountry.getText()), tFirstName.getText(), tLastName.getText(), tCompanyName
-							.getText());
+			if (port > 0)
+				RegisterService.setProxy(host, port);
+			RegisterService.createSDNAccount(email, password, getActualCountry(country), firstName, lastName,
+					companyName);
 			return true;
 		} catch (UnknownHostException e) {
 			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
@@ -197,6 +206,7 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 			Activator.logErrorMessage("Registration failed", e); //$NON-NLS-1$
 			setErrorMessage(MessageFormat.format(Messages.RegistrationException, e.getMessage()));
 		}
+
 		return false;
 	}
 
@@ -207,35 +217,45 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 	private void updatePage() {
 		boolean complete = true;
 		String error = null;
-		if (tEmail.getText().length() <= 0) {
+		email = tEmail.getText();
+		if (email.length() <= 0) {
 			complete = false;
 		}
-		if (tPassword.getText().length() <= 0) {
+		password = tPassword.getText();
+		if (password.length() <= 0) {
 			complete = false;
 		}
-		if (!tPassword.getText().equals(tConfirm.getText())) {
+		if (!password.equals(tConfirm.getText())) {
 			setErrorMessage(Messages.PASSWORDS_DON_T_MATCH);
 			setPageComplete(false);
 			return;
 		}
-		if (tFirstName.getText().length() <= 0) {
+		firstName = tFirstName.getText();
+		if (firstName.length() <= 0) {
 			complete = false;
 		}
-		if (tLastName.getText().length() <= 0) {
+		lastName = tLastName.getText();
+		if (lastName.length() <= 0) {
 			complete = false;
 		}
-		if (tCompanyName.getText().length() <= 0) {
+		companyName = tCompanyName.getText();
+		if (companyName.length() <= 0) {
 			complete = false;
 		}
-		if (tCountry.getText().length() <= 0) {
+		country = tCountry.getText();
+		if (country.length() <= 0) {
 			complete = false;
 		}
 		try {
-			if (tPort.getText().length() > 0)
-				Integer.parseInt(tPort.getText());
+			if (tPort.getText().length() > 0) {
+				port = Integer.parseInt(tPort.getText());
+			} else {
+				port = -1;
+			}
 		} catch (NumberFormatException e) {
 			error = Messages.PleaseInsertCorrectPortNumber;
 		}
+		host = tHost.getText();
 		setErrorMessage(error);
 		if (complete)
 			setMessage(Messages.CLICK_FINISH_TO_REGISTER_YOUR_ACCOUNT_AND_REGISTER_GLASSFISH);
