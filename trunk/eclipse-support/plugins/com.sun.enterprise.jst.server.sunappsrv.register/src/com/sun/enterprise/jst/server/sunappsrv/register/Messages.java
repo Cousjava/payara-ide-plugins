@@ -61,6 +61,7 @@ public class Messages extends NLS {
 	public static String InvocationException;
 	public static String RegistrationException;
 	public static String SETUP_GLASSFISH;
+	public static String PleaseWaitWhileRegistering;
 
 	private Messages() {
 	}

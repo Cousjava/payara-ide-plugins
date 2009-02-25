@@ -34,37 +34,44 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.register.splashHandlers;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
 import com.sun.enterprise.jst.server.sunappsrv.register.Messages;
 
 public class RegistrationWizard extends Wizard {
 
 	private RegistrationChoicePage choicePage;
 	private RegisterAccountPage accountPage;
-	
+	private boolean success = false;
+
 	public RegistrationWizard() {
 		super();
 		setWindowTitle(Messages.RegisterGlassfish);
+		setNeedsProgressMonitor(true);
 	}
 
 	public void addPages() {
 		choicePage = new RegistrationChoicePage(Messages.CHOOSE_REGISTRATION_METHOD);
 		accountPage = new RegisterAccountPage(Messages.REGISTER_ACCOUNT);
-		
+
 		ImageDescriptor image = AbstractUIPlugin.imageDescriptorFromPlugin(
 				"com.sun.enterprise.jst.server.sunappsrv.register", "icons/wizard75x66.png");
 		choicePage.setImageDescriptor(image);
 		accountPage.setImageDescriptor(image);
-		
+
 		addPage(choicePage);
 		addPage(accountPage);
 
 	}
 
-	
 	public boolean canFinish() {
 		boolean choicePageComplete = choicePage.isPageComplete();
 		boolean accountPageComplete = accountPage.isPageComplete();
@@ -82,22 +89,39 @@ public class RegistrationWizard extends Wizard {
 	}
 
 	public boolean performFinish() {
-		boolean success = false;
-		switch (choicePage.getRegistrationType()) {
-		case RegistrationChoicePage.SKIP:
-			success  = choicePage.skipRegistration();
-			break;
-		case RegistrationChoicePage.NO_ACCOUNT:
-			success = accountPage.registerUser();
-			break;
-		case RegistrationChoicePage.ACCOUNT:
-			success = choicePage.register();
-			break;
-		default:
-			break;
-		}
+		success = false;
+		try {
+			switch (choicePage.getRegistrationType()) {
+			case RegistrationChoicePage.SKIP:
+				success = choicePage.skipRegistration();
+				break;
+			case RegistrationChoicePage.NO_ACCOUNT:
+				getContainer().run(false, true, new IRunnableWithProgress() {
+					public void run(final IProgressMonitor monitor) throws InvocationTargetException,
+							InterruptedException {
+						monitor.setTaskName(Messages.PleaseWaitWhileRegistering);
+						success = accountPage.registerUser();
+						monitor.done();
+					}
+				});
+				break;
+			case RegistrationChoicePage.ACCOUNT:
+				getContainer().run(false, true, new IRunnableWithProgress() {
+					public void run(final IProgressMonitor monitor) throws InvocationTargetException,
+							InterruptedException {
+						monitor.setTaskName(Messages.PleaseWaitWhileRegistering);
+						success = choicePage.register();
+						monitor.done();
+					}
+				});
+				break;
+			}
 
+		} catch (InvocationTargetException e) {
+			Activator.logErrorMessage("Perform finish caused an exception", e); //$NON-NLS-1$
+		} catch (InterruptedException e) {
+			Activator.logErrorMessage("Perform finish caused an exception", e); //$NON-NLS-1$
+		}
 		return success;
 	}
-
 }

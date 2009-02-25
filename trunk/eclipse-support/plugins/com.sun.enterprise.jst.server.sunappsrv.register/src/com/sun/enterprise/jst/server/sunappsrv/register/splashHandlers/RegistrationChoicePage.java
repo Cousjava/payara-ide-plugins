@@ -84,7 +84,7 @@ public class RegistrationChoicePage extends WizardPage implements SelectionListe
 	protected RegistrationChoicePage(String pageName) {
 		super(pageName);
 		setTitle(pageName);
-		setPageComplete(false);
+		setPageComplete(true);
 	}
 
 	public void createControl(Composite comp) {
