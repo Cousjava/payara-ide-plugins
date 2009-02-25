@@ -9,6 +9,7 @@
 		<component id="sun-jdk-6-win32-x86" />
 		<component id="sun-jdk-6-linux-x86" />
 		<component id="eclipse-platform" />
+		<assembly id="eclipse-tools" />
 		<component id="eclipse-jdt" />
 		<assembly id="eclipse-wtp-no-servers" />
 		<component id="eclipse-emf-sdo-xsd" />
