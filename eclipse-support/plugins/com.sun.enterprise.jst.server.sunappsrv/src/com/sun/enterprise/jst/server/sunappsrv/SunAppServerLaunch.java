@@ -134,9 +134,10 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
 			} else {
 				abort(
-						"Port conflict: Please stop the server process using the same port as the one used by the Application Server.",
+						"Port conflict or Anti-Virus software monitoring on the port: Please stop the server process using the same port as the one used by the Application Server.",
 						new RuntimeException(
-								"A server process is already running on this port but we cannot determined if it's a GlassFish process (lack of info or credentials)"),
+								"A server process is already running on this port but we cannot determine if it's a GlassFish process (lack of info or credentials)." +
+								"If you do not find something else running on this port, check for antivirus software blocking or monitoring this port."),
 						IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 
 			}
