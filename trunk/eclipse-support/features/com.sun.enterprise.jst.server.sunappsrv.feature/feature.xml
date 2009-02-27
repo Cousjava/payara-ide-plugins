@@ -2,7 +2,7 @@
 <feature
       id="com.sun.enterprise.jst.server.sunappsrv.feature"
       label="GlassFish Java EE 5 Server"
-      version="1.0.19"
+      version="1.0.20"
       provider-name="java.net"
       image="glassfish.gif">
 
@@ -918,7 +918,7 @@ COPYRIGHT © 2008 THE ECLIPSE FOUNDATION. ALL RIGHTS RESERVED
          id="com.sun.enterprise.jst.server.sunappsrv"
          download-size="2000"
          install-size="2000"
-         version="1.0.19"
+         version="1.0.20"
          unpack="false"/>
 
 </feature>
