@@ -187,6 +187,12 @@
 	<fileset dir="${sunappserver.rootdirectory}">
 		<include name="modules/org.eclipse.persistence*.jar" />
 	</fileset>
+	<!--  jars needed for Metro Web Services (optional) -->
+	<fileset dir="${sunappserver.rootdirectory}">
+		<include name="modules/jaxb*.jar" />
+		<include name="modules/webservices*.jar" />
+	</fileset>
+
 	<!--  jar needed for integration with non-built in JPA (toplink) ddl generation -->
 	<!--  note that toplink essentials does not ship with this version of glassfish, so -->
 	<!--  it is intentially included here *after* eclipselink which is shipped with V3 -->
