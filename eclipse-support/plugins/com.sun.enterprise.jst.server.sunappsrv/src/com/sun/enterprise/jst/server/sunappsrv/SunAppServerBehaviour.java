@@ -59,6 +59,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
+import org.eclipse.wst.common.componentcore.internal.util.ComponentUtilities;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleResource;
@@ -527,7 +528,9 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 
 			String spath =""+ path;
 			String name =module[0].getName();
-			String contextRoot =name;
+			String projectContextRoot = ComponentUtilities.getServerContextRoot(module[0].getProject());
+			String contextRoot = (((projectContextRoot != null) && (projectContextRoot.length() > 0)) ? 
+						projectContextRoot : name);
 			Boolean preserveSessions=getSunAppServer().getKeepSessions().equals("true");
 
 			Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions);
