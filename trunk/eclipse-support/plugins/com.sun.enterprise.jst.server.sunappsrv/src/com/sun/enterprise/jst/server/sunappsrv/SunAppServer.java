@@ -40,8 +40,7 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -336,18 +335,35 @@ public class SunAppServer extends GenericServer {
 			*/
 
         }
+    	return !isPortAvailable(Integer.parseInt(getServerPort()));
+    }
+
+    public static boolean isPortAvailable(int port) {
+        // if the port is not in the allowed range - return false
+        if ((port < 0) && (port > 65535)) {
+            return false;
+        }
+
+        // if the port is not in the restricted list, we'll try to open a server
+        // socket on it, if we fail, then someone is already listening on this port
+        // and it is occupied
+        ServerSocket socket = null;
         try {
-            InetSocketAddress isa = new InetSocketAddress(getServer().getHost(), Integer.parseInt(getServerPort()));
-           
-            Socket socket = new Socket();
-            socket.connect(isa, 1);
-            socket.close();
+            socket = new ServerSocket(port);
             return true;
-        } catch (Exception e) {
-           return false;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+
+                }
+            }
         }
     }
- 
+
     enum ServerStatus {
        	DOMAINDIR_MATCHING,
        	DOMAINDIR_NOT_MATCHING,
