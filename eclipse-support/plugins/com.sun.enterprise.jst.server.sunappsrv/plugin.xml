@@ -518,7 +518,7 @@
     <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
         <runtimeClasspathProvider  id="com.sun.enterprise.jst.server.runtimeTarget"
         runtimeTypeIds="com.sun.enterprise.jst.server.runtime.sunappsrv*,com.sun.enterprise.jst.server.runtime.glassfish*,com.sun.enterprise.jst.server.runtime.sailfin*"
-        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>
+        class="com.sun.enterprise.jst.server.sunappsrv.GlassFishServerRuntimeTargetHandler"/>
     </extension>
     
     <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
@@ -728,6 +728,11 @@
             <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 EJB 3.0//EN"
                     uri="dtds/sun-ejb-jar_3_0-0.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_0-0.dtd" />
+            
+            
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.1.1 EJB 3.0//EN"
+                    uri="dtds/sun-ejb-jar_3_0-1.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_0-1.dtd" /> 
             
             
             <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 Application Client 1.3//EN"
@@ -1033,7 +1038,8 @@
        <page
              class="com.sun.enterprise.jst.server.sunappsrv.preferences.GlassFishPreferencePage"
              id="com.sun.enterprise.jst.server.sunappsrv.preferences.GlassFishPreferencePage"
-             name="GlassFish Preferences">
+             name="GlassFish Preferences"
+             icon="icons/obj16/glassfishserver.gif">
        </page>
     </extension>
     <extension
@@ -1048,6 +1054,15 @@
 		id="org.eclipse.help.internal.ui.HelpActionSet"
 		label="%help"
 		visible="true">
+             <menu
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaeedocMenu"
+                label="%menu.javaee5.javadoc"
+                icon="icons/obj16/glassfishserver.gif"
+                path="help/helpEnd"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$JavaEE5JavaDoc"
+				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc">              
+                  <separator name="group1"/>
+            </menu>	
             <menu
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu"
                 label="%menu.glassfishtopmenu"
@@ -1073,7 +1088,16 @@
                 <separator name="group1"/>
 
             </menu>
-            
+
+            <action
+                label="%menu.javaee5.javadoc"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$JavaEE5JavaDoc"
+				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc"
+                 menubarPath="help/helpEnd"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaeedocMenu">
+            </action> 
+                       
            <action
                 label="%menu.v3.quickstart"
                 icon="icons/obj16/glassfishserver.gif"

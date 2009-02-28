@@ -48,6 +48,7 @@
 		<copy todir="plugins/${plugin.id}_${plugin.version}">
 			<fileset dir="." includes="${bin.includes}" />
 		</copy>
+		<unzip dest="plugins/${plugin.id}_${plugin.version}" src="javaee5-doc-api.zip"/>
 		<copy todir="plugins/${plugin.id}_${plugin.version}">
 			<fileset dir="${output.library.jar}" />
 		</copy>
