@@ -104,7 +104,8 @@ public class V3Configurator {
 			copyDomain(domainLocation);
 
 			domainXml = new Path(domainLocation).append("domain1").append("config").append("domain.xml").toOSString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			setPortsForDomain(domainXml, Constants.V3_HTTP_PORT, Constants.V3_ADMIN_PORT);
+			setPortsForDomain(domainXml, FreePortManager.getAvailablePort(Constants.V3_HTTP_PORT), FreePortManager
+                    .getAvailablePort(Constants.V3_ADMIN_PORT));
 
 			Map<String, String> configuration = sunAppServer.getProps();
 			configuration.put(SunAppServer.DOMAINDIR, domainLocation);
