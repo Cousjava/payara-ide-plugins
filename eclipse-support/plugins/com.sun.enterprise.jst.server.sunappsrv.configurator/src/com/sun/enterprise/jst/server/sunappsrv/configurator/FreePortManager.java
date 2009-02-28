@@ -32,36 +32,66 @@ and therefore, elected the GPL Version 2 license, then the option applies
 only if the new code is made subject to such option by the copyright
 holder.
  */
+
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
-public abstract class Constants {
+import java.io.IOException;
+import java.net.ServerSocket;
 
-	public final static String GLASSFISH3_BUNDLE = "com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude"; //$NON-NLS-1$
-	public final static String SERVER_GLASSFISH_2_ID = "com.sun.enterprise.jst.server.sunappsrv91"; //$NON-NLS-1$
-	public final static String SERVER_PRELUDE_ID = "com.sun.enterprise.jst.server.glassfishv3prelude"; //$NON-NLS-1$
+public class FreePortManager {
+    
+    public static boolean isPortAvailable(int port) {
+        // if the port is not in the allowed range - return false
+        if ((port < 0) && (port > 65535)) {
+            return false;
+        }
 
-	public final static String ADMIN_PORT = "admin.port"; //$NON-NLS-1$
-	public final static String INSTANCE_PORT = "instance.port"; //$NON-NLS-1$
-	public final static String HTTPS_PORT = "https.port"; //$NON-NLS-1$
-	public final static String ORB_PORT = "orb.port"; //$NON-NLS-1$
-	public final static String IMQ_PORT = "imq.port"; //$NON-NLS-1$
-	public final static String GLASSFISH_DIR = "glassfish_dir"; //$NON-NLS-1$
-	public final static String ADMIN_USERNAME = "admin_username"; //$NON-NLS-1$
-	public final static String ADMIN_PASSWORD = "admin_password"; //$NON-NLS-1$
-	public final static String DOMAIN_NAME = "domain_name"; //$NON-NLS-1$
-	public final static String DOMAIN_DIR = "domain.dir"; //$NON-NLS-1$
+        // if the port is not in the restricted list, we'll try to open a server
+        // socket on it, if we fail, then someone is already listening on this port
+        // and it is occupied
+        ServerSocket socket = null;
+        try {
+            socket = new ServerSocket(port);
+            return true;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
 
-	// V2 configuration constants
-	public static final int V2_INSTANCE_PORT = 8082;
-    public static final int V2_ADMIN_PORT = 4849;
-    public static final int V2_HTTPS_PORT = 8182;
-    public static final int V2_IMQ_PORT = 7677;
-    public static final int V2_ORB_PORT = 3701;
-	public static final String V2_USER = "admin"; //$NON-NLS-1$
-	public static final String V2_PASS = "adminadmin"; //$NON-NLS-1$
+                }
+            }
+        }
+    }
 
-	// V3 Prelude configuration constants
-	public static final int V3_ADMIN_PORT = 4850;
-    public static final int V3_HTTP_PORT = 8083;
+    /* starting from a given port, try to find the immediate next one which is free
+     * return a really free port
+     *     
+     */
+    public static int getAvailablePort(int basePort) {
+        // increment the port value until we find an available port or stumble into
+        // the upper bound
+        int port = basePort;
+        while ((port < 65535) && !isPortAvailable(port)) {
+            port++;
+        }
+
+        if (port == 65535) {
+            port = 0;
+            while ((port < basePort) && !isPortAvailable(port)) {
+                port++;
+            }
+
+            if (port == basePort) {
+                return basePort;//error there, but there is nothing much more todo
+            } else {
+                return port;
+            }
+        } else {
+            return port;
+        }
+    }
 
 }

@@ -103,8 +103,8 @@ public class V2Configurator {
 		configuration.put(SunAppServer.ADMINNAME, Constants.V2_USER);
 		configuration.put(SunAppServer.ADMINPASSWORD, Constants.V2_PASS);
 		configuration.put(SunAppServer.DOMAINNAME, createDomain(glassfishLoc));
-		configuration.put(SunAppServer.SERVERPORT, Constants.V2_INSTANCE_PORT);
-		configuration.put(SunAppServer.ADMINSERVERPORT, Constants.V2_ADMIN_PORT);
+		configuration.put(SunAppServer.SERVERPORT, "" + FreePortManager.getAvailablePort(Constants.V2_INSTANCE_PORT));
+        configuration.put(SunAppServer.ADMINSERVERPORT, "" + FreePortManager.getAvailablePort(Constants.V2_ADMIN_PORT));
 		sunAppServer.setServerInstanceProperties(configuration);
 
 		wc.save(true, null);
@@ -165,11 +165,11 @@ public class V2Configurator {
 
 	private static HashMap<String, String> configureDomain(String glassfishLoc, String domainName) {
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put(Constants.HTTPS_PORT, Constants.V2_HTTPS_PORT);
-		map.put(Constants.ADMIN_PORT, Constants.V2_ADMIN_PORT);
-		map.put(Constants.INSTANCE_PORT, Constants.V2_INSTANCE_PORT);
-		map.put(Constants.IMQ_PORT, "7677"); //$NON-NLS-1$
-		map.put(Constants.ORB_PORT, "3701"); //$NON-NLS-1$
+		map.put(Constants.HTTPS_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_HTTPS_PORT));
+        map.put(Constants.ADMIN_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_ADMIN_PORT));
+        map.put(Constants.INSTANCE_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_INSTANCE_PORT));
+        map.put(Constants.IMQ_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_IMQ_PORT));
+        map.put(Constants.ORB_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_ORB_PORT)); 
 		map.put(Constants.ADMIN_PASSWORD, Constants.V2_PASS);
 		map.put(Constants.ADMIN_USERNAME, Constants.V2_USER);
 		map.put(Constants.GLASSFISH_DIR, glassfishLoc);

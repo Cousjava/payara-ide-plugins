@@ -4,6 +4,7 @@ cvs  -d :pserver:anonymous@easyeclipse.cvs.sourceforge.net:/cvsroot/easyeclipse 
 #cp -f patches/download-style.xml easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
 #cp -f patches/package.xml easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
 cp -f build.properties easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
+cp -f servicetag-registry.xml easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
 pushd easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
 ./build.sh tools-bundle-for-eclipse
 popd
