@@ -34,6 +34,7 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.Properties;
 
@@ -103,7 +104,7 @@ public class DerbyConfigurator {
 			DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
 			domFactory.setNamespaceAware(true);
 			DocumentBuilder builder = domFactory.newDocumentBuilder();
-			Document doc = builder.parse(domainXml);
+			Document doc = builder.parse(new File(domainXml));
 
 			XPathFactory factory = XPathFactory.newInstance();
 			XPath xpath = factory.newXPath();
