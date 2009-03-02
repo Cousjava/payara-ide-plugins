@@ -107,6 +107,7 @@ public class V3Configurator {
 			setPortsForDomain(domainXml, FreePortManager.getAvailablePort(Constants.V3_HTTP_PORT), FreePortManager
                     .getAvailablePort(Constants.V3_ADMIN_PORT));
 
+			Activator.logMessage("domain.xml location is = " + domainXml, null, IStatus.INFO);
 			Map<String, String> configuration = sunAppServer.getProps();
 			configuration.put(SunAppServer.DOMAINDIR, domainLocation);
 			sunAppServer.setServerInstanceProperties(configuration);
