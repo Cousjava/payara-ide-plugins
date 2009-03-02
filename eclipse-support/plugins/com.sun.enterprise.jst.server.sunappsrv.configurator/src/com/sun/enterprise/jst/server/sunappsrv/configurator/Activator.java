@@ -35,6 +35,7 @@ holder.
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -88,6 +89,15 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+	
+	public static void logErrorMessage(String mess, Exception e) {
+		logMessage(mess, e, IStatus.ERROR);
+	}
+
+	public static void logMessage(String mess, Exception e, int severity) {
+		final Status status = new Status(severity, PLUGIN_ID, 1, "GlassFish: " + mess, e); //$NON-NLS-1$
+		getDefault().getLog().log(status);
 	}
 
 	/**
