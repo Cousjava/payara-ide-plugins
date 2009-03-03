@@ -79,7 +79,7 @@
         </antscript>
     </build>
     <copyright>Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.</copyright>
-    <license style="cddl-gpl-2.0">
+    <license type="cddl-gpl-2.0">
         <terms />
         DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 

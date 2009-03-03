@@ -20,7 +20,7 @@
         </antscript>
         <note></note>
     </build>
-     <license style="cddl-gpl-2.0">
+     <license type="cddl-gpl-2.0">
         <terms/>
         COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 
