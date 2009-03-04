@@ -538,7 +538,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 				Future<OperationState> result = getSunAppServer().execute(command);
 				if(result.get(120, TimeUnit.SECONDS) != OperationState.COMPLETED) {
 					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-							"Timeout after 120s when try to Deploy "+module[0].getName()+". Please try again ", null));
+							"Timeout after 120s when trying to deploy "+module[0].getName()+". Please try again ", null));
 				}
 
 			} catch(Exception ex) {
@@ -553,7 +553,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 					Future<OperationState> result = getSunAppServer().execute(register);
 					if(result.get(120, TimeUnit.SECONDS) != OperationState.COMPLETED) {
 						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-								"Timeout after 120s when try to Deploy the sun-resources.xml for "+module[0].getName()+". Please try again ", null));
+								"Timeout after 120s when trying to deploy the sun-resources.xml for "+module[0].getName()+". Please try again ", null));
 					}
 
 				} catch(Exception ex) {
