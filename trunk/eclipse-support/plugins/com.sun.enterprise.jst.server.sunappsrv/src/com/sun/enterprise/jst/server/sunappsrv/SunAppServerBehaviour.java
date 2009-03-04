@@ -536,9 +536,9 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions);
 			try {
 				Future<OperationState> result = getSunAppServer().execute(command);
-				if(result.get(30, TimeUnit.SECONDS) != OperationState.COMPLETED) {
+				if(result.get(120, TimeUnit.SECONDS) != OperationState.COMPLETED) {
 					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-							"cannot Deploy "+module[0].getName(), null));
+							"Timeout after 120s when try to Deploy "+module[0].getName()+". Please try again ", null));
 				}
 
 			} catch(Exception ex) {
@@ -551,9 +551,9 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 				Commands.AddResourcesCommand register = new Commands.AddResourcesCommand(sunResource.getAbsolutePath());
 				try {
 					Future<OperationState> result = getSunAppServer().execute(register);
-					if(result.get(30, TimeUnit.SECONDS) != OperationState.COMPLETED) {
+					if(result.get(120, TimeUnit.SECONDS) != OperationState.COMPLETED) {
 						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-								"cannot register sun-resource.xml for "+module[0].getName(), null));
+								"Timeout after 120s when try to Deploy the sun-resources.xml for "+module[0].getName()+". Please try again ", null));
 					}
 
 				} catch(Exception ex) {
