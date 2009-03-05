@@ -84,6 +84,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		showWizard(splash);
 
 		final String glassfishLoc = getGlassfishLocation();
+		final String glassfishV3Loc = getGlassfishV3Location();
 
 		if (new File(glassfishLoc + File.separator + ".installed").exists()) //$NON-NLS-1$
 			skipInstall = true;
@@ -111,8 +112,10 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					    protected IStatus run(IProgressMonitor monitor) {
 					        monitor.beginTask(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION, 100);
 					        // execute the task ...
-							if (!skipInstall)
+							if (!skipInstall) {
 								V2InstallationConfigurer.configureV2(dir, glassfishLoc);
+								V3InstallationConfigurer.configureV3(glassfishV3Loc);
+							}
 							Startup.mystartup(monitor);
 							monitor.done();
 					        return Status.OK_STATUS;
@@ -144,6 +147,23 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
 					+ "/glassfishv2.1"; //$NON-NLS-1$
 			Activator.logMessage("glassfishLoc =" + glassfishLoc, null, IStatus.INFO); //$NON-NLS-1$
+		}
+		return glassfishLoc;
+	}
+
+	public static String getGlassfishV3Location() {
+		String property = System.getProperty("gf3location"); //$NON-NLS-1$
+		String glassfishLoc = null;
+		if (property != null) {
+			glassfishLoc = property + "/glassfish"; //$NON-NLS-1$
+		} else {
+			// Get the eclipse installation location and from it V3
+			// installation directory.
+			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
+					+ "/glassfishv3prelude/glassfish"; //$NON-NLS-1$
+
+			Activator.logMessage("glassfishV3Loc =" + glassfishLoc, null, IStatus.INFO); //$NON-NLS-1$
+			return glassfishLoc;
 		}
 		return glassfishLoc;
 	}
