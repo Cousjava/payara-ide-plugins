@@ -85,9 +85,6 @@ public class V3InstallationConfigurer {
 
 			ant.run();
 
-			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc + File.separator + ".installed")); //$NON-NLS-1$
-			out.write("1"); //$NON-NLS-1$
-			out.close();
 		} catch (Exception e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
 					MessageFormat.format(Messages.UNZIPPING_DERBY_SAMPLES_ENCOUNTERED_A_PROBLEM_0, e.getMessage()), Messages.EXCEPTION_OCCURRED);

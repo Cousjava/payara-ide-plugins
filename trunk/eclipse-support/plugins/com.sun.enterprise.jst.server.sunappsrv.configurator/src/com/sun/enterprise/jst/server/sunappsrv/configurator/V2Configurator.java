@@ -216,7 +216,7 @@ public class V2Configurator {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static IRuntime createRuntime(String glassfishLocation) throws CoreException {
+	public static IRuntime createRuntime(String glassfishLocation) throws CoreException {
 		IServerType st = ServerCore.findServerType(Constants.SERVER_GLASSFISH_2_ID);
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		for (IRuntime runtime : runtimes) {

@@ -42,7 +42,7 @@ public class RegisterService {
 			// Get the eclipse installation location and from it V2
 			// installation directory.
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
-					+ "/glassfishv3prelude"; //$NON-NLS-1$
+					+ "/glassfishv3-prelude"; //$NON-NLS-1$
 
 			Activator.logMessage("glassfishLoc =" + glassfishLoc, null, IStatus.INFO); //$NON-NLS-1$
 		}
