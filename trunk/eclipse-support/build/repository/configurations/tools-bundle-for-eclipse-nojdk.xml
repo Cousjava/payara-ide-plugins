@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- first release 2008-11-27 -->
+<configuration name="Tools Bundle For Eclipse"
+	releaseDate="2009-03-09" version="0.9.0">
+
+	<shortdescription>GlassFish Tools Bundle for Eclipse.</shortdescription>
+	<description />
+	<include>
+
+		<component id="eclipse-platform" />
+		<assembly id="eclipse-tools" />
+		<component id="eclipse-jdt" />
+		<assembly id="eclipse-wtp-no-servers" />
+		<component id="eclipse-emf-sdo-xsd" />
+		<component id="eclipse-gef" />
+		<component id="eclipse-dtp" />
+		<component id="subclipse" />
+		<component id="eclipse-cvs" />
+		<component id="feature" />
+		<component id="glassfish-prelude-root" />
+		<component id="glassfish-plugins" />
+
+		<component id="glassfish-v2-linux-x86" />
+		<component id="glassfish-v2-win32-x86" />
+
+	</include>
+	<package>
+		<size os="win32">166M</size>
+		<size os="macosx">146M</size>
+		<size os="linux">172M</size>
+	</package>
+        <mac-postflight-script>
+
+# Don't forget the quotes, there could be a space...
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv2.1"
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv3-prelude"
+
+    </mac-postflight-script>
+</configuration>
