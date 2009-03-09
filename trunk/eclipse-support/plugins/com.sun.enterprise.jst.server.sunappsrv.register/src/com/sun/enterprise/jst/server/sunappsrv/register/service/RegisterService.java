@@ -33,7 +33,7 @@ public class RegisterService {
 	private static String proxyHost = null;
 	private static int proxyPort = 0;
 
-	public static String getPreludeLocation() {
+	public static String getv3PreludeLocation() {
 		String property = System.getProperty("gf3location"); //$NON-NLS-1$
 		String glassfishLoc = null;
 		if (property != null) {
@@ -46,6 +46,11 @@ public class RegisterService {
 
 			Activator.logMessage("glassfishLoc =" + glassfishLoc, null, IStatus.INFO); //$NON-NLS-1$
 		}
+		return glassfishLoc;
+		
+	}
+	public static String getv3PreludeServiceTagRegistryLocation() {
+		String glassfishLoc = getv3PreludeLocation();
 		return glassfishLoc + File.separator + "glassfish" + File.separator + "lib" + File.separator + "registration" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ File.separator + "servicetag-registry.xml"; //$NON-NLS-1$
 
@@ -69,7 +74,7 @@ public class RegisterService {
 			NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException,
 			RegistrationException, UnknownHostException, ConnectException {
 
-		File regPath = new File(getPreludeLocation());
+		File regPath = new File(getv3PreludeServiceTagRegistryLocation());
 		SysnetRegistrationService rs = null;
 		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
@@ -114,7 +119,7 @@ public class RegisterService {
 			NoSuchMethodException, ClassNotFoundException, InstantiationException, IllegalAccessException,
 			InvocationTargetException {
 
-		File regPath = new File(getPreludeLocation());
+		File regPath = new File(getv3PreludeServiceTagRegistryLocation());
 		SysnetRegistrationService rs = null;
 		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
@@ -141,7 +146,7 @@ public class RegisterService {
 	}
 
 	public static void remindLater() throws RegistrationException {
-		File regPath = new File(getPreludeLocation());
+		File regPath = new File(getv3PreludeServiceTagRegistryLocation());
 		SysnetRegistrationService rs = null;
 		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
@@ -152,7 +157,7 @@ public class RegisterService {
 	}
 
 	public static void skipRegister() throws RegistrationException {
-		File regPath = new File(getPreludeLocation());
+		File regPath = new File(getv3PreludeServiceTagRegistryLocation());
 		SysnetRegistrationService rs = null;
 		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
@@ -163,7 +168,7 @@ public class RegisterService {
 	}
 
 	public static boolean isRegistered() throws RegistrationException {
-		File regPath = new File(getPreludeLocation());
+		File regPath = new File(getv3PreludeServiceTagRegistryLocation());
 		SysnetRegistrationService rs = null;
 		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
@@ -174,7 +179,7 @@ public class RegisterService {
 	}
 
 	public static RegistrationReminder getReminder() throws RegistrationException {
-		File regPath = new File(getPreludeLocation());
+		File regPath = new File(getv3PreludeServiceTagRegistryLocation());
 		SysnetRegistrationService rs = null;
 		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
@@ -184,7 +189,7 @@ public class RegisterService {
 	}
 
 	public static List getCountries() throws RegistrationException {
-		File regPath = new File(getPreludeLocation());
+		File regPath = new File(getv3PreludeServiceTagRegistryLocation());
 		SysnetRegistrationService rs = null;
 		if (proxyHost == null || proxyPort == 0)
 			rs = new SysnetRegistrationService(regPath);
