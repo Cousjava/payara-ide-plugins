@@ -63,6 +63,7 @@ public class Messages extends NLS {
 	public static String RegistrationException;
 	public static String SETUP_GLASSFISH;
 	public static String PleaseWaitWhileRegistering;
+	public static String JDKSELECTIONINITIALMESSAGE;
 
 	private Messages() {
 	}
