@@ -164,6 +164,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
  
         
         try {
+        	monitor.worked(10);
             Process process = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
             IProcess runtimeProcess = new RuntimeProcess(launch, process, "...", null);
      //       launch.addProcess(runtimeProcess);
@@ -189,7 +190,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
         for (int i=0;i<120;i++){//max 60 seconds for start.
             try {
-                Thread.sleep(500);//1/2 secs
+            	monitor.worked(10);
+               Thread.sleep(500);//1/2 secs
                 monitor.worked(i);
                 if (viewLog==false){
                 	viewLog = true;//view it only once.
