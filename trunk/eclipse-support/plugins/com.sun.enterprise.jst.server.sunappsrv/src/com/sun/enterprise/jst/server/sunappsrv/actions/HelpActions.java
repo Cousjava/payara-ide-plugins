@@ -76,5 +76,7 @@ public class HelpActions {
 	public static class DeployPlanningGuideV2 extends ShowURLAction {
 		public DeployPlanningGuideV2() { super("http://docs.sun.com/app/docs/doc/819-3680");}
 	}	
-	
+	public static class JavaEE5JavaDoc extends ShowURLAction {
+		public JavaEE5JavaDoc() { super("http://java.sun.com/javaee/5/docs/api/");}
+	}	
 }
