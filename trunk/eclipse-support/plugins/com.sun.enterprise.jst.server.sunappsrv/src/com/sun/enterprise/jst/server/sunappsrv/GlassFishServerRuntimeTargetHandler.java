@@ -37,7 +37,7 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
                         f.setAccessible(true);
                         try {
                             f.set(cpe, newa);
-                            SunAppSrvPlugin.logMessage("correct!!!set" + entries[i].getExtraAttributes().length + entries[i].getPath());
+                        //    SunAppSrvPlugin.logMessage("correct!!!set" + entries[i].getExtraAttributes().length + entries[i].getPath());
                         } catch (IllegalArgumentException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();

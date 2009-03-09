@@ -62,9 +62,11 @@ import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
 import org.eclipse.wst.common.componentcore.internal.util.ComponentUtilities;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
+import org.eclipse.wst.server.core.util.ProjectModule;
 import org.eclipse.wst.server.core.util.PublishUtil;
 
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
@@ -182,7 +184,13 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 	}
 	public void publishModule(int kind, int deltaKind, IModule[] module,
 			IProgressMonitor monitor) throws CoreException {
-
+		
+		
+		SunAppSrvPlugin.logMessage("publishModule kind= " +kind+"  deltaKind=" +deltaKind);
+		for (int i=0;i<module.length;i++){
+			SunAppSrvPlugin.logMessage("publishModule Module [i] name " +module[i].getName() +" id " +module[i].getId()+" project=" +module[i].getProject());			
+		}
+			
 		if (isV3()){ //for V3, try to optimize the redeployment process by not using ANT, but V3 commands
 			long t= System.currentTimeMillis();
 			publishModuleForGlassFishV3( kind,  deltaKind, module,  monitor);
@@ -194,7 +202,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 
 
 	}
-
+	
 	protected synchronized void setServerStarted() {
 		setServerState(IServer.STATE_STARTED);
 	}
@@ -422,9 +430,12 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 	 */
 	protected void publishModuleForGlassFishV3(int kind, int deltaKind, IModule[] module, IProgressMonitor monitor) throws CoreException {
 
-
+		if (module.length > 1){// only publish root modules, i.e web modules
+			setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
+			return ;
+		}
 		IPath path = getTempDirectory().append("publish.txt");
-		//SunAppSrvPlugin.logMessage("in PATH" +path);
+		//SunAppSrvPlugin.logMessage("in PATH" +path +"module length=======" +module.length);
 
 		FileInputStream fis= null;
 		Properties prop = new Properties();
@@ -439,12 +450,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			}
 		}
 
-		if (module.length == 1) {// Only a web project 
-			publishDeployedDirectory(deltaKind,prop, module, monitor);
-		}
-		else {
-			publishJarFile(kind, deltaKind, prop, module, monitor);
-		}
+		publishDeployedDirectory(deltaKind,prop, module, monitor);
 
 		setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
 		try {
@@ -454,7 +460,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		}		
 
 	}
-	private void publishJarFile(int kind, int deltaKind,Properties p,  IModule[] module, IProgressMonitor monitor) throws CoreException {
+/*	private void publishJarFile(int kind, int deltaKind,Properties p,  IModule[] module, IProgressMonitor monitor) throws CoreException {
 		//first try to see if we need to undeploy:
 		
 		if (deltaKind == ServerBehaviourDelegate.REMOVED ) {
@@ -487,7 +493,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			p.put(module[1].getId(), jarPath.toOSString());
 		}
 	}
-
+*/
 	private void publishDeployedDirectory(int deltaKind, Properties p,IModule module[], IProgressMonitor monitor) throws CoreException {
 		if (deltaKind == REMOVED ) {
 			String publishPath = (String) p.get(module[0].getId());
@@ -495,10 +501,10 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			Commands.UndeployCommand command = new Commands.UndeployCommand(module[0].getName());
 			try {
 				Future<OperationState> result = getSunAppServer().execute(command);
-				//wait 30 seconds max
-				if(result.get(30, TimeUnit.SECONDS) != OperationState.COMPLETED) {
+				//wait 120 seconds max
+				if(result.get(120, TimeUnit.SECONDS) != OperationState.COMPLETED) {
 					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-							"cannot UnDeploy "+module[0].getName(), null));
+							"cannot UnDeploy in less than 120 sec "+module[0].getName(), null));
 				}
 
 			} catch(Exception ex) {
@@ -521,10 +527,20 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		}
 		else {
 			IPath path = new Path (getDomainDirWithDomainName()+"/eclipseApps/"+module[0].getName());
-			IModuleResource[] mr = getResources(module);
-			IStatus[] stat = PublishUtil.publishSmart(mr, path, monitor);
+			IModuleResource[] moduleResource = getResources(module);
+			SunAppSrvPlugin.logMessage("IModuleResource len="+moduleResource.length);
+			for (int j=0;j<moduleResource.length ;j++)
+				SunAppSrvPlugin.logMessage("IModuleResource n="+moduleResource[j].getName()+"-----"+moduleResource[j].getModuleRelativePath());
+
+			IStatus[] stat = PublishUtil.publishSmart(moduleResource, path, monitor);
 			SunAppSrvPlugin.logMessage("PublishUtil.publishSmart called");
 			analyseReturnedStatus(stat);
+			
+
+			AssembleModules assembler = new AssembleModules(module[0], path,getSunAppServer());
+			//either ear or web.			
+			assembler.assembleWebModule(monitor);			
+			
 
 			String spath =""+ path;
 			String name =module[0].getName();
