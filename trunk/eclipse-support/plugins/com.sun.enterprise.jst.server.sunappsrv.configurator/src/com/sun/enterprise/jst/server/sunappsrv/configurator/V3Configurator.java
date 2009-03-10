@@ -101,7 +101,10 @@ public class V3Configurator {
 			String domainLocation = Platform.getLocation().append(".metadata").append(".plugins").append( //$NON-NLS-1$ //$NON-NLS-2$
 					Constants.SERVER_PRELUDE_ID).toOSString();
 
-			copyDomain(domainLocation);
+		     File destDir = new File(domainLocation);
+            if (destDir.exists() == false) {//only if the domain is not already there
+                copyDomain(domainLocation);
+            }
 
 			domainXml = new Path(domainLocation).append("domain1").append("config").append("domain.xml").toOSString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			setPortsForDomain(domainXml, FreePortManager.getAvailablePort(Constants.V3_HTTP_PORT), FreePortManager
