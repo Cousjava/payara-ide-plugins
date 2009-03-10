@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>The asadmin Utility Commands - Sun GlassFish Enterprise Server v3 Prelude Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p13.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="idx-1.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="gcode"></a>Appendix&#160;A<h3>The <tt>asadmin</tt> Utility Commands</h3><a name="indexterm-476"></a><p>This appendix lists the <tt>asadmin</tt> commands that are included with this release of
+the Sun GlassFish<sup>TM</sup> Enterprise Server v3 Prelude software.</p>
+<ul><li><p><a href="#ggltk">Basic Administration Commands</a></p></li>
+<li><p><a href="#ggltu">Deployment Commands</a></p></li>
+<li><p><a href="#ggltm">HTTP Service Commands</a></p></li>
+<li><p><a href="#gglsk">JVM Commands</a></p></li>
+<li><p><a href="#ggltf">Resource Management Commands</a></p></li>
+<li><p><a href="#ghged">Security Commands</a></p></li>
+<li><p><a href="#ggngl">User Management Commands</a></p></li></ul>
+<p>Online help for the <tt>asadmin</tt> commands can be invoked on the command line,
+for example, <tt>asadmin create-domain <tt>--help</tt></tt>. The <a href="http://docs.sun.com/doc/820-4497"><i>Sun GlassFish Enterprise Server v3 Prelude Reference Manual</i></a> also provides a collection of these help pages.</p><p>For general information on the <tt>asadmin</tt> utility, see <a href="p4.html#gcocs">Command-Line Utility for Administration (<tt>asadmin</tt>)</a> or <a href="http://docs.sun.com/doc/820-4497/asadmin-1m?a=view"><tt>asadmin</tt>(1M)</a>.</p>
+<hr><p><b>Note - </b>The common options used with remote commands are described in the <a href="http://docs.sun.com/doc/820-4497/asadmin-1m?a=view"><tt>asadmin</tt>(1M)</a> help page.</p>
+<hr>
+
+
+<a name="ggltk"></a><h3>Basic Administration Commands</h3>
+<a name="indexterm-477"></a><dl><dt><a href="http://docs.sun.com/doc/820-4497/create-domain-1?a=view"><tt>create-domain</tt>(1)</a></dt>
+<dd><p>Creates the configuration of a domain. A domain can exist  independent of other domains. Any user who has access to the <tt>asadmin</tt> utility on a given host can create a domain and store its configuration in a location of choice. For procedural information in this guide, see <a href="p5.html#ggoei">To Create a Domain</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/create-system-properties-1?a=view"><tt>create-system-properties</tt>(1)</a></dt>
+<dd><p>The <tt>create-system-properties</tt> command creates or updates system properties. Supported in remote mode only. For procedural information in this guide, see <a href="p5.html#ggonc">To Create System Properties</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-domain-1?a=view"><tt>delete-domain</tt>(1)</a></dt>
+<dd><p>Deletes the specified domain. The domain must be stopped before it can be deleted. For procedural information in this guide, see <a href="p5.html#ggofa">To Delete a Domain</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-system-property-1?a=view"><tt>delete-system-property</tt>(1)</a></dt>
+<dd><p>Deletes system properties of a domain or configuration. Supported in remote mode only. For procedural information in this guide, see <a href="p5.html#ggomm">To Delete a System Property</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/get-1?a=view"><tt>get</tt>(1)</a></dt>
+<dd><p>Gets an attribute of an element in the <tt>domain.xml</tt> file. With the <tt>-m</tt> option, gets the names and values of the monitorable or configurable attributes. For procedural information in this guide, see <a href="p13.html#ablwh">Guidelines for Using the <tt>list</tt> and <tt>get</tt> Commands for Monitoring</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-1?a=view"><tt>list</tt>(1)</a></dt>
+<dd><p>Lists the configurable element. On Solaris, quotes are needed when running commands with <tt>*</tt> as the option value or operand. For procedural information in this guide, see <a href="p13.html#ablwh">Guidelines for Using the <tt>list</tt> and <tt>get</tt> Commands for Monitoring</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-commands-1?a=view"><tt>list-commands</tt>(1)</a></dt>
+<dd><p>Lists all the <tt>asadmin</tt> commands, local commands first, then remote commands. You can specify that only remote commands or only local commands be displayed. Supported in remote mode only. For procedural information in this guide, see <a href="p5.html#ggoeg">To List Commands</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-containers-1?a=view"><tt>list-containers</tt>(1)</a></dt>
+<dd><p>Lists application containers and the status of each container. Supported in remote mode only. For procedural information in this guide, see <a href="p5.html#ggocv">To List Containers</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-domains-1?a=view"><tt>list-domains</tt>(1)</a></dt>
+<dd><p>Lists the existing domains and their statuses. If the domain directory is not specified, the domains in the default <tt></tt><i>as-install</i><tt>/domains</tt> directory is displayed. For procedural information in this guide, see <a href="p5.html#ggoco">To List Domains</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-modules-1?a=view"><tt>list-modules</tt>(1)</a></dt>
+<dd><p>Lists modules that are accessible to the Enterprise Server subsystem. The status of each module is included. Supported in remote mode only. For procedural information in this guide, see <a href="p5.html#ghlgf">To List Modules</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-system-properties-1?a=view"><tt>list-system-properties</tt>(1)</a></dt>
+<dd><p>Lists the system properties of a domain or configuration. Supported in remote mode only. For procedural information in this guide, see <a href="p5.html#ggodt">To List System Properties</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/login-1?a=view"><tt>login</tt>(1)</a></dt>
+<dd><p>Allows you to log in to the domain. For procedural information in this guide, see <a href="p5.html#ghhjz">To Log In to a Domain (or Server)</a></p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/monitor-1?a=view"><tt>monitor</tt>(1)</a></dt>
+<dd><p>Displays monitoring information for the common Enterprise Server resources. Supported in remote mode only. For procedural information in this guide, see <a href="p13.html#gelol">To View Common Monitoring Data</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/set-1?a=view"><tt>set</tt>(1)</a></dt>
+<dd><p>Sets the values of one or more configurable attributes. For procedural information in this guide, see <a href="p13.html#ablvp">Configuring Monitoring</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/start-domain-1?a=view"><tt>start-domain</tt>(1)</a></dt>
+<dd><p>Starts a domain. If the domain directory is not specified, the default <tt>domain1</tt> in the default <tt></tt><i>as-install</i><tt>/domains</tt> directory is started. If there are two or more domains, the <i>domain_name</i> operand must be specified. For procedural information in this guide, see <a href="p5.html#ggoda">To Start a Domain (or Server)</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/start-database-1?a=view"><tt>start-database</tt>(1)</a></dt>
+<dd><p>Starts the Java DB server. Use this command only for working with applications deployed to the Enterprise Server. For procedural information in this guide, see <a href="p8.html#ggndz">To Start the Database</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/stop-database-1?a=view"><tt>stop-database</tt>(1)</a></dt>
+<dd><p>Stops a process of the Java DB database server. For procedural information in this guide, see <a href="p8.html#ggnbw">To Stop the Database</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/stop-domain-1?a=view"><tt>stop-domain</tt>(1)</a></dt>
+<dd><p>Stops the domain administration server (DAS) of the specified domain. Supported in remote mode only. For procedural information in this guide, see <a href="p5.html#ggoch">To Stop a Domain (or Server)</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/uptime-1?a=view"><tt>uptime</tt>(1)</a></dt>
+<dd><p>Displays the length of time that the domain administration server (DAS) has been running since the last restart. Supported in remote mode only. For procedural information in this guide, see <a href="p5.html#ghhnt">To Display Domain Uptime</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/version-1?a=view"><tt>version</tt>(1)</a></dt>
+<dd><p>Displays the version information for the option specified in archive or folder format. If the command cannot communicate with the administration server with the given user/password and host/port, then the command will retrieve the version locally and display a warning message. Supported in remote mode only. For procedural information in this guide, see <a href="p5.html#ghhox">To Display the Enterprise Server Version</a>.</p></dd>
+</dl>
+
+
+<a name="ggltu"></a><h3>Deployment Commands</h3>
+<a name="indexterm-478"></a><dl><dt><a href="http://docs.sun.com/doc/820-4497/deploy-1?a=view"><tt>deploy</tt>(1)</a></dt>
+<dd><p>Deploys an enterprise application, web application, EJB module, connector module, or application client module. If the component is already deployed or already exists, you can forcefully redeploy if you set the <tt>--force</tt> option to <tt>true</tt>. Supported in remote mode only.</p></dd>
+<dt><tt>deploydir</tt></dt>
+<dd><p>This command is deprecated.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/disable-1?a=view"><tt>disable</tt>(1)</a></dt>
+<dd><p>Immediately disables the named component. If the component has not been deployed, an error message is returned. Supported in remote mode only.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/enable-1?a=view"><tt>enable</tt>(1)</a></dt>
+<dd><p>Enables the specified component. If the component has not been deployed, an error message is returned. If the component is already enabled, then it is re-enabled. Supported in remote mode only.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-applications-1?a=view"><tt>list-applications</tt>(1)</a></dt>
+<dd><p>Lists deployed Java<sup>TM</sup> EE applications. If the <tt>--type</tt> option is not specified, all applications are listed. Supported in remote mode only.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-components-1?a=view"><tt>list-components</tt>(1)</a></dt>
+<dd><p>Lists all deployed Java EE 5 components. If the <tt>--type</tt> option is not specified, all components are listed. Supported in remote mode only.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/redeploy-1?a=view"><tt>redeploy</tt>(1)</a></dt>
+<dd><p>Redeploys an application that is already deployed. Supported in remote mode only. </p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/undeploy-1?a=view"><tt>undeploy</tt>(1)</a></dt>
+<dd><p>Removes the specified deployed application. Supported in remote mode only.</p></dd>
+</dl>
+
+
+<a name="ggltm"></a><h3>HTTP Service Commands</h3>
+<a name="indexterm-479"></a><dl><dt><a href="http://docs.sun.com/doc/820-4497/create-http-listener-1?a=view"><tt>create-http-listener</tt>(1)</a></dt>
+<dd><p>Creates a new HTTP listener socket. Restart the server for the change to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p11.html#ggnfh">To Create an HTTP Listener</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/create-virtual-server-1?a=view"><tt>create-virtual-server</tt>(1)</a></dt>
+<dd><p>Creates the specified virtual server element. Restart the server for the change to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p11.html#ggnfr">To Create a Virtual Server</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/create-ssl-1?a=view"><tt>create-ssl</tt>(1)</a></dt>
+<dd><p>Creates and configures the SSL element in the selected HTTP listener to enable secure communication on that listener/service. Restart the server for the change to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p11.html#ggnbj">To Configure an HTTP Listener for SSL</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-http-listener-1?a=view"><tt>delete-http-listener</tt>(1)</a></dt>
+<dd><p>Deletes the specified HTTP listener. Restart the server for the change to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p11.html#ggndu">To Delete an HTTP Listener</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-ssl-1?a=view"><tt>delete-ssl</tt>(1)</a></dt>
+<dd><p>Deletes the SSL element in the selected HTTP listener. Restart the server for the change to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p11.html#ggncl">To Delete SSL From an HTTP Listener</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-virtual-server-1?a=view"><tt>delete-virtual-server</tt>(1)</a></dt>
+<dd><p>Deletes the specified virtual server element. Restart the server for the change to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p11.html#ggnen">To Delete a Virtual Server</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-http-listeners-1?a=view"><tt>list-http-listeners</tt>(1)</a></dt>
+<dd><p>Lists the existing HTTP listeners. Supported in remote mode only. For procedural information in this guide, see <a href="p11.html#ggnbv">To List HTTP Listeners</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-virtual-servers-1?a=view"><tt>list-virtual-servers</tt>(1)</a></dt>
+<dd><p>Lists the existing virtual servers. Supported in remote mode only. For procedural information in this guide, see <a href="p11.html#ggndw">To List Virtual Servers</a>.</p></dd>
+</dl>
+
+
+<a name="gglsk"></a><h3>JVM Commands</h3>
+<a name="indexterm-480"></a><dl><dt><a href="http://docs.sun.com/doc/820-4497/create-jvm-options-1?a=view"><tt>create-jvm-options</tt>(1)</a></dt>
+<dd><p>Creates a JVM option in the Java configuration or profiler elements of the <tt>domain.xml</tt> file. If JVM options are created for a profiler, the options are used to record the settings needed to activate a particular profiler. Restart the server for changes to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p7.html#ggnes">To Create JVM Options</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/create-profiler-1?a=view"><tt>create-profiler</tt>(1)</a></dt>
+<dd><p>Creates a profiler element. A server instance is tied to a particular profiler, by the profiler element in the Java configuration. Restart the server for changes to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p7.html#ggneb">To Create a Profiler</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-jvm-options-1?a=view"><tt>delete-jvm-options</tt>(1)</a></dt>
+<dd><p>Deletes the specified JVM option from the Java configuration or profiler elements of the <tt>domain.xml</tt> file. Restart the server for changes to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p7.html#ggnfi">To Delete JVM Options</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-profiler-1?a=view"><tt>delete-profiler</tt>(1)</a></dt>
+<dd><p>Deletes the specified profiler element. Restart the server for changes to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p7.html#ggnem">To Delete a Profiler</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/generate-jvm-report-1?a=view"><tt>generate-jvm-report</tt>(1)</a></dt>
+<dd><p>Generates a report showing the threads, classes, and memory for the virtual machine that runs Enterprise Server. For procedural information in this guide, see <a href="p7.html#ggnbu">To Generate a JVM Report</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-jvm-options-1?a=view"><tt>list-jvm-options</tt>(1)</a></dt>
+<dd><p>Lists the command-line options that are passed to the Java application launcher when theEnterprise Server is started. Supported in remote mode only. For procedural information in this guide, see <a href="p7.html#ggnce">To List JVM Options</a>.</p></dd>
+</dl>
+
+
+<a name="ggltf"></a><h3>Resource Management Commands</h3>
+<a name="indexterm-481"></a><a name="indexterm-482"></a><a name="indexterm-483"></a><dl><dt><a href="http://docs.sun.com/doc/820-4497/add-resources-1?a=view"><tt>add-resources</tt>(1)</a></dt>
+<dd><p>Creates the resources named in the specified XML file. Supported in remote mode only. For procedural information in this guide, see <a href="p5.html#ggoeh">To Add Resources</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/create-jdbc-connection-pool-1?a=view"><tt>create-jdbc-connection-pool</tt>(1)</a></dt>
+<dd><p>Registers a new JDBC connection pool with the specified JDBC connection pool name. Supported in remote mode only. For procedural information in this guide, see <a href="p8.html#ggnfv">To Create a JDBC Connection Pool</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/create-jdbc-resource-1?a=view"><tt>create-jdbc-resource</tt>(1)</a></dt>
+<dd><p>Creates a new JDBC resource. Supported in remote mode only. For procedural information in this guide, see <a href="p8.html#ggnda">To Create a JDBC Resource</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-jdbc-connection-pool-1?a=view"><tt>delete-jdbc-connection-pool</tt>(1)</a></dt>
+<dd><p>Deletes the specified JDBC connection pool. Supported in remote mode only. For procedural information in this guide, see <a href="p8.html#ggngb">To Delete a JDBC Connection Pool</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-jdbc-resource-1?a=view"><tt>delete-jdbc-resource</tt>(1)</a></dt>
+<dd><p>Deletes a JDBC resource. The specified JNDI name identifies the resource to be deleted. Supported in remote mode only. For procedural information in this guide, see <a href="p8.html#ggnhz">To Delete a JDBC Resource</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-jdbc-connection-pools-1?a=view"><tt>list-jdbc-connection-pools</tt>(1)</a></dt>
+<dd><p>Lists the existing JDBC connection pools. Supported in remote mode only. For procedural information in this guide, see <a href="p8.html#ggnby">To List JDBC Connection Pools</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-jdbc-resources-1?a=view"><tt>list-jdbc-resources</tt>(1)</a></dt>
+<dd><p>Lists the existing JDBC resources. Supported in remote mode only. <a href="p8.html#ggnhl">To List JDBC Resources</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/ping-connection-pool-1?a=view"><tt>ping-connection-pool</tt>(1)</a></dt>
+<dd><p>Tests if a JDBC connection pool is usable. Before you can ping a JDBC connection pool, you must create the connection pool with authentication and ensure that the server or database is started. Supported in remote mode only. For procedural information in this guide, see <a href="p8.html#ggnwn">To Contact (Ping) a Connection Pool</a>.</p></dd>
+</dl>
+
+
+<a name="ghged"></a><h3>Security Commands</h3>
+<a name="indexterm-484"></a><dl><dt><a href="http://docs.sun.com/doc/820-4497/change-admin-password-1?a=view"><tt>change-admin-password</tt>(1)</a></dt>
+<dd><p>Modifies the admin password. You are prompted for the old and new admin password (with confirmation). For procedural information in this guide, see <a href="p9.html#ghgpu">To Change the Administration Password</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/create-audit-module-1?a=view"><tt>create-audit-module</tt>(1)</a></dt>
+<dd><p>Adds the named audit module for the plug-in that implements the audit capabilities. Supported in remote mode only. For procedural information in this guide, see <a href="p9.html#ghgra">To Create an Audit Module</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-audit-module-1?a=view"><tt>delete-audit-module</tt>(1)</a></dt>
+<dd><p>Removes the named audit module. Supported in remote mode only. For procedural information in this guide, see <a href="p9.html#ghgpo">To Delete an Audit Module</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-audit-modules-1?a=view"><tt>list-audit-modules</tt>(1)</a></dt>
+<dd><p>Lists all audit modules. Supported in remote mode only. For procedural information in this guide, see <a href="p9.html#ghgsm">To List Audit Modules</a>.</p></dd>
+</dl>
+
+
+<a name="ggngl"></a><h3>User Management Commands</h3>
+<a name="indexterm-485"></a><dl><dt><a href="http://docs.sun.com/doc/820-4497/create-auth-realm-1?a=view"><tt>create-auth-realm</tt>(1)</a></dt>
+<dd><p>Adds the specified authentication realm. Restart the server for the creation to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p10.html#ggnca">To Create an Authentication Realm</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/create-file-user-1?a=view"><tt>create-file-user</tt>(1)</a></dt>
+<dd><p>Creates a file user in a given file-based authentication realm. An entry is added to the keyfile with the specified user name, password, and groups. Multiple groups can be created by separating each one with a colon (<tt>:</tt>). Restart the server for changes to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p10.html#ggocf">To Create a File User</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-auth-realm-1?a=view"><tt>delete-auth-realm</tt>(1)</a></dt>
+<dd><p>Deletes the specified authentication realm. Restart the server for changes to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p10.html#ggngf">To Delete an Authentication Realm</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/delete-file-user-1?a=view"><tt>delete-file-user</tt>(1)</a></dt>
+<dd><p>Deletes the specified user entry in the keyfile. Restart the server for changes to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p10.html#ggoah">To Delete a File User</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-auth-realms-1?a=view"><tt>list-auth-realms</tt>(1)</a></dt>
+<dd><p>Lists the existing authentication realms. Supported in remote mode only. For procedural information in this guide, see <a href="p10.html#ggngh">To List Authentication Realms</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-file-users-1?a=view"><tt>list-file-users</tt>(1)</a></dt>
+<dd><p>Lists the file users supported by the <tt>file</tt> realm authentication method. Supported in remote mode only. For procedural information in this guide, see <a href="p10.html#ggoab">To List File Users</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/list-file-groups-1?a=view"><tt>list-file-groups</tt>(1)</a></dt>
+<dd><p>Lists groups for a file user, or all groups if the <tt>--name</tt> option is not specified. For procedural information in this guide, see <a href="p10.html#ghlgs">To List File Groups</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-4497/update-file-user-1?a=view"><tt>update-file-user</tt>(1)</a></dt>
+<dd><p>Updates an existing entry in the keyfile using the specified user name, password, and groups. Restart the server for changes to take effect. Supported in remote mode only. For procedural information in this guide, see <a href="p10.html#ggoaw">To Update a File User</a>.</p></dd>
+</dl>
+
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p13.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="idx-1.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

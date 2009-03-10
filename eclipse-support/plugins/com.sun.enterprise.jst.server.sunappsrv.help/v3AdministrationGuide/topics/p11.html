@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Administering the HTTP Service - Sun GlassFish Enterprise Server v3 Prelude Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p10.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p12.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="ablsw"></a>Chapter&#160;8<h3>Administering the HTTP Service</h3><a name="indexterm-337"></a><p>The HTTP service provides functionality for deploying web applications and for making deployed
+web applications accessible by HTTP clients. HTTP services are provided by two kinds
+of related objects: HTTP listeners and virtual servers. This chapter provides procedures for
+administering the HTTP service in the Sun GlassFish<sup>TM</sup> Enterprise Server v3 Prelude environment by using
+the <tt>asadmin</tt> command-line utility.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ggnfu">Administering HTTP Listeners</a></p></li>
+<li><p><a href="#ggncs">Administering Virtual Servers</a></p></li></ul>
+<p>Instructions for accomplishing these tasks by using the Administration Console are contained in
+the Administration Console online help.</p>
+
+<a name="ggnfu"></a><h3>Administering HTTP Listeners</h3>
+<a name="indexterm-338"></a><a name="indexterm-339"></a><a name="indexterm-340"></a><a name="indexterm-341"></a><a name="indexterm-342"></a><a name="indexterm-343"></a><a name="indexterm-344"></a><p>An <b>HTTP listener</b> is a listen socket that has an Internet Protocol (IP) address,
+a port number, a server name, and a default virtual server. Each virtual
+server provides connections between the server and clients through one or more HTTP
+listeners. Each HTTP listener must have a unique combination of port number and
+IP address. For example, an HTTP listener can listen on all configured IP
+addresses on a given port for a host by specifying the IP address
+0.0.0.0. Alternatively, the HTTP listener can specify a unique IP address for each
+listener while using the same port.</p><p>Because an HTTP listener is a combination of IP address and port
+number, you can have multiple HTTP listeners with the same IP address and
+different port numbers, or with different IP addresses and the same port number
+(if your host was configured to respond to these addresses).  The host
+running the Enterprise Server typically has access to only one IP address. HTTP
+listeners typically use the 0.0.0.0 IP address and different port numbers, with each
+port number serving a different purpose. However, if the host does have access
+to more than one IP address, each address can serve a different purpose.</p><p>By default, when Enterprise Server starts, the following HTTP listeners are started automatically:</p>
+<ul><li><p>HTTP listeners associated with the virtual server named <tt>server</tt>:</p>
+<ul><li><p>The listener named <tt>http-listener-1</tt> does not have security enabled.</p></li>
+<li><p>The listener named <tt>http-listener-2</tt> has security enabled</p></li></ul>
+</li>
+<li><p>An HTTP listener named <tt>admin-listener</tt>, associated with the virtual server named <tt>__asadmin</tt>. This listener does not have security enabled.</p></li></ul>
+<p>To access a web application deployed on the Enterprise Server, use the
+URL <tt>http://localhost:8080/</tt> (or <tt>https://localhost:8181/</tt> for a secure application), along with the context root
+specified for the web application. </p><p>To access the Administration Console, use the URL <tt>https://localhost:4848/</tt> or <tt>http://localhost:4848/asadmin/</tt> (console
+default context root).</p><p>The following table describes the Enterprise Server default ports for the listeners that
+use ports.</p><a name="ggnpj"></a><h6>Table&#160;8-1 Default Ports for Listeners</h6><table><col width="17%"><col width="12%"><col width="70%"><tr><th align="left" valign="top" scope="column"><p>Listener</p></th>
+<th align="left" valign="top" scope="column"><p>Default Port </p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Administrative server</p></td>
+<td align="left" valign="top" scope="row"><p>4848</p></td>
+<td align="left" valign="top" scope="row"><p>A domain&#8217;s administrative server is accessed by the
+Administration Console and the <tt>asadmin</tt> utility. For the Administration Console, specify the port number
+in the URL of the browser. When running an <tt>asadmin</tt> command remotely, specify
+the port number by using the <tt>--port</tt> option.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>HTTP</p></td>
+<td align="left" valign="top" scope="row"><p>8080</p></td>
+<td align="left" valign="top" scope="row"><p>The web server listens for
+HTTP requests on a port. To access deployed web applications and services, clients
+connect to this port.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>HTTPS</p></td>
+<td align="left" valign="top" scope="row"><p>8181</p></td>
+<td align="left" valign="top" scope="row"><p>Web applications configured for secure communications listen on a
+separate port.</p></td>
+</tr>
+</table><p>The following tasks are used to administer HTTP listeners:</p>
+<ul><li><p><a href="#ggnfh">To Create an HTTP Listener</a></p></li>
+<li><p><a href="#ggnbv">To List HTTP Listeners</a></p></li>
+<li><p><a href="#ggndu">To Delete an HTTP Listener</a></p></li>
+<li><p><a href="#ggnbj">To Configure an HTTP Listener for SSL</a></p></li>
+<li><p><a href="#ggncl">To Delete SSL From an HTTP Listener</a></p></li></ul>
+
+
+<a name="ggnfh"></a><h4>To Create an HTTP Listener</h4><a name="indexterm-345"></a><a name="indexterm-346"></a><a name="indexterm-347"></a><p>The remote <tt>create-http-listener</tt> command enables you to create an HTTP listener. </p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
+<li><b>Create an HTTP listener by using the <a href="http://docs.sun.com/doc/820-4497/create-http-listener-1?a=view"><tt>create-http-listener</tt>(1)</a> command.</b></li>
+<li><b>To apply your changes, restart Enterprise Server.</b><ol style="list-style-type: lower-alpha">
+<li><b>Stop Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoch">To Stop a Domain (or Server)</a>.</p></li>
+<li><b>Start Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoda">To Start a Domain (or Server)</a>.</p></li></ol></li></ol><a name="ggpjk"></a><h6>Example&#160;8-1 Creating an HTTP Listener</h6><p>The following example command creates an HTTP listener named <tt>sampleListener</tt> that uses
+a non-default number of acceptor threads. Security is not enabled at runtime.</p><pre><tt><b>asadmin create-http-listener --listeneraddress 0.0.0.0 --listenerport 7272 --defaultvs server --servername host1.sun.com --acceptorthreads 100 --securityenabled=false --enabled=false sampleListener</b></tt></pre><p>Information similar to the following is displayed:</p><pre>Command create-http-listener executed successfully.</pre><h6>See Also</h6><p>To see the full syntax and options of the command, type <tt>asadmin help create-http-listener</tt>
+at the command line.</p>
+
+<a name="ggnbv"></a><h4>To List HTTP Listeners</h4><a name="indexterm-348"></a><a name="indexterm-349"></a><a name="indexterm-350"></a><a name="indexterm-351"></a><p>The remote <tt>list-http-listeners</tt> command enables you to list the existing HTTP listeners.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
+<li><b>List HTTP listeners by using the <a href="http://docs.sun.com/doc/820-4497/list-http-listeners-1?a=view"><tt>list-http-listeners</tt>(1)</a> command.</b></li></ol><a name="ggpgw"></a><h6>Example&#160;8-2 Listing HTTP Listeners</h6><p>The following example command lists the HTTP listeners on <tt>localhost</tt>:</p><pre><tt><b>asadmin list-http-listeners</b></tt></pre><p>Information similar to the following is displayed:</p><pre>sampleListener
+admin-listener
+http-listener-2
+http-listener-1
+Command list-http-listeners executed successfully.</pre><h6>See Also</h6><p>To see the full syntax and options of the command, type <tt>asadmin list-http-listeners -help</tt>
+at the command line.</p>
+
+<a name="ggndu"></a><h4>To Delete an HTTP Listener</h4><a name="indexterm-352"></a><a name="indexterm-353"></a><a name="indexterm-354"></a><p>The remote <tt>delete-http-listener</tt> command enables you to delete an existing HTTP listener. This
+disables secure communications for the listener.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
+<li><b>Obtain the exact name of the HTTP listener that you are deleting.</b><p>To list the existing HTTP listeners:</p><pre><tt><b>asadmin list-http-listeners</b></tt></pre></li>
+<li><b>If necessary, notify users that the HTTP listener is being deleted.</b></li>
+<li><b>Delete an HTTP listener by using the <a href="http://docs.sun.com/doc/820-4497/delete-http-listener-1?a=view"><tt>delete-http-listener</tt>(1)</a> command.</b></li>
+<li><b>To apply your changes, restart Enterprise Server.</b><ol style="list-style-type: lower-alpha">
+<li><b>Stop Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoch">To Stop a Domain (or Server)</a>.</p></li>
+<li><b>Start Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoda">To Start a Domain (or Server)</a>.</p></li></ol></li></ol><a name="ggpjr"></a><h6>Example&#160;8-3 Deleting an HTTP Listener</h6><p>The following example command deletes the HTTP listener named <tt>sampleListener</tt> from <tt>localhost</tt>:</p><pre><tt><b>delete-http-listener sampleListener</b></tt></pre><p>Information similar to the following is displayed:</p><pre>Command delete-http-listener executed successfully.</pre><h6>See Also</h6><p>To see the full syntax and options of the command, type <tt>asadmin delete-http-listener -help</tt>
+at the command line.</p>
+
+<a name="ggnbj"></a><h4>To Configure an HTTP Listener for SSL</h4><a name="indexterm-355"></a><a name="indexterm-356"></a><a name="indexterm-357"></a><a name="indexterm-358"></a><p>The remote <tt>create-ssl</tt> command enables you to create and configure an SSL element
+in the specified listener. This enables secure communication for the listener. </p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
+<li><b>Configure an HTTP listener by using the <a href="http://docs.sun.com/doc/820-4497/create-ssl-1?a=view"><tt>create-ssl</tt>(1)</a> command.</b></li>
+<li><b>To apply your changes, restart Enterprise Server.</b><ol style="list-style-type: lower-alpha">
+<li><b>Stop Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoch">To Stop a Domain (or Server)</a>.</p></li>
+<li><b>Start Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoda">To Start a Domain (or Server)</a>.</p></li></ol></li></ol><a name="ggphv"></a><h6>Example&#160;8-4 Configuring an HTTP Listener for SSL</h6><p>The following example command enables the HTTP listener named <tt>http-listener-1</tt> for SSL:</p><pre><tt><b>asadmin create-ssl --type http-listener --certname sampleCert http-listener-1</b></tt></pre><p>Information similar to the following is displayed:</p><pre>Command create-ssl executed successfully.</pre><h6>See Also</h6><p>To see the full syntax and options of the command, type <tt>asadmin create-ssl <tt>--help</tt></tt>
+at the command line.</p>
+
+<a name="ggncl"></a><h4>To Delete SSL From an HTTP Listener</h4><a name="indexterm-359"></a><a name="indexterm-360"></a><a name="indexterm-361"></a><a name="indexterm-362"></a><p>The remote <tt>delete-ssl</tt> command enables you to delete the SSL element in the
+specified listener. This disables secure communications for the listener.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
+<li><b>Delete SSL from an HTTP listener by using the <a href="http://docs.sun.com/doc/820-4497/delete-ssl-1?a=view"><tt>delete-ssl</tt>(1)</a> command.</b></li>
+<li><b>To apply your changes, restart Enterprise Server.</b><ol style="list-style-type: lower-alpha">
+<li><b>Stop Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoch">To Stop a Domain (or Server)</a>.</p></li>
+<li><b>Start Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoda">To Start a Domain (or Server)</a>.</p></li></ol></li></ol><a name="ggpln"></a><h6>Example&#160;8-5 Deleting SSL From an HTTP Listener</h6><p>The following example command disables SSL for the HTTP listener named <tt>http-listener-1</tt>:</p><pre><tt><b>asadmin delete-ssl --type http-listener http-listener-1</b></tt></pre><p>Information similar to the following is displayed:</p><pre>Command delete-http-listener executed successfully.</pre><h6>See Also</h6><p>To see the full syntax and options of the command, type <tt>asadmin delete-ssl <tt>--help</tt></tt>
+at the command line.</p>
+
+<a name="ggncs"></a><h3>Administering Virtual Servers</h3>
+<a name="indexterm-363"></a><a name="indexterm-364"></a><a name="indexterm-365"></a><p>A <b>virtual server</b>, sometimes called a virtual host, is an object that allows the
+same physical server to host multiple Internet domain names. All virtual servers hosted
+on the same physical server share the IP address of that physical server.
+A virtual server associates a domain name for a server (such as <tt>www.aaa.com</tt>)
+with the particular server on which Enterprise Server is running. Each virtual server
+must be registered with the DNS server for your network. </p>
+<hr><p><b>Note - </b>Do not confuse an Internet domain with the administrative domain of Enterprise Server.</p>
+<hr>
+<p>For example, assume that you want to host the following domains on
+your physical server: <tt>www.aaa.com</tt>, <tt>www.bbb.com</tt>, and <tt>www.ccc.com</tt>. Assume that these domains are respectively associated with
+web modules <tt>web1</tt>, <tt>web2</tt>, and <tt>web3</tt>. This means that the following URLs are
+handled by your physical server:</p><pre>http://www.aaa.com:8080/web1
+http://www.bbb.com:8080/web2
+http://www.ccc.com:8080/web3</pre><p>The first URL is mapped to virtual server <tt>www.aaa.com</tt>, the second URL is
+mapped to virtual server <tt>www.bbb.com</tt>, and the third is mapped to virtual server
+<tt>www.ccc.com</tt>. For this mapping to work, <tt>www.aaa.com</tt>, <tt>www.bbb.com</tt>, and <tt>www.ccc.com</tt> must all resolve to
+your physical server&#8217;s IP address and each virtual server must be registered with
+the DNS server for your network. </p><p>By default, when Enterprise Server starts, the following virtual servers are started automatically:</p>
+<ul><li><p>A virtual server named <tt>server</tt>, which hosts all user-defined web modules.</p><p>For development, testing, and deployment of web services in a non-production environment, <tt>server</tt> is often the only virtual server required. </p></li>
+<li><p>A virtual server named <tt>__asadmin</tt>, which hosts all administration-related web modules (specifically, the Administration Console). This server is restricted, which means that you cannot deploy web modules to this virtual server.</p></li></ul>
+<p>The following tasks are used to administer virtual servers:</p>
+<ul><li><p><a href="#ggnfr">To Create a Virtual Server</a></p></li>
+<li><p><a href="#ggndw">To List Virtual Servers</a></p></li>
+<li><p><a href="#ggnen">To Delete a Virtual Server</a></p></li></ul>
+
+
+<a name="ggnfr"></a><h4>To Create a Virtual Server</h4><a name="indexterm-366"></a><a name="indexterm-367"></a><a name="indexterm-368"></a><p>The remote <tt>create-virtual-server</tt> command enables you to create the named virtual server. </p><h6>Before You Begin</h6><p>A virtual server must specify an existing HTTP listener. Because the virtual server
+cannot specify an HTTP listener that is already being used by another virtual
+server, create at least one HTTP listener before creating a new virtual server.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
+<li><b>Create a virtual server by using the <a href="http://docs.sun.com/doc/820-4497/create-virtual-server-1?a=view"><tt>create-virtual-server</tt>(1)</a> command.</b></li>
+<li><b>To apply your changes, restart Enterprise Server.</b><ol style="list-style-type: lower-alpha">
+<li><b>Stop Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoch">To Stop a Domain (or Server)</a>.</p></li>
+<li><b>Start Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoda">To Start a Domain (or Server)</a>.</p></li></ol></li></ol><a name="ggpha"></a><h6>Example&#160;8-6 Creating a Virtual Server</h6><p>The following example command creates a virtual server named <tt>sampleServer</tt> for hosts
+<tt>pigeon</tt> and <tt>localhost</tt>:</p><pre><tt><b>asadmin create-virtual-server --hosts pigeon,localhost sampleServer</b></tt></pre><p>Information similar to the following is displayed:</p><pre>Command create-virtual-server executed successfully.</pre><h6>See Also</h6><p>To see the full syntax and options of the command, type <tt>asadmin create-virutal-server <tt>--help</tt></tt>
+at the command line.</p>
+
+<a name="ggndw"></a><h4>To List Virtual Servers</h4><a name="indexterm-369"></a><a name="indexterm-370"></a><a name="indexterm-371"></a><a name="indexterm-372"></a><p>The remote <tt>list-virtual-servers</tt> command enables you to list the existing virtual servers.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
+<li><b>List virtual servers by using the <a href="http://docs.sun.com/doc/820-4497/list-virtual-servers-1?a=view"><tt>list-virtual-servers</tt>(1)</a> command.</b></li></ol><a name="ggpgr"></a><h6>Example&#160;8-7 Listing Virtual Servers</h6><p>The following example command lists the virtual servers for <tt>localhost</tt>:</p><pre><tt><b>asaadmin list-virtual-servers</b></tt></pre><p>Information similar to the following is displayed:</p><pre>sampleListener
+admin-listener
+http-listener-2
+http-listener-1
+
+Command list-http-listeners executed successfully.</pre><h6>See Also</h6><p>To see the full syntax and options of the command, type <tt>asadmin list-virutal-servers <tt>--help</tt></tt>
+at the command line.</p>
+
+<a name="ggnen"></a><h4>To Delete a Virtual Server</h4><a name="indexterm-373"></a><a name="indexterm-374"></a><a name="indexterm-375"></a><p>The remote <tt>delete-virtual-server</tt> command enables you to delete an existing virtual server.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
+<li><b>Obtain the exact name of the virtual server that you are deleting.</b><p>To list the existing virtual servers:</p><pre><tt><b>asadmin list-virtual-servers</b></tt></pre></li>
+<li><b>If necessary, notify users that the virtual server is being deleted.</b></li>
+<li><b>Delete a virtual server by using the <a href="http://docs.sun.com/doc/820-4497/delete-virtual-server-1?a=view"><tt>delete-virtual-server</tt>(1)</a> command.</b></li>
+<li><b>To apply your changes, restart Enterprise Server.</b><ol style="list-style-type: lower-alpha">
+<li><b>Stop Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoch">To Stop a Domain (or Server)</a>.</p></li>
+<li><b>Start Enterprise Server.</b><p>For instructions, see <a href="p5.html#ggoda">To Start a Domain (or Server)</a>.</p></li></ol></li></ol><a name="ggpmd"></a><h6>Example&#160;8-8 Deleting a Virtual Server</h6><p>The following example command deletes the virtual server named <tt>sampleServer</tt> from <tt>localhost</tt>:</p><pre><tt><b>asadmin delete-virtual-server sampleServer</b></tt></pre><p>Information similar to the following is displayed:</p><pre>Command delete-virtual-server executed successfully.</pre><h6>See Also</h6><p>To see the full syntax and options of the command, type <tt>asadmin delete-virutal-server <tt>--help</tt></tt>
+at the command line.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p10.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p12.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

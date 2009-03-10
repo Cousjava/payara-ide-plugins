@@ -21,5 +21,17 @@
     <toc file="v3preludedevguide/toc.xml" primary="true">
     </toc>
   </extension>
+  <extension point="org.eclipse.help.toc">
+    <toc file="v3AdministrationGuide/toc.xml" primary="true">
+    </toc>
+  </extension>
+  <extension point="org.eclipse.help.toc">
+    <toc file="v3ApplicationDeploymentGuide/toc.xml" primary="true">
+    </toc>
+  </extension>
+  <extension point="org.eclipse.help.toc">
+    <toc file="v3QuickStartGuide/toc.xml" primary="true">
+    </toc>
+  </extension>
 
   </plugin>
