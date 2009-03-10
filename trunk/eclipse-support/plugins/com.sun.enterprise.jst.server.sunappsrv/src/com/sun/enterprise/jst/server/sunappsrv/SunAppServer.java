@@ -96,7 +96,9 @@ public class SunAppServer extends GenericServer {
     public static final String ADMINPASSWORD = "sunappserver.adminpassword";
     public static final String KEEPSESSIONS = "sunappserver.keepSessions";
     public static final String USEANONYMOUSCONNECTIONS = "sunappserver.useAnonymousConnection";
-    
+
+    public static final String SAMPLEDBDIR = "sunappserver.sampledbdir";
+   
     //Default values
     String serverPortNumber="1118080";
     String adminServerPortNumber="1114848";
@@ -223,6 +225,10 @@ public class SunAppServer extends GenericServer {
      
     public String getDomainDir() {
         return (String) getProps().get(DOMAINDIR);
+    }
+
+    public String getSampleDatabaseDir() {
+        return (String) getProps().get(SAMPLEDBDIR);
     }
 
     private void syncHostAndPortsValues() {

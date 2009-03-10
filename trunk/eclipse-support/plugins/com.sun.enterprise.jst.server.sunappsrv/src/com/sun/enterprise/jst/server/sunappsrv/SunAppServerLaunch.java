@@ -175,8 +175,9 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         }
     	boolean javaDBStart= store.getBoolean(PreferenceConstants.ENABLE_START_JAVADB);
     	if(javaDBStart){
-            command = new String[]{ asadminCmd,
-     	           "start-database"};    		
+    		String sampleDBDir = serverBehavior.getSampleDatabaseDir();
+            command = ((sampleDBDir == null) ? new String[]{ asadminCmd, "start-database"} :
+            	new String[]{ asadminCmd, "start-database", "--dbhome", sampleDBDir});
             try {
 				Process process = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
 		        SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(new String[]{ asadminCmd, "stop-database"});
