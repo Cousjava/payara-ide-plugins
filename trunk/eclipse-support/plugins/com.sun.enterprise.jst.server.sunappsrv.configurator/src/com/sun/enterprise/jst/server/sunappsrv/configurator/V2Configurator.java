@@ -68,7 +68,7 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 @SuppressWarnings("restriction")
 public class V2Configurator {
 
-	public static void configure(IProgressMonitor progressMonitor) throws CoreException {
+	public static void configure(IProgressMonitor progressMonitor, String sampleDB) throws CoreException {
 
 		String glassfishLoc = getGlassfishLocation();
 
@@ -105,6 +105,7 @@ public class V2Configurator {
 		configuration.put(SunAppServer.DOMAINNAME, createDomain(glassfishLoc));
 		configuration.put(SunAppServer.SERVERPORT, "" + FreePortManager.getAvailablePort(Constants.V2_INSTANCE_PORT));
         configuration.put(SunAppServer.ADMINSERVERPORT, "" + FreePortManager.getAvailablePort(Constants.V2_ADMIN_PORT));
+        configuration.put(SunAppServer.SAMPLEDBDIR, sampleDB);
 		sunAppServer.setServerInstanceProperties(configuration);
 
 		wc.save(true, null);

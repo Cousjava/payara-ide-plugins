@@ -39,6 +39,7 @@ public abstract class Constants {
 	public final static String GLASSFISH3_BUNDLE = "com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude"; //$NON-NLS-1$
 	public final static String SERVER_GLASSFISH_2_ID = "com.sun.enterprise.jst.server.sunappsrv91"; //$NON-NLS-1$
 	public final static String SERVER_PRELUDE_ID = "com.sun.enterprise.jst.server.glassfishv3prelude"; //$NON-NLS-1$
+	public final static String DERBY_SAMPLE_ID = "com.sun.enterprise.jst.server.derbysample"; //$NON-NLS-1$
 
 	public final static String ADMIN_PORT = "admin.port"; //$NON-NLS-1$
 	public final static String INSTANCE_PORT = "instance.port"; //$NON-NLS-1$
