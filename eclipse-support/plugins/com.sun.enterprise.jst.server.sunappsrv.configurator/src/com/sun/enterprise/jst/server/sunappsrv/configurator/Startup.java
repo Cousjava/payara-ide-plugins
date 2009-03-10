@@ -52,9 +52,10 @@ public class Startup {
 			preferences.setShowOnActivity(false);
 			progressMonitor.setTaskName(Messages.CreatingGlassfishServerInstances);
 			progressMonitor.worked(10);
-			GlassFishConfigurator.createV2Server(progressMonitor);
+			String sampleDB = GlassFishConfigurator.createSampleDerbyDB(progressMonitor);
+			GlassFishConfigurator.createV2Server(progressMonitor, sampleDB);
             progressMonitor.worked(30);
-			String domainXml = GlassFishConfigurator.createV3Server(progressMonitor);
+			String domainXml = GlassFishConfigurator.createV3Server(progressMonitor, sampleDB);
             progressMonitor.worked(30);
 			GlassFishConfigurator.createDerbyDB(progressMonitor, domainXml);
             progressMonitor.worked(30);

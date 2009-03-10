@@ -75,7 +75,7 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 @SuppressWarnings("restriction")
 public class V3Configurator {
 
-	public static String configure(IProgressMonitor progressMonitor) throws CoreException {
+	public static String configure(IProgressMonitor progressMonitor, String sampleDB) throws CoreException {
 		progressMonitor.subTask(Messages.CreatingGlassfishvv3PreludeConfiguration);
 		String glassfishLocation = getGlassfishLocation();
 		String domainXml = null;
@@ -113,6 +113,7 @@ public class V3Configurator {
 			Activator.logMessage("domain.xml location is = " + domainXml, null, IStatus.INFO);
 			Map<String, String> configuration = sunAppServer.getProps();
 			configuration.put(SunAppServer.DOMAINDIR, domainLocation);
+	        configuration.put(SunAppServer.SAMPLEDBDIR, sampleDB);
 			sunAppServer.setServerInstanceProperties(configuration);
 
 			wc.save(true, null);

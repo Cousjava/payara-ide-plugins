@@ -11,10 +11,12 @@ public class Messages extends NLS {
     public static String CONFIGURING_SAMPLE_DERBY_DATABASE_ENCOUNTERED_A_PROBLEM;
     public static String SAMPLE_JAVADB_DATABASE_DESCRIPTION;
     public static String SAMPLE_JAVADB_DATABASE;
+	public static String UNZIPPING_DERBY_SAMPLES_ENCOUNTERED_A_PROBLEM_0;
     
     public static String CreatingGlassfishv21ServerConfiguration;
     public static String CreatingGlassfishvv3PreludeConfiguration;
     public static String CreatingDemoDerbyDatabase;
+    public static String UnzippingDemoDerbyDatabase;
 
 	public static String CreatingServerConfigurationsProblem;
 

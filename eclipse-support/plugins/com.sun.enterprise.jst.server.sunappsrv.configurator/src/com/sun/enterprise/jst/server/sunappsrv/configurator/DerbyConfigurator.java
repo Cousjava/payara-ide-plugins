@@ -35,7 +35,10 @@ holder.
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -45,7 +48,10 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.tools.ant.listener.TimestampedLogger;
+import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -56,6 +62,7 @@ import org.eclipse.datatools.connectivity.ConnectionProfileException;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.datatools.connectivity.drivers.DriverInstance;
 import org.eclipse.datatools.connectivity.drivers.DriverManager;
+import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -65,6 +72,7 @@ public class DerbyConfigurator {
 	private static final String DERBY_PROVIDER_ID = "org.eclipse.datatools.connectivity.db.derby.embedded.connectionProfile"; //$NON-NLS-1$
 	private static final String DERBY_TEMPLATE_ID = "org.eclipse.datatools.connectivity.db.derby102.clientDriver"; //$NON-NLS-1$
 	private static final String DERBY_FOR_SAMPLE_DB = "DerbyForSampleDB"; //$NON-NLS-1$
+	public final static String DERBY_SAMPLE_INSTALL = "derby_sample_dir"; //$NON-NLS-1$
 
 	static void configure(IProgressMonitor progressMonitor, String domainXml) throws CoreException {
 		DriverManager dm = DriverManager.getInstance();
@@ -185,4 +193,48 @@ public class DerbyConfigurator {
 		return glassfishLocation;
 	}
 
+	public static String configureSample(IProgressMonitor progressMonitor) throws CoreException {
+		String databaseLocation = Platform.getLocation().append(".metadata").append(".plugins").append( //$NON-NLS-1$ //$NON-NLS-2$
+				Constants.DERBY_SAMPLE_ID).toOSString();
+		File dbDirectory = new File(databaseLocation);
+		
+		if (dbDirectory.exists()) {	// already configured sample db in a previous run, we are done
+			return databaseLocation;
+		}
+
+		// We use ant as it is better suited for this task.
+		AntRunner ant = new AntRunner();
+		HashMap<String, String> map = new HashMap<String, String>();
+
+		map.put(DERBY_SAMPLE_INSTALL, databaseLocation);
+
+		try {
+			Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
+			URL xml = bundle.getResource("ant/unzipSampleDB.xml"); //$NON-NLS-1$
+			String antFile = FileLocator.toFileURL(xml).getFile();
+
+			// even though we don't use this here in the code, we must access it to make sure
+			// it is available in the ant file (if we don't, it is not copied into the 
+			// relevant osgi directory with the other libs)
+			URL dbURL = bundle.getResource("lib/derbysampledb.zip"); //$NON-NLS-1$
+			String dbSampleFile = FileLocator.toFileURL(dbURL).getFile();
+			// end required access
+
+			ant.setBuildFileLocation(antFile);
+			ant.addUserProperties(map);
+			// FIXME in production remove those lines, no need for the user to
+			// see that much info
+			ant.setArguments("-Dmessage=Building -verbose"); //$NON-NLS-1$
+			ant.addBuildLogger(TimestampedLogger.class.getName());
+
+			ant.run();
+			return databaseLocation;
+		} catch (IOException e) {
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+					MessageFormat.format(Messages.UNZIPPING_DERBY_SAMPLES_ENCOUNTERED_A_PROBLEM_0, e.getMessage()), e), e.getMessage(),
+					Messages.EXCEPTION_OCCURRED);
+		}
+		return null;
+
+	}
 }

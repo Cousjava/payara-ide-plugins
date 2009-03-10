@@ -39,14 +39,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class GlassFishConfigurator {
 
-	public static void createV2Server(IProgressMonitor progressMonitor) throws CoreException {
+	public static void createV2Server(IProgressMonitor progressMonitor, String sampleDB) throws CoreException {
 		progressMonitor.setTaskName(Messages.CreatingGlassfishv21ServerConfiguration);
-		V2Configurator.configure(progressMonitor);
+		V2Configurator.configure(progressMonitor, sampleDB);
 	}
 
-	public static String createV3Server(IProgressMonitor progressMonitor) throws CoreException {
+	public static String createV3Server(IProgressMonitor progressMonitor, String sampleDB) throws CoreException {
 		progressMonitor.setTaskName(Messages.CreatingGlassfishvv3PreludeConfiguration);
-		return V3Configurator.configure(progressMonitor);
+		return V3Configurator.configure(progressMonitor, sampleDB);
 	}
 
 	public static void createDerbyDB(IProgressMonitor progressMonitor, String domainXml) throws CoreException {
@@ -54,4 +54,8 @@ public class GlassFishConfigurator {
 		DerbyConfigurator.configure(progressMonitor, domainXml);
 	}
 
+	public static String createSampleDerbyDB(IProgressMonitor progressMonitor) throws CoreException {
+		progressMonitor.setTaskName(Messages.UnzippingDemoDerbyDatabase);
+		return DerbyConfigurator.configureSample(progressMonitor);
+	}
 }

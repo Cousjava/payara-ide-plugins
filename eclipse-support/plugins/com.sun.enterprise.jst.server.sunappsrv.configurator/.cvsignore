@@ -1,3 +1,5 @@
 .DS_Store
 .settings
 bin
+plugins
+com.sun.enterprise.jst.server.sunappsrv.configurator_*.jar
