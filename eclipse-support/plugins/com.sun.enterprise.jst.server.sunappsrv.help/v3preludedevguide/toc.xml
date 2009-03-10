@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?NLS TYPE="org.eclipse.help.toc"?>
-<toc label="Sun GlassFish Enterprise Server v3 Prelude Developer's Guide">
+<toc label="GlassFish v3 Prelude Developer's Guide">
 
  <topic href="v3preludedevguide/topics/p3.html" label="Preface"></topic>
  <topic href="v3preludedevguide/topics/p4.html" label="Part&#160;I&#160;Development Tasks and Tools">

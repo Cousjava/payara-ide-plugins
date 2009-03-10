@@ -2,7 +2,7 @@
 
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Sun GlassFish Enterprise Server v3 Prelude Application Deployment Guide">
+<toc label="GlassFish v3 Prelude Application Deployment Guide">
  <topic href="v3ApplicationDeploymentGuide/topics/p3.html" label="Preface" ></topic>
  <topic href="v3ApplicationDeploymentGuide/topics/p4.html" label="1.&#160;&#160;Assembling and Deploying Applications" >
     <topic href="v3ApplicationDeploymentGuide/topics/p4.html" label="Overview of Assembly and Deployment" >

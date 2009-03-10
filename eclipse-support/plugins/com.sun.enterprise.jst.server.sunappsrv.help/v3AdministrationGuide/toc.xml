@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Sun GlassFish Enterprise Server v3 Prelude Administration Guide">
+<toc label="GlassFish  v3 Prelude Administration Guide">
  <topic href="v3AdministrationGuide/topics/p3.html" label="Preface" ></topic>
  <topic href="v3AdministrationGuide/topics/p4.html" label="Overview of Sun GlassFish Enterprise Server Administration" >
     <topic href="v3AdministrationGuide/topics/p4.html" label="About Your Administrative Tasks" ></topic>
