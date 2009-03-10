@@ -70,20 +70,27 @@ public class ConfigureDefaultGlassFishJDK {
             StringBuilder buffer = new StringBuilder(Math.min(asEnvScriptFilePath.length(), 60000));
             
             String asJavaString = (isUnix() ? ASENV_INSERTION_POINT_NOWIN_STRING : ASENV_INSERTION_POINT_WIN_STRING);
-            
+            boolean found=false;
             // copy config file from disk into memory buffer and modify line containing AS_JAVA definition
             while ((line = br.readLine()) != null) {
                 if (line.trim().startsWith(asJavaString)) {
                     buffer.append(asJavaString);
                     buffer.append('=');
                     buffer.append(targetJavaHomePath);
+                    found = true;
                 } else {
                     buffer.append(line);
                 }
                 buffer.append(lineBreak);
             }
             //br.close();
-            
+            if (found==false){ //add the line at the end.
+                buffer.append(asJavaString);
+                buffer.append('=');
+                buffer.append(targetJavaHomePath);  
+                buffer.append(lineBreak);
+
+            }
             // flush modified config file from memory buffer back to disk
             fw = new FileWriter(asEnvScriptFile);
             fw.write(buffer.toString());
