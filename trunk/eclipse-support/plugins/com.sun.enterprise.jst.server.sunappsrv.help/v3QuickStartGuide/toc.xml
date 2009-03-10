@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Sun GlassFish Enterprise Server v3 Prelude Quick Start Guide" >
+<toc label="GlassFish v3 Prelude Quick Start Guide" >
     <topic href="v3QuickStartGuide/topics/p3.html" label="How This Quick Start Guide Works" ></topic>
     <topic href="v3QuickStartGuide/topics/p3.html" label="Obtaining Enterprise Server v3 Prelude Software" ></topic>
     <topic href="v3QuickStartGuide/topics/p3.html" label="Installing Enterprise Server v3 Prelude Software" >
