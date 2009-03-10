@@ -277,6 +277,10 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		DEFAULT_DOMAIN_DIR_NAME;
 	}
 
+    public String getSampleDatabaseDir() {
+		return getSunAppServer().getSampleDatabaseDir();
+    }
+
 	private boolean isEmpty(String testString) {
 		return ((testString == null) || (testString.trim().length() == 0));
 	}
