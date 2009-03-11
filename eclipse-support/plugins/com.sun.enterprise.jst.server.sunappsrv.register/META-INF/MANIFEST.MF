@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Glassfish v3 Prelude Register Plug-in
+Bundle-Name: GlassFish v3 Prelude Register Plug-in
 Bundle-SymbolicName: com.sun.enterprise.jst.server.sunappsrv.register;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: com.sun.enterprise.jst.server.sunappsrv.register.Activator
