@@ -61,7 +61,6 @@ import com.sun.enterprise.registration.RegistrationService.RegistrationReminder;
  */
 public class InteractiveSplashHandler extends AbstractSplashHandler {
 
-	private boolean skipInstall = false;;
 
 	public InteractiveSplashHandler() {
 	}
@@ -82,9 +81,13 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 
 		final String glassfishLoc = getGlassfishLocation();
 
-		if (new File(glassfishLoc + File.separator + ".installed").exists()) //$NON-NLS-1$
-			skipInstall = true;
-
+		if (new File(glassfishLoc + File.separator + ".installed").exists()) {//$NON-NLS-1$
+			return;//no need to install anything
+		}
+		
+		final String dir = V2InstallationConfigurer.getJDKDir();
+		String v3RootDir = RegisterService.getv3PreludeLocation();
+		ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
 
 		Display.getDefault().asyncExec(new Runnable() {
 
@@ -108,12 +111,10 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					    protected IStatus run(IProgressMonitor monitor) {
 					        monitor.beginTask(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION, 100);
 					        // execute the task ...
-							if (!skipInstall) {
-								final String dir = V2InstallationConfigurer.getJDKDir();
-								String v3RootDir = RegisterService.getv3PreludeLocation();
-								ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
+
+
 								V2InstallationConfigurer.configureV2(dir, glassfishLoc);
-							}
+
 							Startup.mystartup(monitor);
 							monitor.done();
 					        return Status.OK_STATUS;
