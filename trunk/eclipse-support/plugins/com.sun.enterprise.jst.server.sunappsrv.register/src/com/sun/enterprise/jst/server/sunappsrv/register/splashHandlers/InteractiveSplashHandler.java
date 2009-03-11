@@ -85,9 +85,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		if (new File(glassfishLoc + File.separator + ".installed").exists()) //$NON-NLS-1$
 			skipInstall = true;
 
-		final String dir = V2InstallationConfigurer.getJDKDir();
-		String v3RootDir = RegisterService.getv3PreludeLocation();
-		ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
+
 		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
@@ -111,6 +109,9 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 					        monitor.beginTask(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION, 100);
 					        // execute the task ...
 							if (!skipInstall) {
+								final String dir = V2InstallationConfigurer.getJDKDir();
+								String v3RootDir = RegisterService.getv3PreludeLocation();
+								ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
 								V2InstallationConfigurer.configureV2(dir, glassfishLoc);
 							}
 							Startup.mystartup(monitor);
