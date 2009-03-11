@@ -1,0 +1,1006 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Developing Web and SIP Applications - Sun GlassFish Enterprise Server 2.1 Developer's Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-01-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p12.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p14.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="beafs"></a>Chapter&#160;8<h3>Developing Web and SIP Applications</h3><a name="indexterm-435"></a><p>This chapter describes how web applications are supported in the Sun GlassFish Enterprise
+Server and includes the following sections:</p>
+<ul><li><p><a href="#beagj">Using Servlets</a></p></li>
+<li><p><a href="#beagu">Using JavaServer Pages</a></p></li>
+<li><p><a href="#beaha">Creating and Managing Sessions</a></p></li>
+<li><p><a href="#beaft">Advanced Web Application Features</a></p></li></ul>
+<p>For general information about web applications, see &#8220;Part One: The Web Tier&#8221; in
+the <a name="indexterm-436"></a><a href="http://java.sun.com/javaee/5/docs/tutorial/doc/index.html">Java EE 5 Tutorial</a>.</p>
+
+<a name="beagj"></a><h3>Using Servlets</h3>
+<a name="indexterm-437"></a><p>Enterprise Server supports the Java Servlet Specification version 2.5.</p>
+<hr><p><b>Note - </b>Servlet API version 2.5 is fully backward compatible with versions 2.3 and 2.4,
+so all existing servlets should work without modification or recompilation.</p>
+<hr>
+<p><a name="indexterm-438"></a><a name="indexterm-439"></a><a name="indexterm-440"></a>To develop servlets, use Sun Microsystems&#8217; Java Servlet API. For information about using
+the Java Servlet API, see the documentation provided by Sun Microsystems at <a href="http://java.sun.com/products/servlet/index.html">http://java.sun.com/products/servlet/index.html</a>.</p><p>The Enterprise Server provides the <tt>wscompile</tt> and <tt>wsdeploy</tt> tools to help you
+implement a web service endpoint as a servlet. For more information about these
+tools, see the <i><a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a></i>.</p><p>This section describes how to create effective servlets to control application interactions running
+on an Enterprise Server, including standard-based servlets. In addition, this section describes the
+Enterprise Server features to use to augment the standards.</p><p>This section contains the following topics:</p>
+<ul><li><p><a href="#beagk">Invoking a Servlet With a URL</a></p></li>
+<li><p><a href="#beagl">Servlet Output</a></p></li>
+<li><p><a href="#beagm">Caching Servlet Results</a></p></li>
+<li><p><a href="#beagr">About the Servlet Engine</a></p></li></ul>
+
+
+<a name="beagk"></a><h4>Invoking a Servlet With a URL</h4>
+<a name="indexterm-441"></a><p>You can call a servlet deployed to the Enterprise Server by using a
+URL in a browser or embedded as a link in an HTML
+or JSP file. The format of a servlet invocation URL is as follows:</p><pre>http://<i>server</i>:<i>port</i>/<i>context-root</i>/<i>servlet-mapping</i>?<i>name</i>=<i>value</i></pre><p>The following table describes each URL section.</p><a name="fvyhk"></a><h6>Table&#160;8-1 URL Fields for Servlets Within an Application</h6><table><col width="20%"><col width="79%"><tr><th align="left" valign="top" scope="column"><p>URL element</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><i>server</i><tt>:</tt><i>port</i></p></td>
+<td align="left" valign="top" scope="row"><p>The IP address (or host
+name) and optional port number.</p><p>To access the <a name="indexterm-442"></a><a name="indexterm-443"></a>default web module for a virtual
+server, specify only this URL section. You do not need to specify the
+<i>context-root</i> or <b>servlet-name</b> unless you also wish to specify name-value parameters.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><i>context-root</i></p></td>
+<td align="left" valign="top" scope="row"><p>For an
+application, the <a name="indexterm-444"></a>context root is defined in the <tt>context-root</tt> element of the <tt>application.xml</tt>,
+<tt>sun-application.xml</tt>, or <tt>sun-web.xml</tt> file. For an individually deployed web module, the context root
+is specified during deployment.</p><p>For both applications and individually deployed web modules, the default
+context root is the name of the WAR file minus the <tt>.war</tt> suffix.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><i>servlet-mapping</i></p></td>
+<td align="left" valign="top" scope="row"><p>The
+<tt>servlet-mapping</tt> as configured in the <tt>web.xml</tt> file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>?</tt><i>name</i><tt>=</tt><i>value</i><tt>...</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Optional request parameters.</p></td>
+</tr>
+</table><p>In this example, <tt>localhost</tt> is the host name, <tt>MortPages</tt> is the context
+root, and <tt>calcMortgage</tt> is the servlet mapping:</p><pre>http://localhost:8080/MortPages/calcMortgage?rate=8.0&#38;per=360&#38;bal=180000</pre><p>When invoking a servlet from within a JSP file, you can use a
+relative path. For example:</p><pre>&#60;jsp:forward page="TestServlet"/>
+&#60;jsp:include page="TestServlet"/></pre>
+
+<a name="beagl"></a><h4>Servlet Output</h4>
+<a name="indexterm-445"></a><a name="indexterm-446"></a><p><a name="indexterm-447"></a><tt>ServletContext.log</tt> messages are sent to the server log.</p><p>By default, the <tt>System.out</tt> and <tt>System.err</tt> output of servlets are sent to
+the server log, and during startup, server log messages are echoed to the
+<tt>System.err</tt> output. Also by default, there is no Windows-only console for the <tt>System.err</tt>
+output.</p><p><a name="indexterm-448"></a>You can change these defaults using the Admin Console. In the developer profile,
+select the Enterprise Server component and the Logging tab. In the cluster profile,
+select the Logger Settings component under the relevant configuration. Then check or uncheck Write
+to System Log. If this box is checked, <tt>System.out</tt> output is sent to
+the server log. If it is unchecked, <tt>System.out</tt> output is sent to the
+system default location only.</p><p>For more information, click the Help button in the Admin Console from the
+Logging page.</p>
+
+<a name="beagm"></a><h4>Caching Servlet Results</h4>
+<a name="indexterm-449"></a><a name="indexterm-450"></a><p>The Enterprise Server can cache the results of invoking a servlet, a JSP,
+or any URL pattern to make subsequent invocations of the same servlet, JSP,
+or URL pattern faster. The Enterprise Server caches the request results for a
+specific amount of time. In this way, if another data call occurs, the
+Enterprise Server can return the cached data instead of performing the operation again.
+For example, if your servlet returns a stock quote that updates every 5
+minutes, you set the cache to expire after 300 seconds.</p><p>Whether to cache results and how to cache them depends on the data
+involved. For example, it makes no sense to cache the results of a
+quiz submission, because the input to the servlet is different each time. However,
+it makes sense to cache a high level report showing demographic data taken
+from quiz results that is updated once an hour.</p><p>To define how an Enterprise Server web application handles response caching, you edit
+specific fields in the <tt>sun-web.xml</tt> file.</p>
+<hr><p><b>Note - </b>A servlet that uses caching is not portable.</p>
+<hr>
+<p>For Javadoc tool pages relevant to caching servlet results, go to <a href="http://glassfish.dev.java.net/nonav/javaee5/api/index.html">http://glassfish.dev.java.net/nonav/javaee5/api/index.html</a> and
+click on the <tt>com.sun.appserv.web.cache</tt> package.</p><p>For information about JSP caching, see <a href="#beagw">JSP Caching</a>.</p><p>The rest of this section covers the following topics:</p>
+<ul><li><p><a href="#beagn">Caching Features</a></p></li>
+<li><p><a href="#beago">Default Cache Configuration</a></p></li>
+<li><p><a href="#beagp">Caching Example</a></p></li>
+<li><p><a href="#beagq">The <tt>CacheKeyGenerator</tt> Interface</a></p></li></ul>
+
+
+<a name="beagn"></a><h5>Caching Features</h5>
+<p>The Enterprise Server has the following web application response caching capabilities:</p>
+<ul><li><p>Caching is configurable based on the servlet name or the URI.</p></li>
+<li><p>When caching is based on the URI, this includes user specified parameters in the query string. For example, a response from <tt>/garden/catalog?category=roses</tt> is different from a response from <tt>/garden/catalog?category=lilies</tt>. These responses are stored under different keys in the cache.</p></li>
+<li><p>Cache size, entry timeout, and other caching behaviors are configurable.</p></li>
+<li><p>Entry timeout is measured from the time an entry is created or refreshed. To override this timeout for an individual cache mapping, specify the <tt>cache-mapping</tt> subelement <tt>timeout</tt>.</p></li>
+<li><p>To determine caching criteria programmatically, write a <a name="indexterm-451"></a>class that implements the <tt>com.sun.appserv.web.cache.CacheHelper</tt> interface. For example, if only a servlet knows when a back end data source was last modified, you can write a helper class to retrieve the last modified timestamp from the data source and decide whether to cache the response based on that timestamp.</p></li>
+<li><p>To determine cache key generation programmatically, write a class that implements the <tt>com.sun.appserv.web.cache.CacheKeyGenerator</tt> interface. See <a href="#beagq">The <tt>CacheKeyGenerator</tt> Interface</a>.</p></li>
+<li><p>All non-ASCII request parameter values specified in cache key elements must be URL encoded. The caching subsystem attempts to match the raw parameter values in the request query string.</p></li>
+<li><p>Since newly updated classes impact what gets cached, the web container clears the cache during dynamic deployment or reloading of classes.</p></li>
+<li><p>The following <a name="indexterm-452"></a><tt>HttpServletRequest</tt> request attributes are exposed.</p>
+<ul><li><p><tt>com.sun.appserv.web.cachedServletName</tt>, the cached servlet target</p></li>
+<li><p><tt>com.sun.appserv.web.cachedURLPattern</tt>, the URL pattern being cached</p></li></ul>
+</li>
+<li><p>Results produced by resources that are the target of a <tt>RequestDispatcher.include()</tt> or <tt>RequestDispatcher.forward()</tt> call are cached if caching has been enabled for those resources. For details, see <a href="http://docs.sun.com/doc/820-4337/bearh?a=view">cache-mapping in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a> and <a href="http://docs.sun.com/doc/820-4337/beasp?a=view">dispatcher in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>. These are elements in the <tt>sun-web.xml</tt> file.</p></li></ul>
+
+
+<a name="beago"></a><h5>Default Cache Configuration</h5>
+<p>If you enable <a name="indexterm-453"></a>caching but do not provide any special configuration for a
+servlet or JSP, the default cache configuration is as follows:</p>
+<ul><li><p>The default cache timeout is 30 seconds.</p></li>
+<li><p>Only the HTTP GET method is eligible for caching.</p></li>
+<li><p>HTTP requests with cookies or sessions automatically disable caching.</p></li>
+<li><p>No special consideration is given to <tt>Pragma:</tt>, <tt>Cache-control:</tt>, or <tt>Vary:</tt> headers.</p></li>
+<li><p>The default key consists of the Servlet Path (minus <tt>pathInfo</tt> and the query string).</p></li>
+<li><p>A &#8220;least recently used&#8221; list is maintained to evict cache entries if the maximum cache size is exceeded.</p></li>
+<li><p>Key generation concatenates the servlet path with key field values, if any are specified.</p></li>
+<li><p>Results produced by resources that are the target of a <tt>RequestDispatcher.include()</tt> or <tt>RequestDispatcher.forward()</tt> call are never cached.</p></li></ul>
+
+
+<a name="beagp"></a><h5>Caching Example</h5>
+<p>Here is an example <a name="indexterm-454"></a>cache element in the <tt>sun-web.xml</tt> file:</p><pre>&#60;cache max-capacity="8192" timeout="60">
+&#60;cache-helper name="myHelper" class-name="MyCacheHelper"/>
+&#60;cache-mapping>
+    &#60;servlet-name>myservlet&#60;/servlet-name>
+    &#60;timeout name="timefield">120&#60;/timeout>
+    &#60;http-method>GET&#60;/http-method>
+    &#60;http-method>POST&#60;/http-method>
+&#60;/cache-mapping>
+&#60;cache-mapping>
+    &#60;url-pattern> /catalog/* &#60;/url-pattern>
+    &#60;!-- cache the best selling category; cache the responses to
+       -- this resource only when the given parameters exist. Cache
+       -- only when the catalog parameter has 'lilies' or 'roses'
+       -- but no other catalog varieties:
+      -- /orchard/catalog?best&#38;category='lilies'
+      -- /orchard/catalog?best&#38;category='roses'
+      -- but not the result of
+       -- /orchard/catalog?best&#38;category='wild'
+    -->
+    &#60;constraint-field name='best' scope='request.parameter'/>
+    &#60;constraint-field name='category' scope='request.parameter'>
+        &#60;value> roses &#60;/value>
+        &#60;value> lilies &#60;/value>
+    &#60;/constraint-field>
+     &#60;!-- Specify that a particular field is of given range but the
+       -- field doesn't need to be present in all the requests -->
+    &#60;constraint-field name='SKUnum' scope='request.parameter'>
+        &#60;value match-expr='in-range'> 1000 - 2000 &#60;/value>
+    &#60;/constraint-field>
+    &#60;!-- cache when the category matches with any value other than
+       -- a specific value -->
+    &#60;constraint-field name="category" scope="request.parameter>
+        &#60;value match-expr="equals" cache-on-match-failure="true">
+       bogus
+        &#60;/value>
+    &#60;/constraint-field>
+&#60;/cache-mapping>
+&#60;cache-mapping>
+    &#60;servlet-name> InfoServlet &#60;/servlet-name>
+    &#60;cache-helper-ref>myHelper&#60;/cache-helper-ref>
+&#60;/cache-mapping>
+&#60;/cache></pre><p>For more information about the <tt>sun-web.xml</tt> caching settings, see <a href="http://docs.sun.com/doc/820-4337/beard?a=view">cache in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p>
+
+<a name="beagq"></a><h5>The <tt>CacheKeyGenerator</tt> Interface</h5>
+<p>The built-in default <a name="indexterm-455"></a><a name="indexterm-456"></a><tt>CacheHelper</tt> implementation allows web applications to customize the key generation.
+An application component (in a servlet or JSP) can set up a custom
+<tt>CacheKeyGenerator</tt> implementation as an attribute in the <tt>ServletContext</tt>.</p><p>The name of the context attribute is configurable as the <tt>value</tt> of
+the <a name="indexterm-457"></a><tt>cacheKeyGeneratorAttrName</tt> property in the <tt>default-helper</tt> element of the <tt>sun-web.xml</tt> deployment descriptor. For
+more information, see <a href="http://docs.sun.com/doc/820-4337/beasm?a=view">default-helper in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p>
+
+<a name="beagr"></a><h4>About the Servlet Engine</h4>
+<p>Servlets exist in and are managed by the <a name="indexterm-458"></a>servlet engine in the Enterprise
+Server. The servlet engine is an internal object that handles all servlet meta
+functions. These functions include instantiation, initialization, destruction, access from other components, and configuration management.
+This section covers the following topics:</p>
+<ul><li><p><a href="#beags">Instantiating and Removing Servlets</a></p></li>
+<li><p><a href="#beagt">Request Handling</a></p></li></ul>
+
+
+<a name="beags"></a><h5>Instantiating and Removing Servlets</h5>
+<p><a name="indexterm-459"></a><a name="indexterm-460"></a><a name="indexterm-461"></a><a name="indexterm-462"></a><a name="indexterm-463"></a><a name="indexterm-464"></a><a name="indexterm-465"></a>After the servlet engine instantiates the servlet, the servlet engine calls the servlet&#8217;s
+<tt>init()</tt> method to perform any necessary initialization. You can override this method to
+perform an initialization function for the servlet&#8217;s life, such as initializing a counter.</p><p>When a servlet is removed from service, the servlet engine calls the <tt>destroy()</tt>
+method in the servlet so that the servlet can perform any final tasks
+and deallocate resources. You can override this method to write log messages or
+clean up any lingering connections that won&#8217;t be caught in garbage collection.</p>
+
+<a name="beagt"></a><h5>Request Handling</h5>
+<p><a name="indexterm-466"></a><a name="indexterm-467"></a><a name="indexterm-468"></a>When a request is made, the Enterprise Server hands the incoming data to
+the servlet engine. The servlet engine processes the request&#8217;s input data, such as
+form data, cookies, session information, and URL name-value pairs, into an <tt>HttpServletRequest</tt> request object
+type.</p><p>The servlet engine also creates an <tt>HttpServletResponse</tt> response object type. The engine
+then passes both as parameters to the servlet&#8217;s <tt>service()</tt> method.</p><p><a name="indexterm-469"></a><a name="indexterm-470"></a><a name="indexterm-471"></a>In an HTTP servlet, the default <tt>service()</tt> method routes requests to another
+method based on the HTTP transfer method: <tt>POST</tt>, <tt>GET</tt>, <tt>DELETE</tt>, <tt>HEAD</tt>, <tt>OPTIONS</tt>, <tt>PUT</tt>,
+or <tt>TRACE</tt>. For example, HTTP <tt>POST</tt> requests are sent to the <tt>doPost()</tt>
+method, HTTP <tt>GET</tt> requests are sent to the <tt>doGet()</tt> method, and so on. This
+enables the servlet to process request data differently, depending on which transfer method
+is used. Since the routing takes place in the service method, you generally
+do not override <tt>service()</tt> in an HTTP servlet. Instead, override <tt>doGet()</tt>, <tt>doPost()</tt>,
+and so on, depending on the request type you expect.</p><p><a name="indexterm-472"></a><a name="indexterm-473"></a><a name="indexterm-474"></a>To perform the tasks to answer a request, override the <tt>service()</tt> method for
+generic servlets, and the <tt>doGet()</tt> or <tt>doPost()</tt> methods for HTTP servlets. Very often, this
+means accessing EJB components to perform business transactions, then collating the information in the
+request object or in a JDBC <tt>ResultSet</tt> object.</p>
+
+<a name="beagu"></a><h3>Using JavaServer Pages</h3>
+<p>The Enterprise Server supports the following JSP features:</p>
+<ul><li><p>JavaServer Pages (JSP) Specification version 2.1</p></li>
+<li><p>Precompilation of JSP files, which is especially useful for production servers</p></li>
+<li><p>JSP tag libraries and standard portable tags</p></li></ul>
+<p><a name="indexterm-475"></a><a name="indexterm-476"></a>For information about creating JSP files, see Sun Microsystem&#8217;s JavaServer Pages web site
+at <a href="http://java.sun.com/products/jsp/index.html">http://java.sun.com/products/jsp/index.html</a>.</p><p><a name="indexterm-477"></a><a name="indexterm-478"></a>For information about Java Beans, see Sun Microsystem&#8217;s JavaBeans web page at <a href="http://java.sun.com/beans/index.html">http://java.sun.com/beans/index.html</a>.</p><p>This section describes how to use JavaServer Pages (JSP files) as page templates
+in an Enterprise Server web application. This section contains the following topics:</p>
+<ul><li><p><a href="#beagv">JSP Tag Libraries and Standard Portable Tags</a></p></li>
+<li><p><a href="#beagw">JSP Caching</a></p></li>
+<li><p><a href="#beagz">Options for Compiling JSP Files</a></p></li></ul>
+
+
+<a name="beagv"></a><h4>JSP Tag Libraries and Standard Portable Tags</h4>
+<a name="indexterm-479"></a><a name="indexterm-480"></a><p>Enterprise Server supports tag libraries and standard portable tags. For more information, see
+the JavaServer Pages Standard Tag Library (JSTL) page at <a href="http://java.sun.com/products/jsp/jstl/index.jsp">http://java.sun.com/products/jsp/jstl/index.jsp</a>.</p><p>Web applications don&#8217;t need to bundle copies of the <tt>jsf-impl.jar</tt> or <tt>appserv-jstl.jar</tt>
+JSP tag libraries (in <i>as-install</i><tt>/lib</tt>) to use JavaServer<sup>TM</sup> Faces technology or JSTL, respectively.
+These tag libraries are automatically available to all web applications.</p><p><a name="indexterm-481"></a>However, the <i>as-install</i><tt>/lib/appserv-tags.jar</tt> tag library for JSP caching is not automatically available to web
+applications. See <a href="#beagw">JSP Caching</a>, next.</p>
+
+<a name="beagw"></a><h4>JSP Caching</h4>
+<a name="indexterm-482"></a><a name="indexterm-483"></a><a name="indexterm-484"></a><p>JSP caching lets you cache tag invocation results within the Java engine. Each
+can be cached using different cache criteria. For example, suppose you have invocations
+to view stock quotes, weather information, and so on. The stock quote result
+can be cached for 10 minutes, the weather report result for 30 minutes,
+and so on. JSP caching is described in the following topics:</p>
+<ul><li><p><a href="#gaxbq">The <tt>appserv-tags.jar</tt> File</a></p></li>
+<li><p><a href="#gaxcr">Caching Scope</a></p></li>
+<li><p><a href="#beagx">The <tt>cache</tt> Tag</a></p></li>
+<li><p><a href="#beagy">The <tt>flush</tt> Tag</a></p></li></ul>
+<p>For more information about response caching as it pertains to servlets, see <a href="#beagm">Caching Servlet Results</a>.</p>
+
+<a name="gaxbq"></a><h5>The <tt>appserv-tags.jar</tt> File</h5>
+<a name="indexterm-485"></a><a name="indexterm-486"></a><p>JSP caching is implemented by a tag library packaged into the <i>as-install</i><tt>/lib/appserv-tags.jar</tt>
+file, which you can copy into the <tt>WEB-INF/lib</tt> directory of your web
+application. The <tt>appserv-tags.tld</tt> tag library descriptor file is in the <tt>META-INF</tt> directory of
+this JAR file.</p>
+<hr><p><b>Note - </b>Web applications that use this tag library without bundling it are not portable.</p>
+<hr>
+<p>To allow all web applications to share this tag library, change the following
+elements in the <tt>domain.xml</tt> file. Change this:</p><pre>&#60;jvm-options>
+-Dcom.sun.enterprise.taglibs=appserv-jstl.jar,jsf-impl.jar
+&#60;/jvm-options></pre><p>to this:</p><pre>&#60;jvm-options>
+-Dcom.sun.enterprise.taglibs=appserv-jstl.jar,jsf-impl.jar,appserv-tags.jar
+&#60;/jvm-options></pre><p>and this:</p><pre>&#60;jvm-options>
+-Dcom.sun.enterprise.taglisteners=jsf-impl.jar
+&#60;/jvm-options></pre><p>to this:</p><pre>&#60;jvm-options>
+-Dcom.sun.enterprise.taglisteners=jsf-impl.jar,appserv-tags.jar
+&#60;/jvm-options></pre><p>For more information about the <tt>domain.xml</tt> file, see the <i><a href="http://docs.sun.com/doc/820-4338"><i>Sun GlassFish Enterprise Server 2.1 Administration Reference</i></a></i>.</p><p>Refer to these tags in JSP files as follows:</p><pre>&#60;%@ taglib prefix="<i>prefix</i>" uri="Sun ONE Application Server Tags" %></pre><p>Subsequently, the cache tags are available as <tt>&#60;</tt><i>prefix</i><tt>:cache></tt> and <tt>&#60;</tt><i>prefix</i><tt>:flush></tt>. For example,
+if your <i>prefix</i> is <tt>mypfx</tt>, the cache tags are available as <tt>&#60;mypfx:cache></tt> and
+<tt>&#60;mypfx:flush></tt>.</p>
+
+<a name="gaxcr"></a><h5>Caching Scope</h5>
+<p>JSP caching is available in three different scopes: <tt>request</tt>, <tt>session</tt>, and <tt>application</tt>. The
+default is <tt>application</tt>. To use a cache in <tt>request</tt> scope, a web
+application must specify the <tt>com.sun.appserv.web.taglibs.cache.CacheRequestListener</tt> in its <tt>web.xml</tt> deployment descriptor, as follows:</p><pre>&#60;listener>
+   &#60;listener-class>
+      com.sun.appserv.web.taglibs.cache.CacheRequestListener
+   &#60;/listener-class>
+&#60;/listener></pre><p>Likewise, for a web application to utilize a cache in <tt>session</tt> scope,
+it must specify the   <tt>com.sun.appserv.web.taglibs.cache.CacheSessionListener</tt> in its <tt>web.xml</tt> deployment descriptor, as
+follows:</p><pre>&#60;listener>
+   &#60;listener-class>
+      com.sun.appserv.web.taglibs.cache.CacheSessionListener
+   &#60;/listener-class>
+&#60;/listener></pre><p>To utilize a cache in <tt>application</tt> scope, a web application need not specify
+any listener. The <tt>com.sun.appserv.web.taglibs.cache.CacheContextListener</tt> is already specified in the <tt>appserv-tags.tld</tt> file.</p>
+
+<a name="beagx"></a><h5>The <tt>cache</tt> Tag</h5>
+<a name="indexterm-487"></a><p>The cache tag caches the body between the beginning and ending tags according
+to the attributes specified. The first time the tag is encountered, the body
+content is executed and cached. Each subsequent time it is run, the cached
+content is checked to see if it needs to be refreshed and if
+so, it is executed again, and the cached data is refreshed. Otherwise, the
+cached data is served.</p>
+
+<a name="fvyfx"></a><h5>Attributes of <tt>cache</tt></h5>
+<p>The following table describes attributes for the <tt>cache</tt> tag.</p><a name="fvygg"></a><h6>Table&#160;8-2 The <tt>cache</tt> Attributes</h6><table><col width="10%"><col width="19%"><col width="69%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-488"></a><tt>key</tt></p></td>
+<td align="left" valign="top" scope="row"><p><i>ServletPath</i><tt>_</tt><i>Suffix</i></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The name used
+by the container to access the cached entry. The cache key is suffixed
+to the servlet path to generate a key to access the cached entry.
+If no key is specified, a number is generated according to the position
+of the tag in the page.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-489"></a><tt>timeout</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>60s</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The time in seconds after which
+the body of the tag is executed and the cache is refreshed. By
+default, this value is interpreted in seconds. To specify a different unit of
+time, add a suffix to the timeout value as follows: <tt>s</tt> for seconds,
+<tt>m</tt> for minutes, <tt>h</tt> for hours, <tt>d</tt> for days. For example, <tt>2h</tt> specifies
+two hours.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-490"></a><tt>nocache</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If set to <tt>true</tt>, the body content is executed and served
+as if there were no <tt>cache</tt> tag. This offers a way to programmatically
+decide whether the cached response is sent or whether the body has to
+be executed, though the response is not cached.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-491"></a><tt>refresh</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If set to <tt>true</tt>, the
+body content is executed and the response is cached again. This lets you
+programmatically refresh the cache immediately regardless of the <tt>timeout</tt> setting.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-492"></a><tt>scope</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>application</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The scope of
+the cache. Can be <tt>request</tt>, <tt>session</tt>, or <tt>application</tt>. See <a href="#gaxcr">Caching Scope</a>.</p></td>
+</tr>
+</table>
+
+<a name="fvyeh"></a><h5>Example of <tt>cache</tt></h5>
+<p>The following example represents a cached JSP file:</p><pre>&#60;%@ taglib prefix="mypfx" uri="Sun ONE Application Server Tags" %>
+&#60;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+&#60;mypfx:cache                 key="${sessionScope.loginId}"
+            nocache="${param.nocache}"
+            refresh="${param.refresh}"
+            timeout="10m">
+&#60;c:choose>
+    &#60;c:when test="${param.page == 'frontPage'}">
+        &#60;%-- get headlines from database --%>
+    &#60;/c:when>
+    &#60;c:otherwise>
+        ...
+    &#60;/c:otherwise>
+&#60;/c:choose>
+&#60;/mypfx:cache>
+&#60;mypfx:cache timeout="1h">
+&#60;h2> Local News &#60;/h2>
+    &#60;%-- get the headline news and cache them --%>
+&#60;/mypfx:cache></pre>
+
+<a name="beagy"></a><h5>The <tt>flush</tt> Tag</h5>
+<a name="indexterm-493"></a><p>Forces the cache to be flushed. If a <tt>key</tt> is specified, only the
+entry with that key is flushed. If no key is specified, the entire
+cache is flushed.</p>
+
+<a name="fvykp"></a><h5>Attributes of <tt>flush</tt></h5>
+<p>The following table describes attributes for the <tt>flush</tt> tag.</p><a name="fvyep"></a><h6>Table&#160;8-3 The <tt>flush</tt> Attributes</h6><table><col width="10%"><col width="19%"><col width="69%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-494"></a><tt>key</tt></p></td>
+<td align="left" valign="top" scope="row"><p><i>ServletPath</i><tt>_</tt><i>Suffix</i></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The name used
+by the container to access the cached entry. The cache key is suffixed
+to the servlet path to generate a key to access the cached entry.
+If no key is specified, a number is generated according to the position
+of the tag in the page.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-495"></a><tt>scope</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>application</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The scope of the cache. Can
+be <tt>request</tt>, <tt>session</tt>, or <tt>application</tt>. See <a href="#gaxcr">Caching Scope</a>.</p></td>
+</tr>
+</table>
+
+<a name="fvyle"></a><h5>Examples of <tt>flush</tt></h5>
+<p>To flush the entry with <tt>key="foobar"</tt>:</p><pre>&#60;mypfx:flush key="foobar"/></pre><p>To flush the entire cache:</p><pre>&#60;c:if test="${empty sessionScope.clearCache}">
+   &#60;mypfx:flush />
+&#60;/c:if></pre>
+
+<a name="beagz"></a><h4>Options for Compiling JSP Files</h4>
+<a name="indexterm-496"></a><a name="indexterm-497"></a><a name="indexterm-498"></a><a name="indexterm-499"></a><p>Enterprise Server provides the following ways of compiling JSP 2.1 compliant source files
+into servlets:</p>
+<ul><li><p>JSP files are automatically compiled at runtime.</p></li>
+<li><p><a name="indexterm-500"></a><a name="indexterm-501"></a>The <tt>asadmin deploy</tt> command has a <tt>precompilejsp</tt> option. For details, see the <i><a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a></i>.</p></li>
+<li><p>The <tt>sun-appserv-jspc</tt> Ant task allows you to precompile JSP files; see <a href="p7.html#beaew">The <tt>sun-appserv-jspc</tt> Task</a>.</p></li>
+<li><p>The <a name="indexterm-502"></a><tt>jspc</tt> command line tool allows you to precompile JSP files at the command line. For details, see the <i><a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a></i>.</p></li></ul>
+
+
+<a name="beaha"></a><h3>Creating and Managing Sessions</h3>
+<a name="indexterm-503"></a><p>This chapter describes how to create and manage HTTP sessions that allows
+users and transaction information to persist between interactions.</p><p>This chapter contains the following sections:</p>
+<ul><li><p><a href="#beahb">Configuring Sessions</a></p></li>
+<li><p><a href="#beahf">Session Managers</a></p></li></ul>
+
+
+<a name="beahb"></a><h4>Configuring Sessions</h4>
+<p>This section covers the following topics:</p>
+<ul><li><p><a href="#beahc">HTTP Sessions, Cookies, and URL Rewriting</a></p></li>
+<li><p><a href="#beahd">Coordinating Session Access</a></p></li>
+<li><p><a href="#beahe">Distributed Sessions and Persistence</a></p></li></ul>
+
+
+<a name="beahc"></a><h5>HTTP Sessions, Cookies, and URL Rewriting</h5>
+<a name="indexterm-504"></a><a name="indexterm-505"></a><a name="indexterm-506"></a><p>To configure whether and how HTTP sessions use cookies and URL rewriting, edit
+the <tt>session-properties</tt> and <tt>cookie-properties</tt> elements in the <tt>sun-web.xml</tt> file for an individual web
+application. For more about the properties you can configure, see <a href="http://docs.sun.com/doc/820-4337/beaxr?a=view">session-properties in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a> and <a href="http://docs.sun.com/doc/820-4337/beash?a=view">cookie-properties in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p><p>For information about configuring default session properties for the entire web container, see
+<a href="http://docs.sun.com/doc/820-4335/ablms?a=view">Chapter 8, Web and EJB Containers, in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a> and the <i><a href="http://docs.sun.com/doc/820-4341"><i>Sun GlassFish Enterprise Server 2.1 High Availability Administration Guide</i></a></i>.</p>
+
+<a name="beahd"></a><h5>Coordinating Session Access</h5>
+<p>Make sure that multiple threads don&#8217;t simultaneously modify the same session object in
+conflicting ways. If the persistence type is <tt>ha</tt> (see <a href="#beahi">The <tt>ha</tt> Persistence Type</a>), the following message in
+the log file indicates that this might be happening:</p><pre>Primary Key Constraint violation while saving session <i>session_id</i></pre><p>This is especially likely to occur in web applications that use HTML frames
+where multiple servlets are executing simultaneously on behalf of the same client. A
+good solution is to ensure that one of the servlets modifies the session
+and the others have read-only access.</p>
+
+<a name="beahe"></a><h5>Distributed Sessions and Persistence</h5>
+<a name="indexterm-507"></a><a name="indexterm-508"></a><a name="indexterm-509"></a><a name="indexterm-510"></a><a name="indexterm-511"></a><a name="indexterm-512"></a>
+<hr><p><b>Note - </b>Some topics in the documentation pertain to features that are available only in
+domains that are configured to support clusters. Examples of domains that support clusters
+are domains that are created with the cluster profile or the enterprise profile. For
+information about profiles, see <a href="http://docs.sun.com/doc/820-4335/gelvk?a=view">Usage Profiles in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p>
+<hr>
+<p>A distributed HTTP session can run in multiple Enterprise Server instances, provided the
+following criteria are met:</p>
+<ul><li><p><a name="indexterm-513"></a><a name="indexterm-514"></a>Each server instance has the same distributable web application deployed to it. The <tt>web-app</tt> element of the <tt>web.xml</tt> deployment descriptor file must have the <tt>distributable</tt> subelement specified.</p></li>
+<li><p>The web application uses high-availability session persistence. If a non-distributable web application is configured to use high-availability session persistence, a warning is written to the server log, and the session persistence type reverts to <tt>memory</tt>. See <a href="#gdshu">The <tt>replicated</tt> Persistence Type</a> or <a href="#beahi">The <tt>ha</tt> Persistence Type</a>.</p></li>
+<li><p>All objects bound into a distributed session must be of the types listed in <a href="#fvyem">Table&#160;8-4</a>.</p></li>
+<li><p>The web application must be deployed using the <tt>deploy</tt> or <tt>deploydir</tt> command with the <tt>--availabilityenabled</tt> option set to <tt>true</tt>. See the <i><a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a></i>.</p></li>
+<li><p>Optionally, each server instance has access to the same high-availability database (HADB). HADB must be installed and the enterprise profile must be selected. For information about profiles, see <a href="http://docs.sun.com/doc/820-4335/gelvk?a=view">Usage Profiles in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>. For information about HADB, see the description of the <tt>configure-ha-cluster</tt> command in the <i><a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a></i>.</p></li></ul>
+
+<hr><p><b>Note - </b><a name="indexterm-515"></a>Contrary to the Servlet 2.5 specification, Enterprise Server does not throw an <tt>IllegalArgumentException</tt>
+if an object type not supported for failover is bound into a distributed
+session.</p><p>Keep the distributed session size as small as possible. Session size has a
+direct impact on overall system throughput.</p>
+<hr>
+<p>In the event of an instance or hardware failure, another server instance can
+take over a distributed session, with the following limitations:</p>
+<ul><li><p>If a distributable web application references a Java EE component or resource, the reference might be lost. See <a href="#fvyem">Table&#160;8-4</a> for a list of the types of references that <tt>HTTPSession</tt> failover supports.</p></li>
+<li><p>References to open files or network connections are lost.</p></li></ul>
+<p>In the following table, <b>No</b> indicates that failover for the object type might
+not work in all cases and that no failover support is provided. However,
+failover might work in some cases for that object type. For example, failover
+might work because the class implementing that type is serializable.</p><p>For more information about the <tt>InitialContext</tt>, see <a href="p23.html#beans">Accessing the Naming Context</a>. For more information about transaction recovery,
+see <a href="p22.html">Chapter&#160;16, Using the Transaction Service</a>. For more information about Administered Objects, see <a href="p24.html#beaoj">Creating Physical Destinations</a>.</p><a name="fvyem"></a><h6>Table&#160;8-4 Object Types Supported for Java EE Web Application Session State Failover</h6><a name="indexterm-516"></a><a name="indexterm-517"></a><a name="indexterm-518"></a><a name="indexterm-519"></a><a name="indexterm-520"></a><table><col width="50%"><col width="50%"><tr><th align="left" valign="top" scope="column"><p>Java Object Type</p></th>
+<th align="left" valign="top" scope="column"><p>Failover Support</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Colocated
+or distributed stateless session, stateful session, or entity bean reference</p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>JNDI context</p></td>
+<td align="left" valign="top" scope="row"><p>Yes, <tt>InitialContext</tt> and
+<tt>java:comp/env</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>UserTransaction</p></td>
+<td align="left" valign="top" scope="row"><p>Yes, but if the instance that fails is never restarted, any prepared global
+transactions are lost and might not be correctly rolled back or committed.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>JDBC DataSource</p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Java
+Message Service (JMS) ConnectionFactory, Destination</p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>JavaMail Session</p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Connection Factory</p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Administered Object</p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Web service reference</p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Serializable Java types</p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Extended persistence
+context</p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+</table>
+
+<a name="beahf"></a><h4>Session Managers</h4>
+<a name="indexterm-521"></a><a name="indexterm-522"></a><p>A session manager automatically creates new session objects whenever a new session starts.
+In some circumstances, clients do not join the session, for example, if the
+session manager uses cookies and the client does not accept cookies.</p><p>Enterprise Server offers these session management options, determined by the <tt>session-manager</tt> element&#8217;s <tt>persistence-type</tt>
+attribute in the <tt>sun-web.xml</tt> file:</p>
+<ul><li><p><a href="#beahg">The <tt>memory</tt> Persistence Type</a>, the default</p></li>
+<li><p><a href="#beahh">The <tt>file</tt> Persistence Type</a>, which uses a file to store session data</p></li>
+<li><p><a href="#gdshu">The <tt>replicated</tt> Persistence Type</a>, which uses other servers in the cluster for session persistence</p></li>
+<li><p><a href="#beahi">The <tt>ha</tt> Persistence Type</a>, which uses the high-availability database for session persistence</p></li></ul>
+
+<hr><p><b>Note - </b>If the session manager configuration contains an error, the error is written to
+the server log and the default (<tt>memory</tt>) configuration is used.</p>
+<hr>
+<p>For more information, see <a href="http://docs.sun.com/doc/820-4337/beaxq?a=view">session-manager in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p>
+
+<a name="beahg"></a><h5>The <tt>memory</tt> Persistence Type</h5>
+<p>This persistence type is not designed for a production environment that requires session
+persistence. It provides no session persistence. However, you can configure it so that
+the session state in memory is written to the file system prior to
+server shutdown.</p><p>To specify the <tt>memory</tt> persistence type for the entire web container, use the
+<tt>configure-ha-persistence</tt> command. For details, see the <i><a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a></i>.</p><p>To specify the <tt>memory</tt> persistence type for a specific web application, edit the
+<tt>sun-web.xml</tt> file as in the following example. The <tt>persistence-type</tt> property is optional, but must
+be set to <tt>memory</tt> if included. This overrides the web container availability settings
+for the web application.</p><pre>&#60;sun-web-app>
+...
+&#60;session-config>
+    &#60;session-manager persistence-type="memory" />
+        &#60;manager-properties>
+            &#60;property name="sessionFilename" value="sessionstate" />
+        &#60;/manager-properties>
+    &#60;/session-manager>
+    ...
+&#60;/session-config>
+...
+&#60;/sun-web-app></pre><p>The only manager property that the <tt>memory</tt> persistence type supports is sessionFilename, which
+is listed under <a href="http://docs.sun.com/doc/820-4337/beaum?a=view">manager-properties in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p><p>For more information about the <tt>sun-web.xml</tt> file, see <a href="http://docs.sun.com/doc/820-4337"><i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p>
+
+<a name="beahh"></a><h5>The <tt>file</tt> Persistence Type</h5>
+<p>This persistence type provides session persistence to the local file system, and allows
+a single server domain to recover the session state after a failure and
+restart. The session state is persisted in the background, and the rate at
+which this occurs is configurable. The store also provides passivation and activation of
+the session state to help control the amount of memory used. This option
+is not supported in a production environment. However, it is useful for a development
+system with a single server instance.</p>
+<hr><p><b>Note - </b>Make sure the <tt>delete</tt> option is set in the <tt>server.policy</tt> file, or expired
+file-based sessions might not be deleted properly. For more information about <tt>server.policy</tt>, see
+<a href="p10.html#beabx">The <tt>server.policy</tt> File</a>.</p>
+<hr>
+<p>To specify the <tt>file</tt> persistence type for the entire web container, use the
+<tt>configure-ha-persistence</tt> command. For details, see the <i><a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a></i>.</p><p>To specify the <tt>file</tt> persistence type for a specific web application, edit the
+<tt>sun-web.xml</tt> file as in the following example. Note that <tt>persistence-type</tt> must be set to
+<tt>file</tt>. This overrides the web container availability settings for the web application.</p><pre>&#60;sun-web-app>
+...
+&#60;session-config>
+    &#60;session-manager persistence-type="file">
+        &#60;store-properties>
+            &#60;property name="directory" value="sessiondir" />
+        &#60;/store-properties>
+    &#60;/session-manager>
+    ...
+&#60;/session-config>
+...
+&#60;/sun-web-app></pre><p>The <tt>file</tt> persistence type supports all the manager properties listed under <a href="http://docs.sun.com/doc/820-4337/beaum?a=view">manager-properties in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a> except
+<tt>sessionFilename</tt>, and supports the <tt>directory</tt> store property listed under <a href="http://docs.sun.com/doc/820-4337/beaxu?a=view">store-properties in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p><p>For more information about the <tt>sun-web.xml</tt> file, see <a href="http://docs.sun.com/doc/820-4337"><i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p>
+
+<a name="gdshu"></a><h5>The <tt>replicated</tt> Persistence Type</h5>
+<a name="indexterm-523"></a><a name="indexterm-524"></a><p>The replicated persistence type uses other servers in the cluster for session persistence.
+Clustered server instances replicate session state in a ring topology.  Each backup
+instance stores the replicated data in memory. This allows sessions to be distributed.
+For details, see <a href="#beahe">Distributed Sessions and Persistence</a>. In addition, you can configure the frequency and scope of
+session persistence. The other servers are also used as the passivation and activation store.
+Use this option in a production environment that requires session persistence.</p>
+<hr><p><b>Note - </b>Some topics in the documentation pertain to features that are available only in
+domains that are configured to support clusters. Examples of domains that support clusters
+are domains that are created with the cluster profile or the enterprise profile. For
+information about profiles, see <a href="http://docs.sun.com/doc/820-4335/gelvk?a=view">Usage Profiles in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p>
+<hr>
+<p>To use the replicated persistence type, you must enable availability. Select the Availability
+Service component under the relevant configuration in the Admin Console. Check the Availability
+Service box. To enable availability for the web container, select the Web Container
+Availability tab, then check the Availability Service box. All instances in an Enterprise
+Server cluster should have the same availability settings to ensure consistent behavior. For details,
+see the <i><a href="http://docs.sun.com/doc/820-4341"><i>Sun GlassFish Enterprise Server 2.1 High Availability Administration Guide</i></a></i>.</p><p>To change settings such as persistence frequency and persistence scope for the entire
+web container, use the Persistence Frequency and Persistence Scope drop-down lists on the
+Web Container Availability tab in the Admin Console, or use the <tt>asadmin set</tt>
+command. For example:</p><pre>asadmin set 
+server-config.availability-service.web-container-availability.persistence-frequency=time-based</pre><p>For more information, see the description of the <tt>asadmin set</tt> command in the
+<i><a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a></i>.</p><p>To specify the <tt>replicated</tt> persistence type for a specific web application, edit the
+<tt>sun-web.xml</tt> file as in the following example. Note that <tt>persistence-type</tt> must be set to
+<tt>replicated</tt>. This overrides the web container availability settings for the web application.</p><pre>&#60;sun-web-app>
+...
+&#60;session-config>
+    &#60;session-manager persistence-type="replicated">
+        &#60;manager-properties>
+            &#60;property name="persistenceFrequency" value="web-method" />
+        &#60;/manager-properties>
+        &#60;store-properties>
+            &#60;property name="persistenceScope" value="session" />
+        &#60;/store-properties>
+    &#60;/session-manager>
+    ...
+&#60;/session-config>
+...
+&#60;/sun-web-app></pre><p>The <tt>replicated</tt> persistence type supports all the manager properties listed under <a href="http://docs.sun.com/doc/820-4337/beaum?a=view">manager-properties in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a> except
+<tt>sessionFilename</tt>, and supports the <tt>persistenceScope</tt> store property listed under <a href="http://docs.sun.com/doc/820-4337/beaxu?a=view">store-properties in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p><p>For more information about the <tt>sun-web.xml</tt> file, see <a href="http://docs.sun.com/doc/820-4337"><i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p>
+
+<a name="beahi"></a><h5>The <tt>ha</tt> Persistence Type</h5>
+<a name="indexterm-525"></a><a name="indexterm-526"></a><a name="indexterm-527"></a><p>The ha persistence type uses the high-availability database (HADB) for session persistence. The
+HADB must be installed and the enterprise profile must be selected. For information
+about profiles, see <a href="http://docs.sun.com/doc/820-4335/gelvk?a=view">Usage Profiles in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p><p>The HADB allows sessions to be distributed. For details, see <a href="#beahe">Distributed Sessions and Persistence</a>. In addition,
+you can configure the frequency and scope of session persistence. The HADB is
+also used as the passivation and activation store. Use this option in a
+production environment that requires session persistence.</p><p>The HADB must be configured and enabled before you can use distributed sessions.
+For configuration details, see the description of the <tt>configure-ha-cluster</tt> command in the
+<i><a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a></i>.</p><p>To enable the HADB, select the Availability Service component under the relevant configuration
+in the Admin Console. Check the Instance Level Availability box. To enable availability
+for the web container, select the Web Container Availability tab, then check the Availability
+Service box. All instances in an Enterprise Server cluster should have the same
+availability settings to ensure consistent behavior. For details, see the <i><a href="http://docs.sun.com/doc/820-4341"><i>Sun GlassFish Enterprise Server 2.1 High Availability Administration Guide</i></a></i>.</p><p>To change settings such as persistence frequency and persistence scope for the entire
+web container, see the description of the <tt>configure-ha-persistence</tt> command in the <i><a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a></i>.</p><p>To specify the <tt>ha</tt> persistence type for a specific web application, edit the
+<tt>sun-web.xml</tt> file as in the following example. Note that <tt>persistence-type</tt> must be set to
+<tt>ha</tt>. This overrides the web container availability settings for the web application.</p><pre>&#60;sun-web-app>
+...
+&#60;session-config>
+    &#60;session-manager persistence-type="ha">
+        &#60;manager-properties>
+            &#60;property name="persistenceFrequency" value="web-method" />
+        &#60;/manager-properties>
+        &#60;store-properties>
+            &#60;property name="persistenceScope" value="session" />
+        &#60;/store-properties>
+    &#60;/session-manager>
+    ...
+&#60;/session-config>
+...
+&#60;/sun-web-app></pre><p>The <tt>ha</tt> persistence type supports all the manager properties listed under <a href="http://docs.sun.com/doc/820-4337/beaum?a=view">manager-properties in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a> except
+<tt>sessionFilename</tt>, and supports the <tt>persistenceScope</tt> store property listed under <a href="http://docs.sun.com/doc/820-4337/beaxu?a=view">store-properties in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p><p>For more information about the <tt>sun-web.xml</tt> file, see <a href="http://docs.sun.com/doc/820-4337"><i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p>
+
+<a name="beaft"></a><h3>Advanced Web Application Features</h3>
+<p>This section includes summaries of the following topics:</p>
+<ul><li><p><a href="#beafu">Internationalization Issues</a></p></li>
+<li><p><a href="#beafz">Virtual Servers</a></p></li>
+<li><p><a href="#beaga">Default Web Modules</a></p></li>
+<li><p><a href="#beagb">Class Loader Delegation</a></p></li>
+<li><p><a href="#beagc">Using the <tt>default-web.xml</tt> File</a></p></li>
+<li><p><a href="#beagd">Configuring Logging and Monitoring in the Web Container</a></p></li>
+<li><p><a href="#beage">Configuring Idempotent URL Requests</a></p></li>
+<li><p><a href="#beagi">Header Management</a></p></li>
+<li><p><a href="#geqrh">Configuring Valves and Catalina Listeners</a></p></li>
+<li><p><a href="#geqpl">Alternate Document Roots</a></p></li>
+<li><p><a href="#ggjaa">Redirecting URLs</a></p></li>
+<li><p><a href="#geunw">Enabling Comet Support</a></p></li>
+<li><p><a href="#geurd">Using a context.xml File</a></p></li>
+<li><p><a href="#gezcx">Enabling WebDav</a></p></li>
+<li><p><a href="#gfaad">Using mod_jk</a></p></li></ul>
+
+
+<a name="beafu"></a><h4>Internationalization Issues</h4>
+<p>This section covers <a name="indexterm-528"></a>internationalization as it applies to the following:</p>
+<ul><li><p><a href="#beafv">The Server's Default Locale</a></p></li>
+<li><p><a href="#beafw">Servlet Character Encoding</a></p></li></ul>
+
+
+<a name="beafv"></a><h5>The Server's Default Locale</h5>
+<a name="indexterm-529"></a><a name="indexterm-530"></a><p>To set the default locale of the entire Enterprise Server, which determines the
+locale of the Admin Console, the logs, and so on, use the Admin
+Console. In the developer profile, select the Enterprise Server component, the Advanced tab,
+and the Domain Attributes tab. In the cluster profile, select the domain component.
+Then type a value in the Locale field. For details, click the Help
+button in the Admin Console.</p>
+
+<a name="beafw"></a><h5>Servlet Character Encoding</h5>
+<a name="indexterm-531"></a><a name="indexterm-532"></a><p>This section explains how the Enterprise Server determines the character encoding for the
+servlet request and the servlet response. For encodings you can use, see <a href="http://java.sun.com/javase/6/docs/technotes/guides/intl/encoding.doc.html">http://java.sun.com/javase/6/docs/technotes/guides/intl/encoding.doc.html</a>.</p>
+
+<a name="beafx"></a><h5>Servlet Request</h5>
+<p>When processing a servlet request, the server uses the following order of precedence,
+first to last, to determine the request character encoding:</p>
+<ul><li><p><a name="indexterm-533"></a>The <tt></tt><tt>getCharacterEncoding()</tt> method</p></li>
+<li><p>A hidden field in the form, specified by the <tt>form-hint-field</tt> attribute of the <tt>parameter-encoding</tt> element in the <tt>sun-web.xml</tt> file</p></li>
+<li><p>The <tt>default-charset</tt> attribute of the <tt>parameter-encoding</tt> element in the <tt>sun-web.xml</tt> file</p></li>
+<li><p>The default, which is <tt>ISO-8859-1</tt></p></li></ul>
+<p>For details about the <tt>parameter-encoding</tt> element, see <a href="http://docs.sun.com/doc/820-4337/beavn?a=view">parameter-encoding in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p>
+
+<a name="beafy"></a><h5>Servlet Response</h5>
+<p>When processing a servlet response, the server uses the following order of precedence,
+first to last, to determine the response character encoding:</p>
+<ul><li><p><a name="indexterm-534"></a><a name="indexterm-535"></a>The <tt>setCharacterEncoding()</tt> or <tt></tt><tt>setContentType()</tt> method</p></li>
+<li><p><a name="indexterm-536"></a>The <tt></tt><tt>setLocale()</tt> method</p></li>
+<li><p>The default, which is <tt>ISO-8859-1</tt></p></li></ul>
+
+
+<a name="beafz"></a><h4>Virtual Servers</h4>
+<a name="indexterm-537"></a><p>A virtual server, also called a virtual host, is a virtual web server
+that serves content targeted for a specific URL. Multiple virtual servers can serve
+content using the same or different host names, port numbers, or IP addresses.
+The HTTP service directs incoming web requests to different virtual servers based on
+the URL.</p><p>When you first install the Enterprise Server, a default virtual server is created.
+You can also assign a default virtual server to each new HTTP listener
+you create.</p><p>Web applications and Java EE applications containing web components (web modules) can be
+assigned to virtual servers during deployment. A web module can be assigned to
+more than one virtual server, and a virtual server can have more than
+one web module assigned to it.<a name="indexterm-538"></a></p><p>For more information about virtual servers, see <a href="http://docs.sun.com/doc/820-4338/abhfg?a=view">virtual-server in <i>Sun GlassFish Enterprise Server 2.1 Administration Reference</i></a>.</p>
+
+<a name="gehdt"></a><h5>To Assign a Default Virtual Server</h5>
+<ol>
+<li><b><a name="indexterm-539"></a>In the Admin Console, open the HTTP Service component under the relevant configuration.</b></li>
+<li><b>Open the HTTP Listeners component under the HTTP Service component.</b></li>
+<li><b>Select or create a new HTTP listener.</b></li>
+<li><b><a name="indexterm-540"></a><a name="indexterm-541"></a><a name="indexterm-542"></a>Select from the Default Virtual Server drop-down list. </b><p>For more information, see <a href="#beaga">Default Web Modules</a>.</p></li></ol><h6>See Also</h6><p>For details, click the Help button in the Admin Console from the HTTP
+Listeners page.</p>
+
+<a name="fvycf"></a><h5>To Assign Virtual Servers</h5>
+<ol>
+<li><b>Deploy the application or web module and assign the desired virtual servers to
+it.</b><p>For more information, see <a href="http://docs.sun.com/doc/820-4337"><i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p></li>
+<li><b><a name="indexterm-543"></a>In the Admin Console, open the HTTP Service component under the relevant configuration.</b></li>
+<li><b>Open the Virtual Servers component under the HTTP Service component.</b></li>
+<li><b>Select the virtual server to which you want to assign a default web
+module.</b></li>
+<li><b>Select the application or web module from the Default Web Module drop-down list.
+</b><p>For more information, see <a href="#beaga">Default Web Modules</a>.</p></li></ol><h6>See Also</h6><p>For details, click the Help button in the Admin Console from the Virtual
+Servers page.</p>
+
+<a name="beaga"></a><h4>Default Web Modules</h4>
+<a name="indexterm-544"></a><a name="indexterm-545"></a><p>A default web module can be assigned to the default virtual server and
+to each new virtual server. For details, see <a href="#beafz">Virtual Servers</a>. To access the
+default web module for a virtual server, point the browser to the URL
+for the virtual server, but do not supply a context root. For example:</p><pre>http://myvserver:3184/</pre><p><a name="indexterm-546"></a>A virtual server with no default web module assigned serves HTML or JavaServer Pages<sup>TM</sup>
+(JSP<sup>TM</sup>) content from its document root, which is usually <i>domain-dir</i><tt>/docroot</tt>. To access this HTML
+or JSP content, point your browser to the URL for the virtual server,
+do not supply a context root, but specify the target file.</p><p>For example:</p><pre>http://myvserver:3184/hellothere.jsp</pre>
+
+<a name="beagb"></a><h4>Class Loader Delegation</h4>
+<a name="indexterm-547"></a><a name="indexterm-548"></a><a name="indexterm-549"></a><a name="indexterm-550"></a><p>The Servlet specification recommends that the Web class loader look in the local
+class loader before delegating to its parent. To make the Web class loader
+follow the delegation model in the Servlet specification, set <tt>delegate="false"</tt> in the <tt>class-loader</tt>
+element of the <tt>sun-web.xml</tt> file. It&#8217;s safe to do this only for
+a web module that does not interact with any other modules.</p><p>The default value is <tt>delegate="true"</tt>, which causes the Web class loader to delegate
+in the same manner as the other class loaders. Use <tt>delegate="true"</tt> for a web
+application that accesses EJB components or that acts as a web service client
+or endpoint. For details about <tt>sun-web.xml</tt>, see <a href="http://docs.sun.com/doc/820-4337"><i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p><p>For general information about class loaders, see <a href="p6.html">Chapter&#160;2, Class Loaders</a>.</p>
+
+<a name="beagc"></a><h4>Using the <tt>default-web.xml</tt> File</h4>
+<a name="indexterm-551"></a><p>You can use the <tt>default-web.xml</tt> file to define features such as filters and
+security constraints that apply to all web applications.</p><p><a name="indexterm-552"></a><a name="indexterm-553"></a>For example, you can disable directory listings for added security. In your domain's
+<tt>default-web.xml</tt> file, search for the definition of the servlet whose <tt>servlet-name</tt> is equal to
+<tt>default</tt>, and set the value of the <tt>init-param</tt> named <tt>listings</tt> to <tt>false</tt>. Then
+redeploy your web application if it has already been deployed.</p><pre>&#60;init-param>
+   &#60;param-name>listings&#60;/param-name>
+   &#60;param-value>false&#60;/param-value>
+&#60;/init-param></pre><p><a name="indexterm-554"></a><a name="indexterm-555"></a>The <tt>mime-mapping</tt> elements in <tt>default-web.xml</tt> are global and inherited by all web applications. You
+can override these mappings or define your own using <tt>mime-mapping</tt> elements in your
+web application's <tt>web.xml</tt> file. For more information about <tt>mime-mapping</tt> elements, see the Servlet
+specification.</p><p>You can use the Admin Console to edit the <tt>default-web.xml</tt> file. For
+details, click the Help button in the Admin Console. As an alternative, you
+can edit the file directly using the following steps.</p>
+
+<a name="fvymc"></a><h5>To Use the <tt>default-web.xml</tt> File</h5>
+<ol>
+<li><b>Place the JAR file for the filter, security constraint, or other feature in
+the <i>domain-dir</i><tt>/lib</tt> directory.</b></li>
+<li><b>Edit the <i>domain-dir</i><tt>/config/default-web.xml</tt> file to refer to the JAR file.</b></li>
+<li><b>Restart the server.</b></li></ol>
+
+<a name="beagd"></a><h4>Configuring Logging and Monitoring in the Web Container</h4>
+<a name="indexterm-556"></a><a name="indexterm-557"></a><a name="indexterm-558"></a><a name="indexterm-559"></a><a name="indexterm-560"></a><p>For information about configuring logging and monitoring in the web container using the
+Admin Console, click the Help button in the Admin Console. In the developer
+profile, Logging and Monitor tabs are accessible from the Application Server page. In
+the Cluster profile, select Logger Settings under the relevant configuration, or select the Stand-Alone
+Instances component, select the instance from the table, and select the Monitor tab.</p>
+
+<a name="beage"></a><h4>Configuring Idempotent URL Requests</h4>
+<p><a name="indexterm-561"></a><a name="indexterm-562"></a>An <b>idempotent</b> request is one that does not cause any change or inconsistency
+in an application when retried. To enhance the availability of your applications deployed on
+an Enterprise Server cluster, configure the load balancer to retry failed idempotent HTTP
+requests on all the Enterprise Server instances in a cluster. This option can
+be used for read-only requests, for example, to retry a search request.</p><p>This section describes the following topics:</p>
+<ul><li><p><a href="#beagf">Specifying an Idempotent URL</a></p></li>
+<li><p><a href="#beagg">Characteristics of an Idempotent URL</a></p></li></ul>
+
+
+<a name="beagf"></a><h5>Specifying an Idempotent URL</h5>
+<p>To configure idempotent URL response, specify the URLs that can be safely retried
+in <tt>idempotent-url-pattern</tt> elements in the <tt>sun-web.xml</tt> file. For example:</p><pre>&#60;idempotent-url-pattern url-pattern="sun_java/*" no-of-retries="10"/></pre><p>For details, see <a href="http://docs.sun.com/doc/820-4337/beatm?a=view">idempotent-url-pattern in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p><p>If none of the server instances can successfully serve the request, an error
+page is returned.</p>
+
+<a name="beagg"></a><h5>Characteristics of an Idempotent URL</h5>
+<p>Since all requests for a given session are sent to the same application
+server instance, and if that Enterprise Server instance is unreachable, the load balancer
+returns an error message. Normally, the request is not retried on another Enterprise
+Server instance. However, if the URL pattern matches that specified in the <tt>sun-web.xml</tt>
+file, the request is implicitly retried on another Enterprise Server instance in the cluster.</p><p>In HTTP, some methods (such as GET) are idempotent, while other methods (such
+as POST) are not. In effect, retrying an idempotent URL should not cause
+values to change on the server or in the database. The only difference
+should be a change in the response received by the user.</p><p>Examples of idempotent requests include search engine queries and database queries. The underlying
+principle is that the retry does not cause an update or modification of
+data.</p><p>A search engine, for example, sends HTTP requests with the same URL pattern
+to the load balancer. Specifying the URL pattern of the search request to
+the load balancer ensures that HTTP requests with the specified URL pattern are
+implicitly retried on another Enterprise Server instance.</p><p>For example, if the request URL sent to the Enterprise Server is of
+the type <tt>/search/</tt><i>something</i><tt>.html</tt>, then the URL pattern can be specified as <tt>/search/*</tt>.</p><p>Examples of non-idempotent requests include banking transactions and online shopping. If you retry
+such requests, money might be transferred twice from your account.</p>
+
+<a name="beagi"></a><h4>Header Management</h4>
+<a name="indexterm-563"></a><a name="indexterm-564"></a><p>In all Editions of the Enterprise Server, the <tt>Enumeration</tt> from <tt>request.</tt><tt>getHeaders()</tt> contains
+multiple elements (one element per request header) instead of a single, aggregated value.</p><p>The header names used in <tt>HttpServletResponse.add</tt><i>XXX</i><tt>Header()</tt> and <tt>HttpServletResponse.set</tt><i>XXX</i><tt>Header()</tt> are returned as they were
+created.</p>
+
+<a name="geqrh"></a><h4>Configuring Valves and Catalina Listeners</h4>
+<a name="indexterm-565"></a><a name="indexterm-566"></a><a name="indexterm-567"></a><p>You can configure custom valves and Catalina listeners for web modules or virtual
+servers by defining properties. In the <tt>domain.xml</tt> file, valve and listener properties
+look like this:</p><pre>&#60;web-module ...>
+   &#60;property name="valve_1" value="org.glassfish.extension.Valve"/>
+   &#60;property name="listener_1" value="org.glassfish.extension.MyLifecycleListener"/>
+&#60;/web-module></pre><p>You can define these properties in one of the following ways, then restart
+the server:</p>
+<ul><li><p>You can define properties using the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.applications.web-module.MyWebMod.property.valve_1="org.glassfish.extension.Valve"</pre><pre>asadmin set config1.http-service.virtual-server.MyVS.property.valve_1="org.glassfish.extension.Valve"</pre></li>
+<li><p>You can define virtual server properties using the Admin Console. Select the HTTP Service component under the relevant configuration, select Virtual Servers, and select the desired virtual server. Select Add Property, enter the property name and value, check the enable box, and select Save. For details, click the Help button in the Admin Console.</p></li></ul>
+
+
+<a name="geqpl"></a><h4>Alternate Document Roots</h4>
+<a name="indexterm-568"></a><a name="indexterm-569"></a><p>An alternate document root (docroot) allows a web application to serve requests for
+certain resources from outside its own docroot, based on whether those requests match
+one (or more) of the URI patterns of the web application's alternate docroots.</p><p>To specify an alternate docroot for a web application or a virtual server,
+use the <tt>alternatedocroot_</tt><i>n</i> property, where <i>n</i> is a positive integer that allows specification of
+more than one. This property can be a subelement of a <tt>sun-web-app</tt> element
+in the <tt>sun-web.xml</tt> file or a <tt>virtual-server</tt> element in the <tt>domain.xml</tt> file. For
+more information about these elements, see <a href="http://docs.sun.com/doc/820-4337/beayb?a=view">sun-web-app in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a> and <a href="http://docs.sun.com/doc/820-4338/abhfg?a=view">virtual-server in <i>Sun GlassFish Enterprise Server 2.1 Administration Reference</i></a>.</p><p>A virtual server's alternate docroots are considered only if a request does not
+map to any of the web modules deployed on that virtual server. A
+web module's alternate docroots are considered only once a request has been mapped
+to that web module.</p><p>If a request matches an alternate docroot's URI pattern, it is mapped to
+the alternate docroot by appending the request URI (minus the web application's context
+root) to the alternate docroot's physical location (directory). If a request matches multiple
+URI patterns, the alternate docroot is determined according to the following precedence order:</p>
+<ul><li><p>Exact match</p></li>
+<li><p>Longest path match</p></li>
+<li><p>Extension match</p></li></ul>
+<p>For example, the following properties specify three docroots. The URI pattern of the
+first alternate docroot uses an exact match, whereas the URI patterns of the
+second and third alternate docroots use extension and longest path prefix matches, respectively.</p><pre>&#60;property name="alternatedocroot_1" value="from=/my.jpg dir=/srv/images/jpg"/>
+&#60;property name="alternatedocroot_2" value="from=*.jpg dir=/srv/images/jpg"/>
+&#60;property name="alternatedocroot_3" value="from=/jpg/* dir=/src/images"/></pre><p>The <tt>value</tt> of each alternate docroot has two components: The first component, <tt>from</tt>,
+specifies the alternate docroot's URI pattern, and the second component, <tt>dir</tt>, specifies the
+alternate docroot's physical location (directory).</p><p>Suppose the above examples belong to a web application deployed at <tt>http://company22.com/myapp</tt>. The
+first alternate docroot maps any requests with this URL:</p><pre>http://company22.com/myapp/my.jpg</pre><p>To this resource:</p><pre>/svr/images/jpg/my.jpg</pre><p>The second alternate docroot maps any requests with a <tt>*.jpg</tt> suffix, such
+as:</p><pre>http://company22.com/myapp/*.jpg</pre><p>To this physical location:</p><pre>/svr/images/jpg</pre><p>The third alternate docroot maps any requests whose URI starts with <tt>/myapp/jpg/</tt>, such
+as:</p><pre>http://company22.com/myapp/jpg/*</pre><p>To the same directory as the second alternate docroot.</p><p>For example, the second alternate docroot maps this request:</p><pre>http://company22.com/myapp/abc/def/my.jpg</pre><p>To:</p><pre>/srv/images/jpg/abc/def/my.jpg</pre><p>The third alternate docroot maps:</p><pre>http://company22.com/myapp/jpg/abc/resource</pre><p>To:</p><pre>/srv/images/jpg/abc/resource</pre><p>If a request does not match any of the target web application's alternate
+docroots, or if the target web application does not specify any alternate docroots,
+the request is served from the web application's standard docroot, as usual.</p>
+
+<a name="ggjaa"></a><h4>Redirecting URLs</h4>
+<a name="indexterm-570"></a><a name="indexterm-571"></a><p>You can specify that a request for an old URL is treated
+as a request for a new URL. This is called <b>redirecting</b> a URL.</p><p>To specify a redirected URL for a virtual server, use the <tt>redirect_</tt><i>n</i>
+property, where <i>n</i> is a positive integer that allows specification of more than
+one. This property is a subelement of a <tt>virtual-server</tt> element in the
+<tt>domain.xml</tt> file. For more information about this element, see <a href="http://docs.sun.com/doc/820-4338/abhfg?a=view">virtual-server in <i>Sun GlassFish Enterprise Server 2.1 Administration Reference</i></a>. Each of these
+<tt>redirect_</tt><i>n</i> properties is inherited by all web applications deployed on the virtual server.
+</p><p>The value of each <tt>redirect_</tt><i>n</i> property has two components, which may be specified
+in any order:</p><p>The first component, <tt>from</tt>, specifies the prefix of the requested URI to match.</p><p>The second component, <tt>url-prefix</tt>, specifies the new URL prefix to return to the
+client. The from prefix is simply replaced by this URL prefix.</p><p>For example:</p><pre>&#60;property name="redirect_1" value="from=/dummy url-prefix=http://etude"/></pre>
+
+<a name="geunw"></a><h4>Enabling Comet Support</h4>
+<a name="indexterm-572"></a><p>To enable Comet support for an HTTP listener and all its associated web
+applications, set the <tt>cometSupport</tt> property to <tt>true</tt>. For more information, see <a href="http://docs.sun.com/doc/820-4338/abhco?a=view">http-listener in <i>Sun GlassFish Enterprise Server 2.1 Administration Reference</i></a>.</p><p><a name="indexterm-573"></a>If your servlet or JSP page uses Comet technology, make sure it is
+initialized when the Enterprise Server starts up by adding the <tt>load-on-startup</tt> element to
+your <tt>web.xml</tt> file. For example:</p><pre>&#60;servlet>
+   &#60;servlet-name>CheckIn&#60;/servlet-name>
+   &#60;servlet-class>CheckInServlet&#60;/servlet-class>
+   &#60;load-on-startup>0&#60;/load-on-startup>
+&#60;/servlet></pre>
+
+<a name="geurd"></a><h4>Using a context.xml File</h4>
+<a name="indexterm-574"></a><p>Use the <tt>contextXmlDefault</tt> property to specify the location, relative to <i>domain-dir</i>, of the
+<tt>context.xml</tt> file for a virtual server. For more information about virtual servers, see <a href="#beafz">Virtual Servers</a>.
+For more information about the <tt>context.xml</tt> file, see <a href="http://tomcat.apache.org/tomcat-5.5-doc/config/context.html">The Context Container</a>.</p>
+
+<a name="gezcx"></a><h4>Enabling WebDav</h4>
+<a name="indexterm-575"></a><p>To enable WebDav in the Enterprise Server, you edit the <tt>web.xml</tt> and
+<tt>sun-web.xml</tt> files as follows.</p><p>First, enable the WebDav servlet in your <tt>web.xml</tt> file:</p><pre>&#60;servlet>
+   &#60;servlet-name>webdav&#60;/servlet-name>
+   &#60;servlet-class>org.apache.catalina.servlets.WebdavServlet&#60;/servlet-class>
+   &#60;init-param>
+      &#60;param-name>debug&#60;/param-name>
+      &#60;param-value>0&#60;/param-value>
+   &#60;/init-param>
+   &#60;init-param>
+      &#60;param-name>listings&#60;/param-name>
+      &#60;param-value>true&#60;/param-value>
+   &#60;/init-param>
+   &#60;init-param>
+      &#60;param-name>readonly&#60;/param-name>
+      &#60;param-value>false&#60;/param-value>
+   &#60;/init-param>
+&#60;/servlet></pre><p>Then define the servlet mapping associated with your WebDav servlet in your <tt>web.xml</tt>
+file:</p><pre>&#60;servlet-mapping>
+   &#60;servlet-name>webdav&#60;/servlet-name>
+   &#60;url-pattern>/webdav/*&#60;/url-pattern>
+&#60;/servlet-mapping></pre><p>To protect the WebDav servlet so other users can't modify it, add a
+security constraint in your <tt>web.xml</tt> file:</p><pre>&#60;security-constraint>
+   &#60;web-resource-collection>
+      &#60;web-resource-name>Login Resources&#60;/web-resource-name>
+      &#60;url-pattern>/webdav/*&#60;/url-pattern>
+   &#60;/web-resource-collection>
+   &#60;auth-constraint>
+      &#60;role-name>Admin&#60;/role-name>
+   &#60;/auth-constraint>
+   &#60;user-data-constraint>
+      &#60;transport-guarantee>NONE&#60;/transport-guarantee>
+   &#60;/user-data-constraint>
+   &#60;login-config>
+      &#60;auth-method>BASIC&#60;/auth-method>
+      &#60;realm-name>default&#60;/realm-name>
+   &#60;/login-config>
+   &#60;security-role>
+      &#60;role-name>Admin&#60;/role-name>
+   &#60;/security-role>
+&#60;/security-constraint></pre><p>Then define a security role mapping in your <tt>sun-web.xml</tt> file:</p><pre>&#60;security-role-mapping>
+   &#60;role-name>Admin&#60;/role-name>
+   &#60;group-name>Admin&#60;/group-name>
+&#60;/security-role-mapping></pre><p>If you are using the <tt>file</tt> realm, create a user and password. For
+example:</p><pre>asadmin create-file-user --user admin --host localhost --port 4848 --terse=true 
+--groups Admin --authrealmname default admin</pre><p>You can now use any WebDav client by connecting to the WebDav servlet
+URL, which has this format:</p><pre>http://<i>host</i>:<i>port</i>/<i>context-root</i>/webdav/<i>file</i></pre><p>For example:</p><pre>http://localhost:80/glassfish-webdav/webdav/index.html</pre><p>You can add the WebDav servlet to your <tt>default-web.xml</tt> file to enable it
+for all applications, but you can't set up a security role mapping to
+protect it.</p>
+
+<a name="gfaad"></a><h4>Using mod_jk</h4>
+<p>To set up <tt>mod_jk</tt>, follow these steps:</p>
+<ol><li><p>Obtain the following software:</p>
+<ul><li><p>Apache 2.0.<i>x</i></p></li>
+<li><p>Apache Tomcat Connectors (<a href="http://www.apache.org/dist/tomcat/tomcat-connectors/jk/binaries/">http://www.apache.org/dist/tomcat/tomcat-connectors/jk/binaries/</a>)</p></li>
+<li><p>Apache Tomcat 5.5.16, needed for just one JAR file (<a href="http://archive.apache.org/dist/tomcat/tomcat-5/v5.5.16/bin/apache-tomcat-5.5.16.tar.gz">http://archive.apache.org/dist/tomcat/tomcat-5/v5.5.16/bin/apache-tomcat-5.5.16.tar.gz</a>)</p></li>
+<li><p>Apache Commons Logging 1.0.4 (<a href="http://archive.apache.org/dist/jakarta/commons/logging/binaries/commons-logging-1.0.4.tar.gz">http://archive.apache.org/dist/jakarta/commons/logging/binaries/commons-logging-1.0.4.tar.gz</a>)</p></li>
+<li><p>Apache Commons Modeler 1.1 (<a href="http://archive.apache.org/dist/jakarta/commons/modeler/binaries/modeler-1.1.tar.gz">http://archive.apache.org/dist/jakarta/commons/modeler/binaries/modeler-1.1.tar.gz</a>)</p></li></ul>
+</li>
+<li><p>Install <tt>mod_jk</tt> as described at <a href="http://tomcat.apache.org/connectors-doc/webserver_howto/apache.html">http://tomcat.apache.org/connectors-doc/webserver_howto/apache.html</a>.</p></li>
+<li><p>Copy the following Tomcat and Jakarta Commons files to <i>as-install</i><tt>/lib</tt>:</p>
+<ul><li><p><tt>tomcat-ajp.jar</tt></p></li>
+<li><p><tt>commons-logging.jar</tt></p></li>
+<li><p><tt>commons-modeler.jar</tt></p></li></ul>
+</li>
+<li><p>Create and configure the following files:</p>
+<ul><li><p><tt>/etc/httpd/conf/httpd.conf</tt></p></li>
+<li><p><tt>/etc/httpd/conf/worker.properties</tt> or <i>domain-dir</i><tt>/config/glassfish-jk.properties</tt> (to use non-default values of attributes described at <a href="http://tomcat.apache.org/tomcat-5.5-doc/config/ajp.html">http://tomcat.apache.org/tomcat-5.5-doc/config/ajp.html</a>)</p></li></ul>
+<p>Examples of these files are shown after these steps. If you use both <tt>worker.properties</tt> and <tt>glassfish-jk.properties</tt> files, the file referenced by <tt>httpd.conf</tt>, or referenced by <tt>httpd.conf</tt> first, takes precedence.</p></li>
+<li><p>Start <tt>httpd</tt>.</p></li>
+<li><p>Enable <tt>mod_jk</tt> using the following command:</p><pre>asadmin create-jvm-options -Dcom.sun.enterprise.web.connector.enableJK=8009</pre></li>
+<li><p>If you are using the <tt>glassfish-jk.properties</tt> file and not referencing it in <tt>httpd.conf</tt>, point to it using the following command:</p><pre>asadmin create-jvm-options 
+-Dcom.sun.enterprise.web.connector.enableJK.propertyFile=<i>domain-dir</i>/config/glassfish-jk.properties</pre></li>
+<li><p>Restart the Enterprise Server.</p></li></ol>
+<p>Here is an example <tt>httpd.conf</tt> file:</p><pre>LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so
+JkWorkersFile /etc/httpd/conf/worker.properties
+# Where to put jk logs
+JkLogFile /var/log/httpd/mod_jk.log
+# Set the jk log level [debug/error/info]
+JkLogLevel debug
+# Select the log format
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+# JkOptions indicate to send SSL KEY SIZE,
+JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories
+# JkRequestLogFormat set the request format
+JkRequestLogFormat "%w %V %T"
+# Send all jsp requests to GlassFish
+JkMount /*.jsp worker1
+# Send all glassfish-test requests to GlassFish
+JkMount /glassfish-test/* worker1</pre><p>Here is an example <tt>worker.properties</tt> or <tt>glassfish-jk.properties</tt> file:</p><pre># Define 1 real worker using ajp13
+worker.list=worker1
+# Set properties for worker1 (ajp13)
+worker.worker1.type=ajp13
+worker.worker1.host=localhost.localdomain
+worker.worker1.port=8009
+worker.worker1.lbfactor=50
+worker.worker1.cachesize=10
+worker.worker1.cache_timeout=600
+worker.worker1.socket_keepalive=1
+worker.worker1.socket_timeout=300</pre>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p12.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p14.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+
