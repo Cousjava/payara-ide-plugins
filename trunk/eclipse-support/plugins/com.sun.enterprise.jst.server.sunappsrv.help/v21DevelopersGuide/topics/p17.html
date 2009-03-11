@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Developing Connectors - Sun GlassFish Enterprise Server 2.1 Developer's Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-01-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p16.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p18.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="bealk"></a>Chapter&#160;12<h3>Developing Connectors</h3><a name="indexterm-792"></a><a name="indexterm-793"></a><a name="indexterm-794"></a><p>This chapter describes Sun GlassFish Enterprise Server support for the J2EE<sup>TM</sup> 1.5 Connector
+Architecture (CA).</p><p>The J2EE Connector Architecture provides a Java solution to the problem of connectivity
+between multiple application servers and existing enterprise information systems (EISs). By using the
+J2EE Connector architecture, EIS vendors no longer need to customize their product for each
+application server. Application server vendors who conform to the J2EE Connector architecture do
+not need to write custom code to add connectivity to a new EIS.</p><p><a name="indexterm-795"></a>This chapter uses the terms <b>connector</b> and <b>resource adapter</b> interchangeably. Both terms refer
+to a resource adapter module that is developed in conformance with the J2EE Connector
+Specification.</p><p>For more information about connectors, see <a href="http://java.sun.com/j2ee/connector/">J2EE Connector Architecture</a> and &#8220;Chapter 37: J2EE Connector
+Architecture&#8221; in the <a href="http://java.sun.com/javaee/5/docs/tutorial/doc/index.html">Java EE 5 Tutorial</a>.</p><p>For connector examples, see <a href="http://developers.sun.com/prodtech/appserver/reference/techart/as8_connectors">http://developers.sun.com/prodtech/appserver/reference/techart/as8_connectors</a>.</p><p>This chapter includes the following topics:</p>
+<ul><li><p><a href="#beall">Connector Support in the Enterprise Server</a></p></li>
+<li><p><a href="#bealo">Deploying and Configuring a Stand-Alone Connector Module</a></p></li>
+<li><p><a href="#bealp">Redeploying a Stand-Alone Connector Module</a></p></li>
+<li><p><a href="#bealq">Deploying and Configuring an Embedded Resource Adapter</a></p></li>
+<li><p><a href="#bealr">Advanced Connector Configuration Options</a></p></li>
+<li><p><a href="#bealz">Inbound Communication Support</a></p></li>
+<li><p><a href="#beama">Configuring a Message Driven Bean to Use a Resource Adapter</a></p></li></ul>
+
+
+<a name="beall"></a><h3>Connector Support in the Enterprise Server</h3>
+<a name="indexterm-796"></a><p>The Enterprise Server supports the development and deployment of resource adapters that are
+compatible with Connector specification (and, for backward compatibility, the Connector 1.0 specification).</p><p>The Connector 1.0 specification defines the outbound connectivity system contracts between the resource
+adapter and the Enterprise Server. The Connector 1.5 specification introduces major additions in
+defining system level contracts between the Enterprise Server and the resource adapter with respect
+to the following:</p>
+<ul><li><p>Inbound connectivity from an EIS - Defines the transaction and message inflow system contracts for achieving inbound connectivity from an EIS. The message inflow contract also serves as a standard message provider pluggability contract, thereby allowing various providers of messaging systems to seamlessly plug in their products with any application server that supports the message inflow contract.</p></li>
+<li><p>Resource adapter life cycle management and thread management - These features are available through the lifecycle and work management contracts.</p></li></ul>
+
+
+<a name="bealm"></a><h4>Connector Architecture for JMS and JDBC</h4>
+<a name="indexterm-797"></a><a name="indexterm-798"></a><p>In the Admin Console, connector, JMS, and JDBC resources are handled differently, but
+they use the same underlying Connector architecture. In the Enterprise Server, all communication
+to an EIS, whether to a message provider or an RDBMS, happens through
+the Connector architecture. To provide JMS infrastructure to clients, the Enterprise Server uses
+the Sun GlassFish Message Queue software. To provide JDBC infrastructure to clients, the
+Enterprise Server uses its own JDBC system resource adapters. The application server automatically makes
+these system resource adapters available to any client that requires them.</p><p>For more information about JMS in the Enterprise Server, see <a href="p24.html">Chapter&#160;18, Using the Java Message Service</a>. For more
+information about JDBC in the Enterprise Server, see <a href="p21.html">Chapter&#160;15, Using the JDBC API for Database Access</a>.</p>
+
+<a name="bealn"></a><h4>Connector Configuration</h4>
+<p><a name="indexterm-799"></a>The Enterprise Server does not need to use <a name="indexterm-800"></a><tt>sun-ra.xml</tt>, which previous Enterprise
+Server versions used, to store server-specific deployment information inside a Resource Adapter Archive (RAR)
+file. (However, the <tt>sun-ra.xml</tt> file is still supported for backward compatibility.) Instead, the
+information is stored in the server configuration. As a result, you can create multiple
+connector connection pools for a connection definition in a functional resource adapter instance,
+and you can create multiple user-accessible connector resources (that is, registering a resource with
+a JNDI name) for a connector connection pool. In addition, dynamic changes can
+be made to connector connection pools and the connector resource properties without restarting
+the Enterprise Server.</p>
+
+<a name="bealo"></a><h3>Deploying and Configuring a Stand-Alone Connector Module</h3>
+<a name="indexterm-801"></a><p>You can deploy a stand-alone connector module using the Admin Console or the
+<tt>asadmin</tt> command. For information about using the Admin Console, click the Help button
+in the Admin Console. For information about using the <tt>asadmin</tt> command, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p><p>Deploying a stand-alone connector module allows multiple deployed Java EE applications to share
+the connector module. A resource adapter configuration is automatically created for the connector
+module.</p>
+
+<a name="fvynl"></a><h4>To Deploy and Configure a Stand-Alone Connector Module</h4><ol>
+<li><b>Deploy the connector module in one of the following ways.</b>
+<ul><li><p><a name="indexterm-802"></a>In the Admin Console, open the Applications component and select Connector Modules. When you deploy the connector module, a resource adapter configuration is automatically created for the connector module.</p></li>
+<li><p><a name="indexterm-803"></a><a name="indexterm-804"></a><a name="indexterm-805"></a><a name="indexterm-806"></a><a name="indexterm-807"></a><a name="indexterm-808"></a>Use the <tt>asadmin deploy</tt> or <tt>asadmin deploydir</tt> command. To override the default configuration properties of a resource adapter, if necessary, use the <tt>asadmin create-resource-adapter-config</tt> command.</p></li></ul>
+</li>
+<li><b>Configure connector <a name="indexterm-809"></a>connection pools for the deployed connector module in one of the
+following ways:</b>
+<ul><li><p><a name="indexterm-810"></a>In the Admin Console, open the Resources component, select Connectors, and select Connector Connection Pools.</p></li>
+<li><p>Use the <a name="indexterm-811"></a><a name="indexterm-812"></a><tt>asadmin create-connector-connection-pool</tt> command.</p></li></ul>
+</li>
+<li><b>Configure connector <a name="indexterm-813"></a>resources for the connector connection pools in one of the following
+ways. </b>
+<ul><li><p><a name="indexterm-814"></a>In the Admin Console, open the Resources component, select Connectors, and select Connector Resources.</p></li>
+<li><p>Use the <a name="indexterm-815"></a><a name="indexterm-816"></a><tt>asadmin create-connector-resource</tt> command.</p></li></ul>
+<p>This associates a connector resource with a JNDI name.</p></li>
+<li><b>Create an <a name="indexterm-817"></a><a name="indexterm-818"></a>administered object for an inbound resource adapter, if necessary, in one
+of the following ways:</b>
+<ul><li><p><a name="indexterm-819"></a>In the Admin Console, open the Resources component, select Connectors, and select Admin Object Resources.</p></li>
+<li><p>Use the <a name="indexterm-820"></a><a name="indexterm-821"></a><tt>asadmin create-admin-object</tt> command.</p></li></ul>
+</li></ol>
+
+<a name="bealp"></a><h3>Redeploying a Stand-Alone Connector Module</h3>
+<p><a name="indexterm-822"></a>Redeployment of a connector module maintains all connector connection pools, connector resources, and
+administered objects defined for the previously deployed connector module. You need not reconfigure any
+of these resources.</p><p>However, you should redeploy any dependent modules. A dependent module uses or refers
+to a connector resource of the redeployed connector module. Redeployment of a connector
+module results in the shared class loader reloading the new classes. Other modules
+that refer to the old resource adapter classes must be redeployed to gain
+access to the new classes. For more information about class loaders, see <a href="p6.html">Chapter&#160;2, Class Loaders</a>.</p><p>During connector module redeployment, the server log provides a warning indicating that all
+dependent applications should be redeployed. Client applications or application components using the connector module&#8217;s
+resources may throw class cast exceptions if dependent applications are not redeployed after
+connector module redeployment.</p><p>To disable automatic redeployment, set the <tt>--force</tt> option to <tt>false</tt>. In this case,
+if the connector module has already been deployed, the Enterprise Server provides an
+error message.</p>
+
+<a name="bealq"></a><h3>Deploying and Configuring an Embedded Resource Adapter</h3>
+<p><a name="indexterm-823"></a>A connector module can be deployed as a Java EE component in a
+Java EE application. Such connectors are only visible to components residing in the
+same Java EE application. Simply deploy this Java EE application as you would
+any other Java EE application.</p><p>You can create new connector connection pools and connector resources for a connector
+module embedded within a Java EE application by prefixing the connector name with
+<i>app-name</i><tt>#</tt>. For example, if an application <tt>appX.ear</tt> has <tt>jdbcra.rar</tt> embedded within it,
+the connector connection pools and connector resources refer to the connector module as
+<tt>appX#jdbcra</tt>.</p><p>However, an embedded connector module cannot be undeployed using the name <i>app-name</i><tt>#</tt><i>connector-name</i>. To
+undeploy the connector module, you must undeploy the application in which it is
+embedded.</p><p>The association between the physical JNDI name for the connector module in the
+Enterprise Server and the logical JNDI name used in the application component is
+specified in the Enterprise Server specific XML descriptor <tt>sun-ejb-jar.xml</tt>.</p>
+
+<a name="bealr"></a><h3>Advanced Connector Configuration Options</h3>
+<a name="indexterm-824"></a><p>You can use these advanced connector configuration options:</p>
+<ul><li><p><a href="#beals">Thread Pools</a></p></li>
+<li><p><a href="#bealt">Security Maps</a></p></li>
+<li><p><a href="#bealu">Overriding Configuration Properties</a></p></li>
+<li><p><a href="#bealv">Testing a Connector Connection Pool</a></p></li>
+<li><p><a href="#bealw">Handling Invalid Connections</a></p></li>
+<li><p><a href="#bealx">Setting the Shutdown Timeout</a></p></li>
+<li><p><a href="#bealy">Using Last Agent Optimization of Transactions</a></p></li></ul>
+
+
+<a name="beals"></a><h4>Thread Pools</h4>
+<a name="indexterm-825"></a><a name="indexterm-826"></a><p>Connectors can submit work instances to the Enterprise Server for execution. By default,
+the Enterprise Server services work requests for all connectors from its default thread
+pool. However, you can associate a specific user-created thread pool to service work
+requests from a connector. A thread pool can service work requests from multiple resource
+adapters. To create a thread pool:</p>
+<ul><li><p><a name="indexterm-827"></a>In the Admin Console, select Thread Pools under the relevant configuration. For details, click the Help button in the Admin Console.</p></li>
+<li><p><a name="indexterm-828"></a><a name="indexterm-829"></a>Use the <tt>asadmin create-threadpool</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p></li></ul>
+<p>To associate a connector with a thread pool:</p>
+<ul><li><p><a name="indexterm-830"></a>In the Admin Console, open the Applications component and select Connector Modules. Deploy the module, or select the previously deployed module. Specify the name of the thread pool in the Thread Pool ID field. For details, click the Help button in the Admin Console.</p></li>
+<li><p><a name="indexterm-831"></a><a name="indexterm-832"></a>Use the <tt>--threadpoolid</tt> option of the <tt>asadmin create-resource-adapter-config</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p></li></ul>
+<p>If you create a resource adapter configuration for a connector module that is
+already deployed, the connector module deployment is restarted with the new configuration properties.</p>
+
+<a name="bealt"></a><h4>Security Maps</h4>
+<a name="indexterm-833"></a><p>Create a security map for a connector connection pool to map an application
+principal or a user group to a back end EIS principal. The security
+map is usually used in situations where one or more EIS back end
+principals are used to execute operations (on the EIS) initiated by various principals
+or user groups in the application.</p><p>To create or update security maps for a connector connection pool:</p>
+<ul><li><p><a name="indexterm-834"></a>In the Admin Console, open the Resources component, select Connectors, select Connector Connection Pools, and select the Security Maps tab. For details, click the Help button in the Admin Console.</p></li>
+<li><p><a name="indexterm-835"></a><a name="indexterm-836"></a>Use the <tt>asadmin create-connector-security-map</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p></li></ul>
+<p>If a security map already exists for a connector connection pool, the new
+security map is appended to the previous one. The connector security map configuration
+supports the use of the wildcard asterisk (<tt>*</tt>) to indicate all users or
+all user groups.</p><p>When an application principal initiates a request to an EIS, the Enterprise Server
+first checks for an exact match to a mapped back end EIS principal
+using the security map defined for the connector connection pool. If there is
+no exact match, the Enterprise Server uses the wild card character specification, if
+any, to determined the mapped back end EIS principal.</p>
+
+<a name="bealu"></a><h4>Overriding Configuration Properties</h4>
+<a name="indexterm-837"></a><a name="indexterm-838"></a><p>You can override the properties (<tt>config-property</tt> elements) specified in the <tt>ra.xml</tt> file of
+a resource adapter. Use the <tt>asadmin create-resource-adapter-config</tt> command to create a configuration for a resource
+adapter. Use this command&#8217;s <tt>--property</tt> option to specify a name-value pair for
+a resource adapter property.</p><p>You can use the <tt>asadmin create-resource-adapter-config</tt> command either before or after resource adapter deployment.
+If it is executed after deploying the resource adapter, the existing resource adapter is
+restarted with the new properties. For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p><p>You can also use token replacement for overriding resource adapter configuration properties in
+individual server instances when the resource adapter is deployed to a cluster. For
+example, for a property called <tt>inboundPort</tt>, you can assign the value <tt>${inboundPort}</tt>. You
+can then assign a different value to this property for each server instance.
+Changes to system properties take effect upon server restart.</p>
+
+<a name="bealv"></a><h4>Testing a Connector Connection Pool</h4>
+<a name="indexterm-839"></a><a name="indexterm-840"></a><a name="indexterm-841"></a><p>After configuring a connector connection pool, use the <tt>asadmin ping-connection-pool</tt> command to test
+the health of the underlying connections. For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p>
+
+<a name="bealw"></a><h4>Handling Invalid Connections</h4>
+<a name="indexterm-842"></a><a name="indexterm-843"></a><a name="indexterm-844"></a><p>If a resource adapter generates a <tt>ConnectionErrorOccured</tt> event, the Enterprise Server considers the
+connection invalid and removes the connection from the connection pool. Typically, a resource
+adapter generates a <tt>ConnectionErrorOccured</tt> event when it finds a <tt>ManagedConnection</tt> object unusable. Reasons can be
+network failure with the EIS, EIS failure, fatal problems with resource adapter, and
+so on. If the <tt>fail-all-connections</tt> property in the connection pool configuration is set
+to <tt>true</tt>, all connections are destroyed and the pool is recreated.</p><p>The <tt>is-connection-validation-required</tt> property specifies whether connections have to be validated before being given to
+the application. If a resource&#8217;s validation fails, it is destroyed, and a new
+resource is created and returned.</p><p>You can set the <tt>fail-all-connections</tt> and <tt>is-connection-validation-required</tt> configuration properties during creation of a
+connector connection pool. Or, you can use the <tt>asadmin set</tt> command to dynamically
+reconfigure a previously set property. For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p><p>The interface <tt>ValidatingManagedConnectionFactory</tt> exposes the method <tt>getInvalidConnections</tt> to allow retrieval of the invalid connections.
+The Enterprise Server checks if the resource adapter implements this interface, and if
+it does, invalid connections are removed when the connection pool is resized.</p>
+
+<a name="bealx"></a><h4>Setting the Shutdown Timeout</h4>
+<a name="indexterm-845"></a><p>According to the Connector specification, while an application server shuts down, all resource
+adapters should be stopped. A resource adapter might hang during shutdown, since shutdown
+is typically a resource intensive operation. To avoid such a situation, you can
+set a timeout that aborts resource adapter shutdown if exceeded. The default timeout is
+30 seconds per resource adapter module. To configure this timeout:</p>
+<ul><li><p><a name="indexterm-846"></a>In the Admin Console, select Connector Service under the relevant configuration and edit the shutdown Timeout field. For details, click the Help button in the Admin Console.</p></li>
+<li><p>Use the following command:</p><pre>asadmin set --user adminuser server1.connector-service.shutdown-timeout-in-seconds="<i>num-secs</i>"</pre><p>For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p></li></ul>
+<p>The Enterprise Server deactivates all message-driven bean deployments before stopping a resource adapter.</p>
+
+<a name="bealy"></a><h4>Using Last Agent Optimization of Transactions</h4>
+<a name="indexterm-847"></a><a name="indexterm-848"></a><p>Transactions that involve multiple resources or multiple participant processes are <b>distributed</b> or <b>global</b>
+transactions. A global transaction can involve one non-XA resource if last agent optimization is
+enabled. Otherwise, all resources must be XA. For more information about transactions in
+the Enterprise Server, see <a href="p22.html">Chapter&#160;16, Using the Transaction Service</a>.</p><p>The Connector specification requires that if a resource adapter supports <tt>XATransaction</tt>, the <tt>ManagedConnection</tt>
+created from that resource adapter must support both distributed and local transactions. Therefore,
+even if a resource adapter supports <tt>XATransaction</tt>, you can configure its connector
+connection pools as non-XA or without transaction support for better performance. A non-XA resource
+adapter becomes the last agent in the transactions in which it participates.</p><p><a name="indexterm-849"></a>The value of the connection pool configuration property <tt>transaction-support</tt> defaults to the
+value of the <tt>transaction-support</tt> property in the <tt>ra.xml</tt> file. The connection pool configuration
+property can override the <tt>ra.xml</tt> file property if the transaction level in the
+connection pool configuration property is lower. If the value in the connection pool
+configuration property is higher, it is ignored.</p>
+
+<a name="bealz"></a><h3>Inbound Communication Support</h3>
+<a name="indexterm-850"></a><a name="indexterm-851"></a><p>The Connector specification defines the transaction and message inflow system contracts for achieving
+inbound connectivity from an EIS. The message inflow contract also serves as a
+standard message provider pluggability contract, thereby allowing various message providers to seamlessly plug in
+their products with any application server that supports the message inflow contract. In
+the inbound communication model, the EIS initiates all communication to an application. An
+application can be composed of enterprise beans (session, entity, or message-driven beans), which reside
+in an EJB container.</p><p>Incoming messages are received through a message endpoint, which is a message-driven bean.
+This message-driven bean asynchronously consumes messages from a message provider. An application can
+also synchronously send and receive messages directly using messaging style APIs.</p><p>A resource adapter supporting inbound communication provides an instance of an <tt>ActivationSpec</tt> JavaBean
+class for each supported message listener type. Each class contains a set of configurable
+properties that specify endpoint activation configuration information during message-driven bean deployment. The required
+<tt>config-property</tt> element in the <tt>ra.xml</tt> file provides a list of configuration property names
+required for each activation specification. An endpoint activation fails if the required property values
+are not specified. Values for the properties that are overridden in the message-driven
+bean&#8217;s deployment descriptor are applied to the <tt>ActivationSpec</tt> JavaBean when the message-driven bean is
+deployed.</p><p>Administered objects can also be specified for a resource adapter, and these JavaBeans
+are specific to a messaging style or message provider. For example, some messaging
+styles may need applications to use special administered objects (such as <tt>Queue</tt> and
+<tt>Topic</tt> objects in JMS). Applications use these objects to send and synchronously receive
+messages using connection objects using messaging style APIs. For more information about administered
+objects, see <a href="p24.html">Chapter&#160;18, Using the Java Message Service</a>.</p>
+
+<a name="beama"></a><h3>Configuring a Message Driven Bean to Use a Resource Adapter</h3>
+<a name="indexterm-852"></a><a name="indexterm-853"></a><p>The Connectors specification&#8217;s message inflow contract provides a generic mechanism to plug in
+a wide-range of message providers, including JMS, into a Java-EE-compatible application server. Message providers
+use a resource adapter and dispatch messages to message endpoints, which are implemented
+as message-driven beans.</p><p>The message-driven bean developer provides activation configuration information in the message-driven bean&#8217;s <tt>ejb-jar.xml</tt>
+file. Configuration information includes messaging-style-specific configuration details, and possibly message-provider-specific details as well. The message-driven
+bean deployer uses this configuration information to set up the activation specification JavaBean.
+The activation configuration properties specified in <tt>ejb-jar.xml</tt> override configuration properties in the activation specification
+definition in the <tt>ra.xml</tt> file.</p><p>According to the EJB specification, the messaging-style-specific descriptor elements contained within the activation
+configuration element are not specified because they are specific to a messaging provider. In
+the following sample message-driven bean <tt>ejb-jar.xml</tt>, a message-driven bean has the following
+activation configuration property names: <tt>destinationType</tt>, <tt>SubscriptionDurability</tt>, and <tt>MessageSelector</tt>.</p><pre>&#60;!--  A sample MDB that listens to a JMS Topic -->
+&#60;!-- message-driven bean deployment descriptor -->
+...
+ &#60;activation-config>
+   &#60;activation-config-property>
+     &#60;activation-config-property-name>
+       destinationType
+     &#60;/activation-config-property-name>
+     &#60;activation-config-property-value>
+       javax.jms.Topic
+     &#60;/activation-config-property-value>
+  &#60;/activation-config-property>
+  &#60;activation-config-property>
+     &#60;activation-config-property-name>
+       SubscriptionDurability
+     &#60;/activation-config-property-name>
+     &#60;activation-config-property-value>
+       Durable
+     &#60;/activation-config-property-value>
+  &#60;/activation-config-property>
+  &#60;activation-config-property>
+     &#60;activation-config-property-name>
+       MessageSelector
+     &#60;/activation-config-property-name>
+     &#60;activation-config-property-value>
+       JMSType = 'car' AND color = 'blue'
+     &#60;/activation-config-property-value>
+  &#60;/activation-config-property>
+ ...
+ &#60;/activation-config>
+...</pre><p><a name="indexterm-854"></a>When the message-driven bean is deployed, the value for the <tt>resource-adapter-mid</tt> element in
+the <tt>sun-ejb-jar.xml</tt> file is set to the resource adapter module name that
+delivers messages to the message endpoint (to the message-driven bean). In the following example,
+the <tt>jmsra</tt> JMS resource adapter, which is the bundled resource adapter for the
+Sun GlassFish Message Queue message provider, is specified as the resource adapter module
+identifier for the <tt>SampleMDB</tt> bean.</p><pre>&#60;sun-ejb-jar>
+&#60;enterprise-beans>
+    &#60;unique-id>1&#60;/unique-id>
+    &#60;ejb>
+       &#60;ejb-name>SampleMDB&#60;/ejb-name>
+       &#60;jndi-name>SampleQueue&#60;/jndi-name>
+    &#60;!-- JNDI name of the destination from which messages would be 
+         delivered from MDB needs to listen to -->
+    ...
+    &#60;mdb-resource-adapter>
+       &#60;resource-adapter-mid>jmsra&#60;/resource-adapter-mid>
+       &#60;!-- Resource Adapter Module Id that would deliver messages to 
+            this message endpoint -->
+       &#60;/mdb-resource-adapter>
+    ...
+ &#60;/ejb>
+ ...
+&#60;/enterprise-beans>
+...
+&#60;/sun-ejb-jar></pre><p>When the message-driven bean is deployed, the Enterprise Server uses the <tt>resourceadapter-mid</tt> setting
+to associate the resource adapter with a message endpoint through the message inflow contract.
+This message inflow contract with the application server gives the resource adapter a
+handle to the <tt>MessageEndpointFactory</tt> and the <tt>ActivationSpec</tt> JavaBean, and the adapter uses this
+handle to deliver messages to the message endpoint instances (which are created by
+the <tt>MessageEndpointFactory</tt>).</p><p>When a message-driven bean first created for use on the Enterprise Server
+7 is deployed, the Connector runtime transparently transforms the previous deployment style to the
+current connector-based deployment style. If the deployer specifies neither a <tt>resource-adapter-mid</tt> property nor the
+Message Queue resource adapter&#8217;s activation configuration properties, the Connector runtime maps the message-driven
+bean to the <tt>jmsra</tt> system resource adapter and converts the JMS-specific configuration to the
+Message Queue resource adapter&#8217;s activation configuration properties.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p16.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p18.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

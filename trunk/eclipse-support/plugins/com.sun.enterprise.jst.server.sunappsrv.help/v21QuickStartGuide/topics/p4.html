@@ -1,0 +1,314 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Quick Start for Basic Features - Sun Java System Application Server 9.1 Quick Start Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p3.html">Previous</a></td>
+<td></td>
+<td></td>
+<td><a href="p5.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="aboaa"></a>Chapter&#160;1<h3>Quick Start for Basic Features</h3><p>Welcome to the <i>Quick Start Guide.</i> This guide provides a set of sample procedures that
+you can use to get started with the Application Server. </p><p>Before using the procedures in this document you must have already installed the
+Application Server software. </p><p>This section contains the following topics:</p>
+<ul><li><p><a href="#aboab">Application Server Administration Tools</a></p></li>
+<li><p><a href="#aboac">Starting the Server</a></p></li>
+<li><p><a href="#aboav">Where to Go Next</a></p></li></ul>
+
+
+<a name="aboab"></a><h3>Application Server Administration Tools</h3>
+<p>To enable administrators to manage server instances and clusters running on multiple hosts,
+Application Server provides these tools:</p>
+<ul><li><p>The Admin Console, a browser-based graphical user interface (GUI)</p></li>
+<li><p>Command-line tools, such as the <tt>asadmin</tt> utility. See <a href="#asclt">Table&#160;1-1</a> for the complete list of command-line tools available with Application Server.</p></li>
+<li><p>Programmatic Java Management Extensions (JMX<sup>TM</sup>) APIs</p></li></ul>
+<p>These tools connect to a server called the <b>Domain</b> <b>Administration</b> <b>Server</b>, a
+specially designated Application Server instance that intermediates in all administrative tasks. The Domain Administration
+Server (DAS) provides a single secure interface for validating and executing administrative commands
+regardless of which interface is used.</p><p>A <b>domain</b> is a collection of configuration data, deployed applications, and machines with
+a designated administrator. The domain definition describes and can control the operation of
+several applications, stand-alone application server instances, and clusters, potentially spread over multiple machines. When
+the DAS is installed, a default domain called <b>domain1</b> is always installed. You work
+with the default domain in this guide.</p><p>The Application Server software offers a variety of command-line tools for performing administrative
+functions, in addition to the Admin Console. To launch a tool, type the
+name of the tool in a command window. <a href="#asclt">Table&#160;1-1</a> lists tools by name in
+the first column and describes them in the second column.</p><a name="asclt"></a><h6>Table&#160;1-1 Command-Line Tools</h6><table><col width="30%"><col width="69%"><tr><th align="left" valign="top" scope="column"><p>Name of Tool</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>appclient</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Launches
+the Application Client Container and invokes the client application packaged in the application
+Java archive (JAR) file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>asadmin</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Launches the Application Server administration tool that provides a set
+of subcommands for configuring the Application Server software. </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>asant</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Launches the Jakarta Ant
+tool, so that you can automate repetitive development and deployment tasks.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>asapt</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Compiles Java sources
+with Java EE annotations. The tool automatically invokes the <tt>wsimport</tt> command.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>asupgrade</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Application Server administration
+tool for upgrading the Application Server software.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>capture-schema</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Extracts schema information from a database
+and produces a schema file that the server can use for Container Managed
+Persistence (CMP).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>jspc</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Compiles JSP pages.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>package-appclient</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Packages the application client container libraries and JAR files.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>schemagen</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a
+schema file for each namespace referenced in your Java classes.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>verifier</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Validates the Java EE
+deployment descriptors with the DTDs.</p><p>This tool also provides a graphical user interface.
+To see the GUI, specify the <tt>-u</tt> option.</p><p>Some Windows systems launch a driver
+verifier utility with the same name. To launch the Application Server verifier, you
+must be in the <i>as-install</i><tt>/bin</tt> directory.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>wscompile</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Takes the service definition interface and generates
+the client stubs or server-side skeletons for JAX-RPC; or generates a Web Services Description
+Language (WSDL) description for the provided interface.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>wsdeploy</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Generates an implementation-specific, ready-to-deploy WAR file for
+web services applications that use JAX-RPC.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>wsgen</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Reads a web service endpoint class and
+generates all the required artifacts for web service deployment and invocation.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>wsimport</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Generates JAX-WS portable
+artifacts, such as service endpoint interfaces (SEIs), services, exception classes mapped from the
+<tt>wsdl:fault</tt> and <tt>soap:headerfault</tt> tags, asynchronous response beans derived from the <tt>wsdl:message</tt> tag, and JAXB
+generated value types. </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>xjc</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Transforms, or binds, a source XML schema to a
+set of JAXB content classes in the Java programming language.</p></td>
+</tr>
+</table>
+<hr><p><b>Note - </b>
+<ul><li><p>To run these command-line tools on Windows, ensure that you have an environment variable called PATH that points to the <i>as-install</i><tt>/bin/</tt> directory.</p></li>
+<li><p>You can run the <tt>asadmin</tt> subcommands by prefixing <tt>asadmin</tt> with every sub command or by entering the <tt>asadmin</tt> prompt (type <tt>asadmin</tt> and hit Return) in the <i>as-install</i><tt>/bin/</tt> directory.</p></li></ul>
+
+<hr>
+
+
+<a name="aboac"></a><h3>Starting the Server</h3>
+<p>This topic provides instructions for the following basic tasks: starting the Domain Administration
+Server (DAS), logging into the Admin Console, examining the log files, and starting
+the node agent. The steps are presented in the order that you should
+complete them. </p>
+<ul><li><p><a href="#gewfz">To Start the Domain on Solaris and Linux</a></p></li>
+<li><p><a href="#fvjgo">To Start the Domain on Windows</a></p></li>
+<li><p><a href="#gewgw">To Log On to the Admin Console</a></p></li>
+<li><p><a href="#gewgh">To View the Domain Administration Server Log File</a></p></li>
+<li><p><a href="#fvjhf">To Start the Node Agent</a></p></li>
+<li><p><a href="#gfpuz">To Add Cluster Support to a Domain</a></p></li>
+<li><p><a href="#gbwvf">To Start the Bundled Java DB Server</a></p></li></ul>
+
+
+<a name="gewfz"></a><h4>To Start the Domain on Solaris and Linux</h4><p>To start the Domain Administration Server, start the default domain, <tt>domain1</tt>.</p><ol>
+<li><b>Add the <i>as-install</i><tt>/bin/</tt> directory to the <tt>PATH</tt> environment variable.</b></li>
+<li><b>Start the server by entering this command:</b><p><tt>asadmin start-domain domain1</tt></p><p>When you are prompted for the user, admin password, and the master password,
+enter your user name and the passwords that you provided during installation.</p><p>When the start up process is complete, the following message appears:</p><p><tt>Domain domain1 started</tt></p><p>On the Ubuntu Linux operating system, if you do not have root access,
+you can use the <tt>asadmin</tt> convenience wrapper script located in <tt>/usr/bin</tt> to create
+a domain in your home directory. Running <tt>asadmin start-domain</tt> from the convenience script creates and
+starts the domain. For more information on the convenience script, type <tt>asadmin man</tt> at the
+command prompt. If you have root access, you can also create and start
+domains using the <tt>asadmin</tt> commands <tt>create-domain</tt> and <tt>start-domain</tt> from the <i>as-install</i><tt>/bin</tt> directory.
+These domains are created by default in <i>domain-root-dir</i>.</p><p>Each domain has a corresponding profile: enterprise, cluster, or developer. <tt>domain1</tt> is created
+with the default profile, which is defined in the <tt>AS_ADMIN_PROFILE</tt> variable defined in the
+<tt>asadminenv.conf</tt> file. For more information on the three profiles see the <a href="http://docs.sun.com/doc/819-3671/gelvk?a=view">Usage Profiles in <i>Sun Java System Application Server 9.1 Administration Guide</i></a>. If
+<tt>domain1</tt> was created with developer profile, when you log in to the Admin
+Console, you cannot use features such as clustering and node agents. To use
+clusters and server instances, use the <tt>create-domain</tt> command to create a domain with cluster
+profile.</p><p>For information on creating domains, type <tt>asadmin create-domain</tt> <tt>--help</tt> or see <a href="http://docs.sun.com/doc/819-3675/create-domain-1?a=view"><tt>create-domain</tt>(1)</a> in the
+<a href="http://docs.sun.com/doc/819-3675"><i>Sun Java System Application Server 9.1 Reference Manual</i></a>.</p></li></ol>
+
+<a name="fvjgo"></a><h4>To Start the Domain on Windows</h4><p>To start the Domain Administration Server, start the default domain, <tt>domain 1</tt>.</p><ol>
+<li><b>From the Explorer window or desktop, right click My Computer.</b></li>
+<li><b>Choose Properties to display the System Properties dialog.</b></li>
+<li><b>Click the Advanced tab.</b></li>
+<li><b>Click Environment Variables.</b></li>
+<li><b>In the User variables section:</b><ul>
+<li><b>If a <tt>PATH</tt> variable exists, verify that <i>as-install</i><tt>\bin</tt> exists in the path:
+<i>as-install</i><tt>\bin;</tt><i>other_entries</i>. If <i>as-install</i><tt>\bin</tt> does not exist in the PATH variable, add it.</b></li>
+<li><b>If a <tt>PATH</tt> variable is not present, click New. In Variable Name, type
+<tt>PATH</tt>. In Variable Value, type the path to the server&#8217;s <tt>bin</tt> directory: <i>as-install</i><tt>\bin</tt>.
+Click OK to commit the change.</b></li></ul></li>
+<li><b>Add a new environment variable <tt>AS_ADMIN_USER</tt> and set it to the Administrative User
+Name that you assigned during installation. </b></li>
+<li><b>Click OK to commit the change and close the remaining open windows.</b></li>
+<li><b>Start the Application Server by clicking the Start Admin Server option within the
+Programs menu.</b></li>
+<li><b>When a command prompt window opens to prompt you for the admin password
+and the master password, enter the passwords that you provided during installation.</b><p>A window appears with a message telling that you the server is starting:</p><p><tt>Starting Domain domain1, please wait. Log redirected to domain_dir\domain1\logs\server.log...</tt></p><p>When the startup process has completed, you see an additional message:</p><p><tt>Domain domain1 started.Press any key to continue ...</tt></p><p>Each domain has a corresponding profile: enterprise, cluster, or developer. <tt>domain1</tt> is created with
+the default profile, which is defined in the <tt>AS_ADMIN_PROFILE</tt> variable defined in
+the <tt>asadminenv.conf</tt> file. For more information on profiles see the <a href="http://docs.sun.com/doc/819-3671/gelvk?a=view">Usage Profiles in <i>Sun Java System Application Server 9.1 Administration Guide</i></a>. If <tt>domain1</tt>
+was created with developer profile, when you log in to the Admin Console,
+you cannot use features such as clustering and node agents. To use clusters and
+server instances, use the <tt>create-domain</tt> command to create a domain with cluster profile.
+For information on creating domains, type <tt>asadmin create-domain</tt> <tt>--help</tt> or see <a href="http://docs.sun.com/doc/819-3675/create-domain-1?a=view"><tt>create-domain</tt>(1)</a> in the
+<a href="http://docs.sun.com/doc/819-3675"><i>Sun Java System Application Server 9.1 Reference Manual</i></a>.</p></li>
+<li><b>Press a key to close the message window.</b></li></ol>
+
+<a name="gewgw"></a><h4>To Log On to the Admin Console</h4><p>The Admin Console is a browser interface that simplifies a variety of administration
+and configuration tasks. It is commonly used to:</p>
+<ul><li><p>Deploy and undeploy applications</p></li>
+<li><p>Enable, disable, and manage applications</p></li>
+<li><p>Configure resources and other server settings</p></li>
+<li><p>Select and view log files</p></li></ul>
+<p>For further information about using the Admin Console, consult the online help or
+the <a href="http://docs.sun.com/doc/819-3671"><i>Sun Java System Application Server 9.1 Administration Guide</i></a>.</p><ol>
+<li><b>Type this URL in your browser:</b><p><tt>http://</tt> <i>localhost</i><tt>:4848</tt></p><p>If the browser is on a different system than the server, replace the
+<i>localhost</i> variable with the name of the system that the Domain Admin Server
+is running on.</p><p><tt>4848</tt> is the Admin Console&#8217;s default port number. If you changed the port number
+during the installation or if you have created a domain with another port
+number, use that number instead. </p>
+<hr><p><b>Note - </b>If a popup window appears with a message such as <tt>Website Certified by an Unknown Authority</tt>, click
+OK.</p><p>This message appears because your browser does not recognize the self-signed certificate that the
+Domain Administration Server uses to service the Admin Console over the secure transmission
+protocol.</p>
+<hr>
+</li>
+<li><b>When the Log in window appears, enter the admin user name and password.</b></li>
+<li><b>Click Login.</b><br><img src="figures/adminconsole1.gif" alt="Admin Console has a banner pane, a left pane with common tasks tree, and a right pane with links for Common Tasks and documentation" width="700" height="408"></img><p>In the left pane, select what you want to manage from the
+tree provided. In the right pane, various administrative tasks are listed under the Common
+Tasks heading.</p></li></ol>
+
+<a name="gewgh"></a><h4>To View the Domain Administration Server Log File</h4><p>Application Server instances and the Domain Administration Server produce annotated logs on the
+file system. By default, all errors, warnings or useful informative messages are logged.</p><ol>
+<li><b>From the Common Tasks list in the right pane, click Search Log Files
+to launch a new browser window for Log Viewer.</b><br><img src="figures/log_viewer1.gif" alt="The Log Viewer provides view, search, and filter options." width="700" height="706"></img></li>
+<li><b>In the Log Viewer window, select &#8220;server&#8221; from the Instance Name drop-down list
+and click Search.</b><p>The Domain Administration Server&#8217;s recent log file entries are displayed.</p></li>
+<li><b>Scan the messages and look for any <tt>WARNING</tt> or <tt>SEVERE</tt> messages indicating
+that problems were encountered during server startup.</b><p>You can close Log Viewer at any time. After you create clusters and
+deploy applications, examine log files if any of the operations failed. Use Log
+Viewer to view the log files of any running Application Server instance in
+the domain.</p></li></ol>
+
+<a name="fvjhf"></a><h4>To Start the Node Agent</h4><p>A <b>node agent</b> is a lightweight process running on each machine that participates in
+an Application Server administrative domain. The node agent is responsible for starting and
+stopping server instances on the host. It also communicates with the Domain Administration Server
+to create new Application Server instances. </p>
+<hr><p><b>Note - </b>You can use node agents only on domains with the cluster or enterprise
+profile. If you are running only a developer domain, you need to create
+a domain with cluster profile before you can create and use node agents.
+For information on creating domains, type <tt>asadmin create-domain</tt> <tt>--help</tt> or see <a href="http://docs.sun.com/doc/819-3675/create-domain-1?a=view"><tt>create-domain</tt>(1)</a> in
+the <a href="http://docs.sun.com/doc/819-3675"><i>Sun Java System Application Server 9.1 Reference Manual</i></a></p>
+<hr>
+<p>One node agent is needed on a machine for each Application Server administrative
+domain that the machine belongs to. If you are using Sun Java System
+Application Server 9.1 (Enterprise bundle), choose the Node Agent Component during installation and
+a default node agent called <i>hostname</i> is created. If you have installed Glassfish, the
+node agent is not automatically created. To create a node agent, follow the
+instructions in <a href="http://docs.sun.com/doc/819-3679/geomc?a=view">To Create a Node Agent in <i>Sun Java System Application Server 9.1 High Availability Administration Guide</i></a>.</p><ol>
+<li><b>In a terminal window, type this command:</b><p><tt>asadmin start-node-agent </tt> <i>nodeagentname</i></p><p>Replace the variable <i>nodeagentname</i> with the name of the node agent you created.
+If you want to use the default node agent, which is created by
+Sun Java System Application Server 9.1, replace the <i>nodeagentname</i> with the name of the
+host on which Application Server is running. If your default domain on port
+4848 (<tt>domain1</tt>) is not running on cluster or enterprise profile, use the <tt>--port</tt>
+option to specify the port of the cluster or enterprise domain.</p></li>
+<li><b>When you are prompted, provide the master password.</b><p>The node agent starts and connects with the Domain Administration Server. </p>
+<hr><p><b>Note - </b>Ensure that the Domain Administration Server is running before you start the node
+agent. Check the <tt>server.log</tt> file of a cluster instance to identify problems related
+to starting node agents or cluster instances.</p><p>If you have problems while starting a node agent or a cluster on
+Windows, see the <a href="http://docs.sun.com/doc/819-3666"><i>Sun Java System Application Server 9.1 Release Notes</i></a> for possible solutions to the problem.</p>
+<hr>
+<p>After the node agent has been started once, you can view it in
+the Admin Console. </p></li></ol><h6>Next Steps</h6><p>In this section you started the Domain Administration Server and confirmed that it
+is running. You also logged in to the Admin Console and used the
+Log Viewer. You started the node agent. You can stop the Quick Start
+trail here if you do not wish to continue, or you can go
+on to the next section.</p>
+
+<a name="gfpuz"></a><h4>To Add Cluster Support to a Domain</h4><p>You can use the Admin Console add cluster support to a developer domain.
+</p><ol>
+<li><b>Log on to the Admin Console. For instructions, see <a href="#gewgw">To Log On to the Admin Console</a>.</b></li>
+<li><b>From the left pane, click Application Server. </b></li>
+<li><b>Click the Add Cluster Support button in the General tab.</b></li>
+<li><b>The Add Cluster Support page appears. Review the information on this page and
+click OK. </b></li>
+<li><b>In the Restart Required Page, click the Stop Instance button to stop the
+domain. </b></li>
+<li><b>Log in to the machine where the domain is installed and run the
+following command: <tt></tt><i>as-install</i><tt>/bin/asadmin </tt><tt>list-domains</tt>. Verify that the domain was stopped. </b></li>
+<li><b>Run the following command: <tt></tt><i>as-install</i><tt>/bin/asadmin </tt><tt>start-domain <i>&#60;domain-name></i></tt></b><p>The restarted domain supports clustering.</p></li></ol><h6>More Information<br>Troubleshooting</h6><p>If the restarted domain does not show clustering capabilities, stop the domain, reboot
+the machine on which the domain is installed, and restart the domain as
+shown in step 7. </p>
+
+<a name="gbwvf"></a><h4>To Start the Bundled Java DB Server</h4><p>The Application Server includes a bundled Java DB server. To start it, use
+the following procedure:</p><ol>
+<li><b>Make sure that you are logged in as the user that installed the
+database.</b></li>
+<li><b>Run <tt><b>asadmin start-database</b></tt>.</b><p>For more information on the <tt>start-database</tt> command, see the command's help or the
+<a href="http://docs.sun.com/doc/819-3675/start-database-1?a=view"><tt>start-database</tt>(1)</a> information in <a href="http://docs.sun.com/doc/819-3675"><i>Sun Java System Application Server 9.1 Reference Manual</i></a>.</p></li></ol>
+
+<a name="aboav"></a><h3>Where to Go Next</h3>
+<p>The next steps of the <i>Quick Start Guide</i> are available in the following chapters. </p>
+<ul><li><p><a href="p5.html">Chapter&#160;2, Setting Up a Cluster</a></p><p>Steps for creating a sample cluster. Skip to the next chapter if you are running a domain with developer profile. </p></li>
+<li><p><a href="p6.html">Chapter&#160;3, Deploying an Application</a></p><p>Steps for deploying a sample web application. If you are using a domain with cluster capabilities, you can perform the steps for deploying an enterprise application to a cluster. </p></li>
+<li><p><a href="p7.html">Chapter&#160;4, Working with Load Balancers</a></p><p>Steps for creating and using a load balancer. Requires installation of the load balancer plug-in and the Web Server. </p></li></ul>
+<p>Other resources for learning and using Application Server are available. They include:</p>
+<ul><li><p>Product details at <i>as-install</i><tt>/docs-ee/about.html</tt>.</p></li>
+<li><p>Sample applications at <i>as-install</i><tt>/samples</tt></p></li>
+<li><p><a href="http://docs.sun.com/doc/819-3666"><i>Sun Java System Application Server 9.1 Release Notes</i></a></p></li>
+<li><p><a href="http://docs.sun.com/doc/819-3671"><i>Sun Java System Application Server 9.1 Administration Guide</i></a></p></li>
+<li><p><a href="http://docs.sun.com/doc/819-3675"><i>Sun Java System Application Server 9.1 Reference Manual</i></a> (man pages)</p></li>
+<li><p><a href="http://docs.sun.com/doc/819-3675"><i>Sun Java System Application Server 9.1 Reference Manual</i></a> (man pages)</p></li>
+<li><p><a href="http://docs.sun.com/doc/819-3673"><i>Sun Java System Application Server 9.1 Application Deployment Guide</i></a></p></li>
+<li><p><a href="http://docs.sun.com/doc/819-3679"><i>Sun Java System Application Server 9.1 High Availability Administration Guide</i></a></p></li>
+<li><p><i>The Java EE 5 Tutorial</i></p></li>
+<li><p><a href="http://java.sun.com/blueprints">Java BluePrints</a> guidelines for the Enterprise</p></li></ul>
+
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p3.html">Previous</a></td>
+<td></td>
+<td></td>
+<td><a href="p5.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

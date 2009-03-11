@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Using the Transaction Service - Sun GlassFish Enterprise Server 2.1 Developer's Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-01-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p21.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p23.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="beanm"></a>Chapter&#160;16<h3>Using the Transaction Service</h3><a name="indexterm-957"></a><a name="indexterm-958"></a><a name="indexterm-959"></a><a name="indexterm-960"></a><p>The Java EE platform provides several abstractions that simplify development of dependable transaction
+processing for applications. This chapter discusses Java EE transactions and transaction support in the
+Sun GlassFish Enterprise Server.</p><p>This chapter contains the following sections:</p>
+<ul><li><p><a href="#beann">Transaction Resource Managers</a></p></li>
+<li><p><a href="#beano">Transaction Scope</a></p></li>
+<li><p><a href="#gaxim">Distributed Transaction Recovery</a></p></li>
+<li><p><a href="#beanp">Configuring the Transaction Service</a></p></li>
+<li><p><a href="#gaxit">The Transaction Manager, the Transaction Synchronization Registry, and <tt>UserTransaction</tt></a></p></li>
+<li><p><a href="#beanq">Transaction Logging</a></p></li>
+<li><p><a href="#gcmam">Storing Transaction Logs in a Database</a></p></li>
+<li><p><a href="#gaxig">Recovery Workarounds</a></p></li></ul>
+<p>For more information about the Java<sup>TM</sup> Transaction API (JTA) and Java Transaction Service
+(JTS), see <a href="http://docs.sun.com/doc/820-4335/ablsn?a=view">Chapter 12, Transactions, in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a> and the following sites: <a href="http://java.sun.com/products/jta/">http://java.sun.com/products/jta/</a> and <a href="http://java.sun.com/products/jts/">http://java.sun.com/products/jts/</a>.</p><p>You might also want to read &#8220;Chapter 35: Transactions&#8221; in the <a href="http://java.sun.com/javaee/5/docs/tutorial/doc/index.html">Java EE 5 Tutorial</a>.</p>
+
+<a name="beann"></a><h3>Transaction Resource Managers</h3>
+<a name="indexterm-961"></a><a name="indexterm-962"></a><p>There are three types of transaction resource managers:</p>
+<ul><li><p><a name="indexterm-963"></a>Databases - Use of transactions prevents databases from being left in inconsistent states due to incomplete updates. For information about JDBC transaction isolation levels, see <a href="p21.html#beamv">Using JDBC Transaction Isolation Levels</a>.</p><p>The Enterprise Server supports a variety of JDBC XA drivers. For a list of the JDBC drivers currently supported by the Enterprise Server, see the <i><a href="http://docs.sun.com/doc/820-4329"><i>Sun GlassFish Enterprise Server 2.1 Release Notes</i></a></i>. For configurations of supported and other drivers, see <a href="http://docs.sun.com/doc/820-4335/beamw?a=view">Configurations for Specific JDBC Drivers in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p></li>
+<li><p><a name="indexterm-964"></a>Java Message Service (JMS) Providers - Use of transactions ensures that messages are reliably delivered. The Enterprise Server is integrated with Sun GlassFish Message Queue, a fully capable JMS provider. For more information about transactions and the JMS API, see <a href="p24.html">Chapter&#160;18, Using the Java Message Service</a>.</p></li>
+<li><p><a name="indexterm-965"></a>J2EE Connector Architecture (CA) components - Use of transactions prevents legacy EIS systems from being left in inconsistent states due to incomplete updates. For more information about connectors, see <a href="p17.html">Chapter&#160;12, Developing Connectors</a>.</p></li></ul>
+<p>For details about how transaction resource managers, the transaction service, and applications interact,
+see <a href="http://docs.sun.com/doc/820-4335/ablsn?a=view">Chapter 12, Transactions, in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p>
+
+<a name="beano"></a><h3>Transaction Scope</h3>
+<a name="indexterm-966"></a><a name="indexterm-967"></a><p>A <b>local</b> transaction involves only one non-XA resource and requires that all participating
+application components execute within one process. Local transaction optimization is specific to the resource
+manager and is transparent to the Java EE application.</p><p>In the Enterprise Server, a JDBC resource is non-XA if it meets any
+of the following criteria:</p>
+<ul><li><p>In the JDBC connection pool configuration, the DataSource class does not implement the <tt>javax.sql.XADataSource</tt> interface.</p></li>
+<li><p>The Global Transaction Support box is not checked, or the Resource Type setting does not exist or is not set to <tt>javax.sql.XADataSource</tt>.</p></li></ul>
+<p>A transaction remains local if the following conditions remain true:</p>
+<ul><li><p>One and only one non-XA resource is used. If any additional non-XA resource is used, the transaction is aborted.</p></li>
+<li><p>No transaction importing or exporting occurs.</p></li></ul>
+<p><a name="indexterm-968"></a>Transactions that involve multiple resources or multiple participant processes are <b>distributed</b> or <b>global</b> transactions. A
+global transaction can involve one non-XA resource if last agent optimization is enabled.
+Otherwise, all resourced must be XA. The <tt>use-last-agent-optimization</tt> property is set to
+<tt>true</tt> by default. For details about how to set this property, see <a href="#beanp">Configuring the Transaction Service</a>.</p><p>If only one XA resource is used in a transaction, one-phase commit occurs,
+otherwise the transaction is coordinated with a two-phase commit protocol.</p><p>A two-phase commit protocol between the transaction manager and all the resources enlisted
+for a transaction ensures that either all the resource managers commit the transaction
+or they all abort. When the application requests the commitment of a transaction,
+the transaction manager issues a <tt>PREPARE_TO_COMMIT</tt> request to all the resource managers involved. Each
+of these resources can in turn send a reply indicating whether it is
+ready for commit (<tt>PREPARED</tt>) or not (<tt>NO</tt>). Only when all the resource managers
+are ready for a commit does the transaction manager issue a commit request
+(<tt>COMMIT</tt>) to all the resource managers. Otherwise, the transaction manager issues a rollback request
+(<tt>ABORT</tt>) and the transaction is rolled back.</p>
+
+<a name="gaxim"></a><h3>Distributed Transaction Recovery</h3>
+
+<hr><p><b>Note - </b>Some topics in the documentation pertain to features that are available only in
+domains that are configured to support clusters. Examples of domains that support clusters
+are domains that are created with the cluster profile or the enterprise profile. For
+information about profiles, see <a href="http://docs.sun.com/doc/820-4335/gelvk?a=view">Usage Profiles in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p>
+<hr>
+<p>To enable cluster-wide automatic recovery, you must first facilitate storing of transaction logs
+in a shared file system. You can do this in one of these
+ways:</p>
+<ul><li><p>Set the Enterprise Server's <tt>log-root</tt> attribute to a shared file system base directory and set the transaction service's <tt>tx-log-dir</tt> attribute to a relative path.</p></li>
+<li><p>Set <tt>tx-log-dir</tt> to an absolute path to a shared file system directory, in which case <tt>log-root</tt> is ignored for transaction logs.</p></li>
+<li><p>Set a <tt>system-property</tt> called <tt>TX-LOG-DIR</tt> in the <tt>domain.xml</tt> file to a shared file system directory.</p><pre>&#60;server config-ref="server-config" name="server">
+   &#60;system-property name="TX-LOG-DIR" 
+      value="/net/tulsa/nodeagents/na/instance1/logs" />
+&#60;/server></pre></li></ul>
+<p>Next, you must set the transaction service's <tt>delegated-recovery</tt> property to <tt>true</tt> (the
+default is <tt>false</tt>).</p><p>For information about setting <tt>tx-log-dir</tt> and <tt>delegated-recovery</tt>, see <a href="#beanp">Configuring the Transaction Service</a>. For information about
+setting <tt>log-root</tt> and other general logging settings, see <a href="http://docs.sun.com/doc/820-4335/abluj?a=view">Chapter 17, Configuring Logging, in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>. For information about
+<tt>system-property</tt> and the <tt>domain.xml</tt> file, see the <a href="http://docs.sun.com/doc/820-4338"><i>Sun GlassFish Enterprise Server 2.1 Administration Reference</i></a>.</p>
+
+<a name="beanp"></a><h3>Configuring the Transaction Service</h3>
+<a name="indexterm-969"></a><p>You can configure the transaction service in the Enterprise Server in the following
+ways:</p>
+<ul><li><p><a name="indexterm-970"></a>To configure the transaction service using the Admin Console, open the Transaction Service component under the relevant configuration. For details, click the Help button in the Admin Console.</p></li>
+<li><p><a name="indexterm-971"></a><a name="indexterm-972"></a>To configure the transaction service, use the <tt>asadmin set</tt> command to set the following attributes.</p><pre>server.transaction-service.automatic-recovery = false
+server.transaction-service.heuristic-decision = rollback
+server.transaction-service.keypoint-interval = 2048
+server.transaction-service.retry-timeout-in-seconds = 600
+server.transaction-service.timeout-in-seconds = 0
+server.transaction-service.tx-log-dir = <i>domain-dir</i>/logs</pre><p>You can also set these properties:</p><pre>server.transaction-service.property.oracle-xa-recovery-workaround = false
+server.transaction-service.property.disable-distributed-transaction-logging = false
+server.transaction-service.property.xaresource-txn-timeout = 600
+server.transaction-service.property.pending-txn-cleanup-interval = 60
+server.transaction-service.property.use-last-agent-optimization = true
+server.transaction-service.property.db-logging-resource = jdbc/TxnDS
+server.transaction-service.property.delegated-recovery = false
+server.transaction-service.property.wait-time-before-recovery-insec = 60
+server.transaction-service.property.xa-servername = myserver</pre><p><a name="indexterm-973"></a><a name="indexterm-974"></a>You can use the <tt>asadmin get</tt> command to list all the transaction service attributes and properties. For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p></li></ul>
+
+
+<a name="gaxit"></a><h3>The Transaction Manager, the Transaction Synchronization Registry, and <tt>UserTransaction</tt></h3>
+<a name="indexterm-975"></a><a name="indexterm-976"></a><a name="indexterm-977"></a><a name="indexterm-978"></a><p>You can access the Enterprise Server transaction manager, a <tt>javax.transaction.TransactionManager</tt> implementation, using
+the JNDI subcontext <tt>java:comp/TransactionManager</tt> or <tt>java:appserver/TransactionManager</tt>. You can access the Enterprise Server
+transaction synchronization registry, a <tt>javax.transaction.TransactionSynchronizationRegistry</tt> implementation, using the JNDI subcontext <tt>java:comp/TransactionSynchronizationRegistry</tt> or <tt>java:appserver/TransactionSynchronizationRegistry</tt>.
+You can also request injection of a <tt>TransactionManager</tt> or <tt>TransactionSynchronizationRegistry</tt> object using the
+<tt>@Resource</tt> annotation. Accessing the transaction synchronization registry is recommended. For details, see <a href="http://www.jcp.org/en/jsr/detail?id=907">Java Specification Request (JSR) 907</a>.</p><p>You can also access <tt>java:comp/UserTransaction</tt>. </p>
+
+<a name="beanq"></a><h3>Transaction Logging</h3>
+<a name="indexterm-979"></a><p>The transaction service writes transactional activity into transaction logs so that transactions can
+be recovered. You can control transaction logging in these ways:</p>
+<ul><li><p><a name="indexterm-980"></a>Set the location of the transaction log files using the Transaction Log Location setting in the Admin Console, or set the <tt>tx-log-dir</tt> attribute using the <tt>asadmin set</tt> command.</p></li>
+<li><p>Turn off transaction logging by setting the <tt>disable-distributed-transaction-logging</tt> property to <tt>true</tt> and the <tt>automatic-recovery</tt> attribute to <tt>false</tt>. Do this <b>only</b> if performance is more important than transaction recovery.</p></li></ul>
+
+
+<a name="gcmam"></a><h3>Storing Transaction Logs in a Database</h3>
+<a name="indexterm-981"></a><p>For multi-core machines, logging transactions to a database may be more efficient.</p><p>To log transactions to a database, follow these steps:</p>
+<ol><li><p>Create a JDBC connection Pool, and set the <tt>non-transactional-connections</tt> attribute to <tt>true</tt>.</p></li>
+<li><p>Create a JDBC resource that uses the connection pool and note the JNDI name of the JDBC resource.</p></li>
+<li><p>Create a table named <tt>txn_log_table</tt> with the schema shown in <a href="#gcmap">Table&#160;16-1</a>.</p></li>
+<li><p>Add the <tt>db-logging-resource</tt> property to the transaction service. For example:</p><pre>asadmin set --user adminuser server1.transaction-service.property.db-logging-resource="jdbc/TxnDS"</pre><p>The property's value should be the JNDI name of the JDBC resource configured previously.</p></li>
+<li><p><a name="indexterm-982"></a><a name="indexterm-983"></a>To disable file synchronization, use the following <tt>asadmin create-jvm-options</tt> command:</p><pre>asadmin create-jvm-options --user adminuser -Dcom.sun.appserv.transaction.nofdsync</pre></li>
+<li><p>Restart the server.</p></li></ol>
+<p>For information about JDBC connection pools and resources, see <a href="p21.html">Chapter&#160;15, Using the JDBC API for Database Access</a>. For more
+information about the <tt>asadmin create-jvm-options</tt> command, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p><a name="gcmap"></a><h6>Table&#160;16-1 Schema for <tt>txn_log_table</tt></h6><table><col width="50%"><col width="50%"><tr><th align="left" valign="top" scope="column"><p>Column Name</p></th>
+<th align="left" valign="top" scope="column"><p>JDBC Type</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>LOCALTID</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BIGINT</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>SERVERNAME</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>VARCHAR(n)</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>GTRID</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>VARBINARY</tt></p></td>
+</tr>
+</table><p>The size of the <tt>SERVERNAME</tt> column should be at least the length of
+the Enterprise Server host name plus 10 characters.</p><p>The size of the <tt>GTRID</tt> column should be at least 64 bytes.</p><p>To define the SQL used by the transaction manager when it is storing
+its transaction logs in the database, use the following flags:</p><pre>-Dcom.sun.jts.dblogging.insertquery=sql <i>statement</i>
+-Dcom.sun.jts.dblogging.deletequery=sql <i>statement</i></pre><p>The default statements are as follows:</p><pre>-Dcom.sun.jts.dblogging.insertquery=insert into txn_log_table values ( ?, ? , ? )
+-Dcom.sun.jts.dblogging.deletequery=delete from txn_log_table where localtid = ? and servername = ?</pre><p>To set one of these flags using the <tt>asadmin create-jvm-options</tt> command, you must
+quote the statement. For example:</p><pre>create-jvm-options '-Dcom.sun.jts.dblogging.deletequery=delete from txn_log_table where gtrid = ?'</pre><p>You can also set JVM options in the Admin Console. In the
+developer profile, select the Application Server component and the JVM Settings tab. In the
+cluster profile, select the JVM Settings component under the relevant configuration. These flags
+and their statements must also be quoted in the Admin Console. For example:</p><pre>'-Dcom.sun.jts.dblogging.deletequery=delete from txn_log_table where gtrid = ?'</pre>
+
+<a name="gaxig"></a><h3>Recovery Workarounds</h3>
+<p>The Enterprise Server provides workarounds for some known issues with the recovery implementations
+of the following JDBC drivers. These workarounds are used unless explicitly disabled.</p><p><a name="indexterm-984"></a>In the Oracle thin driver, the <tt>XAResource.recover</tt> method repeatedly returns the same
+set of in-doubt Xids regardless of the input flag. According to the XA
+specifications, the Transaction Manager initially calls this method with TMSTARTSCAN and then with TMNOFLAGS
+repeatedly until no Xids are returned. The <tt>XAResource.commit</tt> method also has some
+issues.</p><p><a name="indexterm-985"></a>To disable the Enterprise Server workaround, set the <tt>oracle-xa-recovery-workaround</tt> property value to
+<tt>false</tt>. For details about how to set this property, see <a href="#beanp">Configuring the Transaction Service</a>.</p>
+<hr><p><b>Note - </b>These workarounds do not imply support for any particular JDBC driver.</p>
+<hr>
+
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p21.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p23.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

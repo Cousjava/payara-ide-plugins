@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Setting Up High Availability Failover - Sun Java System Application Server 9.1 Quick Start Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p7.html">Previous</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+
+<a name="aboaw"></a>Chapter&#160;5<h3>Setting Up High Availability Failover</h3><p>With the configuration used in the previous chapter, if a server instance goes
+down, users lose session state. This section, the second of two advanced topics,
+provides the steps for installing the high-availability database (HADB), creating a highly available
+cluster, and testing HTTP session persistence.</p><p>GlassFish v2 does not offer HADB. For high availability and failover, GlassFish offers
+the in-memory replication feature. For more information, see </p><p>Application Server supports both HTTP session persistence and persistence for Stateful Session Beans.
+The procedures in this chapter cover high availability using in-memory replication or HADB.</p><p>These steps assume you have already performed the steps in the previous sections
+of this Quick Start. The steps are presented in the order that
+you should complete them. To use the HADB feature, you need to be
+running a domain with enterprise profile.</p>
+<hr><p><b>Note - </b>Completing the procedures in this section may require additional hardware resources.</p>
+<hr>
+<p>This topic contains the following sections:</p>
+<ul><li><p><a href="#aboax">High-availability Clusters and HADB</a></p></li>
+<li><p><a href="#aboay">HADB Preinstallation Steps</a></p></li>
+<li><p><a href="#aboaz">Installing HADB</a></p></li>
+<li><p><a href="#aboba">Starting HADB</a></p></li>
+<li><p><a href="#abobb">Configuring a Cluster and Application for High Availability</a></p></li>
+<li><p><a href="#abobc">Restarting the Cluster</a></p></li>
+<li><p><a href="#abobd">Verifying HTTP Session Failover</a></p></li></ul>
+
+
+<a name="aboax"></a><h3>High-availability Clusters and HADB</h3>
+<p>A highly availability cluster inSun Java System Application Server integrates a state replication
+service with the clusters and load balancer created earlier, enabling failover of HTTP
+sessions.</p><p><tt>HttpSession</tt> objects and Stateful Session Bean state is stored in HADB, a high-availability
+database for storing session state. This horizontally scalable state management service can be
+managed independently of the application server tier. It was designed to support up
+to 99.999% service and data availability with load balancing, failover and state recovery
+capabilities.</p><p>Keeping state management responsibilities separated from Application Server has significant benefits. Application Server
+instances spend their cycles performing as a scalable and high performance Java<sup>TM</sup> Platform, Enterprise Edition
+5 (Java EE<sup>TM</sup> 5 platform) containers delegating state replication to an external high availability
+state service. Due to this loosely coupled architecture, application server instances can be easily
+added to or deleted from a cluster. The HADB state replication service can
+be independently scaled for optimum availability and performance. When an application server instance
+also performs replication, the performance of J2EE applications can suffer and can be
+subject to longer garbage collection pauses.</p><p>Because each HADB node requires 512 Mbytes of memory, you need 1
+Gbyte of memory to run two HADB nodes on the same machine. If
+you have less memory, set up each node on a different machine. Running
+a two-node database on only one host is not recommended for deployment since
+it is not fault tolerant.</p>
+
+<a name="aboay"></a><h3>HADB Preinstallation Steps</h3>
+<p>This procedure covers the most common preinstallation tasks. For information on other preinstallation
+topics, including prerequisites for installing HADB, configuring network redundancy, and file system support,
+see <a href="http://docs.sun.com/doc/819-3679/abdca?a=view">Chapter 2, Installing and Setting Up High Availability Database, in <i>Sun Java System Application Server 9.1 High Availability Administration Guide</i></a>.</p><p>The recommended system configuration values in this section are sufficient for running up
+to six HADB nodes and do not take into consideration other applications on
+the system that also use shared memory. </p>
+
+<a name="gewfy"></a><h4>To Configure Your System for HADB</h4><ol>
+<li><b>Get root access. </b></li>
+<li><b>Define variables related to shared memory and semaphores</b><ul>
+<li><b>On Solaris:</b><ol style="list-style-type: lower-alpha">
+<li><b>Add these lines to the <tt>/etc/system</tt> file (or if these lines are in
+the file as comments, uncomment them and make sure that the values match
+these):</b><p><tt>set shmsys:shminfo_shmmax=0x80000000</tt></p><p><tt>set shmsys:shminfo_shmseg=36</tt></p><p><tt>set semsys:seminfo_semmnu=600</tt></p><p>Set <tt>shminfo_shmmax</tt> to the total memory in your system (in hexadecimal notation
+the value <tt>0x80000000</tt> shown is for 2 Gigabytes of memory).</p><p>If the <tt>seminfo_*</tt> variables are already defined, increment them by the amounts shown.
+The default values for <tt>seminfo_semmni</tt> and <tt>seminfo_semmns</tt> do not need to be
+changed. The variable <tt>shminfo_shmeg</tt> is obsolete after Solaris 8.</p></li>
+<li><b>Reboot, using this command:</b><p><tt>sync; sync; reboot</tt></p></li></ol></li>
+<li><b>On Linux:</b><ol style="list-style-type: lower-alpha">
+<li><b>Add these lines to the <tt>/etc/sysctl.conf</tt> file (or if they are in the
+file as comments, uncomment them). Set the value to the amount physical memory
+on the machine. Specify the value as a decimal number of bytes. For
+example, for a machine having 2 GB of physical memory:</b><p><tt>echo 2147483648 > /proc/sys/shmmax</tt></p><p><tt>echo 2147483648 > /proc/sys/shmall</tt></p></li>
+<li><b>Reboot, using this command:</b><p><tt>sync; sync; reboot</tt></p></li></ol></li>
+<li><b>On Windows: No special system settings are needed.</b></li></ul></li>
+<li><b>If you used existing JDK software when you installed a standalone Application
+Server, check the JDK version.</b><p>HADB requires Sun JDK 1.4.1_03 or higher (for the latest information on JDK
+versions, see the <a href="http://docs.sun.com/doc/819-3666"><i>Sun Java System Application Server 9.1 Release Notes</i></a>). Check the version installed, and if it is not
+done already, set the <tt>JAVA_HOME</tt> environment variable to the directory where the
+JDK is installed.</p></li>
+<li><b>If necessary after the reboot, restart the domain, Web Server, and node agent.</b><p>To restart the domain, use the command <tt>asadmin start-domain domain1</tt>.</p><p>To restart the Web Server, execute the start program in <i>web_server_install_dir</i><tt>/https-</tt><i>hostname</i>.</p><p>To restart the node agent, use the command <tt>asadmin start-node-agent</tt> <i>hostname</i>. Replace the variable
+<i>hostname</i> with the name of the host where the Application Server is running.</p></li></ol>
+
+<a name="aboaz"></a><h3>Installing HADB</h3>
+<p>This section provides the steps for installing the high-availability database (HADB).</p>
+<hr><p><b>Note - </b>If you plan to run the high-availability database on the Application Server
+machine, and if you installed HADB when you installed Application Server, skip to
+<a href="#aboba">Starting HADB</a>.</p>
+<hr>
+<p>You can install the HADB component on the same machine as your
+Application Server system if you have 2 Gbytes of memory and 1-2 CPUs.
+If not, use additional hardware. For example:</p>
+<ul><li><p>Two 1 CPU systems with 512 Mbytes to 1 Gbyte memory each</p></li>
+<li><p>One 1-2 CPU system with 1 Gbytes to 2 Gbytes memory</p></li></ul>
+
+
+<a name="gewex"></a><h4>To Install HADB</h4><ol>
+<li><b>Run the Application Server or Java Enterprise System installer. </b></li>
+<li><b>Choose the option to install HADB.</b></li>
+<li><b>Complete the installation on your hosts. </b></li></ol>
+
+<a name="aboba"></a><h3>Starting HADB</h3>
+<p>This section describes starting the HADB management agent in most cases by running
+the <tt>ma-initd</tt> script. For a production deployment, start the management agent as a
+service to ensure its availability. For more information, see <a href="http://docs.sun.com/doc/819-3679/abddf?a=view">Starting the HADB Management Agent in <i>Sun Java System Application Server 9.1 High Availability Administration Guide</i></a>.</p><p>If starting a database with HADB nodes on several hosts, start the
+management agent on each host.</p>
+
+<a name="gewgb"></a><h4>To Start HADB in a Java Enterprise System Installation on Solaris or Linux</h4><ol>
+<li><b>Change to the <tt>/etc/init.d</tt> directory:</b><p><tt>cd /etc/init.d</tt></p></li>
+<li><b>Run the command to start the agent:</b><p><tt>./ma-initd start</tt></p></li></ol>
+
+<a name="fxcrd"></a><h4>To Start HADB in a Java Enterprise System Installation on Windows</h4><p>HADB is started by default when Sun Java System is configured and
+running. However, if you need to start it manually, follow these steps:</p><ol>
+<li><b>Go to Start&#8658;Settings&#8658;Control Panel, and double click Administrative Tools. </b></li>
+<li><b>Double click Services shortcut.</b></li>
+<li><b>Select HADBMgmtAgent Service from the Services list.</b></li>
+<li><b>From the Action menu, select Start.</b></li></ol>
+
+<a name="fvznm"></a><h4>To Start HADB in a Stand-Alone Installation on Solaris or Linux</h4><ol>
+<li><b>Change to the HADB <tt>bin</tt> directory in the Application Serverinstallation: <i>as-install</i><tt>/hadb/4/bin</tt></b></li>
+<li><b>Run the command to start the agent:</b><p><tt>./ma-initd start</tt></p></li></ol>
+
+<a name="fxcgh"></a><h4>To Start HADB in a Stand-Alone Installation on Windows</h4><ol>
+<li><b>In a terminal window, change to the HADB <tt>bin</tt> directory in the Application
+Serverinstallation: <i>as-install</i><tt>\hadb\4.</tt><i>x</i><tt>\bin</tt></b><p>The <i>x</i> represents the release number of HADB.</p></li>
+<li><b>Run the command to start the agent:</b><p><tt>ma -i ma.cfg</tt></p></li></ol>
+
+<a name="abobb"></a><h3>Configuring a Cluster and Application for High Availability</h3>
+<p>The FirstCluster cluster must be configured to use HADB and high-availability must be
+enabled for the clusterjsp application before you can verify HTTP session persistence. Use
+the <tt>asadmin configure-ha-cluster</tt> command to configure an existing cluster for high availability. For more
+information on how to use this command, type <tt>configure-ha-cluster --help</tt> at the <tt>asadmin</tt> command prompt
+or see the <a href="http://docs.sun.com/doc/819-3675/configure-ha-cluster-1?a=view"><tt>configure-ha-cluster</tt>(1)</a> man page.</p>
+
+<a name="abobc"></a><h3>Restarting the Cluster</h3>
+<p>Before the changes made in the previous section take effect, the cluster's instances
+must be restarted.</p>
+
+<a name="gewfj"></a><h4>To Restart the Cluster</h4><ol>
+<li><b>In the Admin Console, expand the Clusters node.</b></li>
+<li><b>Click <tt>FirstCluster</tt>. </b></li>
+<li><b>In the right pane, click Stop Instances.</b></li>
+<li><b>Once the instances are stopped, click Start Instances.</b></li></ol>
+
+<a name="abobd"></a><h3>Verifying HTTP Session Failover</h3>
+<p>The steps for testing session data failover are similar for testing load balancing
+as described in the topic <a href="p7.html#aboar">Verifying Load Balancing</a>. This time Session Data is preserved
+after failure. Failover is transparent to the user because the sample application is
+configured for automatic retry after failure.</p>
+
+<a name="gewfm"></a><h4>To Verify HTTP Session Failover</h4><ol>
+<li><b>To display the first page of the clusterjsp application, type this URL in
+your browser:</b><p><tt>http://</tt><i>localhost</i><tt>:</tt><i>web_server_port</i><tt>/clusterjsp</tt></p><p>Replace the <i>localhost</i> variable with the name of the system that the Web
+Server is running on.</p><p>Replace the <i>web_server_port</i> variable with the value of the port attribute of the <tt>LS</tt>
+element in <i>web_server_install_dir</i><tt>/https-</tt><i>hostname</i><tt>/config/server.xml</tt>. For this example, port 38000 is used.</p><p>A page similar to what you saw in <a href="p6.html#fvjep">To Verify Application Deployment</a> appears.</p></li>
+<li><b>Examine the Session and Host information displayed. For example:</b>
+<ul><li><p><tt>Executed From Server:</tt> <i>localhost</i></p></li>
+<li><p><tt>Server Port Number: 38000</tt></p></li>
+<li><p><tt>Executed Server IP Address: 192.18.145.133</tt></p></li>
+<li><p><tt>Session ID: 41880f618e4593e14fb5d0ac434b1</tt></p></li>
+<li><p><tt>Session Created: Wed Feb 23 15:23:18 PST 2005</tt></p></li></ul>
+</li>
+<li><b>View the server access log files to determine which application server instance is
+serving the application. The log files are located here:</b>
+<ul><li><p>Solaris Java Enterprise System installation: </p><p><tt>/var/opt/SUNWappserver/nodeagents/</tt><i>nodeagent_name</i><tt>/i1/logs/access/server_access_log</tt></p><p><tt>/var/opt/SUNWappserver/nodeagents/</tt><i>nodeagent_name</i><tt>/i2/logs/access/server_access_log</tt></p></li>
+<li><p>Linux Java Enterprise System installation:</p><p><tt>/var/opt/sun/appserver/nodeagents/</tt><i>nodeagent_name</i><tt>/i1/logs/access/server_access_log</tt></p><p><tt>/var/opt/sun/appserver/nodeagents/</tt><i>nodeagent_name</i><tt>/i2/logs/access/server_access_log</tt></p></li>
+<li><p>Windows Java Enterprise System installation:</p><p><i>as-install</i><tt>\nodeagents\</tt><i>nodeagent_name</i><tt>\i1\logs\access\server_access_log</tt></p><p><i>as-install</i><tt>\nodeagents\</tt><i>nodeagent_name</i><tt>\i2\logs\access/server_access_log</tt></p></li>
+<li><p>Standalone Application Server installations: </p><p><i>as-install</i><tt>/nodeagents/</tt><i>nodeagent_name</i><tt>/i1/logs/access/server_access_log</tt></p><p><i>as-install</i><tt>/nodeagents/</tt><i>nodeagent_name</i><tt>/i2/logs/access/server_access_log</tt></p></li></ul>
+</li>
+<li><b>Stop the Application Server instance that is serving the page.</b><ol style="list-style-type: lower-alpha">
+<li><b>In the Admin Console, in the left pane, expand Clusters.</b></li>
+<li><b>Click <tt>FirstCluster</tt>. </b></li>
+<li><b>In the right pane, click the Instances tab.</b></li>
+<li><b>Click the checkbox next to the server instance that served the request and
+click the Stop button. </b></li></ol></li>
+<li><b>Reload the <tt>clusterjsp</tt> sample application page.</b><p>The session ID and session attribute data is retained.</p></li>
+<li><b>Check the access log of the other Application Server instance, and notice that
+it is now servicing the request.</b><p>The state failover features work because the HTTP session is stored persistently in
+the HADB. In addition to the HTTP session state, the Application Server also
+can store the state of EJB in the HADB.</p></li></ol><h6>Next Steps</h6><p>Congratulations! You have now completed the Quick Start for Application Server.</p><p>In this section, you have installed, configured, and started HADB and configured a
+cluster and an application to use high availability. See<a href="p4.html#aboav">Where to Go Next</a> for additional information
+on Application Server.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p7.html">Previous</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

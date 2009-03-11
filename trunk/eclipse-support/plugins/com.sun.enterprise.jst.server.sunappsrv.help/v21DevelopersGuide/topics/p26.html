@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Using the Application Server Management Extensions - Sun GlassFish Enterprise Server 2.1 Developer's Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-01-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p25.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="idx-1.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="beapd"></a>Chapter&#160;20<h3>Using the Application Server Management Extensions</h3><a name="indexterm-1104"></a><a name="indexterm-1105"></a><p>Sun GlassFish Enterprise Server uses <a href="http://glassfish.dev.java.net/javaee5/amx/index.html">Enterprise Server Management eXtensions (AMX)</a> for management and monitoring purposes. AMX technology
+exposes managed resources for remote management as the Java<sup>TM</sup> Management eXtensions (JMX<sup>TM</sup>) API.</p><p><a name="indexterm-1106"></a><a name="indexterm-1107"></a><a name="indexterm-1108"></a>The Enterprise Server incorporates the <a href="http://java.sun.com/products/JavaManagement/index.jsp">JMX 1.2 Reference Implementation</a>, which was developed by the Java Community Process
+as <a href="http://jcp.org/en/jsr/detail?id=3">Java Specification Request (JSR) 3</a>, and the JMX Remote API 1.0 Reference Implementation , which is
+<a href="http://jcp.org/en/jsr/detail?id=160">JSR 160</a>.</p><p>This chapter assumes some familiarity with the JMX technology, but the AMX interfaces
+can be used for the most part without understanding JMX. For more information
+about JMX, see the <a href="http://java.sun.com/products/JavaManagement/download.html">JMX specifications and Reference Implementations</a>.</p><p>For information about creating custom MBeans, see <a href="p19.html">Chapter&#160;14, Developing Custom MBeans</a>.</p><p>This chapter contains the following topics:</p>
+<ul><li><p><a href="#beapf">About AMX</a></p></li>
+<li><p><a href="#beapg">AMX MBeans</a></p></li>
+<li><p><a href="#beapo">Dynamic Client Proxies</a></p></li>
+<li><p><a href="#beapp">Connecting to the Domain Administration Server</a></p></li>
+<li><p><a href="#beapq">Examining AMX Code Samples</a></p></li>
+<li><p><a href="#beaqe">Running the AMX Samples</a></p></li></ul>
+
+
+<a name="beapf"></a><h3>About AMX</h3>
+<a name="indexterm-1109"></a><a name="indexterm-1110"></a><a name="indexterm-1111"></a><p>AMX is an API that exposes all of the Enterprise Server configuration, monitoring
+and JSR 77 MBeans as easy-to-use client-side dynamic proxies implementing the AMX interfaces.
+To understand the design and implementation of the AMX API, you can get
+started with this <a href="http://glassfish.dev.java.net/nonav/javaee5/amx/amx.html">white paper</a>.</p><p>Complete API documentation for AMX is provided in the <a href="http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/index.html">Enterprise Server package</a>.</p><p><tt>com.sun.appserv.management</tt></p><p>The code samples in this section are taken from the package:</p><p><tt>com.sun.appserv.management.sample</tt></p><p>The Enterprise Server is based around the concept of <b>administration domains</b>. Each domain
+consists of one or more <b>managed resources</b>. A managed resource can be an
+Enterprise Server instance, a cluster of such instances, or a manageable entity within
+a server instance. A managed resource is of a particular type, and each
+resource type exposes a set of attributes and administrative operations that change the resource&#8217;s
+state.</p><p>Managed resources are exposed as JMX <b>management beans</b>, or <b>MBeans</b>. While the MBeans can
+be accessed using standard JMX APIs (for example, <tt>MBeanServerConnection</tt>), most users find the use
+of the AMX client-side dynamic proxies much more convenient.</p><p>Virtually all components of the Enterprise Server are visible for monitoring and management
+through AMX. You can use third-party tools to perform all common administrative tasks
+programmatically, based on the JMX and JMX Remote API standards.</p><p>The AMX API consists of a set of interfaces. The interfaces are implemented
+by <a href="http://glassfish.dev.java.net/nonav/javaee5/amx/amx.html#AMXDynamicClientProxy">client-side dynamic proxies</a>, each of which is associated with a server-side MBean in the
+Domain Administration Server (DAS). AMX provides routines to obtain proxies for MBeans, starting with
+the <tt>DomainRoot</tt> interface (see <a href="http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/DomainRoot.html">http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/DomainRoot.html</a>).</p>
+<hr><p><b>Note - </b>The term AMX interface in the context of this document should be understood
+as synonymous with a client-side dynamic proxy implementing that interface. </p>
+<hr>
+<p>You can navigate generically through the MBean hierarchy using the <tt>com.sun.appserv.management.base.Container</tt> interface (see <a href="http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/base/Container.html">http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/base/Container.html</a>).
+When using AMX, the interfaces defined are implemented by client-side dynamic proxies, but
+they also implicitly define the <tt>MBeanInfo</tt> that is made available by the
+MBean or MBeans corresponding to it. Certain operations defined in the interface might have
+a different return type or a slightly different name when accessed through the
+MBean directly. This results from the fact that direct access to JMX requires
+the use of <tt>ObjectName</tt>, whereas the AMX interfaces use strongly typed proxies implementing
+the interface(s).</p>
+
+<a name="beapg"></a><h3>AMX MBeans</h3>
+<a name="indexterm-1112"></a><a name="indexterm-1113"></a><a name="indexterm-1114"></a><p>All AMX MBeans are represented as interfaces in a subpackage of <tt>com.sun.appserv.management</tt> (see
+<a href="http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/package-summary.html">http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/package-summary.html</a>) and are implemented by dynamic proxies on the client-side. Note that client-side
+means any client, wherever it resides. AMX may be used within the server
+itself such as in a custom MBean. While you can access AMX MBeans
+directly through standard JMX APIs, most users find the use of AMX interface
+(proxy) classes to be most convenient.</p><p>An AMX MBean belongs to an Enterprise Server domain. There is exactly one
+domain per DAS. Thus all MBeans accessible through the DAS belong to a
+single Enterprise Server administrative domain. All MBeans in an Enterprise Server administrative domain,
+and hence within the DAS, belong to the JMX domain <tt>amx</tt>. All AMX
+MBeans can be reached by navigating through the <tt>DomainRoot</tt>.</p>
+<hr><p><b>Note - </b>Any MBeans that do not have the JMX domain <tt>amx</tt> are not part
+of AMX, and are neither documented nor supported for use by clients.</p>
+<hr>
+<p>AMX defines different types of MBean, namely, <b>configuration</b> MBeans, <b>monitoring</b> MBeans, <b>utility</b>
+MBeans and <a href="http://jcp.org/en/jsr/detail?id=77">Java EE management JSR 77</a> MBeans. These MBeans are logically related in the following ways:</p>
+<ul><li><p>They all implement the <tt>com.sun.appserv.management.base.AMX</tt> interface (see <a href="http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/base/AMX.html">http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/base/AMX.html</a>).</p></li>
+<li><p>They all have a <tt>j2eeType</tt> and <tt>name</tt> property within their <tt>ObjectName</tt>. See <tt>com.sun.appserv.management.base.XTypes</tt> (<a href="http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/base/XTypes.html">http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/base/XTypes.html</a>) and <tt>com.sun.appserv.management.j2ee.J2EETypes</tt> (<a href="http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/j2ee/J2EETypes.html">http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/j2ee/J2EETypes.html</a>) for the available values of the <tt>j2eeType</tt> property.</p></li>
+<li><p>All MBeans that logically contain other MBeans implement the <tt>com.sun.appserv.management.base.Container</tt> interface.</p></li>
+<li><p>JSR 77 MBeans that have a corresponding configuration or monitoring peer expose it using <tt>getConfigPeer()</tt> or <tt>getMonitoringPeer()</tt>. However, there are many configuration and monitoring MBeans that do not correspond to JSR 77 MBeans.</p></li></ul>
+
+
+<a name="beaph"></a><h4>Configuration MBeans</h4>
+<a name="indexterm-1115"></a><p>Configuration information for a given Enterprise Server domain is stored in a central
+repository that is shared by all instances in that domain. The central repository
+can only be written to by the DAS. However, configuration information in the
+central repository is made available to administration clients through AMX MBeans.</p><p>The configuration MBeans are those that modify the underlying <tt>domain.xml</tt> or related
+files. Collectively, they form a model representing the configuration and deployment repository and
+the operations that can be performed on them.</p><p>The <tt>Group</tt> Attribute of configuration MBeans, obtained from <tt>getGroup()</tt>, has a value of
+<tt>com.sun.appserv.management.base.AMX.GROUP_CONFIGURATION</tt>.</p>
+
+<a name="beapi"></a><h4>Monitoring MBeans</h4>
+<a name="indexterm-1116"></a><p>Monitoring MBeans provide transient monitoring information about all the vital components of the
+Enterprise Server.</p><p>The <tt>Group</tt> Attribute of monitoring MBeans, obtained from <tt>getGroup()</tt>, has a value of
+<tt>com.sun.appserv.management.base.AMX.GROUP_MONITORING</tt>.</p>
+
+<a name="beapj"></a><h4>Utility MBeans</h4>
+<a name="indexterm-1117"></a><p>Utility MBeans provide commonly used services to the Enterprise Server.</p><p>The <tt>Group</tt> Attribute of utility MBeans, obtained from <tt>getGroup()</tt>, has a value of
+<tt>com.sun.appserv.management.base.AMX.GROUP_UTILITY</tt>.</p>
+
+<a name="beapk"></a><h4>Java EE Management MBeans</h4>
+<a name="indexterm-1118"></a><a name="indexterm-1119"></a><p>The Java EE management MBeans implement, and in some cases extend, the management
+hierarchy as defined by <a href="http://jcp.org/en/jsr/detail?id=77">JSR 77</a>, which specifies the management model for the whole
+Java EE platform. </p><p>The AMX JSR 77 MBeans offer access to configuration and monitoring MBeans using
+the <tt>getMonitoringPeer()</tt> and <tt>getConfigPeer()</tt> methods.</p><p>The <tt>Group</tt> Attribute of Java EE management MBeans, obtained from <tt>getGroup()</tt>, has a
+value of <tt>com.sun.appserv.management.base.AMX.GROUP_JSR77</tt>.</p>
+
+<a name="beapl"></a><h4>Other MBeans</h4>
+<a name="indexterm-1120"></a><p>MBeans that do not fit into one of the above four categories have
+the value <tt>com.sun.appserv.management.base.AMX.GROUP_OTHER</tt>. One such example is <tt>com.sun.appserv.management.deploy.DeploymentMgr</tt> (see <a href="http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/deploy/DeploymentMgr.html">http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/deploy/DeploymentMgr.html</a>).</p>
+
+<a name="beapm"></a><h4>MBean Notifications</h4>
+<a name="indexterm-1121"></a><p>All AMX MBeans that emit Notifications place a <tt>java.util.Map</tt> within the <tt>UserData</tt>
+field of a standard JMX Notification, which can be obtained using <tt>Notification.getUserData()</tt>. Within
+the map are one or more items, which vary according to the Notification
+type. Each Notification type, and the data available within the Notification, is defined
+in the Javadoc of the MBean (AMX interface) that emits it.</p><p>Note that certain standard Notifications, such as <tt>javax.management.AttributeChangeNotification</tt> (see <a href="http://java.sun.com/javase/6/docs/api/javax/management/AttributeChangeNotification.html">http://java.sun.com/javase/6/docs/api/javax/management/AttributeChangeNotification.html</a>) do not
+and cannot follow this behavior.</p>
+
+<a name="beapn"></a><h4>Access to MBean Attributes</h4>
+<a name="indexterm-1122"></a><p>An AMX MBean <tt>Attribute</tt> is accessible in three ways<b>:</b></p>
+<ul><li><p>Dotted names using <tt>MonitoringDottedNames</tt> and <tt>ConfigDottedNames</tt></p></li>
+<li><p>Attributes on MBeans using <tt>getAttribute(s)</tt> and <tt>setAttributes(s)</tt> (from the standard JMX API)</p></li>
+<li><p>Getters/setters within the MBean&#8217;s interface class, for example, <tt>getPort()</tt>, <tt>setPort()</tt>, and so on</p></li></ul>
+<p>All dotted names that are accessible through the command line interface are available
+as Attributes within a single MBean. This includes properties, which are provided as
+Attributes beginning with the prefix <tt>property.</tt>, for example, <tt>server.property.myproperty</tt>.</p>
+<hr><p><b>Note - </b>Certain attributes that ought to be of a specific type, such as <tt>int</tt>,
+are declared as <tt>java.lang.String</tt>. This is because the value of the attribute
+may be a template of a form such as <tt>${HTTP_LISTENER_PORT}</tt>.</p>
+<hr>
+
+
+<a name="beapo"></a><h3>Dynamic Client Proxies</h3>
+<a name="indexterm-1123"></a><a name="indexterm-1124"></a><a name="indexterm-1125"></a><p>Dynamic Client Proxies are an important part of the AMX API, and enhance
+ease-of-use for the programmer.</p><p>JMX MBeans can be used directly by an <tt>MBeanServerConnection</tt> (see <a href="http://java.sun.com/javase/6/docs/api/javax/management/MBeanServerConnection.html">http://java.sun.com/javase/6/docs/api/javax/management/MBeanServerConnection.html</a>) to
+the server. However, client proxies greatly simplify access to Attributes and operations on
+MBeans, offering get/set methods and type-safe invocation of operations. Compiling against the AMX interfaces
+means that compile-time checking is performed, as opposed to server-side runtime checking, when
+invoked generically through <tt>MBeanServerConnection</tt>.</p><p>See the API documentation for the <tt>com.sun.appserv.management</tt> package and its sub-packages for
+more information about using proxies. The API documentation explains the use of AMX
+with proxies. If you are using JMX directly (for example, by using<tt>MBeanServerConnection</tt>), the
+return type, argument types, and method names might vary as needed for the
+difference between a strongly-typed proxy interface and generic <tt>MBeanServerConnection/ObjectName</tt> interface. </p>
+
+<a name="beapp"></a><h3>Connecting to the Domain Administration Server</h3>
+<a name="indexterm-1126"></a><a name="indexterm-1127"></a><p>As stated in <a href="#beaph">Configuration MBeans</a>, the AMX API allows client applications to connect to
+Enterprise Server instances using the DAS. All AMX connections are established to the
+DAS only: AMX does not support direct connections to individual server instances. This makes
+it simple to interact with all servers, clusters, and so on, with a
+single connection.</p><p>Sample code for connecting to the DAS is shown in <a href="#beaps">Connecting to the DAS</a>. The
+<tt>com.sun.appserv.management.helper.Connect</tt> class (see <a href="http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/helper/Connect.html">http://glassfish.dev.java.net/nonav/javaee5/amx/javadoc/com/sun/appserv/management/helper/Connect.html</a>) is also available.</p>
+
+<a name="beapq"></a><h3>Examining AMX Code Samples</h3>
+<a name="indexterm-1128"></a><p>An overview of the AMX API and code samples that demonstrate various uses
+of the AMX API can be found at <a href="http://glassfish.dev.java.net/nonav/javaee5/amx/samples/javadoc/index.html">http://glassfish.dev.java.net/nonav/javaee5/amx/samples/javadoc/index.html</a> and <a href="http://glassfish.dev.java.net/nonav/javaee5/amx/samples/javadoc/amxsamples/Samples.html">http://glassfish.dev.java.net/nonav/javaee5/amx/samples/javadoc/amxsamples/Samples.html</a>.</p><p>The sample implementation is based around the <tt>SampleMain</tt> class. The principal uses of
+AMX demonstrated by <tt>SampleMain</tt> are the following:</p>
+<ul><li><p><a href="#beapt">Starting an Enterprise Server</a></p></li>
+<li><p><a href="#beapu">Deploying an Archive</a></p></li>
+<li><p><a href="#beapv">Displaying the AMX MBean Hierarchy</a></p></li>
+<li><p><a href="#beapw">Setting Monitoring States</a></p></li>
+<li><p><a href="#beapx">Accessing AMX MBeans</a></p></li>
+<li><p><a href="#beapy">Accessing and Displaying the Attributes of an AMX MBean</a></p></li>
+<li><p><a href="#beapz">Listing AMX MBean Properties</a></p></li>
+<li><p><a href="#beaqa">Performing Queries</a></p></li>
+<li><p><a href="#beaqb">Monitoring Attribute Changes</a></p></li>
+<li><p><a href="#beaqc">Undeploying Modules</a></p></li>
+<li><p><a href="#beaqd">Stopping an Enterprise Server</a></p></li></ul>
+<p>All of these actions are performed by commands that you give to <tt>SampleMain</tt>.
+Although these commands are executed by <tt>SampleMain</tt>, they are defined as methods of
+the class <tt>Samples</tt>, which is also found in the <tt>com.sun.appserv.management.sample</tt> package.</p>
+
+<a name="beapr"></a><h4>The <tt>SampleMain</tt> Class</h4>
+<p>The <tt>SampleMain</tt> class creates a connection to a DAS, and creates an interactive
+loop in which you can run the various commands defined in <tt>Samples</tt> that
+demonstrate different uses of AMX.</p>
+
+<a name="beaps"></a><h4>Connecting to the DAS</h4>
+<p>The connection to the DAS is shown in the following code.</p><pre>[...]
+public static AppserverConnectionSource
+    connect(
+        final String host,
+        final int port,
+        final String user,
+        final String password,
+        final TLSParams tlsParams )
+        throws IOException
+        {
+            final String info = "host=" + host + ", port=" + port +
+                ", user=" + user + ", password=" + password +
+                ", tls=" + (tlsParams != null);
+
+            SampleUtil.println( "Connecting...:" + info );
+
+            final AppserverConnectionSource conn    =
+                new AppserverConnectionSource(
+                    AppserverConnectionSource.PROTOCOL_RMI,
+                    host, port, user, password, tlsParams, null);
+
+            conn.getJMXConnector( false );
+
+            SampleUtil.println( "Connected: " + info );
+
+            return( conn );
+        }
+[...]</pre><p>A connection to the DAS is obtained using an instance of the
+<tt>com.sun.appserv.management.client.AppserverConnectionSource</tt> class. For the connection to be established, you must know the name
+of the host and port number on which the DAS is running, and
+have the correct user name, password and TLS parameters.</p><p>After the connection to the DAS is established, <tt>DomainRoot</tt> is obtained as
+follows:</p><pre>DomainRoot domainRoot = appserverConnectionSource.getDomainRoot();</pre><p>This <tt>DomainRoot</tt> instance is a client-side dynamic proxy to the MBean <tt>amx:j2eeType=X-DomainRoot,name=amx</tt>.</p><p>See the API documentation for <tt>com.sun.appserv.management.client.AppserverConnectionSource</tt> for further details about connecting to
+the DAS using the <tt>AppserverConnectionSource</tt> class<tt>.</tt></p><p>However, if you prefer to work with standard JMX, instead of getting <tt>DomainRoot</tt>,
+you can get the <tt>MBeanServerConnection</tt> or <tt>JMXConnector</tt>, as shown:</p><pre>MBeanServerConnection conn =
+appserverConnectionSource.getMBeanServerConnection( false );
+JMXConnector jmxConn =
+appserverConnectionSource.getJMXConnector( false );</pre>
+
+<a name="beapt"></a><h4>Starting an Enterprise Server</h4>
+<p>The <tt>Samples.startServer</tt> method demonstrates how to start an Enterprise Server.</p><p>In this sample AMX implementation, all the tasks are performed by the command
+<tt>start-server</tt> when you run <tt>SampleMain</tt>. See the <tt>startServer</tt> method to see how this
+command is implemented. Click the method name to see the source code.</p>
+
+<a name="beapu"></a><h4>Deploying an Archive</h4>
+<p>The <tt>Samples.uploadArchive()</tt> and <tt>deploy</tt> methods demonstrate how to upload and deploy a Java
+EE archive file.</p>
+
+<a name="beapv"></a><h4>Displaying the AMX MBean Hierarchy</h4>
+<p><a name="indexterm-1129"></a>The <tt>Samples.displayHierarchy</tt> method demonstrates how to display the AMX MBean hierarchy.</p>
+
+<a name="beapw"></a><h4>Setting Monitoring States</h4>
+<p><a name="indexterm-1130"></a>The <tt>Samples.setMonitoring</tt> method demonstrates how to set monitoring states.</p>
+
+<a name="beapx"></a><h4>Accessing AMX MBeans</h4>
+<a name="indexterm-1131"></a><p>The <tt>Samples.handleList</tt> method demonstrates how to access many (but not all) configuration elements.</p>
+
+<a name="beapy"></a><h4>Accessing and Displaying the Attributes of an AMX MBean</h4>
+<a name="indexterm-1132"></a><p>The <tt>Samples.displayAllAttributes</tt> method demonstrates how to access and display the attributes of an
+AMX MBean.</p>
+
+<a name="beapz"></a><h4>Listing AMX MBean Properties</h4>
+<p><a name="indexterm-1133"></a>The <tt>Samples.displayAllProperties</tt> method demonstrates how to list AMX MBean properties.</p>
+
+<a name="beaqa"></a><h4>Performing Queries</h4>
+<a name="indexterm-1134"></a><a name="indexterm-1135"></a><p>The <tt>Samples.demoQuery</tt> method demonstrates how to perform queries.</p><p>The <tt>demoQuery()</tt> method uses other methods that are defined by <tt>Samples</tt>, namely <tt>displayWild()</tt>,
+and <tt>displayJ2EEType()</tt>.</p>
+
+<a name="beaqb"></a><h4>Monitoring Attribute Changes</h4>
+<p>The <tt>Samples.demoJMXMonitor</tt> method demonstrates how to monitor attribute changes.</p>
+
+<a name="beaqc"></a><h4>Undeploying Modules</h4>
+<a name="indexterm-1136"></a><p>The <tt>Samples.undeploy</tt> method demonstrates how to undeploy a module.</p>
+
+<a name="beaqd"></a><h4>Stopping an Enterprise Server</h4>
+<a name="indexterm-1137"></a><a name="indexterm-1138"></a><p>The <tt>Samples.stopServer</tt> method demonstrates how to stop an Enterprise Server. The <tt>stopServer</tt> method simply
+calls the <tt>Samples.getJ2EEServer</tt> method on a given server instance, and then calls <tt>J2EEServer.stop</tt>.</p>
+
+<a name="beaqe"></a><h3>Running the AMX Samples</h3>
+<a name="indexterm-1139"></a><p>The following section lists the steps to run the AMX samples.</p>
+
+<a name="fvynd"></a><h4>To Run the AMX Sample</h4><ol>
+<li><b>Ensure that the JAR file <tt>appserv-ext.jar</tt> has been added to your classpath. Some
+examples also require that <tt>j2ee.jar</tt> be present.</b></li>
+<li><b>Define a <tt>SampleMain.properties</tt> file, which provides the parameters required by <tt>AppserverConnectionSource</tt> to connect
+to the DAS.</b><p>The file <tt>SampleMain.properties</tt> file should use the following format:</p><pre>connect.host=localhost
+connect.port=8686
+connect.user=admin
+connect.password=admin123
+connect.truststore=sample-truststore
+connect.truststorePassword=changeme
+connect.useTLS=true</pre>
+<hr><p><b>Note - </b>If you are running the Enterprise Server enterprise profile, TLS must be
+used (provided it has not been turned off). The <tt>useTLS</tt> property must
+therefore be set to <tt>useTLS=true</tt>. For information about profiles, see <a href="http://docs.sun.com/doc/820-4335/gelvk?a=view">Usage Profiles in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p>
+<hr>
+</li>
+<li><b>Scripts are provided in the <tt>com.sun.appserv.management.sample</tt> package to run the AMX samples.</b><p>Start <tt>SampleMain</tt> by running the appropriate script for your platform:</p>
+<ul><li><p><tt>run-samples.sh</tt> on UNIX or Linux platforms</p></li>
+<li><p><tt>run-samples.bat</tt> on Microsoft Windows platforms</p></li></ul>
+</li>
+<li><b>After <tt>SampleMain</tt> is running, you can interact with it by typing the commands
+examined above:</b>
+<ul><li><p><tt>Enter Command></tt> <tt><b>start-server</b></tt> <i>serverName</i></p></li>
+<li><p><tt>Enter Command></tt> <tt><b>list-attributes</b></tt></p><p>You see output like this:</p><pre>    --- Attributes for X-DomainRoot=amx ---
+    AttributeNames=[...]
+    BulkAccessObjectName=amx:j2eeType=X-BulkAccess,name=na
+    DomainConfigObjectName=amx:j2eeType=X-DomainConfig,name=na
+    MBeanInfoIsInvariant=true
+    J2EEDomainObjectName=amx:j2eeType=J2EEDomain,name=amx
+    AppserverDomainName=amx
+    ObjectName=amx:j2eeType=X-DomainRoot,name=amx
+    [...]</pre></li>
+<li><p><tt>Enter Command></tt> <tt><b>show-hierarchy</b></tt></p><p>You see output like this:</p><pre>    X-DomainRoot=amx
+    X-ConfigDottedNames
+    X-SystemInfo
+    X-QueryMgr
+    X-DeploymentMgr
+    X-UploadDownloadMgr
+    X-BulkAccess
+    X-MonitoringDottedNames
+    X-JMXMonitorMgr
+    X-Sample
+    X-DomainConfig
+    X-WebModuleConfig=admingui
+    X-WebModuleConfig=adminapp
+    X-WebModuleConfig=com_sun_web_ui
+    X-JDBCResourceConfig=jdbc/__default
+    X-JDBCResourceConfig=jdbc/__TimerPool
+    X-J2EEApplicationConfig=MEjbApp
+    [...]</pre></li>
+<li><p><tt>Enter Command></tt> <tt><b>list</b></tt></p><p>You see output like this:</p><pre>    --- Top-level ---
+    ConfigConfig: [server2-config, default-config, server-config,
+    server3-config]
+    ServerConfig: [server3, server, server2]
+    StandaloneServerConfig: [server3, server, server2]
+    ClusteredServerConfig: []
+    ClusterConfig: []
+    [...]</pre></li>
+<li><p><tt>Enter Command></tt> <tt><b>list-properties</b></tt></p><p>You see output like this:</p><pre>    Properties for:
+    amx:j2eeType=X-JDBCConnectionPoolConfig,name=DerbyPool
+    Password=pbPublic
+DatabaseName=jdbc:derby://localhost:9092/sun-appserv-samples
+    User=pbPublic
+    [...]</pre></li>
+<li><p><tt>Enter Command></tt> <tt><b>query</b></tt></p><p>You see output like this:</p><pre>    --- Queried for j2eeType=X-*ResourceConfig ---
+    j2eeType=X-JDBCResourceConfig,name=jdbc/__default
+    j2eeType=X-JDBCResourceConfig,name=jdbc/__TimerPool
+    [...]</pre></li>
+<li><p>And so on for the other commands:</p><p><tt>Enter Command></tt> <tt><b>demo-jmx-monitor</b></tt></p><p><tt>Enter Command></tt> <tt><b>set-monitoring</b></tt> <i>monitoringLevel</i> (one of <tt>HIGH</tt>, <tt>LOW</tt> or <tt>OFF</tt>)</p><p><tt>Enter Command></tt> <tt><b>stop-server</b></tt> <i>serverName</i></p><p><tt>Enter Command></tt> <tt><b>quit</b></tt></p></li></ul>
+</li></ol>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p25.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="idx-1.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+
