@@ -49,7 +49,7 @@ public class GetSupportAction extends ShowURLAction  {
      * The constructor.
      */
     public GetSupportAction() {
-    	super("http://www.sun.com/service/applicationserversubscriptions");
+    	super("http://www.sun.com/software/products/glassfish_portfolio/get_it.jsp");
     }
 
 }
