@@ -31,7 +31,7 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
                 if (entries[i].getExtraAttributes().length == 0) {
                     ClasspathEntry cpe = (ClasspathEntry) entries[i];
                     IClasspathAttribute[] newa = new IClasspathAttribute[1];
-                    newa[0] = JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, "jar:file:" + jarFile.getCanonicalPath() + "!/docs/api");
+                    newa[0] = JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, "jar:" + jarFile.toURI().toURL() + "!/docs/api");
                     try {
                         Field f = cpe.getClass().getDeclaredField("extraAttributes");
                         f.setAccessible(true);
