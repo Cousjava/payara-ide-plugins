@@ -11,7 +11,7 @@
 		<component id="eclipse-platform" />
 		<assembly id="eclipse-tools" />
 		<component id="eclipse-jdt" />
-		<assembly id="eclipse-wtp-no-servers" />
+		<assembly id="eclipse-wtp-no-servers-nightly" />
 		<component id="eclipse-emf-sdo-xsd" />
 		<component id="eclipse-gef" />
 		<component id="eclipse-dtp" />
