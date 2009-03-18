@@ -105,6 +105,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
         SunAppServer sunserver = serverBehavior.getSunAppServer();
         SunAppServer.ServerStatus status =SunAppServer.ServerStatus.CONNEXTION_ERROR ;
+        sunserver.SunInitialize();	// force reread of domain info if necessary
         if (sunserver.isRunning()) {
 			if (serverBehavior.isV3()) {
 				SunAppSrvPlugin

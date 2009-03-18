@@ -40,6 +40,8 @@ package com.sun.enterprise.jst.server.sunappsrv.editorsections;
 
 
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import org.eclipse.swt.SWT;
@@ -77,10 +79,14 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
  *
  * @author ludo
  */
-public class ServerSection extends ServerEditorSection {
+public class ServerSection extends ServerEditorSection implements PropertyChangeListener {
 
 
 	SunAppServer sunserver;
+	Text username = null;
+	Text password = null;
+	Text adminServerPortNumber = null;
+	Text serverPortNumber = null;
 
 	/**
 	 *
@@ -92,6 +98,17 @@ public class ServerSection extends ServerEditorSection {
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		sunserver = SunAppServer.getSunAppServer(server);
+		sunserver.addPropertyChangeListener(this);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.ui.editor.ServerEditorSection#dispose()
+	 */
+	@Override
+	public void dispose() {
+		sunserver.removePropertyChangeListener(this);
+		super.dispose();
 	}
 
 
@@ -138,8 +155,6 @@ public class ServerSection extends ServerEditorSection {
 			public void modifyText(ModifyEvent e) {
 
 				execute(new SunAppServerCommands(server, domainname.getText(),SunAppServer.DOMAINNAME));
-
-
 			}
 		});
 
@@ -155,7 +170,7 @@ public class ServerSection extends ServerEditorSection {
 
 		createLabel(comp, Messages.AdminName, toolkit);
 
-		final Text username = toolkit.createText(comp, sunserver.getAdminName(), SWT.BORDER);
+		username = toolkit.createText(comp, sunserver.getAdminName(), SWT.BORDER);
 		txtGDF.align(SWT.FILL, SWT.CENTER).span(2, 1).applyTo(username);
 		username.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -165,7 +180,7 @@ public class ServerSection extends ServerEditorSection {
 
 		createLabel(comp, Messages.AdminPassword, toolkit);
 
-		final Text password = toolkit.createText(comp,sunserver.getAdminPassword(), SWT.BORDER);
+		password = toolkit.createText(comp,sunserver.getAdminPassword(), SWT.BORDER);
 		password.setEchoChar('*');
 		txtGDF.applyTo(password);
 		password.addModifyListener(new ModifyListener() {
@@ -176,7 +191,7 @@ public class ServerSection extends ServerEditorSection {
 
 		createLabel(comp, Messages.ServerPortNumber, toolkit);
 
-		final Text serverPortNumber = toolkit.createText(comp, sunserver.getServerPort(), SWT.BORDER);
+		serverPortNumber = toolkit.createText(comp, sunserver.getServerPort(), SWT.BORDER);
 
 		txtGDF.applyTo(serverPortNumber);
 		serverPortNumber.setEditable(false);
@@ -185,7 +200,7 @@ public class ServerSection extends ServerEditorSection {
 
 		createLabel(comp, Messages.AdminServerPortNumber, toolkit);
 
-		final Text adminServerPortNumber = toolkit.createText(comp, sunserver.getAdminServerPort(), SWT.BORDER);
+		adminServerPortNumber = toolkit.createText(comp, sunserver.getAdminServerPort(), SWT.BORDER);
 		txtGDF.applyTo(adminServerPortNumber);
 		adminServerPortNumber.setEditable(false);
 		adminServerPortNumber.setEnabled(false);
@@ -246,6 +261,7 @@ public class ServerSection extends ServerEditorSection {
 			i[0] = new Status(IStatus.ERROR,  "Glassfish",domain.getAbsolutePath()+" is not a valid domain (no domain.xml)" );
 			return i;
 		}
+		
 		return new IStatus[0];
 	}
 	protected Label createLabel(Composite parent, String text, FormToolkit toolkit) {
@@ -267,6 +283,17 @@ public class ServerSection extends ServerEditorSection {
 
 
 		return autoPublishTime;
+	}
+
+
+	// note that this is currently not working due to issue 140
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (SunAppServer.DOMAINUPDATE == evt.getPropertyName()) {
+			username.setText(sunserver.getAdminName());
+			password.setText(sunserver.getAdminPassword());
+			adminServerPortNumber.setText(sunserver.getAdminServerPort());
+			serverPortNumber.setText(sunserver.getServerPort());
+		}
 	}
 
 

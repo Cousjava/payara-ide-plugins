@@ -38,11 +38,14 @@
 
 package com.sun.enterprise.jst.server.sunappsrv;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +107,10 @@ public class SunAppServer extends GenericServer {
     String adminServerPortNumber="1114848";
     String jmxPort = "8686";//For V2 only, the jmx port to issue some MBeans call that return server loc
     boolean initializedCalled = false;
+    private String prevDomainDir, prevDomainName;
+    
+    public static final String DOMAINUPDATE = "domainupdate";
+    private List<PropertyChangeListener> propChangeListeners;
     
     public SunAppServer(){
         SunAppSrvPlugin.logMessage("in SunAppServer CTOR");
@@ -121,16 +128,33 @@ public class SunAppServer extends GenericServer {
 
     }
 
-    private void SunInitialize(){
+    protected void SunInitialize(){
+    	String domainDir = getDomainDir();
+    	String domainName = getdomainName();
     	if (initializedCalled){
-    		return;
+        	if ((prevDomainDir != null) && !prevDomainDir.startsWith("${") && !prevDomainDir.equals(domainDir)) {
+        		initializedCalled = false;
+        	}
+        	if ((prevDomainName != null) && !prevDomainName.startsWith("${") && !prevDomainName.equals(domainName)) {
+        		initializedCalled = false;
+        	}
+        	if (initializedCalled)
+        		return;
     	}
     	SunAppSrvPlugin.logMessage("in SunAppServer SunInitialize domain is"+getDomainDir());
-    	if ((getDomainDir()!=null)&&(!getDomainDir().startsWith("${"))){ //only if we are correctly setup...
-    		readServerConfiguration(new File(getDomainDir()+File.separator+getdomainName()+"/config/domain.xml"));
+    	if ((domainDir!=null)&&(!domainDir.startsWith("${"))){ //only if we are correctly setup...
+    		readServerConfiguration(new File(domainDir+File.separator+domainName+"/config/domain.xml"));
     		SunAppSrvPlugin.logMessage("in SunAppServer initialize done readServerConfiguration");
     		syncHostAndPortsValues();
-    		initializedCalled = true;
+        	prevDomainDir = domainDir;
+			prevDomainName = domainName;
+			// this is mainly so serversection can listen and repopulate, 
+			// but it is not working as intended because the sunserver instance to 
+			// which the prop change listener is attached is a different one than is 
+			// seeing the changes. in fact, we have multiple instances of this 
+			// object and the SunAppServerBehaviour object per server - issue 140
+			firePropertyChangeEvent(DOMAINUPDATE, null, null);			
+			initializedCalled = true;
     	}    	
     }
 
@@ -138,7 +162,7 @@ public class SunAppServer extends GenericServer {
 	  return getServerInstanceProperties();
   }
   
-  /* overide needed to store the admin server port  and server port immediately at server creation
+  /* overide needed to store the admin server port and server port immediately at server creation
    * (non-Javadoc)
    * @see org.eclipse.jst.server.generic.core.internal.GenericServer#setServerInstanceProperties(java.util.Map)
    */
@@ -250,7 +274,7 @@ public class SunAppServer extends GenericServer {
     	}
 	}
 
-    public void  saveConfiguration(IProgressMonitor m) throws CoreException  {
+    public void saveConfiguration(IProgressMonitor m) throws CoreException  {
         SunAppSrvPlugin.logMessage("in Save SunAppServer " +initializedCalled);
         if (initializedCalled==false){
         	SunInitialize(); 
@@ -261,9 +285,56 @@ public class SunAppServer extends GenericServer {
         super.saveConfiguration(m);
 
     }
-    
-    
-    public String getAdminPassword() {
+
+	/**
+	 * Add a property change listener to this server.
+	 *
+	 * @param listener java.beans.PropertyChangeListener
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		if (propChangeListeners == null)
+			propChangeListeners = new ArrayList<PropertyChangeListener>();
+		propChangeListeners.add(listener);
+	}
+
+	/**
+	 * Remove a property change listener from this server.
+	 *
+	 * @param listener java.beans.PropertyChangeListener
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		if (propChangeListeners != null)
+			propChangeListeners.remove(listener);
+	}
+
+	/**
+	 * Fire a property change event.
+	 * 
+	 * @param propertyName a property name
+	 * @param oldValue the old value
+	 * @param newValue the new value
+	 */
+	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
+		if (propChangeListeners == null)
+			return;
+	
+		PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
+		try {
+			Iterator<PropertyChangeListener> iterator = propChangeListeners.iterator();
+			while (iterator.hasNext()) {
+				try {
+					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
+					listener.propertyChange(event);
+				} catch (Exception e) {
+					SunAppSrvPlugin.logMessage("Error firing property change event", e);
+				}
+			}
+		} catch (Exception e) {
+			SunAppSrvPlugin.logMessage("Error in property event", e);
+		}
+	}
+
+	public String getAdminPassword() {
         
         return (String) getProps().get(ADMINPASSWORD);
     }
@@ -626,7 +697,7 @@ public class SunAppServer extends GenericServer {
         }
         
     }
-    
+
 }       
     
 
