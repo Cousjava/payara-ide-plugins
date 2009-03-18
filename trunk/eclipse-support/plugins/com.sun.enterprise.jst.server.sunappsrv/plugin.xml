@@ -986,7 +986,7 @@
         <editor
             class="com.sun.enterprise.jst.server.sunappsrv.v3.Register"
             contributorClass="com.sun.enterprise.jst.server.sunappsrv.v3.BrowserEditorContributor"
-            extensions="xml"
+            extensions="notusedxml"
             icon="icons/obj16/glassfishserver.gif"
             id="com.sun.enterprise.jst.server.sunappsrv.v3.Register"
             name="%menu.registerglassfish">
@@ -994,7 +994,7 @@
         <editor
             class="com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter"
             contributorClass="com.sun.enterprise.jst.server.sunappsrv.v3.BrowserEditorContributor"
-            extensions="jjjxml"
+            extensions="notusedxml"
             icon="icons/obj16/glassfishserver.gif"
             id="com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter"
             name="%menu.updatecenter">
