@@ -1,0 +1,573 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>JDBC Resources - Sun GlassFish Enterprise Server 2.1 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p5.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p7.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="ablih"></a>Chapter&#160;3<h3>JDBC Resources</h3><p>This chapter explains how to configure JDBC resources, which are required by applications
+that access databases. This chapter contains the following sections:</p>
+<ul><li><p><a href="#ablij">JDBC Resources</a></p></li>
+<li><p><a href="#ablik">JDBC Connection Pools</a></p></li>
+<li><p><a href="#ablil">How JDBC Resources and Connection Pools Work Together</a></p></li>
+<li><p><a href="#ablim">Setting Up Database Access</a></p></li>
+<li><p><a href="#ablip">Working with JDBC Connection Pools</a></p></li>
+<li><p><a href="#beamw">Configurations for Specific JDBC Drivers</a></p></li></ul>
+
+
+<a name="ablij"></a><h3>JDBC Resources</h3>
+<p>To store, organize, and retrieve data, most applications use relational databases. Java EE
+applications access relational databases through the JDBC API.</p><p>A JDBC resource (data source) provides applications with a means of connecting to
+a database. Typically, the administrator creates a JDBC resource for each database accessed
+by the applications deployed in a domain. (However, more than one JDBC resource
+can be created for a database.)</p><p>To create a JDBC resource, specify a unique JNDI name that identifies the
+resource. (See the section JNDI Names and Resources.) Expect to find the JNDI
+name of a JDBC resource in <tt>java:comp/env/jdbc</tt> subcontext. For example, the JNDI name
+for the resource of a payroll database could be <tt>java:comp/env/jdbc/payrolldb</tt>. Because all
+resource JNDI names are in the <tt>java:comp/env</tt> subcontext, when specifying the JNDI name of
+a JDBC resource in the Admin Console, enter only <tt>jdbc/</tt><b>name</b>. For example,
+for a payroll database specify <tt>jdbc/payrolldb</tt>.</p><p>A JDBC resource (data source) provides applications with a means of connecting to
+a database.</p><p>Before creating a JDBC resource, first create a JDBC connection pool.</p><p> When creating a JDBC resource, you must identify:</p>
+<ol><li><p>The JNDI Name. By convention, the name begins with the <tt>jdbc/</tt> string. For example: <tt>jdbc/payrolldb</tt>. Don&#8217;t forget the forward slash.</p></li>
+<li><p>Select a connection pool to be associated with the new JDBC resource.</p></li>
+<li><p>Specify the settings for the resource.</p></li>
+<li><p>Identify the targets (clusters and standalone server instance) on which the resource is available.</p></li></ol>
+
+
+<a name="ablik"></a><h3>JDBC Connection Pools</h3>
+<p>To create a JDBC resource, specify the connection pool with which it is
+associated. Multiple JDBC resources can specify a single connection pool.</p><p>A JDBC connection pool is a group of reusable connections for a
+particular database. Because creating each new physical connection is time consuming, the server maintains
+a pool of available connections to increase performance. When an application requests a
+connection, it obtains one from the pool. When an application closes a connection,
+the connection is returned to the pool.</p><p>The properties of connection pools can vary with different database vendors. Some common
+properties are the database&#8217;s name (URL), user name, and password.</p><p>See Also:</p>
+<ul><li><p><a href="#ablij">JDBC Resources</a></p></li>
+<li><p><a href="#ablil">How JDBC Resources and Connection Pools Work Together</a></p></li>
+<li><p><a href="#ablir">Editing a JDBC Connection Pool</a></p></li></ul>
+
+
+<a name="ablil"></a><h3>How JDBC Resources and Connection Pools Work Together</h3>
+<p>To store, organize, and retrieve data, most applications use relational databases. Java EE
+applications access relational databases through the JDBC API. Before an application can access
+a database, it must get a connection.</p><p>At runtime, here&#8217;s what happens when an application connects to a database:</p>
+<ol><li><p>The application gets the JDBC resource (data source) associated with the database by making a call through the JNDI API.</p><p>Given the resource&#8217;s JNDI name, the naming and directory service locates the JDBC resource. Each JDBC resource specifies a connection pool.</p></li>
+<li><p>Via the JDBC resource, the application gets a database connection.</p><p>Behind the scenes, the application server retrieves a physical connection from the connection pool that corresponds to the database. The pool defines connection attributes such as the database name (URL), user name, and password.</p></li>
+<li><p>Now that it is connected to the database, the application can read, modify, and add data to the database.</p><p>The applications access the database by making calls to the JDBC API. The JDBC driver translates the application&#8217;s JDBC calls into the protocol of the database server.</p></li>
+<li><p>When it is finished accessing the database, the application closes the connection.</p><p>The application server returns the connection to the connection pool. Once it&#8217;s back in the pool, the connection is available for the next application.</p></li></ol>
+
+
+<a name="ablim"></a><h3>Setting Up Database Access</h3>
+<p>To set up a database access:</p>
+<ol><li><p>Install a supported database product. </p><p>For a list of database products supported by the Enterprise Server, see the <i>Release Notes</i>.</p></li>
+<li><p>Install a JDBC driver for the database product.</p></li>
+<li><p>Make the driver&#8217;s JAR file accessible to the domain&#8217;s server instance.</p></li>
+<li><p>Create the database. </p><p>Usually, the application provider delivers scripts for creating and populating the database.</p></li>
+<li><p>Create a connection pool for the database.</p></li>
+<li><p>Create a JDBC resource that points to the connection pool.</p></li></ol>
+<p>Now to integrate the JDBC driver into an administrative domain, do either of
+the following:</p>
+<ol><li><p>Make the driver accessible to the common class loader.</p><p>Copy the driver&#8217;s JAR and ZIP files into the <i>domain-dir</i><tt>/lib</tt> directory or copy its class files into the <i>domain-dir</i><tt>/lib/ext</tt> directory.</p></li>
+<li><p>Restart the domain.</p></li>
+<li><p>Identify the fully-qualified path name for the driver's JAR file.</p></li></ol>
+
+
+<a name="ablip"></a><h3>Working with JDBC Connection Pools</h3>
+<p>A JDBC connection pool is a group of reusable connections for a
+particular database. When creating the pool with the Admin Console, the Administrator is actually
+defining the aspects of a connection to a specific database.</p><p>Before creating the pool, you must first install and integrate the JDBC driver.
+When building the Create Connection Pool pages, certain data specific to the JDBC
+driver and the database vendor must be entered. Before proceeding, gather the following
+information:</p>
+<ul><li><p>Database vendor name</p></li>
+<li><p>Resource type, such as <tt>javax.sql.DataSource</tt> (local transactions only) <tt>javax.sql.XADataSource</tt> (global transactions)</p></li>
+<li><p>Data source class name</p></li>
+<li><p>Required properties, such as the database name (URL), user name, and password</p></li></ul>
+
+
+<a name="gibzk"></a><h4>Creating a JDBC Connection Pool</h4>
+<p>You can use the Admin Console for creating the JDBC connection pool.
+</p>
+
+<a name="gibyy"></a><h5>Creating a JDBC Connection Pool and JDBC Resource Using the Admin Console</h5>
+<ol>
+<li><b>Copy the JDBC driver for database connectivity to <tt></tt><i>as-install</i><tt>/domains/</tt><i>domain_name</i><tt>/lib/ext</tt>. Alternatively, add the
+path to the JDBC driver to <tt>classpath-prefix</tt> and restart the server.</b></li>
+<li><b>In the Admin Console, click Create JDBC Connection Pool in the Common Tasks
+page.</b></li>
+<li><b>Provide a name for the connection pool, select the resource type, select the
+database vendor. Click Next.</b></li>
+<li><b>The Admin Console lists the default pool settings and the properties of datasource
+class provided by the vendor. </b></li>
+<li><b>Click the Ping button to test the JDBC connection pool. </b></li>
+<li><b>In the left-hand pane of the Admin Console, click Resources > JDBC Resources.</b></li>
+<li><b>Click New.</b></li>
+<li><b>In the New JDBC Resource page, provide the JNDI name for the
+resource and the JDBC comnnection pool with which the JDBC resource needs to
+be associated.</b></li>
+<li><b>Click OK.</b></li></ol>
+
+<a name="gicbh"></a><h5>Creating a JDBC Connection Pool and JDBC Resource Using the CLI</h5>
+<ol>
+<li><b>Use the <tt>asadmin create-jdbc-connection-pool</tt> command to create a JDBC connection pool.</b><p>Sample command to create a JDBC connection pool: </p><p><tt>asadmin create-jdbc-connection-pool --datasourceclassname oracle.jdbc.pool.OracleDataSource --restype javax.sql.DataSource --property user=dbuser:password=dbpassword:url="jdbc:oracle\:thin\:@localhost\:1521\:ORCL" myjdbc_oracle-pool</tt></p></li>
+<li><b>Use the <tt>asadmin create-jdbc-resource</tt> command to create a JDBC resource assicated with this connection
+pool.</b><p>Sample command to create a JDBC resource: </p><p><tt>asadmin create-jdbc-connection-pool --connectionpoolid myjdbc_oracle-pool jdbc/oracle-resource </tt></p></li>
+<li><b>Test the connection settings are correct by pinging the connection pool using the
+<tt>asadmin ping-connection-pool</tt> command.</b><p><tt>asadmin ping-connection-pool myjdbc_oracle-pool</tt></p></li>
+<li><b>To edit JDBC connection pool properties, use the <tt>asadmin list</tt>, <tt>get</tt>, and <tt>set</tt>
+commands.</b><p>Sample list command to list a JDBC connection pool: </p><p><tt>asadmin list myjdbc_oracle-pool</tt></p><p>The sample output of this command: </p><p><tt>domain.resources.jdbc-connection-pool.oracle-pool</tt></p><p>Sample get command to list all properties of a JDBC connection pool:
+</p><p><tt>asadmin list myjdbc_oracle-pool</tt></p><p>Sample get command to get all properties of a JDBC connection pool: </p><p><tt>asadmin get domain.resources.jdbc-connection-pool.myjdbc_oracle-pool</tt></p><p>Sample get command to set a properties of a JDBC connection pool:
+</p><p><tt>asadmin set domain.resources.jdbc-connection-pool.myjdbc_oracle-pool.steady-pool-size=20</tt></p></li></ol>
+
+<a name="ablir"></a><h4>Editing a JDBC Connection Pool</h4>
+<p>The Edit JDBC Connection Pool page provides the means to change all of
+the settings for an existing pool except its name.</p>
+<ol><li><p>Change general settings.</p><p>The values of the general settings depend on the specific JDBC driver that is installed. These settings are the names of classes or interfaces in the Java programming language.</p><table><col width="25%"><col width="75%"><tr><th align="left" valign="top" scope="column"><p>Parameter </p></th>
+<th align="left" valign="top" scope="column"><p>Description </p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>DataSource Class Name</p></td>
+<td align="left" valign="top" scope="row"><p>The vendor-specific class name that implements the <tt>DataSource</tt> and / or <tt>XADataSource</tt> APIs. This class is in the JDBC driver.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Resource Type</p></td>
+<td align="left" valign="top" scope="row"><p>Choices include <tt>javax.sql.DataSource</tt> (local transactions only), <tt>javax.sql.XADataSource</tt> (global transactions), and <tt>java.sql.ConnectionPoolDataSource</tt> (local transactions, possible performance improvements).</p></td>
+</tr>
+</table></li>
+<li><p>Change pool settings.</p><p>A set of physical database connections reside in the pool. When an application requests a connection, the connection is removed from the pool, and when the application releases the connection, it is returned to the pool.</p><table><col width="25%"><col width="75%"><tr><th align="left" valign="top" scope="column"><p>Parameter </p></th>
+<th align="left" valign="top" scope="column"><p>Description </p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Initial and Minimum Pool Size</p></td>
+<td align="left" valign="top" scope="row"><p>The minimum number of connections in the pool. This value also determines the number of connections placed in the pool when the pool is first created.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Maximum Pool Size</p></td>
+<td align="left" valign="top" scope="row"><p>The maximum number of connections in the pool.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Pool Resize Quantity</p></td>
+<td align="left" valign="top" scope="row"><p>When the pool scales up and scales down towards the maximum and minimum pool sizes respectively, it is resized in batches. This value determines the number of connections in the batch. Making this value too large delays connection creation and recycling; making it too small will be less efficient.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Idle Timeout</p></td>
+<td align="left" valign="top" scope="row"><p>The maximum time in seconds that a connection can remain idle in the pool. After this time expires, the connection is removed from the pool.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Max Wait Time</p></td>
+<td align="left" valign="top" scope="row"><p>The amount of time the application requesting a connection will wait before getting a connection timeout. Because the default wait time is long, the application might appear to hang indefinitely.</p></td>
+</tr>
+</table></li>
+<li><p>Change connection validation settings.</p><p>Optionally, the application server can validate connections before they are passed to applications. This validation allows the application server to automatically reestablish database connections if the database becomes unavailable due to network failure or database server crash. Validation of connections incurs additional overhead and slightly reduces performance.</p><table><col width="25%"><col width="75%"><tr><th align="left" valign="top" scope="column"><p>Parameter </p></th>
+<th align="left" valign="top" scope="column"><p>Description </p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Connection Validation</p></td>
+<td align="left" valign="top" scope="row"><p>Select the Required checkbox to enable connection validation.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Validation Method</p></td>
+<td align="left" valign="top" scope="row"><p>The application server can validate database connections in three ways: auto-commit, metadata, and table.</p><p>auto-commit and metadata - The application server validates a connection by calling the <tt>con.getAutoCommit()</tt> and <tt>con.getMetaData()</tt> methods. </p><p>Auto-commit validation makes use of two methods for validating the connection.<tt>getAutoCommit() </tt>is used to retrieve the current state of auto-commit and <tt>setAutoCommit() </tt>to change the state of auto-commit. This allows actual contact with the database to take place. <tt>getAutomCommit()</tt>might or might not contact the database, depending on the implementation. Actual physical connection will be wrapped for different purposes, such as a connection pool.</p>
+<hr><p><b>Note - </b>Because many JDBC drivers cache the results of these calls, they do not always provide reliable validations. Check with the driver vendor to determine whether these calls are cached or not.</p>
+<hr>
+<p>table - The application queries a database table that are specified. The table must exist and be accessible, but it doesn't require any rows. Do not use an existing table that has a large number of rows or a table that is already frequently accessed.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Table Name</p></td>
+<td align="left" valign="top" scope="row"><p>If you selected table from the Validation Method combo box, then specify the name of the database table here.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>On Any Failure</p></td>
+<td align="left" valign="top" scope="row"><p>If you select the checkbox labelled Close All Connections, if a single connection fails, then the application server closes all connections in the pool and then reestablish them. If you do not select the checkbox, then individual connections are reestablished only when they are used.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Allow Non Component Callers</p></td>
+<td align="left" valign="top" scope="row"><p>Click this check box if you want to enable the pool for use by non-component callers such as Servlet Filters and Lifecycle modules. </p></td>
+</tr>
+</table></li>
+<li><p>Change transaction isolation settings.</p><p>Because a database is usually accessed by many users concurrently, one transaction might update data while another attempts to read the same data. The isolation level of a transaction defines the degree to which the data being updated is visible to other transactions. For details on isolation levels, refer to the documentation of the database vendor.</p><table><col width="25%"><col width="75%"><tr><th align="left" valign="top" scope="column"><p>Parameter </p></th>
+<th align="left" valign="top" scope="column"><p>Description </p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Non-transactional Connections</p></td>
+<td align="left" valign="top" scope="row"><p>Click the check box if you want Application Server to return all non-transactional connections.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Transaction Isolation</p></td>
+<td align="left" valign="top" scope="row"><p>Makes it possible to select the transaction isolation level for the connections of this pool. If left unspecified, the connections operate with default isolation levels provided by the JDBC driver.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Guaranteed Isolation Level</p></td>
+<td align="left" valign="top" scope="row"><p>Only applicable if the isolation level has been specified. If you select the Guaranteed checkbox, then all connections taken from the pool have the same isolation level. For example, if the isolation level for the connection is changed programmatically (with <tt>con.setTransactionIsolation</tt>) when last used, this mechanism changes the status back to the specified isolation level.</p></td>
+</tr>
+</table></li>
+<li><p>Change properties.</p><p>In the Additional Properties table, it is possible to specify properties, such as the database name (URL), user name, and password. Because the properties vary with database vendor, consult the vendor&#8217;s documentation for details.</p></li></ol>
+
+
+<a name="geveg"></a><h4>Editing JDBC Connection Pool Advanced Attributes</h4>
+<p>To help diagnose connection leaks and improve ease-of&#8211;use, Application Server 9.1 provides several
+new attributes to configure a connection pool at the time of its creation.</p>
+<ol><li><p>Open the Advanced tab and specify the following attributes.</p><table><col width="50%"><col width="50%"><tr><td align="left" valign="top" scope="row"><p>Attribute</p></td>
+<td align="left" valign="top" scope="row"><p>Description</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Name</p></td>
+<td align="left" valign="top" scope="row"><p>Name of the JDBC connection pool whose properties you want to edit. You cannot change the pool name, however.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Statement Timeout</p></td>
+<td align="left" valign="top" scope="row"><p>Time in seconds after which abnormally long running queries will be terminated. Application Server will set "QueryTimeout" on the statements created. The default value of -1 implies that the attribute is not enabled.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Wrap JDBC Objects</p></td>
+<td align="left" valign="top" scope="row"><p>When set to true, application will get wrapped jdbc objects for Statement, PreparedStatement, CallableStatement, ResultSet, DatabaseMetaData. The default value is false.</p></td>
+</tr>
+</table></li>
+<li><p>Specify the Connection Settings as explained in the following table. </p><table><col width="50%"><col width="50%"><tr><td align="left" valign="top" scope="row"><p>Attribute</p></td>
+<td align="left" valign="top" scope="row"><p>Description</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Validate Atmost Once</p></td>
+<td align="left" valign="top" scope="row"><p>Amount of time, in seconds, after which a connection is validated at most once. This will help reduce the number of validation requests by a connection. The default value 0 implies that connection validation is not enabled.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Leak Timeout</p></td>
+<td align="left" valign="top" scope="row"><p>Amount of time, in seconds, to trace connection leaks in a connection pool. The default value 0 means that connection leak tracing is disabled. If connection leak tracing is enabled, you can get statistics on the number of connection leaks in the Monitoring Resources tab. To view this tab, go to Application Server > Monitoring > Resources. </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Leak Reclaim</p></td>
+<td align="left" valign="top" scope="row"><p>If this option is enabled, leaked connections will be restored to the pool after leak connection tracing is complete.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Creation Retry Attempts</p></td>
+<td align="left" valign="top" scope="row"><p>Number of attempts that will be made if there is a failure in creating a new connection. The default value of 0 implies that no attempts will be made to create the connection again.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Retry Interval</p></td>
+<td align="left" valign="top" scope="row"><p>Specify the interval, in seconds, between two attempts to create a connection. The default value is 10 seconds. This attribute is used only if the value of Creation Retry Attempts is greater than 0.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Lazy Connection Enlistment</p></td>
+<td align="left" valign="top" scope="row"><p>Enable this option to enlist a resource to the transaction only when it is actually used in a method.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Lazy Association</p></td>
+<td align="left" valign="top" scope="row"><p>Connections are lazily associated when an operation is performed on them. Also, they are disassociated when the transaction is completed and a component method ends, which helps reuse of the physical connections. Default value is false.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Associate with Thread</p></td>
+<td align="left" valign="top" scope="row"><p>Enable this option to associate a connection with the thread such that when the same thread is in need of a connection, it can reuse the connection already associated with that thread, thereby not incurring the overhead of getting a connection from the pool. Default value is false.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Match Connections </p></td>
+<td align="left" valign="top" scope="row"><p>Use this option to switch on/off connection matching for the pool. It can be set to false if the administrator knows that the connections in the pool will always be homogeneous and hence a connection picked from the pool need not be matched by the resource adapter. Default value is false.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Max Connection Usage</p></td>
+<td align="left" valign="top" scope="row"><p>Specify the number of times a connection should be reused by the pool. Once a connection is reused for the specified number of times, it will be closed. This is useful, for instance, to avoid statement-leaks. The default value of 0 implies that no connections will be reused.</p></td>
+</tr>
+</table></li></ol>
+
+
+<a name="beamw"></a><h3>Configurations for Specific JDBC Drivers</h3>
+<p>Enterprise Server  is designed to support connectivity to any database management system
+with a corresponding JDBC driver. The following JDBC driver and database combinations are
+<a name="indexterm-16"></a><a name="indexterm-17"></a>supported. These combinations have been tested with Enterprise Server  and are found
+to be Java EE compatible. </p>
+<ul><li><p><a href="#beamx">Java DB Type 4 Driver</a></p></li>
+<li><p><a href="#beamy">Sun GlassFish JDBC Driver for DB2 Databases</a></p></li>
+<li><p><a href="#beamz">Sun GlassFish JDBC Driver for Oracle 8.1.7 and 9.x Databases</a></p></li>
+<li><p><a href="#beana">Sun GlassFish JDBC Driver for Microsoft SQL Server Databases</a></p></li>
+<li><p><a href="#beanb">Sun GlassFish JDBC Driver for Sybase Databases</a></p></li>
+<li><p><a href="#beanc">IBM DB2 8.1 Type 2 Driver</a></p></li>
+<li><p><a href="#beand">JConnect Type 4 Driver for Sybase ASE 12.5 Databases</a></p></li>
+<li><p><a href="#gbsok">MySQL Type 4 Driver </a></p></li></ul>
+<p>Other JDBC drivers can be used with Enterprise Server , but Java EE
+compliance tests have not been completed with these drivers. Although Sun offers no
+product support for these drivers, Sun offers limited support of the use of
+these drivers with Enterprise Server .</p>
+<ul><li><p><a href="#beane">Inet Oraxo JDBC Driver for Oracle 8.1.7 and 9.x Databases</a></p></li>
+<li><p><a href="#beanf">Inet Merlia JDBC Driver for Microsoft SQL Server Databases</a></p></li>
+<li><p><a href="#beang">Inet Sybelux JDBC Driver for Sybase Databases</a></p></li>
+<li><p><a href="#beanh">Oracle Thin Type 4 Driver for Oracle 8.1.7 and 9.x Databases</a></p></li>
+<li><p><a href="#beani">OCI Oracle Type 2 Driver for Oracle 8.1.7 and 9.x Databases</a></p></li>
+<li><p><a href="#beanj">IBM Informix Type 4 Driver</a></p></li>
+<li><p><a href="#beanl">CloudScape 5.1 Type 4 Driver</a></p></li></ul>
+<p>For details about how to integrate a JDBC driver and how to
+use the Administration Console or the command line interface to implement the configuration, see
+the <i><a href="http://docs.sun.com/doc/820-4335"><i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a></i>.</p>
+<hr><p><b>Note - </b>An Oracle database user running the <tt>capture-schema</tt> command needs ANALYZE ANY TABLE privileges
+if that user does not own the schema. These privileges are granted to
+the user by the database administrator. For information about <tt>capture-schema</tt>, see <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p>
+<hr>
+
+
+<a name="beamx"></a><h4>Java DB Type 4 Driver</h4>
+<a name="indexterm-18"></a><p>The Java DB JDBC driver is included with the Enterprise Server by
+default, except for the Solaris bundled installation, which does not include Java DB. Therefore,
+unless you have the Solaris bundled installation, you do not need to integrate
+this JDBC driver with the Enterprise Server.</p><p>The JAR file for the Java DB driver is <tt>derbyclient.jar</tt>.</p><p>Configure the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>Java DB</tt></p></li>
+<li><p><b>DataSource Classname:</b> Specify one of the following:</p><pre>org.apache.derby.jdbc.ClientDataSource
+org.apache.derby.jdbc.ClientXADataSource</pre></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>user</b></tt> - Specify the database user.</p><p>This is only necessary if Java DB is configured to use authentication. Java DB does <b>not</b> use authentication by default. When the user is provided, it is the name of the schema where the tables reside.</p></li>
+<li><p><tt><b>password</b></tt> - Specify the database password.</p><p>This is only necessary if Java DB is configured to use authentication.</p></li>
+<li><p><tt><b>databaseName</b></tt> - Specify the name of the database.</p></li>
+<li><p><tt><b>serverName</b></tt> - Specify the host name or IP address of the database server.</p></li>
+<li><p><tt><b>portNumber</b></tt> - Specify the port number of the database server if it is different from the default.</p></li></ul>
+</li>
+<li><p><b>URL:</b> <tt>jdbc:javadb://</tt><i>serverName</i><tt>:</tt><i>portNumber</i><tt>/</tt><i>databaseName</i><tt>;create=true</tt></p><p>Include the <tt>;create=true</tt> part only if you want the database to be created if it does not exist.</p></li></ul>
+
+
+<a name="beamy"></a><h4>Sun GlassFish JDBC Driver for DB2 Databases</h4>
+<a name="indexterm-19"></a><p>The JAR files for this driver are <tt>smbase.jar</tt>, <tt>smdb2.jar</tt>, and <tt>smutil.jar</tt>. Configure
+the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>DB2</tt></p></li>
+<li><p><b>DataSource Classname:</b> <tt>com.sun.sql.jdbcx.db2.DB2DataSource</tt></p></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> - Specify the host name or IP address of the database server.</p></li>
+<li><p><tt><b>portNumber</b></tt> - Specify the port number of the database server.</p></li>
+<li><p><tt><b>databaseName</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li></ul>
+</li>
+<li><p><b>URL:</b> <tt>jdbc:sun:db2://</tt><i>serverName</i><tt>:</tt><i>portNumber</i><tt>;databaseName=</tt><i>databaseName</i></p></li></ul>
+
+
+<a name="beamz"></a><h4>Sun GlassFish JDBC Driver for Oracle 8.1.7 and 9.x Databases</h4>
+<a name="indexterm-20"></a><p>The JAR files for this driver are <tt>smbase.jar</tt>, <tt>smoracle.jar</tt>, and <tt>smutil.jar</tt>. Configure
+the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>Oracle</tt></p></li>
+<li><p><b>DataSource Classname:</b> <tt>com.sun.sql.jdbcx.oracle.OracleDataSource</tt></p></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> - Specify the host name or IP address of the database server.</p></li>
+<li><p><tt><b>portNumber</b></tt> - Specify the port number of the database server.</p></li>
+<li><p><tt><b>SID</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li></ul>
+</li>
+<li><p><b>URL:</b> <tt>jdbc:sun:oracle://</tt><i>serverName</i><tt>[:</tt><i>portNumber</i><tt>][;SID=</tt><i>databaseName</i><tt>]</tt></p></li></ul>
+
+
+<a name="beana"></a><h4>Sun GlassFish JDBC Driver for Microsoft SQL Server Databases</h4>
+<a name="indexterm-21"></a><p>The JAR files for this driver are <tt>smbase.jar</tt>, <tt>smsqlserver.jar</tt>, and <tt>smutil.jar</tt>. Configure
+the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>mssql</tt></p></li>
+<li><p><b>DataSource Classname:</b> <tt>com.sun.sql.jdbcx.sqlserver.SQLServerDataSource</tt></p></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> - Specify the host name or IP address and the port of the database server.</p></li>
+<li><p><tt><b>portNumber</b></tt> - Specify the port number of the database server.</p></li>
+<li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>selectMethod</b></tt> - Set to <tt>cursor</tt>.</p></li></ul>
+</li>
+<li><p><b>URL:</b> <tt>jdbc:sun:sqlserver://</tt><i>serverName</i><tt>[:</tt><i>portNumber</i><tt>]</tt></p></li></ul>
+
+
+<a name="beanb"></a><h4>Sun GlassFish JDBC Driver for Sybase Databases</h4>
+<a name="indexterm-22"></a><p>The JAR files for this driver are <tt>smbase.jar</tt>, <tt>smsybase.jar</tt>, and <tt>smutil.jar</tt>. Configure
+the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>Sybase</tt></p></li>
+<li><p><b>DataSource Classname:</b> <tt>com.sun.sql.jdbcx.sybase.SybaseDataSource</tt></p></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> - Specify the host name or IP address of the database server.</p></li>
+<li><p><tt><b>portNumber</b></tt> - Specify the port number of the database server.</p></li>
+<li><p><tt><b>databaseName</b></tt> - Set as appropriate. This is optional.</p></li>
+<li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li></ul>
+</li>
+<li><p><b>URL:</b> <tt>jdbc:sun:sybase://</tt><i>serverName</i><tt>[:</tt><i>portNumber</i><tt>]</tt></p></li></ul>
+
+
+<a name="beanc"></a><h4>IBM DB2 8.1 Type 2 Driver</h4>
+<a name="indexterm-23"></a><p>The JAR files for the DB2 driver are <tt>db2jcc.jar</tt>, <tt>db2jcc_license_cu.jar</tt>, and <tt>db2java.zip</tt>.
+Set environment variables as follows:</p><pre>LD_LIBRARY_PATH=/usr/db2user/sqllib/lib:${Java EE.home}/lib
+DB2DIR=/opt/IBM/db2/V8.1
+DB2INSTANCE=db2user
+INSTHOME=/usr/db2user
+VWSPATH=/usr/db2user/sqllib
+THREADS_FLAG=native</pre><p>Configure the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>DB2</tt></p></li>
+<li><p><b>DataSource Classname:</b> <tt>com.ibm.db2.jcc.DB2SimpleDataSource</tt></p></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>databaseName</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>driverType</b></tt> - Set to <tt>2</tt>.</p></li>
+<li><p><tt><b>deferPrepares</b></tt> - Set to <tt>false</tt>.</p></li></ul>
+</li></ul>
+
+
+<a name="beand"></a><h4>JConnect Type 4 Driver for Sybase ASE 12.5 Databases</h4>
+<a name="indexterm-24"></a><p>The JAR file for the Sybase driver is <tt>jconn2.jar</tt>. Configure the connection pool
+using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>Sybase</tt></p></li>
+<li><p><b>DataSource Classname:</b>Specify one of the following:</p><pre>com.sybase.jdbc2.jdbc.SybDataSource
+com.sybase.jdbc2.jdbc.SybXADataSource</pre></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> - Specify the host name or IP address of the database server.</p></li>
+<li><p><tt><b>portNumber</b></tt> - Specify the port number of the database server.</p></li>
+<li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>databaseName</b></tt> - Set as appropriate. Do not specify the complete URL, only the database name.</p></li>
+<li><p><tt><b>BE_AS_JDBC_COMPLIANT_AS_POSSIBLE</b></tt> - Set to <tt>true</tt>.</p></li>
+<li><p><tt><b>FAKE_METADATA</b></tt> - Set to <tt>true</tt>.</p></li></ul>
+</li></ul>
+
+
+<a name="gbsok"></a><h4>MySQL Type 4 Driver </h4>
+<a name="indexterm-25"></a><p>The JAR file for the MySQL driver is <tt>mysql-connector-java-</tt><i>version</i><tt>-bin-g.jar</tt>, for example, <tt>mysql-connector-java-5.0.5-bin-g.jar</tt>.
+Configure the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>mysql</tt></p></li>
+<li><p><b>DataSource Classname:</b> Specify one of the following:</p><pre>com.mysql.jdbc.jdbc2.optional.MysqlDataSource</pre></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> - Specify the host name or IP address of the database server.</p></li>
+<li><p><tt><b>port</b></tt> - Specify the port number of the database server.</p></li>
+<li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>databaseName</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>URL</b></tt> - If you are using global transactions, you can set this property instead of <tt>serverName</tt>, <tt>port</tt>, and <tt>databaseName</tt>.</p><pre>jdbc:mysql://<i>host</i>:<i>port</i>/<i>database</i></pre></li></ul>
+</li></ul>
+
+
+<a name="beane"></a><h4>Inet Oraxo JDBC Driver for Oracle 8.1.7 and 9.x Databases</h4>
+<a name="indexterm-26"></a><a name="indexterm-27"></a><p>The JAR file for the Inet Oracle driver is <tt>Oranxo.jar</tt>. Configure the connection
+pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>Oracle</tt></p></li>
+<li><p><b>DataSource Classname:</b> <tt>com.inet.ora.OraDataSource</tt></p></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>user</b></tt> - Specify the database user.</p></li>
+<li><p><tt><b>password</b></tt> - Specify the database password.</p></li>
+<li><p><tt><b>serviceName</b></tt> - Specify the URL of the database. The syntax is as follows:</p><pre>jdbc:inetora:<i>server</i>:<i>port</i>:<i>dbname</i></pre><p>For example:</p><pre>jdbc:inetora:localhost:1521:payrolldb</pre><p>In this example,<tt>localhost</tt> is the host name of the machine running the Oracle server, <tt>1521</tt> is the Oracle server&#8217;s port number, and <tt>payrolldb</tt> is the SID of the database. For more information about the syntax of the database URL, see the Oracle documentation.</p></li>
+<li><p><tt><b>serverName</b></tt> - Specify the host name or IP address of the database server.</p></li>
+<li><p><tt><b>port</b></tt> - Specify the port number of the database server.</p></li>
+<li><p><tt><b>streamstolob</b></tt> - If the size of BLOB or CLOB data types exceeds 4 KB and this driver is used for CMP, this property must be set to <tt>true</tt>.</p></li>
+<li><p><tt><b>xa-driver-does-not-support-non-tx-operations</b></tt> - Set to the value <tt>true</tt>. Optional: only needed if both non-XA and XA connections are retrieved from the same connection pool. Might degrade performance.</p><p>As an alternative to setting this property, you can create two connection pools, one for non-XA connections and one for XA connections.</p></li></ul>
+</li></ul>
+
+
+<a name="beanf"></a><h4>Inet Merlia JDBC Driver for Microsoft SQL Server Databases</h4>
+<a name="indexterm-28"></a><a name="indexterm-29"></a><p>The JAR file for the Inet Microsoft SQL Server driver is <tt>Merlia.jar</tt>.
+Configure the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>mssql</tt></p></li>
+<li><p><b>DataSource Classname:</b> <tt>com.inet.tds.TdsDataSource</tt></p></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> - Specify the host name or IP address and the port of the database server.</p></li>
+<li><p><tt><b>port</b></tt> - Specify the port number of the database server.</p></li>
+<li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li></ul>
+</li></ul>
+
+
+<a name="beang"></a><h4>Inet Sybelux JDBC Driver for Sybase Databases</h4>
+<a name="indexterm-30"></a><a name="indexterm-31"></a><p>The JAR file for the Inet Sybase driver is <tt>Sybelux.jar</tt>. Configure the connection
+pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>Sybase</tt></p></li>
+<li><p><b>DataSource Classname:</b> <tt>com.inet.syb.SybDataSource</tt></p></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> - Specify the host name or IP address of the database server.</p></li>
+<li><p><tt><b>portNumber</b></tt> - Specify the port number of the database server.</p></li>
+<li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>databaseName</b></tt> - Set as appropriate. Do not specify the complete URL, only the database name.</p></li></ul>
+</li></ul>
+
+
+<a name="beanh"></a><h4>Oracle Thin Type 4 Driver for Oracle 8.1.7 and 9.x Databases</h4>
+<a name="indexterm-32"></a><p>The JAR file for the Oracle driver is <tt>ojdbc14.jar</tt>. Configure the connection pool
+using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>Oracle</tt></p></li>
+<li><p><b>DataSource Classname:</b>Specify one of the following:</p><pre>oracle.jdbc.pool.OracleDataSource
+oracle.jdbc.xa.client.OracleXADataSource</pre></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>URL</b></tt> - Specify the complete database URL using the following syntax:</p><pre>jdbc:oracle:thin:[<i>user</i>/<i>password</i>]@<i>host</i>[:<i>port</i>]/<i>service</i></pre><p>For example:</p><pre>jdbc:oracle:thin:@localhost:1521:customer_db</pre></li>
+<li><p><tt><b>xa-driver-does-not-support-non-tx-operations</b></tt> - Set to the value <tt>true</tt>. Optional: only needed if both non-XA and XA connections are retrieved from the same connection pool. Might degrade performance.</p><p>As an alternative to setting this property, you can create two connection pools, one for non-XA connections and one for XA connections.</p></li></ul>
+
+<hr><p><b>Note - </b>You must set the <tt>oracle-xa-recovery-workaround</tt> property in the Transaction Service for recovery of global transactions to work correctly. For details, see <a href="p15.html#gatel">Workarounds for Specific Databases</a>.</p><p>When using this driver, it is not possible to insert more than 2000 bytes of data into a column. To circumvent this problem, use the OCI driver (JDBC type 2).</p>
+<hr>
+</li></ul>
+
+
+<a name="beani"></a><h4>OCI Oracle Type 2 Driver for Oracle 8.1.7 and 9.x Databases</h4>
+<a name="indexterm-33"></a><p>The JAR file for the OCI Oracle driver is <tt>ojdbc14.jar</tt>. Make sure that
+the shared library is available through LD_LIBRARY_PATH and that the ORACLE_HOME property is
+set. Configure the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>Oracle</tt></p></li>
+<li><p><b>DataSource Classname:</b>Specify one of the following:</p><pre>oracle.jdbc.pool.OracleDataSource
+oracle.jdbc.xa.client.OracleXADataSource</pre></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>URL</b></tt> - Specify the complete database URL using the following syntax:</p><pre>jdbc:oracle:oci:[<i>user</i>/<i>password</i>]@<i>host</i>[:<i>port</i>]/<i>service</i></pre><p>For example:</p><pre>jdbc:oracle:oci:@localhost:1521:customer_db</pre></li>
+<li><p><tt><b>xa-driver-does-not-support-non-tx-operations</b></tt> - Set to the value <tt>true</tt>. Optional: only needed if both non-XA and XA connections are retrieved from the same connection pool. Might degrade performance.</p><p>As an alternative to setting this property, you can create two connection pools, one for non-XA connections and one for XA connections.</p></li></ul>
+</li></ul>
+
+
+<a name="beanj"></a><h4>IBM Informix Type 4 Driver</h4>
+<a name="indexterm-34"></a><p>Configure the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>Informix</tt></p></li>
+<li><p><b>DataSource Classname:</b>Specify one of the following:</p><pre>com.informix.jdbcx.IfxDataSource
+com.informix.jdbcx.IfxXADataSource</pre></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> - Specify the Informix database server name.</p></li>
+<li><p><tt><b>portNumber</b></tt> - Specify the port number of the database server.</p></li>
+<li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>databaseName</b></tt> - Set as appropriate. This is optional.</p></li>
+<li><p><tt><b>IfxIFXHost</b></tt> - Specify the host name or IP address of the database server.</p></li></ul>
+</li></ul>
+
+
+<a name="beanl"></a><h4>CloudScape 5.1 Type 4 Driver</h4>
+<a name="indexterm-35"></a><p>The JAR files for the CloudScape driver are <tt>db2j.jar</tt>, <tt>db2jtools.jar</tt>, <tt>db2jcview.jar</tt>, <tt>jh.jar</tt>,
+<tt>db2jcc.jar</tt>, and <tt>db2jnet.jar</tt>. Configure the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> <tt>Cloudscape</tt></p></li>
+<li><p><b>DataSource Classname:</b> <tt>com.ibm.db2.jcc.DB2DataSource</tt></p></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>user</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> - Set as appropriate.</p></li>
+<li><p><tt><b>databaseName</b></tt> - Set as appropriate.</p></li></ul>
+</li></ul>
+
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p5.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p7.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+
