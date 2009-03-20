@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Managing Web Services - Sun GlassFish Enterprise Server 2.1 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p16.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p18.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="gbbjk"></a>Chapter&#160;14<h3>Managing Web Services</h3><p>This chapter describes web services management with Enterprise Server. Admin Console and
+the <tt>asadmin</tt> tool enable you deploy, test, and manage web services. You
+can quickly visualize, understand, monitor, and manage complex web services. You can
+see all web services deployed in a domain just as you see Java
+EE applications and application components such as EJBs.</p><p>You can also:</p>
+<ul><li><p>Track and graph response times and invocation counts for web services in real time.</p></li>
+<li><p>Generate alerts on boundary conditions including response time and throughput failures.</p></li>
+<li><p>View web service invocation content in XML.</p></li>
+<li><p>Transform messages at runtime using XSLT. </p></li></ul>
+<p>This chapter contains the following topics:</p>
+<ul><li><p><a href="#gbbjd">Overview of Web Services</a></p></li>
+<li><p><a href="#gbbik">Deploying and Testing Web Services</a></p></li>
+<li><p><a href="#gbbja">Using Web Services Registries</a></p></li>
+<li><p><a href="#gbbiz">Transforming Messages with XSLT Filters</a></p></li>
+<li><p><a href="#gbbjf">Monitoring Web Services</a></p></li></ul>
+
+
+<a name="gbbjd"></a><h3>Overview of Web Services</h3>
+<p>A web service is an application accessed by clients using XML-based protocols,
+such as Simple Object Access Protocol (SOAP), sent over internet protocols, such
+as HTTP. Clients access a web service application through its interfaces and
+bindings, defined using XML artifacts such as a web services Definition Language (WSDL)
+file.</p><p>The eXtensible Markup Language (XML) is a standard developed by the World
+Wide Web Consortium (W3C) and is one of the foundations on which
+web services are built. XML enables web services and clients to communicate
+with each other in a common language. XML is a simple, flexible,
+text-based markup language. XML data is marked using tags enclosed in angled brackets.
+The tags contain the meaning of the data they mark. Such markup
+allows different systems to easily exchange data with each other. </p><p>A Document Type Definition (DTD) or XML Schema Definition (XSD) describes the
+structure of an XML document. It has information on the tags the
+corresponding XML document can have, the order of those tags, and so
+forth.</p><p>XSLT, which stands for eXtensible Stylesheet Language Transformation, is used for transforming
+XML documents from one format to another.</p>
+
+<a name="gbndm"></a><h4>Web Services Standards</h4>
+<p>Simple Object Access Protocol (SOAP) provides a common messaging format for web
+services. SOAP enables objects not known to one another to exchange messages.
+SOAP uses an XML-based data encoding format and HTTP to transport messages.
+SOAP is independent of both the programming language and the operational platform, and
+it does not require any specific technology at its endpoints</p><p>Universal Description, Discovery, and Integration (UDDI) provides a standard way to register,
+de-register, and look up web services. Similar to a telephone system's yellow
+pages, a UDDI registry's enables providers to register their services and requestors
+to find services. Once a requestor finds a service, the registry has no
+more role to play between the requestor and the provider.</p><p>Web Services Description Language (WSDL) defines a standard way to specify the
+details of a web service. It is a general-purpose XML schema that
+can specifies details of web service interfaces, bindings, and other deployment details.
+By having such a standard way to specify details of a service, clients
+who have no prior knowledge of a web service can use it.</p><p>ebXML (Electronic Business using eXtensible Markup Language) is a set of specifications
+that enables enterprises to conduct business over the Internet. <a href="http://www.oasis-open.org">OASIS</a> (Organization for
+the Advancement of Structured Information Standards) controls the ebXML specifications.</p>
+
+<a name="gbnbb"></a><h4>Java EE Web Service Standards</h4>
+<p>Java APIs for XML processing (JAXP) is a vendor-neutral set of lightweight
+APIs for parsing or processing XML documents. JAXP enables a web service
+to &#8220;plug in&#8221; any conforming XML parser. If no external parser is
+&#8220;plugged in,&#8221; then JAXP uses its own XML parser implementation.</p><p>Java API for XML-based remote procedure calls (JAX-RPC) uses an XML-based protocol
+for client-server remote procedure calls . JAX-RPC enables SOAP-based interoperable and portable
+web services. Developers use the JAX-RPC programming model to develop SOAP-based web
+service endpoints, along with corresponding WSDL descriptions, and clients. A JAX-RPC based web
+service can interact with clients that are not based on Java. Similarly,
+a JAX-RPC based client can interact with a non-Java-based web service implementation.</p><p>Java API for XML registries (JAXR), a Java API for accessing business
+registries, has a flexible architecture that supports UDDI, and other registry specifications
+(such as ebXML). A JAXR client, which can be a stand-alone Java
+application or a J2EE component, uses an implementation of the JAXR API provided
+by a JAXR provider to access business registries. A JAXR provider consists
+of two parts: a registry--specific JAXR provider, which provides a registry-specific implementation
+of the API, and a JAXR pluggable provider, which implements those features
+of the API that are independent of the type of registry. The pluggable
+provider hides the details of registry-specific providers from clients.  </p><p>SOAP with Attachments API for Java (SAAJ) enables developers to produce and
+consume messages conforming to the SOAP 1.1 specification and SOAP with Attachments
+note. SAAJ provides an abstraction for handling SOAP messages with attachments. Advanced
+developers can use SAAJ to have their applications operate directly with SOAP messages.
+Attachments may be complete XML documents, XML fragments, or MIME-type attachments. In
+addition, SAAJ allows developers to enable support for other MIME types. JAX
+technologies, such as JAX-RPC, internally use SAAJ to hide SOAP complexities from
+developers.  SAAJ enables:</p>
+<ul><li><p>Synchronous request-response messaging: the client sends a message and then waits for the response.</p></li>
+<li><p>One-way asynchronous messaging: the client sends a message and continues with its processing without waiting for a response.</p></li></ul>
+
+
+<a name="gbbik"></a><h3>Deploying and Testing Web Services</h3>
+<p>Enterprise Server enables you to easily deploy and test web services.</p>
+
+<a name="gbbim"></a><h4>Deploying Web Services</h4>
+<p>Deploy a web service in an enterprise archive (EAR) just as you
+would an enterprise application. </p><p>A web service can also be implemented by a POJO (plain old
+Java Object). Deploy a POJO web service using the auto-deploy feature by
+dragging and dropping it into the auto-deploy directory. Enterprise Server will automatically
+generate the appropriate web XML files and deploy the web service.</p><p>In Admin Console, you can view a list of deployed web services
+under Application Server  >  Web Services | General.</p>
+
+<a name="gbscm"></a><h4>Viewing Deployed Web Services </h4>
+<p>To test a web service with Admin Console, select Applications > Web
+Services > <i>web-service-name</i> | General. Admin Console displays t the attributes of
+the web service:</p>
+<ul><li><p>Name: the name of the web service.</p></li>
+<li><p>Endpoint Address URI: the URI of the web service endpoint.</p></li>
+<li><p>Application: Click on the link to display the properties of the web application or enterprise application.</p></li>
+<li><p>WSDL: Click on the link to display the WSDL file for the web service.</p></li>
+<li><p>Module name: the name of the WAR or EAR file for the web service.</p></li>
+<li><p>Mapping File: Click on the link to display the Java WSDL mapping file.</p></li>
+<li><p>Webservices.xml: click on the link to display the webservices.xml file.</p></li>
+<li><p>Implementation Type: SERVLET or EJB</p></li>
+<li><p>Implementation Class Name:</p></li>
+<li><p>Deployment Descriptors:</p></li></ul>
+
+
+<a name="gbsbq"></a><h4>Testing Web Services</h4>
+<p>Admin Console enables you to test web services and diagnose problems. You
+can ping a deployed web service with a generic test Servlet. SOAP
+messages are displayed for each method invocation. </p><p>To test a web service with Admin Console, select Applications > Web
+Services > <i>web-service-name</i> | General, then click the Test button.</p>
+
+<a name="gbbjv"></a><h4>Web Services Security</h4>
+<p>Support for SOAP message layer security is based on the SAML token
+profile of WS-Security. Tamper-proof auditing for Web services is also provided. </p>
+
+<a name="gbbja"></a><h3>Using Web Services Registries</h3>
+
+<hr><p><b>Note - </b>Enterprise Server does not have an internal registry. To publish web services
+to an internal registry, you must download and install the registry on
+the application server. To publish a web service to an external registry,
+specify the address of the external registry. </p>
+<hr>
+
+
+<a name="gbsca"></a><h4>Adding a Registry</h4>
+<p>Add or remove a web services registry with Admin Console at Application
+Server > Web Services | Registry. Use this page to create a
+Registry Access Point (RAP). When you add a registry, specify the following
+paramters:</p>
+<ul><li><p>JNDI Name: the connection resource pool (JNDI) name of the registry. The JNDI Name of this connector resource is the JNDI Name of the registry. </p></li>
+<li><p>Choose the type of the registry to add: UDDI 3.0 or ebXML. </p></li>
+<li><p>Publish URL and Query URL: the addresses for publishing and querying the registry, respectively. The format is: http://&#60;hostname>/&#60;path of registry installation>.</p></li>
+<li><p>User name and password for the registry.</p></li></ul>
+<p>The registry JNDI Name is created as a result of the following
+steps: </p>
+<ul><li><p>A resource adapter is created that can talk to the registry. </p></li>
+<li><p>In the application server context, a JAXR resource adapter comes preconfigured to talk to a UDDI registry. You can also download a SOA registry resource adapter module. The SOA registry is the Sun specific ebXML registry.</p></li>
+<li><p>Create a connection resource pool using the resource adapter. </p></li>
+<li><p>Create a connector resource using this connection pool. </p></li></ul>
+
+
+<a name="gbscx"></a><h4>Publishing a Web Service to a Registry</h4>
+<p>To publish a web service with Admin Console, select Applications > Web
+Services > <i>web-service-name</i> | Publish. </p><p>In the Publish Web Service screen, select one or more registries to
+which you want to publish the web service, then click Publish. To
+publish to all the available registries, click the Add All button. </p><p>Enter categories under which this web service will show up in the
+registry. Use a comma to separate each category. The categories are defined
+in the registry you are using. Enter a description for this web
+service. Enter the name of the organization, if you are publishing to
+a UDDI registry.</p><p>If you are using a load balancer, enter the Load Balancer host
+name, port number, and the SSL port number. If you are publishing
+the web service to an external registry, where the WSDL can be
+found over the internet, these options will replace the hostname and port
+name specified in the WSDL to the one of the load balancer.</p><p>To un-publish a web service, In the Publish Web Service screen, select
+the registry from which you want to unpublish the web service, then
+click Unpublish. </p>
+
+<a name="gbbiz"></a><h3>Transforming Messages with XSLT Filters</h3>
+<p>You can apply XSLT transformation rules to a web service end point.
+This enables fine-grained control of web service requests and responses. You can
+apply multiple XSLT rules to a web service end point method, and
+you can configure the order in which you apply the transformations. All
+the XSLT files are stored in the <tt>generated/xml/</tt><i>appOrModule</i><tt></tt> directory of the central repository.
+These transformation rules are synchronized to the remote server instances.</p><p>You can apply transformation rule to a SOAP request or response. </p><p>To add a transformation rule to apply to a web service operation
+with Admin Console, select Applications > Web Services > <i>web-service-name</i> | Transformation.
+Click Add.</p><p>A list of transformation rule available for this web service end point
+is displayed. </p><p>Browse to the location of the XSLT file that contains the transformation
+rule. All the generated XSLT files are stored in the <tt>generated/xml/</tt><i>application or module name/</i> directory.</p><p>If you add multiple transformation rules for a web service endpoint, the
+transformation rules are applied in the order in which they are added.
+</p><p>To enable a transformation rule, in the Transformation Rules page select the
+check box corresponding to the rule, then click Enable. To disable the
+a rule, click Disable.</p><p>To remove a transformation rule, in the Transformation Rules page select the
+check box corresponding to the rule, then click Remove. This removes the
+transformation rule from the list. If this transformation rule is applied to
+a web service endpoint, it is automatically disabled. However, the XSLT file remains
+in the file path location. Other web service endpoints can use this
+XSLT file. </p>
+
+<a name="gbbjf"></a><h3>Monitoring Web Services</h3>
+<p>Admin console can track and graphically display operational statistics for web services,
+and can display messages sent and received by web services.</p><p>To enable monitoring for a web service, with Admin Console,  select
+Applications > Web Services > <i>web-service-name</i> | Monitor | Configuration.</p><p>In the Monitoring Configuration page, set the monitoring level:</p>
+<ul><li><p>LOW- Monitors response time, throughput, total number of requests, and faults for the web service. Does not perform method-level monitoring. </p></li>
+<li><p>HIGH- Adds message tracing and monitoring of number of requests per second, average response time, and throughput attributes.</p></li>
+<li><p>OFF- Disables monitoring.</p></li></ul>
+<p>Enter a value for the Message History. The default is 25. Click
+the Reset button to clear all statistics and the running averages are
+restarted. </p>
+
+<a name="gbsda"></a><h4>Viewing Web Service Statistics</h4>
+<p>Enterprise Server provides capabilities to track and graphically display the operational statistics
+of a web service. </p><p>View monitoring statistics at Applications > Web Services > <i>web-service-name</i> | Monitor
+| Statistics. The statistics available are:</p>
+<ul><li><p>Response time in milli seconds on any successful or unsuccessful operation (Maximum, Minimum, Average). </p></li>
+<li><p>Throughput</p></li>
+<li><p>Total number of requests </p></li>
+<li><p>Total number of faults, including URI of the endpoint where the fault originated </p></li>
+<li><p>Total number of authentication failures</p></li>
+<li><p>Total number of authorization success</p></li></ul>
+
+
+<a name="gbsdf"></a><h4>Monitoring Web Service Messages</h4>
+<p>You can also configure a web service to view messages (default is
+25) for a web service endpoint. These messages are stored in the
+memory of remote server instances. Details of SOAP request, response, and HTTP
+header information are displayed. </p><p>Monitor web service messages at Applications > Web Services > <i>web-service-name</i> |
+Monitor | Messages.</p><p>When enabled, you can see the last few (default is 25) messages
+for a web service end point. These messages are kept in memory
+of the remote server instances, including details of SOAP requests and responses
+and HTTP header information.</p><p>Displays a list of messages received for the web service. The number
+of messages displayed depends on the monitoring configuration. </p><p>You can also select a filter to view only the success messages
+or the failure messages. </p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p16.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p18.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

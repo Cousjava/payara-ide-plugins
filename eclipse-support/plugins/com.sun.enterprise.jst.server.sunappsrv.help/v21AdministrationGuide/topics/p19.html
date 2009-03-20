@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Thread Pools - Sun GlassFish Enterprise Server 2.1 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p18.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p20.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="abluc"></a>Chapter&#160;16<h3>Thread Pools</h3><p><a name="indexterm-135"></a><a name="indexterm-136"></a><a name="indexterm-137"></a><a name="indexterm-138"></a><a name="indexterm-139"></a><a name="indexterm-140"></a><a name="indexterm-141"></a><a name="indexterm-142"></a><a name="indexterm-143"></a>The Java Virtual Machine (JVM) can support many threads of execution at once.
+To help performance, the Enterprise Server maintains one or more thread pools. It
+is possible to assign specific thread pools to connector modules and to the
+ORB.</p><p>One thread pool can serve multiple connector modules and enterprise beans. Request threads
+handle user requests for application components. When the server receives a request, it
+assigns the request to a free thread from the thread pool. The thread
+executes the client's requests and returns results. For example, if the request needs
+to use a system resource that is currently busy, the thread waits until
+that resource is free before allowing the request to use that resource.</p><p>Specify the minimum and maximum number of threads that are reserved for requests
+from applications. The thread pool is dynamically adjusted between these two values. The
+minimum thread pool size that is specified signals the server to allocate at
+least that many threads in reserve for application requests. That number is increased
+up to the maximum thread pool size that is specified.</p><p>Increasing the number of threads available to a process allows the process to
+respond to more application requests simultaneously.</p><p><a name="indexterm-144"></a>Avoid thread starvation, where one resource adapter or application occupies all threads in
+the Enterprise Server, by dividing the Enterprise Server threads into different thread-pools.</p><p>This chapter contains the following topics:</p>
+<ul><li><p><a href="#ablud">Working with Thread Pools</a></p></li></ul>
+
+
+<a name="ablud"></a><h3>Working with Thread Pools</h3>
+<p>To create a thread pool using the Admin Console, go to Configuration >
+Thread Pools > Current Pools > New.</p>
+<ul><li><p>Enter the name of the thread pool in the Thread Pool ID field.</p></li>
+<li><p>Enter the minimum number of threads in the thread pool servicing requests in this queue in the Minimum Thread Pool Size field.</p><p>These threads are created up front when this thread pool is instantiated.</p></li>
+<li><p>Enter the maximum number of threads in the thread pool servicing requests in this queue in the Maximum Thread Pool Size field.</p><p>This is the upper limit on the number of threads that exist in the thread pool.</p></li>
+<li><p>Enter the number, in seconds, after which idle threads are removed from pool in the Idle Timeout field.</p></li>
+<li><p>Enter the total number of work queues that are serviced by this thread pool in the Number of Work Queues field.</p></li>
+<li><p>Restart the Enterprise Server.</p></li></ul>
+<p>For more details on creating thread pools, click Help in the Admin
+Console. </p><p>You can also create a thread pool from the command-line by using
+the <tt>asadmin</tt> command, <tt>create-threadpool</tt>.</p><p>To edit a settings for a thread pool using the Admin Console,
+go to Configuration > Thread Pools > Current Pools and select the pool
+you want to configure. Modify the values for the selected thread pool, save
+and restart the Enterprise Server.</p><p>For more details on editing thread pools, click Help in the Admin
+Console.</p><p>To delete a thread pool using the Admin Console, go to Configuration >
+Thread Pools > Current Pools. Check the thread pool name to be
+deleted and click Delete.</p><p>You can also create a thread pool from the command-line by using
+the <tt>asadmin</tt> command, <tt>delete-threadpool</tt>.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p18.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p20.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

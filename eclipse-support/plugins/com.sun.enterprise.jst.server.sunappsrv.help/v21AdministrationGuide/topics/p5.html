@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Java Business Integration - Sun GlassFish Enterprise Server 2.1 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p4.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p6.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="jbichapter"></a>Chapter&#160;2<h3>Java Business Integration</h3><p>Java Business Integration (JBI) is an implementation of the <a href="http://www.jcp.org/en/jsr/detail?id=208">JSR 208 specification</a> for Java
+Business Integration, a standard developed under the Java Community Process (JCP) as an
+approach to implementing a service-oriented architecture (SOA).</p><p> JBI defines an environment for plug-in components that interact using a services
+model based directly on Web Services Description Language (WSDL) 2.0. The plug-in components
+function as service providers, service consumers, or both. </p><p>For detailed information on managing the key components of the JBI runtime environment
+and their lifecycle states, see the Admin Console Online Help. For information about
+using the JBI commands, see <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p>
+
+<a name="jbienvironment"></a><h3>JBI Environment </h3>
+<p>The key components of the JBI environment are covered in the following sections.</p>
+<ul><li><p><a href="#gevde">JBI Components</a></p></li>
+<li><p><a href="#gelqv">Service Assemblies</a></p></li>
+<li><p><a href="#geuwm">Shared Libraries</a></p></li>
+<li><p><a href="#geuxg">JBI Descriptors</a></p></li></ul>
+
+
+<a name="gevde"></a><h4>JBI Components</h4>
+
+
+<a name="gevfb"></a><h5>Service Engines</h5>
+<a name="indexterm-13"></a><a name="indexterm-14"></a><p>Service Engines are components that provide local services (that is, services within the
+JBI environment) and consume local or remote services.</p>
+
+<a name="gevdl"></a><h5>Binding Components</h5>
+<a name="indexterm-15"></a><p>Binding Components are proxies for consumers or providers that are outside the JBI
+environment. Binding components typically are based on a standard communications protocol, such as
+FTP, JMS, or SMTP, or a call to an external service, such as
+SAP or WebSphere MQ. </p><p>JBI components have the following lifecyle states:</p>
+<ul><li><p> Started</p></li>
+<li><p> Stopped</p></li>
+<li><p>Shutdown</p></li></ul>
+<p>The JBI Runtime persists the life cycle states of JBI Components. When the
+server shuts down and then restarts, JBI Components revert to their state at
+the time the Enterprise Server shut down. </p>
+<hr><p><b>Note - </b>The JBI runtime attempts to revert to the "desired" state of a JBI
+component. For example, suppose you tried to start a JBI component but it
+did not start due to an error in the component. If you
+restart the Enterprise Server, the JBI runtime attempts to start the component again.</p>
+<hr>
+<p>You can do the following operations on the JBI components. For detailed steps,
+log on to the Admin Console, navigate to the JBI node, click
+Components and then click Online Help. </p>
+<ul><li><p>View JBI components by their specific lifestyle states. </p></li>
+<li><p>Install JBI components. </p></li>
+<li><p>Uninstall JBI components. </p></li>
+<li><p>Manage the lifecycle states of the JBI Components. </p></li>
+<li><p>View the general properties of a JBI Component. </p></li>
+<li><p>View the configuration information for a JBI Component.</p></li>
+<li><p>View the descriptor for a JBI Component. </p></li>
+<li><p>Manage JBI Component Loggers.</p></li></ul>
+
+
+<a name="gevdc"></a><h5>JBI Component Loggers</h5>
+<p>Using the Admin Console, you can manage the log levels for JBI Components.
+Some JBI Components provide several loggers while other components might not provide any.
+However, there will always be a logger level displayed for the entire component.
+But the logger level setting will only have an effect if a component
+implements its loggers based on the default name. The provider of a JBI
+Component might provide additional documentation on specifying logging levels. </p>
+<hr><p><b>Note - </b>The logging levels for JBI Components are often inherited from a parent logger
+such as the JBI logger. To view and set parent logging levels, in
+the Admin Console, select Common Tasks and then Application Server. Then, in the
+Enterprise Server panel, select Logging and then Log Levels. Look for the drop-down
+list for the JBI module to view and set the parent JBI
+logging level.  </p>
+<hr>
+
+
+<a name="gelqv"></a><h4>Service Assemblies</h4>
+<p>A Service Assembly is a collection of Service Units that provision target components
+that together provide or consume specific services for an application. Service Assemblies are
+typically created in a development tools environment, such as that provided by NetBeans
+Enterprise Pack. </p><p>A Service Assembly has the following lifecyle states:</p>
+<ul><li><p> Started</p></li>
+<li><p>Shutdown</p></li>
+<li><p> Stopped</p></li></ul>
+<p>The JBI Runtime persists the lifecycle states of Service Assemblies. When the Enterprise
+Server shuts down and then restarts, Service Assemblies revert to their state at
+the time the Enterprise Server shut down. </p>
+<hr><p><b>Note - </b>The JBI runtime attempts to revert to the "desired" state of a Service
+Assembly. For example, suppose you tried to start a Service Assembly but it
+did not start due to an error in the Service Assembly. If
+you restart the Application Server, the JBI runtime attempts to start the Service
+Assembly again.</p>
+<hr>
+<p>You can do the following operations on Service Assemblies. For detailed steps, log
+on to the Admin Console, navigate to the JBI node, click Service Assemblies
+and then click Online Help. </p>
+<ul><li><p>View all the Service Assemblies, with support for sorting and for filtering by lifecycle state. </p></li>
+<li><p>Deploy a Service Assembly. </p></li>
+<li><p>Undeploy a Service Assembly.</p></li>
+<li><p>Manage the lifecyle of a Service Assembly.</p></li>
+<li><p>View the general properties of a Service Assembly. </p></li>
+<li><p>View the descriptor for a Service Assembly. </p></li></ul>
+
+
+<a name="geuwm"></a><h4>Shared Libraries</h4>
+<p>A Shared Library provides Java classes that are not private to a
+single component and is typically shared by more than one JBI Component. For
+example, the Java EE Service Engine requires the WSDL Shared Library.</p><p>You can do the following operations on Shared Libraries. For detailed steps, log
+on to the Admin Console, navigate to the JBI node, click Shared Libraries
+and then click Online Help. </p>
+<ul><li><p>View all Shared Libraries. </p></li>
+<li><p>Install Shared Libraries. </p></li>
+<li><p>View General Properties of a Shared Library. </p></li>
+<li><p>View the descriptor for a Shared Library. </p></li>
+<li><p>Uninstall a Shared Library. </p></li></ul>
+
+
+<a name="geuxg"></a><h4>JBI Descriptors</h4>
+<p>The descriptor file (<tt>jbi.xml</tt>) for Service Assemblies, JBI Components, and Shared Libraries provides
+the following information:</p>
+<ul><li><p>Service Assemblies: Lists the Service Units contained in the Service Assembly and the target for each Service Unit. Some Service Units may also show information on connection endpoints.</p></li>
+<li><p>JBI Components: Lists the type of the JBI Component (Binding Component or Service Engine), a description of the component, information about relevant classpaths for the component, and the name of any Shared Library upon which it depends.</p></li>
+<li><p>Shared Libraries: Lists the name of the shared library, and the names of the archive files (<tt>.jar</tt> files) or class file subdirectories it contains.</p></li></ul>
+
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p4.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p6.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

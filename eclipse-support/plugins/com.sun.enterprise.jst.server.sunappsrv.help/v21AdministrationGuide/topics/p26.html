@@ -1,0 +1,1079 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>The asadmin Utility - Sun GlassFish Enterprise Server 2.1 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p25.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="idx-1.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="gcode"></a>Appendix&#160;C<h3>The <tt>asadmin</tt> Utility</h3><p>The Application Server includes a command-line administration utility known as <tt>asadmin</tt>. The<tt>asadmin</tt> utility is
+used to start and stop the Application Server, manage users, resources, and applications.</p><p>This chapter contains the following sections:</p>
+<ul><li><p><a href="#gcnth">Common Options for Remote Commands</a></p></li>
+<li><p><a href="#gcnuc">The Multimode Command</a></p></li>
+<li><p><a href="#gcnuf">The Get, Set, and List Commands</a></p></li>
+<li><p><a href="#gcnkf">Server Lifecycle Commands</a></p></li>
+<li><p><a href="#gcnkn">List and Status Commands</a></p></li>
+<li><p><a href="#gcnji">Deployment Commands</a></p></li>
+<li><p><a href="#gcnkx">Version Commands</a></p></li>
+<li><p><a href="#gcnjt">Message Queue Administration Commands</a></p></li>
+<li><p><a href="#gcnkp">Resource Management Commands</a></p></li>
+<li><p><a href="#gcnjm">Configuration Commands</a></p></li>
+<li><p><a href="#gcnmj">User Management Commands</a></p></li>
+<li><p><a href="#gcnmq">Rules and Monitoring Commands</a></p></li>
+<li><p><a href="#gcnlt">Database Commands</a></p></li>
+<li><p><a href="#gcnms">Diagnostic and Logging Commands</a></p></li>
+<li><p><a href="#gcnmh">Web Service Commands</a></p></li>
+<li><p><a href="#gcnmp">Security Service Commands</a></p></li>
+<li><p><a href="#gcnmg">Password Commands</a></p></li>
+<li><p><a href="#gcnlq">Verify Command</a></p></li>
+<li><p><a href="#gcnmo">Custom MBean Commands</a></p></li>
+<li><p><a href="#gcnly">Service Command</a></p></li>
+<li><p><a href="#gcnzs">Property Command</a></p></li></ul>
+
+
+<a name="gcocs"></a><h3>The <tt>asadmin</tt> Utility</h3>
+<p>Use the <tt>asadmin</tt> utility to perform any administrative tasks for the Application Server.
+You can use this <tt>asadmin</tt> utility in place of using the Administrator interface.</p><p>The <tt>asadmin</tt> utility invokes subcommands that identify the operation or task you wish
+to perform. Subcommands are case-sensitive. Short option arguments have a single dash (-);
+while long option arguments have two dashes (--). Options control how the utility
+performs a subcommand. Options are also case-sensitive. Most options require argument values except boolean
+options which toggle to switch a feature ON or OFF. Operands appear after
+the argument values, and are set off by a space, a tab,
+or double dashes (--). The <tt>asadmin</tt> utility treats anything that comes after the options
+and their values as an operand.</p><p><tt>asadmin</tt> can be used in command shell invocation or multi command mode (known
+as<tt> multimode</tt>). In command shell invocation you invoke the <tt>asadmin</tt> utility from your command shell.
+<tt>asadmin</tt> executes the command, then exits. In multiple command mode, you invoke <tt>asadmin</tt>
+once, it then accepts multiple commands until you exit <tt>asadmin</tt> and return to the
+normal command shell invocation. Environment variables set while in multiple command mode are
+used for all subsequent commands until you exit <tt>multimode</tt>. You may provide
+commands by passing a previously prepared list of commands from a file or
+standard input (pipe). Additionally, you can invoke <tt>multimode</tt> from within a multimode
+session; once you exit the second multimode environment, you return to your original
+multimode environment.</p><p>You can also run the <tt>asadmin</tt> utility in interactive or non-interactive options. By
+default, the interactive option is enabled. It prompts you for the required arguments.
+You can use the interactive option in command shell invocation under all circumstances.
+You can use the interactive option in <tt>multimode</tt> when you run one subcommand
+at a time from the command prompt; and when you run in <tt>multimode</tt>
+from a file. Subcommands in <tt>multimode</tt>, when piped from an input stream, and subcommands
+invoked from another program, cannot run in the interactive option.</p><p>Local subcommands can be executed without the presence of an administration server. However,
+it is required that the user be logged into the machine hosting the
+domain in order to execute the subcommand and have access (permissions) for the
+installation and domain directories. Remote subcommands are always executed by connecting to an
+administration server and executing the subcommand there. A running administration server is required.
+All remote subcommands require the following options:</p>
+<ul><li><p><tt>-u</tt> <tt>--user</tt> authorized domain application server administrative username.</p></li>
+<li><p><tt>--passwordfile</tt> the file containing the domain application server password in the following form: <tt><b>AS_ADMIN_PASSWORD=</tt><i>password</i><tt></b></tt>. Where <i>password</i> is the actual administrator password.</p></li>
+<li><p><tt>-H</tt> <tt>--host</tt> machine name where the domain application server is running.</p></li>
+<li><p><tt>-p</tt> <tt>--port</tt> port number of the domain application server listening for administration requests. The default port number for Platform Edition is 4848.</p></li>
+<li><p><tt>-s</tt> <tt>--secure</tt> if true, uses SSL/TLS to communicate with the domain application server.</p></li>
+<li><p><tt>-t</tt> <tt>--terse</tt> indicates that any output data must be very concise, typically avoiding human-friendly sentences and favoring well-formatted data for consumption by a script. Default is false.</p></li>
+<li><p><tt>-e</tt> <tt>--echo</tt> setting to true will echo the command line statement on the standard output. Default is false.</p></li>
+<li><p><tt>-I</tt> <tt>--interactive</tt> if set to true (default), only the required password options are prompted.</p></li>
+<li><p><tt>-h</tt> <tt>--help</tt> displays the help text for the command.</p></li></ul>
+<p>For subcommands that can be executed locally or remotely, if any one of
+the<tt>--host</tt>, <tt>--port</tt>, <tt>--user</tt>, and <tt>--passwordfile</tt> options are set, either in the environment or in
+the command line, the subcommand will run in remote mode. Additionally, for subcommands
+that can be executed locally or remotely, if the <tt>--local</tt> option is set
+to true, the subcommand will run locally. Also, if none of the
+local options are set, either on the command line or in the environment,
+the subcommand is executed locally by default. Setting the <tt>--local</tt> option to true overrides
+the local <tt>--host</tt>, <tt>--port</tt>, <tt>--user</tt>, and <tt>--passwordfile</tt> settings, even if specified. The subcommand
+will run in local mode. </p><p>Subcommands that can be executed locally accept the <tt>--domain</tt> option to specify the
+domain of interest which assumes the domain as the default domain if there
+is only one. If there is more than one domain, the <tt>--domain</tt>
+option is a required option. For subcommands that can be run locally or
+remotely, when run remotely with the<tt>--host</tt>, <tt>--port</tt>, <tt>--user</tt>, and <tt>--passwordfile</tt> options specified,
+the <tt>--domain</tt> option is ignored. The <tt>--domain</tt> option is ignored if the subcommand
+will be run in remote mode. Note that there is one administration instance
+per domain, so on a single machine with multiple domains, local execution must
+specify the domain, and remote execution must specify the <tt>--host</tt>, <tt>--port</tt>, <tt>--user</tt>, and <tt>--passwordfile</tt>
+options for the administration instance for that domain.</p><p>For security purposes, you can set the password for a subcommand from a
+file instead of entering the password at the command line. The <tt>--passwordfile</tt>
+option takes the file containing the passwords. The valid contents for the file
+are:</p><a name="gcnlj"></a><h6>Example&#160;C-1 Passwordfile contents</h6><pre>AS_ADMIN_PASSWORD=value
+AS_ADMIN_ADMINPASSWORD=value
+AS_ADMIN_USERPASSWORD=value
+AS_ADMIN_MASTERPASSWORD=value</pre><p>If <tt><b>AS_ADMIN_PASSWORD</b></tt> has been exported to the global environment, specifying the <tt>--passwordfile</tt> option
+will produce a warning about using the <tt>--password</tt> option. Unset <tt><b>AS_ADMIN_PASSWORD</b></tt> to prevent
+this from happening. The master password is not propagated on the command line
+or an environment variable, but can be specified in the <tt>passwordfile</tt>.</p><p>To use the <tt>--secure</tt> option, you must use the <tt>set</tt> command to enable
+the security <tt>--enabled</tt> flag in the <tt>admin http-listener</tt> in the<tt> domain.xml</tt>. When you use the
+<tt>asadmin</tt> subcommands to create and/or delete, you must restart the server for the
+newly created command to take affect. Use the <tt>start-domain</tt> command to restart
+the server. </p><p>To access the manpages for the Application Server command-line interface subcommands on the
+Solaris platform, add <tt>$AS_INSTALL/man</tt> to your <tt>MANPATH</tt> environment variable. </p><p>You can obtain overall usage information for any of the <tt>asadmin</tt> utility subcommands
+by invoking the <tt>--help</tt> option. If you specify a subcommand, the usage information
+for that subcommand is displayed. Using the <tt>--help</tt>option without a subcommand displays a
+listing of all the available subcommands.</p>
+
+<a name="gcnth"></a><h3>Common Options for Remote Commands</h3>
+<p>All the remote commands require the following common options:</p><a name="gcnti"></a><h6>Table&#160;C-1 Remote Commands Required Options</h6><table><col width="21%"><col width="78%"><tr><th align="left" valign="top" scope="column"><p>Option</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--host</tt></p></td>
+<td align="left" valign="top" scope="row"><p>The machine name where
+the domain administration server is running. The default value is localhost.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--port</tt></p></td>
+<td align="left" valign="top" scope="row"><p>The HTTP/S port
+for administration. This is the port to which you should point your browser
+in order to manage the domain. For example, <tt>http://localhost:4848</tt>. The default port
+number for Platform Edition is 4848.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--user</tt></p></td>
+<td align="left" valign="top" scope="row"><p>The authorized domain administration server administrative username. If
+you have authenticated to a domain using the <tt>asadmin login</tt> command, then you need
+not specify the <tt>--user</tt> option on subsequent operations to this particular domain.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--passwordfile</tt></p></td>
+<td align="left" valign="top" scope="row"><p>The <tt>--passwordfile</tt>
+option specifies the name of a file containing the password entries in a
+specific format. The entry for the password must have the <tt>AS_ADMIN_</tt> prefix followed
+by the password name in uppercase letters.</p><p>For example, to specify the domain administration
+server password, use an entry with the following format: <tt>AS_ADMIN_PASSWORD</tt>=<i>password</i>, where <i>password</i> is
+the actual administrator password. Other passwords that can be specified include  <tt>AS_ADMIN_MAPPEDPASSWORD</tt>,
+<tt>AS_ADMIN_USERPASSWORD</tt>, and <tt>AS_ADMIN_ALIASPASSWORD</tt>.</p><p>All remote commands must specify the admin password to authenticate to
+the domain administration server, either through<tt>--passwordfile</tt> or <tt>asadmin login</tt>, or interactively on the
+command prompt. The <tt>asadmin login</tt> command can be used only to specify the
+admin password. For other passwords, that must be specified for remote commands, use
+the <tt>--passwordfile</tt> or enter them at the command prompt.</p><p>If you have authenticated
+to a domain using the <tt>asadmin login</tt> command, then you need not specify the
+admin password through the <tt>--passwordfile</tt> option on subsequent operations to this particular
+domain. However, this is applicable only to <tt>AS_ADMIN_PASSWORD</tt> option. You will still need to
+provide the other passwords, for example, <tt>AS_ADMIN_USERPASSWORD</tt>, as and when required by
+individual commands, such as <tt>update-file-user</tt>.</p><p>For security reasons, passwords specified as an environment
+variable will not be read by <tt>asadmin</tt>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--secure</tt></p></td>
+<td align="left" valign="top" scope="row"><p>If set to true, uses SSL/TLS to
+communicate with the domain administration server.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--interactive</tt></p></td>
+<td align="left" valign="top" scope="row"><p>If set to true (default), only the required
+password options are prompted.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--terse</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Indicates that any output data must be very concise,
+typically avoiding human-friendly sentences and favoring well-formatted data for consumption by a script. Default
+is false.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--echo</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Setting to true will echo the command line statement on the
+standard output. Default is false.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--help</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Displays the help text for the command.</p></td>
+</tr>
+</table>
+
+<a name="gcnuc"></a><h3>The Multimode Command</h3>
+<p>Use the <tt>multimode</tt> command to process the <tt>asadmin</tt> commands. The command-line interface
+will prompt you for a command, execute that command, display the results of
+the command, and then prompt you for the next command. Additionally, all the
+<tt>asadmin</tt> option names set in this mode are used for all the subsequent
+commands. You can set your environment and run commands until you exit <tt>multimode</tt>
+by typing &#8220;exit&#8221; or &#8220;quit.&#8221; You can also provide commands by passing a previously
+prepared list of commands from a file or standard input (pipe). You can
+invoke<tt>multimode</tt> from within a <b>multimode</b>session; once you exit the second <b>multimode</b> environment, you
+return to your original <b>multimode</b> environment.</p>
+
+<a name="gcnuf"></a><h3>The Get, Set, and List Commands</h3>
+<p>The <tt>asadmin get</tt>, <tt>set</tt> and <tt>list</tt> commands work in tandem to provide a
+navigation mechanism for the Application Server's abstract hierarchy. There  are two hierarchies:
+<tt>configuration</tt> and <tt>monitoring</tt> and these commands operate on both. The <tt>list</tt> command provides
+the fully qualified dotted names of the management components that have read-only or
+modifiable attributes.</p><p>The <tt>configuration</tt>hierarchy provides attributes that are modifiable; whereas the attributes of management components
+from monitoring hierarchy are purely read-only. The <tt>configuration</tt> hierarchy is loosely based on the
+domain's schema document; whereas the<tt> monitoring</tt>hierarchy is a little different.</p><p>Use the <tt>list</tt> command to reach a particular management component in the desired
+hierarchy. Then, invoke the <tt>get</tt>and <tt>set</tt> commands to get the names and
+values or set the values of the attributes of the management component at
+hand. Use the wildcard (*) option to fetch all matches in a given
+fully qualified dotted name. See the examples for further clarification of the possible
+navigation of the hierarchies and management components.</p><p>An application server dotted name uses the &#8220;<tt>.</tt>&#8221; (period) as a delimiter to
+separate the parts of a complete name. This is similar to how the
+&#8220;<tt>/</tt>&#8221; character is used to delimit the levels in the absolute path name
+of a file in the UNIX file system. The following rules apply while
+forming the dotted names accepted by the <tt>get</tt>, <tt>set</tt>, and <tt>list</tt> commands. Note
+that a specific command has some additional semantics applied.</p>
+<ul><li><p>A <tt>.</tt> (period) always separates two sequential parts of the name.</p></li>
+<li><p>A part of the name usually identifies an application server subsystem and/or its specific instance. For example: web-container, log-service, thread-pool-1, etc.</p></li>
+<li><p>If any part of the name itself contains a <tt>.</tt> (period), then it must be escaped with a leading <tt>\</tt>(backslash) so that the &#8220;<tt>.</tt>&#8221; does not act like a delimiter.</p></li>
+<li><p>An <tt>*</tt> (asterisk) can be used anywhere in the dotted name and it acts like the wildcard character in regular expressions. Additionally, an <tt>*</tt> can collapse all the parts of the dotted name. Long dotted name like "<tt>&#60;classname>this.is.really.long.hierarchy &#60;/classname></tt>" can be abbreviated to "<tt>&#60;classname>th*.hierarchy&#60;/classname></tt>."But note that the <tt>.</tt> always delimits the parts of the name.</p></li>
+<li><p>The top level switch for any dotted name is <tt>--monitor</tt> or <tt>-m</tt> that is separately specified on a given command line. The presence or lack of this switch implies the selection of one of the two hierarchies for application server management: monitoring and configuration.</p></li>
+<li><p>If you happen to know the exact complete dotted name without any wildcard character, then <tt>list</tt> and <tt>get</tt>/<tt>set</tt> have a little difference in their semantics:</p>
+<ul><li><p>The <tt>list</tt> command treats this complete dotted name as the complete name of a parent node in the abstract hierarchy. Upon providing this name to <tt>list</tt> command, it simply returns the names of the immediate children at that level. For example,<tt>list server.applications.web-module</tt> will list all the web modules deployed to the domain or the default server.</p></li>
+<li><p>The <tt>get</tt> and <tt>set</tt> commands treat this complete dotted name as the fully qualified name of the attribute of a node (whose dotted name itself is the name that you get when you remove the last part of this dotted name) and it gets/sets the value of that attribute. This is true if such an attribute exists. You will never start with this case because in order to find out the names of attributes of a particular node in the hierarchy, you must use the wildcard character <tt>*</tt>. For example, <tt>server.applications.web-module.JSPWiki.context-root</tt> will return the context-root of the web-application deployed to the domain or default server.</p></li></ul>
+</li></ul>
+<p>The <tt>list</tt> command is the progenitor of navigational capabilities of these three commands.
+If you want to <tt>set</tt> or <tt>get</tt> attributes of a particular application
+server subsystem, you must know its dotted name. The <tt>list</tt> command is the
+one which can guide you to find the dotted name of that subsystem.
+For example, to find out the modified date (attribute) of a particular file
+in a large file system that starts with <tt>/</tt>. First you must find
+out the location of that file in the file system, and then look
+at its attributes. Therefore, two of the first commands to understand the hierarchies
+in appserver are: <tt>* list "*"</tt> and &#60;command><tt>* list * <tt>--monitor</tt></tt>. Consult the <tt>get</tt> <tt>set</tt> or <tt>list</tt> commands
+manpages to identify the sorted output of these commands.</p>
+
+<a name="gcnkf"></a><h3>Server Lifecycle Commands</h3>
+<p>The server lifecycle commands are commands that create, delete, or start, stop a
+domain, or an instance.</p><a name="gcntp"></a><h6>Table&#160;C-2 Server Lifecycle Commands</h6><table><col width="27%"><col width="72%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-domain</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates the configuration of a domain. A domain is
+an administrative namespace. Every domain has a configuration, which is stored in a
+set of files. Any number of domains each of which has a distinct
+administrative identity can be created in a given installation of application server. A
+domain can exist  independent of other domains. Any user who has access
+to the <tt>asadmin</tt> script on a  given system can create a
+domain and store its configuration in a folder of choice. By default, the
+domain configuration is created in the <tt></tt><i>install_dir</i><tt>/domains</tt> directory. You can override this location to
+store the configuration elsewhere.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-domain</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes the named domain. The domain must already exist
+and must be stopped.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>start-domain</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Starts a domain. If the domain directory is not specified,
+the domain in the default <tt></tt><i>install_dir</i><tt>/domains</tt> directory is started. If there are two or
+more domains, the <i>domain_name</i> operand must be specified.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>stop-domain</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Stops the Domain Administration Server of
+the specified domain.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>restore-domain</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Restores files under the domain from a backup directory.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-domains</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the
+domain. If the domain directory is not specified, the domain in the default
+<tt></tt><i>install_dir</i><tt>/domains</tt> directory is listed. If there is more than one domain, the <i>domain_name</i>
+operand must be specified.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>backup-domain</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Backs up files under the named domain.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>login</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lets you log in
+to a domain. If various application server domains are created on various machines
+(locally), <tt>asadmin</tt> invocation from any of these machines can manage the domains located
+elsewhere (remotely). This comes in handy especially when a particular machine is chosen
+as an administration client and it manages multiple domains and servers. <tt>asadmin</tt>  commands
+that are used to manage domains located elsewhere are called remote commands. The
+<tt>asadmin login</tt> command eases the administration of such remote domains. The <tt>login</tt> command runs
+only in the interactive mode. It prompts you for the admin user name
+and password. On successful login, the file <tt>.asadminpass</tt> will be created in the user's
+home directory. This is the same file that is modified during the <tt>create-domain</tt>
+command while using the <tt>--savelogin</tt> option. The domain must be running for
+this command to run.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-instance</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a new server instance residing on a local
+or remote machine.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-instance</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes the server instance. This command can be run remotely
+or locally. The user authenticates using the password identified for the administration server. Additionally,
+the instance must already exist within the domain served by the administration server.
+Use this command with discretion since it is destructive and cannot be undone.</p></td>
+</tr>
+</table>
+
+<a name="gcnkn"></a><h3>List and Status Commands</h3>
+<p>The list and status commands display the status of a deployed component.</p><a name="gcnue"></a><h6>Table&#160;C-3 List and Status Commands</h6><table><col width="27%"><col width="72%"><tr><td align="left" valign="top" scope="row"><p>Command</p></td>
+<td align="left" valign="top" scope="row"><p>Definition</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>show-component-status</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Gets
+the status of the deployed component. The status is a string representation returned
+by the server. The possible status strings include status of <i>app-name</i> is
+<tt>enabled</tt> or status of <i>app-name</i> is <tt>disabled</tt>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-components</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists all deployed Java EE 5
+components. If the <tt>--type</tt>option is not specified, all components are listed.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-sub-components</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists EJBs or
+Servlets in a deployed module or in a module of the deployed application.
+If a module is not identified, all modules are listed.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>enable</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Enables the specified
+component. If the component is already enabled, then it is re-enabled. The component
+must have been deployed in order to be enabled. If it has not
+been deployed, then an error message is returned.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>disable</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Immediately disables the named component.
+The component must have been deployed. If the component has not been deployed,
+an error message is returned.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>export</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Marks a variable name for automatic export to
+the environment of subsequent commands. All subsequent commands use the variable name value
+as specified unless you unset them or exit multimode.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>get</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Gets the names and values
+of attributes.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>set</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Sets the values of one or more configurable attribute.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the configurable
+element. On Solaris, quotes are needed when executing commands with <tt>*</tt> as the
+option value or operand.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>unset</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes one or more variables you set for the
+multimode environment. The variables and their associated values will no longer exist in
+the environment.</p></td>
+</tr>
+</table>
+
+<a name="gcnji"></a><h3>Deployment Commands</h3>
+<p>The deployment commands deploy an application or get the client stubs.</p><a name="gcntx"></a><h6>Table&#160;C-4 Deployment Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>deploy</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deploys an
+enterprise application, web application, EJB module, connector module, or application client module. If
+the component is already deployed or already exists, it is forcefully redeployed if
+the <tt>--force</tt> option is set to <tt>true</tt>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>deploydir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deploys an application directly from a development
+directory. The appropriate directory hierarchy and deployment descriptors conforming to the Java EE
+specification must exist in the deployment directory.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>get-client-stubs</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Gets the client stubs JAR file for
+an <tt>AppClient</tt> standalone module or an application containing the <tt>AppClient</tt> module, from the server
+machine to the local directory. The application or module should be deployed before
+executing this command.</p></td>
+</tr>
+</table>
+
+<a name="gcnkx"></a><h3>Version Commands</h3>
+<p>The version commands return the version string, display a list of all the
+<tt>asadmin</tt> commands, and allow you to install the license file.</p><a name="gcnsy"></a><h6>Table&#160;C-5 Version Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>version</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Displays the version information.
+If the command cannot communicate with the administration server with the given user/password
+and host/port, then the command will retrieve the version locally and display a
+warning message.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>help</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Displays a list of all the <tt>asadmin</tt> utility commands.  Specify the
+command to display the usage information for that command</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>install-license</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Prevents unauthorized use of
+the Application Server. Allows you to install the license file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>shutdown</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Gracefully brings down the
+administration server and all the running instances. You must manually start the administration
+server to bring it up again.</p></td>
+</tr>
+</table>
+
+<a name="gcnjt"></a><h3>Message Queue Administration Commands</h3>
+<p>The Message Queue administration commands allow you to manage the JMS destinations.</p><a name="gcnvh"></a><h6>Table&#160;C-6 Message Queue Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-jmsdest</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a
+JMS physical destination. Along with the physical destination, you use the <tt>create-jms-resource</tt> command
+to create a JMS destination resource that has a <tt>Name</tt> property that specifies the
+physical destination.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-jmsdest</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the specified JMS destination.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>flush-jmsdest</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Purges the messages from a physical destination
+in the specified target's JMS Service configuration. </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-jmsdest</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the JMS physical destinations.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>jms-ping</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Checks if
+the JMS service (also known as the JMS provider) is up and running.
+When you start the Application Server, the JMS service starts by default. Additionally,
+it  pings only the default JMS host within the JMS service. It
+displays an error message when it is unable to ping a built-in JMS
+service.</p></td>
+</tr>
+</table>
+
+<a name="gcnkp"></a><h3>Resource Management Commands</h3>
+<p>The resource commands allow you to manage the various resources used in your
+application.</p><a name="gcnvc"></a><h6>Table&#160;C-7 Resource Management Commands</h6><table><col width="36%"><col width="63%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-jdbc-connection-pool</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Registers a new JDBC connection pool with the specified JDBC connection pool name.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-jdbc-connection-pool</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes
+a JDBC connection pool. The operand identifies the JDBC connection pool to be
+deleted.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-jdbc-connection-pools</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Gets the JDBC connection pools that have been created.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-jdbc-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a new JDBC
+resource.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-jdbc-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes a JDBC resource with the specified JNDI name.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-jdbc-resources</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Displays a list of
+JDBC resources that have been created.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-jms-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a Java Message Service (JMS) connection
+factory resource or a JMS destination resource.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-jms-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the specified JMS resource.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-jms-resources</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the existing
+JMS resources (destination and connection factory resources).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-jndi-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Registers a JNDI resource.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-jndi-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the JNDI resource
+with the specified JNDI name.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-jndi-resources</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Identifies all the existing JNDI resources.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-jndi-entries</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Browses and queries
+the JNDI tree.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-javamail-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a JavaMail session resource.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-javamail-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the specified JavaMail session resource.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-javamail-resources</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists
+the existing JavaMail session resources.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-persistence-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Registers a persistence resource.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-persistence-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes a persistence resource. When
+you delete a persistence resource, the command also removes the JDBC resource if
+it was created using the <tt>create-persistence-resource</tt> command.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-persistence-resources</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Displays all the persistence resources.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-custom-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a
+custom resource. A custom resource specifies a custom server-wide resource object factory that
+implements the <tt>javax.naming.spi.ObjectFactory</tt> interface.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-custom-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes a custom resource.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-custom-resources</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the custom resources.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-connector-connection-pool</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Adds a new
+connector connection pool with the specified connection pool name.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-connector-connection-pool</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the connector connection pool
+specified using the operand <tt>connector_connection_pool_name</tt>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-connector-connection-pools</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the connector connection pools that have been
+created.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-connector-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Registers the connector resource with the specified JNDI name.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-connector-resource</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the connector resource
+with the specified JNDI name.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-connector-resources</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Gets all the connector resources.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-admin-object</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates the administered object
+that has a specified JNDI name.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-admin-object</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the administered object with the specified
+JNDI name.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-admin-objects</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists all the administered objects.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-resource-adapter-config</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates configuration information for the connector module.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-resource-adapter-config</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes
+the configuration information created in <tt>domain.xm</tt>l for the connector module.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-resource-adapter-configs</tt></p></td>
+<td align="left" valign="top" scope="row"><p>lists the configuration information
+in the <tt>domain.xml</tt> for the connector module</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>add-resources</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates the resources named in the specified
+XML file. The <i>xml_file_path</i> is the path to the XML file containing
+the resources to be created. The <tt>DOCTYPE</tt> should be specified as <tt></tt><i>install_dir</i><tt>/lib/dtds/sun-resources_1_2.dtd</tt> 
+in the <tt>resources.xml</tt> file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>ping-connection-pool</tt></p></td>
+<td align="left" valign="top" scope="row"><p>tests if a connection pool is usable for both
+JDBC connection pools and connector connection pools. For example, if you create a
+new JDBC connection pool for an application that is expected to be deployed
+later, the JDBC pool is tested with this command before deploying the application.
+ Before pinging a connection pool, you must create the connection pool with
+authentication and ensure that the enterprise server or database is started.</p></td>
+</tr>
+</table>
+
+<a name="gcnjm"></a><h3>Configuration Commands</h3>
+<p>The configuration commands allow you to construct IIOP listeners, lifecycle modules, HTTP and
+IIOP listeners, profilers, and other subsystems. </p><p>This section contains the following topics:</p>
+<ul><li><p><a href="#gcnky">HTTP and IIOP Listener Commands</a></p></li>
+<li><p><a href="#gcnkj">Lifecycle and Audit Module Commands</a></p></li>
+<li><p><a href="#gcnkb">Profiler and SSL Commands</a></p></li>
+<li><p><a href="#gcnlo">JVM Options and Virtual Server Commands</a></p></li>
+<li><p><a href="#gcnxq">Threadpool and Auth-Realm Commands</a></p></li>
+<li><p><a href="#gcnxr">Transaction and Timer Commands</a></p></li></ul>
+
+
+<a name="gcnky"></a><h4>HTTP and IIOP Listener Commands</h4>
+<p>The HTTP and IIOP listener commands help you manage listeners. These commands are
+supported in remote mode only.</p><a name="gcnvp"></a><h6>Table&#160;C-8 IIOP Listener Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-http-listener</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Adds a new HTTP listener socket.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-http-listener</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the specified
+HTTP listener.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-http-listeners</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the existing HTTP listener.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-iiop-listener</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates an IIOP listener.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-iiop-listener</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the specified IIOP
+listener.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-iiop-listeners</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the existing IIOP listeners.</p></td>
+</tr>
+</table>
+
+<a name="gcnkj"></a><h4>Lifecycle and Audit Module Commands</h4>
+<p>The lifecycle and audit module commands help you control lifecycle modules and optional
+plugin modules which implement audit capabilities. The commands are supported in remote mode
+only.</p><a name="gcnvn"></a><h6>Table&#160;C-9 Lifecycle Module Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-lifecycle-module</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a lifecycle module. The lifecycle modules provide a means of running short
+or long duration Java-based tasks within the application server environment.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-lifecycle-module</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the specified lifecycle
+module.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-lifecycle-modules</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the existing lifecycle module.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-audit-module</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Adds the named audit module for the plug-in
+module that implements the audit capabilities.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-audit-module</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the named audit module.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-audit-modules</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists all the audit
+modules.</p></td>
+</tr>
+</table>
+
+<a name="gcnkb"></a><h4>Profiler and SSL Commands</h4>
+<p>The Profiler and SSL commands allow you to administrate profilers and SSL client
+configurations. These commands are supported in remote mode only.</p><a name="gcnvo"></a><h6>Table&#160;C-10 Profiler and SSL Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-profiler</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates the profiler element.
+A server instance is tied to a particular profiler, by the profiler element
+in the Java configuration. Changing a profiler requires you to restart the server.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-profiler</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes
+the profiler element you specify. A server instance is tied to a particular
+profiler by the profiler element in the Java configuration. Changing a profiler requires
+you to restart the server.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-ssl</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates and configures the SSL element in the
+selected SIP/ HTTP/ IIOP listener, or IIOP service to enable secure communication on
+that listener/service.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-ssl</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes the SSL element in the selected SIP/ HTTP/ IIOP listener,
+or IIOP service.</p></td>
+</tr>
+</table>
+
+<a name="gcnlo"></a><h4>JVM Options and Virtual Server Commands</h4>
+<p>The JVM options and Virtual Server commands allow you to control these elements.
+These commands are supported in remote mode only.</p><a name="gcnxl"></a><h6>Table&#160;C-11 JVM Options and Virtual Server Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-jvm-option</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates JVM options in the
+Java configuration or profiler elements of the <tt>domain.xml</tt> file. If JVM options are
+created for a profiler, they are used to record the settings needed to
+get a particular profiler going. You must restart the server for newly created
+JVM options to take effect.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-jvm-option</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes JVM options from the Java configuration or profiler
+elements of the <tt>domain.xml</tt> file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-virtual-server</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates the named virtual server. Virtualization in the Application Server
+allows multiple URL domains to be served by a single HTTP server
+process that is listening on multiple host addresses. If the application is available at
+two virtual servers, they still share the same physical resource pools.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-virtual-server</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the
+virtual server with the specified virtual server ID.</p></td>
+</tr>
+</table>
+
+<a name="gcnxq"></a><h4>Threadpool and Auth-Realm Commands</h4>
+<p>The threadpool and auth-realm commands allow you to control these elements. These commands
+are supported in remote mode only.</p><a name="gcnxc"></a><h6>Table&#160;C-12 Threadpool and Auth-Realm Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-threadpool</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a threadpool with the specified name.
+You can specify maximum and minimum number of threads in the pool, the
+number of work queues, and the idle timeout of a thread. The created
+thread pool can be used for servicing IIOP requests and for resource adapters
+to service work management requests. A created thread pool can be used in
+multiple resource adapters.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-threadpool</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the threadpool with the named ID.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-threadpools</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists all the thread
+pools.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-auth-realm</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Adds the named authentication realm.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-auth-realm</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the named authentication realm.</p></td>
+</tr>
+</table>
+
+<a name="gcnxr"></a><h4>Transaction and Timer Commands</h4>
+<p>The transaction and timer commands allow you to control the transaction and timer
+subsystems; allowing you to suspend any inflight transactions. These commands are supported in
+remote mode only.</p><a name="gcnwq"></a><h6>Table&#160;C-13 Transaction Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>freeze-transaction</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Freezes the transaction subsystem during which time all the inflight transactions
+are suspended. Invoke this command before rolling back any inflight transactions. Invoking this
+command on an already frozen transaction subsystem has no effect.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>unfreeze-transaction</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Resumes all the suspended
+inflight transactions. Invoke this command on an already frozen transaction.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>recover-transactions</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Manually recovers pending transactions.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>rollback-transaction</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Rolls
+back the named transaction.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>unpublish-from-registry</tt></p></td>
+<td align="left" valign="top" scope="row"></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-timers</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the timers owned by a specific server instance
+</p></td>
+</tr>
+</table>
+
+<a name="gcoca"></a><h4>Registry Commands</h4>
+<p>The registry commands allow you to publish or unpublish webservice artifacts.</p><a name="gcoat"></a><h6>Table&#160;C-14 Transaction Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>publish-to-registry</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Publishes the
+web service artifacts to registries.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>unpublish-from-registry</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Unpublishes the web service artifacts from the registries.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-registry-locations</tt></p></td>
+<td align="left" valign="top" scope="row"></td>
+</tr>
+</table>
+
+<a name="gcnmj"></a><h3>User Management Commands</h3>
+<p>These user commands are to administer the users support by the file realm
+authentication. These commands are supported in remote mode only.</p><a name="gcnxo"></a><h6>Table&#160;C-15 User Management Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-file-user</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates an entry in
+the keyfile with the specified username, password, and groups. Multiple groups can be
+created by separating them with a colon (<tt>:</tt>).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-file-user</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes the entry in the keyfile
+with the specified username.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>update-file-user</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Updates an existing entry in the keyfile using the
+specified <tt>user_name</tt>, <tt>user_password</tt> and groups. Multiple groups can be entered by separating them,
+with a colon (<tt>:</tt>).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-file-users</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a list of file users supported by file
+realm authentication.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-file-groups</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Administers file users and groups supported by the file realm authentication. This
+command lists available groups in the file user.</p></td>
+</tr>
+</table>
+
+<a name="gcnmq"></a><h3>Rules and Monitoring Commands</h3>
+<p>Rules and monitoring commands allow you to manage rules and monitor the server.
+These commands are supported in remote mode only.</p><a name="gcnxv"></a><h6>Table&#160;C-16 Rules and Monitoring Commands</h6><table><col width="31%"><col width="68%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-management-rule</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a new management rule
+to intelligently self-manage the application server installation and deployed applications. </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-management-rule</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes the management
+rule you specify.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-transformation-rule</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates an XSLT transformation rule that can be applied to
+a webservice operation. The rule can be applied either to a request or
+to a response.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-transformation-rule</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes an XSLT transformation rule of a given web service.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>start-callflow-monitoring</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Collects
+and correlates data from Web container, EJB container and JDBC to provide a
+complete call flow/path of a request. Data is collected only if <tt>callflow-monitoring</tt> is
+ON.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>stop-callflow-monitoring</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Disables collection of call flow information of a request.</p></td>
+</tr>
+</table>
+
+<a name="gcnlt"></a><h3>Database Commands</h3>
+<p>The database commands allow you to start and stop the Java DB
+database (based on Apache Derby. These commands are supported in local mode only.</p><a name="gcnxb"></a><h6>Table&#160;C-17 Database Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>start-database</p></td>
+<td align="left" valign="top" scope="row"><p>Starts
+the Java DB server that is available with the Application Server. Use this
+command only for working with applications deployed to the Application Server.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>stop-database</p></td>
+<td align="left" valign="top" scope="row"><p>Stops a process
+of the Java DB server. Java DB server is available with the Application
+Server.</p></td>
+</tr>
+</table>
+
+<a name="gcnms"></a><h3>Diagnostic and Logging Commands</h3>
+<p>The diagnostic and logging commands help you troubleshoot problems with the application server.
+These commands are supported in remote mode only.</p><a name="gcnxw"></a><h6>Table&#160;C-18 Diagnostic and Logging Commands</h6><table><col width="30%"><col width="69%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>generate-diagnostic-report</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Generates an HTML report that
+contains pointers or navigational links to an application server installation details such as
+configuration details, logging details, or process specific information for an application server instance.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>display-error-statistics</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Displays a
+summary list of severities and warnings in <tt>server.log</tt> since the last server restart.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>display-error-distribution</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Displays
+distribution of errors from instance <tt>server.log</tt> at module level.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>display-log-records</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Displays all the error messages
+for a given module at a given timestamp.</p></td>
+</tr>
+</table>
+
+<a name="gcnmh"></a><h3>Web Service Commands</h3>
+<p>The web service commands allow you to monitor a deployed web service and
+manage transformation rules.</p><a name="gcnxj"></a><h6>Table&#160;C-19 Web Service Commands</h6><table><col width="36%"><col width="63%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>configure-webservice-management</tt></p></td>
+<td align="left" valign="top" scope="row"><p>configure the monitoring or the <tt>maxhistory</tt> attributes of a deployed web
+service.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-transformation-rule</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates an XSLT transformation rule that can be applied to a web
+service operation. The rule can be applied either to a request or to
+a response.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-transformation-rule</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes an XSLT transformation rule of a given web service.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-transformation-rules</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists all
+the transformation rules of a given web service in the order they are
+applied.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>publish-to-registry</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Publishes the web service artifacts to registries.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>unpublish-from-registry</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Unpublishes the web service artifacts from
+the registries.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-registry-locations</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Displays a list of configured web service registry access points.</p></td>
+</tr>
+</table>
+
+<a name="gcnmp"></a><h3>Security Service Commands</h3>
+<p>These security commands are used to control the security mapping for the connector
+connection pool. These commands are supported in remote mode only.</p><a name="gcnxm"></a><h6>Table&#160;C-20 Security Commands</h6><table><col width="36%"><col width="63%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-connector-security-map</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates a security map
+for the specified connector connection pool. If the security map is not present,
+a new one is created. Also, use this command to map the caller
+identity of the application (principal or user group) to a suitable enterprise information
+system (EIS) principal in container-managed transaction-based scenarios. One or more named security maps
+may be associated with a connector connection pool. The connector security map configuration supports
+the use of the wild card asterisk (<tt>*</tt>) to indicate all users or
+all user groups. For this command to succeed, you must have first created
+a connector connection pool. The EIS is any system that holds the data
+of an organization. It can be a mainframe, a messaging system, a
+database system, or an application.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-connector-security-map</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes a security map for the specified connector connection
+pool.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>update-connector-security-map</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Modifies a security map for the specified connector connection pool.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-connector-security-map</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the security
+maps belonging to the specified connector connection pool.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-message-security-provider</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Enables administrators to create a <tt>provider-config</tt>
+sub-element for the given message layer (<tt>message-security-config</tt> element of <tt>domain.xml</tt>, the file that specifies
+parameters and properties to the Application Server).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-message-security-provide</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Enables administrators to delete a <tt>provider-config</tt> sub-element for
+the given message layer (<tt>message-security-config</tt> element of <tt>domain.xml</tt>, the file that specifies parameters
+and properties to the Application Server).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-message-security-providers</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Enables administrators to list all security message providers
+(<tt>provider-config</tt> sub-elements) for the given message layer (<tt>message-security-config</tt> element of <tt>domain.xml</tt>). </p></td>
+</tr>
+</table>
+
+<a name="gcnmg"></a><h3>Password Commands</h3>
+<p>The password commands allow you to manage passwords and ensure security for the
+application server.</p><a name="gcnxz"></a><h6>Table&#160;C-21 Password Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-password-alias</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates an alias for a password and stores it in <tt>domain.xml</tt>. An
+alias is a token of the form <tt>${ALIAS=password-alias-password}</tt>. The password corresponding to the
+alias name is stored in an encrypted form. This command takes both a
+secure interactive form (in which the user is prompted for all information) and
+a more script-friendly form, in which the password is propagated on the command
+line.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-password-alias</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes a password alias.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>update-password-alias</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Updates the password alias IDs in the named target.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-password-aliases</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists
+all password aliases.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>change-admin-password</tt></p></td>
+<td align="left" valign="top" scope="row"><p>This remote command modifies the admin password. This command is
+interactive in that the user is prompted for the old and new admin
+password (with confirmation).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>change-master-password</tt></p></td>
+<td align="left" valign="top" scope="row"><p>This local command is used to modify the master password.
+This command is interactive in that the user is prompted for the old
+and new master password. This command will not work unless the server is
+stopped.</p></td>
+</tr>
+</table>
+
+<a name="gcnlq"></a><h3>Verify Command</h3>
+<p>The XML verifier command verifies the content of the <tt>domain.xml</tt> file.</p><a name="gcnxp"></a><h6>Table&#160;C-22 Verify Command</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>verify-domain-xml</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Verifies the
+content of the <tt>domain.xml</tt> file.</p></td>
+</tr>
+</table>
+
+<a name="gcnmo"></a><h3>Custom MBean Commands</h3>
+<p>The MBean commands allow you to manage and register custom MBeans. The commands
+are supported in remote mode only.</p><a name="gcnxe"></a><h6>Table&#160;C-23 Custom MBean Commands</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-mbean</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates and registers a custom MBean. If
+the target <tt>MBeanServer</tt> is not running, the MBean is not registered.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-mbean</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Deletes a custom
+MBean. Ensure that the target <tt>MBeanServer</tt> is running.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-mbeans</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Lists the custom mbeans for the
+specified target.</p></td>
+</tr>
+</table>
+
+<a name="gcnly"></a><h3>Service Command</h3>
+<p>The service command allows you to configure the starting of the Domain Administration
+Server (DAS).</p><a name="gcnxt"></a><h6>Table&#160;C-24 Service Command</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-service</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Configures the starting of a DAS on an unattended boot. On
+Solaris 10, this command uses the Service Management Facility (SMF). This is a
+local command and must be run as the OS-level user with superuser privileges.
+It is available only for Solaris 10. When the service is created, the
+user has to start, enable, disable, delete, or stop the service. The DAS
+must be stored on a folder to which the super-user has access. The
+configuration cannot be stored on a network file system. The service is created
+such that it is controlled by the OS-level user, who owns the folder
+where the configuration of the DAS resides. To run this command, you must
+have <tt>solaris.smf.*</tt> authorization.</p></td>
+</tr>
+</table>
+
+<a name="gcnzs"></a><h3>Property Command</h3>
+<p>Shared server instances will often need to override attributes defined in their referenced
+configuration. Any configuration attribute in a server instance can be overridden through a
+system property of the corresponding name. Use the system property commands to manage
+these shared server instances.</p><a name="gcnzf"></a><h6>Table&#160;C-25 Property Command</h6><table><col width="28%"><col width="71%"><tr><th align="left" valign="top" scope="column"><p>Command</p></th>
+<th align="left" valign="top" scope="column"><p>Definition</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>create-system-property</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Creates one system property of the domain, configuration, or
+server instance, at a time.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>delete-system-property</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Removes one system property of a domain, configuration, or
+server instance.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>list-system-properties</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Displays the system properties of a domain, configuration, or server instance.</p></td>
+</tr>
+</table>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p25.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="idx-1.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+
