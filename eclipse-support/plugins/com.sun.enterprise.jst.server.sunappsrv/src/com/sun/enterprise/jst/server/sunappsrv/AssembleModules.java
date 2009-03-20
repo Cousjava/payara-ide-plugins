@@ -93,6 +93,7 @@ public  class AssembleModules {
 	
 
 	public IPath assembleWebModule(IProgressMonitor monitor) throws CoreException{
+
 		IPath parent =copyModule(module,monitor);
 		IWebModule webModule = (IWebModule)module.loadAdapter(IWebModule.class, monitor);
 		IModule[] childModules = webModule.getModules();
@@ -145,7 +146,9 @@ public  class AssembleModules {
 			if (resource instanceof IModuleFolder) {
 				IModuleFolder mFolder = (IModuleFolder)resource;
 				IModuleResource[] resources = mFolder.members();
-		        SunAppSrvPlugin.logMessage("AssembleModules IModuleFolder="+mFolder);
+		        SunAppSrvPlugin.logMessage("AssembleModules  doPackModule IModuleFolder="+mFolder);
+		        SunAppSrvPlugin.logMessage("AssembleModules  doPackModule resource.getModuleRelativePath()="+resource.getModuleRelativePath());
+		        SunAppSrvPlugin.logMessage("AssembleModules  resource.getModuleRelativePath().append(resource.getName()).toPortableString()="+resource.getModuleRelativePath().append(resource.getName()).toPortableString());
 
 				packager.writeFolder(resource.getModuleRelativePath().append(resource.getName()).toPortableString());
 
@@ -169,6 +172,7 @@ public  class AssembleModules {
 
 	protected IPath copyModule(IModule module, IProgressMonitor monitor) throws CoreException {
 		ProjectModule pm =(ProjectModule)module.loadAdapter(ProjectModule.class, monitor);
+        //SunAppSrvPlugin.logMessage("AssembleModules copyModule ProjectModule is="+pm);
 		IStatus[] status = publishHelper.publishSmart(pm.members(), assembleRoot, monitor);
 		if (status != null && status.length > 0)
 			throw new CoreException(status[0]);
@@ -183,7 +187,7 @@ public  class AssembleModules {
 	}
 	
 	public IPath assembleEARModule(IProgressMonitor monitor) throws CoreException{
-	/*	//copy ear root to the temporary assembly directory
+		//copy ear root to the temporary assembly directory
 		IPath parent =copyModule(module,monitor);
 		IEnterpriseApplication earModule = (IEnterpriseApplication)module.loadAdapter(IEnterpriseApplication.class, monitor);
 		IModule[] childModules = earModule.getModules();
@@ -206,8 +210,8 @@ public  class AssembleModules {
             }
 		}
 		return parent;
-		*/
-		return null;
+		
+		
 	}
 	/**
      * Checks if there has been a change in the published resources.
@@ -218,18 +222,68 @@ public  class AssembleModules {
         final Server _server = (Server) server.getServer();
         final IModule[] modules ={module}; 
         IModuleResourceDelta[] deltas = _server.getPublishedResourceDelta( modules );
+
         return deltas.length > 0;
     }
 
+	/* returns true is a deploy command has to be run.
+	 *  for example a simple JSP change does not need a redeployment as the file is already been copied by the assembly in the
+	 *  correct directory
+	 */
+	public boolean needsARedeployment(  ) {
+        final Server _server = (Server) server.getServer();
+        final IModule[] modules ={module}; 
+        IModuleResourceDelta[] deltas = _server.getPublishedResourceDelta( modules );
+        return criticalResourceChangeThatNeedsARedeploy(deltas);
+    }	
+	/*return true is a module resource change requires a redeploy command 
+	 * for example, web.xml or a .class file change needs a redepploy.
+	 * a jsp or html change just needs a file copy not a redeploy command.
+	 */
+	private boolean criticalResourceChangeThatNeedsARedeploy(IModuleResourceDelta[] deltas){
+		if (deltas==null){
+			return false;
+		}
+	
+        for (int i=0;i<deltas.length;i++){
+            SunAppSrvPlugin.logMessage("AssembleModules criticalResourceChangeThatNeedsARedeploy DELTA IS="+deltas[i].getKind()+deltas[i].getModuleResource().getName());
+            if (deltas[i].getModuleResource().getName().endsWith (".class")){//class file
+            	return true;
+            }
+            if (deltas[i].getModuleResource().getName().endsWith ("web.xml")){//web.xml or sun-web.xml
+            	return true;
+            }
+            if (deltas[i].getModuleResource().getName().endsWith ("ejb-jar.xml")){//ejb-jar.xml or sun-ejb-jar.xml
+            	return true;
+            }
+            if (deltas[i].getModuleResource().getName().endsWith ("application.xml")){//application.xml or sun-application.xml
+            	return true;
+            }
+            
+            IModuleResourceDelta[] childrenDeltas= deltas[i].getAffectedChildren();
+	        if ( criticalResourceChangeThatNeedsARedeploy(childrenDeltas)){
+	        	return true;
+	        }
+        }
+		
+		return false;
+		
+	}
+
    protected void packModuleEARModule(IModule module, String deploymentUnitName, IPath destination) throws CoreException {
-	/*	if(module.getModuleType().getId().equals("jst.web")) //$NON-NLS-1$
-		{
-			AbstractModuleAssembler assembler= AbstractModuleAssembler.Factory.getModuleAssembler(module, server);
-			IPath webAppPath = assembler.assemble(new NullProgressMonitor());
+       SunAppSrvPlugin.logMessage("AssembleModules packModuleEARModule="+module.getId()+" "+module.getName());
+       SunAppSrvPlugin.logMessage("AssembleModules deploymentUnitName="+deploymentUnitName); //ie foo.war or myejbs.jar
+       //need to replace the , with_ ie _war or _jar as the dirname for dir deploy
+       SunAppSrvPlugin.logMessage("AssembleModules destination="+destination);
+		if(module.getModuleType().getId().equals("jst.web")) {//$NON-NLS-1$
+		
+			AssembleModules assembler= new AssembleModules(module, assembleRoot,server);
+			IPath webAppPath = assembler.assembleWebModule(new NullProgressMonitor());
 			String realDestination = destination.append(deploymentUnitName).toString();
+	        SunAppSrvPlugin.logMessage("AssembleModules realDestination="+realDestination);
 			ModulePackager packager=null;
 			try {
-				packager =new ModulePackager(realDestination);
+				packager =new ModulePackager(realDestination,false);
 				packager.pack(webAppPath.toFile(),webAppPath.toOSString());
 			
 			} catch (IOException e) {
@@ -247,10 +301,64 @@ public  class AssembleModules {
 			}			
 			
 		}
-		else
-		{
-			super.packModule(module, deploymentUnitName, destination);
+		else {
+			/*ludo super.*/packModule(module, deploymentUnitName, destination);
 		}
-		*/
+		
+	}
+   
+   
+	public IPath assembleDirDeployedEARModule(IProgressMonitor monitor) throws CoreException{
+		//copy ear root to the temporary assembly directory
+		IPath parent =copyModule(module,monitor);
+		IEnterpriseApplication earModule = (IEnterpriseApplication)module.loadAdapter(IEnterpriseApplication.class, monitor);
+		IModule[] childModules = earModule.getModules();
+		for (int i = 0; i < childModules.length; i++) {
+
+			IModule module = childModules[i];
+			String uri = earModule.getURI(module);
+		       SunAppSrvPlugin.logMessage("AssembleModules childModules.length="+childModules.length +" "+uri);
+			if(uri==null){ 
+				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,	"unable to assemble module null uri",null ); //$NON-NLS-1$
+				throw new CoreException(status);
+			}
+			IJ2EEModule jeeModule = (IJ2EEModule) module.loadAdapter(IJ2EEModule.class,monitor);
+		       SunAppSrvPlugin.logMessage("AssembleModules jeeModule="+jeeModule);
+			if( jeeModule != null && jeeModule.isBinary() ){//Binary module just copy
+			       SunAppSrvPlugin.logMessage("AssembleModules jeeModule is binary"+jeeModule);
+				ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
+				IModuleResource[] resources = pm.members();
+				publishHelper.publishFull(resources, parent, monitor);
+			       SunAppSrvPlugin.logMessage("AssembleModules WE CONTINUE!!!!!!");
+
+				continue;//done! no need to go further
+			}
+			
+			uri = uri.replace (".","_");
+		       SunAppSrvPlugin.logMessage("AssembleModules NEW URIRIRIRIRIRIRIR="+childModules.length +" "+uri);
+			if( shouldRepack( module ) ){	
+			       SunAppSrvPlugin.logMessage("AssembleModules shouldRepack="+"yes");
+//				packModuleEARModule(module,uri, parent);
+				if(module.getModuleType().getId().equals("jst.web")) {//$NON-NLS-1$					
+				       SunAppSrvPlugin.logMessage("AssembleModules module type is WEB!!!!");
+					AssembleModules assembler= new AssembleModules(module, assembleRoot.append(uri),server);
+					IPath webAppPath = assembler.assembleWebModule(new NullProgressMonitor());
+				//	String realDestination = parent.append(uri).toString();
+			    //    SunAppSrvPlugin.logMessage("AssembleModules realDestination="+realDestination);								
+				}
+				else {
+				       SunAppSrvPlugin.logMessage("AssembleModules module type is NOT WEB!!!!"+module.getModuleType().getId());
+				//	/*ludo super.*/packModule(module, uri, parent);
+					AssembleModules assembler= new AssembleModules(module, assembleRoot.append(uri),server);
+					assembler.copyModule(module,monitor);		
+
+				}				
+																				
+            }
+			
+		}
+		return parent;
+		
+		
 	}
 }

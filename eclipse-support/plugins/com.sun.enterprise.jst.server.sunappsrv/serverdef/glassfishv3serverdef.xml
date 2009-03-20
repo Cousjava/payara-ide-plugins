@@ -40,7 +40,7 @@
     xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
-    name="GlassFish v3" version="v0.1">
+    name="GlassFish v3 promoted build" version="v0.2">
     
     
     <property id="sunappserver.rootdirectory"  label="%sunappserver.rootdirectory"
@@ -60,6 +60,8 @@
     context="server"
     default="domain1" />
 
+
+
     <property id="sunappserver.adminname"  label="%sunappserver.adminname"
     type="string"
     context="server"
@@ -69,7 +71,17 @@
     type="string"
     context="server"
     default="adminadmin" />
+
+    <property id="sunappserver.useAnonymousConnection" label="%sunappserver.useAnonymousConnection"
+    type="boolean"
+    context="server"
+    default="true" />
     
+    <property id="sunappserver.keepSessions" label="%sunappserver.keepSessions"
+    type="boolean"
+    context="server"
+    default="true" />
+
 
 
 
@@ -98,7 +110,8 @@
     </project>
 	
 	<start>
-        <!-- This is not used at all-->
+		<!-- This is not used at all, but if/when it is again, use of args (like -->
+		<!-- domain & domain dir) should be re-examined -->
 		<mainClass>com.sun.enterprise.glassfish.bootstrap.Main</mainClass>
 		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
 		<programArguments></programArguments>
@@ -107,7 +120,8 @@
 	</start>
 	
     <stop>
-        <!-- This is not used at all-->
+        <!-- This is not used at all, but if/when it is again, use of args (like -->
+        <!-- domain & domain dir) should be re-examined -->
 		<mainClass>com.sun.enterprise.admin.cli.AsadminMain</mainClass>
 		<workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
 		<programArguments>stop-domain</programArguments>
@@ -148,33 +162,43 @@
 
 
 
+    <!-- This classpath is only used in the start task above (which is not used) -->
     <classpath id="sunappsrv.server" >
-        <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-SNAPSHOT.jar" />
-    </classpath>
-    <classpath id="sunappsrv.deploy" >
-        <archive path="${sunappserver.rootdirectory}/modules/glassfish-10.0-SNAPSHOT.jar" />
+        <archive path="${sunappserver.rootdirectory}/modules/glassfish.jar" />
     </classpath>
     <classpath id="sunapprsrv.admin">
-    	<archive path="${sunappserver.rootdirectory}/modules/admin-cli-10.0-SNAPSHOT.jar"/>
+    	<archive path="${sunappserver.rootdirectory}/modules/admin-cli.jar"/>
 	</classpath>
 
+    <!-- with the switch to an OSGI style manifest which does not help for compilation/code completion -->
+    <!-- this list is constantly changing -->
     <classpath id="sunappsrv.project" >
-        <archive path="${sunappserver.rootdirectory}/modules/servlet-api-2.5.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/transaction-api-1.1.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/ejb-api-3.0.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/jaxws-api-2.0.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/jaxrpc-api-1.1.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/jaxb-api-2.0.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/jms-api-1.1.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/persistence-api-1.0b.jar" />
-        <!--archive path="${sunappserver.rootdirectory}/modules/saaj-api-1.3.jar" /-->
-        <archive path="${sunappserver.rootdirectory}/modules/deployment-api-1.2.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/jsr250-api-1.0.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/connector-api-1.5.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/security-api-1.1.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/jsr173_api-1.0.jar" />
-        <archive path="${sunappserver.rootdirectory}/modules/jsr181-api-1.0-MR1.jar" />
+	<fileset dir="${sunappserver.rootdirectory}">
+		<include name="modules/javax.*.jar" />
+		<include name="modules/web/javax.*.jar" />
+		<include name="modules/ejb/javax.*.jar" />
+	</fileset>
+	<!-- leave at least one generic jar as an archive so that validation works -->
+	<archive path="${sunappserver.rootdirectory}/modules/jsf-api.jar" />
+	<!--  jar needed for tld files (html_basic and jsf_core) -->
+	<archive path="${sunappserver.rootdirectory}/modules/jsf-impl.jar" />
+	<archive path="${sunappserver.rootdirectory}/modules/jstl-impl.jar" />
+	<!--  jars needed for integration with JPA tools (eclipselink) -->
+	<fileset dir="${sunappserver.rootdirectory}">
+		<include name="modules/org.eclipse.persistence*.jar" />
+	</fileset>
+	<!--  jars needed for Metro Web Services (optional) -->
+	<fileset dir="${sunappserver.rootdirectory}">
+		<include name="modules/jaxb*.jar" />
+		<include name="modules/webservices*.jar" />
+	</fileset>
 
+	<!--  jar needed for integration with non-built in JPA (toplink) ddl generation -->
+	<!--  note that toplink essentials does not ship with this version of glassfish, so -->
+	<!--  it is intentially included here *after* eclipselink which is shipped with V3 -->
+	<fileset dir="${sunappserver.rootdirectory}">
+		<include name="lib/toplink-essentials*.jar" />
+	</fileset>
     </classpath>
 	
     <!-- Note: This is not currently used, but it uses the property sunappserver.serveraddress -->

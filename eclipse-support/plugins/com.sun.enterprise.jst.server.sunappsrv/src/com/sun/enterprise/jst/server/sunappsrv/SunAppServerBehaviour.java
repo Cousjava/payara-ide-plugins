@@ -80,10 +80,12 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.Operatio
 public class SunAppServerBehaviour extends GenericServerBehaviour {
 	private static final String DEFAULT_DOMAIN_DIR_NAME = "domains"; //$NON-NLS-N$
 	private static final String DEFAULT_DOMAIN_NAME = "domain1"; //$NON-NLS-N$
+//not used yet	private GlassFishV2DeployFacility gfv2depl=null;//lazy initialized
+	private boolean needARedeploy = true; //by default, will be calculated..
 
 	/** Creates a new instance of SunAppServerBehaviour */
 	public SunAppServerBehaviour() {
-		//       SunAppSrvPlugin.logMessage("in SunAppServerBehaviour CTOR ");
+		      SunAppSrvPlugin.logMessage("in SunAppServerBehaviour CTOR ");
 
 	}
 	protected void initialize(IProgressMonitor monitor){
@@ -182,14 +184,58 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		setServerState(IServer.STATE_STARTED);
 		resetStatus(IServer.STATE_STARTED);		
 	}
+	
+	
+	/**
+	 * Publish a single module to the server.
+	 * <p>
+	 * This method is called by the server core framework,
+	 * in response to a call to <code>IServer.publish()</code>.
+	 * Clients should never call this method directly.
+	 * </p>
+	 * <p>
+	 * If the deltaKind is IServer.REMOVED, the module may have been completely
+	 * deleted and does not exist anymore. In this case, a dummy module (with the
+	 * correct id) will be passed to this method.
+	 * </p>
+	 * <p>
+	 * It is recommended that clients implementing this method be responsible for
+	 * setting the module state.
+	 * </p>
+	 * 
+	 * @param kind one of the IServer.PUBLISH_XX constants. Valid values are:
+	 *    <ul>
+	 *    <li><code>PUBLISH_FULL</code>- indicates a full publish.</li>
+	 *    <li><code>PUBLISH_INCREMENTAL</code>- indicates a incremental publish.
+	 *    <li><code>PUBLISH_AUTO</code>- indicates an automatic incremental publish.</li>
+	 *    <li><code>PUBLISH_CLEAN</code>- indicates a clean request. Clean throws
+	 *      out all state and cleans up the module on the server before doing a
+	 *      full publish.
+	 *    </ul>
+	 * @param module the module to publish
+	 * @param deltaKind one of the IServer publish change constants. Valid values are:
+	 *    <ul>
+	 *    <li><code>ADDED</code>- indicates the module has just been added to the server
+	 *      and this is the first publish.
+	 *    <li><code>NO_CHANGE</code>- indicates that nothing has changed in the module
+	 *      since the last publish.</li>
+	 *    <li><code>CHANGED</code>- indicates that the module has been changed since
+	 *      the last publish. Call <code>getPublishedResourceDelta()</code> for
+	 *      details of the change.
+	 *    <li><code>REMOVED</code>- indicates the module has been removed and should be
+	 *      removed/cleaned up from the server.
+	 *    </ul>
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is a problem publishing the module
+	 */	
 	public void publishModule(int kind, int deltaKind, IModule[] module,
 			IProgressMonitor monitor) throws CoreException {
 		
+		needARedeploy = true; //by default
 		
-		SunAppSrvPlugin.logMessage("publishModule kind= " +kind+"  deltaKind=" +deltaKind);
-		for (int i=0;i<module.length;i++){
-			SunAppSrvPlugin.logMessage("publishModule Module [i] name " +module[i].getName() +" id " +module[i].getId()+" project=" +module[i].getProject());			
-		}
+		//if (kind==IServer.PUBLISH_AUTO)
+		SunAppSrvPlugin.logMessage("publishModule kind= " +kind+"  deltaKind=" +deltaKind+" "+module.length+module[0].getName(),null);
 			
 		if (isV3()){ //for V3, try to optimize the redeployment process by not using ANT, but V3 commands
 			long t= System.currentTimeMillis();
@@ -197,7 +243,16 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			SunAppSrvPlugin.logMessage("done publishModule in " +(System.currentTimeMillis()-t)+" ms");
 		}
 		else {
-			super.publishModule(kind, deltaKind, module, monitor);
+		/*not used yet	if (getSunAppServer().getFastDeploy().equals("true")){
+
+				long t= System.currentTimeMillis();
+				publishModuleForGlassFishV3( kind,  deltaKind, module,  monitor);
+				SunAppSrvPlugin.logMessage("done V2.x publishModule in " +(System.currentTimeMillis()-t)+" ms");
+			}
+			else {*/
+				super.publishModule(kind, deltaKind, module, monitor);
+				
+			//}
 		}
 
 
@@ -498,10 +553,25 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		}
 	}
 */
+	
+/*not used yet	private GlassFishV2DeployFacility getV2DeploymentFacility(){
+		if (gfv2depl==null){
+			SunAppServer ss= getSunAppServer();
+			SunAppSrvPlugin.logMessage("SunAppServer ss=" +ss);
+			SunAppSrvPlugin.logMessage("SunAppServer ssgetAdminServerPort=" +ss.getAdminServerPort());
+			SunAppSrvPlugin.logMessage("SunAppServer ssgetAdminName=" +ss.getAdminName());
+			SunAppSrvPlugin.logMessage("SunAppServer ssgetAdminPassword=" +ss.getAdminPassword());
+			gfv2depl = new GlassFishV2DeployFacility("localhost",Integer.parseInt(ss.getAdminServerPort()),ss.getAdminName(),ss.getAdminPassword(),false);
+		}
+		return gfv2depl;
+	}
+	
+	*/
 	private void publishDeployedDirectory(int deltaKind, Properties p,IModule module[], IProgressMonitor monitor) throws CoreException {
 		if (deltaKind == REMOVED ) {
 			String publishPath = (String) p.get(module[0].getId());
 			SunAppSrvPlugin.logMessage("REMOVED in publishPath" +publishPath);
+			if (isV3()){
 			Commands.UndeployCommand command = new Commands.UndeployCommand(module[0].getName());
 			try {
 				Future<OperationState> result = getSunAppServer().execute(command);
@@ -515,6 +585,15 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 				SunAppSrvPlugin.logMessage("Undeploy is failing=",ex );
 				throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
 						"cannot UnDeploy "+module[0].getName(), ex));
+			}
+			}else { //v2
+		/*not used yet		boolean ret= getV2DeploymentFacility().unDeploy(module[0].getName());
+				SunAppSrvPlugin.logMessage("gfv2depl.unDeploy"+ret );
+				if (ret==false){
+					throw new CoreException(new Status(IStatus.WARNING, SunAppSrvPlugin.SUNPLUGIN_ID, 0,"cannot undeploy "+module[0].getName(), null));
+					
+				}
+				*/
 			}
 			if (publishPath != null) {
 				try {
@@ -532,39 +611,67 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		else {
 			IPath path = new Path (getDomainDirWithDomainName()+"/eclipseApps/"+module[0].getName());
 			IModuleResource[] moduleResource = getResources(module);
-			SunAppSrvPlugin.logMessage("IModuleResource len="+moduleResource.length);
-			for (int j=0;j<moduleResource.length ;j++)
-				SunAppSrvPlugin.logMessage("IModuleResource n="+moduleResource[j].getName()+"-----"+moduleResource[j].getModuleRelativePath());
+	//		SunAppSrvPlugin.logMessage("IModuleResource len="+moduleResource.length);
+	//		for (int j=0;j<moduleResource.length ;j++)
+	//			SunAppSrvPlugin.logMessage("IModuleResource n="+moduleResource[j].getName()+"-----"+moduleResource[j].getModuleRelativePath());
 
 			IStatus[] stat = PublishUtil.publishSmart(moduleResource, path, monitor);
 			SunAppSrvPlugin.logMessage("PublishUtil.publishSmart called");
 			analyseReturnedStatus(stat);
 			
-
+			String contextRoot=null;
 			AssembleModules assembler = new AssembleModules(module[0], path,getSunAppServer());
-			//either ear or web.			
-			assembler.assembleWebModule(monitor);			
-			
-
+			//either ear or web.
+			if(AssembleModules.isModuleType(module[0], "jst.web")) {
+				SunAppSrvPlugin.logMessage("is WEB");
+						assembler.assembleWebModule(monitor);
+						
+						needARedeploy = assembler.needsARedeployment();
+						 String projectContextRoot = ComponentUtilities.getServerContextRoot(module[0].getProject());
+						 contextRoot = (((projectContextRoot != null) && (projectContextRoot.length() > 0)) ? 
+									projectContextRoot : module[0].getName());			
+			}
+			if(AssembleModules.isModuleType(module[0], "jst.ear")) {
+				SunAppSrvPlugin.logMessage("is EAR");
+				assembler.assembleDirDeployedEARModule(monitor);
+				needARedeploy = assembler.needsARedeployment();
+				
+			}
 			String spath =""+ path;
-			String name =module[0].getName();
-			String projectContextRoot = ComponentUtilities.getServerContextRoot(module[0].getProject());
-			String contextRoot = (((projectContextRoot != null) && (projectContextRoot.length() > 0)) ? 
-						projectContextRoot : name);
-			Boolean preserveSessions=getSunAppServer().getKeepSessions().equals("true");
-
-			Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions);
-			try {
-				Future<OperationState> result = getSunAppServer().execute(command);
-				if(result.get(120, TimeUnit.SECONDS) != OperationState.COMPLETED) {
+			///BUG NEED ALSO to test if it has been deployed once...isDeployed()
+			if (needARedeploy ){
+				String name =module[0].getName();
+	
+				Boolean preserveSessions=getSunAppServer().getKeepSessions().equals("true");
+				if (isV3()){
+				Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions);
+				try {
+					Future<OperationState> result = getSunAppServer().execute(command);
+					OperationState res=result.get(120, TimeUnit.SECONDS);
+					SunAppSrvPlugin.logMessage("res="+res);
+					if( res!= OperationState.COMPLETED) {
+						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+								"Timeout after 120s when trying to deploy "+module[0].getName()+". Please try again ", null));
+					}
+	
+				} catch(Exception ex) {
+					SunAppSrvPlugin.logMessage("deploy is failing=",ex );
 					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-							"Timeout after 120s when trying to deploy "+module[0].getName()+". Please try again ", null));
+							"cannot Deploy "+module[0].getName(), ex));	            
 				}
-
-			} catch(Exception ex) {
-				SunAppSrvPlugin.logMessage("deploy is failing=",ex );
-				throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-						"cannot Deploy "+module[0].getName(), ex));	            
+				}else{
+				/*not used yet	
+					boolean ret= getV2DeploymentFacility().directoryDeploy(new File(spath),name,contextRoot);
+					SunAppSrvPlugin.logMessage("gfv2depl.incrementalDeploy"+ret );
+					if (ret==false){
+						throw new CoreException(new Status(IStatus.WARNING, SunAppSrvPlugin.SUNPLUGIN_ID, 0,"cannot deploy "+name,null));
+					}
+					*/
+					
+				}
+			}else {
+				SunAppSrvPlugin.logMessage("optimal: NO NEED TO TO A REDEPLOYMENT, !!!");
+				
 			}
 			File sunResource = new File(spath,"WEB-INF/sun-resources.xml");
 			if (sunResource.exists()){
