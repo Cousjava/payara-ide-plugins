@@ -60,9 +60,14 @@ import javax.management.remote.JMXServiceURL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
@@ -98,6 +103,7 @@ public class SunAppServer extends GenericServer {
     public static final String ADMINNAME = "sunappserver.adminname";
     public static final String ADMINPASSWORD = "sunappserver.adminpassword";
     public static final String KEEPSESSIONS = "sunappserver.keepSessions";
+    public static final String FASTDEPLOY = "sunappserver.fastDeploy";
     public static final String USEANONYMOUSCONNECTIONS = "sunappserver.useAnonymousConnection";
 
     public static final String SAMPLEDBDIR = "sunappserver.sampledbdir";
@@ -168,7 +174,22 @@ public class SunAppServer extends GenericServer {
    */
   public void setServerInstanceProperties(Map map) {
 	  String domdir = (String)map.get(DOMAINDIR);
+	  String domainName = (String)map.get(DOMAINNAME);
 	  if ((domdir!=null)&&(!domdir.startsWith("${"))){ //only if we are correctly setup...
+		  //need to verify first that domaindir/domainname area is a correct domain location
+		  File dom=new File(domdir+File.separator+domainName+"/config/domain.xml");
+		  if (!dom.exists()){
+				MessageDialog message;
+				Shell shell = SunAppSrvPlugin.getInstance().getWorkbench()
+				.getActiveWorkbenchWindow().getShell();
+				String labels[] = new String[1];
+				labels[0] = "OK";
+				message = new MessageDialog(shell, "Wrong domain directory location", null,
+						dom.getAbsolutePath() +" does not exist...", 2, labels, 1);
+				message.open();
+				
+				throw new RuntimeException ("Wrong domain location:"+dom.getAbsolutePath());
+	    		}
 		  SunInitialize();
 		  map.put(ADMINSERVERPORT, adminServerPortNumber);
 		  map.put(SERVERPORT, serverPortNumber);
@@ -202,6 +223,28 @@ public class SunAppServer extends GenericServer {
   public void setKeepSessions(String value) {
   	getProps().put(KEEPSESSIONS, value);
   }
+  /* fast deploy for v2 and v2.1 (not using ANT and optimal like in v3
+   * 
+   */
+  public String getFastDeploy() {
+	  String s =getProps().get(FASTDEPLOY);
+	  if (s==null){
+		  s = "false"; //by default, false
+	  }
+      return  s;
+  }
+  public void setFastDeploy(String value) {
+  	getProps().put(FASTDEPLOY, value);
+  	if (value.equals ("true")){
+    		setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, 2/*Server.AUTO_PUBLISH_OVERRIDE*/);
+           	setAttribute(Server.PROP_AUTO_PUBLISH_TIME, 0);
+   		
+  	}
+  	else{
+       	setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, Server.AUTO_PUBLISH_DISABLE);
+ 		
+  	}
+  }  
   
   public String getUseAnonymousConnections() {
 	  String s =getProps().get(USEANONYMOUSCONNECTIONS);
