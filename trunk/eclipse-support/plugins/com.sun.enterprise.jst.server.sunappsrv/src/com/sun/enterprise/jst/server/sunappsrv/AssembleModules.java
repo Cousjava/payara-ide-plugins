@@ -72,7 +72,7 @@ public  class AssembleModules {
 	protected IPath assembleRoot;
 	protected PublishHelper publishHelper;
 	protected SunAppServer server;
-
+	protected boolean childNeedsARedeployment=false;
 	
 	protected AssembleModules(IModule module, IPath assembleRoot, SunAppServer server)
 	{
@@ -234,7 +234,7 @@ public  class AssembleModules {
         final Server _server = (Server) server.getServer();
         final IModule[] modules ={module}; 
         IModuleResourceDelta[] deltas = _server.getPublishedResourceDelta( modules );
-        return criticalResourceChangeThatNeedsARedeploy(deltas);
+        return (childNeedsARedeployment|| criticalResourceChangeThatNeedsARedeploy(deltas));
     }	
 	/*return true is a module resource change requires a redeploy command 
 	 * for example, web.xml or a .class file change needs a redepploy.
@@ -246,7 +246,7 @@ public  class AssembleModules {
 		}
 	
         for (int i=0;i<deltas.length;i++){
-            SunAppSrvPlugin.logMessage("AssembleModules criticalResourceChangeThatNeedsARedeploy DELTA IS="+deltas[i].getKind()+deltas[i].getModuleResource().getName());
+            SunAppSrvPlugin.logMessage("AssembleModules criticalResourceChangeThatNeedsARedeploy DELTA IS="+deltas[i].getKind()+deltas[i].getModuleResource().getName(),null);
             if (deltas[i].getModuleResource().getName().endsWith (".class")){//class file
             	return true;
             }
@@ -259,7 +259,8 @@ public  class AssembleModules {
             if (deltas[i].getModuleResource().getName().endsWith ("application.xml")){//application.xml or sun-application.xml
             	return true;
             }
-            
+            SunAppSrvPlugin.logMessage("AssembleModules neither class web or ejb-jarxml",null);
+          
             IModuleResourceDelta[] childrenDeltas= deltas[i].getAffectedChildren();
 	        if ( criticalResourceChangeThatNeedsARedeploy(childrenDeltas)){
 	        	return true;
@@ -328,7 +329,12 @@ public  class AssembleModules {
 			       SunAppSrvPlugin.logMessage("AssembleModules jeeModule is binary"+jeeModule);
 				ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
 				IModuleResource[] resources = pm.members();
-				publishHelper.publishFull(resources, parent, monitor);
+////////
+				/////
+				//////
+				////
+				//ludo avion				publishHelper.publishFull(resources, parent, monitor);
+				publishHelper.publishSmart(resources, parent, monitor);
 			       SunAppSrvPlugin.logMessage("AssembleModules WE CONTINUE!!!!!!");
 
 				continue;//done! no need to go further
@@ -343,6 +349,9 @@ public  class AssembleModules {
 				       SunAppSrvPlugin.logMessage("AssembleModules module type is WEB!!!!");
 					AssembleModules assembler= new AssembleModules(module, assembleRoot.append(uri),server);
 					IPath webAppPath = assembler.assembleWebModule(new NullProgressMonitor());
+					childNeedsARedeployment = (childNeedsARedeployment||assembler.needsARedeployment());
+				       SunAppSrvPlugin.logMessage("AssembleModules web need childNeedsARedeployment=="+childNeedsARedeployment,null);
+
 				//	String realDestination = parent.append(uri).toString();
 			    //    SunAppSrvPlugin.logMessage("AssembleModules realDestination="+realDestination);								
 				}
@@ -350,6 +359,8 @@ public  class AssembleModules {
 				       SunAppSrvPlugin.logMessage("AssembleModules module type is NOT WEB!!!!"+module.getModuleType().getId());
 				//	/*ludo super.*/packModule(module, uri, parent);
 					AssembleModules assembler= new AssembleModules(module, assembleRoot.append(uri),server);
+					childNeedsARedeployment = (childNeedsARedeployment||assembler.needsARedeployment());
+				       SunAppSrvPlugin.logMessage("AssembleModules NOT web need childNeedsARedeployment=="+childNeedsARedeployment,null);
 					assembler.copyModule(module,monitor);		
 
 				}				
