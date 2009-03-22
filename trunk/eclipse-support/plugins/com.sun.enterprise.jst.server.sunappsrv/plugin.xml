@@ -365,7 +365,7 @@
 
         <fragment id="org.eclipse.jst.server.generic.runtime"
                   typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv92"
-                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>           
+                  class="com.sun.enterprise.jst.server.sunappsrv.InstallableRuntimeServerRuntimeWizardFragment"/>           
         <fragment id="org.eclipse.jst.server.generic.server"
                   typeIds="com.sun.enterprise.jst.server.sunappsrv92"
                   class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
