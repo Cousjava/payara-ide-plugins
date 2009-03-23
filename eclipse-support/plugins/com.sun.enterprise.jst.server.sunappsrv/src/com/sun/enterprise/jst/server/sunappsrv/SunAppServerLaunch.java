@@ -154,19 +154,21 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         if (mode.equals("debug")) {
        	 debugFlag="--debug";
         }
-        command = new String[]{ asadminCmd,
-	           "start-domain",
-	           "--domaindir",
-	           serverBehavior.getDomainDir(), 
-	           debugFlag,
-	           verboseFlag,
-		           domain
-		        };
- 
-        
-        try {
+         try {
         	monitor.worked(10);
-            Process process = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
+        	 ProcessBuilder pb = new ProcessBuilder(asadminCmd,
+      	           "start-domain",
+    	           "--domaindir",
+    	           serverBehavior.getDomainDir(), 
+    	           debugFlag,
+    	           verboseFlag,
+    		           domain);
+
+        	 pb.directory(new File(serverBehavior.getSunApplicationServerInstallationDirectory()));
+        	 Process process = pb.start();
+            
+            
+            
             IProcess runtimeProcess = new RuntimeProcess(launch, process, "...", null);
      //       launch.addProcess(runtimeProcess);
      //       serverBehavior.setProcess(runtimeProcess);
