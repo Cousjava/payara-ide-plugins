@@ -43,6 +43,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -89,37 +90,37 @@ import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
 
 public class SunAppServer extends GenericServer {
     
-    public static final String ROOTDIR = "sunappserver.rootdirectory";
+    public static final String ROOTDIR = "sunappserver.rootdirectory";	//$NON-NLS-1$
     // This property does not come from serverdef, but is used there and in the ant files
     // so we set it by synchronizing it with the value from the generic server framework
-    public static final String ADDRESS = "sunappserver.serveraddress";
+    public static final String ADDRESS = "sunappserver.serveraddress";	//$NON-NLS-1$
     
 // now we read these props from domain.xml
-    public static final String SERVERPORT = "sunappserver.serverportnumber";
-    public static final String ADMINSERVERPORT = "sunappserver.adminserverportnumber";
+    public static final String SERVERPORT = "sunappserver.serverportnumber";	//$NON-NLS-1$
+    public static final String ADMINSERVERPORT = "sunappserver.adminserverportnumber";	//$NON-NLS-1$
 
-    public static final String DOMAINNAME = "sunappserver.domainname";
-    public static final String DOMAINDIR = "sunappserver.domaindir";
-    public static final String ADMINNAME = "sunappserver.adminname";
-    public static final String ADMINPASSWORD = "sunappserver.adminpassword";
-    public static final String KEEPSESSIONS = "sunappserver.keepSessions";
-    public static final String FASTDEPLOY = "sunappserver.fastDeploy";
-    public static final String USEANONYMOUSCONNECTIONS = "sunappserver.useAnonymousConnection";
+    public static final String DOMAINNAME = "sunappserver.domainname";	//$NON-NLS-1$
+    public static final String DOMAINDIR = "sunappserver.domaindir";	//$NON-NLS-1$
+    public static final String ADMINNAME = "sunappserver.adminname";	//$NON-NLS-1$
+    public static final String ADMINPASSWORD = "sunappserver.adminpassword";	//$NON-NLS-1$
+    public static final String KEEPSESSIONS = "sunappserver.keepSessions";	//$NON-NLS-1$
+    public static final String FASTDEPLOY = "sunappserver.fastDeploy";	//$NON-NLS-1$
+    public static final String USEANONYMOUSCONNECTIONS = "sunappserver.useAnonymousConnection";	//$NON-NLS-1$
 
-    public static final String SAMPLEDBDIR = "sunappserver.sampledbdir";
+    public static final String SAMPLEDBDIR = "sunappserver.sampledbdir";	//$NON-NLS-1$
    
     //Default values
-    String serverPortNumber="1118080";
-    String adminServerPortNumber="1114848";
-    String jmxPort = "8686";//For V2 only, the jmx port to issue some MBeans call that return server loc
+    String serverPortNumber="1118080";	//$NON-NLS-1$
+    String adminServerPortNumber="1114848";	//$NON-NLS-1$
+    String jmxPort = "8686";//For V2 only, the jmx port to issue some MBeans call that return server loc	//$NON-NLS-1$
     boolean initializedCalled = false;
     private String prevDomainDir, prevDomainName;
     
-    public static final String DOMAINUPDATE = "domainupdate";
+    public static final String DOMAINUPDATE = "domainupdate";	//$NON-NLS-1$
     private List<PropertyChangeListener> propChangeListeners;
     
     public SunAppServer(){
-        SunAppSrvPlugin.logMessage("in SunAppServer CTOR");
+        SunAppSrvPlugin.logMessage("in SunAppServer CTOR");	//$NON-NLS-1$
      }
 	
 		
@@ -128,7 +129,7 @@ public class SunAppServer extends GenericServer {
      */
     @Override
     protected void initialize() {
-    	SunAppSrvPlugin.logMessage("in SunAppServer initialize"+this.getServer().getName());
+    	SunAppSrvPlugin.logMessage("in SunAppServer initialize"+this.getServer().getName());	//$NON-NLS-1$
     	super.initialize();
     	SunInitialize();
 
@@ -138,28 +139,31 @@ public class SunAppServer extends GenericServer {
     	String domainDir = getDomainDir();
     	String domainName = getdomainName();
     	if (initializedCalled){
-        	if ((prevDomainDir != null) && !prevDomainDir.startsWith("${") && !prevDomainDir.equals(domainDir)) {
+        	if ((prevDomainDir != null) && !prevDomainDir.startsWith("${") && !prevDomainDir.equals(domainDir)) {	//$NON-NLS-1$
         		initializedCalled = false;
         	}
-        	if ((prevDomainName != null) && !prevDomainName.startsWith("${") && !prevDomainName.equals(domainName)) {
+        	if ((prevDomainName != null) && !prevDomainName.startsWith("${") && !prevDomainName.equals(domainName)) {	//$NON-NLS-1$
         		initializedCalled = false;
         	}
         	if (initializedCalled)
         		return;
     	}
-    	SunAppSrvPlugin.logMessage("in SunAppServer SunInitialize domain is"+getDomainDir());
-    	if ((domainDir!=null)&&(!domainDir.startsWith("${"))){ //only if we are correctly setup...
-    		readServerConfiguration(new File(domainDir+File.separator+domainName+"/config/domain.xml"));
-    		SunAppSrvPlugin.logMessage("in SunAppServer initialize done readServerConfiguration");
-    		syncHostAndPortsValues();
-        	prevDomainDir = domainDir;
-			prevDomainName = domainName;
-			// this is mainly so serversection can listen and repopulate, 
-			// but it is not working as intended because the sunserver instance to 
-			// which the prop change listener is attached is a different one than is 
-			// seeing the changes. in fact, we have multiple instances of this 
-			// object and the SunAppServerBehaviour object per server - issue 140
-			firePropertyChangeEvent(DOMAINUPDATE, null, null);			
+    	SunAppSrvPlugin.logMessage("in SunAppServer SunInitialize domain is"+getDomainDir());	//$NON-NLS-1$
+    	if ((domainDir!=null)&&(!domainDir.startsWith("${"))){ //only if we are correctly setup...	//$NON-NLS-1$
+    		if (readServerConfiguration(new File(domainDir+File.separator+domainName+"/config/domain.xml"))) {	//$NON-NLS-1$
+	    		SunAppSrvPlugin.logMessage("in SunAppServer initialize done readServerConfiguration");	//$NON-NLS-1$
+	    		syncHostAndPortsValues();
+	        	prevDomainDir = domainDir;
+				prevDomainName = domainName;
+				// this is mainly so serversection can listen and repopulate, 
+				// but it is not working as intended because the sunserver instance to 
+				// which the prop change listener is attached is a different one than is 
+				// seeing the changes. in fact, we have multiple instances of this 
+				// object and the SunAppServerBehaviour object per server - issue 140
+				firePropertyChangeEvent(DOMAINUPDATE, null, null);
+    		} else {
+	    		SunAppSrvPlugin.logMessage("in SunAppServer could not readServerConfiguration - probably invalid domain");	//$NON-NLS-1$
+    		}
 			initializedCalled = true;
     	}    	
     }
@@ -167,7 +171,27 @@ public class SunAppServer extends GenericServer {
   public Map<String, String> getProps(){
 	  return getServerInstanceProperties();
   }
-  
+
+  public String validateDomainExists(String domainDir, String domainName) {
+	  if ((domainDir!=null)&&(!domainDir.startsWith("${"))){ //only if we are correctly setup...	//$NON-NLS-1$
+		File f= new File(domainDir+File.separator+domainName);
+		if (!f.exists()){
+			return MessageFormat.format(Messages.pathDoesNotExist, f.getAbsolutePath());
+		}
+		if (!f.isDirectory()){
+			return MessageFormat.format(Messages.pathNotDirectory, f.getAbsolutePath());
+		}
+		if (!f.canWrite()){
+			return MessageFormat.format(Messages.pathNotWritable, f.getAbsolutePath());
+		}
+		File domain= new File(f,"config/domain.xml");	//$NON-NLS-1$
+		if (!domain.exists()){
+			return MessageFormat.format(Messages.pathNotValidDomain, domain.getAbsolutePath());
+		}
+		return null;
+	  }
+	  return Messages.incompleteDomainSetup;
+  }
   /* overide needed to store the admin server port and server port immediately at server creation
    * (non-Javadoc)
    * @see org.eclipse.jst.server.generic.core.internal.GenericServer#setServerInstanceProperties(java.util.Map)
@@ -175,26 +199,25 @@ public class SunAppServer extends GenericServer {
   public void setServerInstanceProperties(Map map) {
 	  String domdir = (String)map.get(DOMAINDIR);
 	  String domainName = (String)map.get(DOMAINNAME);
-	  if ((domdir!=null)&&(!domdir.startsWith("${"))){ //only if we are correctly setup...
-		  //need to verify first that domaindir/domainname area is a correct domain location
-		  File dom=new File(domdir+File.separator+domainName+"/config/domain.xml");
-		  if (!dom.exists()){
+	  if ((domdir!=null)&&(!domdir.startsWith("${"))){ //only if we are correctly setup...	//$NON-NLS-1$
+		  String domainValidationError = validateDomainExists(domdir, domainName);
+		  if (domainValidationError!=null) {
 				MessageDialog message;
 				Shell shell = SunAppSrvPlugin.getInstance().getWorkbench()
 				.getActiveWorkbenchWindow().getShell();
 				String labels[] = new String[1];
-				labels[0] = "OK";
-				message = new MessageDialog(shell, "Wrong domain directory location", null,
-						dom.getAbsolutePath() +" does not exist...", 2, labels, 1);
+				labels[0] = Messages.OKButton;
+				message = new MessageDialog(shell, Messages.TitleWrongDomainLocation, null,
+						domainValidationError, 2, labels, 1);
 				message.open();
 				
-				throw new RuntimeException ("Wrong domain location:"+dom.getAbsolutePath());
-	    		}
+				throw new RuntimeException (Messages.TitleWrongDomainLocation +": "+domainValidationError); //$NON-NLS-1$
+		  }
 		  SunInitialize();
 		  map.put(ADMINSERVERPORT, adminServerPortNumber);
 		  map.put(SERVERPORT, serverPortNumber);
 	  }
-	  SunAppSrvPlugin.logMessage("in SunAppServer setServerInstanceProperties new MAP IS"+map);
+	  SunAppSrvPlugin.logMessage("in SunAppServer setServerInstanceProperties new MAP IS"+map);	//$NON-NLS-1$
 	  setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, map);
   } 
  
@@ -216,7 +239,7 @@ public class SunAppServer extends GenericServer {
   public String getKeepSessions() {
 	  String s =getProps().get(KEEPSESSIONS);
 	  if (s==null){
-		  s = "true";
+		  s = Boolean.TRUE.toString();
 	  }
       return  s;
   }
@@ -229,13 +252,13 @@ public class SunAppServer extends GenericServer {
   public String getFastDeploy() {
 	  String s =getProps().get(FASTDEPLOY);
 	  if (s==null){
-		  s = "false"; //by default, false
+		  s = Boolean.FALSE.toString(); //by default, false
 	  }
       return  s;
   }
   public void setFastDeploy(String value) {
   	getProps().put(FASTDEPLOY, value);
-  	if (value.equals ("true")){
+  	if (value.equals (Boolean.TRUE.toString())){
     		setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, 2/*Server.AUTO_PUBLISH_OVERRIDE*/);
            	setAttribute(Server.PROP_AUTO_PUBLISH_TIME, 0);
    		
@@ -249,7 +272,7 @@ public class SunAppServer extends GenericServer {
   public String getUseAnonymousConnections() {
 	  String s =getProps().get(USEANONYMOUSCONNECTIONS);
 	  if (s==null){
-		  s = "true";
+		  s = Boolean.TRUE.toString();
 	  }
       return  s;
   }
@@ -318,10 +341,10 @@ public class SunAppServer extends GenericServer {
 	}
 
     public void saveConfiguration(IProgressMonitor m) throws CoreException  {
-        SunAppSrvPlugin.logMessage("in Save SunAppServer " +initializedCalled);
+        SunAppSrvPlugin.logMessage("in Save SunAppServer " +initializedCalled);	//$NON-NLS-1$
         if (initializedCalled==false){
         	SunInitialize(); 
-            SunAppSrvPlugin.logMessage("in Save SunAppServer done" );
+            SunAppSrvPlugin.logMessage("in Save SunAppServer done" );	//$NON-NLS-1$
        }
         syncHostAndPortsValues();
 
@@ -369,11 +392,11 @@ public class SunAppServer extends GenericServer {
 					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
 					listener.propertyChange(event);
 				} catch (Exception e) {
-					SunAppSrvPlugin.logMessage("Error firing property change event", e);
+					SunAppSrvPlugin.logMessage("Error firing property change event", e);	//$NON-NLS-1$
 				}
 			}
 		} catch (Exception e) {
-			SunAppSrvPlugin.logMessage("Error in property event", e);
+			SunAppSrvPlugin.logMessage("Error in property event", e);	//$NON-NLS-1$
 		}
 	}
 
@@ -387,7 +410,7 @@ public class SunAppServer extends GenericServer {
             //this.saveConfiguration(new NullProgressMonitor());
             this.configurationChanged();
         } catch (Exception ex) {
-            SunAppSrvPlugin.logMessage("error ="+ ex);
+            SunAppSrvPlugin.logMessage("error ="+ ex);	//$NON-NLS-1$
         }
     }
     
@@ -406,7 +429,7 @@ public class SunAppServer extends GenericServer {
      */
     @Override
     public void setDefaults(IProgressMonitor monitor) {
-         SunAppSrvPlugin.logMessage("In  setDefaults for " +this.getServer().getServerType().getName());
+         SunAppSrvPlugin.logMessage("In  setDefaults for " +this.getServer().getServerType().getName());	//$NON-NLS-1$
         if (isV3()){
     		setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, 2/*Server.AUTO_PUBLISH_OVERRIDE*/);
            	setAttribute(Server.PROP_AUTO_PUBLISH_TIME, 0);
@@ -444,9 +467,15 @@ public class SunAppServer extends GenericServer {
      */
     public  boolean isRunning() throws CoreException {
 
-    	if (adminServerPortNumber.equals("1114848")){
-    		SunAppSrvPlugin.logMessage("catastrophic state where adminServerPortNumber is not initialize is null in SunAppServer.java");
-    		SunAppSrvPlugin.logMessage("catastrophic Only thing to do is restart Eclipse");
+		String domainValidationError = validateDomainExists(getDomainDir(), getdomainName());
+		if (domainValidationError != null) {
+			throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, 
+    				IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR, domainValidationError, 
+    				new RuntimeException(domainValidationError)));
+		}
+    	if (adminServerPortNumber.equals("1114848")){	//$NON-NLS-1$
+    		SunAppSrvPlugin.logMessage("catastrophic state where adminServerPortNumber is not initialize is null in SunAppServer.java");	//$NON-NLS-1$
+    		SunAppSrvPlugin.logMessage("catastrophic Only thing to do is restart Eclipse");	//$NON-NLS-1$
     		initialize();
     		/*throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, 
     				IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR, 
@@ -513,27 +542,27 @@ public class SunAppServer extends GenericServer {
                 		File installDir = new File(installRoot);
                 		File targetInstallDir = new File(targetInstallRoot);
                 		if (installDir.getCanonicalPath().equals(targetInstallDir.getCanonicalPath())){
-                			SunAppSrvPlugin.logMessage("getV3ServerStatus DOMAINDIR_MATCHING" );
+                			SunAppSrvPlugin.logMessage("getV3ServerStatus DOMAINDIR_MATCHING" );	//$NON-NLS-1$
                 			return ServerStatus.DOMAINDIR_MATCHING;
 
                 		}
                 		else {
-                			SunAppSrvPlugin.logMessage("getV3ServerStatus DOMAINDIR_NOT_MATCHING" );
+                			SunAppSrvPlugin.logMessage("getV3ServerStatus DOMAINDIR_NOT_MATCHING" );	//$NON-NLS-1$
                 			return ServerStatus.DOMAINDIR_NOT_MATCHING;
 
                 		}
                 	} else {
-                		SunAppSrvPlugin.logMessage("getV3ServerStatus 3 DOMAINDIR_NOT_MATCHING" );
+                		SunAppSrvPlugin.logMessage("getV3ServerStatus 3 DOMAINDIR_NOT_MATCHING" );	//$NON-NLS-1$
                 		return ServerStatus.DOMAINDIR_NOT_MATCHING;
                 	}
                 } else  {
-                	SunAppSrvPlugin.logMessage("apparently CREDENTIAL_ERROR" );
+                	SunAppSrvPlugin.logMessage("apparently CREDENTIAL_ERROR" );	//$NON-NLS-1$
                 	return ServerStatus.CREDENTIAL_ERROR;
 
                 }
             } catch(Exception ex) {
-                SunAppSrvPlugin.logMessage("IsReady is failing=",ex );
-                SunAppSrvPlugin.logMessage("getV3ServerStatus 2 CONNEXTION_ERROR" );
+                SunAppSrvPlugin.logMessage("IsReady is failing=",ex );	//$NON-NLS-1$
+                SunAppSrvPlugin.logMessage("getV3ServerStatus 2 CONNEXTION_ERROR" );	//$NON-NLS-1$
               	return ServerStatus.CONNEXTION_ERROR;
             }
       
@@ -552,19 +581,19 @@ public class SunAppServer extends GenericServer {
     		// Create an RMI connector client
     		//
     		JMXServiceURL url = new JMXServiceURL(
-    		"service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi");
+    		"service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi");	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     		HashMap env = new HashMap();
     		env.put(JMXConnector.CREDENTIALS, new String[]{ getAdminName(), getAdminPassword()});
-            SunAppSrvPlugin.logMessage("service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi" );
+            SunAppSrvPlugin.logMessage("service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi" );	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     		jmxc = JMXConnectorFactory.connect(url, env);
-    		SunAppSrvPlugin.logMessage("after JMXConnectorFactory");
+    		SunAppSrvPlugin.logMessage("after JMXConnectorFactory");	//$NON-NLS-1$
     		MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();
-   			ObjectName on = new ObjectName("com.sun.appserv:type=domain,category=config");
+   			ObjectName on = new ObjectName("com.sun.appserv:type=domain,category=config");	//$NON-NLS-1$
 
-    		Object o = mbsc.invoke(on, "getConfigDir", null, null);
-    		SunAppSrvPlugin.logMessage("mbsc.invoke="+o);
+    		Object o = mbsc.invoke(on, "getConfigDir", null, null);	//$NON-NLS-1$
+    		SunAppSrvPlugin.logMessage("mbsc.invoke="+o);	//$NON-NLS-1$
    		if (o != null) {
-    			File domainDir=new File(""+o).getParentFile();
+    			File domainDir=new File(""+o).getParentFile(); //$NON-NLS-1$
                 File knownDomainRoot = new File(this.getDomainDir()+File.separator+this.getdomainName());
                 if (domainDir.getCanonicalPath().equals(knownDomainRoot.getCanonicalPath())){
                 	return ServerStatus.DOMAINDIR_MATCHING;
@@ -574,13 +603,13 @@ public class SunAppServer extends GenericServer {
                 }
     		}
     		else {
-                SunAppSrvPlugin.logMessage("V2 not ready yet: o=null" );
+                SunAppSrvPlugin.logMessage("V2 not ready yet: o=null" );	//$NON-NLS-1$
             	return ServerStatus.MBEAN_ERROR;
    		}
    		
 
     	} catch (Exception e) {
-            SunAppSrvPlugin.logMessage("V2 not ready yet:",e );
+            SunAppSrvPlugin.logMessage("V2 not ready yet:",e );	//$NON-NLS-1$
            	return ServerStatus.CONNEXTION_ERROR;
             
     	} finally {
@@ -606,7 +635,7 @@ public class SunAppServer extends GenericServer {
         
         if (domainXml.exists()) {
             List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
-            pathList.add(new TreeParser.Path("/domain/configs/config/admin-service/jmx-connector",
+            pathList.add(new TreeParser.Path("/domain/configs/config/admin-service/jmx-connector",	//$NON-NLS-1$
                     new TreeParser.NodeReader() {
                 @Override
                 public void readAttributes(String qname, Attributes attributes) throws SAXException {
@@ -614,19 +643,19 @@ public class SunAppServer extends GenericServer {
         <admin-service type="das-and-server" system-jmx-connector-name="system">
         <jmx-connector ..... port="8686" />
   */
-                	String jmxAttr= attributes.getValue("port");
+                	String jmxAttr= attributes.getValue("port");	//$NON-NLS-1$
                 	try{
                 		int port = Integer.parseInt(jmxAttr);
-                		jmxPort = ""+port;
-                		SunAppSrvPlugin.logMessage("JMX Port is "+jmxPort );
+                		jmxPort = ""+port;	//$NON-NLS-1$
+                		SunAppSrvPlugin.logMessage("JMX Port is "+jmxPort );	//$NON-NLS-1$
                 	} catch(NumberFormatException ex) {
-                        SunAppSrvPlugin.logMessage("error reading one jmx port"+ex );
+                        SunAppSrvPlugin.logMessage("error reading one jmx port"+ex );	//$NON-NLS-1$
 
                 	}
                     
                 }
             }));
-            pathList.add(new TreeParser.Path("/domain/configs/config/http-service/http-listener",
+            pathList.add(new TreeParser.Path("/domain/configs/config/http-service/http-listener",	//$NON-NLS-1$
                     new TreeParser.NodeReader() {
                 @Override
                 public void readAttributes(String qname, Attributes attributes) throws SAXException {
@@ -636,25 +665,25 @@ public class SunAppServer extends GenericServer {
                     //   family="inet" default-virtual-server="server" 
                     //   server-name="" blocking-enabled="false" acceptor-threads="1">
                     try {
-                        String id = attributes.getValue("id");
+                        String id = attributes.getValue("id");	//$NON-NLS-1$
                        if(id != null && id.length() > 0) {
-                            int port = Integer.parseInt(attributes.getValue("port"));
-                            SunAppSrvPlugin.logMessage("PORT is "+port );
-                           boolean secure = "true".equals(attributes.getValue("security-enabled"));
-                            boolean enabled = !"false".equals(attributes.getValue("enabled"));
-                            SunAppSrvPlugin.logMessage("secure "+secure );
+                            int port = Integer.parseInt(attributes.getValue("port"));	//$NON-NLS-1$
+                            SunAppSrvPlugin.logMessage("PORT is "+port );	//$NON-NLS-1$
+                           boolean secure = Boolean.TRUE.toString().equals(attributes.getValue("security-enabled"));	//$NON-NLS-1$
+                            boolean enabled = !Boolean.FALSE.toString().equals(attributes.getValue("enabled"));	//$NON-NLS-1$
+                            SunAppSrvPlugin.logMessage("secure "+secure );	//$NON-NLS-1$
                            if(enabled) {
                                 HttpData data = new HttpData(id, port, secure);
-                                SunAppSrvPlugin.logMessage(" Adding " + data );
+                                SunAppSrvPlugin.logMessage(" Adding " + data );	//$NON-NLS-1$
                                 httpMap.put(id, data);
                             } else {
-                                SunAppSrvPlugin.logMessage("http-listener " + id + " is not enabled and won't be used." );
+                                SunAppSrvPlugin.logMessage("http-listener " + id + " is not enabled and won't be used." );	//$NON-NLS-1$ //$NON-NLS-2$
                             }
                         } else {
-                            SunAppSrvPlugin.logMessage("http-listener found with no name" );
+                            SunAppSrvPlugin.logMessage("http-listener found with no name" );	//$NON-NLS-1$
                         }
                     } catch(NumberFormatException ex) {
-                        SunAppSrvPlugin.logMessage("http-listener error reading this"+ex );
+                        SunAppSrvPlugin.logMessage("http-listener error reading this"+ex );	//$NON-NLS-1$
                       // throw new SAXException(ex);
                     }
                 }
@@ -673,10 +702,10 @@ public class SunAppServer extends GenericServer {
                 //   https port is the first secure enabled port - typically http-listener-2
                 // disabled ports are ignored.
                 //
-                HttpData adminData = httpMap.remove("admin-listener");
+                HttpData adminData = httpMap.remove("admin-listener");	//$NON-NLS-1$
                 
-               adminServerPortNumber =""+(adminData != null ? adminData.getPort() : -1);
-               SunAppSrvPlugin.logMessage("reading from domain.xml adminServerPortNumber="+adminServerPortNumber );
+               adminServerPortNumber =""+(adminData != null ? adminData.getPort() : -1);	//$NON-NLS-1$
+               SunAppSrvPlugin.logMessage("reading from domain.xml adminServerPortNumber="+adminServerPortNumber );	//$NON-NLS-1$
                
                 
                 HttpData httpData = null;
@@ -698,13 +727,13 @@ public class SunAppServer extends GenericServer {
                 }
                 
                 int httpPort = httpData != null ? httpData.getPort() : -1;
-                serverPortNumber= ""+httpPort;
-                SunAppSrvPlugin.logMessage("reading from domain.xml serverPortNumber="+serverPortNumber );
+                serverPortNumber= ""+httpPort;	//$NON-NLS-1$
+                SunAppSrvPlugin.logMessage("reading from domain.xml serverPortNumber="+serverPortNumber );	//$NON-NLS-1$
                 /////ludo secure TODO   wi.setHttpsPort(httpsData != null ? httpsData.getPort() : -1);
                 
                 result = httpPort != -1;
             } catch(IllegalStateException ex) {
-                SunAppSrvPlugin.logMessage("error IllegalStateException ",ex);
+                SunAppSrvPlugin.logMessage("error IllegalStateException ",ex);	//$NON-NLS-1$
             }
         }
         return result;
@@ -736,7 +765,7 @@ public class SunAppServer extends GenericServer {
         
         @Override
         public String toString() {
-            return "{ " + id + ", " + port + ", " + secure + " }";
+            return "{ " + id + ", " + port + ", " + secure + " }";	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         }
         
     }

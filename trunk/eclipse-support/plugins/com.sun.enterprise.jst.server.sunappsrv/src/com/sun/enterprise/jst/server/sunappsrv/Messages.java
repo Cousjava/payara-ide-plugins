@@ -39,7 +39,6 @@
 package com.sun.enterprise.jst.server.sunappsrv;
 
 
-
 public class Messages extends org.eclipse.osgi.util.NLS {
     static {
         org.eclipse.osgi.util.NLS.initializeMessages(
@@ -64,4 +63,13 @@ public class Messages extends org.eclipse.osgi.util.NLS {
 
     public static String register;
     public static String updateCenter;
+ 
+    public static String pathDoesNotExist;
+    public static String pathNotDirectory;
+    public static String pathNotWritable;
+    public static String pathNotValidDomain;
+    public static String incompleteDomainSetup;
+    public static String TitleWrongDomainLocation;
+    public static String OKButton;
+
 }
