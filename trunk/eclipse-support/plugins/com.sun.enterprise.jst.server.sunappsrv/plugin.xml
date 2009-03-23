@@ -363,6 +363,7 @@
                   typeIds="com.sun.enterprise.jst.server.sailfin1"
                   class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
 
+     	<!--the fact that we need to provide our own wizard fragment is a workaround for issue 222688-->
         <fragment id="org.eclipse.jst.server.generic.runtime"
                   typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv92"
                   class="com.sun.enterprise.jst.server.sunappsrv.InstallableRuntimeServerRuntimeWizardFragment"/>           
