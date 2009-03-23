@@ -42,8 +42,6 @@ package com.sun.enterprise.jst.server.sunappsrv.editorsections;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -71,7 +69,6 @@ import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerCommands;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 
 
@@ -238,27 +235,25 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 			});
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.ui.editor.ServerEditorSection#getErrorMessage()
+	 */
+	@Override
+	public String getErrorMessage() {
+		String domainValidationError = sunserver.validateDomainExists(sunserver.getDomainDir(), sunserver.getdomainName());
+		if (domainValidationError != null) {
+			return domainValidationError;
+		}
+		return super.getErrorMessage();
+	}
+
+
 	public IStatus[] getSaveStatus(){
-		File f= new File(sunserver.getDomainDir()+File.separator+sunserver.getdomainName());
-		if (!f.exists()){
+		String domainValidationError = sunserver.validateDomainExists(sunserver.getDomainDir(), sunserver.getdomainName());
+		if (domainValidationError != null) {
 			IStatus[] i= new IStatus[1];
-			i[0] = new Status(IStatus.ERROR,  "Glassfish",f.getAbsolutePath()+" does not exist" );
-			return i;
-		}
-		if (!f.isDirectory()){
-			IStatus[] i= new IStatus[1];
-			i[0] = new Status(IStatus.ERROR,  "Glassfish",f.getAbsolutePath()+" is not a directory" );
-			return i;
-		}
-		if (!f.canWrite()){
-			IStatus[] i= new IStatus[1];
-			i[0] = new Status(IStatus.ERROR,  "Glassfish",f.getAbsolutePath()+" is not writable" );
-			return i;
-		}
-		File domain= new File(f,"config/domain.xml");
-		if (!domain.exists()){
-			IStatus[] i= new IStatus[1];
-			i[0] = new Status(IStatus.ERROR,  "Glassfish",domain.getAbsolutePath()+" is not a valid domain (no domain.xml)" );
+			i[0] = new Status(IStatus.ERROR,  "Glassfish",domainValidationError);
 			return i;
 		}
 		
