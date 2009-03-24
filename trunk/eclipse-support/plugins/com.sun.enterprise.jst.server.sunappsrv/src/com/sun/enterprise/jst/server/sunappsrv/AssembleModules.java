@@ -259,6 +259,9 @@ public  class AssembleModules {
             if (deltas[i].getModuleResource().getName().endsWith ("application.xml")){//application.xml or sun-application.xml
             	return true;
             }
+            if (deltas[i].getModuleResource().getName().equalsIgnoreCase("manifest.mf") ){
+            	return true;
+            }
             SunAppSrvPlugin.logMessage("AssembleModules neither class web or ejb-jarxml",null);
           
             IModuleResourceDelta[] childrenDeltas= deltas[i].getAffectedChildren();
