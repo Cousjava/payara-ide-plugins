@@ -576,11 +576,14 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			try {
 				Future<OperationState> result = getSunAppServer().execute(command);
 				//wait 120 seconds max
-				if(result.get(120, TimeUnit.SECONDS) != OperationState.COMPLETED) {
+				if(result.get(120, TimeUnit.SECONDS) == OperationState.RUNNING) {
 					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
 							"cannot UnDeploy in less than 120 sec "+module[0].getName(), null));
 				}
-
+				if(result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
+					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+							"Error during undeploy of module "+module[0].getName()+": "+command.message, null));
+				}
 			} catch(Exception ex) {
 				SunAppSrvPlugin.logMessage("Undeploy is failing=",ex );
 				throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
@@ -649,11 +652,14 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 					Future<OperationState> result = getSunAppServer().execute(command);
 					OperationState res=result.get(120, TimeUnit.SECONDS);
 					SunAppSrvPlugin.logMessage("res="+res);
-					if( res!= OperationState.COMPLETED) {
+					if( res== OperationState.RUNNING) {
 						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
 								"Timeout after 120s when trying to deploy "+module[0].getName()+". Please try again ", null));
 					}
-	
+					if( res== OperationState.FAILED) {
+						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+								"Deployment Error for module: "+module[0].getName()+": "+command.message, null));
+					}	
 				} catch(Exception ex) {
 					SunAppSrvPlugin.logMessage("deploy is failing=",ex );
 					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
@@ -678,11 +684,14 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 				Commands.AddResourcesCommand register = new Commands.AddResourcesCommand(sunResource.getAbsolutePath());
 				try {
 					Future<OperationState> result = getSunAppServer().execute(register);
-					if(result.get(120, TimeUnit.SECONDS) != OperationState.COMPLETED) {
+					if(result.get(120, TimeUnit.SECONDS) == OperationState.RUNNING) {
 						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
 								"Timeout after 120s when trying to deploy the sun-resources.xml for "+module[0].getName()+". Please try again ", null));
 					}
-
+					if(result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
+						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+								"Error when trying to deploy the sun-resources.xml for "+module[0].getName()+": "+register.message, null));
+					}
 				} catch(Exception ex) {
 					SunAppSrvPlugin.logMessage("deploy of sun-resources is failing ",ex );
 					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
