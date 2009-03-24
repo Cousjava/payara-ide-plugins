@@ -63,7 +63,8 @@ public abstract class ServerCommand {
     protected final String command;
     protected String query = null;
     protected boolean retry = false;
-
+    // returned message from the command
+    public String message="";
     public ServerCommand(String command) {
         this.command = command;
     }
@@ -176,7 +177,7 @@ public abstract class ServerCommand {
             result = true;
         } else {
             // !PW FIXME Need to pass this message back.  Need <Result> object?
-            String message = m.getMainAttributes().getValue("message"); // NOI18N
+             message = m.getMainAttributes().getValue("message"); // NOI18N
 
             // If server is not currently available for processing commands,
             // set the retry flag.
