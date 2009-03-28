@@ -19,12 +19,11 @@
 						verbose="true" usetimestamp="true" />
 
 					<mkdir dir="${components.dist.folder}/${dist.name}/eclipse/glassfishv2.1" />
-					<exec executable="unzip">
-						<arg
-							value="${gfplugins.download.folder}/appserver_install_image-windows-b60e.zip" />
-						<arg value="-d" />
-						<arg value="${components.dist.folder}/${dist.name}/eclipse/glassfishv2.1" />
-					</exec>
+                                        <unzip
+                                            src="${gfplugins.download.folder}/appserver_install_image-windows-b60e.zip"
+                                            dest="${components.dist.folder}/${dist.name}/eclipse/glassfishv2.1" />
+
+
 
                     <copy file="servicetag-registry.xml"
                     tofile="${components.dist.folder}/${dist.name}/eclipse/glassfishv2.1/lib/registration/servicetag-registry.xml"
