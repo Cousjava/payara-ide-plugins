@@ -61,6 +61,7 @@ import com.sun.enterprise.registration.RegistrationService.RegistrationReminder;
  */
 public class InteractiveSplashHandler extends AbstractSplashHandler {
 
+	private boolean skipInstall = false;
 
 	public InteractiveSplashHandler() {
 	}
@@ -82,48 +83,36 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		final String glassfishLoc = getGlassfishLocation();
 
 		if (new File(glassfishLoc + File.separator + ".installed").exists()) {//$NON-NLS-1$
-			return;//no need to install anything
+			skipInstall = true;
 		}
 		
 		final String dir = V2InstallationConfigurer.getJDKDir();
-		String v3RootDir = RegisterService.getv3PreludeLocation();
-		ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
-
+		if (!skipInstall) {
+			String v3RootDir = RegisterService.getv3PreludeLocation();
+			ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
+		}
 		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
 				final Shell shell = new Shell(Display.getDefault());
 				try {
-				/*	IRunnableWithProgress op = new IRunnableWithProgress() {
-						public void run(IProgressMonitor progressMonitor) throws InvocationTargetException,
-								InterruptedException {
-							progressMonitor.setTaskName(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION);
-							if (!skipInstall)
-								V2InstallationConfigurer.configureV2(dir, glassfishLoc);
-							Startup.mystartup(progressMonitor);
-						}
-					};
-					ProgressMonitorDialog pmd = new ProgressMonitorDialog(shell);
-					pmd.run(true, false, op);
-					*/
+
 					Job job = new Job(Messages.SETUP_GLASSFISH) {
-					    @Override
-					    protected IStatus run(IProgressMonitor monitor) {
-					        monitor.beginTask(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION, 100);
-					        // execute the task ...
+						@Override
+						protected IStatus run(IProgressMonitor monitor) {
+							monitor.beginTask(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION, 100);
+							// execute the task ...
 
-
+							if (!skipInstall)
 								V2InstallationConfigurer.configureV2(dir, glassfishLoc);
 
 							Startup.mystartup(monitor);
 							monitor.done();
-					        return Status.OK_STATUS;
-					    }
+							return Status.OK_STATUS;
+						}
 					};
 					job.schedule();
-					
-					
-					
+
 				} catch (Exception e) {
 					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
 							MessageFormat.format(Messages.CONFIGURING_GLASSFISH_V2_1_ENCOUNTERED_A_PROBLEM_0, e
