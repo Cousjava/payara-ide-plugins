@@ -416,13 +416,13 @@ public class SunAppServer extends GenericServer {
     
     
     public static SunAppServer getSunAppServer(IServerWorkingCopy server){
-        SunAppServer  sunserver = (SunAppServer) server.getAdapter(SunAppServer.class);
+        SunAppServer  sunserver = (SunAppServer) server.getOriginal().getAdapter(SunAppServer.class);
         if (sunserver == null) {
-            sunserver = (SunAppServer) server.loadAdapter(SunAppServer.class, new NullProgressMonitor());
+            sunserver = (SunAppServer) server.getOriginal().loadAdapter(SunAppServer.class, new NullProgressMonitor());
         }
         return sunserver;
     }
-    
+
     /* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.core.internal.GenericServer#setDefaults(org.eclipse.core.runtime.IProgressMonitor)
      * This implementation overrides the automatic publishing option to disable it by default.
