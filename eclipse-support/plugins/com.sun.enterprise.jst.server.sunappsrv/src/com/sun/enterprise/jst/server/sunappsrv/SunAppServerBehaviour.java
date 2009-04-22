@@ -59,6 +59,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
+import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.wst.common.componentcore.internal.util.ComponentUtilities;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
@@ -295,7 +296,9 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		}
 	}
 
-
+    public GenericServerRuntime getRuntimeDelegate() {
+        return (GenericServerRuntime)getServer().getRuntime().loadAdapter(GenericServerRuntime.class,null);
+     }
 	public String getSunApplicationServerInstallationDirectory(){
 		String path= (String)getRuntimeDelegate().getServerInstanceProperties().get(SunAppServer.ROOTDIR);
 		/* SunAppServer  sunserver = (SunAppServer) getServer().getAdapter(SunAppServer.class);
