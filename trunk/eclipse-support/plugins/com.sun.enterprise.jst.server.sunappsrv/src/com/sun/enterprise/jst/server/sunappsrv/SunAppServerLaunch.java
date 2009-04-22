@@ -40,8 +40,11 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.runtime.CoreException;
@@ -58,6 +61,7 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.RuntimeProcess;
 import org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
+import org.eclipse.jdt.launching.AbstractVMInstall;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMConnector;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -92,7 +96,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         return ret;
     }
 
-    public void launch(ILaunchConfiguration configuration,  String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+    @SuppressWarnings("restriction")
+	public void launch(ILaunchConfiguration configuration,  String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
         SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch launch");
 
         String command[]=null;
@@ -163,11 +168,25 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
     	           debugFlag,
     	           verboseFlag,
     		           domain);
-
+   /*     	 
+        	 Map<String,String> m= pb.environment();
+        	 Set<Map.Entry<String,String>> cc=m.entrySet();
+        	 for (Map.Entry<String,String> me : cc){
+ 				SunAppSrvPlugin.logMessage("map="+me.getKey()+"---"+me.getValue(),null);
+      		 
+        	 }
+*/
+        	 
+        	 pb.environment().clear();//issue with v3 promoted build and jdk1.6: cannot use the 
+        	 //eclipse environment if eclipse is using jdk1.5, v3 promoted would inherit from it
+        	 //causing start failure
         	 pb.directory(new File(serverBehavior.getSunApplicationServerInstallationDirectory()));
         	 Process process = pb.start();
             
-            
+        	 AbstractVMInstall/*IVMInstall*/ vm =(AbstractVMInstall)serverBehavior.getRuntimeDelegate().getVMInstall(); 
+				SunAppSrvPlugin.logMessage("AbstractVMInstall="+vm.getJavaVersion(),null);
+       	 
+        	 
             
             IProcess runtimeProcess = new RuntimeProcess(launch, process, "...", null);
      //       launch.addProcess(runtimeProcess);
