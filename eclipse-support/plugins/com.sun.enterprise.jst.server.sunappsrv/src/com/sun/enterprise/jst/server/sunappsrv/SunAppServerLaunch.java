@@ -40,12 +40,8 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-
 import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

@@ -63,14 +63,9 @@ import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.wst.common.componentcore.internal.util.ComponentUtilities;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.IModuleResource;
-import org.eclipse.wst.server.core.model.IModuleResourceDelta;
-import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
-import org.eclipse.wst.server.core.util.ProjectModule;
 import org.eclipse.wst.server.core.util.PublishUtil;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer.ServerStatus;
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
@@ -411,7 +406,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
                 Future<OperationState> result = mgr.execute(Commands.STOP);
                 if(result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED) {
                 } else  {
-                	SunAppSrvPlugin.logMessage("Cannot stop is 30 seconds" );	//$NON-NLS-1$
+                	SunAppSrvPlugin.logMessage("Cannot stop in 30 seconds" );	//$NON-NLS-1$
                 	return ;
 
                 }
