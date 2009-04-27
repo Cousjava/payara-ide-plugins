@@ -68,9 +68,10 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
     	logMessage("STOP IS CALLED!!!!!!!!!!!!!!!!");
     	for (String[] command: commandsToExecuteAtExit){
     		try {
+    			logMessage(">>> " + command[0],null);
     			BufferedReader input = new BufferedReader(new InputStreamReader(Runtime.getRuntime().exec(command).getInputStream()));
     			String line = null;
-    			while ((line = input.readLine()) != null) logMessage(">>> " + line);
+    			while ((line = input.readLine()) != null) logMessage(">>> " + line,null);
     			input.close();
     		} catch (Exception ex) {
     			logMessage("Error executing process:\n" + ex);

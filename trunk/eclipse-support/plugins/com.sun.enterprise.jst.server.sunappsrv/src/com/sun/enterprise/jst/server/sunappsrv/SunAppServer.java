@@ -442,10 +442,20 @@ public class SunAppServer extends GenericServer {
         
         
     }
+    /* for both v3 or v3 prelude
+     * 
+     */
 	public boolean isV3(){
 		//test the server name to contain GlassFish v3
 		return (this.getServer().getServerType().getName().indexOf("GlassFish v3")!=-1);
 	}
+	/* returns true if this is v3 prelude
+	 * and false otherwise, i.e v2 or v3 classic
+	 */
+	public boolean isV3Prelude(){
+		//test the server name to contain GlassFish v3 prelude
+		return (this.getServer().getServerType().getName().indexOf("GlassFish v3 Prelude")!=-1);
+	}	
 	
 	public ServerPort[] getServerPorts() {
 

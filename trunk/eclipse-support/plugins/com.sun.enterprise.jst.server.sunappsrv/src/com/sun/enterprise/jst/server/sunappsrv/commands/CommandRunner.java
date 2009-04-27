@@ -229,12 +229,12 @@ public class CommandRunner extends BasicTask<OperationState> {
     
     public Future<OperationState> deploy(File dir, String moduleName, String contextRoot)  {
         return execute(new Commands.DeployCommand(dir.getAbsolutePath(), moduleName, 
-                contextRoot, computePreserveSessions()));
+                contextRoot, computePreserveSessions(), server.isV3Prelude()));
     }
     
     public Future<OperationState> redeploy(String moduleName, String contextRoot)  {
         return execute(new Commands.RedeployCommand(moduleName, contextRoot, 
-                computePreserveSessions()));
+                computePreserveSessions(), server.isV3Prelude()));
     }
 
     private  Boolean computePreserveSessions() {

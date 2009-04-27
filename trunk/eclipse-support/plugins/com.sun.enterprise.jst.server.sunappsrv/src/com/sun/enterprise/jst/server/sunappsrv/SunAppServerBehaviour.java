@@ -70,6 +70,8 @@ import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.util.ProjectModule;
 import org.eclipse.wst.server.core.util.PublishUtil;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServer.ServerStatus;
+import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 
@@ -388,9 +390,39 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
         }*/
 
 		///shutdown(state);
-		stopSunServer();
+		if (isV3()){
+			stopV3();
+		}else {
+			stopSunServer();
+			
+		}
 		setServerState(IServer.STATE_STOPPED);
 	}
+	
+	
+	 /**
+     * 
+     * @stop GlassFish v3 or v3 prelude via http command
+     */
+    public void stopV3() {
+
+           try {
+        	   CommandRunner mgr = new CommandRunner(getSunAppServer());
+                Future<OperationState> result = mgr.execute(Commands.STOP);
+                if(result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED) {
+                } else  {
+                	SunAppSrvPlugin.logMessage("Cannot stop is 30 seconds" );	//$NON-NLS-1$
+                	return ;
+
+                }
+            } catch(Exception ex) {
+                SunAppSrvPlugin.logMessage("stop-domain v3 is failing=",ex );	//$NON-NLS-1$
+              	return ;
+            }
+      
+
+    }	
+	
 	private String getScriptExtension(){
 		String ret="";
 		if (File.separator.equals("\\")) {
@@ -650,7 +682,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 	
 				Boolean preserveSessions=getSunAppServer().getKeepSessions().equals("true");
 				if (isV3()){
-				Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions);
+				Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions , getSunAppServer().isV3Prelude());
 				try {
 					Future<OperationState> result = getSunAppServer().execute(command);
 					OperationState res=result.get(120, TimeUnit.SECONDS);
