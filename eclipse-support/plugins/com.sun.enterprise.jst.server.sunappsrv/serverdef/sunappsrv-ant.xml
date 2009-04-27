@@ -178,6 +178,8 @@
 		<property file="fooFile1.properties" />
 		<exec executable="${asadmin}" failonerror="${failonerror}">
 			<arg line=" add-resources "/>
+            <arg line=" --user ${sunappserver.adminname}" />
+            <arg line=" --passwordfile passw" />
 			<arg line=" ${resourcesfile}" />
 		</exec>
 		<concat>
