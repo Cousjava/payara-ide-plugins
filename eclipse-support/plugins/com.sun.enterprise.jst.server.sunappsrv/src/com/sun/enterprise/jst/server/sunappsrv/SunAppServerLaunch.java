@@ -159,50 +159,124 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         if (mode.equals("debug")) {
        	 debugFlag="--debug";
         }
+        ProcessBuilder pb=null;
+      	 AbstractVMInstall/*IVMInstall*/ vm =(AbstractVMInstall)serverBehavior.getRuntimeDelegate().getVMInstall(); 
          try {
         	monitor.worked(10);
-        	 ProcessBuilder pb = new ProcessBuilder(asadminCmd,
-      	           "start-domain",
-    	           "--domaindir",
-    	           serverBehavior.getDomainDir(), 
-    	           debugFlag,
-    	           verboseFlag,
-    		           domain);
-   /*     	 
-        	 Map<String,String> m= pb.environment();
+
+			if (serverBehavior.isV3()) {
+				
+		     	//needed to see if we force JDK 1.6 (prelude did not need it)
+				if (sunserver.isV3Prelude()==false) { //so it is v3
+					if (vm.getJavaVersion().startsWith("1.5")
+							|| vm.getJavaVersion().startsWith("1.4")) {
+						// error: real v3 only works with 1.6 or later.
+						abort(
+								"GlassFish v3 requires JDK 1.6 or later to run. Please select the correct JDK in the Server properties 'Runtime Environment' section.",
+								null,
+								IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+
+					}
+				}
+		/*		SunAppSrvPlugin.logMessage("AbstractVMInstall getJavaVersion="
+						+ vm.getJavaVersion(), null);
+				SunAppSrvPlugin.logMessage(
+						"AbstractVMInstall getInstallLocation"
+								+ vm.getInstallLocation(), null);*/
+				
+				pb = new ProcessBuilder(vm.getInstallLocation() + "/bin/java",
+						"-jar", serverBehavior
+								.getSunApplicationServerInstallationDirectory()
+								+ "/modules/admin-cli.jar", "start-domain",
+						"--domaindir", serverBehavior.getDomainDir(),
+						debugFlag, verboseFlag, domain);
+				//for mac only: this next env variable has to always match the vm used in the processbuilder, otherwise mac
+				// will be confused between jdk 1.5 and 1.6 (google search for JAVA_JVM_VERSION for details
+				
+				pb.environment().put("JAVA_JVM_VERSION", vm.getJavaVersion());
+				pb.environment().put("JAVA_HOME", vm.getInstallLocation().getAbsolutePath());
+				
+				//how do we stop it at exit???
+				String[] stopcmd= new String[]{
+						vm.getInstallLocation() + "/bin/java",
+						"-jar", 
+						serverBehavior.getSunApplicationServerInstallationDirectory()
+											+ "/modules/admin-cli.jar", 
+						"stop-domain",
+						"--domaindir", 
+						serverBehavior.getDomainDir(),
+						 domain						
+				};
+	              SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(stopcmd);
+				
+			}
+			else {
+	        	  pb = new ProcessBuilder(asadminCmd, "start-domain",
+						"--domaindir", serverBehavior.getDomainDir(),
+						debugFlag, verboseFlag, domain);
+	              SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(serverBehavior.getStopCommand());
+
+			}
+       	 
+        	/* Map<String,String> m= pb.environment();
         	 Set<Map.Entry<String,String>> cc=m.entrySet();
         	 for (Map.Entry<String,String> me : cc){
  				SunAppSrvPlugin.logMessage("map="+me.getKey()+"---"+me.getValue(),null);
-      		 
-        	 }
-*/
-        	 
-        	 pb.environment().clear();//issue with v3 promoted build and jdk1.6: cannot use the 
-        	 //eclipse environment if eclipse is using jdk1.5, v3 promoted would inherit from it
-        	 //causing start failure
+     		 
+        	 }*/    	 
+
         	 pb.directory(new File(serverBehavior.getSunApplicationServerInstallationDirectory()));
         	 Process process = pb.start();
-            
-        	 AbstractVMInstall/*IVMInstall*/ vm =(AbstractVMInstall)serverBehavior.getRuntimeDelegate().getVMInstall(); 
-				SunAppSrvPlugin.logMessage("AbstractVMInstall="+vm.getJavaVersion(),null);
-       	 
-        	 
+                 	       	 
             
             IProcess runtimeProcess = new RuntimeProcess(launch, process, "...", null);
-     //       launch.addProcess(runtimeProcess);
-     //       serverBehavior.setProcess(runtimeProcess);
-            SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(serverBehavior.getStopCommand());
+
+
         } catch (IOException ioe) {
             abort("error Launching Executable", ioe,  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
     	boolean javaDBStart= store.getBoolean(PreferenceConstants.ENABLE_START_JAVADB);
-    	if(javaDBStart){
-    		String sampleDBDir = serverBehavior.getSampleDatabaseDir();
-            command = ((sampleDBDir == null) ? new String[]{ asadminCmd, "start-database"} :
-            	new String[]{ asadminCmd, "start-database", "--dbhome", sampleDBDir});
+    	if (javaDBStart) {
+			String sampleDBDir = serverBehavior.getSampleDatabaseDir();
+			if ((serverBehavior.isV3()) && (sunserver.isV3Prelude()==false)) { //so it is v3
+
+				command = ((sampleDBDir == null) ? new String[] {
+						vm.getInstallLocation() + "/bin/java",
+						"-jar",
+						serverBehavior
+								.getSunApplicationServerInstallationDirectory()
+								+ "/modules/admin-cli.jar", "start-database" }
+						: new String[] {
+								vm.getInstallLocation() + "/bin/java",
+								"-jar",
+								serverBehavior
+										.getSunApplicationServerInstallationDirectory()
+										+ "/modules/admin-cli.jar",
+								"start-database", "--dbhome", sampleDBDir
+
+						});
+				//add also the stop on exit command:
+				SunAppSrvPlugin
+						.getInstance()
+						.addCommandToExecuteAtExit(
+								new String[] {
+										vm.getInstallLocation() + "/bin/java",
+										"-jar",
+										serverBehavior
+												.getSunApplicationServerInstallationDirectory()
+												+ "/modules/admin-cli.jar",
+										"stop-database" });
+			} else {
+				command = ((sampleDBDir == null) ? new String[] { asadminCmd,
+						"start-database" } : new String[] { asadminCmd,
+						"start-database", "--dbhome", sampleDBDir });
+				//stop the db on exit of the IDE:
+				SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(
+						new String[] { asadminCmd, "stop-database" });
+
+			}
             try {
 				Process process = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
-		        SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(new String[]{ asadminCmd, "stop-database"});
 		           			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
