@@ -4,7 +4,7 @@
 
 <toc label="GlassFish v3 Prelude Application Deployment Guide">
  <topic href="v3ApplicationDeploymentGuide/topics/p3.html" label="Preface" ></topic>
- <topic href="v3ApplicationDeploymentGuide/topics/p4.html" label="1.&#160;&#160;Assembling and Deploying Applications" >
+ <topic href="v3ApplicationDeploymentGuide/topics/p4.html" label="1.Assembling and Deploying Applications" >
     <topic href="v3ApplicationDeploymentGuide/topics/p4.html" label="Overview of Assembly and Deployment" >
         <topic href="v3ApplicationDeploymentGuide/topics/p4.html" label="About Modules" ></topic>
         <topic href="v3ApplicationDeploymentGuide/topics/p4.html" label="Java EE Standard Annotation" ></topic>
@@ -33,7 +33,7 @@
         <topic href="v3ApplicationDeploymentGuide/topics/p4.html" label="Access to Shared Frameworks" ></topic>
         </topic>
         </topic>
- <topic href="v3ApplicationDeploymentGuide/topics/p5.html" label="A.&#160;&#160;Deployment Descriptor Files" >
+ <topic href="v3ApplicationDeploymentGuide/topics/p5.html" label="A.Deployment Descriptor Files" >
     <topic href="v3ApplicationDeploymentGuide/topics/p5.html" label="Sun Java System Application Server Descriptors" ></topic>
     <topic href="v3ApplicationDeploymentGuide/topics/p5.html" label="The sun-web.xml File" ></topic>
     <topic href="v3ApplicationDeploymentGuide/topics/p5.html" label="The sun-ejb-jar.xml File" ></topic>
