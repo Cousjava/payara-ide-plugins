@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="GlassFish Plugin" version="1.0.24">
+<component name="GlassFish Plugin" version="1.0.25">
     <package no-download="no">
         <size os="win32">TODO</size>
         <size os="macosx">TODO</size>
