@@ -39,7 +39,7 @@
     </toc>
   </extension>
   <extension point="org.eclipse.help.toc">
-    <toc file="v21ApplicationDeploymentGuide/toc.xml" primary="true">
+    <toc file="v21AppplicationDeploymentGuide/toc.xml" primary="true">
     </toc>
   </extension>
   <extension point="org.eclipse.help.toc">

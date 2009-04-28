@@ -4,7 +4,7 @@
 <toc label="GlassFish v2.1 Quick Start Guide">
 
  <topic href="topics/p3.html" label="Preface" ></topic>
- <topic href="topics/p4.html" label="1.&#160;&#160;Quick Start for Basic Features" >
+ <topic href="topics/p4.html" label="1.Quick Start for Basic Features" >
     <topic href="topics/p4.html" label="Application Server Administration Tools" ></topic>
     <topic href="topics/p4.html" label="Starting the Server" >
         <topic href="topics/p4.html" label="To Start the Domain on Solaris and Linux" ></topic>
@@ -15,13 +15,13 @@
         <topic href="topics/p4.html" label="To Add Cluster Support to a Domain" ></topic>
         <topic href="topics/p4.html" label="To Start the Bundled Java DB Server" ></topic></topic>
     <topic href="topics/p4.html" label="Where to Go Next" ></topic></topic>
- <topic href="topics/p5.html" label="2.&#160;&#160;Setting Up a Cluster" >
+ <topic href="topics/p5.html" label="2.Setting Up a Cluster" >
     <topic href="topics/p5.html" label="Creating a Cluster" >
         <topic href="topics/p5.html" label="To Create a Cluster using the Admin Console" ></topic>
         <topic href="topics/p5.html" label="To Create a Cluster using CLI Commands" ></topic></topic>
     <topic href="topics/p5.html" label="Viewing Ports for Clustered Server Instances" >
         <topic href="topics/p5.html" label="To View Ports for Clustered Server Instances" ></topic></topic></topic>
- <topic href="topics/p6.html" label="3.&#160;&#160;Deploying an Application" >
+ <topic href="topics/p6.html" label="3.Deploying an Application" >
     <topic href="topics/p6.html" label="Deploying a Sample Web Application" >
         <topic href="topics/p6.html" label="To Deploy the Hello Application Using Autodeploy" ></topic>
         <topic href="topics/p6.html" label="To Deploy the Hello Application Using Admin Console" ></topic></topic>
@@ -29,14 +29,14 @@
         <topic href="topics/p6.html" label="To Deploy the Sample Enterprise Application Using Admin Console" ></topic>
         <topic href="topics/p6.html" label="To Start the Instances in a Cluster" ></topic>
         <topic href="topics/p6.html" label="To Verify Application Deployment" ></topic></topic></topic>
- <topic href="topics/p7.html" label="4.&#160;&#160;Working with Load Balancers" >
+ <topic href="topics/p7.html" label="4.Working with Load Balancers" >
     <topic href="topics/p7.html" label="Setting up Load Balancing" >
         <topic href="topics/p7.html" label="To Set Up Load Balancing" ></topic></topic>
     <topic href="topics/p7.html" label="Starting Load Balancing" ></topic>
     <topic href="topics/p7.html" label="Verifying Load Balancing" >
         <topic href="topics/p7.html" label="To Verify Load Balancing" ></topic></topic>
     <topic href="topics/p7.html" label="High Availability and Failover Using the In-memory Replication Feature" ></topic></topic>
- <topic href="topics/p8.html" label="5.&#160;&#160;Setting Up High Availability Failover" >
+ <topic href="topics/p8.html" label="5.Setting Up High Availability Failover" >
     <topic href="topics/p8.html" label="High-availability Clusters and HADB" ></topic>
     <topic href="topics/p8.html" label="HADB Preinstallation Steps" >
         <topic href="topics/p8.html" label="To Configure Your System for HADB" ></topic></topic>
