@@ -60,6 +60,7 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     // additional strings to workaround for issue 222688
     public static String canInstallPath;
     public static String possibleInstallExists;
+    public static String downloadingServer;
 
     public static String register;
     public static String updateCenter;
