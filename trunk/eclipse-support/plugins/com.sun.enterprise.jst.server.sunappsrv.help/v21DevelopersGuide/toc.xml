@@ -3,588 +3,588 @@
 
 <toc label="GlassFish v2.1 Developer's Guide">
 
-    <topic href="topics/p3.html" label="Preface" ></topic>
-    <topic href="topics/p4.html" label="Part&#160;I&#160;Development Tasks and Tools" >
-        <topic href="topics/p5.html" label="1.&#160;&#160;Setting Up a Development Environment" >
-            <topic href="topics/p5.html" label="Installing and Preparing the Server for Development" ></topic>
-            <topic href="topics/p5.html" label="The GlassFish Project" ></topic>
-            <topic href="topics/p5.html" label="Usage Profiles" ></topic>
-            <topic href="topics/p5.html" label="High Availability Features" ></topic>
-            <topic href="topics/p5.html" label="Development Tools" >
-                <topic href="topics/p5.html" label="The asadmin Command" ></topic>
-                <topic href="topics/p5.html" label="The Admin Console" ></topic>
-                <topic href="topics/p5.html" label="The asant Utility" ></topic>
-                <topic href="topics/p5.html" label="The verifier Tool" ></topic>
-                <topic href="topics/p5.html" label="The NetBeans IDE" ></topic>
-                <topic href="topics/p5.html" label="The Migration Tool" ></topic>
-                <topic href="topics/p5.html" label="Debugging Tools" ></topic>
-                <topic href="topics/p5.html" label="Profiling Tools" ></topic>
-                <topic href="topics/p5.html" label="The Eclipse IDE" ></topic>
+    <topic href="v21DevelopersGuide/topics/p3.html" label="Preface" ></topic>
+    <topic href="v21DevelopersGuide/topics/p4.html" label="Development Tasks and Tools" >
+        <topic href="v21DevelopersGuide/topics/p5.html" label="1.Setting Up a Development Environment" >
+            <topic href="v21DevelopersGuide/topics/p5.html" label="Installing and Preparing the Server for Development" ></topic>
+            <topic href="v21DevelopersGuide/topics/p5.html" label="The GlassFish Project" ></topic>
+            <topic href="v21DevelopersGuide/topics/p5.html" label="Usage Profiles" ></topic>
+            <topic href="v21DevelopersGuide/topics/p5.html" label="High Availability Features" ></topic>
+            <topic href="v21DevelopersGuide/topics/p5.html" label="Development Tools" >
+                <topic href="v21DevelopersGuide/topics/p5.html" label="The asadmin Command" ></topic>
+                <topic href="v21DevelopersGuide/topics/p5.html" label="The Admin Console" ></topic>
+                <topic href="v21DevelopersGuide/topics/p5.html" label="The asant Utility" ></topic>
+                <topic href="v21DevelopersGuide/topics/p5.html" label="The verifier Tool" ></topic>
+                <topic href="v21DevelopersGuide/topics/p5.html" label="The NetBeans IDE" ></topic>
+                <topic href="v21DevelopersGuide/topics/p5.html" label="The Migration Tool" ></topic>
+                <topic href="v21DevelopersGuide/topics/p5.html" label="Debugging Tools" ></topic>
+                <topic href="v21DevelopersGuide/topics/p5.html" label="Profiling Tools" ></topic>
+                <topic href="v21DevelopersGuide/topics/p5.html" label="The Eclipse IDE" ></topic>
             </topic>
-            <topic href="topics/p5.html" label="Sample Applications" ></topic>
+            <topic href="v21DevelopersGuide/topics/p5.html" label="Sample Applications" ></topic>
         </topic>
-        <topic href="topics/p6.html" label="2.&#160;&#160;Class Loaders" >
-            <topic href="topics/p6.html" label="The Class Loader Hierarchy" ></topic>
-            <topic href="topics/p6.html" label="Delegation" ></topic>
-            <topic href="topics/p6.html" label="Using the Java Optional Package Mechanism" ></topic>
-            <topic href="topics/p6.html" label="Using the Endorsed Standards Override Mechanism" ></topic>
-            <topic href="topics/p6.html" label="Class Loader Universes" ></topic>
-            <topic href="topics/p6.html" label="Application-Specific Class Loading" ></topic>
-            <topic href="topics/p6.html" label="Circumventing Class Loader Isolation" >
-                <topic href="topics/p6.html" label="Using the System Class Loader" ></topic>
-                <topic href="topics/p6.html" label="Using the Common Class Loader" ></topic>
-                <topic href="topics/p6.html" label="Sharing Libraries Across a Cluster" ></topic>
-                <topic href="topics/p6.html" label="Packaging the Client JAR for One Application in Another Application" ></topic>
-                <topic href="topics/p6.html" label="To Package the Client JAR for One Application in Another Application" ></topic>
-            </topic>
-        </topic>
-        <topic href="topics/p7.html" label="3.&#160;&#160;The asant Utility" >
-            <topic href="topics/p7.html" label="Enterprise Server asant Tasks" >
-                <topic href="topics/p7.html" label="The sun-appserv-deploy Task" >
-                    <topic href="topics/p7.html" label="Subelements of sun-appserv-deploy" ></topic>
-                    <topic href="topics/p7.html" label="Attributes of sun-appserv-deploy" ></topic>
-                    <topic href="topics/p7.html" label="Examples of sun-appserv-deploy" ></topic>
-                </topic>
-                <topic href="topics/p7.html" label="The sun-appserv-undeploy Task" >
-                    <topic href="topics/p7.html" label="Subelements of sun-appserv-undeploy" ></topic>
-                    <topic href="topics/p7.html" label="Attributes of sun-appserv-undeploy" ></topic>
-                    <topic href="topics/p7.html" label="Examples of sun-appserv-undeploy" ></topic>
-                </topic>
-                <topic href="topics/p7.html" label="The sun-appserv-instance Task" >
-                    <topic href="topics/p7.html" label="Subelements of sun-appserv-instance" ></topic>
-                    <topic href="topics/p7.html" label="Attributes of sun-appserv-instance" ></topic>
-                    <topic href="topics/p7.html" label="Examples of sun-appserv-instance" ></topic>
-                </topic>
-                <topic href="topics/p7.html" label="The sun-appserv-component Task" >
-                    <topic href="topics/p7.html" label="Subelements of sun-appserv-component" ></topic>
-                    <topic href="topics/p7.html" label="Attributes of sun-appserv-component" ></topic>
-                    <topic href="topics/p7.html" label="Examples of sun-appserv-component" ></topic>
-                </topic>
-                <topic href="topics/p7.html" label="The sun-appserv-admin Task" >
-                    <topic href="topics/p7.html" label="Subelements of sun-appserv-admin" ></topic>
-                    <topic href="topics/p7.html" label="Attributes of sun-appserv-admin" ></topic>
-                    <topic href="topics/p7.html" label="Examples of sun-appserv-admin" ></topic>
-                </topic>
-                <topic href="topics/p7.html" label="The sun-appserv-jspc Task" >
-                    <topic href="topics/p7.html" label="Attributes of sun-appserv-jspc" ></topic>
-                    <topic href="topics/p7.html" label="Example of sun-appserv-jspc" ></topic>
-                </topic>
-                <topic href="topics/p7.html" label="The sun-appserv-update Task" >
-                    <topic href="topics/p7.html" label="Attributes of sun-appserv-update" ></topic>
-                    <topic href="topics/p7.html" label="Example of sun-appserv-update" ></topic>
-                </topic>
-                <topic href="topics/p7.html" label="The wsgen Task" >
-                    <topic href="topics/p7.html" label="Attributes of wsgen" ></topic>
-                    <topic href="topics/p7.html" label="Example of wsgen" ></topic>
-                </topic>
-                <topic href="topics/p7.html" label="The wsimport Task" >
-                    <topic href="topics/p7.html" label="Attributes of wsimport" ></topic>
-                    <topic href="topics/p7.html" label="Example of wsimport" ></topic>
-                </topic>
-            </topic>
-            <topic href="topics/p7.html" label="Reusable Subelements" >
-                <topic href="topics/p7.html" label="The server Subelement" >
-                    <topic href="topics/p7.html" label="Attributes of server" ></topic>
-                    <topic href="topics/p7.html" label="Examples of server" ></topic>
-                </topic>
-                <topic href="topics/p7.html" label="The component Subelement" >
-                    <topic href="topics/p7.html" label="Attributes of component" ></topic>
-                    <topic href="topics/p7.html" label="Examples of component" ></topic>
-                </topic>
-                <topic href="topics/p7.html" label="The fileset Subelement" ></topic>
-            </topic>
-            <topic href="topics/p7.html" label="JBI Tasks" ></topic>
-        </topic>
-        <topic href="topics/p8.html" label="4.&#160;&#160;Debugging Applications" >
-            <topic href="topics/p8.html" label="Enabling Debugging" >
-                <topic href="topics/p8.html" label="To Set the Server to Automatically Start Up in Debug Mode" ></topic>
-            </topic>
-            <topic href="topics/p8.html" label="JPDA Options" ></topic>
-            <topic href="topics/p8.html" label="Generating a Stack Trace for Debugging" ></topic>
-            <topic href="topics/p8.html" label="Application Client Debugging" ></topic>
-            <topic href="topics/p8.html" label="Sun GlassFish Message Queue Debugging" ></topic>
-            <topic href="topics/p8.html" label="Enabling Verbose Mode" ></topic>
-            <topic href="topics/p8.html" label="Enterprise Server Logging" ></topic>
-            <topic href="topics/p8.html" label="Profiling Tools" >
-                <topic href="topics/p8.html" label="The NetBeans Profiler" ></topic>
-                <topic href="topics/p8.html" label="The HPROF Profiler" >
-                    <topic href="topics/p8.html" label="To Use HPROF Profiling on UNIX" ></topic>
-                </topic>
-                <topic href="topics/p8.html" label="The JProbe Profiler" >
-                    <topic href="topics/p8.html" label="To Enable Remote Profiling With JProbe" ></topic>
-                </topic>
+        <topic href="v21DevelopersGuide/topics/p6.html" label="2.Class Loaders" >
+            <topic href="v21DevelopersGuide/topics/p6.html" label="The Class Loader Hierarchy" ></topic>
+            <topic href="v21DevelopersGuide/topics/p6.html" label="Delegation" ></topic>
+            <topic href="v21DevelopersGuide/topics/p6.html" label="Using the Java Optional Package Mechanism" ></topic>
+            <topic href="v21DevelopersGuide/topics/p6.html" label="Using the Endorsed Standards Override Mechanism" ></topic>
+            <topic href="v21DevelopersGuide/topics/p6.html" label="Class Loader Universes" ></topic>
+            <topic href="v21DevelopersGuide/topics/p6.html" label="Application-Specific Class Loading" ></topic>
+            <topic href="v21DevelopersGuide/topics/p6.html" label="Circumventing Class Loader Isolation" >
+                <topic href="v21DevelopersGuide/topics/p6.html" label="Using the System Class Loader" ></topic>
+                <topic href="v21DevelopersGuide/topics/p6.html" label="Using the Common Class Loader" ></topic>
+                <topic href="v21DevelopersGuide/topics/p6.html" label="Sharing Libraries Across a Cluster" ></topic>
+                <topic href="v21DevelopersGuide/topics/p6.html" label="Packaging the Client JAR for One Application in Another Application" ></topic>
+                <topic href="v21DevelopersGuide/topics/p6.html" label="To Package the Client JAR for One Application in Another Application" ></topic>
             </topic>
         </topic>
-    </topic>
-    <topic href="topics/p9.html" label="Part&#160;II&#160;Developing Applications and Application Components" >
-        <topic href="topics/p10.html" label="5.&#160;&#160;Securing Applications" >
-            <topic href="topics/p10.html" label="Security Goals" ></topic>
-            <topic href="topics/p10.html" label="Enterprise Server Specific Security Features" ></topic>
-            <topic href="topics/p10.html" label="Container Security" >
-                <topic href="topics/p10.html" label="Declarative Security" >
-                    <topic href="topics/p10.html" label="Application Level Security" ></topic>
-                    <topic href="topics/p10.html" label="Component Level Security" ></topic>
+        <topic href="v21DevelopersGuide/topics/p7.html" label="3.The asant Utility" >
+            <topic href="v21DevelopersGuide/topics/p7.html" label="Enterprise Server asant Tasks" >
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The sun-appserv-deploy Task" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Subelements of sun-appserv-deploy" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of sun-appserv-deploy" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Examples of sun-appserv-deploy" ></topic>
                 </topic>
-                <topic href="topics/p10.html" label="Programmatic Security" ></topic>
-            </topic>
-            <topic href="topics/p10.html" label="Roles, Principals, and Principal to Role Mapping" ></topic>
-            <topic href="topics/p10.html" label="Realm Configuration" >
-                <topic href="topics/p10.html" label="Supported Realms" ></topic>
-                <topic href="topics/p10.html" label="How to Configure a Realm" ></topic>
-                <topic href="topics/p10.html" label="How to Set a Realm for an Application or Module" ></topic>
-                <topic href="topics/p10.html" label="Creating a Custom Realm" ></topic>
-            </topic>
-            <topic href="topics/p10.html" label="JACC Support" ></topic>
-            <topic href="topics/p10.html" label="Pluggable Audit Module Support" >
-                <topic href="topics/p10.html" label="Configuring an Audit Module" ></topic>
-                <topic href="topics/p10.html" label="The AuditModule Class" ></topic>
-            </topic>
-            <topic href="topics/p10.html" label="The server.policy File" >
-                <topic href="topics/p10.html" label="Default Permissions" ></topic>
-                <topic href="topics/p10.html" label="Changing Permissions for an Application" ></topic>
-                <topic href="topics/p10.html" label="Enabling and Disabling the Security Manager" ></topic>
-            </topic>
-            <topic href="topics/p10.html" label="Configuring Message Security for Web Services" >
-                <topic href="topics/p10.html" label="Message Security Providers" ></topic>
-                <topic href="topics/p10.html" label="Message Security Responsibilities" >
-                    <topic href="topics/p10.html" label="Application Developer" ></topic>
-                    <topic href="topics/p10.html" label="Application Deployer" ></topic>
-                    <topic href="topics/p10.html" label="System Administrator" ></topic>
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The sun-appserv-undeploy Task" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Subelements of sun-appserv-undeploy" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of sun-appserv-undeploy" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Examples of sun-appserv-undeploy" ></topic>
                 </topic>
-                <topic href="topics/p10.html" label="Application-Specific Message Protection" >
-                    <topic href="topics/p10.html" label="Using a Signature to Enable Message Protection for All Methods" ></topic>
-                    <topic href="topics/p10.html" label="Configuring Message Protection for a Specific Method Based on Digital Signatures" ></topic>
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The sun-appserv-instance Task" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Subelements of sun-appserv-instance" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of sun-appserv-instance" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Examples of sun-appserv-instance" ></topic>
                 </topic>
-                <topic href="topics/p10.html" label="Understanding and Running the Sample Application" >
-                    <topic href="topics/p10.html" label="To Set Up the Sample Application" ></topic>
-                    <topic href="topics/p10.html" label="To Run the Sample Application" ></topic>
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The sun-appserv-component Task" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Subelements of sun-appserv-component" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of sun-appserv-component" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Examples of sun-appserv-component" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The sun-appserv-admin Task" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Subelements of sun-appserv-admin" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of sun-appserv-admin" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Examples of sun-appserv-admin" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The sun-appserv-jspc Task" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of sun-appserv-jspc" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Example of sun-appserv-jspc" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The sun-appserv-update Task" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of sun-appserv-update" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Example of sun-appserv-update" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The wsgen Task" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of wsgen" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Example of wsgen" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The wsimport Task" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of wsimport" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Example of wsimport" ></topic>
                 </topic>
             </topic>
-            <topic href="topics/p10.html" label="Programmatic Login" >
-                <topic href="topics/p10.html" label="Programmatic Login Precautions" ></topic>
-                <topic href="topics/p10.html" label="Granting Programmatic Login Permission" ></topic>
-                <topic href="topics/p10.html" label="The ProgrammaticLogin Class" ></topic>
+            <topic href="v21DevelopersGuide/topics/p7.html" label="Reusable Subelements" >
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The server Subelement" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of server" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Examples of server" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The component Subelement" >
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Attributes of component" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p7.html" label="Examples of component" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p7.html" label="The fileset Subelement" ></topic>
             </topic>
-            <topic href="topics/p10.html" label="User Authentication for Single Sign-on" ></topic>
+            <topic href="v21DevelopersGuide/topics/p7.html" label="JBI Tasks" ></topic>
         </topic>
-        <topic href="topics/p11.html" label="6.&#160;&#160;Developing Web Services" >
-            <topic href="topics/p11.html" label="Creating Portable Web Service Artifacts" ></topic>
-            <topic href="topics/p11.html" label="Deploying a Web Service" ></topic>
-            <topic href="topics/p11.html" label="Web Services Registry" ></topic>
-            <topic href="topics/p11.html" label="The Web Service URI, WSDL File, and Test Page" ></topic>
-            <topic href="topics/p11.html" label="JBI Runtime" >
-                <topic href="topics/p11.html" label="Using the jbi.xml File" ></topic>
-                <topic href="topics/p11.html" label="Using Application Server Descriptors" ></topic>
+        <topic href="v21DevelopersGuide/topics/p8.html" label="4.Debugging Applications" >
+            <topic href="v21DevelopersGuide/topics/p8.html" label="Enabling Debugging" >
+                <topic href="v21DevelopersGuide/topics/p8.html" label="To Set the Server to Automatically Start Up in Debug Mode" ></topic>
             </topic>
-            <topic href="topics/p11.html" label="Using the Woodstox Parser" ></topic>
-        </topic>
-        <topic href="topics/p12.html" label="7.&#160;&#160;Using the Java Persistence API" >
-            <topic href="topics/p12.html" label="Specifying the Database" ></topic>
-            <topic href="topics/p12.html" label="Additional Database Properties" ></topic>
-            <topic href="topics/p12.html" label="Configuring the Cache" ></topic>
-            <topic href="topics/p12.html" label="Setting the Logging Level" ></topic>
-            <topic href="topics/p12.html" label="Using Lazy Loading" ></topic>
-            <topic href="topics/p12.html" label="Primary Key Generation Defaults" ></topic>
-            <topic href="topics/p12.html" label="Automatic Schema Generation" >
-                <topic href="topics/p12.html" label="Annotations" ></topic>
-                <topic href="topics/p12.html" label="Supported Data Types" ></topic>
-                <topic href="topics/p12.html" label="Generation Options" ></topic>
-            </topic>
-            <topic href="topics/p12.html" label="Query Hints" ></topic>
-            <topic href="topics/p12.html" label="Changing the Persistence Provider" ></topic>
-            <topic href="topics/p12.html" label="Restrictions and Optimizations" >
-                <topic href="topics/p12.html" label="Extended Persistence Context Failover" ></topic>
-                <topic href="topics/p12.html" label="Using @OrderBy with a Shared Session Cache" ></topic>
-                <topic href="topics/p12.html" label="Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver" ></topic>
-                <topic href="topics/p12.html" label="Database Case Sensitivity" >
-                    <topic href="topics/p12.html" label="Unique Constraints" ></topic>
-                    <topic href="topics/p12.html" label="Foreign Key Mapping" ></topic>
-                    <topic href="topics/p12.html" label="SQL Result Set Mapping" ></topic>
-                    <topic href="topics/p12.html" label="Named Native Queries and JDBC Queries" ></topic>
-                    <topic href="topics/p12.html" label="PostgreSQL Case Sensitivity" ></topic>
+            <topic href="v21DevelopersGuide/topics/p8.html" label="JPDA Options" ></topic>
+            <topic href="v21DevelopersGuide/topics/p8.html" label="Generating a Stack Trace for Debugging" ></topic>
+            <topic href="v21DevelopersGuide/topics/p8.html" label="Application Client Debugging" ></topic>
+            <topic href="v21DevelopersGuide/topics/p8.html" label="Sun GlassFish Message Queue Debugging" ></topic>
+            <topic href="v21DevelopersGuide/topics/p8.html" label="Enabling Verbose Mode" ></topic>
+            <topic href="v21DevelopersGuide/topics/p8.html" label="Enterprise Server Logging" ></topic>
+            <topic href="v21DevelopersGuide/topics/p8.html" label="Profiling Tools" >
+                <topic href="v21DevelopersGuide/topics/p8.html" label="The NetBeans Profiler" ></topic>
+                <topic href="v21DevelopersGuide/topics/p8.html" label="The HPROF Profiler" >
+                    <topic href="v21DevelopersGuide/topics/p8.html" label="To Use HPROF Profiling on UNIX" ></topic>
                 </topic>
-                <topic href="topics/p12.html" label="Sybase Finder Limitation" ></topic>
-                <topic href="topics/p12.html" label="MySQL Database Restrictions" ></topic>
-            </topic>
-        </topic>
-        <topic href="topics/p13.html" label="8.&#160;&#160;Developing Web and SIP Applications" >
-            <topic href="topics/p13.html" label="Using Servlets" >
-                <topic href="topics/p13.html" label="Invoking a Servlet With a URL" ></topic>
-                <topic href="topics/p13.html" label="Servlet Output" ></topic>
-                <topic href="topics/p13.html" label="Caching Servlet Results" >
-                    <topic href="topics/p13.html" label="Caching Features" ></topic>
-                    <topic href="topics/p13.html" label="Default Cache Configuration" ></topic>
-                    <topic href="topics/p13.html" label="Caching Example" ></topic>
-                    <topic href="topics/p13.html" label="The CacheKeyGenerator Interface" ></topic>
-                </topic>
-                <topic href="topics/p13.html" label="About the Servlet Engine" >
-                    <topic href="topics/p13.html" label="Instantiating and Removing Servlets" ></topic>
-                    <topic href="topics/p13.html" label="Request Handling" ></topic>
+                <topic href="v21DevelopersGuide/topics/p8.html" label="The JProbe Profiler" >
+                    <topic href="v21DevelopersGuide/topics/p8.html" label="To Enable Remote Profiling With JProbe" ></topic>
                 </topic>
             </topic>
-            <topic href="topics/p13.html" label="Using JavaServer Pages" >
-                <topic href="topics/p13.html" label="JSP Tag Libraries and Standard Portable Tags" ></topic>
-                <topic href="topics/p13.html" label="JSP Caching" >
-                    <topic href="topics/p13.html" label="The appserv-tags.jar File" ></topic>
-                    <topic href="topics/p13.html" label="Caching Scope" ></topic>
-                    <topic href="topics/p13.html" label="The cache Tag" >
-                        <topic href="topics/p13.html" label="Attributes of cache" ></topic>
-                        <topic href="topics/p13.html" label="Example of cache" ></topic>
-                    </topic>
-                    <topic href="topics/p13.html" label="The flush Tag" >
-                        <topic href="topics/p13.html" label="Attributes of flush" ></topic>
-                        <topic href="topics/p13.html" label="Examples of flush" ></topic>
-                    </topic>
-                </topic>
-                <topic href="topics/p13.html" label="Options for Compiling JSP Files" ></topic>
-            </topic>
-            <topic href="topics/p13.html" label="Creating and Managing Sessions" >
-                <topic href="topics/p13.html" label="Configuring Sessions" >
-                    <topic href="topics/p13.html" label="HTTP Sessions, Cookies, and URL Rewriting" ></topic>
-                    <topic href="topics/p13.html" label="Coordinating Session Access" ></topic>
-                    <topic href="topics/p13.html" label="Distributed Sessions and Persistence" ></topic>
-                </topic>
-                <topic href="topics/p13.html" label="Session Managers" >
-                    <topic href="topics/p13.html" label="The memory Persistence Type" ></topic>
-                    <topic href="topics/p13.html" label="The file Persistence Type" ></topic>
-                    <topic href="topics/p13.html" label="The replicated Persistence Type" ></topic>
-                    <topic href="topics/p13.html" label="The ha Persistence Type" ></topic>
-                </topic>
-            </topic>
-            <topic href="topics/p13.html" label="Advanced Web Application Features" >
-                <topic href="topics/p13.html" label="Internationalization Issues" >
-                    <topic href="topics/p13.html" label="The Server's Default Locale" ></topic>
-                    <topic href="topics/p13.html" label="Servlet Character Encoding" >
-                        <topic href="topics/p13.html" label="Servlet Request" ></topic>
-                        <topic href="topics/p13.html" label="Servlet Response" ></topic>
-                    </topic>
-                </topic>
-                <topic href="topics/p13.html" label="Virtual Servers" >
-                    <topic href="topics/p13.html" label="To Assign a Default Virtual Server" ></topic>
-                    <topic href="topics/p13.html" label="To Assign Virtual Servers" ></topic>
-                </topic>
-                <topic href="topics/p13.html" label="Default Web Modules" ></topic>
-                <topic href="topics/p13.html" label="Class Loader Delegation" ></topic>
-                <topic href="topics/p13.html" label="Using the default-web.xml File" >
-                    <topic href="topics/p13.html" label="To Use the default-web.xml File" ></topic>
-                </topic>
-                <topic href="topics/p13.html" label="Configuring Logging and Monitoring in the Web Container" ></topic>
-                <topic href="topics/p13.html" label="Configuring Idempotent URL Requests" >
-                    <topic href="topics/p13.html" label="Specifying an Idempotent URL" ></topic>
-                    <topic href="topics/p13.html" label="Characteristics of an Idempotent URL" ></topic>
-                </topic>
-                <topic href="topics/p13.html" label="Header Management" ></topic>
-                <topic href="topics/p13.html" label="Configuring Valves and Catalina Listeners" ></topic>
-                <topic href="topics/p13.html" label="Alternate Document Roots" ></topic>
-                <topic href="topics/p13.html" label="Redirecting URLs" ></topic>
-                <topic href="topics/p13.html" label="Enabling Comet Support" ></topic>
-                <topic href="topics/p13.html" label="Using a context.xml File" ></topic>
-                <topic href="topics/p13.html" label="Enabling WebDav" ></topic>
-                <topic href="topics/p13.html" label="Using mod_jk" ></topic>
-            </topic>
-        </topic>
-        <topic href="topics/p14.html" label="9.&#160;&#160;Using Enterprise JavaBeans Technology" >
-            <topic href="topics/p14.html" label="Summary of EJB 3.0 Changes" ></topic>
-            <topic href="topics/p14.html" label="Value Added Features" >
-                <topic href="topics/p14.html" label="Read-Only Beans" ></topic>
-                <topic href="topics/p14.html" label="The pass-by-reference Element" ></topic>
-                <topic href="topics/p14.html" label="Pooling and Caching" >
-                    <topic href="topics/p14.html" label="Pooling Parameters" ></topic>
-                    <topic href="topics/p14.html" label="Caching Parameters" ></topic>
-                </topic>
-                <topic href="topics/p14.html" label="Bean-Level Container-Managed Transaction Timeouts" ></topic>
-                <topic href="topics/p14.html" label="Priority Based Scheduling of Remote Bean Invocations" ></topic>
-                <topic href="topics/p14.html" label="Immediate Flushing" ></topic>
-            </topic>
-            <topic href="topics/p14.html" label="EJB Timer Service" ></topic>
-            <topic href="topics/p14.html" label="Using Session Beans" >
-                <topic href="topics/p14.html" label="About the Session Bean Containers" >
-                    <topic href="topics/p14.html" label="Stateless Container" ></topic>
-                    <topic href="topics/p14.html" label="Stateful Container" ></topic>
-                </topic>
-                <topic href="topics/p14.html" label="Stateful Session Bean Failover" >
-                    <topic href="topics/p14.html" label="Choosing a Persistence Store" ></topic>
-                    <topic href="topics/p14.html" label="Enabling Checkpointing" >
-                        <topic href="topics/p14.html" label="Server Instance and EJB Container Levels" ></topic>
-                        <topic href="topics/p14.html" label="Application and EJB Module Levels" ></topic>
-                        <topic href="topics/p14.html" label="SFSB Level" ></topic>
-                    </topic>
-                    <topic href="topics/p14.html" label="Specifying Methods to Be Checkpointed" ></topic>
-                </topic>
-                <topic href="topics/p14.html" label="Session Bean Restrictions and Optimizations" >
-                    <topic href="topics/p14.html" label="Optimizing Session Bean Performance" ></topic>
-                    <topic href="topics/p14.html" label="Restricting Transactions" ></topic>
-                </topic>
-            </topic>
-            <topic href="topics/p14.html" label="Using Read-Only Beans" >
-                <topic href="topics/p14.html" label="Read-Only Bean Characteristics and Life Cycle" ></topic>
-                <topic href="topics/p14.html" label="Read-Only Bean Good Practices" ></topic>
-                <topic href="topics/p14.html" label="Refreshing Read-Only Beans" >
-                    <topic href="topics/p14.html" label="Invoking a Transactional Method" ></topic>
-                    <topic href="topics/p14.html" label="Refreshing Periodically" ></topic>
-                    <topic href="topics/p14.html" label="Refreshing Programmatically" ></topic>
-                </topic>
-                <topic href="topics/p14.html" label="Deploying Read-Only Beans" ></topic>
-            </topic>
-            <topic href="topics/p14.html" label="Using Message-Driven Beans" >
-                <topic href="topics/p14.html" label="Message-Driven Bean Configuration" >
-                    <topic href="topics/p14.html" label="Connection Factory and Destination" ></topic>
-                    <topic href="topics/p14.html" label="Message-Driven Bean Pool" ></topic>
-                    <topic href="topics/p14.html" label="Domain-Level Settings" ></topic>
-                </topic>
-                <topic href="topics/p14.html" label="Message-Driven Bean Restrictions and Optimizations" >
-                    <topic href="topics/p14.html" label="Pool Tuning and Monitoring" ></topic>
-                    <topic href="topics/p14.html" label="The onMessage Runtime Exception" ></topic>
-                </topic>
-            </topic>
-            <topic href="topics/p14.html" label="Handling Transactions With Enterprise Beans" >
-                <topic href="topics/p14.html" label="Flat Transactions" ></topic>
-                <topic href="topics/p14.html" label="Global and Local Transactions" ></topic>
-                <topic href="topics/p14.html" label="Commit Options" ></topic>
-                <topic href="topics/p14.html" label="Administration and Monitoring" ></topic>
-            </topic>
-        </topic>
-        <topic href="topics/p15.html" label="10.&#160;&#160;Using Container-Managed Persistence" >
-            <topic href="topics/p15.html" label="Enterprise Server Support for CMP" ></topic>
-            <topic href="topics/p15.html" label="CMP Mapping" >
-                <topic href="topics/p15.html" label="Mapping Capabilities" ></topic>
-                <topic href="topics/p15.html" label="The Mapping Deployment Descriptor File" ></topic>
-                <topic href="topics/p15.html" label="Mapping Considerations" >
-                    <topic href="topics/p15.html" label="Join Tables and Relationships" ></topic>
-                    <topic href="topics/p15.html" label="Automatic Primary Key Generation" ></topic>
-                    <topic href="topics/p15.html" label="Fixed Length CHAR Primary Keys" ></topic>
-                    <topic href="topics/p15.html" label="Managed Fields" ></topic>
-                    <topic href="topics/p15.html" label="BLOB Support" ></topic>
-                    <topic href="topics/p15.html" label="CLOB Support" ></topic>
-                </topic>
-            </topic>
-            <topic href="topics/p15.html" label="Automatic Schema Generation for CMP" >
-                <topic href="topics/p15.html" label="Supported Data Types for CMP" ></topic>
-                <topic href="topics/p15.html" label="Generation Options for CMP" ></topic>
-            </topic>
-            <topic href="topics/p15.html" label="Schema Capture" >
-                <topic href="topics/p15.html" label="Automatic Database Schema Capture" ></topic>
-                <topic href="topics/p15.html" label="Using the capture-schema Utility" ></topic>
-            </topic>
-            <topic href="topics/p15.html" label="Configuring the CMP Resource" ></topic>
-            <topic href="topics/p15.html" label="Performance-Related Features" >
-                <topic href="topics/p15.html" label="Version Column Consistency Checking" >
-                    <topic href="topics/p15.html" label="To Use Version Consistency" ></topic>
-                </topic>
-                <topic href="topics/p15.html" label="Relationship Prefetching" ></topic>
-                <topic href="topics/p15.html" label="Read-Only Beans" ></topic>
-            </topic>
-            <topic href="topics/p15.html" label="Default Fetch Group Flags" ></topic>
-            <topic href="topics/p15.html" label="Configuring Queries for 1.1 Finders" >
-                <topic href="topics/p15.html" label="About JDOQL Queries" ></topic>
-                <topic href="topics/p15.html" label="Query Filter Expression" ></topic>
-                <topic href="topics/p15.html" label="Query Parameters" ></topic>
-                <topic href="topics/p15.html" label="Query Variables" ></topic>
-                <topic href="topics/p15.html" label="JDOQL Examples" >
-                    <topic href="topics/p15.html" label="Example 1" ></topic>
-                    <topic href="topics/p15.html" label="Example 2" ></topic>
-                    <topic href="topics/p15.html" label="Example 3" ></topic>
-                </topic>
-            </topic>
-            <topic href="topics/p15.html" label="CMP Restrictions and Optimizations" >
-                <topic href="topics/p15.html" label="Disabling ORDER BY Validation" ></topic>
-                <topic href="topics/p15.html" label="Setting the Heap Size on DB2" ></topic>
-                <topic href="topics/p15.html" label="Eager Loading of Field State" ></topic>
-                <topic href="topics/p15.html" label="Restrictions on Remote Interfaces" ></topic>
-                <topic href="topics/p15.html" label="PostgreSQL Case Insensitivity" ></topic>
-                <topic href="topics/p15.html" label="No Support for lock-when-loaded on Sybase" ></topic>
-                <topic href="topics/p15.html" label="Sybase Finder Limitation" ></topic>
-                <topic href="topics/p15.html" label="Date and Time Fields" ></topic>
-                <topic href="topics/p15.html" label="Set RECURSIVE_TRIGGERS to false on MSSQL" ></topic>
-                <topic href="topics/p15.html" label="MySQL Database Restrictions" ></topic>
-            </topic>
-        </topic>
-        <topic href="topics/p16.html" label="11.&#160;&#160;Developing Java Clients" >
-            <topic href="topics/p16.html" label="Introducing the Application Client Container" >
-                <topic href="topics/p16.html" label="ACC Security" ></topic>
-                <topic href="topics/p16.html" label="ACC Naming" ></topic>
-                <topic href="topics/p16.html" label="ACC Annotation" ></topic>
-                <topic href="topics/p16.html" label="Java Web Start" ></topic>
-            </topic>
-            <topic href="topics/p16.html" label="Developing Clients Using the ACC" >
-                <topic href="topics/p16.html" label="To Access an EJB Component From an Application Client" ></topic>
-                <topic href="topics/p16.html" label="To Access a JMS Resource From an Application Client" ></topic>
-                <topic href="topics/p16.html" label="Using Java Web Start" >
-                    <topic href="topics/p16.html" label="Enabling and Disabling Java Web Start" ></topic>
-                    <topic href="topics/p16.html" label="Downloading and Launching an Application Client" ></topic>
-                    <topic href="topics/p16.html" label="The Application Client URL" ></topic>
-                    <topic href="topics/p16.html" label="Signing JAR Files Used in Java Web Start" >
-                        <topic href="topics/p16.html" label="Automatically Signing JAR Files" ></topic>
-                        <topic href="topics/p16.html" label="Manually Signing appserv-jwsacc.jar" ></topic>
-                        <topic href="topics/p16.html" label="Manually Signing the Generated Application Client JAR File" ></topic>
-                    </topic>
-                    <topic href="topics/p16.html" label="Error Handling" ></topic>
-                    <topic href="topics/p16.html" label="Vendor Icon, Splash Screen, and Text" ></topic>
-                </topic>
-                <topic href="topics/p16.html" label="Running an Application Client Using the appclient Script" ></topic>
-                <topic href="topics/p16.html" label="Using the package-appclient Script" ></topic>
-                <topic href="topics/p16.html" label="The client.policy File" ></topic>
-                <topic href="topics/p16.html" label="Using RMI/IIOP Over SSL" ></topic>
-                <topic href="topics/p16.html" label="Connecting to a Remote EJB Module Through a Firewall" ></topic>
-            </topic>
-        </topic>
-        <topic href="topics/p17.html" label="12.&#160;&#160;Developing Connectors" >
-            <topic href="topics/p17.html" label="Connector Support in the Enterprise Server" >
-                <topic href="topics/p17.html" label="Connector Architecture for JMS and JDBC" ></topic>
-                <topic href="topics/p17.html" label="Connector Configuration" ></topic>
-            </topic>
-            <topic href="topics/p17.html" label="Deploying and Configuring a Stand-Alone Connector Module" >
-                <topic href="topics/p17.html" label="To Deploy and Configure a Stand-Alone Connector Module" ></topic>
-            </topic>
-            <topic href="topics/p17.html" label="Redeploying a Stand-Alone Connector Module" ></topic>
-            <topic href="topics/p17.html" label="Deploying and Configuring an Embedded Resource Adapter" ></topic>
-            <topic href="topics/p17.html" label="Advanced Connector Configuration Options" >
-                <topic href="topics/p17.html" label="Thread Pools" ></topic>
-                <topic href="topics/p17.html" label="Security Maps" ></topic>
-                <topic href="topics/p17.html" label="Overriding Configuration Properties" ></topic>
-                <topic href="topics/p17.html" label="Testing a Connector Connection Pool" ></topic>
-                <topic href="topics/p17.html" label="Handling Invalid Connections" ></topic>
-                <topic href="topics/p17.html" label="Setting the Shutdown Timeout" ></topic>
-                <topic href="topics/p17.html" label="Using Last Agent Optimization of Transactions" ></topic>
-            </topic>
-            <topic href="topics/p17.html" label="Inbound Communication Support" ></topic>
-            <topic href="topics/p17.html" label="Configuring a Message Driven Bean to Use a Resource Adapter" ></topic>
-        </topic>
-        <topic href="topics/p18.html" label="13.&#160;&#160;Developing Lifecycle Listeners" >
-            <topic href="topics/p18.html" label="Server Life Cycle Events" ></topic>
-            <topic href="topics/p18.html" label="The LifecycleListener Interface" ></topic>
-            <topic href="topics/p18.html" label="The LifecycleEvent Class" ></topic>
-            <topic href="topics/p18.html" label="The Server Lifecycle Event Context" ></topic>
-            <topic href="topics/p18.html" label="Deploying a Lifecycle Module" ></topic>
-            <topic href="topics/p18.html" label="Considerations for Lifecycle Modules" ></topic>
-        </topic>
-        <topic href="topics/p19.html" label="14.&#160;&#160;Developing Custom MBeans" >
-            <topic href="topics/p19.html" label="The MBean Life Cycle" ></topic>
-            <topic href="topics/p19.html" label="MBean Class Loading" ></topic>
-            <topic href="topics/p19.html" label="Creating, Deleting, and Listing MBeans" >
-                <topic href="topics/p19.html" label="The asadmin create-mbean Command" ></topic>
-                <topic href="topics/p19.html" label="The asadmin delete-mbean Command" ></topic>
-                <topic href="topics/p19.html" label="The asadmin list-mbeans Command" ></topic>
-            </topic>
-            <topic href="topics/p19.html" label="The MBeanServer in the Enterprise Server" ></topic>
-            <topic href="topics/p19.html" label="Enabling and Disabling MBeans" ></topic>
-            <topic href="topics/p19.html" label="Handling MBean Attributes" ></topic>
         </topic>
     </topic>
-    <topic href="topics/p20.html" label="Part&#160;III&#160;Using Services and APIs" >
-        <topic href="topics/p21.html" label="15.&#160;&#160;Using the JDBC API for Database Access" >
-            <topic href="topics/p21.html" label="General Steps for Creating a JDBC Resource" >
-                <topic href="topics/p21.html" label="Integrating the JDBC Driver" >
-                    <topic href="topics/p21.html" label="Supported Database Drivers" ></topic>
-                    <topic href="topics/p21.html" label="Making the JDBC Driver JAR Files Accessible" ></topic>
+    <topic href="v21DevelopersGuide/topics/p9.html" label="Part&#160;II&#160;Developing Applications and Application Components" >
+        <topic href="v21DevelopersGuide/topics/p10.html" label="5.Securing Applications" >
+            <topic href="v21DevelopersGuide/topics/p10.html" label="Security Goals" ></topic>
+            <topic href="v21DevelopersGuide/topics/p10.html" label="Enterprise Server Specific Security Features" ></topic>
+            <topic href="v21DevelopersGuide/topics/p10.html" label="Container Security" >
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Declarative Security" >
+                    <topic href="v21DevelopersGuide/topics/p10.html" label="Application Level Security" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p10.html" label="Component Level Security" ></topic>
                 </topic>
-                <topic href="topics/p21.html" label="Creating a Connection Pool" ></topic>
-                <topic href="topics/p21.html" label="Testing a JDBC Connection Pool" ></topic>
-                <topic href="topics/p21.html" label="Creating a JDBC Resource" ></topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Programmatic Security" ></topic>
             </topic>
-            <topic href="topics/p21.html" label="Creating Applications That Use the JDBC API" >
-                <topic href="topics/p21.html" label="Sharing Connections" ></topic>
-                <topic href="topics/p21.html" label="Obtaining a Physical Connection From a Wrapped Connection" ></topic>
-                <topic href="topics/p21.html" label="Marking Bad Connections" ></topic>
-                <topic href="topics/p21.html" label="Using Non-Transactional Connections" ></topic>
-                <topic href="topics/p21.html" label="Using JDBC Transaction Isolation Levels" ></topic>
-                <topic href="topics/p21.html" label="Allowing Non-Component Callers" ></topic>
+            <topic href="v21DevelopersGuide/topics/p10.html" label="Roles, Principals, and Principal to Role Mapping" ></topic>
+            <topic href="v21DevelopersGuide/topics/p10.html" label="Realm Configuration" >
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Supported Realms" ></topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="How to Configure a Realm" ></topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="How to Set a Realm for an Application or Module" ></topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Creating a Custom Realm" ></topic>
             </topic>
-            <topic href="topics/p21.html" label="Restrictions and Optimizations" >
-                <topic href="topics/p21.html" label="Disabling Stored Procedure Creation on Sybase" ></topic>
+            <topic href="v21DevelopersGuide/topics/p10.html" label="JACC Support" ></topic>
+            <topic href="v21DevelopersGuide/topics/p10.html" label="Pluggable Audit Module Support" >
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Configuring an Audit Module" ></topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="The AuditModule Class" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p10.html" label="The server.policy File" >
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Default Permissions" ></topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Changing Permissions for an Application" ></topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Enabling and Disabling the Security Manager" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p10.html" label="Configuring Message Security for Web Services" >
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Message Security Providers" ></topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Message Security Responsibilities" >
+                    <topic href="v21DevelopersGuide/topics/p10.html" label="Application Developer" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p10.html" label="Application Deployer" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p10.html" label="System Administrator" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Application-Specific Message Protection" >
+                    <topic href="v21DevelopersGuide/topics/p10.html" label="Using a Signature to Enable Message Protection for All Methods" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p10.html" label="Configuring Message Protection for a Specific Method Based on Digital Signatures" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Understanding and Running the Sample Application" >
+                    <topic href="v21DevelopersGuide/topics/p10.html" label="To Set Up the Sample Application" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p10.html" label="To Run the Sample Application" ></topic>
+                </topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p10.html" label="Programmatic Login" >
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Programmatic Login Precautions" ></topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="Granting Programmatic Login Permission" ></topic>
+                <topic href="v21DevelopersGuide/topics/p10.html" label="The ProgrammaticLogin Class" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p10.html" label="User Authentication for Single Sign-on" ></topic>
+        </topic>
+        <topic href="v21DevelopersGuide/topics/p11.html" label="6.Developing Web Services" >
+            <topic href="v21DevelopersGuide/topics/p11.html" label="Creating Portable Web Service Artifacts" ></topic>
+            <topic href="v21DevelopersGuide/topics/p11.html" label="Deploying a Web Service" ></topic>
+            <topic href="v21DevelopersGuide/topics/p11.html" label="Web Services Registry" ></topic>
+            <topic href="v21DevelopersGuide/topics/p11.html" label="The Web Service URI, WSDL File, and Test Page" ></topic>
+            <topic href="v21DevelopersGuide/topics/p11.html" label="JBI Runtime" >
+                <topic href="v21DevelopersGuide/topics/p11.html" label="Using the jbi.xml File" ></topic>
+                <topic href="v21DevelopersGuide/topics/p11.html" label="Using Application Server Descriptors" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p11.html" label="Using the Woodstox Parser" ></topic>
+        </topic>
+        <topic href="v21DevelopersGuide/topics/p12.html" label="7.Using the Java Persistence API" >
+            <topic href="v21DevelopersGuide/topics/p12.html" label="Specifying the Database" ></topic>
+            <topic href="v21DevelopersGuide/topics/p12.html" label="Additional Database Properties" ></topic>
+            <topic href="v21DevelopersGuide/topics/p12.html" label="Configuring the Cache" ></topic>
+            <topic href="v21DevelopersGuide/topics/p12.html" label="Setting the Logging Level" ></topic>
+            <topic href="v21DevelopersGuide/topics/p12.html" label="Using Lazy Loading" ></topic>
+            <topic href="v21DevelopersGuide/topics/p12.html" label="Primary Key Generation Defaults" ></topic>
+            <topic href="v21DevelopersGuide/topics/p12.html" label="Automatic Schema Generation" >
+                <topic href="v21DevelopersGuide/topics/p12.html" label="Annotations" ></topic>
+                <topic href="v21DevelopersGuide/topics/p12.html" label="Supported Data Types" ></topic>
+                <topic href="v21DevelopersGuide/topics/p12.html" label="Generation Options" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p12.html" label="Query Hints" ></topic>
+            <topic href="v21DevelopersGuide/topics/p12.html" label="Changing the Persistence Provider" ></topic>
+            <topic href="v21DevelopersGuide/topics/p12.html" label="Restrictions and Optimizations" >
+                <topic href="v21DevelopersGuide/topics/p12.html" label="Extended Persistence Context Failover" ></topic>
+                <topic href="v21DevelopersGuide/topics/p12.html" label="Using @OrderBy with a Shared Session Cache" ></topic>
+                <topic href="v21DevelopersGuide/topics/p12.html" label="Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver" ></topic>
+                <topic href="v21DevelopersGuide/topics/p12.html" label="Database Case Sensitivity" >
+                    <topic href="v21DevelopersGuide/topics/p12.html" label="Unique Constraints" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p12.html" label="Foreign Key Mapping" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p12.html" label="SQL Result Set Mapping" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p12.html" label="Named Native Queries and JDBC Queries" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p12.html" label="PostgreSQL Case Sensitivity" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p12.html" label="Sybase Finder Limitation" ></topic>
+                <topic href="v21DevelopersGuide/topics/p12.html" label="MySQL Database Restrictions" ></topic>
             </topic>
         </topic>
-        <topic href="topics/p22.html" label="16.&#160;&#160;Using the Transaction Service" >
-            <topic href="topics/p22.html" label="Transaction Resource Managers" ></topic>
-            <topic href="topics/p22.html" label="Transaction Scope" ></topic>
-            <topic href="topics/p22.html" label="Distributed Transaction Recovery" ></topic>
-            <topic href="topics/p22.html" label="Configuring the Transaction Service" ></topic>
-            <topic href="topics/p22.html" label="The Transaction Manager, the Transaction Synchronization Registry, and UserTransaction" ></topic>
-            <topic href="topics/p22.html" label="Transaction Logging" ></topic>
-            <topic href="topics/p22.html" label="Storing Transaction Logs in a Database" ></topic>
-            <topic href="topics/p22.html" label="Recovery Workarounds" ></topic>
+        <topic href="v21DevelopersGuide/topics/p13.html" label="8.Developing Web and SIP Applications" >
+            <topic href="v21DevelopersGuide/topics/p13.html" label="Using Servlets" >
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Invoking a Servlet With a URL" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Servlet Output" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Caching Servlet Results" >
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Caching Features" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Default Cache Configuration" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Caching Example" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="The CacheKeyGenerator Interface" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="About the Servlet Engine" >
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Instantiating and Removing Servlets" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Request Handling" ></topic>
+                </topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p13.html" label="Using JavaServer Pages" >
+                <topic href="v21DevelopersGuide/topics/p13.html" label="JSP Tag Libraries and Standard Portable Tags" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="JSP Caching" >
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="The appserv-tags.jar File" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Caching Scope" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="The cache Tag" >
+                        <topic href="v21DevelopersGuide/topics/p13.html" label="Attributes of cache" ></topic>
+                        <topic href="v21DevelopersGuide/topics/p13.html" label="Example of cache" ></topic>
+                    </topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="The flush Tag" >
+                        <topic href="v21DevelopersGuide/topics/p13.html" label="Attributes of flush" ></topic>
+                        <topic href="v21DevelopersGuide/topics/p13.html" label="Examples of flush" ></topic>
+                    </topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Options for Compiling JSP Files" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p13.html" label="Creating and Managing Sessions" >
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Configuring Sessions" >
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="HTTP Sessions, Cookies, and URL Rewriting" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Coordinating Session Access" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Distributed Sessions and Persistence" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Session Managers" >
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="The memory Persistence Type" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="The file Persistence Type" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="The replicated Persistence Type" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="The ha Persistence Type" ></topic>
+                </topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p13.html" label="Advanced Web Application Features" >
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Internationalization Issues" >
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="The Server's Default Locale" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Servlet Character Encoding" >
+                        <topic href="v21DevelopersGuide/topics/p13.html" label="Servlet Request" ></topic>
+                        <topic href="v21DevelopersGuide/topics/p13.html" label="Servlet Response" ></topic>
+                    </topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Virtual Servers" >
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="To Assign a Default Virtual Server" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="To Assign Virtual Servers" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Default Web Modules" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Class Loader Delegation" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Using the default-web.xml File" >
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="To Use the default-web.xml File" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Configuring Logging and Monitoring in the Web Container" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Configuring Idempotent URL Requests" >
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Specifying an Idempotent URL" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p13.html" label="Characteristics of an Idempotent URL" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Header Management" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Configuring Valves and Catalina Listeners" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Alternate Document Roots" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Redirecting URLs" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Enabling Comet Support" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Using a context.xml File" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Enabling WebDav" ></topic>
+                <topic href="v21DevelopersGuide/topics/p13.html" label="Using mod_jk" ></topic>
+            </topic>
         </topic>
-        <topic href="topics/p23.html" label="17.&#160;&#160;Using the Java Naming and Directory Interface" >
-            <topic href="topics/p23.html" label="Accessing the Naming Context" >
-                <topic href="topics/p23.html" label="Global JNDI Names" ></topic>
-                <topic href="topics/p23.html" label="Accessing EJB Components Using the CosNaming Naming Context" ></topic>
-                <topic href="topics/p23.html" label="Accessing EJB Components in a Remote Application Server" ></topic>
-                <topic href="topics/p23.html" label="Naming Environment for Lifecycle Modules" ></topic>
+        <topic href="v21DevelopersGuide/topics/p14.html" label="9.Using Enterprise JavaBeans Technology" >
+            <topic href="v21DevelopersGuide/topics/p14.html" label="Summary of EJB 3.0 Changes" ></topic>
+            <topic href="v21DevelopersGuide/topics/p14.html" label="Value Added Features" >
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Read-Only Beans" ></topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="The pass-by-reference Element" ></topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Pooling and Caching" >
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Pooling Parameters" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Caching Parameters" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Bean-Level Container-Managed Transaction Timeouts" ></topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Priority Based Scheduling of Remote Bean Invocations" ></topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Immediate Flushing" ></topic>
             </topic>
-            <topic href="topics/p23.html" label="Configuring Resources" >
-                <topic href="topics/p23.html" label="External JNDI Resources" ></topic>
-                <topic href="topics/p23.html" label="Custom Resources" ></topic>
+            <topic href="v21DevelopersGuide/topics/p14.html" label="EJB Timer Service" ></topic>
+            <topic href="v21DevelopersGuide/topics/p14.html" label="Using Session Beans" >
+                <topic href="v21DevelopersGuide/topics/p14.html" label="About the Session Bean Containers" >
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Stateless Container" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Stateful Container" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Stateful Session Bean Failover" >
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Choosing a Persistence Store" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Enabling Checkpointing" >
+                        <topic href="v21DevelopersGuide/topics/p14.html" label="Server Instance and EJB Container Levels" ></topic>
+                        <topic href="v21DevelopersGuide/topics/p14.html" label="Application and EJB Module Levels" ></topic>
+                        <topic href="v21DevelopersGuide/topics/p14.html" label="SFSB Level" ></topic>
+                    </topic>
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Specifying Methods to Be Checkpointed" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Session Bean Restrictions and Optimizations" >
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Optimizing Session Bean Performance" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Restricting Transactions" ></topic>
+                </topic>
             </topic>
-            <topic href="topics/p23.html" label="Using a Custom jndi.properties File" ></topic>
-            <topic href="topics/p23.html" label="Mapping References" ></topic>
+            <topic href="v21DevelopersGuide/topics/p14.html" label="Using Read-Only Beans" >
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Read-Only Bean Characteristics and Life Cycle" ></topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Read-Only Bean Good Practices" ></topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Refreshing Read-Only Beans" >
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Invoking a Transactional Method" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Refreshing Periodically" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Refreshing Programmatically" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Deploying Read-Only Beans" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p14.html" label="Using Message-Driven Beans" >
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Message-Driven Bean Configuration" >
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Connection Factory and Destination" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Message-Driven Bean Pool" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Domain-Level Settings" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Message-Driven Bean Restrictions and Optimizations" >
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="Pool Tuning and Monitoring" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p14.html" label="The onMessage Runtime Exception" ></topic>
+                </topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p14.html" label="Handling Transactions With Enterprise Beans" >
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Flat Transactions" ></topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Global and Local Transactions" ></topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Commit Options" ></topic>
+                <topic href="v21DevelopersGuide/topics/p14.html" label="Administration and Monitoring" ></topic>
+            </topic>
         </topic>
-        <topic href="topics/p24.html" label="18.&#160;&#160;Using the Java Message Service" >
-            <topic href="topics/p24.html" label="The JMS Provider" ></topic>
-            <topic href="topics/p24.html" label="Message Queue Resource Adapter" ></topic>
-            <topic href="topics/p24.html" label="Generic Resource Adapter" ></topic>
-            <topic href="topics/p24.html" label="Administration of the JMS Service" >
-                <topic href="topics/p24.html" label="Configuring the JMS Service" ></topic>
-                <topic href="topics/p24.html" label="The Default JMS Host" ></topic>
-                <topic href="topics/p24.html" label="Creating JMS Hosts" ></topic>
-                <topic href="topics/p24.html" label="Checking Whether the JMS Provider Is Running" ></topic>
-                <topic href="topics/p24.html" label="Creating Physical Destinations" ></topic>
-                <topic href="topics/p24.html" label="Creating JMS Resources: Destinations and Connection Factories" ></topic>
+        <topic href="v21DevelopersGuide/topics/p15.html" label="10.Using Container-Managed Persistence" >
+            <topic href="v21DevelopersGuide/topics/p15.html" label="Enterprise Server Support for CMP" ></topic>
+            <topic href="v21DevelopersGuide/topics/p15.html" label="CMP Mapping" >
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Mapping Capabilities" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="The Mapping Deployment Descriptor File" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Mapping Considerations" >
+                    <topic href="v21DevelopersGuide/topics/p15.html" label="Join Tables and Relationships" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p15.html" label="Automatic Primary Key Generation" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p15.html" label="Fixed Length CHAR Primary Keys" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p15.html" label="Managed Fields" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p15.html" label="BLOB Support" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p15.html" label="CLOB Support" ></topic>
+                </topic>
             </topic>
-            <topic href="topics/p24.html" label="Restarting the JMS Client After JMS Configuration" ></topic>
-            <topic href="topics/p24.html" label="JMS Connection Features" >
-                <topic href="topics/p24.html" label="Connection Pooling" ></topic>
-                <topic href="topics/p24.html" label="Connection Failover" ></topic>
+            <topic href="v21DevelopersGuide/topics/p15.html" label="Automatic Schema Generation for CMP" >
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Supported Data Types for CMP" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Generation Options for CMP" ></topic>
             </topic>
-            <topic href="topics/p24.html" label="Load-Balanced Message Inflow" ></topic>
-            <topic href="topics/p24.html" label="JMS Service High Availability" ></topic>
-            <topic href="topics/p24.html" label="Transactions and Non-Persistent Messages" ></topic>
-            <topic href="topics/p24.html" label="Authentication With ConnectionFactory" ></topic>
-            <topic href="topics/p24.html" label="Message Queue varhome Directory" ></topic>
-            <topic href="topics/p24.html" label="Delivering SOAP Messages Using the JMS API" >
-                <topic href="topics/p24.html" label="To Send SOAP Messages Using the JMS API" ></topic>
-                <topic href="topics/p24.html" label="To Receive SOAP Messages Using the JMS API" ></topic>
+            <topic href="v21DevelopersGuide/topics/p15.html" label="Schema Capture" >
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Automatic Database Schema Capture" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Using the capture-schema Utility" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p15.html" label="Configuring the CMP Resource" ></topic>
+            <topic href="v21DevelopersGuide/topics/p15.html" label="Performance-Related Features" >
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Version Column Consistency Checking" >
+                    <topic href="v21DevelopersGuide/topics/p15.html" label="To Use Version Consistency" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Relationship Prefetching" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Read-Only Beans" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p15.html" label="Default Fetch Group Flags" ></topic>
+            <topic href="v21DevelopersGuide/topics/p15.html" label="Configuring Queries for 1.1 Finders" >
+                <topic href="v21DevelopersGuide/topics/p15.html" label="About JDOQL Queries" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Query Filter Expression" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Query Parameters" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Query Variables" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="JDOQL Examples" >
+                    <topic href="v21DevelopersGuide/topics/p15.html" label="Example 1" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p15.html" label="Example 2" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p15.html" label="Example 3" ></topic>
+                </topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p15.html" label="CMP Restrictions and Optimizations" >
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Disabling ORDER BY Validation" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Setting the Heap Size on DB2" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Eager Loading of Field State" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Restrictions on Remote Interfaces" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="PostgreSQL Case Insensitivity" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="No Support for lock-when-loaded on Sybase" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Sybase Finder Limitation" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Date and Time Fields" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="Set RECURSIVE_TRIGGERS to false on MSSQL" ></topic>
+                <topic href="v21DevelopersGuide/topics/p15.html" label="MySQL Database Restrictions" ></topic>
             </topic>
         </topic>
-        <topic href="topics/p25.html" label="19.&#160;&#160;Using the JavaMail API" >
-            <topic href="topics/p25.html" label="Introducing JavaMail" ></topic>
-            <topic href="topics/p25.html" label="Creating a JavaMail Session" ></topic>
-            <topic href="topics/p25.html" label="JavaMail Session Properties" ></topic>
-            <topic href="topics/p25.html" label="Looking Up a JavaMail Session" ></topic>
-            <topic href="topics/p25.html" label="Sending and Reading Messages Using JavaMail" >
-                <topic href="topics/p25.html" label="To Send a Message Using JavaMail" ></topic>
-                <topic href="topics/p25.html" label="To Read a Message Using JavaMail" ></topic>
+        <topic href="v21DevelopersGuide/topics/p16.html" label="11.Developing Java Clients" >
+            <topic href="v21DevelopersGuide/topics/p16.html" label="Introducing the Application Client Container" >
+                <topic href="v21DevelopersGuide/topics/p16.html" label="ACC Security" ></topic>
+                <topic href="v21DevelopersGuide/topics/p16.html" label="ACC Naming" ></topic>
+                <topic href="v21DevelopersGuide/topics/p16.html" label="ACC Annotation" ></topic>
+                <topic href="v21DevelopersGuide/topics/p16.html" label="Java Web Start" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p16.html" label="Developing Clients Using the ACC" >
+                <topic href="v21DevelopersGuide/topics/p16.html" label="To Access an EJB Component From an Application Client" ></topic>
+                <topic href="v21DevelopersGuide/topics/p16.html" label="To Access a JMS Resource From an Application Client" ></topic>
+                <topic href="v21DevelopersGuide/topics/p16.html" label="Using Java Web Start" >
+                    <topic href="v21DevelopersGuide/topics/p16.html" label="Enabling and Disabling Java Web Start" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p16.html" label="Downloading and Launching an Application Client" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p16.html" label="The Application Client URL" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p16.html" label="Signing JAR Files Used in Java Web Start" >
+                        <topic href="v21DevelopersGuide/topics/p16.html" label="Automatically Signing JAR Files" ></topic>
+                        <topic href="v21DevelopersGuide/topics/p16.html" label="Manually Signing appserv-jwsacc.jar" ></topic>
+                        <topic href="v21DevelopersGuide/topics/p16.html" label="Manually Signing the Generated Application Client JAR File" ></topic>
+                    </topic>
+                    <topic href="v21DevelopersGuide/topics/p16.html" label="Error Handling" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p16.html" label="Vendor Icon, Splash Screen, and Text" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p16.html" label="Running an Application Client Using the appclient Script" ></topic>
+                <topic href="v21DevelopersGuide/topics/p16.html" label="Using the package-appclient Script" ></topic>
+                <topic href="v21DevelopersGuide/topics/p16.html" label="The client.policy File" ></topic>
+                <topic href="v21DevelopersGuide/topics/p16.html" label="Using RMI/IIOP Over SSL" ></topic>
+                <topic href="v21DevelopersGuide/topics/p16.html" label="Connecting to a Remote EJB Module Through a Firewall" ></topic>
             </topic>
         </topic>
-        <topic href="topics/p26.html" label="20.&#160;&#160;Using the Application Server Management Extensions" >
-            <topic href="topics/p26.html" label="About AMX" ></topic>
-            <topic href="topics/p26.html" label="AMX MBeans" >
-                <topic href="topics/p26.html" label="Configuration MBeans" ></topic>
-                <topic href="topics/p26.html" label="Monitoring MBeans" ></topic>
-                <topic href="topics/p26.html" label="Utility MBeans" ></topic>
-                <topic href="topics/p26.html" label="Java EE Management MBeans" ></topic>
-                <topic href="topics/p26.html" label="Other MBeans" ></topic>
-                <topic href="topics/p26.html" label="MBean Notifications" ></topic>
-                <topic href="topics/p26.html" label="Access to MBean Attributes" ></topic>
+        <topic href="v21DevelopersGuide/topics/p17.html" label="12.Developing Connectors" >
+            <topic href="v21DevelopersGuide/topics/p17.html" label="Connector Support in the Enterprise Server" >
+                <topic href="v21DevelopersGuide/topics/p17.html" label="Connector Architecture for JMS and JDBC" ></topic>
+                <topic href="v21DevelopersGuide/topics/p17.html" label="Connector Configuration" ></topic>
             </topic>
-            <topic href="topics/p26.html" label="Dynamic Client Proxies" ></topic>
-            <topic href="topics/p26.html" label="Connecting to the Domain Administration Server" ></topic>
-            <topic href="topics/p26.html" label="Examining AMX Code Samples" >
-                <topic href="topics/p26.html" label="The SampleMain Class" ></topic>
-                <topic href="topics/p26.html" label="Connecting to the DAS" ></topic>
-                <topic href="topics/p26.html" label="Starting an Enterprise Server" ></topic>
-                <topic href="topics/p26.html" label="Deploying an Archive" ></topic>
-                <topic href="topics/p26.html" label="Displaying the AMX MBean Hierarchy" ></topic>
-                <topic href="topics/p26.html" label="Setting Monitoring States" ></topic>
-                <topic href="topics/p26.html" label="Accessing AMX MBeans" ></topic>
-                <topic href="topics/p26.html" label="Accessing and Displaying the Attributes of an AMX MBean" ></topic>
-                <topic href="topics/p26.html" label="Listing AMX MBean Properties" ></topic>
-                <topic href="topics/p26.html" label="Performing Queries" ></topic>
-                <topic href="topics/p26.html" label="Monitoring Attribute Changes" ></topic>
-                <topic href="topics/p26.html" label="Undeploying Modules" ></topic>
-                <topic href="topics/p26.html" label="Stopping an Enterprise Server" ></topic>
+            <topic href="v21DevelopersGuide/topics/p17.html" label="Deploying and Configuring a Stand-Alone Connector Module" >
+                <topic href="v21DevelopersGuide/topics/p17.html" label="To Deploy and Configure a Stand-Alone Connector Module" ></topic>
             </topic>
-            <topic href="topics/p26.html" label="Running the AMX Samples" >
-                <topic href="topics/p26.html" label="To Run the AMX Sample" ></topic>
+            <topic href="v21DevelopersGuide/topics/p17.html" label="Redeploying a Stand-Alone Connector Module" ></topic>
+            <topic href="v21DevelopersGuide/topics/p17.html" label="Deploying and Configuring an Embedded Resource Adapter" ></topic>
+            <topic href="v21DevelopersGuide/topics/p17.html" label="Advanced Connector Configuration Options" >
+                <topic href="v21DevelopersGuide/topics/p17.html" label="Thread Pools" ></topic>
+                <topic href="v21DevelopersGuide/topics/p17.html" label="Security Maps" ></topic>
+                <topic href="v21DevelopersGuide/topics/p17.html" label="Overriding Configuration Properties" ></topic>
+                <topic href="v21DevelopersGuide/topics/p17.html" label="Testing a Connector Connection Pool" ></topic>
+                <topic href="v21DevelopersGuide/topics/p17.html" label="Handling Invalid Connections" ></topic>
+                <topic href="v21DevelopersGuide/topics/p17.html" label="Setting the Shutdown Timeout" ></topic>
+                <topic href="v21DevelopersGuide/topics/p17.html" label="Using Last Agent Optimization of Transactions" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p17.html" label="Inbound Communication Support" ></topic>
+            <topic href="v21DevelopersGuide/topics/p17.html" label="Configuring a Message Driven Bean to Use a Resource Adapter" ></topic>
+        </topic>
+        <topic href="v21DevelopersGuide/topics/p18.html" label="13.Developing Lifecycle Listeners" >
+            <topic href="v21DevelopersGuide/topics/p18.html" label="Server Life Cycle Events" ></topic>
+            <topic href="v21DevelopersGuide/topics/p18.html" label="The LifecycleListener Interface" ></topic>
+            <topic href="v21DevelopersGuide/topics/p18.html" label="The LifecycleEvent Class" ></topic>
+            <topic href="v21DevelopersGuide/topics/p18.html" label="The Server Lifecycle Event Context" ></topic>
+            <topic href="v21DevelopersGuide/topics/p18.html" label="Deploying a Lifecycle Module" ></topic>
+            <topic href="v21DevelopersGuide/topics/p18.html" label="Considerations for Lifecycle Modules" ></topic>
+        </topic>
+        <topic href="v21DevelopersGuide/topics/p19.html" label="14.Developing Custom MBeans" >
+            <topic href="v21DevelopersGuide/topics/p19.html" label="The MBean Life Cycle" ></topic>
+            <topic href="v21DevelopersGuide/topics/p19.html" label="MBean Class Loading" ></topic>
+            <topic href="v21DevelopersGuide/topics/p19.html" label="Creating, Deleting, and Listing MBeans" >
+                <topic href="v21DevelopersGuide/topics/p19.html" label="The asadmin create-mbean Command" ></topic>
+                <topic href="v21DevelopersGuide/topics/p19.html" label="The asadmin delete-mbean Command" ></topic>
+                <topic href="v21DevelopersGuide/topics/p19.html" label="The asadmin list-mbeans Command" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p19.html" label="The MBeanServer in the Enterprise Server" ></topic>
+            <topic href="v21DevelopersGuide/topics/p19.html" label="Enabling and Disabling MBeans" ></topic>
+            <topic href="v21DevelopersGuide/topics/p19.html" label="Handling MBean Attributes" ></topic>
+        </topic>
+    </topic>
+    <topic href="v21DevelopersGuide/topics/p20.html" label="Part&#160;III&#160;Using Services and APIs" >
+        <topic href="v21DevelopersGuide/topics/p21.html" label="15.Using the JDBC API for Database Access" >
+            <topic href="v21DevelopersGuide/topics/p21.html" label="General Steps for Creating a JDBC Resource" >
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Integrating the JDBC Driver" >
+                    <topic href="v21DevelopersGuide/topics/p21.html" label="Supported Database Drivers" ></topic>
+                    <topic href="v21DevelopersGuide/topics/p21.html" label="Making the JDBC Driver JAR Files Accessible" ></topic>
+                </topic>
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Creating a Connection Pool" ></topic>
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Testing a JDBC Connection Pool" ></topic>
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Creating a JDBC Resource" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p21.html" label="Creating Applications That Use the JDBC API" >
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Sharing Connections" ></topic>
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Obtaining a Physical Connection From a Wrapped Connection" ></topic>
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Marking Bad Connections" ></topic>
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Using Non-Transactional Connections" ></topic>
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Using JDBC Transaction Isolation Levels" ></topic>
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Allowing Non-Component Callers" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p21.html" label="Restrictions and Optimizations" >
+                <topic href="v21DevelopersGuide/topics/p21.html" label="Disabling Stored Procedure Creation on Sybase" ></topic>
+            </topic>
+        </topic>
+        <topic href="v21DevelopersGuide/topics/p22.html" label="16.Using the Transaction Service" >
+            <topic href="v21DevelopersGuide/topics/p22.html" label="Transaction Resource Managers" ></topic>
+            <topic href="v21DevelopersGuide/topics/p22.html" label="Transaction Scope" ></topic>
+            <topic href="v21DevelopersGuide/topics/p22.html" label="Distributed Transaction Recovery" ></topic>
+            <topic href="v21DevelopersGuide/topics/p22.html" label="Configuring the Transaction Service" ></topic>
+            <topic href="v21DevelopersGuide/topics/p22.html" label="The Transaction Manager, the Transaction Synchronization Registry, and UserTransaction" ></topic>
+            <topic href="v21DevelopersGuide/topics/p22.html" label="Transaction Logging" ></topic>
+            <topic href="v21DevelopersGuide/topics/p22.html" label="Storing Transaction Logs in a Database" ></topic>
+            <topic href="v21DevelopersGuide/topics/p22.html" label="Recovery Workarounds" ></topic>
+        </topic>
+        <topic href="v21DevelopersGuide/topics/p23.html" label="17.Using the Java Naming and Directory Interface" >
+            <topic href="v21DevelopersGuide/topics/p23.html" label="Accessing the Naming Context" >
+                <topic href="v21DevelopersGuide/topics/p23.html" label="Global JNDI Names" ></topic>
+                <topic href="v21DevelopersGuide/topics/p23.html" label="Accessing EJB Components Using the CosNaming Naming Context" ></topic>
+                <topic href="v21DevelopersGuide/topics/p23.html" label="Accessing EJB Components in a Remote Application Server" ></topic>
+                <topic href="v21DevelopersGuide/topics/p23.html" label="Naming Environment for Lifecycle Modules" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p23.html" label="Configuring Resources" >
+                <topic href="v21DevelopersGuide/topics/p23.html" label="External JNDI Resources" ></topic>
+                <topic href="v21DevelopersGuide/topics/p23.html" label="Custom Resources" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p23.html" label="Using a Custom jndi.properties File" ></topic>
+            <topic href="v21DevelopersGuide/topics/p23.html" label="Mapping References" ></topic>
+        </topic>
+        <topic href="v21DevelopersGuide/topics/p24.html" label="18.Using the Java Message Service" >
+            <topic href="v21DevelopersGuide/topics/p24.html" label="The JMS Provider" ></topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="Message Queue Resource Adapter" ></topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="Generic Resource Adapter" ></topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="Administration of the JMS Service" >
+                <topic href="v21DevelopersGuide/topics/p24.html" label="Configuring the JMS Service" ></topic>
+                <topic href="v21DevelopersGuide/topics/p24.html" label="The Default JMS Host" ></topic>
+                <topic href="v21DevelopersGuide/topics/p24.html" label="Creating JMS Hosts" ></topic>
+                <topic href="v21DevelopersGuide/topics/p24.html" label="Checking Whether the JMS Provider Is Running" ></topic>
+                <topic href="v21DevelopersGuide/topics/p24.html" label="Creating Physical Destinations" ></topic>
+                <topic href="v21DevelopersGuide/topics/p24.html" label="Creating JMS Resources: Destinations and Connection Factories" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="Restarting the JMS Client After JMS Configuration" ></topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="JMS Connection Features" >
+                <topic href="v21DevelopersGuide/topics/p24.html" label="Connection Pooling" ></topic>
+                <topic href="v21DevelopersGuide/topics/p24.html" label="Connection Failover" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="Load-Balanced Message Inflow" ></topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="JMS Service High Availability" ></topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="Transactions and Non-Persistent Messages" ></topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="Authentication With ConnectionFactory" ></topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="Message Queue varhome Directory" ></topic>
+            <topic href="v21DevelopersGuide/topics/p24.html" label="Delivering SOAP Messages Using the JMS API" >
+                <topic href="v21DevelopersGuide/topics/p24.html" label="To Send SOAP Messages Using the JMS API" ></topic>
+                <topic href="v21DevelopersGuide/topics/p24.html" label="To Receive SOAP Messages Using the JMS API" ></topic>
+            </topic>
+        </topic>
+        <topic href="v21DevelopersGuide/topics/p25.html" label="19.Using the JavaMail API" >
+            <topic href="v21DevelopersGuide/topics/p25.html" label="Introducing JavaMail" ></topic>
+            <topic href="v21DevelopersGuide/topics/p25.html" label="Creating a JavaMail Session" ></topic>
+            <topic href="v21DevelopersGuide/topics/p25.html" label="JavaMail Session Properties" ></topic>
+            <topic href="v21DevelopersGuide/topics/p25.html" label="Looking Up a JavaMail Session" ></topic>
+            <topic href="v21DevelopersGuide/topics/p25.html" label="Sending and Reading Messages Using JavaMail" >
+                <topic href="v21DevelopersGuide/topics/p25.html" label="To Send a Message Using JavaMail" ></topic>
+                <topic href="v21DevelopersGuide/topics/p25.html" label="To Read a Message Using JavaMail" ></topic>
+            </topic>
+        </topic>
+        <topic href="v21DevelopersGuide/topics/p26.html" label="20.Using the Application Server Management Extensions" >
+            <topic href="v21DevelopersGuide/topics/p26.html" label="About AMX" ></topic>
+            <topic href="v21DevelopersGuide/topics/p26.html" label="AMX MBeans" >
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Configuration MBeans" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Monitoring MBeans" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Utility MBeans" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Java EE Management MBeans" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Other MBeans" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="MBean Notifications" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Access to MBean Attributes" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p26.html" label="Dynamic Client Proxies" ></topic>
+            <topic href="v21DevelopersGuide/topics/p26.html" label="Connecting to the Domain Administration Server" ></topic>
+            <topic href="v21DevelopersGuide/topics/p26.html" label="Examining AMX Code Samples" >
+                <topic href="v21DevelopersGuide/topics/p26.html" label="The SampleMain Class" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Connecting to the DAS" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Starting an Enterprise Server" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Deploying an Archive" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Displaying the AMX MBean Hierarchy" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Setting Monitoring States" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Accessing AMX MBeans" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Accessing and Displaying the Attributes of an AMX MBean" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Listing AMX MBean Properties" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Performing Queries" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Monitoring Attribute Changes" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Undeploying Modules" ></topic>
+                <topic href="v21DevelopersGuide/topics/p26.html" label="Stopping an Enterprise Server" ></topic>
+            </topic>
+            <topic href="v21DevelopersGuide/topics/p26.html" label="Running the AMX Samples" >
+                <topic href="v21DevelopersGuide/topics/p26.html" label="To Run the AMX Sample" ></topic>
             </topic>
         </topic>
     </topic>
