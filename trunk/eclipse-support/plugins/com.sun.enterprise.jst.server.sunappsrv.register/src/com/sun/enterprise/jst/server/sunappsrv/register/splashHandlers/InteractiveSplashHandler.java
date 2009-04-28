@@ -89,7 +89,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		final String dir = V2InstallationConfigurer.getJDKDir();
 		if (!skipInstall) {
 			String v3RootDir = RegisterService.getv3PreludeLocation();
-			ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
+	//no need anymore for build 1.0.25 ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
 		}
 		Display.getDefault().asyncExec(new Runnable() {
 
