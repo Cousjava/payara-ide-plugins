@@ -179,6 +179,8 @@
 		<include name="modules/ejb/javax.*.jar" />
 		<include name="modules/webbeans-osgi*.jar" />
 		<include name="modules/bean-validator*.jar" />
+		<include name="modules/jsr311-api*.jar" />
+		<include name="modules/jersey-bundle*.jar" />
 	</fileset>
 	<!-- leave at least one generic jar as an archive so that validation works -->
 	<archive path="${sunappserver.rootdirectory}/modules/jsf-api.jar" />
