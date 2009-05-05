@@ -116,7 +116,8 @@ public class V2InstallationConfigurer {
 		
 		String lcOSName = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
 		boolean mac = lcOSName.startsWith("mac os x"); //$NON-NLS-1$
-		if (mac) {
+		boolean solaris = lcOSName.startsWith("sunos"); //$NON-NLS-1$
+		if (mac || solaris) {
 			return System.getProperty("java.home"); //$NON-NLS-1$
 		}
 		String file = getSystemJDKDir();
