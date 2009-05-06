@@ -62,6 +62,8 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.Runtime;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 
@@ -76,6 +78,7 @@ public class V2Configurator {
 
 		IServerType st = ServerCore.findServerType(Constants.SERVER_GLASSFISH_2_ID);
 		IRuntime runtime = createRuntime(glassfishLoc);
+
 		IServer[] servers = ServerCore.getServers();
 
 		// Check if we already have a runtime, if we have, we don't need to
@@ -104,11 +107,66 @@ public class V2Configurator {
 		configuration.put(SunAppServer.ADMINPASSWORD, Constants.V2_PASS);
 		configuration.put(SunAppServer.DOMAINNAME, createDomain(glassfishLoc));
 		configuration.put(SunAppServer.SERVERPORT, "" + FreePortManager.getAvailablePort(Constants.V2_INSTANCE_PORT));
-        configuration.put(SunAppServer.ADMINSERVERPORT, "" + FreePortManager.getAvailablePort(Constants.V2_ADMIN_PORT));
-        configuration.put(SunAppServer.SAMPLEDBDIR, sampleDB);
+		configuration.put(SunAppServer.ADMINSERVERPORT, "" + FreePortManager.getAvailablePort(Constants.V2_ADMIN_PORT));
+		configuration.put(SunAppServer.SAMPLEDBDIR, sampleDB);
 		sunAppServer.setServerInstanceProperties(configuration);
 
 		wc.save(true, null);
+
+	}
+
+	private static void ensureRuntimeHasCorrectDirectories(IRuntime runtime, String glassfishLoc) {
+		if (runtime instanceof Runtime) {
+			Runtime r = (Runtime) runtime;
+			
+			Map settings = r.getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, (Map) null);
+			String dir = (String) settings.get(SunAppServer.ROOTDIR);
+			
+			if (!glassfishLoc.equals(dir)) {
+				try {
+					Activator.logMessage("changing: " + dir + " -> " + glassfishLoc, null, IStatus.INFO);
+					settings.put(SunAppServer.ROOTDIR, glassfishLoc);
+			
+					// Saving changes for the runtime.
+					RuntimeDelegate delegate = (RuntimeDelegate) r.loadAdapter(RuntimeDelegate.class,
+							new NullProgressMonitor());
+					IRuntimeWorkingCopy runtimeWorkingCopy = delegate.getRuntimeWorkingCopy();
+					if (runtimeWorkingCopy != null)
+					runtimeWorkingCopy.save(true, new NullProgressMonitor());
+					else
+						runtime.createWorkingCopy().save(true, new NullProgressMonitor());
+					
+					// Changing location in domain. 
+					AntRunner ant = new AntRunner();
+
+					HashMap<String, String> map = new HashMap<String, String>();
+
+					map.put("previousDir", dir);//$NON-NLS-1$
+					map.put("newDir", glassfishLoc);//$NON-NLS-1$
+					map.put(Constants.DOMAIN_DIR, Platform.getLocation().append(".metadata").append(".plugins").append( //$NON-NLS-1$ //$NON-NLS-2$
+							Constants.SERVER_GLASSFISH_2_ID).toOSString());
+					try {
+						URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource("ant/updateDomains.xml"); //$NON-NLS-1$
+						String antFile = FileLocator.toFileURL(xml).getFile();
+
+						ant.setBuildFileLocation(antFile);
+						ant.addUserProperties(map);
+						ant.setArguments("-Dmessage=Building -verbose"); //$NON-NLS-1$
+						ant.addBuildLogger(TimestampedLogger.class.getName());
+
+						ant.run();
+					} catch (IOException e) {
+						Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat.format(
+								Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(),
+								Messages.EXCEPTION_OCCURRED);
+					}
+				} catch (CoreException e) {
+					Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat.format(
+							Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(),
+							Messages.EXCEPTION_OCCURRED);
+				}
+			}
+		}
 
 	}
 
@@ -129,7 +187,8 @@ public class V2Configurator {
 						new Status(IStatus.INFO, Activator.PLUGIN_ID, "glassfishV2Loc =" + glassfishLoc)); //$NON-NLS-1$
 			} catch (Exception e) {
 				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
-						MessageFormat.format(Messages.GettingGlassfishV21LocationProblem, e.getMessage()), Messages.EXCEPTION_OCCURRED);
+						MessageFormat.format(Messages.GettingGlassfishV21LocationProblem, e.getMessage()),
+						Messages.EXCEPTION_OCCURRED);
 			}
 		}
 		return glassfishLoc;
@@ -157,9 +216,8 @@ public class V2Configurator {
 
 			ant.run();
 		} catch (IOException e) {
-			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-					MessageFormat.format(Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(),
-					Messages.EXCEPTION_OCCURRED);
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat.format(
+					Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(), Messages.EXCEPTION_OCCURRED);
 		}
 		return domainName;
 	}
@@ -167,10 +225,10 @@ public class V2Configurator {
 	private static HashMap<String, String> configureDomain(String glassfishLoc, String domainName) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put(Constants.HTTPS_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_HTTPS_PORT));
-        map.put(Constants.ADMIN_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_ADMIN_PORT));
-        map.put(Constants.INSTANCE_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_INSTANCE_PORT));
-        map.put(Constants.IMQ_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_IMQ_PORT));
-        map.put(Constants.ORB_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_ORB_PORT)); 
+		map.put(Constants.ADMIN_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_ADMIN_PORT));
+		map.put(Constants.INSTANCE_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_INSTANCE_PORT));
+		map.put(Constants.IMQ_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_IMQ_PORT));
+		map.put(Constants.ORB_PORT, "" + FreePortManager.getAvailablePort(Constants.V2_ORB_PORT));
 		map.put(Constants.ADMIN_PASSWORD, Constants.V2_PASS);
 		map.put(Constants.ADMIN_USERNAME, Constants.V2_USER);
 		map.put(Constants.GLASSFISH_DIR, glassfishLoc);
@@ -195,9 +253,10 @@ public class V2Configurator {
 				count = Integer.parseInt(in.readLine()) + 1;
 				in.close();
 			} catch (Exception e) {
-				Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-						MessageFormat.format(Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(),
-						Messages.EXCEPTION_OCCURRED);
+				Activator
+						.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat.format(
+								Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(),
+								Messages.EXCEPTION_OCCURRED);
 			}
 		}
 		return count;
@@ -210,9 +269,8 @@ public class V2Configurator {
 			out.write("" + count); //$NON-NLS-1$
 			out.close();
 		} catch (Exception e) {
-			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-					MessageFormat.format(Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(),
-					Messages.EXCEPTION_OCCURRED);
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat.format(
+					Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(), Messages.EXCEPTION_OCCURRED);
 		}
 	}
 
@@ -222,6 +280,7 @@ public class V2Configurator {
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		for (IRuntime runtime : runtimes) {
 			if (runtime != null && runtime.getRuntimeType().equals(st.getRuntimeType())) {
+				ensureRuntimeHasCorrectDirectories(runtime, glassfishLocation);
 				return runtime;
 			}
 		}
