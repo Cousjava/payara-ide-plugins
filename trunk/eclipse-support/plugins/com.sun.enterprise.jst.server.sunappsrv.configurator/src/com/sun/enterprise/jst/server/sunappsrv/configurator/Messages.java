@@ -12,6 +12,7 @@ public class Messages extends NLS {
     public static String SAMPLE_JAVADB_DATABASE_DESCRIPTION;
     public static String SAMPLE_JAVADB_DATABASE;
 	public static String UNZIPPING_DERBY_SAMPLES_ENCOUNTERED_A_PROBLEM_0;
+	public static String MISSING_DOMAIN_XML_PATH;
     
     public static String CreatingGlassfishv21ServerConfiguration;
     public static String CreatingGlassfishvv3PreludeConfiguration;
