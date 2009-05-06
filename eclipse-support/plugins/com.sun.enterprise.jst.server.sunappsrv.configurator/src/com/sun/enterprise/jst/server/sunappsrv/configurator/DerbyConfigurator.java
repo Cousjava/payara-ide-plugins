@@ -83,6 +83,12 @@ public class DerbyConfigurator {
 			return;
 
 		Properties properties = new Properties();
+		if (domainXml == null) {
+			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, Messages.MISSING_DOMAIN_XML_PATH), MessageFormat
+					.format(Messages.CONFIGURING_SAMPLE_DERBY_DATABASE_ENCOUNTERED_A_PROBLEM, Messages.MISSING_DOMAIN_XML_PATH),
+					Messages.EXCEPTION_OCCURRED);
+			return;
+		}
 		readProperties(domainXml, properties);
 
 		String profileName = Messages.SAMPLE_JAVADB_DATABASE;
