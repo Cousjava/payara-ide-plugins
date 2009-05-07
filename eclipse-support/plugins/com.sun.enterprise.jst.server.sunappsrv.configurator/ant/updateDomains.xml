@@ -2,9 +2,12 @@
 <project default="update.domain">
 
 	<target name="update.domain">
-		<echo>${domain.dir}   ${previousDir}     ${newDir}</echo>
-		<replace dir="${domain.dir}">
-			<include name="**" />
+		<echo>${baseDir}   ${previousDir}     ${newDir}</echo>
+		<replace dir="${baseDir}">
+			<exclude name="org.eclipse.core.resources/**" />
+			<exclude name="**/*.log" />
+			<exclude name="**/log/*" />
+			<exclude name="**/*log*.txt" />
 			<replacefilter token="${previousDir}" value="${newDir}" />
 		</replace>
 	</target>
