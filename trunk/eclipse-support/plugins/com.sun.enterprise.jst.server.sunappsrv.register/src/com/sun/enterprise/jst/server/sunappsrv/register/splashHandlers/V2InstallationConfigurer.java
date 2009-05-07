@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
 import com.sun.enterprise.jst.server.sunappsrv.register.Messages;
+import com.sun.enterprise.jst.server.sunappsrv.utilities.DomainUtilities;
 
 public class V2InstallationConfigurer {
 
@@ -101,6 +102,7 @@ public class V2InstallationConfigurer {
 			BufferedWriter out = new BufferedWriter(new FileWriter(glassfishLoc + File.separator + ".installed")); //$NON-NLS-1$
 			out.write("1"); //$NON-NLS-1$
 			out.close();
+			DomainUtilities.writeInstallLocation(glassfishLoc.substring(0, glassfishLoc.length() - InteractiveSplashHandler.GLASSFISHV2_1.length()));
 		} catch (Exception e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e),
 					MessageFormat.format(Messages.CONFIGURING_GLASSFISH_V2_1_ENCOUNTERED_A_PROBLEM_0, e.getMessage()), Messages.EXCEPTION_OCCURRED);

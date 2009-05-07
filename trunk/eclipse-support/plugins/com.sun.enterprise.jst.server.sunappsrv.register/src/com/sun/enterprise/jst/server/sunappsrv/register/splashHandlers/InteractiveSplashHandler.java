@@ -52,6 +52,7 @@ import com.sun.enterprise.jst.server.sunappsrv.configurator.Startup;
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
 import com.sun.enterprise.jst.server.sunappsrv.register.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.register.service.RegisterService;
+import com.sun.enterprise.jst.server.sunappsrv.utilities.DomainUtilities;
 import com.sun.enterprise.registration.RegistrationException;
 import com.sun.enterprise.registration.RegistrationService.RegistrationReminder;
 
@@ -61,6 +62,7 @@ import com.sun.enterprise.registration.RegistrationService.RegistrationReminder;
  */
 public class InteractiveSplashHandler extends AbstractSplashHandler {
 
+	public static final String GLASSFISHV2_1 = "glassfishv2.1";
 	private boolean skipInstall = false;
 
 	public InteractiveSplashHandler() {
@@ -81,7 +83,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		showWizard(splash);
 
 		final String glassfishLoc = getGlassfishLocation();
-
+		DomainUtilities.ensureRuntimeHasCorrectDirectories(glassfishLoc.substring(0, glassfishLoc.length()-GLASSFISHV2_1.length()));
 		if (new File(glassfishLoc + File.separator + ".installed").exists()) {//$NON-NLS-1$
 			skipInstall = true;
 		}
@@ -133,7 +135,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 			// Get the eclipse installation location and from it V2
 			// installation directory.
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
-					+ "glassfishv2.1"; //$NON-NLS-1$
+					+ GLASSFISHV2_1; //$NON-NLS-1$
 			Activator.logMessage("glassfishLoc =" + glassfishLoc, null, IStatus.INFO); //$NON-NLS-1$
 		}
 		return glassfishLoc;
