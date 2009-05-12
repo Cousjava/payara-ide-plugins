@@ -90,6 +90,7 @@ public class V2Configurator {
 				return;
 			}
 		}
+		DomainUtilities.writeInstallLocation(glassfishLoc.substring(0, glassfishLoc.length() - Constants.GLASSFISHV2_1.length()));
 
 		progressMonitor.subTask(Messages.CreatingGlassFishV21Domain);
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
