@@ -41,6 +41,8 @@ public abstract class Constants {
 	public final static String SERVER_PRELUDE_ID = "com.sun.enterprise.jst.server.glassfishv3prelude"; //$NON-NLS-1$
 	public final static String DERBY_SAMPLE_ID = "com.sun.enterprise.jst.server.derbysample"; //$NON-NLS-1$
 
+	public static final String GLASSFISHV2_1 = "glassfishv2.1";
+	
 	public final static String ADMIN_PORT = "admin.port"; //$NON-NLS-1$
 	public final static String INSTANCE_PORT = "instance.port"; //$NON-NLS-1$
 	public final static String HTTPS_PORT = "https.port"; //$NON-NLS-1$
