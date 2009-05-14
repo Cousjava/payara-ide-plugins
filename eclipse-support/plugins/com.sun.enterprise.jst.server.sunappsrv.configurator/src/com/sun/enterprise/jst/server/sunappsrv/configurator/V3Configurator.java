@@ -89,6 +89,14 @@ public class V3Configurator {
 					server.delete();
 				}
 				if (runtime != null && server != null && runtime.equals(server.getRuntime())) {
+					Activator.logMessage("found an existing server at " + runtime.getLocation().toOSString(), null, IStatus.INFO);
+					String existingDomainLocation = runtime.getLocation().append("domains").	//$NON-NLS-1$ 
+						append("domain1").append("config").append("domain.xml").toOSString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				    File existingDomainXml = new File(existingDomainLocation);
+					Activator.logMessage("testing for existing domain.xml at " + existingDomainLocation + ", exists = " + existingDomainXml.exists(), null, IStatus.INFO);
+					if (existingDomainXml.exists()) {
+						return existingDomainLocation;
+					}
 					return null;
 				}
 			}
