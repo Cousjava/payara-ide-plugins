@@ -90,7 +90,8 @@ public class V2Configurator {
 				return;
 			}
 		}
-		DomainUtilities.writeInstallLocation(glassfishLoc.substring(0, glassfishLoc.length() - Constants.GLASSFISHV2_1.length()));
+		DomainUtilities.writeInstallLocation(glassfishLoc.substring(0, glassfishLoc.length()
+				- Constants.GLASSFISHV2_1.length()));
 
 		progressMonitor.subTask(Messages.CreatingGlassFishV21Domain);
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
@@ -240,7 +241,7 @@ public class V2Configurator {
 		gRun.setServerDefinitionId(gRun.getRuntime().getRuntimeType().getId());
 		gRun.setServerInstanceProperties(map);
 
-		// wc.setLocation(new Path(glassfishLocation));
+		wc.setLocation(new Path(glassfishLocation));
 		return wc.save(true, null);
 	}
 }
