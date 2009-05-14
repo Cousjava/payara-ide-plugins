@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- first release 2008-11-27 -->
 <configuration name="Tools Bundle For Eclipse"
-	releaseDate="2009-05-09" version="0.99.2">
+	releaseDate="2009-05-09" version="1.0">
 
 	<shortdescription>GlassFish Tools Bundle for Eclipse.</shortdescription>
 	<description />
@@ -23,7 +23,7 @@
 		<component id="glassfish-v2-linux-x86" />
 		<component id="glassfish-v2-opensolaris-x86" />
 		<component id="glassfish-v2-win32-x86" />
-        <component id="metro-plugins" />
+
 
 	</include>
 	<package>
