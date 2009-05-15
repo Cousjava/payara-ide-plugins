@@ -1,3 +1,4 @@
-bin
-plugins
+.DS_Store
 com.sun.enterprise.jst.server.sunappsrv.register_*.jar
+plugins
+bin
