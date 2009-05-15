@@ -83,16 +83,27 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		showWizard(splash);
 
 		final String glassfishLoc = getGlassfishLocation();
+		File installedPlaceholder = new File(glassfishLoc + File.separator + ".installed"); //$NON-NLS-1$
 		DomainUtilities.ensureRuntimeHasCorrectDirectories(glassfishLoc.substring(0, glassfishLoc.length()-Constants.GLASSFISHV2_1.length()));
-		if (new File(glassfishLoc + File.separator + ".installed").exists()) {//$NON-NLS-1$
-			skipInstall = true;
+		if (installedPlaceholder.exists()) {
+			long installedTime = installedPlaceholder.lastModified();
+			String asadminName = "asadmin" + (File.separator.equals("\\") ? ".bat" : "");
+			long substitutionTime = new File(glassfishLoc + File.separator + "bin" + File.separator + asadminName).lastModified();
+
+			// .installed file is written immediately after the substitution, so check for it being close in time
+			// in elapsed minutes
+			if ((Math.abs(installedTime - substitutionTime)/60000) <= 2) {
+				skipInstall = true;
+			}
 		}
+		Activator.logMessage("skip install is " + skipInstall, null, IStatus.INFO);
 		
 		final String dir = V2InstallationConfigurer.getJDKDir();
+		/* no need anymore for build 1.0.25 
 		if (!skipInstall) {
 			String v3RootDir = RegisterService.getv3PreludeLocation();
-	//no need anymore for build 1.0.25 ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
-		}
+			ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
+		}*/
 		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
