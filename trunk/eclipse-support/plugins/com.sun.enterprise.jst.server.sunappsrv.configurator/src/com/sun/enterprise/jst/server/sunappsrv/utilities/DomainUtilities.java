@@ -71,6 +71,12 @@ public class DomainUtilities {
 				String baseDir = Platform.getLocation().append(".metadata").append(".plugins") //$NON-NLS-1$ //$NON-NLS-2$ 
 						.toOSString();
 				replaceDirs(baseDir, dir, glassfishLoc);
+                                if (File.separator.equals("\\")){//special case for Windows...for replacing  C\:/Program Files
+                                    dir = dir.replaceFirst(":", "\\\\:");
+                                    glassfishLoc = glassfishLoc.replaceFirst(":", "\\\\:");
+                                    replaceDirs(baseDir, dir, glassfishLoc);
+
+                                }
 			} catch (CoreException e) {
 				Activator
 						.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat.format(
