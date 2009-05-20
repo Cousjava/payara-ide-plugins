@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="MySQL JDBC drivers" version="5.1.7">
+
+	<copyright>Copyright 2009 Sun Microsystems, Inc., 4150 Network Circle,
+		Santa Clara, California 95054, U.S.A. All rights reserved.</copyright>
+	<provider name="Sun Microsystems" />
+	<build type="binary" skip-packaging="yes">
+		<archive destination="eclipse"
+			url="http://mysql.he.net/Downloads/Connector-J/mysql-connector-java-5.1.7.tar.gz" />
+	</build>
+	<license type="gpl-2.0">
+		<terms />
+	</license>
+	<link type="homepage" url="http://www.mysql.com/" />
+	<shortdescription>MySQL JDBC drivers</shortdescription>
+	<package no-download="no">
+		<size os="win32">TODO</size>
+		<size os="macosx">TODO</size>
+		<size os="linux">TODO</size>
+	</package>
+	<description>MySQL JDBC drivers</description>
+
+
+</component>
