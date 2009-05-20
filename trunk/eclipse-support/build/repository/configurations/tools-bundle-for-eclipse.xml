@@ -16,6 +16,7 @@
 		<component id="eclipse-gef" />
 		<component id="eclipse-dtp" />
 		<component id="subclipse" />
+		<component id="m2eclipse" /> <!-- Maven eclipse plugin -->
 		<component id="eclipse-cvs" />
 		<component id="feature" />
 		<component id="glassfish-prelude-root" />
