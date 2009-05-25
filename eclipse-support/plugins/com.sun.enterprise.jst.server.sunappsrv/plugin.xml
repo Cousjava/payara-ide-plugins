@@ -1062,7 +1062,7 @@
 		label="%help"
 		visible="true">
              <menu
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaeedocMenu"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaee5docMenu"
                 label="%menu.javaee5.javadoc"
                 icon="icons/obj16/glassfishserver.gif"
                 path="help/helpEnd"
@@ -1070,6 +1070,15 @@
 				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc">              
                   <separator name="group1"/>
             </menu>	
+              <menu
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaee6docMenu"
+                label="%menu.javaee6.javadoc"
+                icon="icons/obj16/glassfishserver.gif"
+                path="help/helpEnd"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$JavaEE6JavaDoc"
+				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc">              
+                  <separator name="group1"/>
+            </menu>
             <menu
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu"
                 label="%menu.glassfishtopmenu"
@@ -1102,9 +1111,17 @@
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$JavaEE5JavaDoc"
 				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc"
                  menubarPath="help/helpEnd"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaeedocMenu">
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaee5docMenu">
             </action> 
-                       
+            <action
+                label="%menu.javaee6.javadoc"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$JavaEE6JavaDoc"
+				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc"
+                 menubarPath="help/helpEnd"
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaee6docMenu">
+            </action> 
+                               
            <action
                 label="%menu.v3.quickstart"
                 icon="icons/obj16/glassfishserver.gif"

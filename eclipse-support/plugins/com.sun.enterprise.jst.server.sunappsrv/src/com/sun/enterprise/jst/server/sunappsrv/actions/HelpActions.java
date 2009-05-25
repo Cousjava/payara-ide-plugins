@@ -78,5 +78,8 @@ public class HelpActions {
 	}	
 	public static class JavaEE5JavaDoc extends ShowURLAction {
 		public JavaEE5JavaDoc() { super("http://java.sun.com/javaee/5/docs/api/");}
+	}
+	public static class JavaEE6JavaDoc extends ShowURLAction {
+		public JavaEE6JavaDoc() { super("http://javadoc.glassfish.org/javaee6/apidoc/");}
 	}	
 }
