@@ -20,18 +20,37 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
      */
     public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
         IClasspathEntry[] ent = super.resolveClasspathContainer(runtime);
-        return processEntries(ent);
+        SunAppSrvPlugin.logMessage("IClasspathEntry[] resolveClasspathContainer(IRuntime runtime)  " + runtime.getRuntimeType().getId(),null);
+        return processEntries(runtime , ent);
     }
 
-    public IClasspathEntry[] processEntries(IClasspathEntry[] entries) {
+    public IClasspathEntry[] processEntries(IRuntime runtime ,IClasspathEntry[] entries) {
         try {
-            File jarFile = new File(GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        	
+          //  SunAppSrvPlugin.logMessage("URLPATH=" +GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath(),null);
+          //  SunAppSrvPlugin.logMessage("URLPATHfile=" +GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getFile(),null);
+
+       //     File jarFile = new File(""+GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            String javadocPath;
+            String relativeDocPath="!/docs/api";
+            if (runtime.getRuntimeType().getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){//GlassFish v3
+            	relativeDocPath="!/javaee6doc";
+            }
+       	    if (File.separator.equals("\\")) {
+       	    	javadocPath ="jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + relativeDocPath;
+       	    }else{
+       	    	javadocPath ="jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + relativeDocPath;
+       	    }
+          //  SunAppSrvPlugin.logMessage("entry-------::::" +javadocPath,null);
 
             for (int i = 0; i < entries.length; i++) {
+
                 if (entries[i].getExtraAttributes().length == 0) {
+                 //   SunAppSrvPlugin.logMessage("entries[i].getExtraAttributes().length" +entries[i].getExtraAttributes().length,null);
+
                     ClasspathEntry cpe = (ClasspathEntry) entries[i];
                     IClasspathAttribute[] newa = new IClasspathAttribute[1];
-                    newa[0] = JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, "jar:" + jarFile.toURI().toURL() + "!/docs/api");
+                    newa[0] = JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, javadocPath);
                     try {
                         Field f = cpe.getClass().getDeclaredField("extraAttributes");
                         f.setAccessible(true);
@@ -39,24 +58,24 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
                             f.set(cpe, newa);
                         //    SunAppSrvPlugin.logMessage("correct!!!set" + entries[i].getExtraAttributes().length + entries[i].getPath());
                         } catch (IllegalArgumentException e) {
-                            // TODO Auto-generated catch block
+                            SunAppSrvPlugin.logMessage("error processEntries" ,e);
                             e.printStackTrace();
                         } catch (IllegalAccessException e) {
-                            // TODO Auto-generated catch block
+                            SunAppSrvPlugin.logMessage("error processEntries" ,e);
                             e.printStackTrace();
                         }
                     } catch (SecurityException e) {
-                        // TODO Auto-generated catch block
+                        SunAppSrvPlugin.logMessage("error processEntries" ,e);
                         e.printStackTrace();
                     } catch (NoSuchFieldException e) {
-                        // TODO Auto-generated catch block
+                        SunAppSrvPlugin.logMessage("error processEntries" ,e);
                         e.printStackTrace();
                     }
                 }
 
             }
         } catch (Exception e1) {
-            // TODO Auto-generated catch block
+            SunAppSrvPlugin.logMessage("error processEntries" ,e1);
             e1.printStackTrace();
         }
         return entries;
@@ -72,6 +91,8 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
      */
     public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
         IClasspathEntry[] ent = super.getDelegateClasspathEntries(runtime, monitor);
-        return processEntries(ent);
+        SunAppSrvPlugin.logMessage("IClasspathEntry[] resolveClasspathContainer(IRuntime runtime)  " + runtime.getRuntimeType().getId(),null);
+
+        return processEntries(runtime , ent);
     }
 }
