@@ -1,11 +1,8 @@
 package com.sun.enterprise.jst.server.sunappsrv;
 
-import java.io.File;
 import java.lang.reflect.Field;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.core.IAccessRule;
 import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -31,16 +28,11 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
           //  SunAppSrvPlugin.logMessage("URLPATHfile=" +GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getFile(),null);
 
        //     File jarFile = new File(""+GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-            String javadocPath;
             String relativeDocPath="!/docs/api";
             if (runtime.getRuntimeType().getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){//GlassFish v3
             	relativeDocPath="!/javaee6doc";
             }
-       	    if (File.separator.equals("\\")) {
-       	    	javadocPath ="jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + relativeDocPath;
-       	    }else{
-       	    	javadocPath ="jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + relativeDocPath;
-       	    }
+            String javadocPath ="jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + relativeDocPath;
           //  SunAppSrvPlugin.logMessage("entry-------::::" +javadocPath,null);
 
             for (int i = 0; i < entries.length; i++) {
