@@ -153,10 +153,10 @@ public class V2Configurator {
 
 		// space in domaindir is not supported for v2 domain creation
 		String domainDir = map.get(Constants.DOMAIN_DIR);
-		if (domainDir.indexOf(' ') != -1) {
-			throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator", //$NON-NLS-1$
-					Messages.DomainDestinationDirectoryContainsSpace));
-		}
+//		if (domainDir.indexOf(' ') != -1) {
+//			throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator", //$NON-NLS-1$
+//					Messages.DomainDestinationDirectoryContainsSpace));
+//		}
 
 		try {
 			URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource("ant/createDomain.xml"); //$NON-NLS-1$
