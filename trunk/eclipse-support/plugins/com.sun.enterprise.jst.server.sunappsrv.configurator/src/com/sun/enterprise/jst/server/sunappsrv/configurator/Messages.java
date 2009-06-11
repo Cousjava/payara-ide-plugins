@@ -31,6 +31,7 @@ public class Messages extends NLS {
 	public static String ConfigurationOfPortsFailed;
 	public static String FileCopyingFailed;
 	public static String DomainDestinationDirectoryExists;
+	public static String DomainDestinationDirectoryContainsSpace;
 	public static String Bundled;
 
 	static {
