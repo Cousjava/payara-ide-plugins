@@ -93,4 +93,11 @@ only if the new code is made subject to such option by the copyright holder.
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="com.sun.enterprise.datatools.enablement.mysql"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
