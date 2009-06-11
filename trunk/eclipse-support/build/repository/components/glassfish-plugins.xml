@@ -61,6 +61,7 @@
 							<include name="*configurator*/**" />
 							<include name="*register*/**" />
 							<include name="*help*/**" />
+							<include name="*enablement*/**" />
 						</fileset>
 					</copy>
 					<copy todir="${gfplugins.work.folder}/features">
