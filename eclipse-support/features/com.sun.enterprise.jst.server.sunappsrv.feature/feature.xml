@@ -888,7 +888,9 @@ COPYRIGHT © 2008 THE ECLIPSE FOUNDATION. ALL RIGHTS RESERVED
       <discovery label="jMaki and GlassFish Application Server Eclipse Update Center" url="https://ajax.dev.java.net/eclipse/"/>
    </url>
 
-   <requires>
+   <!-- Dependency info removed as per best practices recommended by Tim deBoer -->
+   <!-- in issue https://bugs.eclipse.org/bugs/show_bug.cgi?id=246208           -->
+   <!--requires>
       <import plugin="org.apache.xerces"/>
       <import plugin="org.apache.ant"/>
       <import plugin="org.eclipse.jdt.core"/>
@@ -910,7 +912,7 @@ COPYRIGHT © 2008 THE ECLIPSE FOUNDATION. ALL RIGHTS RESERVED
       <import plugin="org.eclipse.debug.ui" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jdt.debug.ui" version="3.3.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jdt.ui"/>
-   </requires>
+   </requires-->
 
    <plugin
          id="com.sun.enterprise.jst.server.sunappsrv"
