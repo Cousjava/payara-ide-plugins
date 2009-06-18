@@ -250,19 +250,13 @@ public  class AssembleModules {
             if (deltas[i].getModuleResource().getName().endsWith (".class")){//class file
             	return true;
             }
-            if (deltas[i].getModuleResource().getName().endsWith ("web.xml")){//web.xml or sun-web.xml
-            	return true;
-            }
-            if (deltas[i].getModuleResource().getName().endsWith ("ejb-jar.xml")){//ejb-jar.xml or sun-ejb-jar.xml
-            	return true;
-            }
-            if (deltas[i].getModuleResource().getName().endsWith ("application.xml")){//application.xml or sun-application.xml
+            if (deltas[i].getModuleResource().getName().endsWith (".xml")){//all XML files, including DD files or config files
             	return true;
             }
             if (deltas[i].getModuleResource().getName().equalsIgnoreCase("manifest.mf") ){
             	return true;
             }
-            SunAppSrvPlugin.logMessage("AssembleModules neither class web or ejb-jarxml",null);
+            SunAppSrvPlugin.logMessage("AssembleModules neither class manifest or xml file",null);
           
             IModuleResourceDelta[] childrenDeltas= deltas[i].getAffectedChildren();
 	        if ( criticalResourceChangeThatNeedsARedeploy(childrenDeltas)){
