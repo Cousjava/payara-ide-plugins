@@ -40,7 +40,7 @@
     xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
-    name="GlassFish v3 promoted build" version="v0.2">
+    name="GlassFish v3 Java EE 6 build" version="v0.2">
     
     
     <property id="sunappserver.rootdirectory"  label="%sunappserver.rootdirectory"
