@@ -62,7 +62,7 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
 // Finally, we make use of the IProgressMonitor for task/progress bar reporting
 public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeDefinitionRuntimeDecorator implements
 	GenericServerCompositeDecorator {
-    private  String UNZIP_DIR_NAME = "glassfishv3-prelude"; //$NON-NLS-1$ //by default, v3 prelude otherwise v3 PROMOTED BUILD
+    private  String UNZIP_DIR_NAME = "glassfishv3-prelude"; //$NON-NLS-1$ //by default, v3 prelude otherwise v3 build
     private static final String BIN_DIR_NAME = "bin";  //$NON-NLS-1$
     private static final String ADMIN_SCRIPT_NAME = "asadmin"; //$NON-NLS-1$
 	private String fInstallDirName;
@@ -76,7 +76,7 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 	public InstallableServerTypeDefinitionRuntimeDecorator(ServerRuntime definition, Map initialProperties, 
 			IWizardHandle wizard, GenericServerRuntime runtime, String installDirName) {
 		super(definition, initialProperties,wizard,runtime);
-		//adding v3 PROMOTED BUILD support for download. root dir is a bit different
+		//adding v3 build support for download. root dir is a bit different
 		if (definition.getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){
 			UNZIP_DIR_NAME = "glassfishv3";
 		}
