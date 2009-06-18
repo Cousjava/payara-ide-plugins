@@ -54,7 +54,7 @@
             <param name="os" value="*"/>
             <param name="feature.base" value="${feature.temp.folder}"/>
         </antcall>
-        <jar destfile="${feature.destination}/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.27.jar" basedir="${feature.temp.folder}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.27"/>
+        <jar destfile="${feature.destination}/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.28.jar" basedir="${feature.temp.folder}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.28"/>
         <delete dir="${feature.temp.folder}"/>
     </target>
     
@@ -63,8 +63,8 @@
             <param name="destination.temp.folder" value="${feature.base}/plugins"/>
             <param name="target" value="gather.bin.parts"/>
         </antcall>
-        <mkdir dir="${feature.base}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.27"/>
-        <copy todir="${feature.base}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.27" failonerror="true" overwrite="false">
+        <mkdir dir="${feature.base}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.28"/>
+        <copy todir="${feature.base}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.28" failonerror="true" overwrite="false">
             <fileset dir="${basedir}" includes="feature.xml,glassfish.gif"			/>
         </copy>
         <!--eclipse.idReplacer featureFilePath="${feature.base}/features/org.jvnet.ajax.eclipse.jmaki.feature_0.9.2/feature.xml"  selfVersion="0.9.2" featureIds="" pluginIds="org.jvnet.ajax.eclipse.jmaki.feature,0.9.2,"/>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.sun.enterprise.jst.server.sunappsrv.feature"
-      label="GlassFish Java EE 5 Server"
-      version="1.0.27"
+      label="GlassFish Java EE 5, Java EE 6"
+      version="1.0.28"
       provider-name="java.net"
       image="glassfish.gif">
 
    <description url="https://glassfishplugins.dev.java.net">
       Provides development and publishing tools for GlassFish Java
-EE 5 Server (versions v1, v2, and v3 Prelude)
+EE 5 Server (v1, v2, and v3 Prelude) and Java EE 6 (v3)
    </description>
 
    <copyright url="http://www.example.com/copyright">
@@ -918,7 +918,7 @@ COPYRIGHT © 2008 THE ECLIPSE FOUNDATION. ALL RIGHTS RESERVED
          id="com.sun.enterprise.jst.server.sunappsrv"
          download-size="2000"
          install-size="2000"
-         version="1.0.27"
+         version="1.0.28"
          unpack="false"/>
 
 </feature>
