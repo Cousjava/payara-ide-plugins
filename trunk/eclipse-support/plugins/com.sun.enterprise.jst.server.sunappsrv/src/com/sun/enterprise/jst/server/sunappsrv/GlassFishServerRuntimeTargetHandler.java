@@ -17,7 +17,7 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
      */
     public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
         IClasspathEntry[] ent = super.resolveClasspathContainer(runtime);
-        SunAppSrvPlugin.logMessage("IClasspathEntry[] resolveClasspathContainer(IRuntime runtime)  " + runtime.getRuntimeType().getId(),null);
+   //     SunAppSrvPlugin.logMessage("IClasspathEntry[] resolveClasspathContainer(IRuntime runtime)  " + runtime.getRuntimeType().getId(),null);
         return processEntries(runtime , ent);
     }
 
@@ -83,7 +83,7 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
      */
     public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
         IClasspathEntry[] ent = super.getDelegateClasspathEntries(runtime, monitor);
-        SunAppSrvPlugin.logMessage("IClasspathEntry[] resolveClasspathContainer(IRuntime runtime)  " + runtime.getRuntimeType().getId(),null);
+    //    SunAppSrvPlugin.logMessage("IClasspathEntry[] resolveClasspathContainer(IRuntime runtime)  " + runtime.getRuntimeType().getId(),null);
 
         return processEntries(runtime , ent);
     }
