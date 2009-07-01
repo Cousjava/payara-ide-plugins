@@ -71,7 +71,7 @@
 		<concat destfile="fooFile2.properties">module.name.nospace=${module.name}</concat>
 		<replace file="fooFile2.properties" token=" " value="_" />
 		<property file="fooFile2.properties" />
-		<echo message="new value = ${module.name.nospace}"/>
+		<!--echo message="new module name with no space is ${module.name.nospace}"/-->
 		<delete file="fooFile2.properties"/>
 	</target>
 
