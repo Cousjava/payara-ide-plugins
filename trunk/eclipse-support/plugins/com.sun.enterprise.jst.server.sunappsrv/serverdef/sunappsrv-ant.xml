@@ -36,7 +36,7 @@
 
 <project name="deployextension"  default="deploy.j2ee.web"  basedir=".">
 
-    <target name="tools" >
+    <target name="tools" depends="replace.module.name.space">
         <!--echo message="${sunappserver.rootdirectory}" />
         <echo message="${sunappserver.serveraddress}" />
         <echo message="${sunappserver.serverportnumber}" />
@@ -66,15 +66,24 @@
         <property name="appclient" value="${sunappserver.rootdirectory}/bin/appclient${sunappserver-script-suffix}"/>
         <echo file ="passw"  message="AS_ADMIN_PASSWORD=${sunappserver.adminpassword}"/>
     </target>
+
+	<target name="replace.module.name.space">
+		<concat destfile="fooFile2.properties">module.name.nospace=${module.name}</concat>
+		<replace file="fooFile2.properties" token=" " value="_" />
+		<property file="fooFile2.properties" />
+		<echo message="new value = ${module.name.nospace}"/>
+		<delete file="fooFile2.properties"/>
+	</target>
+
     <target name="undeploy" depends="tools">
-        <echo message="Undeploying ${module.name}." />
+        <echo message="Undeploying ${module.name.nospace}." />
         <exec executable="${asadmin}">
             <arg line="undeploy"/>
             <arg line=" --host ${sunappserver.serveraddress}" />
             <arg line=" --port ${sunappserver.adminserverportnumber}" />
             <arg line=" --user ${sunappserver.adminname}" />
             <arg line=" --passwordfile passw" />
-            <arg line="'${module.name}'" />
+            <arg line="'${module.name.nospace}'" />
         </exec> 
     </target>
 
@@ -82,7 +91,7 @@
     <target name="deploy" depends="tools">
         <fail unless="app.module" message="app.module must be set before invoking this target. Otherwise there is no application to deploy."/>
         <fail unless="module.name" message="app.name must be set before invoking this target. Otherwise there is no application to deploy."/>
-        <condition property="app.url" value="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/${module.name}">
+        <condition property="app.url" value="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/${module.name.nospace}">
             <not>
                 <isset property="app.endpointuri"/>
             </not>
@@ -95,7 +104,8 @@
             <arg line=" --user ${sunappserver.adminname}" />
             <arg line=" --passwordfile passw" />
 
-            <arg line=" --name ${module.name}"/>
+            <arg line=" --name ${module.name.nospace}"/>
+            <arg line=" --contextroot ${module.name.nospace}"/>
             <arg line=" --force=true "/>
             <arg line=" --upload=true "/>
 
@@ -110,7 +120,7 @@
     <target name="deploydir" depends="tools">
         <fail unless="app.module" message="app.module must be set before invoking this target. Otherwise there is no application to deploy."/>
         <fail unless="module.name" message="app.name must be set before invoking this target. Otherwise there is no application to deploy."/>
-        <condition property="app.url" value="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/${module.name}">
+        <condition property="app.url" value="http://${sunappserver.serveraddress}:${sunappserver.serverportnumber}/${module.name.nospace}">
             <not>
                 <isset property="app.endpointuri"/>
             </not>
@@ -122,7 +132,8 @@
             <arg line=" --user ${sunappserver.adminname}" />
             <arg line=" --passwordfile passw" />
 
-            <arg line=" --name ${module.name}"/>
+            <arg line=" --name ${module.name.nospace}"/>
+            <arg line=" --contextroot ${module.name.nospace}"/>
             <arg line=" --force=true "/>
  
             <arg line="'${project.working.dir}/${module.name}'" />
@@ -132,24 +143,24 @@
   
     
     <target name="undeploy.j2ee.web">
-        <property name="app.module" value="${module.name}.war"/>
+        <property name="app.module" value="${module.name.nospace}.war"/>
         <antcall target="undeploy"/>
     </target>
     
     <target name="undeploy.j2ee.ejb">
-        <property name="app.module" value="${module.name}.jar"/>
+        <property name="app.module" value="${module.name.nospace}.jar"/>
         <antcall target="undeploy"/>
     </target>
 	<target name="undeploy.j2ee.ear">
-        <property name="app.module" value="${module.name}.ear"/>
+        <property name="app.module" value="${module.name.nospace}.ear"/>
         <antcall target="undeploy"/>
     </target>
 	
     <target name="deploy.j2ee.ejb">
-        <property name="app.module" value="${module.name}.jar"/>
-        <jar destfile="${module.name}.jar"> 
+        <property name="app.module" value="${module.name.nospace}.jar"/>
+        <jar destfile="${module.name.nospace}.jar"> 
             <!-- <zipfileset dir="${module.dir}"> -->
-            <zipfileset dir="${project.working.dir}/${module.name}">
+            <zipfileset dir="'${project.working.dir}/${module.name}'">
                 <include name="**/*.*"/>
                 <exclude name="**/*.java"/>
             </zipfileset>
@@ -189,7 +200,7 @@
 
     <target name="deploy.j2ee.web">
 
-        <property name="app.module" value="${module.name}.war"/>
+        <property name="app.module" value="${module.name.nospace}.war"/>
 		<antcall target="addresources">
 			<param name="subdirectory" value="WEB-INF" />
 		</antcall>
@@ -229,10 +240,10 @@
     </target>
 
     <target name="deploy.j2ee.ear" >
-        <property name="app.module" value="${project.working.dir}/${module.name}.ear"/>
-    <jar destfile="${project.working.dir}/${module.name}.ear"> 
+        <property name="app.module" value="${project.working.dir}/${module.name.nospace}.ear"/>
+    <jar destfile="${project.working.dir}/${module.name.nospace}.ear"> 
         <!-- <zipfileset dir="${module.dir}"> -->
-        <zipfileset dir="${project.working.dir}/${module.name}">
+        <zipfileset dir="'${project.working.dir}/${module.name}'">
             <include name="**/*.*"/>
             <exclude name="**/*.java"/>
         </zipfileset>

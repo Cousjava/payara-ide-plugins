@@ -36,6 +36,10 @@
 
 <project name="deployextension"  default="deploy.j2ee.web"  basedir=".">
 
+	<!-- NOTE: v3 deployment is now done via code, not the targets below.  However, if -->
+	<!-- we go back to using the targets below, space in project name support must be  -->
+	<!-- added - see module.name.nospace in the sunappsrv-ant.xml file for details.    -->
+
 	<target name="tools" >
 		<!--echo message="${sunappserver.rootdirectory}" />
         <echo message="${sunappserver.serveraddress}" />
