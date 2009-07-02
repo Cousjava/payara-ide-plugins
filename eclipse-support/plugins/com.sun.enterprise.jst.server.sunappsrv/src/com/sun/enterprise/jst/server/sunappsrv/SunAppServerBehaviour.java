@@ -442,7 +442,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		String arr[] = getStopCommand();
 		// stop the SJSAS using Runtime.exec
 		asyncExec(arr);
-		for (int i=0;i<30;i++){//max 30 seconds for stop.
+        int timeout = getServer().getStopTimeout();
+		for (int i=0;i<timeout;i++){
 			try {
 				Thread.sleep(1000);
 				SunAppSrvPlugin.logMessage("in SunAppServerBehaviour stopping...");
