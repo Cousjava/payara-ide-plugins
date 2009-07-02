@@ -192,15 +192,17 @@ public class SunAppServer extends GenericServer {
 	  }
 	  return Messages.incompleteDomainSetup;
   }
+  String domainValidationError=null;
   /* overide needed to store the admin server port and server port immediately at server creation
    * (non-Javadoc)
    * @see org.eclipse.jst.server.generic.core.internal.GenericServer#setServerInstanceProperties(java.util.Map)
    */
   public void setServerInstanceProperties(Map map) {
+       domainValidationError=null;
 	  String domdir = (String)map.get(DOMAINDIR);
 	  String domainName = (String)map.get(DOMAINNAME);
 	  if ((domdir!=null)&&(!domdir.startsWith("${"))){ //only if we are correctly setup...	//$NON-NLS-1$
-		  String domainValidationError = validateDomainExists(domdir, domainName);
+		  domainValidationError = validateDomainExists(domdir, domainName);
 		  if (domainValidationError!=null) {
 				MessageDialog message;
 				Shell shell = SunAppSrvPlugin.getInstance().getWorkbench()
@@ -211,30 +213,33 @@ public class SunAppServer extends GenericServer {
 						domainValidationError, 2, labels, 1);
 				message.open();
 				
-				throw new RuntimeException (Messages.TitleWrongDomainLocation +": "+domainValidationError); //$NON-NLS-1$
-		  }
+				// throw new RuntimeException (Messages.TitleWrongDomainLocation +": "+domainValidationError); //$NON-NLS-1$
+		  } else {
 		  SunInitialize();
 		  map.put(ADMINSERVERPORT, adminServerPortNumber);
 		  map.put(SERVERPORT, serverPortNumber);
+		  }
 	  }
 	  SunAppSrvPlugin.logMessage("in SunAppServer setServerInstanceProperties new MAP IS"+map);	//$NON-NLS-1$
 	  setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, map);
-  } 
- 
+  }
+  
   /* not yet, ui nor working well for generic validation
-   * public IStatus validate() {
-   
+   */
+  public IStatus validate() {
+      
    	   SunAppSrvPlugin.logMessage("in SunAppServer -------validate"+getDomainDir()+getdomainName());
 		IStatus s= super.validate();
-		
-		File f= new File(getDomainDir()+File.separator+getdomainName());
-		if (!f.exists()){
-			IStatus i= new Status(IStatus.ERROR,  "Glassfish",f.getAbsolutePath()+" does not exist" );
+        
+		//File f= new File(getDomainDir()+File.separator+getdomainName());
+		//if (!f.exists()){
+		  if (domainValidationError!=null) {
+              
+			IStatus i= new Status(IStatus.ERROR,  "Glassfish:",domainValidationError );
 			return i;
 		}
  		return s;
- 	}	
- 	*/
+ 	}   
   
   public String getKeepSessions() {
 	  String s =getProps().get(KEEPSESSIONS);
