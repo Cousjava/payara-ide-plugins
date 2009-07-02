@@ -151,12 +151,12 @@ public class V2Configurator {
 
 		HashMap<String, String> map = configureDomain(glassfishLoc, domainName);
 
-		// space in domaindir is not supported for v2 domain creation
+		// space in domaindir is only supported for v2 domain creation on windows
 		String domainDir = map.get(Constants.DOMAIN_DIR);
-//		if (domainDir.indexOf(' ') != -1) {
-//			throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator", //$NON-NLS-1$
-//					Messages.DomainDestinationDirectoryContainsSpace));
-//		}
+		if (!File.separator.equals("\\") && domainDir.indexOf(' ') != -1) { //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR, "com.sun.enterprise.jst.server.sunappsrv.configurator", //$NON-NLS-1$
+					Messages.DomainDestinationDirectoryContainsSpace));
+		}
 
 		try {
 			URL xml = Platform.getBundle(Activator.PLUGIN_ID).getResource("ant/createDomain.xml"); //$NON-NLS-1$
