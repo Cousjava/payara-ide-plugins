@@ -280,8 +280,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
    	}
 
         boolean viewLog=false;
-
-        for (int i=0;i<120;i++){//max 60 seconds for start.
+        int timeout = server.getStartTimeout();
+        for (int i=0;i<timeout;i++){
             try {
             	monitor.worked(10);
                Thread.sleep(500);//1/2 secs
