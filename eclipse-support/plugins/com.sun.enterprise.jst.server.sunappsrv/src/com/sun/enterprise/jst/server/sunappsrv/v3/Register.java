@@ -37,6 +37,8 @@
 // </editor-fold>
 package com.sun.enterprise.jst.server.sunappsrv.v3;
 
+import java.net.URL;
+
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -51,7 +53,10 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
 import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
@@ -88,12 +93,29 @@ public class Register extends MultiPageEditorPart implements IResourceChangeList
         pageTextTitle = pageText;
     }
 
+    public String getURL() {
+    	return URLtoShow;
+    }
+
     /**
      * Creates page 1 of the multi-page editor,
      * which allows you to change the font used in page 2.
      */
     void createPage1() {
         parent = getContainer();
+        // workaround for eclipse bug 77217
+        // OpenSolaris doesn't have internal browser set up properly
+        if ("SunOS".equals(System.getProperty("os.name"))) {
+    		IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
+    		IWebBrowser externalBrowser;
+			try {
+				externalBrowser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
+		   		externalBrowser.openURL(new URL(URLtoShow));
+		   	 } catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        } else { // end workaround
 
         browser = new Browser(getContainer(), SWT.NONE);
         browser.setUrl(URLtoShow);
@@ -112,6 +134,7 @@ public class Register extends MultiPageEditorPart implements IResourceChangeList
         });
         int index = addPage(browser);
         setPageText(index, pageTextTitle);
+        }
     }
 
     /**
