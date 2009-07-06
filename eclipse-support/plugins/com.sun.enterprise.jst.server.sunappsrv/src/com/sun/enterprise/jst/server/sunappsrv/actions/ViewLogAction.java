@@ -65,7 +65,7 @@ public class ViewLogAction extends AppServerContextAction{
 			GlassFishConsole.showConsole(new File(logFile));
 			
 		} catch (Exception e) {
-	           SunAppSrvPlugin.logMessage("Error opening browser: "+e.getMessage());
+	           SunAppSrvPlugin.logMessage("Error opening log: "+e.getMessage());
 
 		}
 	}
