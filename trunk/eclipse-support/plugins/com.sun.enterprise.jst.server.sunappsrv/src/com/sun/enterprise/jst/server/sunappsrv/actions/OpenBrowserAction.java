@@ -38,13 +38,7 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.actions;
 
-import java.net.URL;
-
-import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.AdminURLHelper;
 
@@ -61,9 +55,7 @@ public class OpenBrowserAction extends AppServerContextAction {
 			return;
 		}
 		try {
-			IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
-			IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
-			browser.openURL(new URL(AdminURLHelper.getURL("", server)));
+			showPageInDefaultBrowser(AdminURLHelper.getURL("", server));
 		} catch (Exception e) {
 	           SunAppSrvPlugin.logMessage("Error opening browser: "+e.getMessage());
 

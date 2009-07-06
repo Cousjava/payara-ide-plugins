@@ -35,46 +35,52 @@
  * holder.
  */
 // </editor-fold>
-
 package com.sun.enterprise.jst.server.sunappsrv.actions;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.server.core.IServer;
 
-/**
- *
- * @author Ludovic.Champenois@Sun.COM
- */
-public class PreludeRegistrationAction extends OpenBrowserEditorAction  {
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
-    /**
-     * The constructor.
-     */
-    public PreludeRegistrationAction() {
-    	super ("Register your GlassFish Enterprise Server...",getImageDescriptorFromlocalImage("icons/obj16/registration.png"));
-    }
-
- 	public void execute (IServer server) {
- 		// for now, do registration through url whether v2 or v3
- 		// once registration plugin is ready, consider using it (eclipse gui) instead
- 		// if we do, we will need a plugin dependency on that module or to do some refactoring here
- 		// if we do not, and continue to use code which is called v3 for both v2 & v3, 
- 		// we should think about renaming this action and moving Register class out of v3 package
-      	     	
-		if (accept(server)==false){
-			showMessageDialog();
-			return;
-		}
-		showPageInBrowser(server);
-    }
-
-	protected String getEditorClassName() { return "com.sun.enterprise.jst.server.sunappsrv.v3.Register"; }
-
- 	protected String getIconName() { return "icons/obj16/sunappsrvs.gif"; }
-
- 	protected String getURL() { return new com.sun.enterprise.jst.server.sunappsrv.v3.Register().getURL(); }
- 
-	@Override
-	public boolean accept(IServer server) {
-		return acceptIfServerRunning(server);
+public abstract class OpenBrowserEditorAction extends AppServerContextAction {
+	public OpenBrowserEditorAction(String name, ImageDescriptor image) {
+		super(name, image);
 	}
+
+	abstract protected String getEditorClassName();
+	abstract protected String getIconName();
+	abstract protected String getURL();
+
+ 	protected void showPageInBrowser(IServer server) {
+	    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+	    String className = getClass().getName();
+	    String editorClassName = getEditorClassName();
+	    try {
+	        SunAppSrvPlugin.logMessage(className + " run "+server);
+	        // workaround for eclipse bug 77217
+	        // OpenSolaris doesn't have internal browser set up properly
+	        if ("SunOS".equals(System.getProperty("os.name"))) {
+	        	showPageInDefaultBrowser(getURL());
+	        } else { // end workaround
+	        IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(getIconName()));
+	        page.openEditor(new FileEditorInput(file), editorClassName);
+	        }
+	    } catch (Exception e) {
+	        SunAppSrvPlugin.logMessage(className + " " + e);
+	        try {
+	            page.openEditor(null, editorClassName);
+	        } catch (PartInitException e1) {
+	            // TODO Auto-generated catch block
+	            e1.printStackTrace();
+	        }
+	        e.printStackTrace();
+	    }
+    }
 }

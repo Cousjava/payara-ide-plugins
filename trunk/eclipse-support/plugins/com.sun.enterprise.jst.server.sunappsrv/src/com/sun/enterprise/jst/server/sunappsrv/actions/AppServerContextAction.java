@@ -60,8 +60,11 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.SelectionProviderAction;
+import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
@@ -283,4 +286,11 @@ IWorkbenchWindowActionDelegate {
 		// TODO Auto-generated method stub
 		
 	}
+
+ 	protected void showPageInDefaultBrowser(String url) throws PartInitException, MalformedURLException {
+		IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
+		IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
+		browser.openURL(new URL(url));
+	}
+
 }
