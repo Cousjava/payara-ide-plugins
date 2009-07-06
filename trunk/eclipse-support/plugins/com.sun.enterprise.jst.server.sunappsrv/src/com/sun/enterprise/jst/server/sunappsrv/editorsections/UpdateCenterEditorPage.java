@@ -50,11 +50,8 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.ServerEvent;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
-
-import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.AdminURLHelper;
-import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
 
 /**
  *
@@ -113,6 +110,21 @@ public class UpdateCenterEditorPage extends ServerEditorPart {
     @Override
     public void createPartControl(Composite arg0) {
         SunAppSrvPlugin.logMessage("createPartControl ");
+        // workaround for eclipse bug 77217
+        // OpenSolaris doesn't have internal browser set up properly, but it doesn't make sense
+        // to show an editor tab in the external browser like for actions
+        if ("SunOS".equals(System.getProperty("os.name"))) {
+            SunAppSrvPlugin.logMessage("Can't show UC in tab for Open Solaris");
+    		/*IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
+    		IWebBrowser externalBrowser;
+			try {
+				externalBrowser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
+		   		externalBrowser.openURL(new URL(URLtoShow));
+		   	 } catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+        } else { // end workaround
         browser = new Browser(arg0, SWT.NONE);
         browser.setUrl(URLtoShow);
         final Composite parent = arg0;
@@ -128,6 +140,7 @@ public class UpdateCenterEditorPage extends ServerEditorPart {
                 browser.setSize(c.x, c.y);
             }
         });
+        }
     }
 
     /* (non-Javadoc)
