@@ -109,7 +109,7 @@
             <arg line=" --force=true "/>
             <arg line=" --upload=true "/>
 
-            <arg line="'${app.module}'" />
+            <arg line="'${project.working.dir}/${app.module}'" />
         </exec>
         <antcall target="deploy-url-message"/>
     </target>
@@ -156,11 +156,11 @@
         <antcall target="undeploy"/>
     </target>
 	
-    <target name="deploy.j2ee.ejb">
+    <target name="deploy.j2ee.ejb" depends="replace.module.name.space">
         <property name="app.module" value="${module.name.nospace}.jar"/>
-        <jar destfile="${module.name.nospace}.jar"> 
+        <jar destfile="${project.working.dir}/${module.name.nospace}.jar"> 
             <!-- <zipfileset dir="${module.dir}"> -->
-            <zipfileset dir="'${project.working.dir}/${module.name}'">
+            <zipfileset dir="${project.working.dir}/${module.name}">
                 <include name="**/*.*"/>
                 <exclude name="**/*.java"/>
             </zipfileset>
@@ -239,11 +239,11 @@
 
     </target>
 
-    <target name="deploy.j2ee.ear" >
-        <property name="app.module" value="${project.working.dir}/${module.name.nospace}.ear"/>
+    <target name="deploy.j2ee.ear" depends="replace.module.name.space">
+        <property name="app.module" value="${module.name.nospace}.ear"/>
     <jar destfile="${project.working.dir}/${module.name.nospace}.ear"> 
         <!-- <zipfileset dir="${module.dir}"> -->
-        <zipfileset dir="'${project.working.dir}/${module.name}'">
+        <zipfileset dir="${project.working.dir}/${module.name}">
             <include name="**/*.*"/>
             <exclude name="**/*.java"/>
         </zipfileset>
