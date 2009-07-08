@@ -53,10 +53,8 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import com.sun.enterprise.jst.server.sunappsrv.configurator.Constants;
 import com.sun.enterprise.jst.server.sunappsrv.register.Activator;
 import com.sun.enterprise.jst.server.sunappsrv.register.Messages;
-import com.sun.enterprise.jst.server.sunappsrv.utilities.DomainUtilities;
 
 public class V2InstallationConfigurer {
 
