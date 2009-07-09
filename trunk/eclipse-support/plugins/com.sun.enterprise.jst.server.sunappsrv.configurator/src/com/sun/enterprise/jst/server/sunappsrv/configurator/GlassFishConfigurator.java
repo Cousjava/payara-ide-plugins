@@ -58,4 +58,10 @@ public class GlassFishConfigurator {
 		progressMonitor.setTaskName(Messages.UnzippingDemoDerbyDatabase);
 		return DerbyConfigurator.configureSample(progressMonitor);
 	}
+
+	// workaround for eclipse bug 94497
+	public static void configureExternalBrowser(IProgressMonitor progressMonitor) throws CoreException {
+		progressMonitor.setTaskName(Messages.RegisteringDefaultSolarisBrowser);
+		SolarisBrowserConfigurator.configure(progressMonitor);
+	} // end workaround
 }

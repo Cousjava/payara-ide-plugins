@@ -18,6 +18,9 @@ public class Messages extends NLS {
     public static String CreatingGlassfishvv3PreludeConfiguration;
     public static String CreatingDemoDerbyDatabase;
     public static String UnzippingDemoDerbyDatabase;
+	// workaround for eclipse bug 94497
+    public static String RegisteringDefaultSolarisBrowser;
+    // end workaround
 
 	public static String CreatingServerConfigurationsProblem;
 
