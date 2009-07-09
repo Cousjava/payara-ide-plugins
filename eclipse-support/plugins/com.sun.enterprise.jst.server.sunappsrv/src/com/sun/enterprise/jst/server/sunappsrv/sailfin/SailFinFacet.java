@@ -54,7 +54,6 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 public class SailFinFacet implements IDelegate {
 
     @SuppressWarnings("deprecation")
-    @Override
     public void execute(IProject prj, IProjectFacetVersion arg1, Object arg2,
             IProgressMonitor monitor) throws CoreException {
         IDataModel model = DataModelFactory
