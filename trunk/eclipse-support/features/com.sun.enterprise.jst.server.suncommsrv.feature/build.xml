@@ -94,8 +94,9 @@
 
     
     <target name="clean" depends="init" description="Clean the feature: com.sun.enterprise.jst.server.suncommsrv.feature of all the zips, jars and logs created.">
-        <delete file="${feature.destination}/com.sun.enterprise.jst.server.suncommsrv.feature_${feature.version}.jar"/>
-        <delete file="${feature.destination}/com.sun.enterprise.jst.server.suncommsrv.feature_${feature.version}.bin.dist.zip"/>
+        <delete>
+		<fileset dir="${feature.destination}" includes="**/com.sun.enterprise.jst.server.suncommsrv.feature_*"/>
+	</delete>
         <delete dir="${feature.temp.folder}"/>
         <antcall target="all.children">
             <param name="target" value="clean"/>
