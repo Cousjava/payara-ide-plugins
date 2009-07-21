@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- first release 2008-11-27 -->
 <configuration name="Tools Bundle For Eclipse"
-	releaseDate="2009-05-09" version="1.0.6">
+	releaseDate="2009-05-09" version="1.0.6"> 
 
 	<shortdescription>GlassFish Tools Bundle for Eclipse.</shortdescription>
 	<description />
