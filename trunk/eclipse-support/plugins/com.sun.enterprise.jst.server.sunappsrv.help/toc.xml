@@ -4,37 +4,51 @@
 <toc label="GlassFish Tools Bundle for Eclipse User Guide">
 
     <topic href="topics/p3.html" label="1. GlassFish Tools Bundle for Eclipse User Guide" >
+        
     </topic>
-    <topic href="topics/p4.html" label="2. Installing GlassFish Tools Bundle for Eclipse" >
-             <topic label="To Install on Windows Platform" href="topics/p4.html"></topic>
-            <topic href="topics/p4.html" label="To Install on Mac OS Platform" ></topic>
-            <topic href="topics/p4.html" label="To Install on Linux Platform" ></topic>
-            <topic href="topics/p4.html" label="To Uninstall" ></topic>
-            <topic href="topics/p4.html" label="Troubleshooting" ></topic>
+    <topic href="topics/p4.html" label="2. Installing GlassFish Tools Bundle for Eclipse">
+        <topic href="topics/p4.html" label="To Install on Windows Platform" ></topic>
+        <topic href="topics/p4.html" label="To Install on Mac OS Platform" ></topic>
+        <topic href="topics/p4.html" label="To Install on Linux Platform" ></topic>
+        <topic href="topics/p4.html" label="To Install on Open Solaris Platform" ></topic>
+        <topic href="topics/p4.html" label="To Uninstall" ></topic>
+        <topic href="topics/p4.html" label="Troubleshooting" ></topic>
     </topic>
-    <topic href="topics/p5.html" label="3. Configuring and Using GlassFish Server from Eclipse IDE" >
-            <topic href="topics/p5.html" label="To create a new GlassFish Server" ></topic>
-            <topic href="topics/p5.html" label="To start GlassFish Server" ></topic>
-            <topic href="topics/p5.html" label="To stop GlassFish Server" ></topic>
-            <topic href="topics/p5.html" label="To restart GlassFish Server" ></topic>
-            <topic href="topics/p5.html" label="To start GlassFish Server in debug mode" ></topic>
-            <topic href="topics/p5.html" label="To publish Projects" ></topic>
-            <topic href="topics/p5.html" label="To clean published Projects" ></topic>
-            <topic href="topics/p5.html" label="To add and remove Projects" ></topic>
-            <topic href="topics/p5.html" label="To display GlassFish Sever properties" ></topic>
-            <topic href="topics/p5.html" label="To access GlassFish Server Administration Console" ></topic>
-            <topic href="topics/p5.html" label="To register GlassFish Server Installation" ></topic>
-            <topic href="topics/p5.html" label="To use GlassFish Update Center from Eclipse IDE" ></topic>
-            <topic href="topics/p5.html" label="To use Help menu for GlassFish Server" ></topic>
-            <topic href="topics/p5.html" label="To change Preferences for GlassFish Server " ></topic>
-            <topic href="topics/p5.html" label="To monitor TCP/IP for Web Applications with GlassFish Server" ></topic>
+    <topic href="topics/p5.html" label="3. Configuring and Using GlassFish Server from Eclipse IDE">
+        <topic href="topics/p5.html" label="To create a new GlassFish Server" ></topic>
+        <topic href="topics/p5.html" label="To start GlassFish Server" ></topic>
+        <topic href="topics/p5.html" label="To stop GlassFish Server" ></topic>
+        <topic href="topics/p5.html" label="To restart GlassFish Server" ></topic>
+        <topic href="topics/p5.html" label="To start GlassFish Server in debug mode" ></topic>
+        <topic href="topics/p5.html" label="To publish Projects" ></topic>
+        <topic href="topics/p5.html" label="To clean published Projects" ></topic>
+        <topic href="topics/p5.html" label="To add and remove Projects" ></topic>
+        <topic href="topics/p5.html" label="To display GlassFish Sever properties" ></topic>
+        <topic href="topics/p5.html" label="To access GlassFish Server Administration Console" ></topic>
+        <topic href="topics/p5.html" label="To register GlassFish Server Installation" ></topic>
+        <topic href="topics/p5.html" label="To use GlassFish Update Center from Eclipse IDE" ></topic>
+        <topic href="topics/p5.html" label="To use Help Menu for GlassFish Server" ></topic>
+        <topic href="topics/p5.html" label="To change Preferences for GlassFish Server Plug-in" ></topic>
+        <topic href="topics/p5.html" label="To monitor TCP/IP for Web Applications with GlassFish Server" ></topic>
+        <topic href="topics/p5.html" label="To view Sample JavaDB" ></topic>
+        <topic href="topics/p5.html" label="Miscellaneous" ></topic>
     </topic>
-    <topic href="topics/p6.html" label="4. Developing Applications for GlassFish Server from Eclipse IDE" >
-             <topic href="topics/p6.html" label="To Create a new Web Application project for GlassFish Server" ></topic>
-            <topic href="topics/p6.html" label="To add a Servlet and use Session Preservation feature" ></topic>
-            <topic href="topics/p6.html" label="To debug a Servlet with the GlassFish Server" ></topic>
-            <topic href="topics/p6.html" label="To Create a New Data Source and register it to the GlassFish Server" ></topic>
-            <topic href="topics/p6.html" label="To create a JPA Project for GlassFish Server" ></topic>
+    <topic href="topics/p6.html" label="4. Developing Applications for GlassFish Server from Eclipse IDE">
+        <topic href="topics/p6.html" label="To create a new Web Application project for GlassFish Server" ></topic>
+        <topic href="topics/p6.html" label="To add a Servlet and use Session Preservation feature" ></topic>
+        <topic href="topics/p6.html" label="To debug a Servlet with GlassFish Server" ></topic>
+        <topic href="topics/p6.html" label="To use the preconfigured MySQL Database Connector with GlassFish Server" ></topic>
+        <topic href="topics/p6.html" label="To create a new Data Source and register it with GlassFish Server" ></topic>
+        <topic href="topics/p6.html" label="To create a JPA Project for GlassFish Server" ></topic>
+        <topic href="topics/p6.html" label="Additional Resources" ></topic>
     </topic>
-    <topic href="topics/p7.html" label="Using Popup Menu" ></topic>
+    <topic href="topics/p7.html" label="5. Getting started with Metro">
+        <topic href="topics/p7.html" label="Developing Web Applications using Metro" ></topic>
+        <topic href="topics/p7.html" label="Install Metro on GlassFish Server" ></topic>
+        <topic href="topics/p7.html" label="To install Metro for GlassFish Server v3 Prelude" ></topic>
+        <topic href="topics/p7.html" label="To create a new Metro based Web Service" ></topic>
+        <topic href="topics/p7.html" label="To create a new Metro based Web Service from WSDL" ></topic>
+        <topic href="topics/p7.html" label="Configure the Web Service policies" ></topic>
+    </topic>
+    <topic href="topics/p8.html" label="A. Using Popup Menu" ></topic>
 </toc>

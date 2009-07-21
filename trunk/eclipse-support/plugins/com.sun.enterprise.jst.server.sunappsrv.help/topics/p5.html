@@ -5,7 +5,7 @@
 <title>Configuring and Using GlassFish Server from Eclipse IDE - GlassFish Tools Bundle for Eclipse User Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-02-01">
+<meta name="date" content="2009-05-01">
 </head>
 
 <body>
@@ -24,15 +24,15 @@
 </table>
 
 
-<a name="chapter2"></a>Chapter&#160;3<h3>Configuring and Using GlassFish Server from Eclipse IDE</h3><p>When the GlassFish Tools Bundle for Eclipse installation is complete, you can configure
-and take advantage of the features of the GlassFish Server. This chapter seeks
-to introduce you to configuring and using the GlassFish Server from Eclipse IDE.
-The following topics describe the process of configuring the GlassFish Server from Eclipse
-IDE.</p>
+<a name="chapter2"></a>Chapter&#160;3<h3>Configuring and Using GlassFish Server from Eclipse IDE</h3><p>This chapter introduces you to configuring and using the GlassFish Server from Eclipse
+IDE. When GlassFish Tools Bundle for Eclipse is installed successfully, you can configure
+it and take advantage of advanced features available in GlassFish Servers. The following
+topics describe the process of configuring the GlassFish Server from the Eclipse IDE.</p><p>Several of the following procedures use Server popup menu. For more information on
+using the Server popup menu, see <a href="p8.html">Appendix&#160;A, Using Popup Menu</a>.</p>
 
 <a name="to-administer"></a><h3></h3>
 
-<ul><li><p><a href="#to-create">To create a new GlassFish Server</a></p></li>
+<ul><li><p><a href="#to-create">To create a new Server</a></p></li>
 <li><p><a href="#to-start">To start GlassFish Server</a></p></li>
 <li><p><a href="#to-stop">To stop GlassFish Server</a></p></li>
 <li><p><a href="#to-restart">To restart GlassFish Server</a></p></li>
@@ -44,171 +44,207 @@ IDE.</p>
 <li><p><a href="#to-access">To access GlassFish Server Administration Console</a></p></li>
 <li><p><a href="#to-register">To register GlassFish Server Installation</a></p></li>
 <li><p><a href="#to-update">To use GlassFish Update Center from Eclipse IDE</a></p></li>
-<li><p><a href="#to-helpmenu">To use Help menu for GlassFish Server</a></p></li>
-<li><p><a href="#to-gp">To change Preferences for GlassFish Server </a></p></li>
-<li><p><a href="#to-tcpip">To monitor TCP/IP for Web Applications with GlassFish Server</a></p></li></ul>
+<li><p><a href="#to-helpmenu">To use Help Menu for GlassFish Server</a></p></li>
+<li><p><a href="#to-gp">To change Preferences for GlassFish Server Plug-in</a></p></li>
+<li><p><a href="#to-tcpip">To monitor TCP/IP for Web Applications with GlassFish Server</a></p></li>
+<li><p><a href="#to-viewdb">To view Sample JavaDB</a></p></li>
+<li><p><a href="#misc">Miscellaneous</a></p></li></ul>
 
 
-<a name="to-create"></a><h4>To create a new GlassFish Server</h4><p>The GlassFish Tools Bundle for Eclipse will install a new instance of GlassFish
-v2.1 Server and GlassFish v3 Prelude for you automatically. If you need to
-create another new instance of the GlassFish Server, use the following procedure.</p><ol>
-<li><b>Select Servers tab.</b></li>
-<li><b>From GlassFish Server popup menu, select New.</b></li>
-<li><b>From New Server page, complete the required parameters:</b><p><i>Server's host name</i></p><p><i>Server type</i></p><p><i>Server name</i></p><p><i>Server Runtime Environment</i></p></li>
-<li><b>Click Next to complete Server configuration details.</b></li>
-<li><b>Click Next to see Add and Remove Projects page.</b><p>Select any projects you want to add to the new GlassFish Server</p></li>
-<li><b>Click Finish to complete the new Server creation.</b></li></ol>
+<a name="to-create"></a><h4>To create a new Server</h4><p>The GlassFish Tools Bundle for Eclipse, by default, installs a new instance of
+GlassFish v2.1 Server and GlassFish v3 Prelude Server (Bundled GlassFish v2.1 and Bundled
+GlassFish v3 Prelude) for you. If you want to add a new
+Server to Eclipse IDE, use the following procedure. In some cases, this option
+also downloads and installs a new Server. For example: GlassFish v3 Promoted Build</p><p>To create a new Server instance, use the following procedure:</p><ol>
+<li><b>Select Servers view.</b></li>
+<li><b>Select New, from Server popup menu.</b><p>New Server page is displayed</p></li>
+<li><b>Provide GlassFish Server details.</b><p>For example, provide details for the following:</p><p><i>Server's host name</i></p><p><i>Server type</i></p><p><i>Server name</i></p><p><i>Server Runtime Environment</i></p></li>
+<li><b>Click Next.</b><p>Complete Server configuration. For example, provide values for the following:</p><p><i>Domain Directory</i></p><p><i>Domain Name</i></p><p><i>Administrator ID</i></p><p><i>Administrator password</i></p></li>
+<li><b>Click Next.</b><p>Add and Remove Projects page is displayed.</p><p>Select the existing projects, you want to add to the new Server.</p></li>
+<li><b>Click Finish.</b><p>New Server creation is completed.</p></li></ol>
 
-<a name="to-start"></a><h4>To start GlassFish Server</h4><p>This task describes the process of starting your GlassFish Server after installation. </p>
-<hr><p><b>Note - </b>By default, Eclipse Workbench is set to Java EE Perspective. Skip Step 1
-if the Workbench is already set to Java EE Perspective.</p>
+<a name="to-start"></a><h4>To start GlassFish Server</h4><p>To start your GlassFish Server from Eclipse IDE, use the following procedure:</p>
+<hr><p><b>Note - </b>By default, Eclipse <tt>Workbench</tt> is set to Java EE Perspective. Skip Step 1
+if <tt>Workbench</tt> is already set to Java EE Perspective.</p>
 <hr>
-<h6>Before You Begin</h6><p>Make sure the Eclipse IDE is open. </p><ol>
-<li><b>Set the Eclipse IDE to Java EE Perspective, by selecting Window->Open Perspective->Java EE
-Perspective.</b><p>Eclipse IDE is set to Java EE Perspective.</p></li>
-<li><b>Select the GlassFish Server instance you want to start, from Servers tab menu.</b></li>
-<li><b>Start the GlassFish Server from Server Popup menu.</b>
-<hr><p><b>Note - </b>You can learn more about how to access GlassFish Server Popup menu from
-<a href="p7.html">Appendix&#160;A, Using Popup Menu</a></p>
+<ol>
+<li><b>Select Window<tt>-></tt>Open Perspective<tt>-></tt>Java EE Perspective, to set Eclipse IDE to Java EE Perspective.</b></li>
+<li><b>Select Servers view.</b></li>
+<li><b>Select the GlassFish Server instance you want to start.</b></li>
+<li><b>Select Start from Server popup menu.</b><p>GlassFish Server is started.</p>
+<hr><p><b>Tip - </b>You could also use the Start icon from the toolbar to start
+Server.</p>
 <hr>
 </li></ol>
 
-<a name="to-stop"></a><h4>To stop GlassFish Server</h4><p>To stop the running GlassFish Server from Eclipse IDE, use the following procedure.</p><ol>
-<li><b>Select Servers tab.</b></li>
-<li><b>Select the GlassFish Server you want to stop.</b></li>
-<li><b>From GlassFish Server Popup menu, select Stop.</b><p>GlassFish Server is started.</p></li></ol>
+<a name="to-stop"></a><h4>To stop GlassFish Server</h4><p>To stop a running GlassFish Server, use the following procedure:</p><ol>
+<li><b>Select Servers view.</b></li>
+<li><b>Select the GlassFish Server instance you want to stop.</b></li>
+<li><b> Select Stop from Server popup menu.</b><p>GlassFish Server is stopped.</p>
+<hr><p><b>Tip - </b>You could also use the Stop icon from the toolbar to stop
+the Server.</p>
+<hr>
+</li></ol>
 
-<a name="to-restart"></a><h4>To restart GlassFish Server</h4><p>To stop and restart the GlassFish Server, use the following procedure.</p><ol>
-<li><b>Select Server tab.</b></li>
+<a name="to-restart"></a><h4>To restart GlassFish Server</h4><p>To stop and restart a running GlassFish Server, use the following procedure:</p><ol>
+<li><b>Select Servers view.</b></li>
 <li><b>Select the GlassFish Server you want to restart.</b></li>
-<li><b>From GlassFish Server Popup menu, select Restart.</b><p>GlassFish Server is stopped and restarted.</p></li></ol>
+<li><b>From Server popup menu, select Restart.</b><p>GlassFish Server is stopped and restarted.</p></li></ol>
 
-<a name="to-debug"></a><h4>To start GlassFish Server in debug mode</h4><p>When you want to debug an application, run the GlassFish Server in
-debug mode. To start the GlassFish Server in debug mode use the following
-procedure.</p><ol>
-<li><b>Select Servers tab.</b></li>
-<li><b>Select the GlassFish Server, you want to start in debug mode.</b></li>
-<li><b>From GlassFish Server Popup menu, select Debug.</b><p>GlassFish Server is in Debug mode.</p>
-<hr><p><b>Note - </b>If the GlassFish Server is already running, you will see the Restart in
-Debug Menu option.</p>
+<a name="to-debug"></a><h4>To start GlassFish Server in debug mode</h4><p>When you want to debug an application, run GlassFish Server in debug mode,
+. To start GlassFish Server in debug mode, use the following procedure:</p><ol>
+<li><b>Select Servers view.</b></li>
+<li><b>Select the GlassFish Server.</b></li>
+<li><b>Select Debug from Server popup menu.</b><p>GlassFish Server is started in Debug mode.</p>
+<hr><p><b>Note - </b>If GlassFish Server is already running, you will see <tt>Restart in Debug</tt> option in
+the popup menu, instead of <tt>Debug</tt>.</p>
 <hr>
-<p>You can learn more about using the GlassFish Server to debug the
-applications from here:<a href="p6.html#task-7">To debug a Servlet with the GlassFish Server</a></p></li></ol>
+<p>For more information on using GlassFish Server to debug applications, see <a href="p6.html#task-7">To debug a Servlet with GlassFish Server</a>.</p></li></ol>
 
-<a name="to-publish"></a><h4>To publish Projects</h4><p>You can publish the applications to the GlassFish Server, by using the following
-procedure.</p><ol>
-<li><b>Select Servers tab.</b></li>
-<li><b>Select the GlassFish Server.</b></li>
-<li><b>From the GlassFish Server Popup menu, select Publish.</b><p>The applications are published to the GlassFish Server.</p></li></ol>
+<a name="to-publish"></a><h4>To publish Projects</h4><p>To publish applications to the GlassFish Server, use the following procedure:</p><ol>
+<li><b>Select Servers view.</b></li>
+<li><b>Select GlassFish Server.</b></li>
+<li><b>Select Publish from Server popup menu.</b><p>The selected applications are published to the GlassFish Server.</p></li></ol>
 
-<a name="to-clean"></a><h4>To clean published Projects</h4><p>To discard all the published projects, and republish from scratch, use the following
-procedure.</p><ol>
-<li><b>Select Servers tab.</b></li>
-<li><b>Select the GlassFish Server.</b></li>
-<li><b>From the GlassFish Server Popup menu, select Clean.</b></li>
-<li><b>Click OK to accept the warning regarding discarding the published state.</b><p>The published state of projects is discarded and republished.</p></li></ol>
+<a name="to-clean"></a><h4>To clean published Projects</h4><p>To discard all published projects, and republish from scratch, use the following procedure:</p><ol>
+<li><b>Select Servers view.</b></li>
+<li><b>Select GlassFish Server.</b></li>
+<li><b>Select Clean... from Server popup menu.</b></li>
+<li><b>Click OK to accept the warning regarding discarding the published state.</b><p>The published state of projects is discarded and projects are republished.</p></li></ol>
 
-<a name="to-addremove"></a><h4>To add and remove Projects</h4><p>You can add and remove the projects that are configured to run
-on GlassFish Server with the following procedure.</p><ol>
-<li><b>Select Server tab.</b></li>
-<li><b>Select the GlassFish Server.</b></li>
-<li><b>From GlassFish Server Popup menu, select Add and Remove Projects.</b><p>Add and Remove Project screen is displayed.</p></li>
-<li><b>To add a project, select the project you want to add to
-the Server from the Available projects panel. </b></li>
-<li><b>Click Add, to add the project to the Configured projects panel.</b></li>
-<li><b>To remove a project, select the project you want to remove from the
-Configured projects panel.</b></li>
-<li><b>Click Remove, to remove the project to the Available projects panel.</b></li>
-<li><b>Click Finish to exit..</b></li></ol>
+<a name="to-addremove"></a><h4>To add and remove Projects</h4><p>To add and remove projects that are configured to run on GlassFish
+Server, use the following procedure:</p><ol>
+<li><b>Select Servers view.</b></li>
+<li><b>Select GlassFish Server.</b></li>
+<li><b>Select Add and Remove Projects... from Server popup menu.</b><p>Add and Remove Project screen is displayed.</p></li>
+<li><b>To add a project to Server:</b><ol style="list-style-type: lower-alpha">
+<li><b>Select the project you want to add from Available projects panel.</b></li>
+<li><b>Click Add, to add the project to Configured projects panel.</b></li></ol></li>
+<li><b>To remove a project from Server:</b><ol style="list-style-type: lower-alpha">
+<li><b>Select the project you want to remove from Configured projects panel.</b></li>
+<li><b>Click Remove, to remove the project and move it to Available projects panel.</b></li></ol></li>
+<li><b>Click Finish to exit.</b></li></ol>
 
-<a name="to-display"></a><h4>To display GlassFish Sever properties</h4><p>To view some of the GlassFish Server current properties and to restore them
-to default, use the following procedure.</p><ol>
-<li><b></b></li>
-<li><b>Select Server tab.</b></li>
-<li><b>Select the GlassFish Server.</b></li>
-<li><b>From GlassFish Server Popup menu, select Properties.</b><p>Properties for GlassFish Server screen is displayed.</p></li>
-<li><b>View the current properties or restore them to default.</b></li></ol>
+<a name="to-display"></a><h4>To display GlassFish Sever properties</h4><p>To view some of the GlassFish Server current properties and/or to restore them
+to default, use the following procedure:</p><ol>
+<li><b>Select Servers view.</b></li>
+<li><b>Select GlassFish Server.</b></li>
+<li><b>Select Properties from Server popup menu.</b><p>Properties for GlassFish Server page is displayed.</p></li>
+<li><b>View current Server properties or restore them to default.</b></li></ol>
 
-<a name="to-access"></a><h4>To access GlassFish Server Administration Console</h4><p>The GlassFish Sever offers many administrative features that are not accessible from the
-Eclipse IDE. These features are available from GlassFish Server Administration Console which is
-accessible from Eclipse IDE. The following steps describe how to access GlassFish Server
-Administration Console from Eclipse IDE.</p><h6>Before You Begin</h6><p>Make sure that the GlassFish Server is up and running. </p><ol>
-<li><b>Open the Eclipse IDE.</b></li>
-<li><b>Select Servers tab.</b></li>
-<li><b>Select GlassFish Server Popup menu <tt>-&gt;</tt> GlassFish Enterprise Server <tt>-&gt;</tt>GlassFish Administration Console.</b><p>GlassFish Administration Console is displayed.</p>
-<hr><p><b>Note - </b>You can learn more about how to access GlassFish Server Popup menu from
-<a href="p7.html">Appendix&#160;A, Using Popup Menu</a></p>
+<a name="to-access"></a><h4>To access GlassFish Server Administration Console</h4><p>GlassFish Sever offers many administrative features that are not accessible from Eclipse IDE.
+These features are available from GlassFish Server Administration Console which is accessible from
+Eclipse IDE. The following procedure describes the process of accessing GlassFish Server Administration
+Console, from Eclipse IDE.</p><p>For more information on how to access GlassFish Server popup menu, see
+<a href="p8.html">Appendix&#160;A, Using Popup Menu</a>.</p><h6>Before You Begin</h6><p>Make sure that GlassFish Server is running. </p><ol>
+<li><b>Open Eclipse IDE.</b><p>Default <tt>Workbench</tt> is displayed.</p></li>
+<li><b>Select Servers view.</b></li>
+<li><b>Select Server popup menu <tt>-&gt;</tt> GlassFish Enterprise Server <tt>-&gt;</tt>GlassFish Administration Console.</b><p>GlassFish Administration Console is displayed.</p><p>Access various features available from Administration Console such as Registration, Subscription and Documentation.</p></li></ol>
+
+<a name="to-register"></a><h4>To register GlassFish Server Installation</h4><p>By registering your GlassFish Installation, you have the advantage of receiving patch information
+and updates, screen casts and tutorials, support and training offerings from GlassFish community.</p><p>If you did not register during installation, use the following procedure to register
+your GlassFish Server from Eclipse IDE.</p><h6>Before You Begin</h6><p>Make sure that GlassFish Server is running.</p><p> For more information on GlassFish Server popup menu, see <a href="p8.html">Appendix&#160;A, Using Popup Menu</a>.</p><ol>
+<li><b>To view Registration page, select Server popup menu <tt>-&gt;</tt>GlassFish Enterprise Server <tt>-&gt;</tt>Register GlassFish
+Enterprise Server.</b></li>
+<li><b>Provide the required information to register your GlassFish Server Installation.</b></li>
+<li><b>To access Support Information, from GlassFish Server popup menu, select <tt>-&gt;</tt>GlassFish Enterprise Server
+<tt>-&gt;</tt>Get Support for GlassFish Enterprise Server.</b></li></ol>
+
+<a name="to-update"></a><h4>To use GlassFish Update Center from Eclipse IDE</h4><p>GlassFish Update Center provides access to Add-On components and product updates for GlassFish
+Server.</p><p>Use the following procedure to access GlassFish Update Center from Eclipse IDE.</p>
+<hr><p><b>Note - </b>You can update the GlassFish plug-in in the bundle, by accessing Help<tt>-&gt;</tt>Software Updates
+option and downloading the latest version of the GlassFish plug-in.</p>
 <hr>
-</li>
-<li><b>Access various features available from the Administration Console such as Registration, Subscription and
-Documentation.</b></li></ol>
+<h6>Before You Begin</h6><p>Make sure that the GlassFish Server is running.</p><p>For more information on how to access GlassFish Server popup menu, see
+<a href="p8.html">Appendix&#160;A, Using Popup Menu</a>.</p><ol>
+<li><b>Select GlassFish Enterprise Server <tt>-&gt;</tt>GlassFish Update Center from Server popup menu.</b></li>
+<li><b>Select Add-On components and product updates as required.</b><p>For example: <i>JRuby</i>.</p></li></ol>
 
-<a name="to-register"></a><h4>To register GlassFish Server Installation</h4><p>By registering your GlassFish Server installation, you can receive product support, updates and
-community news. If you did not register during installation, use the following procedure
-to register your GlassFish Server from Eclipse IDE.</p><h6>Before You Begin</h6><p>Make sure that the GlassFish Server is up and running. You can
-learn more about how to access GlassFish Server Popup menu from <a href="p7.html">Appendix&#160;A, Using Popup Menu</a></p><ol>
-<li><b>Select GlassFish Server Popup menu <tt>-&gt;</tt>GlassFish Enterprise Server <tt>-&gt;</tt>Register GlassFish Enterprise Server to view
-the Registration page</b></li>
-<li><b>Provide the required information to register the GlassFish Server Installation.</b></li>
-<li><b>To access the Support Information, select GlassFish Server Popup menu <tt>-&gt;</tt>GlassFish Enterprise Server
-<tt>-&gt;</tt>Get Support for GlassFish Enterprise Server to view the Support page</b></li></ol>
-
-<a name="to-update"></a><h4>To use GlassFish Update Center from Eclipse IDE</h4><p>By using the GlassFish Update Center you can access Add-On components and product
-updates for GlassFish Server. Use the following procedure to access the GlassFish Update
-Center from the Eclipse IDE.</p><h6>Before You Begin</h6><p>Make sure that the GlassFish Server is up and running. You can
-learn more about how to access GlassFish Server Popup menu from <a href="p7.html">Appendix&#160;A, Using Popup Menu</a></p><ol>
-<li><b>Select GlassFish Server Popup menu <tt>-&gt;</tt>GlassFish Enterprise Server <tt>-&gt;</tt>GlassFish Update Center to view
-the Update Center</b></li>
-<li><b>Select Add-On components and product updates as required.</b></li></ol>
-
-<a name="to-helpmenu"></a><h4>To use Help menu for GlassFish Server</h4><p>In the GlassFish Tools Bundle for Eclipse, additional GlassFish help options are added
-to the Help menu. You can access the Online Help for GlassFish Server
-v2.1 and GlassFish Server v3 Prelude from Eclipse IDE Help->GlassFish Enterprise Server menu.
+<a name="to-helpmenu"></a><h4>To use Help Menu for GlassFish Server</h4><p>The GlassFish Tools Bundle for Eclipse, provides additional GlassFish help options from the
+Eclipse IDE Help menu. You can access the Online Help for GlassFish Server
+v2.1 and GlassFish Server v3 Prelude from Eclipse IDE Help<tt>-></tt>GlassFish Enterprise Server menu.
 The Help options are useful for learning how to use, administer or deploy
-with GlassFish server.</p><ol>
-<li><b>To view Java EE javadoc, select Help->Java EE 5 Javadoc.</b></li>
-<li><b>To view GlassFish Server help options, select Help->GlassFish Enterprise Server.</b><p>The following options are available:</p><ul>
+with GlassFish server.</p><p>Use the following procedure to access Eclipse Help menu:</p><ol>
+<li><b> Select Help<tt>-></tt>Java EE 5 Javadoc, to view Java EE javadoc.</b></li>
+<li><b>Select Help<tt>-></tt>GlassFish Enterprise Server, to view GlassFish Server help options.</b><p>The following options are available:</p><ul>
 <li><b>Get Support for GlassFish Enterprise Server</b></li>
 <li><b>Aquarium: GlassFish Community News</b></li>
 <li><b>GlassFish v3 Prelude (Documentation)</b></li>
 <li><b>GlassFish v2.1 Java EE 5 (Documentation)</b></li></ul></li></ol>
 
-<a name="to-gp"></a><h4>To change Preferences for GlassFish Server </h4><p>The GlassFish Tools Bundle for Eclipse allows you to change the Global preferences
-for GlassFish Server from Eclipse IDE.</p><ul>
-<li><b>To change GlassFish Server Global preferences from Eclipse IDE, select Window->Preferences.</b><p>The following Global Preferences options are explained in detail.</p><ul>
-<li><b>Enable GlassFish Plug-in Log information in IDE log file</b><p>This preference is useful for the debugging purposes. Turning on this option allows
-you to see additional traces in the Eclipse log file specific to the
-GlassFish Plug-in. This option is OFF by default.</p></li>
-<li><b>Start the JavaDB database process when Starting GlassFish Server</b><p>GlassFish Tools Bundle for Eclipse includes a preconfigured JavaDB Database. This option allows
-you to start the database automatically when the server is started. It is
-useful when working with JPA applications. This option is ON by default.</p></li>
-<li><b>Start the GlassFish Enterprise Server in Verbose Mode</b><p>Turning on this option will send all the output log of the GlassFish
-server to the Eclipse console. This option is OFF by default as there
-is a GlassFish specific log view.</p></li>
-<li><b>Enable colored rendering in the GlassFish Log Viewer</b><p>This option will enable messages to be displayed in color. INFO level messages will
-be in black, WARNING messages will be in yellow, SEVERE messages will be
-in red, and multiple line entries will be in Italic. This option
-is ON by default.</p></li></ul></li></ul>
+<a name="to-gp"></a><h4>To change Preferences for GlassFish Server Plug-in</h4><p>The GlassFish Tools Bundle for Eclipse allows you to change the preferences for
+GlassFish Server plug-in from Eclipse IDE.</p><ul>
+<li><b>To change GlassFish plug-in preferences from Eclipse IDE, select Window<tt>-></tt>Preferences.</b><p>The available GlassFish Server preference flags are explained in detail.</p><ul>
+<li><b>Enable GlassFish Plug-in Log information in IDE log file</b><p>This preference is useful for debugging purposes. By turning this option on, you
+can see additional traces in Eclipse log file specific to GlassFish plug-in. This
+option is in <tt>OFF</tt> state by default.</p></li>
+<li><b>Start the JavaDB database process when Starting GlassFish Server</b><p>GlassFish Tools Bundle for Eclipse includes a preconfigured JavaDB Database. By turning this
+option on, you can start the database automatically when the server is started.
+It is useful when working with JPA applications. This option is in <tt>OFF</tt>
+state by default.</p></li>
+<li><b>Start the GlassFish Enterprise Server in Verbose Mode</b><p>By turning this option on, GlassFish server output log is sent to Eclipse
+console. This option is in <tt>OFF</tt> state by default.</p></li>
+<li><b>Enable colored rendering in GlassFish Log Viewer</b><p>By turning this option on, log messages can be rendered in color: INFO
+level messages in black, WARNING messages in yellow, SEVERE messages in red (Eclipse IDE
+default <tt>Error Text</tt> color), and multiple line entries in Italic. This option is in
+<tt>ON</tt> state by default.</p>
+<hr><p><b>Tip - </b>You an always modify Eclipse IDE Error message text color. Select Window<tt>-&gt;</tt>Preferences<tt>-&gt;</tt>General<tt>-&gt;</tt>Appearance<tt>-&gt;</tt>Colors and
+Fonts. From Colors and Fonts panel, select Basic and then Error Text color.
+Modify error text color as per your requirement.</p>
+<hr>
+</li></ul></li></ul>
 
-<a name="to-tcpip"></a><h4>To monitor TCP/IP for Web Applications with GlassFish Server</h4><p>TCP/IP monitoring is a useful Eclipse IDE feature that is enabled for the
-GlassFish Server in this bundle. It allows you to trace HTTP requests made
-to your web application. The procedure to configure the TCP/IP monitoring is as
-follows:</p><ol>
-<li><b>Select the GlassFish Server Popup menu Monitoring->Properties.</b><p>Monitoring Properties page is displayed.</p></li>
-<li><b>Select the Add button on the right side of panel.</b><p>Monitoring Ports page is displayed.</p></li>
-<li><b>Select the Server Port, which is the http port used by the
-GlassFish server. By default, it is 8080. The port that will be used
-to actually do the monitoring is 8081 as specified in the Monitor Port
-field.</b><p>You can modify the port number as required.</p></li>
-<li><b>To start monitoring, press the Start button on the right side. The port
-8080 is now monitored from port 8081.</b><p>The Status column in the page will show status as Started.</p></li>
-<li><b>Select the Apply button and then the OK button, to complete the setup.</b><p>When the GlassFish server is started, access a web page using the port
-8081 instead of the regular port 8080. The TCP/IP monitor view should appear
-below, and fill up with the traffic between your Web browser and your
-web application. When you select each request in the tree at the top
-left, information about the request/response is shown, the bottom left of the view
+<a name="to-tcpip"></a><h4>To monitor TCP/IP for Web Applications with GlassFish Server</h4><p>TCP/IP monitoring is a useful Eclipse IDE feature that is enabled for GlassFish
+Server in this bundle. It allows you to trace HTTP requests made to
+your web application. Use the following procedure to configure TCP/IP monitoring for GlassFish
+Server.</p><ol>
+<li><b>From GlassFish Server popup menu, select Monitoring<tt>-></tt>Properties.</b><p>Monitoring Properties page is displayed.</p></li>
+<li><b>Click Add.</b><p>Monitoring Ports page is displayed.</p></li>
+<li><b>Select Server Port, which is the http port used by GlassFish server.</b><p>By default, it is 8080. The port that will be used to
+actually do monitoring is 8081 which is specified in the Monitor Port field.</p>
+<hr><p><b>Note - </b>You can modify port numbers as necessary.</p>
+<hr>
+</li>
+<li><b>Click Start, to start monitoring. </b><p>The port 8080 is now monitored from port 8081.</p><p>The Status column in page will show (monitoring) status as Started.</p></li>
+<li><b>Select Apply and then OK, to complete setup.</b><p>When GlassFish server is running, access a web page using port 8081 instead
+of the regular port 8080. The TCP/IP monitor view should appear below, and
+fill up with the traffic between your Web browser and your web application.
+When you select each request in the tree at the top left of
+page, information about the request/response is shown. The bottom left of the view
 will display the HTTP request that was made to your web application, and
 the bottom right will show each response.</p></li></ol>
+
+<a name="to-viewdb"></a><h4>To view Sample JavaDB</h4><p>The GlassFish Tools Bundle for Eclipse, by default, installs and creates a JavaDB
+sample database for you.</p><p>Use the following procedure to view the tables that exist in the
+database. Skip Step 1 to Step 5 if the database is already started.</p><ol>
+<li><b>Select Window<tt>-&gt;</tt>Preferences.</b><p>Preferences page is displayed.</p></li>
+<li><b>Select GlassFish Preferences.</b></li>
+<li><b>Select the Checkbox next to Start JavaDB database process when Starting GlassFish Server
+option.</b></li>
+<li><b>Click Close.</b></li>
+<li><b>Restart the GlassFish Server.</b><p>The sample JavaDB database will be started along with the GlassFish Server.</p></li>
+<li><b>Select Data Source Explorer view.</b></li>
+<li><b>Select Sample JavaDB database node.</b></li>
+<li><b>Right click the node to view the popup menu and confirm if
+the Database is connected.</b></li>
+<li><b>If not, select Connect from the popup menu.</b><p>You will be connected to the Database.</p></li>
+<li><b>Click to expand the database node.</b><p>You will be able to see the various schemata and tables that are
+already created for you.</p></li></ol>
+
+<a name="misc"></a><h4>Miscellaneous</h4><p>The above procedures describe the use of Server popup menu for various tasks,
+such as starting and stopping GlassFish Server.</p><p>The same tasks can also be performed using other menus such as
+Eclipse IDE toolbar menu or Project node right click menu. You can use
+any of the available menus as is convenient.</p><p>For example, starting the Server in Debug mode as described in <a href="p6.html#task-7">To debug a Servlet with GlassFish Server</a>,
+can also be done from Eclipse toolbar menu.</p><ol>
+<li><b>Select the Project in Project Explorer.</b></li>
+<li><b>Select Debug As.</b><p>Menu is displayed.</p></li>
+<li><b>Select Debug As icon from toolbar.</b><ol style="list-style-type: lower-alpha">
+<li><b>Select Run on Server.</b><p>Debug On Server page is displayed.</p></li>
+<li><b>Select Bundled GlassFish Server v3 Prelude.</b></li>
+<li><b>Click Next to continue.</b></li>
+<li><b>Select any other Projects you want to Debug.</b></li>
+<li><b>Click Finish.</b><p>Prompt to Switch mode is displayed.</p></li>
+<li><b>Select Switch Mode option and click OK.</b></li></ol></li></ol><h6>See Also</h6><p>For more information on Eclipse IDE menus, see <a href="http://help.eclipse.org/ganymede/index.jsp">Eclipse Documentation</a>.</p>
 
 
 <table border="0" cellpadding="5" cellspacing="0" width="100%">
