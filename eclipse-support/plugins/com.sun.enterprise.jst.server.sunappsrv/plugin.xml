@@ -43,7 +43,7 @@
             id="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
             name="%sunappserver.ConfigurationTypeName"
             delegate="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunch"
-            modes="run, debug"
+            modes="run, debug, profile"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
     </extension> 
@@ -195,7 +195,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug">         
+            launchModes="run,debug,profile">         
         </serverType> 
        
       
@@ -212,7 +212,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug">         
+            launchModes="run,debug,profile">         
         </serverType>        
 
         <!-- GlassFish v1 server -->
@@ -229,7 +229,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug">         
+            launchModes="run,debug,profile">         
         </serverType> 
         
         <!-- GlassFish v2 server -->
@@ -245,7 +245,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug">         
+            launchModes="run,debug,profile">         
         </serverType> 
         
         <!-- Sailfin V1 server -->
@@ -262,7 +262,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug">         
+            launchModes="run,debug,profile">         
         </serverType> 
 
         <!-- Sailfin v2 server -->
@@ -279,7 +279,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug">         
+            launchModes="run,debug,profile">         
         </serverType> 
 
         <serverType
@@ -295,7 +295,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug">         
+            launchModes="run,debug,profile">         
         </serverType> 
         
         <serverType
@@ -311,7 +311,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug">         
+            launchModes="run,debug,profile">         
         </serverType> 
         
         
@@ -1382,4 +1382,40 @@
        </classpathContainerPage>
     </extension-->
     
+   <extension point="org.eclipse.hyades.trace.ui.launchConfigMechanismAssociator">
+       <association launchConfigID="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType">
+           <mechanism mechanismID="org.eclipse.tptp.trace.ui.jvmpiMechanism">
+ 	           <configuration
+ 	               launchDelegate="org.eclipse.tptp.trace.ui.internal.launcher.deleg.application.PIAttachLauncherDelegate"
+ 	               configurationId="org.eclipse.tptp.trace.ui.jvmpiConfiguration"
+ 	               associatedAgent="org.eclipse.tptp.trace.ui.jvmpiAgent"
+ 	               filter="org.eclipse.tptp.platform.profile.server.core.internal.PICollectorFiltration">                                  
+ 	           </configuration>                        
+ 	       </mechanism>
+ 	                        
+ 	       <mechanism mechanismID="org.eclipse.tptp.trace.jvmti.jvmtiMechanism">
+ 	            <configuration
+ 	                 launchDelegate="org.eclipse.tptp.platform.jvmti.client.internal.launcher.TIAttachLauncherDelegate"
+ 	                 configurationId="org.eclipse.tptp.trace.jvmti.tiConfiguration"
+ 	                 associatedAgent="org.eclipse.tptp.platform.jvmti.TIAgent"       
+ 	                 filter="org.eclipse.tptp.platform.profile.server.core.internal.TICollectorFiltration">                                                  
+ 	            </configuration>                        
+ 	       </mechanism>
+ 	
+ 	  <!--
+ 	                        
+ 	                        <mechanism mechanismID="org.eclipse.tptp.trace.ui.jvmpiMechanism">
+ 	                            <configuration
+ 	                                        launchDelegate="org.eclipse.tptp.platform.integration.pde.internal.delegators.PIEquinoxLauncherDelegate"
+ 	                                        configurationId="org.eclipse.tptp.trace.ui.jvmpiExtendedConfiguration"
+ 	                                        associatedAgent="org.eclipse.tptp.trace.ui.jvmpiAgent"
+ 	                                        filter="org.eclipse.tptp.trace.ui.internal.launcher.application.PICollectorFiltration">                                 
+ 	                                </configuration>                        
+ 	                        </mechanism>
+ 	        -->
+ 	                
+ 	                </association>
+ 	        
+ 	        </extension>
+ 	   
     </plugin>
