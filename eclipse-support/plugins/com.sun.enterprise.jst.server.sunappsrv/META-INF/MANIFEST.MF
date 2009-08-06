@@ -33,8 +33,8 @@ Require-Bundle: org.apache.xerces,
  org.eclipse.jdt.debug,
  org.eclipse.ui.console;bundle-version="3.3.0",
  org.eclipse.tptp.platform.profile.server.core;bundle-version="4.2.102";resolution:=optional,
- org.eclipse.tptp.platform.profile.server;bundle-version="4.4.0";resolution:=optional,
- org.eclipse.tptp.platform.jvmti.client;bundle-version="4.4.300";resolution:=optional
+ org.eclipse.tptp.platform.profile.server;bundle-version="4.2.200";resolution:=optional,
+ org.eclipse.tptp.platform.jvmti.client;bundle-version="4.4.200";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Export-Package: com.sun.enterprise.jst.server.sunappsrv;x-friends:="com.sun.enterprise.jst.server.sunappsrv.ui"
 Import-Package: org.eclipse.jdt.ui.wizards,
