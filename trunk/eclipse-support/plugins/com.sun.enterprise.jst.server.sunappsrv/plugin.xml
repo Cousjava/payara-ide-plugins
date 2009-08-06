@@ -961,6 +961,10 @@
                     uri="dtds/sun-domain_1_4.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_4.dtd" />
             
+            <public publicId="-//Sun Microsystems Inc.//DTD GlassFish Communications Server 1.5 Domain//EN"
+                    uri="dtds/sun-domain_1_5.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-domain_1_5.dtd" />
+
            <public publicId="-//Java Community Process//DTD SIP Application 1.0//ENN"
                     uri="dtds/sip-app_1_0.dtd"
                     webURL="http://www.jcp.org/dtd/sip-app_1_0.dtd" />
