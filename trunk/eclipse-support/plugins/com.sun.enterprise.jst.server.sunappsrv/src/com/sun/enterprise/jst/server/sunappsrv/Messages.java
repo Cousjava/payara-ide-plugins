@@ -73,4 +73,6 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String TitleWrongDomainLocation;
     public static String OKButton;
 
+    public static String startupWarning;
+    public static String noProfilersConfigured;
 }
