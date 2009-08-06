@@ -66,8 +66,11 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.server.core.ServerProfilerDelegate;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -224,6 +227,20 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 di.addProfilerElements(nativeLib, vmArgs2);
             } catch (CoreException ce) {
                 ce.printStackTrace(System.err);
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        final Shell shell = new Shell(Display.getDefault());
+                        MessageDialog message;
+                        //Shell shell = new Shell(Display.getDefault());
+                        String labels[] = new String[1];
+                        labels[0] = Messages.OKButton;
+                        message = new MessageDialog(shell, Messages.startupWarning, null, Messages.noProfilersConfigured, MessageDialog.WARNING, labels, 1);
+                        message.open();
+                        shell.dispose();
+
+                    }
+                });
                 di.removeProfilerElements();
             }
         } else {
