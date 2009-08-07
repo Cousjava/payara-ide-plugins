@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en-US">
 <head>
+<!-- GenHTML revision 22645-->
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 <title>Developing Applications for GlassFish Server from Eclipse IDE - GlassFish Tools Bundle for Eclipse User Guide</title>
 <meta name="robots" content="index,follow">
@@ -37,7 +38,7 @@ GlassFish Server v3 Prelude but not with GlassFish Server v2.1.</p>
 <ul><li><p><a href="#task-5">To create a new Web Application project for GlassFish Server</a></p></li>
 <li><p><a href="#task-6">To add a Servlet and use Session Preservation feature</a></p></li>
 <li><p><a href="#task-7">To debug a Servlet with GlassFish Server</a></p></li>
-<li><p><a href="#task-8">To use the preconfigured MySQL Database Connector with GlassFish Server</a></p></li>
+<li><p><a href="#task-8">To edit the preconfigured MySQL Database Connector</a></p></li>
 <li><p><a href="#task-9">To create a new Data Source and register it with GlassFish Server</a></p></li>
 <li><p><a href="#task-10">To create a JPA Project for GlassFish Server</a></p></li></ul>
 
@@ -123,9 +124,8 @@ right click menu.</p><p>For more information on using the Eclipse IDE, use the H
 <hr>
 </li></ol>
 
-<a name="task-8"></a><h4>To use the preconfigured MySQL Database Connector with GlassFish Server</h4><p>The GlassFish Tools Bundle for Eclipse includes a preconfigured MySQL database connector. You
-can start using it with your MySQL database with minimal configuration effort.</p><p>The following steps describe how to use the preconfigured MySQL database connector.</p><h6>Before You Begin</h6><p>Install MySQL database if you do not have a pre-installed MySQL database instance.
-For more information on installing MySQL, See <a href="http://dev.mysql.com/doc/refman/5.4/en/installing.html">MySQL installation documentation</a>.</p><ol>
+<a name="task-8"></a><h4>To edit the preconfigured MySQL Database Connector</h4><p>The GlassFish Tools Bundle for Eclipse includes a preconfigured MySQL database connector. You
+can use it to connect with your MySQL database with minimal configuration effort.</p><p>To edit the preconfigured MySQL database connector, use the following process:</p><ol>
 <li><b>From Eclipse IDE, select Windows->Preferences</b></li>
 <li><b>Select Data Management from left-hand side panel.</b></li>
 <li><b>Click Connectivity</b></li>
@@ -136,23 +136,29 @@ For more information on installing MySQL, See <a href="http://dev.mysql.com/doc/
 <li><b>Click OK to close Preferences screen.</b></li></ol>
 
 <a name="task-9"></a><h4>To create a new Data Source and register it with GlassFish Server</h4><p>As described in <a href="p5.html">Chapter&#160;3, Configuring and Using GlassFish Server from Eclipse IDE</a>, by default GlassFish Tools Bundle for Eclipse installs and
-configures a database instance for you.</p><p>You can also create a new Data Source and register it with
-GlassFish Server from Eclipse IDE. The procedure is as follows:</p><ol>
-<li><b>Select Databases from Data Source Explorer view. Right click the Databases node and
-select New.</b></li>
-<li><b>Select Derby from New Connection Profile options. Accept default name New Derby or
-choose another name.</b></li>
-<li><b>Click Next.</b><p>Derby Connection Profile screen is displayed.</p></li>
-<li><b>Click New Driver Definition button (located next to Driver text box).</b><p>Edit Driver Definition screen is displayed.</p></li>
-<li><b>Select Jar List tab, and select location of Derby Client jar file from
-GlassFish Server Installation directory.</b></li>
-<li><b>Select Properties tab and view properties of Driver Definition.</b></li>
-<li><b>Click OK to exit Edit Driver Definition screen.</b></li>
-<li><b>From Connection Profile screen, modify any other details as required.</b></li>
+configures a Derby database instance for you.</p><p>You can also create a new Data Source and register it with
+GlassFish Server from Eclipse IDE. The process of creating and registering a new
+MySQL Data Source is described as follows:</p><h6>Before You Begin</h6><p>Install a MySQL database instance if you do not have a pre-installed MySQL
+database. For more information on installing MySQL, See <a href="http://dev.mysql.com/doc/refman/5.4/en/installing.html">MySQL installation documentation</a>.</p><ol>
+<li><b>Select Database Connections from Data Source Explorer view. Right click the Databases node
+and select New.</b></li>
+<li><b>Select MySQL from New Connection Profile options.</b><p>Accept default name New MySQL or choose another name.</p></li>
+<li><b>Click Next.</b><p>MySQL Connection Profile screen is displayed.</p></li>
+<li><b>Click New Driver Definition button (located next to Drivers text box).</b><p>New Driver Definition screen is displayed.</p>
+<hr><p><b>Note - </b>Step 5 through 8 are optional and may be used if you
+need to use a MySQL driver that is not bundled.</p>
+<hr>
+</li>
+<li><b>Select a Driver template from list.</b></li>
+<li><b>Select Jar List tab, and select location of MySQL JDBC Driver file from
+<tt>&#60;glassfish-tools-bundle-for-eclipse-xxxx></tt> directory.</b></li>
+<li><b>Select Properties tab and view properties of Driver Definition.</b><p>Change any properties as required.</p></li>
+<li><b>Click OK to exit New Driver Definition screen.</b></li>
+<li><b>From Connection Profile screen, modify any other details as required.</b><p>For example: User name and Password.</p></li>
 <li><b>Click Test Connection to test Database connectivity.</b></li>
 <li><b>Click Next to view a summary of Connection Profile.</b></li>
 <li><b>Verify Profile details.</b><p>If necessary, go back and change details.</p></li>
-<li><b>Click Finish to complete creation of new Data Source profile.</b><p>The newly created Derby Data Source can be seen from Data Source
+<li><b>Click Finish to complete creation of the new Data Source profile.</b><p>The newly created MySQL Data Source can be seen from Data Source
 Explorer view.</p>
 <hr><p><b>Note - </b>You can also edit Data Resources from GlassFish Server Administration Console.</p><p>Additional details on editing  Data Resources are available from GlassFish Server Administration
 Documentation.</p>

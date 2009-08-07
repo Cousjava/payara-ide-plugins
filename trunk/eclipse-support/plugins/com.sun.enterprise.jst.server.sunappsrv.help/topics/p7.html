@@ -1,289 +1,167 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
-	<TITLE>Getting started with Metro - GlassFish Tools Bundle for Eclipse User Guide</TITLE>
-	<META NAME="GENERATOR" CONTENT="StarOffice 9  (Solaris Sparc)">
-	<META NAME="CREATED" CONTENT="0;0">
-	<META NAME="CHANGEDBY" CONTENT="Devika Gollapudi">
-	<META NAME="CHANGED" CONTENT="20090720;21331800">
-	<META NAME="date" CONTENT="2009-05-01">
-	<META NAME="robots" CONTENT="index,follow">
-	<META NAME="CHANGEDBY" CONTENT="Devika Gollapudi">
-	<META NAME="robots" CONTENT="index,follow">
-</HEAD>
-<BODY LANG="en-US" DIR="LTR">
-<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0 STYLE="page-break-before: always">
-	<TR>
-		<TD COLSPAN=5>
-			<P><BR>
-			</P>
-		</TD>
-		<TD VALIGN=TOP></TD>
-	</TR>
-	<TR>
-		<TD></TD>
-		<TD>
-			<P>&nbsp;</P>
-		</TD>
-		<TD>
-			<P><A HREF="p6.html">Previous</A></P>
-		</TD>
-		<TD></TD>
-		<TD></TD>
-		<TD>
-			<P><A HREF="p8.html">Next</A></P>
-		</TD>
-	</TR>
-</TABLE>
-<P><A NAME="chapter4"></A>Chapter&nbsp;5</P>
-<H3>Getting started with Metro</H3>
-<P>Metro is a high-performance, extensible, easy-to-use Web Service
-stack that is a part of GlassFish Server community. It offers core
-support for JAX-WS and optionally support for additional features.</P>
-<P>The GlassFish Tools Bundle for Eclipse 1.1 version includes Metro
-plug-in for Eclipse.</P>
-<H3><A NAME="gentextid-1030"></A>Developing Web Applications using
-Metro</H3>
-<P>This section of the document will help you get familiar with
-developing web services applications with Metro using the Tools
-Bundle.</P>
-<H4><A NAME="givkk"></A>Install Metro on GlassFish Server</H4>
-<P>Before you can start developing web application with Metro for
-GlassFish Server, you need to ensure Metro is installed on GlassFish
-Server. 
-</P>
-<P>While GlassFish v2.1 includes Metro, GlassFish v3 Prelude does not
-include the Metro stack by default. You can install it as an Add-On
-package.</P>
-<P>You can also update Metro version included with GlassFish Server
-v2 as described in the following document:</P>
-<P><A HREF="https://metro.dev.java.net/1.4/docs/install.html">https://metro.dev.java.net/1.4/docs/install.html</A></P>
-<H5><A NAME="giwgg"></A>To install Metro for GlassFish Server v3
-Prelude</H5>
-<P>Metro is available as an Add-On package from Update Center for
-GlassFish v3 Prelude. The following task describes the process of
-adding Metro stack to GlassFish v3 Prelude.</P>
-<OL>
-	<LI><P STYLE="margin-bottom: 0in"><B>Stop GlassFish v3 Prelude
-	Server.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Start the Update Tool from
-	</B><I><B>&lt;install-location&gt;/glassfishv3prelude/bin</B></I>
-	<B>directory.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click available Add-Ons.</B> 
-	</P>
-	<LI><P><B>Select Metro Web Services for GlassFish.</B></P>
-	<P>Optionally you can also select Jersey Web Services.</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click Install.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Accept License.</B> 
-	</P>
-	<LI><P><B>Start the GlassFish v3 Prelude Server.</B></P>
-</OL>
-<H4><A NAME="giufe"></A>To create a new Metro based Web Service</H4>
-<P>The following task describes the steps to create a web application
-and add a web service to it. 
-</P>
-<OL>
-	<LI><P STYLE="margin-bottom: 0in"><B>Create a new web application as
-	described in <A HREF="p6.html#task-5">To create a new Web
-	Application project for GlassFish Server</A>.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>From Project Explorer,
-	right-click the web application project node and select New-&gt;Class</B>
-		</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>In the New Java Class wizard,
-	select </B><TT><B>mypkg</B></TT> <B>as package name, and
-	</B><TT><B>MyHelloService</B></TT> <B>as class name.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click Finish.</B> 
-	</P>
-	<LI><P><B>In the Eclipse IDE, edit the java class file and enter the
-	following code snippet to create a method:</B></P>
-	<PRE>package pkg;
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 22645-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Getting started with Metro - GlassFish Tools Bundle for Eclipse User Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-05-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p6.html">Previous</a></td>
+<td></td>
+<td></td>
+<td><a href="p8.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="chapter4"></a>Chapter&#160;5<h3>Getting started with Metro</h3><p>Metro is a high-performance, extensible, easy-to-use Web Service stack that is a part
+of GlassFish Server community. It offers core support for JAX-WS and optionally support
+for additional features.</p><p>The GlassFish Tools Bundle for Eclipse 1.1 version includes Metro plug-in for Eclipse.</p>
+
+<a name="gentextid-1101"></a><h3>Developing Web Applications using Metro</h3>
+<p>This section of the document will help you get familiar with developing web
+services applications with Metro using the Tools Bundle.</p>
+
+<a name="givkk"></a><h4>Install Metro on GlassFish Server</h4>
+<p>Before you can start developing web application with Metro for GlassFish Server, you
+need to ensure Metro is installed on GlassFish Server. </p><p>While GlassFish v2.1 includes Metro, GlassFish v3 Prelude does not include the Metro
+stack by default. You can install it as an Add-On package.</p><p>You can also update Metro version included with GlassFish Server v2 as described
+in the following document:</p><p><a href="https://metro.dev.java.net/1.4/docs/install.html">https://metro.dev.java.net/1.4/docs/install.html</a></p>
+
+<a name="giwgg"></a><h5>To install Metro for GlassFish Server v3 Prelude</h5>
+<p>Metro is available as an Add-On package from Update Center for GlassFish v3
+Prelude. The following task describes the process of adding Metro stack to GlassFish
+v3 Prelude.</p><ol>
+<li><b>Stop GlassFish v3 Prelude Server.</b></li>
+<li><b>Start the Update Tool from <i>&#60;install-location>/glassfishv3prelude/bin</i> directory.</b></li>
+<li><b>Click available Add-Ons.</b></li>
+<li><b>Select Metro Web Services for GlassFish.</b><p>Optionally you can also select Jersey Web Services.</p></li>
+<li><b>Click Install.</b></li>
+<li><b>Accept License Agreement.</b><p>Selected packages will be installed.</p></li>
+<li><b>Start the GlassFish v3 Prelude Server.</b>
+<hr><p><b>Note - </b>You can also use the Update Tool from GlassFish Server Administration Console for
+installing Metro packages. If you are using the Update Tool from GlassFish Administration
+Console, make sure the GlassFish Server is running and the Administration Console is
+installed.</p>
+<hr>
+</li></ol>
+
+<a name="giufe"></a><h4>To create a new Metro based Web Service</h4><p>The following task describes the steps to create a web application and add
+a web service to it. </p><ol>
+<li><b>Create a new web application as described in <a href="p6.html#task-5">To create a new Web Application project for GlassFish Server</a>.</b></li>
+<li><b>From Project Explorer, right-click the web application project node and select New->Class</b></li>
+<li><b>In the New Java Class wizard, select <tt>mypkg</tt> as package name, and <tt>MyHelloService</tt>
+as class name.</b></li>
+<li><b>Click Finish.</b></li>
+<li><b>In the Eclipse IDE, edit the java class file and enter the
+following code snippet to create a method:</b><pre>package mypkg;
 
 public class MyHelloService {
 public String sayhello(String name) {
-        return &quot;Hello &quot; + name;
+        return "Hello " + name;
      }
 }
- </PRE>
-	<LI><P STYLE="margin-bottom: 0in"><B>From the Project Explorer,
-	select MyHelloService java class.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Right-click the java class and
-	select WebServices-&gt;Create Web Service.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>In the Service section, move
-	the Service slider one level up to the top, to enable </B><TT><B>Test
-	Service</B></TT> <B>stage.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click Web Service runtime
-	entry.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Select METRO Runtime in the
-	dialog box.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click OK to close the dialog
-	box.</B> 
-	</P>
-	<LI><P><B>Click Next.</B></P>
-	<P>Options screen is displayed. You can customize your options for:</P>
-	<UL>
-		<LI><P>Generation of JSR 109 portable /JAX-WS RI specific Web
-		Service.</P>
-		<LI><P>Packaging of Metro libraries in war file.</P>
-	</UL>
-	<P>The default options are set based on your target runtime
-	platform.</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click Next.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Start the Server if necessary,
-	depending on the state of Server.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Enter your GlassFish Server
-	admin login and password if requested.</B> 
-	</P>
-	<LI><P><B>Click Launch, when presented with option to launch Web
-	Service testing facility.</B></P>
-	<P>Browser opens page where you can test the web service.</P>
-	<LI><P><B>Click Finish to complete the wizard.</B></P>
-	<P>At this stage a web service has been created and deployed on the
-	server.</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click </B><TT><B>sayHello</B></TT>
-	<B>link in the web page, and then click Add to add the parameter
-	value.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Enter your name in the text
-	field and click Go.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>The service will respond with
-	</B><TT><B>Hello $YOUR_NAME</B></TT> <B>message.</B> 
-	</P>
-	<LI><P><B>Click Source link to see the SOAP communication.</B></P>
-	<P>The result shall look like this:</P>
-	<P><IMG SRC="WSExplorer-Test.png" NAME="graphics1" ALIGN=LEFT WIDTH=681 HEIGHT=561 BORDER=0><BR CLEAR=LEFT><BR><BR><BR>
-	</P>
-</OL>
-<H4><A NAME="giupt"></A>To create a new Metro based Web Service from
-<TT>WSDL</TT></H4>
-<OL>
-	<LI><P STYLE="margin-bottom: 0in"><B>Download this <A HREF="https://metroplugineclipse.dev.java.net/source/browse/*checkout*/metroplugineclipse/trunk/docs/SearchWS.wsdl">WSDL</A>
-	file and save it in a suitable location.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Right-click the Web Project
-	created in the previous task, in Project Explorer and select
-	New-&gt;Other...</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Browse the Web Services
-	category and select Web Service from Menu.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Select </B><TT><B>Top down Java
-	bean Web Service</B></TT> <B>and click Browse... to choose the WSDL
-	file.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click OK to close the dialog
-	box</B> 
-	</P>
-	<LI><P><B>Enter the direct file link to your WSDL file from the web
-	browser as follows: </B>
-	</P>
-	<P><TT>file:///Users/admin/work/sources/eclipse/metro/docs/SearchWS.wsdl.</TT></P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click Web Service runtime
-	option and select METRO Runtime from the dialog box.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click OK.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click Next.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Accept the default options and
-	click Next.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Start the Server if necessary,
-	depending on the state of Server.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Enter your GlassFish Server
-	admin login and password if requested.</B> 
-	</P>
-	<LI><P><B>Click Finish to close the wizard. </B>
-	</P>
-	<P>The Web Service is created, but deployment to server fails,
-	because implementation of the service is missing.</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click the error message
-	(light-bulb icon) next to the compilation error, and choose Add
-	Unimplemented Methods.</B> 
-	</P>
-	<LI><P><B>Implement the service method. An example Service method
-	source is as follows:</B></P>
-	<PRE>package org.tempuri;
+ </pre></li>
+<li><b>From the Project Explorer, select MyHelloService java class.</b></li>
+<li><b>Right-click the java class and select WebServices->Create Web Service.</b></li>
+<li><b>In the Service section, move the Service slider one level up to the
+top, to enable <tt>Test Service</tt> stage.</b></li>
+<li><b>Click Web Service runtime entry.</b></li>
+<li><b>Select METRO Runtime in the dialog box.</b></li>
+<li><b>Click OK to close the dialog box.</b><p>Your configuration will look like this:</p><br><img src="figures/WebServiceCreate.gif" alt="" width="650" height="615"></img></li>
+<li><b>Click Next.</b><p>Options screen is displayed. You can customize your options for:</p>
+<ul><li><p>Generation of JSR 109 portable /JAX-WS RI specific Web Service.</p></li>
+<li><p>Packaging of Metro libraries in war file.</p></li></ul>
+<p>The default options are set based on your target runtime platform.</p></li>
+<li><b>Click Next.</b></li>
+<li><b>Start the Server if necessary, depending on the state of Server.</b></li>
+<li><b>Enter your GlassFish Server admin login and password if requested.</b></li>
+<li><b>Click Launch, when presented with option to launch Web Service testing facility.</b><p>Browser opens page where you can test the web service.</p></li>
+<li><b>Click Finish to complete the wizard.</b><p>At this stage a web service has been created and deployed on the
+server.</p></li>
+<li><b>Click <tt>sayHello</tt> link in the web page, and then click Add to add
+the parameter value.</b></li>
+<li><b>Enter your name in the text field and click Go.</b></li>
+<li><b>The service will respond with <tt>Hello $YOUR_NAME</tt> message.</b></li>
+<li><b>Click Source link to see the SOAP communication.</b><p>The result shall look like this:</p><br><img src="figures/WSExplorer-Tester.gif" alt="" width="560" height="556"></img></li></ol>
+
+<a name="giupt"></a><h4>To create a new Metro based Web Service from <tt>WSDL</tt></h4><ol>
+<li><b>Download this <a href="https://metroplugineclipse.dev.java.net/source/browse/*checkout*/metroplugineclipse/trunk/docs/SearchWS.wsdl">WSDL</a> file and save it in a suitable location.</b></li>
+<li><b>Right-click the Web Project created in the previous task, in Project Explorer and
+select New->Other.</b></li>
+<li><b>Browse the Web Services category and select Web Service from Menu.</b></li>
+<li><b>Click Next.</b></li>
+<li><b>Select <tt>Top down Java bean Web Service</tt> and click Browse to choose the WSDL file.</b></li>
+<li><b>Click OK to close the dialog box.</b></li>
+<li><b>Enter the direct file link to your WSDL file from the web
+browser as follows:</b><p><tt>file:///Users/admin/work/sources/eclipse/metro/docs/SearchWS.wsdl</tt>.</p></li>
+<li><b>Click Web Service runtime option and select METRO Runtime from the dialog box.</b></li>
+<li><b>Click OK.</b><p>Your configuration will look like this:</p><br><img src="figures/WebService-WSDL.gif" alt="" width="627" height="712"></img></li>
+<li><b>Click Next.</b></li>
+<li><b>Accept the default options and click Next.</b></li>
+<li><b>Start the Server if necessary, depending on the state of Server.</b></li>
+<li><b>Enter your GlassFish Server admin login and password if requested.</b></li>
+<li><b>Click Finish to close the wizard. </b><p>The Web Service is created, but deployment to server fails, because implementation of
+the service is missing.</p></li>
+<li><b>Click the error message (light-bulb icon) next to the compilation error, and choose
+Add Unimplemented Methods.</b></li>
+<li><b>Implement the service method. An example Service method source is as follows:</b><pre>package org.tempuri;
 
 import javax.jws.*;
 
-@WebService(wsdlLocation = &quot;WEB-INF/wsdl/SearchWS.wsdl&quot;,
-            serviceName = &quot;WebSearchWS&quot;,
-            portName = &quot;WebSearchWSSoap&quot;,
-            endpointInterface = &quot;org.tempuri.WebSearchWSSoap&quot;)
+@WebService(wsdlLocation = "WEB-INF/wsdl/SearchWS.wsdl",
+            serviceName = "WebSearchWS",
+            portName = "WebSearchWSSoap",
+            endpointInterface = "org.tempuri.WebSearchWSSoap")
 public class WebSearchWSSoapImpl implements org.tempuri.WebSearchWSSoap {
 
     public String search(String keyWord) {
-        return &quot;Search Result for: &quot; + keyWord;
+        return "Search Result for: " + keyWord;
     }    
 
-}</PRE>
-	<LI><P STYLE="margin-bottom: 0in"><B>Right-click the web project
-	node, and select Run As -&gt;Run On Server to deploy the
-	application.</B> 
-	</P>
-	<LI><P><B>Visit the web service URL from browser.</B></P>
-	<P>For example:</P>
-	<P>http://localhost:8080/MyFirstWebApp/WebSearchWS?Tester</P>
-	<LI><P><B>Input a search string and click Search.</B></P>
-	<P>The result shall look like this:</P>
-	<P><IMG SRC="TesterInvocation.png" NAME="graphics4" ALIGN=LEFT WIDTH=625 HEIGHT=607 BORDER=0><BR CLEAR=LEFT></P>
-</OL>
-<H4><A NAME="giuod"></A>Configure the Web Service policies</H4>
-<OL>
-	<LI><P STYLE="margin-bottom: 0in"><B>Browse the WSDL of the web
-	service, in the project you created in the previous task.</B> 
-	</P>
-	<LI><P><B>Right-click it and select Web Services-&gt;WS-Policy
-	Configuration.</B></P>
-	<P>WS-Policy configuration dialog box is opened.</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Click the Reliable Message
-	Delivery checkbox and click OK to save the value and close the
-	dialog box.</B> 
-	</P>
-	<LI><P STYLE="margin-bottom: 0in"><B>Deploy the project again (Run
-	As-&gt;Run On Server)</B> 
-	</P>
-	<LI><P><B>Visit the service URL.</B></P>
-	<P>For example:</P>
-	<P>http://localhost:8080/MyFirstWebApp/WebSearchWS?Tester</P>
-	<LI><P><B>Click the WSDL link to see the WSDL of the service.</B></P>
-	<P>Scroll down to see the policy definition:</P>
-	<P><IMG SRC="RMPolicyInWSDL.png" NAME="graphics2" ALIGN=LEFT WIDTH=542 HEIGHT=204 BORDER=0><BR CLEAR=LEFT></P>
-	<LI><P><B>Get back to the Tester page in browser, input a search
-	string in the search box and click Search.</B></P>
-	<P>Notice the change in the soap communication:</P>
-	<P><IMG SRC="PolicyTesterInvocation.png" NAME="graphics3" ALIGN=LEFT WIDTH=627 HEIGHT=483 BORDER=0><BR CLEAR=LEFT></P>
-</OL>
-<TABLE WIDTH=100% BORDER=0 CELLPADDING=5 CELLSPACING=0>
-	<TR VALIGN=BOTTOM>
-		<TD></TD>
-		<TD></TD>
-		<TD>
-			<P><A HREF="p6.html">Previous</A></P>
-		</TD>
-		<TD></TD>
-		<TD></TD>
-		<TD>
-			<P><A HREF="p8.html">Next</A></P>
-		</TD>
-	</TR>
-</TABLE>
-<P><BR><BR>
-</P>
-</BODY>
-</HTML>
+}</pre></li>
+<li><b>Right-click the web project node, and select Run As ->Run On Server to
+deploy the application.</b></li>
+<li><b>Visit the web service URL from browser.</b><p>For example:</p><p>http://localhost:8080/MyFirstWebApp/WebSearchWS?Tester</p></li>
+<li><b>Input a search string and click Search.</b><p>The result shall look like this:</p><br><img src="figures/TesterInvocation.gif" alt="" width="558" height="748"></img></li></ol>
+
+<a name="giuod"></a><h4>Configure the Web Service Policies</h4><ol>
+<li><b>Browse the WSDL of the web service, in the project you created in
+the previous task.</b></li>
+<li><b>Right-click it and select Web Services->WS-Policy Configuration.</b><p>WS-Policy configuration dialog box is opened.</p></li>
+<li><b>Select the Reliable Message Delivery checkbox and click OK to save the value
+and close the dialog box.</b></li>
+<li><b>Deploy the project again (Run As->Run On Server)</b></li>
+<li><b>Visit the service URL from web browser.</b><p>For example:</p><p>http://localhost:8080/MyFirstWebApp/WebSearchWS?Tester</p></li>
+<li><b>Click the WSDL link to see the WSDL of the service.</b><p>Scroll down to see the policy definition:</p><br><img src="figures/RMPolicyin-WSDL.gif" alt="" width="381" height="193"></img></li>
+<li><b>Go back to the Tester page in browser, input a search string in
+the search box and click Search.</b><p>Notice the change in the soap communication:</p><br><img src="figures/PolicyTesterInvocation.gif" alt="" width="1095" height="937"></img></li></ol>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p6.html">Previous</a></td>
+<td></td>
+<td></td>
+<td><a href="p8.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+
