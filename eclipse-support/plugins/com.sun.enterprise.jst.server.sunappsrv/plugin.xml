@@ -1014,6 +1014,10 @@
              id="com.sun.enterprise.jst.server.sunappsrv"
              name="%sunappserver.wizardcategory">
        </category>
+       <category
+             id="com.sun.enterprise.jst.server.sailfin"
+             name="%sipserver.wizardcategory">
+       </category>
        <wizard
              category="com.sun.enterprise.jst.server.sunappsrv"
              class="com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.JDBCWizard"
@@ -1021,6 +1025,13 @@
              id="com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.JDBCWizard"
              name="%sunappserver.sunresourceslabel">
        <selection class="org.eclipse.core.resources.IResource"/>
+       </wizard>
+       <wizard
+             category="com.sun.enterprise.jst.server.sailfin"
+             class="com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards.SIPServletWizard"
+             icon="icons/obj16/glassfishserver.gif"
+             id="com.sun.enterprise.jst.server.sunappsrv.wizards.SIPServletWizard"
+             name="%sipserver.sipservletlabel">
        </wizard>
     </extension>
  
@@ -1421,5 +1432,4 @@
  	                </association>
  	        
  	        </extension>
- 	   
     </plugin>
