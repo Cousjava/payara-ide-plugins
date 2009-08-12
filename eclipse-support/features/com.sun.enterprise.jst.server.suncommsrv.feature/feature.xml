@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.sun.enterprise.jst.server.suncommsrv.feature"
-      label="Adapter for SailFin Converged Application Server"
+      label="Adapter for Sailfin Converged Application Server"
       version="1.0.30"
       provider-name="java.net"
       image="WindsurferSharp-100x111.png">
 
    <description url="https://glassfishplugins.dev.java.net/">
-      Provides development and publishing tools for SailFin Converged Application Server (versions v1 and v2) which supports applications built on the Java EE 5 and the SIP Servlet version 1.1 specifications.
+      Provides development and publishing tools for Sailfin Converged Application Server (versions v1 and v2) which supports applications built on the Java EE 5 and the SIP Servlet version 1.1 specifications.
    </description>
 
    <copyright>
@@ -1266,7 +1266,7 @@ COPYRIGHT © 2008 THE ECLIPSE FOUNDATION. ALL RIGHTS RESERVED
    </license>
 
    <url>
-      <discovery label="SailFin Converged Application Server and jMaki Eclipse Update Center" url="https://ajax.dev.java.net/eclipse/"/>
+      <discovery label="Sailfin Converged Application Server and jMaki Eclipse Update Center" url="https://ajax.dev.java.net/eclipse/"/>
    </url>
 
    <requires>
