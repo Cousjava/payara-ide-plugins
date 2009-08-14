@@ -38,35 +38,24 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards;
 
-import org.eclipse.jst.j2ee.internal.web.operations.NewServletClassDataModelProvider;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 
 /**
- * This page makes use of the and model (NewServletClassDataModelProvider) for basic 
- * synchronization and validation but does not use it for the generation of the code.
+ * This is a wizard that creates a new SIPListener.
  */
 
-@SuppressWarnings("restriction")
-public class SIPServletWizardPage extends AbstractSIPWizardPage {
-	private static final String SIP_SUPERCLASS_NAME = "javax.servlet.sip.SipServlet"; //$NON-NLS-1$
-	private static final String DEFAULT_NAME = "NewSipServlet"; //$NON-NLS-1$
+public class SIPListenerWizard extends AbstractSIPWizard {
+	/**
+	 * location of the sip listener creation template file
+	 */
+	private static final String RESOURCE_FILE_TEMPLATE = "../templates/SipListener-java-template.resource"; //$NON-NLS-1$
 
-	public SIPServletWizardPage() {
-		super(DataModelFactory.createDataModel(new NewServletClassDataModelProvider()), 
-				Messages.ServletWizardDescription, Messages.ServletWizardTitle);
-	}
-
-	protected Composite createTopLevelComposite(Composite parent) {
-		Composite superComposite = super.createTopLevelComposite(parent);
-		superText.setText(SIP_SUPERCLASS_NAME);
-		superText.setEnabled(false);
-		superButton.setEnabled(false);
-		return superComposite;
+	@Override
+	protected AbstractSIPWizardPage createWizardPage() {
+		return new SIPListenerWizardPage();
 	}
 
 	@Override
-	protected String getDefaultClassName() {
-		return DEFAULT_NAME;
+	protected String getTemplateName() {
+		return RESOURCE_FILE_TEMPLATE;
 	}
 }

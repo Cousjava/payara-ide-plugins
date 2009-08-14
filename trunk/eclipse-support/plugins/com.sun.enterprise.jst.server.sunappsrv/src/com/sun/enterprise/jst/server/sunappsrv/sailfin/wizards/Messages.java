@@ -43,11 +43,15 @@ package com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards;
 public class Messages extends org.eclipse.osgi.util.NLS {
     static {
         org.eclipse.osgi.util.NLS.initializeMessages(
-                "com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards.Messages", Messages.class);
+                "com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards.Messages", Messages.class); //$NON-NLS-1$
     }
     
 	public static String ProjectName;
-    public static String wizardTitle;
-    public static String wizardDescription;
+    public static String ServletWizardTitle;
+    public static String ServletWizardDescription;
+    public static String ListenerWizardTitle;
+    public static String ListenerWizardDescription;
+    public static String implementsLabel;
     public static String ErrorTitle;
+    public static String errorInterfacesMissing;
 }
