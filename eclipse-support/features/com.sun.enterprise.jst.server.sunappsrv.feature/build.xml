@@ -54,7 +54,7 @@
             <param name="os" value="*"/>
             <param name="feature.base" value="${feature.temp.folder}"/>
         </antcall>
-        <jar destfile="${feature.destination}/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.30.jar" basedir="${feature.temp.folder}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.30"/>
+        <jar destfile="${feature.destination}/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.31.jar" basedir="${feature.temp.folder}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.31"/>
         <delete dir="${feature.temp.folder}"/>
     </target>
     
@@ -63,8 +63,8 @@
             <param name="destination.temp.folder" value="${feature.base}/plugins"/>
             <param name="target" value="gather.bin.parts"/>
         </antcall>
-        <mkdir dir="${feature.base}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.30"/>
-        <copy todir="${feature.base}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.30" failonerror="true" overwrite="false">
+        <mkdir dir="${feature.base}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.31"/>
+        <copy todir="${feature.base}/features/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.31" failonerror="true" overwrite="false">
             <fileset dir="${basedir}" includes="feature.xml,glassfish.gif"			/>
         </copy>
         <!--eclipse.idReplacer featureFilePath="${feature.base}/features/org.jvnet.ajax.eclipse.jmaki.feature_0.9.2/feature.xml"  selfVersion="0.9.2" featureIds="" pluginIds="org.jvnet.ajax.eclipse.jmaki.feature,0.9.2,"/>
@@ -84,15 +84,15 @@
             <param name="feature.base" value="${feature.temp.folder}"/>
             <param name="os" value="*"/>
         </antcall>
-        <zip destfile="${feature.destination}/ocom.sun.enterprise.jst.server.sunappsrv.feature_1.0.30.bin.dist.zip" basedir="${feature.temp.folder}" filesonly="false" whenempty="skip" update="false"/>
+        <zip destfile="${feature.destination}/ocom.sun.enterprise.jst.server.sunappsrv.feature_1.0.31.bin.dist.zip" basedir="${feature.temp.folder}" filesonly="false" whenempty="skip" update="false"/>
         <delete dir="${feature.temp.folder}"/>
     </target>
     
 
     
     <target name="clean" depends="init" description="Clean the feature: com.sun.enterprise.jst.server.sunappsrv.feature of all the zips, jars and logs created.">
-        <delete file="${feature.destination}/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.30.jar"/>
-        <delete file="${feature.destination}/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.30.bin.dist.zip"/>
+        <delete file="${feature.destination}/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.31.jar"/>
+        <delete file="${feature.destination}/com.sun.enterprise.jst.server.sunappsrv.feature_1.0.31.bin.dist.zip"/>
         <delete dir="${feature.temp.folder}"/>
         <antcall target="all.children">
             <param name="target" value="clean"/>
