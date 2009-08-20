@@ -257,25 +257,27 @@ public class ReadDomainInfo {
     }
 
     private boolean removeProfiler(Document domainDoc) {
-        // Remove any previously defined 'profiler' element(s)
-        NodeList profilerElementNodeList = domainDoc.getElementsByTagName("profiler"); //$NON-NLS-1$
-        if (profilerElementNodeList != null && profilerElementNodeList.getLength() > 0) {
-            Vector<Node> nodes = new Vector<Node>(); //temp storage for the nodes to delete
-            //we only want to delete the NBPROFILERNAME nodes.
-            // otherwise, see bug # 77026
-            for (int i = 0; i < profilerElementNodeList.getLength(); i++) {
-                Node n = profilerElementNodeList.item(i);
-                Node a = n.getAttributes().getNamedItem("name"); //$NON-NLS-1$
-                if ((a != null) && (a.getNodeValue().equals("TPTP"))) { //$NON-NLS-1$
-                    nodes.add(n);
-                }
-            }
-            for (int i = 0; i < nodes.size(); i++) {
-                Node nd = nodes.get(i);
-                nd.getParentNode().removeChild(nd);
-            }
-            return true;
-        }
+    	if (domainDoc != null) {
+	        // Remove any previously defined 'profiler' element(s)
+	        NodeList profilerElementNodeList = domainDoc.getElementsByTagName("profiler"); //$NON-NLS-1$
+	        if (profilerElementNodeList != null && profilerElementNodeList.getLength() > 0) {
+	            Vector<Node> nodes = new Vector<Node>(); //temp storage for the nodes to delete
+	            //we only want to delete the NBPROFILERNAME nodes.
+	            // otherwise, see bug # 77026
+	            for (int i = 0; i < profilerElementNodeList.getLength(); i++) {
+	                Node n = profilerElementNodeList.item(i);
+	                Node a = n.getAttributes().getNamedItem("name"); //$NON-NLS-1$
+	                if ((a != null) && (a.getNodeValue().equals("TPTP"))) { //$NON-NLS-1$
+	                    nodes.add(n);
+	                }
+	            }
+	            for (int i = 0; i < nodes.size(); i++) {
+	                Node nd = nodes.get(i);
+	                nd.getParentNode().removeChild(nd);
+	            }
+	            return true;
+	        }
+    	}
 
         return false;
     }
