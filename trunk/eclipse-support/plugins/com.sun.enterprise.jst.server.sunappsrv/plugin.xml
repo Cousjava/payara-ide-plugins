@@ -1040,6 +1040,13 @@
              id="com.sun.enterprise.jst.server.sunappsrv.wizards.SIPListenerWizard"
              name="%sipserver.siplistenerlabel">
        </wizard>
+       <wizard
+             category="com.sun.enterprise.jst.server.sunappsrv"
+             class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard"
+             icon="icons/obj16/glassfishserver.gif"
+             id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard"
+             name="%sunappserver.webservletlabel">
+       </wizard>
     </extension>
  
 
