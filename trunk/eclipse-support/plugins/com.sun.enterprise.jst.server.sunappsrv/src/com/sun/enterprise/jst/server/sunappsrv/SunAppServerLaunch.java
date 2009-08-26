@@ -46,6 +46,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
@@ -69,16 +70,20 @@ import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.server.core.ServerProfilerDelegate;
+import org.eclipse.osgi.service.resolver.BundleDescription;
+import org.eclipse.osgi.service.resolver.State;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
+import org.osgi.framework.Version;
 
 import com.sun.enterprise.jst.server.sunappsrv.log.GlassFishConsole;
 import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
 
+@SuppressWarnings("restriction")
 public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate {
 
     public static final String GFV3_MODULES_DIR_NAME = "modules"; //$NON-NLS-1$
@@ -97,6 +102,15 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             ret = ".bat"; //$NON-NLS-1$
         }
         return ret;
+    }
+    
+    private static Version getCurrentVersion(String bundleId) {
+    	State s = Platform.getPlatformAdmin().getState();
+        if (null == s) {
+            return null;
+        }
+    	BundleDescription bd = s.getBundle(bundleId, null); //$NON-NLS-1$
+    	return  null == bd ? null : bd.getVersion();
     }
 
     @SuppressWarnings("restriction")
@@ -208,39 +222,36 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 serverBehavior.getDomainName());
         if (ILaunchManager.PROFILE_MODE.equals(mode)) {
             try {
-                ServerProfilerDelegate.configureProfiling(launch, vm2, runConfig,
-                        monitor);
-                String[] vmArgs2 = runConfig.getVMArguments();
-                String nativeLib = "";
-                for (String nameVal : runConfig.getEnvironment()) {
-                	String jph = "JAVA_PROFILER_HOME="; //$NON-NLS-1$
-                    if (nameVal.startsWith(jph)) { 
-                        nativeLib = nameVal.substring(jph.length());
+            	// if the IDE is less than Galileo... don't attempt to do
+            	// profiling...
+            	//
+            	Version tptpVersion = getCurrentVersion("org.eclipse.tptp.platform.models");
+            	Version testVersion = new Version(4,5,9);
+            	if (null == tptpVersion || tptpVersion.compareTo(testVersion) < 1) {
+            		// open info dialog
+            		ProfilerInfoMessage.display(Messages.profilingUnsupportedInVersion);
+                    di.removeProfilerElements();
+            	} else {
+                    ServerProfilerDelegate.configureProfiling(launch, vm2, runConfig,
+                            monitor);
+                    String[] vmArgs2 = runConfig.getVMArguments();
+                    String nativeLib = "";
+                    for (String nameVal : runConfig.getEnvironment()) {
+                        String jph = "JAVA_PROFILER_HOME="; //$NON-NLS-1$
+                        if (nameVal.startsWith(jph)) {
+                            nativeLib = nameVal.substring(jph.length());
+                        }
                     }
+                    if (vmArgs2 != null && vmArgs2.length == 1) {
+                        String orig = vmArgs2[0];
+                        String[] broken = orig.split(":");
+                        String fixed = broken[0] + ":" + nativeLib + File.separator + broken[1] + ":" + broken[2];
+                        vmArgs2[0] = fixed;
+                    }
+                    di.addProfilerElements(nativeLib, vmArgs2);
                 }
-                if (vmArgs2 != null && vmArgs2.length == 1) {
-                	String orig = vmArgs2[0];
-                	String[] broken = orig.split(":");
-                	String fixed = broken[0]+":"+nativeLib+File.separator+broken[1]+":"+broken[2];
-                	vmArgs2[0]=fixed;
-                }
-                di.addProfilerElements(nativeLib, vmArgs2);
             } catch (CoreException ce) {
-                ce.printStackTrace(System.err);
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    public void run() {
-                        final Shell shell = new Shell(Display.getDefault());
-                        MessageDialog message;
-                        //Shell shell = new Shell(Display.getDefault());
-                        String labels[] = new String[1];
-                        labels[0] = Messages.OKButton;
-                        message = new MessageDialog(shell, Messages.startupWarning, null, Messages.noProfilersConfigured, MessageDialog.WARNING, labels, 1);
-                        message.open();
-                        shell.dispose();
-
-                    }
-                });
+                ProfilerInfoMessage.display(Messages.noProfilersConfigured);
                 di.removeProfilerElements();
             }
         } else {
@@ -426,5 +437,24 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 }
             } catch (InterruptedException ex) {}
         }
+    }
+    
+    static class ProfilerInfoMessage {
+    	static void display(final String mess) {
+    		Display.getDefault().asyncExec(new Runnable() {
+
+                public void run() {
+                    final Shell shell = new Shell(Display.getDefault());
+                    MessageDialog message;
+                    //Shell shell = new Shell(Display.getDefault());
+                    String labels[] = new String[1];
+                    labels[0] = Messages.OKButton;
+                    message = new MessageDialog(shell, Messages.startupWarning, null, mess, MessageDialog.WARNING, labels, 1);
+                    message.open();
+                    shell.dispose();
+
+                }
+            });
+    	}
     }
 }

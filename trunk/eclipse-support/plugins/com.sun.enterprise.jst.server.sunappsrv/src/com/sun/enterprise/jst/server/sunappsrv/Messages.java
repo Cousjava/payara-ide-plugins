@@ -75,4 +75,5 @@ public class Messages extends org.eclipse.osgi.util.NLS {
 
     public static String startupWarning;
     public static String noProfilersConfigured;
+	public static String profilingUnsupportedInVersion;
 }
