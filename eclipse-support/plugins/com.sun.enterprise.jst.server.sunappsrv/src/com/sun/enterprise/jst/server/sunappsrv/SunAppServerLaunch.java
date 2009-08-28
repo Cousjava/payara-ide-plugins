@@ -109,7 +109,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         if (null == s) {
             return null;
         }
-    	BundleDescription bd = s.getBundle(bundleId, null); //$NON-NLS-1$
+    	BundleDescription bd = s.getBundle(bundleId, null);
     	return  null == bd ? null : bd.getVersion();
     }
 
@@ -225,7 +225,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             	// if the IDE is less than Galileo... don't attempt to do
             	// profiling...
             	//
-            	Version tptpVersion = getCurrentVersion("org.eclipse.tptp.platform.models");
+            	Version tptpVersion = getCurrentVersion("org.eclipse.tptp.platform.models"); //$NON-NLS-1$
             	Version testVersion = new Version(4,5,9);
             	if (null == tptpVersion || tptpVersion.compareTo(testVersion) < 1) {
             		// open info dialog
@@ -235,7 +235,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                     ServerProfilerDelegate.configureProfiling(launch, vm2, runConfig,
                             monitor);
                     String[] vmArgs2 = runConfig.getVMArguments();
-                    String nativeLib = "";
+                    String nativeLib = "";  //$NON-NLS-1$
                     for (String nameVal : runConfig.getEnvironment()) {
                         String jph = "JAVA_PROFILER_HOME="; //$NON-NLS-1$
                         if (nameVal.startsWith(jph)) {
@@ -244,8 +244,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                     }
                     if (vmArgs2 != null && vmArgs2.length == 1) {
                         String orig = vmArgs2[0];
-                        String[] broken = orig.split(":");
-                        String fixed = broken[0] + ":" + nativeLib + File.separator + broken[1] + ":" + broken[2];
+                        String[] broken = orig.split(":"); //$NON-NLS-1$
+                        String fixed = broken[0] + ":" + nativeLib + File.separator + broken[1] + ":" + broken[2]; //$NON-NLS-1$
                         vmArgs2[0] = fixed;
                     }
                     di.addProfilerElements(nativeLib, vmArgs2);
