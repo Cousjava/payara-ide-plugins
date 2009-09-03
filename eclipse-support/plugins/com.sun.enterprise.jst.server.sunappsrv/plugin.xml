@@ -1047,6 +1047,16 @@
              id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard"
              name="%sunappserver.webservletlabel">
        </wizard>
+       <wizard
+             category="com.sun.enterprise.jst.server.sunappsrv"
+             class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard"
+             icon="icons/obj16/glassfishserver.gif"
+             id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard"
+             name="%sunappserver.sessionbeanlabel">
+         <description>
+            %sunappserver.sessionbean.BeanWebRegionWizard.description
+         </description>
+       </wizard>
     </extension>
  
 
