@@ -99,7 +99,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 						SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize V3 DOMAINDIR_MATCHING"  );
 						setStartedState();
 
-						return;
+                                                return;
 					} else {
 						SunAppSrvPlugin.logMessage("***in SunAppServerBehaviour initialize V3 DOMAINDIR_NOT_MATCHING, will reset to stop shortly"  );
 					}
@@ -157,8 +157,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		SunAppServer  sunserver = getSunAppServer();
 		if (sunserver.isRunning()){
 			SunAppSrvPlugin.logMessage("in SunAppServerBehaviour CTOR after sunserver it is running!!!");
-			setMode(ILaunchManager.RUN_MODE);
-			setStartedState();
+			setMode(launchMode); //ILaunchManager.RUN_MODE);
+			setStartedState(launchMode);
 
 
 		} 
@@ -170,17 +170,24 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 
 
 				SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setupLaunch  ALREADY STARTED!!!!!!");
-				setMode(ILaunchManager.RUN_MODE);
-				setStartedState();
+				setMode(launchMode); //ILaunchManager.RUN_MODE);
+				setStartedState(launchMode);
 				return;
 			}
 		}
 		resetStatus(state);
 	}
 
-	public void setStartedState(){
-		setServerState(IServer.STATE_STARTED);
-		resetStatus(IServer.STATE_STARTED);		
+        public void setStartedState() {
+            setStartedState(null);
+        }
+
+	public void setStartedState(String mode){
+            if (null != mode) {
+		setServerMode(mode);
+            }
+            setServerState(IServer.STATE_STARTED);
+            resetStatus(IServer.STATE_STARTED);
 	}
 	
 	
