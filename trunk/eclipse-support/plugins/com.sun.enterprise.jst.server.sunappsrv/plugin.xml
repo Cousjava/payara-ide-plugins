@@ -1024,6 +1024,9 @@
              icon="icons/obj16/glassfishserver.gif"
              id="com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.JDBCWizard"
              name="%sunappserver.sunresourceslabel">
+         <description>
+            %sunappserver.sunresources.BeanWebRegionWizard.description
+         </description>
        <selection class="org.eclipse.core.resources.IResource"/>
        </wizard>
        <wizard
@@ -1032,6 +1035,9 @@
              icon="icons/obj16/glassfishserver.gif"
              id="com.sun.enterprise.jst.server.sunappsrv.wizards.SIPServletWizard"
              name="%sipserver.sipservletlabel">
+         <description>
+            %sipserver.sipservlet.BeanWebRegionWizard.description
+         </description>
        </wizard>
        <wizard
              category="com.sun.enterprise.jst.server.sailfin"
@@ -1039,6 +1045,9 @@
              icon="icons/obj16/glassfishserver.gif"
              id="com.sun.enterprise.jst.server.sunappsrv.wizards.SIPListenerWizard"
              name="%sipserver.siplistenerlabel">
+         <description>
+            %sipserver.siplistener.BeanWebRegionWizard.description
+         </description>
        </wizard>
        <wizard
              category="com.sun.enterprise.jst.server.sunappsrv"
@@ -1046,6 +1055,9 @@
              icon="icons/obj16/glassfishserver.gif"
              id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard"
              name="%sunappserver.webservletlabel">
+         <description>
+            %sunappserver.webservlet.BeanWebRegionWizard.description
+         </description>
        </wizard>
        <wizard
              category="com.sun.enterprise.jst.server.sunappsrv"
