@@ -178,9 +178,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
         IVMInstall vm2 = verifyVMInstall(configuration);
         IVMRunner runner = vm2.getVMRunner(mode);
-        if (runner == null) {
-            runner = vm2.getVMRunner(ILaunchManager.RUN_MODE);
-        }
 
         File workingDir = verifyWorkingDirectory(configuration);
         String workingDirName = null;
@@ -385,7 +382,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                         }
 
                     }
-                    serverBehavior.setStartedState();
+                    serverBehavior.setStartedState(mode);
+                    
                     // /////startPingingThread();
                     setDefaultSourceLocator(launch, configuration);
                     if (mode.equals("debug")) { //$NON-NLS-1$
