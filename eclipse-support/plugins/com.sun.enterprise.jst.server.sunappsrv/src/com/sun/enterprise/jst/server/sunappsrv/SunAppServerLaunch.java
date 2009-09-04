@@ -74,6 +74,7 @@ import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.osgi.service.resolver.State;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -439,17 +440,22 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
     
     static class ProfilerInfoMessage {
     	static void display(final String mess) {
-    		Display.getDefault().asyncExec(new Runnable() {
+    		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+    		final Shell shell;
+    		if (null != windows && windows.length > 0) {
+    			shell = windows[0].getShell();
+    		} else {
+    			shell = Display.getDefault().getActiveShell();
+    		}
+
+    		shell.getDisplay().asyncExec(new Runnable() {
 
                 public void run() {
-                    final Shell shell = new Shell(Display.getDefault());
                     MessageDialog message;
-                    //Shell shell = new Shell(Display.getDefault());
                     String labels[] = new String[1];
                     labels[0] = Messages.OKButton;
                     message = new MessageDialog(shell, Messages.startupWarning, null, mess, MessageDialog.WARNING, labels, 1);
                     message.open();
-                    shell.dispose();
 
                 }
             });
