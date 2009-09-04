@@ -225,7 +225,9 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             	//
             	Version tptpVersion = getCurrentVersion("org.eclipse.tptp.platform.models"); //$NON-NLS-1$
             	Version testVersion = new Version(4,5,9);
-            	if (null == tptpVersion || tptpVersion.compareTo(testVersion) < 1) {
+            	if (null == tptpVersion) {
+                    ProfilerInfoMessage.display(Messages.noProfilersConfigured);
+            	} else if (tptpVersion.compareTo(testVersion) < 1) {
             		// open info dialog
             		ProfilerInfoMessage.display(Messages.profilingUnsupportedInVersion);
                     di.removeProfilerElements();
