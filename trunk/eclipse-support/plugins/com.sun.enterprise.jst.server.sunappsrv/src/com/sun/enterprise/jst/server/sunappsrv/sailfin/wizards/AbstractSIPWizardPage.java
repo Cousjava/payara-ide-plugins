@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.common.componentcore.internal.operation.IArtifactEditOperationDataModelProperties;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
+import org.eclipse.wst.server.core.IRuntime;
 
 /**
  * This page makes use of the superclass (NewJavaClassWizardPage) controls and 
@@ -59,6 +60,9 @@ import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 
 @SuppressWarnings("restriction")
 public abstract class AbstractSIPWizardPage extends NewJavaClassWizardPage {
+
+	private static final String SAILFIN1_RUNTIME = "com.sun.enterprise.jst.server.runtime.sailfin1"; //$NON-NLS-1$
+	private static final String SAILFIN2_RUNTIME = "com.sun.enterprise.jst.server.runtime.sailfin2"; //$NON-NLS-1$
 
 	public AbstractSIPWizardPage(IDataModel dataModel, String wizardDescription, String wizardTitle) {
 		super(dataModel, "wizardPage1", wizardDescription, wizardTitle, J2EEProjectUtilities.DYNAMIC_WEB); //$NON-NLS-1$
@@ -71,9 +75,23 @@ public abstract class AbstractSIPWizardPage extends NewJavaClassWizardPage {
 	 */
 	@Override
 	protected boolean isProjectValid(IProject project) {
+		// returns true if super's check is true and the project either has the sip facet or 
+		// is targeted to a sailfin v1 or v2 runtime
 		if (super.isProjectValid(project)) {
 			try {
-				return FacetedProjectFramework.hasProjectFacet(project, "sip.facet"); //$NON-NLS-1$
+				if (FacetedProjectFramework.hasProjectFacet(project, "sip.facet")) { //$NON-NLS-1$
+					return true;
+				}
+
+				IRuntime runtime = J2EEProjectUtilities.getServerRuntime(project);
+
+				if (runtime != null) {
+					String runtimeType = runtime.getRuntimeType().getId();
+					
+					return (runtimeType.equals(SAILFIN1_RUNTIME) || 
+							runtimeType.equals(SAILFIN2_RUNTIME));
+					
+				}
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
