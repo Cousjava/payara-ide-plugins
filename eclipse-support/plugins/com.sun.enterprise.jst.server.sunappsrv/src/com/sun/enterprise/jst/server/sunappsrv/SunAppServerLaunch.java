@@ -227,6 +227,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             	Version testVersion = new Version(4,5,9);
             	if (null == tptpVersion) {
                     ProfilerInfoMessage.display(Messages.noProfilersConfigured);
+                    di.removeProfilerElements();
             	} else if (tptpVersion.compareTo(testVersion) < 1) {
             		// open info dialog
             		ProfilerInfoMessage.display(Messages.profilingUnsupportedInVersion);
