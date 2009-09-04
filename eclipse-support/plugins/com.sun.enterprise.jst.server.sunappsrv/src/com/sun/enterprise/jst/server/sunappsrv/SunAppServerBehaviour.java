@@ -43,6 +43,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -131,8 +133,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			sunserver = (SunAppServer) getServer().loadAdapter(SunAppServer.class, new NullProgressMonitor());
 		}
 		return sunserver;
-	}
-
+        }
+        
 	/* stub this public method from parent since we are not using <start> class definition in the serverdef.
 	 * This was called and created a NPE for our special case.
 	 * Note that this workaround was here before (added in plugin version 1.0.3) but
@@ -180,17 +182,34 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 
         public void setStartedState() {
             setStartedState(null);
-        }
+    }
 
-	public void setStartedState(String mode){
-            if (null != mode) {
-		setServerMode(mode);
+    public void setStartedState(String mode) {
+        if (null != mode) {
+            // setServerMode is a Galileo thing
+            Method setServerMode;
+            try {
+                setServerMode = this.getClass().getMethod("setServerMode", String.class); //$NON-NLS-1$
+                if (setServerMode != null) {
+                    setServerMode.invoke(this, mode);
+                }
+            } catch (SecurityException e) {
+                // TODO Auto-generated catch block
+                SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : security exception"); //$NON-NLS-1$
+            } catch (NoSuchMethodException e) {
+                SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : no such method  exception"); //$NON-NLS-1$
+            } catch (IllegalArgumentException e) {
+                SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : illegal argument exception"); //$NON-NLS-1$
+            } catch (IllegalAccessException e) {
+                SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : illegal access exception"); //$NON-NLS-1$
+            } catch (InvocationTargetException e) {
+                SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : invacation target exception"); //$NON-NLS-1$
             }
-            setServerState(IServer.STATE_STARTED);
-            resetStatus(IServer.STATE_STARTED);
-	}
-	
-	
+        }
+        setServerState(IServer.STATE_STARTED);
+        resetStatus(IServer.STATE_STARTED);
+    }
+
 	/**
 	 * Publish a single module to the server.
 	 * <p>
