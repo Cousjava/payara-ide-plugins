@@ -250,6 +250,9 @@ public  class AssembleModules {
             if (deltas[i].getModuleResource().getName().endsWith (".class")){//class file
             	return true;
             }
+            if (deltas[i].getModuleResource().getName().endsWith (".properties")){//properties file
+            	return true;
+            }
             if (deltas[i].getModuleResource().getName().endsWith (".xml")){//all XML files, including DD files or config files
             	return true;
             }
