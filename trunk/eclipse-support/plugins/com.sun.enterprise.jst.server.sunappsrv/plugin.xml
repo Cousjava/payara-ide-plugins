@@ -1263,7 +1263,7 @@
             </menu>	
             <menu
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3"
-                label="%menu.v3.documentation"
+                label="%menu.v3prelude.documentation"
                 icon="icons/obj16/glassfishserver.gif"
                 path="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1">                
                 <separator name="group1"/>
@@ -1288,7 +1288,15 @@
             </action> 
                                
            <action
-                label="%menu.v3.quickstart"
+                label="%menu.v3.documentation"
+                icon="icons/obj16/glassfishserver.gif"
+                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$TopV3"
+                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
+				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
+               id="com.sun.enterprise.jst.server.sunappsrv.actions.topActionHelpv3">
+             </action>   
+           <action
+                label="%menu.v3prelude.quickstart"
                 icon="icons/obj16/glassfishserver.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$QuickStartGuideV3"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
@@ -1296,7 +1304,7 @@
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.quickstartActionHelpv3">
             </action>            
             <action
-                label="%menu.v3.adminguide"
+                label="%menu.v3prelude.adminguide"
                 icon="icons/obj16/glassfishserver.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$AdminGuideV3"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
@@ -1304,7 +1312,7 @@
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.adminguideActionHelpv3">
             </action>
             <action
-                label="%menu.v3.devguide"
+                label="%menu.v3prelude.devguide"
                 icon="icons/obj16/glassfishserver.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$DevGuideV3"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"
@@ -1312,7 +1320,7 @@
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.devguideActionHelpv3">
             </action> 
              <action
-                label="%menu.v3.appdeployguide"
+                label="%menu.v3prelude.appdeployguide"
                 icon="icons/obj16/glassfishserver.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$AppDeployGuideV3"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/com.sun.enterprise.jst.server.sunappsrv.actions.subMenuV3/group1"

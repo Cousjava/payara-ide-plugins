@@ -46,6 +46,12 @@ package com.sun.enterprise.jst.server.sunappsrv.actions;
 public class HelpActions {
 	//V3 help menu items:
 	
+	public static class TopV3 extends ShowURLAction {
+		public TopV3() { super("http://docs.sun.com/app/docs/coll/1343.9");}
+	}	
+
+	//V3 prelude help menu items:
+	
 	public static class QuickStartGuideV3 extends ShowURLAction {
 		public QuickStartGuideV3() { super("http://docs.sun.com/doc/820-4836");}
 	}	
