@@ -203,7 +203,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
             } catch (IllegalAccessException e) {
                 SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : illegal access exception"); //$NON-NLS-1$
             } catch (InvocationTargetException e) {
-                SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : invacation target exception"); //$NON-NLS-1$
+                SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : invocation target exception"); //$NON-NLS-1$
             }
         }
         setServerState(IServer.STATE_STARTED);
