@@ -42,6 +42,8 @@ import static org.eclipse.jst.j2ee.ejb.internal.operations.INewEnterpriseBeanCla
 import static org.eclipse.jst.j2ee.ejb.internal.operations.INewSessionBeanClassDataModelProperties.LOCAL;
 import static org.eclipse.jst.j2ee.ejb.internal.operations.INewSessionBeanClassDataModelProperties.STATE_TYPE;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -74,6 +76,8 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.WTPPlugin;
 import org.eclipse.wst.server.core.IRuntime;
+
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
 public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
@@ -186,6 +190,36 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 								super.generateInterfacesUsingTemplates(monitor, fragment, tempModel);
 							}
 
+							// this method is the eclipse 3.5 way of doing things
+							// we can't use super or officially "override" with the annotation because
+							// the method doesn't exist in the 3.4.x code
+							//@Override
+							@SuppressWarnings("unused")
+							protected String generateTemplateSource(CreateJavaEEArtifactTemplateModel templateModel, Object templateImpl) 
+								throws JETException {
+					            try {
+					    			Method generateTemplateSource = templateImpl.getClass().getMethod("generate", new Class[] { Object.class }); //$NON-NLS-1$
+					                if (generateTemplateSource != null) {
+										if (!(templateModel instanceof CreateSessionBeanWithSingletonTemplateModel) && 
+												(templateModel instanceof CreateSessionBeanTemplateModel)) {
+											templateModel = new CreateSessionBeanWithSingletonTemplateModel(model);
+										}
+					                	return (String)generateTemplateSource.invoke(templateImpl, templateModel);
+					                }
+					            } catch (SecurityException e) {
+					                SunAppSrvPlugin.logMessage("in JavaEE6SessionBeanWizard generateTemplateSource : security exception"); //$NON-NLS-1$
+					            } catch (NoSuchMethodException e) {
+					                SunAppSrvPlugin.logMessage("in JavaEE6SessionBeanWizard generateTemplateSource : no such method exception"); //$NON-NLS-1$
+					            } catch (IllegalArgumentException e) {
+					                SunAppSrvPlugin.logMessage("in JavaEE6SessionBeanWizard generateTemplateSource : illegal argument exception"); //$NON-NLS-1$
+					            } catch (IllegalAccessException e) {
+					                SunAppSrvPlugin.logMessage("in JavaEE6SessionBeanWizard generateTemplateSource : illegal access exception"); //$NON-NLS-1$
+					            } catch (InvocationTargetException e) {
+					                SunAppSrvPlugin.logMessage("in JavaEE6SessionBeanWizard generateTemplateSource : invocation target exception"); //$NON-NLS-1$
+					            }
+					            return null;
+							}
+							// this method is the eclipse 3.4.x way of doing things
 							/* (non-Javadoc)
 							 * @see org.eclipse.jst.j2ee.internal.common.operations.NewJavaEEArtifactClassOperation#generateTemplateSource(org.eclipse.wst.common.frameworks.internal.WTPPlugin, org.eclipse.jst.j2ee.internal.common.operations.CreateJavaEEArtifactTemplateModel, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 							 */
