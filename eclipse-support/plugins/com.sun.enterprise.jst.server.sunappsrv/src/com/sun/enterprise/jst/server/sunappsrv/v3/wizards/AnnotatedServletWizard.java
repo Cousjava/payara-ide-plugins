@@ -40,6 +40,8 @@ package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
 import static org.eclipse.jst.j2ee.application.internal.operations.IAnnotationsDataModel.USE_ANNOTATIONS;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
@@ -80,6 +82,8 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.WTPPlugin;
 import org.eclipse.wst.server.core.IRuntime;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+
 /**
  * This is a wizard which creates a new annotated servlet, for use 
  * with Java EE 6.  It is provided as a temporary measure to allow for 
@@ -109,8 +113,40 @@ public class AnnotatedServletWizard extends AddServletWizard {
 					@Override
 					protected NewJavaEEArtifactClassOperation getNewClassOperation() {
 						return new NewServletClassOperation(getDataModel()) {
+							// this method is the eclipse 3.5 way of doing things
+							// we can't use super or officially "override" with the annotation because
+							// the method doesn't exist in the 3.4.x code
+							//@Override
+							@SuppressWarnings("unused")
+							protected String generateTemplateSource(CreateJavaEEArtifactTemplateModel templateModel, Object templateImpl) 
+								throws JETException {
+					            try {
+					    			Method generateTemplateSource = templateImpl.getClass().getMethod("generate", new Class[] { Object.class }); //$NON-NLS-1$
+					                if (generateTemplateSource != null) {
+					                	Object superSource = generateTemplateSource.invoke(templateImpl, templateModel);
+										return operateOnSourceGeneratedBySuper((String)superSource, templateModel);
+					                }
+					            } catch (SecurityException e) {
+					                SunAppSrvPlugin.logMessage("in AnnotatedServletWizard generateTemplateSource : security exception"); //$NON-NLS-1$
+					            } catch (NoSuchMethodException e) {
+					                SunAppSrvPlugin.logMessage("in AnnotatedServletWizard generateTemplateSource : no such method exception"); //$NON-NLS-1$
+					            } catch (IllegalArgumentException e) {
+					                SunAppSrvPlugin.logMessage("in AnnotatedServletWizard generateTemplateSource : illegal argument exception"); //$NON-NLS-1$
+					            } catch (IllegalAccessException e) {
+					                SunAppSrvPlugin.logMessage("in AnnotatedServletWizard generateTemplateSource : illegal access exception"); //$NON-NLS-1$
+					            } catch (InvocationTargetException e) {
+					                SunAppSrvPlugin.logMessage("in AnnotatedServletWizard generateTemplateSource : invocation target exception"); //$NON-NLS-1$
+					            }
+					            return null;
+							}
+							// this method is the eclipse 3.4.x way of doing things
+							@Override
 							protected String generateTemplateSource(WTPPlugin plugin, CreateJavaEEArtifactTemplateModel tempModel, String template_file, IProgressMonitor monitor) throws JETException {
-								String source = super.generateTemplateSource(plugin, tempModel, template_file, monitor);
+								return operateOnSourceGeneratedBySuper(
+										super.generateTemplateSource(plugin, tempModel, template_file, monitor), tempModel);
+							}
+
+							private String operateOnSourceGeneratedBySuper(String source, CreateJavaEEArtifactTemplateModel tempModel) {
 								ASTParser parser = ASTParser.newParser(AST.JLS3);  // handles JDK 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6
 								parser.setSource(source.toCharArray());
 								CompilationUnit result = (CompilationUnit) parser.createAST(null);
