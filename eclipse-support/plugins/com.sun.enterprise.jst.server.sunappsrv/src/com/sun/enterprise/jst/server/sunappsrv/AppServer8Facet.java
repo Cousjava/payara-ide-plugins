@@ -48,9 +48,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jst.common.project.facet.JavaProjectFacetCreationDataModelProvider;
-import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
+import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
-import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
@@ -74,19 +73,19 @@ public class AppServer8Facet implements IDelegate {
  ///       IDataModel model = DataModelFactory.createDataModel(new JavaComponentCreationDataModelProvider());
 ///        model.setStringProperty(IComponentCreationDataModelProperties.COMPONENT_NAME, virtualC.getName());
 ///        model.setStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME, prj.getName());
-        String type = J2EEProjectUtilities.getJ2EEProjectType(getProject(model ));
+        IProject project = getProject(model);
         try{
-        	if (IModuleConstants.JST_WEB_MODULE.equals(type)) {
+        	if (JavaEEProjectUtilities.isDynamicWebProject(project)) {
         		SunWebXmlCreate swa= new SunWebXmlCreate(model,"8.x");
         		swa.execute(monitor,null);
         		IndexJSPCreate i= new IndexJSPCreate(model);
         		i.execute(monitor,null);
-        	} else if (IModuleConstants.JST_EJB_MODULE.equals(type)) {
+        	} else if (JavaEEProjectUtilities.isEJBProject(project)) {
         		SunEjbJarXmlCreate sej= new SunEjbJarXmlCreate(model,"8.x");
         		sej.execute(monitor,null);
-        	} else if (IModuleConstants.JST_EAR_MODULE.equals(type)) {
+        	} else if (JavaEEProjectUtilities.isEARProject(project)) {
             
-        } else if (IModuleConstants.JST_CONNECTOR_MODULE.equals(type)) {
+        } else if (JavaEEProjectUtilities.isJCAProject(project)) {
         }
         }catch (ExecutionException e){
         	

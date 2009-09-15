@@ -66,7 +66,6 @@ import org.eclipse.ui.actions.SelectionProviderAction;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
@@ -270,8 +269,7 @@ IWorkbenchWindowActionDelegate {
 
 	protected void showMessageDialog(){
 		MessageDialog message;
-		Shell shell = ServerUIPlugin.getInstance().getWorkbench()
-		.getActiveWorkbenchWindow().getShell();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		String labels[] = new String[1];
 		labels[0] = "OK";
 		message = new MessageDialog(shell, "Cannot Execute this action", null,
@@ -288,7 +286,7 @@ IWorkbenchWindowActionDelegate {
 	}
 
  	protected void showPageInDefaultBrowser(String url) throws PartInitException, MalformedURLException {
-		IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
+		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 		IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
 		browser.openURL(new URL(url));
 	}

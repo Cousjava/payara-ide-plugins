@@ -48,9 +48,9 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
@@ -75,7 +75,7 @@ public class ShowURLAction implements IObjectActionDelegate ,IViewActionDelegate
 		try {
 
 			
-			IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
+			IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 			IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
 			browser.openURL(new URL(url));
 		} catch (Exception e) {
