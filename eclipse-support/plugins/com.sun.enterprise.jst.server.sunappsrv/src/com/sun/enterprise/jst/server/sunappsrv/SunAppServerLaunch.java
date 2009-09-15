@@ -282,6 +282,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
                 pb.environment().put("JAVA_JVM_VERSION", vm.getJavaVersion()); //$NON-NLS-1$
                 pb.environment().put("JAVA_HOME",vm.getInstallLocation().getAbsolutePath()); //$NON-NLS-1$
+                pb.environment().put("AS_JAVA",vm.getInstallLocation().getAbsolutePath()); //$NON-NLS-1$ bug 229
 
                 // how do we stop it at exit???
                 String[] stopcmd = new String[]{
