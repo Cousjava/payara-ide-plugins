@@ -38,10 +38,13 @@
 
 package com.sun.enterprise.jst.server.sunappsrv;
 
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.ui.wizards.IClasspathContainerPage;
+import org.eclipse.jdt.ui.wizards.IClasspathContainerPageExtension;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.jst.server.core.internal.JavaServerPlugin;
-import org.eclipse.jst.server.core.internal.RuntimeClasspathContainer;
-import org.eclipse.jst.server.core.internal.RuntimeClasspathProviderWrapper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,14 +53,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-
-import org.eclipse.jdt.ui.wizards.IClasspathContainerPage;
-import org.eclipse.jdt.ui.wizards.IClasspathContainerPageExtension;
 
 
 public class GlassFishContainerPage extends WizardPage implements

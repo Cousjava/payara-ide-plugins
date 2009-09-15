@@ -76,6 +76,7 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppServerCommands;
  *
  * @author ludo
  */
+@SuppressWarnings("restriction")
 public class ServerSection extends ServerEditorSection implements PropertyChangeListener {
 
 

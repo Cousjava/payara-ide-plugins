@@ -58,7 +58,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
@@ -77,6 +76,7 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.Operatio
  *
  *
  */
+@SuppressWarnings("restriction")
 public class SunAppServerBehaviour extends GenericServerBehaviour {
 	private static final String DEFAULT_DOMAIN_DIR_NAME = "domains"; //$NON-NLS-N$
 	private static final String DEFAULT_DOMAIN_NAME = "domain1"; //$NON-NLS-N$
