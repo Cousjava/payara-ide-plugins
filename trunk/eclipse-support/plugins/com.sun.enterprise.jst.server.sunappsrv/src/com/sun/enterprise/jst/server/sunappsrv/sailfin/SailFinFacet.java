@@ -42,18 +42,15 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jst.common.project.facet.JavaProjectFacetCreationDataModelProvider;
-import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
+import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
-import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
-@SuppressWarnings("restriction")
 public class SailFinFacet implements IDelegate {
 
-    @SuppressWarnings("deprecation")
     public void execute(IProject prj, IProjectFacetVersion arg1, Object arg2,
             IProgressMonitor monitor) throws CoreException {
         IDataModel model = DataModelFactory
@@ -61,10 +58,9 @@ public class SailFinFacet implements IDelegate {
         model.setStringProperty(IFacetDataModelProperties.FACET_PROJECT_NAME,
                 prj.getName());
 
-        String type = J2EEProjectUtilities
-                .getJ2EEProjectType(getProject(model));
+        IProject project = getProject(model);
         try {
-            if (IModuleConstants.JST_WEB_MODULE.equals(type)) {
+			if (JavaEEProjectUtilities.isDynamicWebProject(project)) {
                 SipXmlCreate swa = new SipXmlCreate(model, arg1
                         .getVersionString());
                 swa.execute(monitor, null);

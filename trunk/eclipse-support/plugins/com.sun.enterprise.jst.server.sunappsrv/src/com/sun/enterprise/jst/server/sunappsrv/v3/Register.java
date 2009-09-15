@@ -53,14 +53,14 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.part.MultiPageEditorPart;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
+import com.sun.enterprise.jst.server.sunappsrv.AdminURLHelper;
 import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.AdminURLHelper;
 import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
 
 /**
@@ -106,7 +106,7 @@ public class Register extends MultiPageEditorPart implements IResourceChangeList
         // workaround for eclipse bug 77217
         // OpenSolaris doesn't have internal browser set up properly
         if ("SunOS".equals(System.getProperty("os.name"))) {
-    		IWorkbenchBrowserSupport browserSupport = ServerUIPlugin.getInstance().getWorkbench().getBrowserSupport();
+    		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
     		IWebBrowser externalBrowser;
 			try {
 				externalBrowser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);

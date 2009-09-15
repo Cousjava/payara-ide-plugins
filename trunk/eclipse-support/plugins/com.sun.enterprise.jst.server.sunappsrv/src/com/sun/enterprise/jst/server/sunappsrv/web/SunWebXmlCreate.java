@@ -38,6 +38,7 @@
 package com.sun.enterprise.jst.server.sunappsrv.web;
 
 import java.io.ByteArrayInputStream;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -55,8 +56,6 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
-
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 public class SunWebXmlCreate extends AbstractDataModelOperation  {
     private String version;
