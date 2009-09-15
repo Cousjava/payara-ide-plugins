@@ -88,6 +88,7 @@ import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
  *
  **/
 
+@SuppressWarnings("restriction")
 public class SunAppServer extends GenericServer {
     
     public static final String ROOTDIR = "sunappserver.rootdirectory";	//$NON-NLS-1$

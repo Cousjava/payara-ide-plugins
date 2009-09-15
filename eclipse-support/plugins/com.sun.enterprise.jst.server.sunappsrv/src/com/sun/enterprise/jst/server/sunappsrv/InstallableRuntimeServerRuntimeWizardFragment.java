@@ -39,6 +39,7 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 // it is basically the code from the GenericServerRuntimeWizardFragment
 // (which would be used automatically if the bug wasn't there) which modifies
 // the createContent code to use our own runtime decorator and also pass in a directory name constant
+@SuppressWarnings("restriction")
 public class InstallableRuntimeServerRuntimeWizardFragment extends
         ServerDefinitionTypeAwareWizardFragment {
     private static final String INSTALL_DIR_NAME = "glassfish"; //$NON-NLS-1$

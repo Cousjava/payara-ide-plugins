@@ -10,6 +10,7 @@ import org.eclipse.jdt.internal.core.ClasspathEntry;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler;
 import org.eclipse.wst.server.core.IRuntime;
 
+@SuppressWarnings("restriction")
 public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTargetHandler {
 
     /* (non-Javadoc)

@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.management.monitor.Monitor;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -60,6 +58,7 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
 // so they can interact better b/w the text/browse/download controls and show the license
 // There is also some additional directory checking, permission setting, and error messages
 // Finally, we make use of the IProgressMonitor for task/progress bar reporting
+@SuppressWarnings("restriction")
 public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeDefinitionRuntimeDecorator implements
 	GenericServerCompositeDecorator {
     private  String UNZIP_DIR_NAME = "glassfishv3-prelude"; //$NON-NLS-1$ //by default, v3 prelude otherwise v3 build

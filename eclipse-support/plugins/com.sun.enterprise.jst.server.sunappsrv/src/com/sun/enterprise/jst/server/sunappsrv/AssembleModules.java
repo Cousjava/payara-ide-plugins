@@ -52,20 +52,20 @@ import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
+import org.eclipse.jst.server.generic.core.internal.publishers.ModulePackager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.util.ProjectModule;
 import org.eclipse.wst.server.core.util.PublishHelper;
-import org.eclipse.jst.server.generic.core.internal.publishers.ModulePackager;
 
 /* assemble modules (i.e if a web app depends on a utility lib, we need to create the jar file for this utility and
  * put it in the web-inf/lib area of the web app.
  * Later for v3 we need to also handle ear files
  */
+@SuppressWarnings("restriction")
 public  class AssembleModules {
 
 	protected IModule module; 
@@ -347,7 +347,7 @@ public  class AssembleModules {
 //				packModuleEARModule(module,uri, parent);
 				if(module.getModuleType().getId().equals("jst.web")) {//$NON-NLS-1$					
 				       SunAppSrvPlugin.logMessage("AssembleModules module type is WEB!!!!");
-					AssembleModules assembler= new AssembleModules(module, assembleRoot.append(uri),server);
+					AssembleModules assembler = new AssembleModules(module, assembleRoot.append(uri),server);
 					IPath webAppPath = assembler.assembleWebModule(new NullProgressMonitor());
 					childNeedsARedeployment = (childNeedsARedeployment||assembler.needsARedeployment());
 				       SunAppSrvPlugin.logMessage("AssembleModules web need childNeedsARedeployment=="+childNeedsARedeployment,null);
