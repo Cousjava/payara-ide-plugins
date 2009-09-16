@@ -82,6 +82,7 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropert
  *
  * @author Peter Williams
  */
+@SuppressWarnings("restriction")
 public class CommandRunner extends BasicTask<OperationState> {
     
     public final int HTTP_RETRY_DELAY = 3000;
@@ -103,7 +104,7 @@ public class CommandRunner extends BasicTask<OperationState> {
     private ServerCommand serverCmd;
     
     /** Has been the last access to  manager web app authorized? */
-    private boolean authorized;
+    //private boolean authorized;
     private SunAppServer server;
     
     public CommandRunner(SunAppServer server) {
@@ -371,7 +372,7 @@ public class CommandRunner extends BasicTask<OperationState> {
                             hconn.setRequestProperty("Content-Type", contentType);
                         }
                         hconn.setRequestProperty("User-Agent", "hk2-agent"); // NOI18N
-                        if (!server.getUseAnonymousConnections().equals("true")){
+                        if (server.isV3() || (server.isV3Prelude() && !server.getUseAnonymousConnections().equals("true"))){
                         	// Set up an authorization header with our credentials
                         	// Hk2Properties tp = tm.getHk2Properties();
                         	String input = server.getAdminName() + ":" + server.getAdminPassword();
@@ -385,7 +386,7 @@ public class CommandRunner extends BasicTask<OperationState> {
                         if(respCode == HttpURLConnection.HTTP_UNAUTHORIZED || 
                                 respCode == HttpURLConnection.HTTP_FORBIDDEN) {
                             // connection to manager has not been allowed
-                            authorized = false;
+                            // authorized = false;
                             return fireOperationStateChanged(OperationState.FAILED, 
                                     "MSG_AuthorizationFailed", serverCmd.toString(), instanceName); // NOI18N
                         }

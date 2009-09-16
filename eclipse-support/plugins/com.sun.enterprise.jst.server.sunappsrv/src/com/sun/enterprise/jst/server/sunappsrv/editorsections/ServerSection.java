@@ -204,8 +204,9 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 		adminServerPortNumber.setEnabled(false);
 
 
+		boolean isV3Prelude = sunserver.isV3Prelude();
 
-		if (serverBehavior.isV3()) {
+		if (isV3Prelude) {
 			final Button useAnonymousConnection = new Button(comp, SWT.CHECK);
 			useAnonymousConnection.setText(Messages.UseAnonymousConnection);
 			boolean useAnon=sunserver.getUseAnonymousConnections().equals("true");
@@ -222,7 +223,9 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 					execute(new SunAppServerCommands(server, ""+selected,SunAppServer.USEANONYMOUSCONNECTIONS));
 				}
 			});
+		}
 
+		if (isV3Prelude || sunserver.isV3()) {
 			final Button keepSessions = new Button(comp, SWT.CHECK);
 			keepSessions.setText(Messages.keepSessions);
 			keepSessions.setSelection(sunserver.getKeepSessions().equals("true"));
