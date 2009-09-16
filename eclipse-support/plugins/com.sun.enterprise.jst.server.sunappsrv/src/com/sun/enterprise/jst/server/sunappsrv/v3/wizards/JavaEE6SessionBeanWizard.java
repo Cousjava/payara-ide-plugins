@@ -46,8 +46,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -68,13 +68,18 @@ import org.eclipse.jst.j2ee.internal.common.operations.CreateJavaEEArtifactTempl
 import org.eclipse.jst.j2ee.internal.common.operations.NewJavaEEArtifactClassOperation;
 import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
 import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelPropertyDescriptor;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.WTPPlugin;
+import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelSynchHelper;
 import org.eclipse.wst.server.core.IRuntime;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
@@ -91,6 +96,9 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 	// share help context with superclass, but copy the string here so no dependency issues
 	private static final String PLUGIN_EJB_UI = "org.eclipse.jst.ejb.ui."; //$NON-NLS-1$
 	private static final String EJB_SESSION_BEAN_WIZARD_ADD_SESSION_BEAN_PAGE_1 = PLUGIN_EJB_UI + "sessbw1100"; //$NON-NLS-1$
+
+	private static final String NO_INTERFACE = "INewSessionBeanClassDataModelProperties.NO_INTERFACE"; //$NON-NLS-1$
+	private static final String IEjbWizardConstants_NO_INTERFACE = "No-interface"; //$NON-NLS-1$
 
 	public JavaEE6SessionBeanWizard(IDataModel model) {
 		super(model);
@@ -148,8 +156,33 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 							Composite composite = super.createTopLevelComposite(parent);
 
 							projectNameLabel.setText(Messages.ProjectName);
-
+							Group group = lookupLocalGroup();
+							if (group != null) {
+								Button nointerfaceCheckbox = new Button(group, SWT.CHECK);
+								nointerfaceCheckbox.setText(IEjbWizardConstants_NO_INTERFACE);
+								synchHelper.synchCheckbox(nointerfaceCheckbox, NO_INTERFACE, null);
+							}
 							return composite;
+						}
+						/* (non-Javadoc)
+						 * @see org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage#initializeSynchHelper(org.eclipse.wst.common.frameworks.datamodel.IDataModel)
+						 */
+						@Override
+						public DataModelSynchHelper initializeSynchHelper(
+								IDataModel dm) {
+							return new ExposedControlSynchHelper(dm);
+						}
+						private Group lookupLocalGroup() {
+							if (synchHelper instanceof ExposedControlSynchHelper) {
+								Control localControl = ((ExposedControlSynchHelper)synchHelper).getControl(LOCAL);
+								if (localControl instanceof Button) {
+									Control parentControl = ((Button)localControl).getParent();
+									if (parentControl instanceof Group) {
+										return (Group)parentControl;
+									}
+								}
+							}
+							return null;
 						}
 			};
 			page1.setInfopopID(EJB_SESSION_BEAN_WIZARD_ADD_SESSION_BEAN_PAGE_1);
@@ -160,6 +193,16 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 	@Override
 	protected IDataModelProvider getDefaultProvider() {
 		return (IDataModelProvider) new NewSessionBeanClassDataModelProvider() {
+			/* (non-Javadoc)
+			 * @see org.eclipse.jst.j2ee.ejb.internal.operations.NewSessionBeanClassDataModelProvider#getPropertyNames()
+			 */
+			@Override
+			public Set<String> getPropertyNames() {
+				Set<String> propertyNames = (Set<String>) super.getPropertyNames();
+
+				propertyNames.add(NO_INTERFACE);
+				return propertyNames;
+			}
 			/* (non-Javadoc)
 			 * @see org.eclipse.jst.j2ee.ejb.internal.operations.NewSessionBeanClassDataModelProvider#getDefaultOperation()
 			 */
@@ -289,9 +332,25 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 		};
 	}
 
+	static class ExposedControlSynchHelper extends DataModelSynchHelper {
+
+		public ExposedControlSynchHelper(IDataModel model) {
+			super(model);
+		}
+		protected Control getControl(String propertyName) {
+			Control control = null;
+			if (propertyToWidgetHash != null) {
+				control = (Control) propertyToWidgetHash.get(propertyName);
+			}
+			return control;
+		}
+	}
+
 	static class CreateSessionBeanWithSingletonTemplateModel extends CreateSessionBeanTemplateModel {
 		private static final String SINGLETON_ANNOTATION = "@Singleton"; //$NON-NLS-1$
 		private static final String QUALIFIED_SINGLETON = "javax.ejb.Singleton"; //$NON-NLS-1$
+		private static final String LOCALBEAN_ANNOTATION = "@LocalBean"; //$NON-NLS-1$
+		private static final String QUALIFIED_LOCALBEAN = "javax.ejb.LocalBean"; //$NON-NLS-1$
 
 		public CreateSessionBeanWithSingletonTemplateModel(IDataModel dataModel) {
 			super(dataModel);
@@ -302,14 +361,23 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 		 */
 		@Override
 		public Collection<String> getImports() {
+			Collection<String> returnImports = null;
+
 			// if singleton, can't call super to get imports because state_type comes across as invalid
 			// and throws an exception in super's method
 			String stateType = dataModel.getStringProperty(STATE_TYPE);
 			if (stateType.equals(StateType_SINGLETON)) {
-				return Collections.singletonList(QUALIFIED_SINGLETON);
+				returnImports = new ArrayList<String>();
+				returnImports.add(QUALIFIED_SINGLETON);
+			} else {
+				returnImports = super.getImports();
 			}
-				
-			return super.getImports();
+
+			if (isNoInterface()) {
+				returnImports.add(QUALIFIED_LOCALBEAN);
+			}
+
+			return returnImports;
 		}
 
 		/* (non-Javadoc)
@@ -317,12 +385,14 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 		 */
 		@Override
 		public String getClassAnnotation() {
+			String noInterfacePrefix = (isNoInterface() ? LOCALBEAN_ANNOTATION + "\n" : ""); //$NON-NLS-1$ //$NON-NLS-2$
 			String stateType = dataModel.getStringProperty(STATE_TYPE);
-			if (stateType.equals(StateType_SINGLETON)) {
-				return SINGLETON_ANNOTATION;
-			}
+			String returnAnnotation = (stateType.equals(StateType_SINGLETON) ? SINGLETON_ANNOTATION : super.getClassAnnotation());
 
-			return super.getClassAnnotation();
+			return noInterfacePrefix + returnAnnotation;
+		}
+		private boolean isNoInterface() {
+			return Boolean.TRUE.equals(dataModel.getBooleanProperty(NO_INTERFACE));
 		}
 	}
 }
