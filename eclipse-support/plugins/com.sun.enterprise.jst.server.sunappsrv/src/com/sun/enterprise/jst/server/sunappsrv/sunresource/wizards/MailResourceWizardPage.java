@@ -70,7 +70,8 @@ public class MailResourceWizardPage extends WizardPage {
 	private Text hostText;
 	private Text userText;
 	private Text fromText;
-
+	private boolean canFinish = false;
+	
 	private IProject selectedProject;
 	private MailInfo mailInfo;
 
@@ -113,7 +114,7 @@ public class MailResourceWizardPage extends WizardPage {
 				String newSelection = projectNameCombo.getText();
 				if (newSelection != null) {
 					selectedProject = ProjectUtilities.getProject(newSelection);
-					updateStatus();
+					dialogChanged();
 				}
 			}
 		});
@@ -170,7 +171,7 @@ public class MailResourceWizardPage extends WizardPage {
 
 	private void initialize() {
 		populateCombos();
-		updateStatus();
+		dialogChanged();
 	}
 
 	public String getJNDIName() {
@@ -194,42 +195,40 @@ public class MailResourceWizardPage extends WizardPage {
 	}
 
 	private void dialogChanged() {
-		if (getJNDIName().length() == 0 ) {
-			setErrorMessage(Messages.errorMailJndiNameMissing);
-			return;
-		}
-
-		if (getMailHost().length() == 0 ) {
-			setErrorMessage(Messages.errorMailHostNameMissing);
-			return;
-		}
-
-		if (getMailUser().length() == 0 ) {
-			setErrorMessage(Messages.errorMailUserNameMissing);
-			return;
-		}
-
-		if (getMailFrom().length() == 0 ) {
-			setErrorMessage(Messages.errorMailReturnAddrMissing);
-			return;
-		}
-
-		setErrorMessage(null);
-	}
-
-
-	private void updateStatus() {
 		boolean hasProject = (projectNameCombo.getSelectionIndex() != -1);
 		setPageComplete(hasProject);
 		if (!hasProject) {
 			setErrorMessage(Messages.errorProjectMissing);
-		} else {
-			setErrorMessage(null);
 		}
+		String jndiName = getJNDIName();
+		if ((jndiName == null) || (jndiName.length() == 0 )) {
+			setErrorMessage(Messages.errorMailJndiNameMissing);
+			return;
+		}
+		String mailHost = getMailHost();
+		if ((mailHost == null) || (mailHost.length() == 0 )) {
+			setErrorMessage(Messages.errorMailHostNameMissing);
+			return;
+		}
+		String mailUser = getMailUser();
+		if ((mailUser == null) || (mailUser.length() == 0 )) {
+			setErrorMessage(Messages.errorMailUserNameMissing);
+			return;
+		}
+		String mailFrom = getMailFrom();
+		if ((mailFrom == null) || (mailFrom.length() == 0 )) {
+			setErrorMessage(Messages.errorMailReturnAddrMissing);
+			return;
+		}
+		
+		canFinish = true;
+		setErrorMessage(null);
 	}
 
-
-
+	public boolean canFinish(){
+		return canFinish;
+	}
+	
 	private List<IProject> getSunFacetIProjects() {
 		IProject[] allProjects = ProjectUtilities.getAllProjects();
 		List<IProject> returnProjects = new ArrayList<IProject>();

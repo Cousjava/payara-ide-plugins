@@ -75,4 +75,11 @@ public class Messages extends org.eclipse.osgi.util.NLS {
 	public static String jmsWizardDescription;
 	public static String lblChooseType;
 	public static String lblAdminObject;
+	public static String lblConnector;
+	public static String lblQueue;
+	public static String lblTopic;
+	public static String lblQueueConnectionFactory;
+	public static String lblTopicConnectionFactory;
+	public static String lblConnectionFactory;
+	public static String errorResourceTypeMissing;
 }
