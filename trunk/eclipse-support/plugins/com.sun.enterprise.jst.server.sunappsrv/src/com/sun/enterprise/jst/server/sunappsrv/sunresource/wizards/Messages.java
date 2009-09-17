@@ -61,7 +61,7 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     
     //JavaMail Wizard
     public static String mailWizardTitle;
-    public static String mailwizardDescription;
+    public static String mailWizardDescription;
 	public static String MailHost;
 	public static String MailUser;
 	public static String MailFrom;
@@ -69,4 +69,10 @@ public class Messages extends org.eclipse.osgi.util.NLS {
 	public static String errorMailHostNameMissing;
 	public static String errorMailUserNameMissing;
 	public static String errorMailReturnAddrMissing;
+	
+	//JMS Wizard
+	public static String jmsWizardTitle;
+	public static String jmsWizardDescription;
+	public static String lblChooseType;
+	public static String lblAdminObject;
 }
