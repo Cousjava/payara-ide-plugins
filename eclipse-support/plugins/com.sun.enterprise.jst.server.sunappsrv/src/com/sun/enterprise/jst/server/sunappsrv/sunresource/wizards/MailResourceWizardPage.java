@@ -85,7 +85,7 @@ public class MailResourceWizardPage extends WizardPage {
 	public MailResourceWizardPage(IProject project) {
 		super("wizardPage"); //$NON-NLS-1$
 		setTitle(Messages.mailWizardTitle);
-		setDescription(Messages.mailwizardDescription);
+		setDescription(Messages.mailWizardDescription);
 		selectedProject = project;
 	}
 

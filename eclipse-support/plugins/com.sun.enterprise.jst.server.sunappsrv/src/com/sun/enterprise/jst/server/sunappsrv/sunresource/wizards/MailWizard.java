@@ -205,12 +205,19 @@ public class MailWizard extends Wizard implements INewWizard {
 		final String mailUser = mailInfo.getMailUser();
 		final String mailFrom = mailInfo.getMailFrom();
 		
+		boolean matchStart = false;
+		boolean matchEnd = false;
+		
 		try {
 			InputStream input = MailInfo.class.getResourceAsStream(RESOURCE_FILE_TEMPLATE);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					input));
 			try {
 				while ((line = reader.readLine()) != null) {
+					if( line.indexOf("<mail-resource") != -1) {
+						matchStart = true;
+					}
+					if ( (matchStart) && (! matchEnd) ) {
 						line = line.replaceAll("\\$\\{jndiName\\}", jndiName); //$NON-NLS-1$
 						line = line.replaceAll("\\$\\{mailHost\\}", mailHost); //$NON-NLS-1$
 						line = line.replaceAll("\\$\\{mailUser\\}", mailUser); //$NON-NLS-1$
@@ -220,7 +227,12 @@ public class MailWizard extends Wizard implements INewWizard {
 							sb.append(line);
 							sb.append(newline);
 						}
+						if(line.indexOf("</mail-resource>") != -1) {
+							matchEnd = true;
+						}
+					}
 				}
+				
 			} finally {
 				reader.close();
 			}
