@@ -100,6 +100,15 @@ public class MailWizard extends Wizard implements INewWizard {
 		page = new MailResourceWizardPage(selectedProject);
 		addPage(page);
 	}
+	
+	/**
+	 * Enable the Finish button 
+	 */
+	
+	@Override
+	public boolean canFinish(){
+		return page.canFinish();
+	}
 
 	/**
 	 * This method is called when 'Finish' button is pressed in
@@ -157,7 +166,7 @@ public class MailWizard extends Wizard implements INewWizard {
 			throw new CoreException(status);
 		}
 
-		monitor.beginTask("Creating " + ResourceUtils.RESOURCE_FILE_NAME, 2);
+		monitor.beginTask("Creating " + ResourceUtils.RESOURCE_FILE_NAME, 2); 
 
 		final IFile file = folder.getFile(new Path(ResourceUtils.RESOURCE_FILE_NAME));
 		
@@ -214,7 +223,7 @@ public class MailWizard extends Wizard implements INewWizard {
 					input));
 			try {
 				while ((line = reader.readLine()) != null) {
-					if( line.indexOf("<mail-resource") != -1) {
+					if( line.indexOf("<mail-resource") != -1) { //$NON-NLS-1$
 						matchStart = true;
 					}
 					if ( (matchStart) && (! matchEnd) ) {
@@ -227,7 +236,7 @@ public class MailWizard extends Wizard implements INewWizard {
 							sb.append(line);
 							sb.append(newline);
 						}
-						if(line.indexOf("</mail-resource>") != -1) {
+						if(line.indexOf("</mail-resource>") != -1) { //$NON-NLS-1$
 							matchEnd = true;
 						}
 					}
