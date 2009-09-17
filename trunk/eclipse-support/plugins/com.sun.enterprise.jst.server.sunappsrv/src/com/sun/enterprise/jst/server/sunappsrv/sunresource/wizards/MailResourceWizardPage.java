@@ -70,8 +70,7 @@ public class MailResourceWizardPage extends WizardPage {
 	private Text hostText;
 	private Text userText;
 	private Text fromText;
-	private boolean canFinish = false;
-	
+		
 	private IProject selectedProject;
 	private MailInfo mailInfo;
 
@@ -195,10 +194,11 @@ public class MailResourceWizardPage extends WizardPage {
 	}
 
 	private void dialogChanged() {
+		setPageComplete(false);
 		boolean hasProject = (projectNameCombo.getSelectionIndex() != -1);
-		setPageComplete(hasProject);
 		if (!hasProject) {
 			setErrorMessage(Messages.errorProjectMissing);
+			return;
 		}
 		String jndiName = getJNDIName();
 		if ((jndiName == null) || (jndiName.length() == 0 )) {
@@ -220,15 +220,10 @@ public class MailResourceWizardPage extends WizardPage {
 			setErrorMessage(Messages.errorMailReturnAddrMissing);
 			return;
 		}
-		
-		canFinish = true;
+		setPageComplete(true);
 		setErrorMessage(null);
 	}
 
-	public boolean canFinish(){
-		return canFinish;
-	}
-	
 	private List<IProject> getSunFacetIProjects() {
 		IProject[] allProjects = ProjectUtilities.getAllProjects();
 		List<IProject> returnProjects = new ArrayList<IProject>();
