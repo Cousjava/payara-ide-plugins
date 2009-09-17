@@ -102,15 +102,6 @@ public class MailWizard extends Wizard implements INewWizard {
 	}
 	
 	/**
-	 * Enable the Finish button 
-	 */
-	
-	@Override
-	public boolean canFinish(){
-		return page.canFinish();
-	}
-
-	/**
 	 * This method is called when 'Finish' button is pressed in
 	 * the wizard. We will create an operation and run it
 	 * using wizard as execution context.
