@@ -58,4 +58,15 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String errorFolderMissing;
     public static String errorProjectMissing;
     public static String errorConnectionMissing;
+    
+    //JavaMail Wizard
+    public static String mailWizardTitle;
+    public static String mailwizardDescription;
+	public static String MailHost;
+	public static String MailUser;
+	public static String MailFrom;
+	public static String errorMailJndiNameMissing;
+	public static String errorMailHostNameMissing;
+	public static String errorMailUserNameMissing;
+	public static String errorMailReturnAddrMissing;
 }

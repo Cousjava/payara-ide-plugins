@@ -1030,6 +1030,17 @@
        <selection class="org.eclipse.core.resources.IResource"/>
        </wizard>
        <wizard
+             category="com.sun.enterprise.jst.server.sunappsrv"
+             class="com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.MailWizard"
+             icon="icons/obj16/glassfishserver.gif"
+             id="com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.MailWizard"
+             name="%sunappserver.mailresourceslabel">
+         <description>
+            %sunappserver.mailresources.BeanWebRegionWizard.description
+         </description>
+       <selection class="org.eclipse.core.resources.IResource"/>
+       </wizard>
+       <wizard
              category="com.sun.enterprise.jst.server.sailfin"
              class="com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards.SIPServletWizard"
              icon="icons/obj16/glassfishserver.gif"
