@@ -981,10 +981,69 @@
                     uri="dtds/sun-converged-loadbalancer_1_0.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-converged-loadbalancer_1_0.dtd" />
             
-           
-            
-            
-            
+       
+       <!-- New Java EE 6 only schemas... The old ee 5 schemas are alreay known by Eclipse current wtp.
+        We might check when we need to remove these schemas from our plugin when Eclipse really support officially
+        Java EE 6 -->
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/application-client_6.xsd"
+                uri="ee6_schemas/application-client_6.xsd" />        
+
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-common_3_0.xsd"
+                uri="ee6_schemas/web-common_3_0.xsd" /> 
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/application_6.xsd"
+                uri="ee6_schemas/application_6.xsd" /> 
+            <uri
+                name="http://java.sun.com/xml/ns/jax-rpc/ri/config/jax-rpc-ri-config.xsd"
+                uri="ee6_schemas/jax-rpc-ri-config.xsd" /> 
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/connector_1_6.xsd"
+                uri="ee6_schemas/connector_1_6.xsd" /> 
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/jsp_2_2.xsd"
+                uri="ee6_schemas/jsp_2_2.xsd" /> 
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"
+                uri="ee6_schemas/ejb-jar_3_1.xsd" /> 
+ 
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+                uri="ee6_schemas/web-fragment_3_0.xsd" /> 
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/javaee_6.xsd"
+                uri="ee6_schemas/javaee_6.xsd" /> 
+                
+             <uri
+                name="http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+                uri="ee6_schemas/orm_2_0.xsd" />               
+            <uri
+                name="http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+                uri="ee6_schemas/persistence_2_0.xsd" /> 
+                
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+                uri="ee6_schemas/web-facesconfig_2_0.xsd" /> 
+            <uri
+                name="http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
+                uri="ee6_schemas/web-facelettaglibrary_2_0.xsd" />                
+           <uri
+                name="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+                uri="ee6_schemas/web-app_3_0.xsd" /> 
+
+                
+           <uri
+                name="http://java.sun.com/xml/ns/javaee/javaee_web_services_client_1_3.xsd"
+                uri="ee6_schemas/javaee_web_services_client_1_3.xsd" /> 
+          <uri
+                name="http://java.sun.com/xml/ns/javaee/javaee_web_services_1_3.xsd"
+                uri="ee6_schemas/javaee_web_services_1_3.xsd" /> 
+          <uri
+                name="http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+                uri="ee6_schemas/web-jsptaglibrary_2_1.xsd" /> 
+                
+<!-- end of Java EE 6 schemas section -->
             
         </catalogContribution>
     </extension> 
