@@ -74,13 +74,41 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 
 @SuppressWarnings("restriction")
 public class V3Configurator {
+    
+    //either Constants.SERVER_PRELUDE_ID or Constants.SERVER_GLASSFISH_V3_ID
+    private String serverID;
 
-	public static String configure(IProgressMonitor progressMonitor, String sampleDB) throws CoreException {
-		progressMonitor.subTask(Messages.CreatingGlassfishvv3PreludeConfiguration);
+    //for v3: "glassfishv3", for v3 prelude: "glassfishv3-prelude"
+    private String serverRootDirName;
+    
+    
+    int adminPort;
+
+    int HTTPPort;
+
+    /**
+     * @param serverID
+     *            either Constants.SERVER_PRELUDE_ID or Constants.SERVER_GLASSFISH_V3_ID
+     * @param serverRootDirName
+     *            : for v3: "glassfishv3", for v3 prelude: "glassfishv3-prelude"
+     * @param adminPort
+     * @param HTTPPort
+     */
+    public V3Configurator(String serverID, String serverRootDirName, int adminPort, int HTTPPort) {
+        this.serverID = serverID;
+        this.serverRootDirName = serverRootDirName;
+        this.HTTPPort = HTTPPort;
+        this.adminPort = adminPort;
+        
+
+    }
+
+	public String configure(IProgressMonitor progressMonitor, String sampleDB) throws CoreException {
+		progressMonitor.subTask(Messages.CreatingGlassfishv3Configuration);
 		String glassfishLocation = getGlassfishLocation();
 		String domainXml = null;
 		try {
-			IServerType st = ServerCore.findServerType(Constants.SERVER_PRELUDE_ID);// v3
+			IServerType st = ServerCore.findServerType(serverID);// v3
 			IRuntime runtime = createRuntime(glassfishLocation);
 			IServer[] servers = ServerCore.getServers();
 
@@ -107,7 +135,7 @@ public class V3Configurator {
 			SunAppServer sunAppServer = (SunAppServer) wc.getAdapter(SunAppServer.class);
 
 			String domainLocation = Platform.getLocation().append(".metadata").append(".plugins").append( //$NON-NLS-1$ //$NON-NLS-2$
-					Constants.SERVER_PRELUDE_ID).toOSString();
+					serverID).toOSString();
 
 		     File destDir = new File(domainLocation);
             if (destDir.exists() == false) {//only if the domain is not already there
@@ -115,8 +143,7 @@ public class V3Configurator {
             }
 
 			domainXml = new Path(domainLocation).append("domain1").append("config").append("domain.xml").toOSString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			setPortsForDomain(domainXml, FreePortManager.getAvailablePort(Constants.V3_HTTP_PORT), FreePortManager
-                    .getAvailablePort(Constants.V3_ADMIN_PORT));
+			setPortsForDomain(domainXml, FreePortManager.getAvailablePort(HTTPPort), FreePortManager.getAvailablePort(adminPort));
 
 			Activator.logMessage("domain.xml location is = " + domainXml, null, IStatus.INFO);
 			Map<String, String> configuration = sunAppServer.getProps();
@@ -126,7 +153,6 @@ public class V3Configurator {
 
 			wc.save(true, null);
 
-			// startServer(sunAppServer);
 		} catch (CoreException e) {
 			Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, MessageFormat.format(
 					Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(), Messages.EXCEPTION_OCCURRED);
@@ -135,18 +161,15 @@ public class V3Configurator {
 		return domainXml;
 	}
 
-	public static String getGlassfishLocation() {
-		String property = System.getProperty("gf3location"); //$NON-NLS-1$
+	private String getGlassfishLocation() {
 		String glassfishLocation = null;
-		if (property != null) {
-			glassfishLocation = property + "/glassfish"; //$NON-NLS-1$
 
-		} else {
 			try {
-				// Get the eclipse installation location and from it V2
+				// Get the eclipse installation location and from it, gf
 				// installation directory.
 				glassfishLocation = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
-						+ "glassfishv3-prelude/glassfish"; //$NON-NLS-1$
+						+ serverRootDirName
+                    + "/glassfish"; //$NON-NLS-1$
 
 				Activator.getDefault().getLog().log(
 						new Status(IStatus.INFO, Activator.PLUGIN_ID, "glassfishV3Loc =" + glassfishLocation)); //$NON-NLS-1$
@@ -157,14 +180,14 @@ public class V3Configurator {
 								Messages.ErrorInStartupConfig, e.getMessage()), e), e.getMessage(),
 								Messages.EXCEPTION_OCCURRED);
 			}
-		}
+		
 		return glassfishLocation;
 	}
 
 	@SuppressWarnings("unchecked")
-	public static IRuntime createRuntime(String glassfishLocation) {
+	private IRuntime createRuntime(String glassfishLocation) {
 		try {
-			IServerType st = ServerCore.findServerType(Constants.SERVER_PRELUDE_ID);
+			IServerType st = ServerCore.findServerType(serverID);
 			IRuntime[] runtimes = ServerCore.getRuntimes();
 			for (IRuntime runtime : runtimes) {
 				if (runtime != null && runtime.getRuntimeType().equals(st.getRuntimeType())) {
@@ -193,7 +216,7 @@ public class V3Configurator {
 		return null;
 	}
 
-	public static void copyDomain(String toDir) throws CoreException {
+	private void copyDomain(String toDir) throws CoreException {
 		String srcDir = getDomainsDir();
 		File destDir = new File(toDir);
 		if (destDir.exists()) {
@@ -205,7 +228,7 @@ public class V3Configurator {
 
 	}
 
-	private static void copyDir(File srcDir, File destDir) throws CoreException {
+	private void copyDir(File srcDir, File destDir) throws CoreException {
 		if (srcDir.isDirectory()) {
 			File[] listFiles = srcDir.listFiles();
 			for (File file : listFiles) {
@@ -234,11 +257,11 @@ public class V3Configurator {
 		}
 	}
 
-	public static String getDomainsDir() throws CoreException {
+	private String getDomainsDir() throws CoreException {
 		return new Path(getGlassfishLocation()).append("domains").toOSString(); //$NON-NLS-1$
 	}
 
-	public static void setPortsForDomain(String domainXml, int http, int admin) throws CoreException {
+	private void setPortsForDomain(String domainXml, int http, int admin) throws CoreException {
 		try {
 			DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
 			domFactory.setNamespaceAware(true);
@@ -249,11 +272,19 @@ public class V3Configurator {
 			XPath xpath = factory.newXPath();
 			XPathExpression expr = xpath.compile("//http-listener[@id='http-listener-1']"); //$NON-NLS-1$
 			Node node = (Node) expr.evaluate(doc, XPathConstants.NODE);
+			if (node == null) {
+                expr = xpath.compile("//network-listener[@name='http-listener-1']"); //$NON-NLS-1$
+                node = (Node) expr.evaluate(doc, XPathConstants.NODE);
+            }
 			Node port = node.getAttributes().getNamedItem("port"); //$NON-NLS-1$
 			port.setNodeValue("" + http); //$NON-NLS-1$
 
 			expr = xpath.compile("//http-listener[@id='admin-listener']"); //$NON-NLS-1$
 			node = (Node) expr.evaluate(doc, XPathConstants.NODE);
+	         if (node == null) {
+                expr = xpath.compile("//network-listener[@name='admin-listener']"); //$NON-NLS-1$
+                node = (Node) expr.evaluate(doc, XPathConstants.NODE);
+            }
 			port = node.getAttributes().getNamedItem("port"); //$NON-NLS-1$
 			port.setNodeValue("" + admin); //$NON-NLS-1$
 

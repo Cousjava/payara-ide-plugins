@@ -64,7 +64,7 @@ import com.sun.enterprise.registration.RegistrationService.RegistrationReminder;
 public class InteractiveSplashHandler extends AbstractSplashHandler {
 
 	private boolean skipInstall = false;
-
+	private String JDKdir =null;
 	public InteractiveSplashHandler() {
 	}
 
@@ -82,28 +82,31 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 
 		showWizard(splash);
 
-		final String glassfishLoc = getGlassfishLocation();
-		File installedPlaceholder = new File(glassfishLoc + File.separator + ".installed"); //$NON-NLS-1$
-		DomainUtilities.ensureRuntimeHasCorrectDirectories(glassfishLoc.substring(0, glassfishLoc.length()-Constants.GLASSFISHV2_1.length()));
-		if (installedPlaceholder.exists()) {
-			long installedTime = installedPlaceholder.lastModified();
-			String asadminName = "asadmin" + (File.separator.equals("\\") ? ".bat" : "");
-			long substitutionTime = new File(glassfishLoc + File.separator + "bin" + File.separator + asadminName).lastModified();
-
-			// .installed file is written immediately after the substitution, so check for it being close in time
-			// in elapsed minutes
-			if ((Math.abs(installedTime - substitutionTime)/60000) <= 2) {
-				skipInstall = true;
+		final String glassfishLoc = getGlassfishv2Location();
+		final File loc= new File(glassfishLoc);
+		if (loc.exists()&&loc.isDirectory()) {  //Only if v2 is part of the bundle:
+			File installedPlaceholder = new File(glassfishLoc + File.separator + ".installed"); //$NON-NLS-1$
+			DomainUtilities.ensureRuntimeHasCorrectDirectories(glassfishLoc.substring(0, glassfishLoc.length()-Constants.GLASSFISHV2_1.length()));
+			if (installedPlaceholder.exists()) {
+				long installedTime = installedPlaceholder.lastModified();
+				String asadminName = "asadmin" + (File.separator.equals("\\") ? ".bat" : "");
+				long substitutionTime = new File(glassfishLoc + File.separator + "bin" + File.separator + asadminName).lastModified();
+	
+				// .installed file is written immediately after the substitution, so check for it being close in time
+				// in elapsed minutes
+				if ((Math.abs(installedTime - substitutionTime)/60000) <= 2) {
+					skipInstall = true;
+				}
 			}
+			Activator.logMessage("skip install is " + skipInstall, null, IStatus.INFO);
+			
+			JDKdir = V2InstallationConfigurer.getJDKDir();
+			/* no need anymore for build 1.0.25 
+			if (!skipInstall) {
+				String v3RootDir = RegisterService.getv3PreludeLocation();
+				ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
+			}*/
 		}
-		Activator.logMessage("skip install is " + skipInstall, null, IStatus.INFO);
-		
-		final String dir = V2InstallationConfigurer.getJDKDir();
-		/* no need anymore for build 1.0.25 
-		if (!skipInstall) {
-			String v3RootDir = RegisterService.getv3PreludeLocation();
-			ConfigureDefaultGlassFishJDK.modifyAsEnvScriptFile(v3RootDir, dir);
-		}*/
 		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
@@ -116,9 +119,10 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 							monitor.beginTask(Messages.CONFIGURING_GLASSFISH_V2_1_INSTALLATION, 100);
 							// execute the task ...
 
-							if (!skipInstall)
-								V2InstallationConfigurer.configureV2(dir, glassfishLoc);
-
+							if ((!skipInstall)&&(JDKdir!=null))
+								V2InstallationConfigurer.configureV2(JDKdir, glassfishLoc);
+							
+							//then do the regular configuration for the default domains in the workspace directory
 							Startup.mystartup(monitor);
 							monitor.done();
 							return Status.OK_STATUS;
@@ -137,7 +141,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 
 	}
 
-	public static String getGlassfishLocation() {
+	private static String getGlassfishv2Location() {
 		String property = System.getProperty("gf2location"); //$NON-NLS-1$
 		String glassfishLoc = null;
 		if (property != null) {
@@ -157,7 +161,7 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 	 * 
 	 * @param splash
 	 */
-	public static void showWizard(final Shell splash) {
+	private static void showWizard(final Shell splash) {
 		try {
 			RegistrationReminder reminder = RegisterService.getReminder();
 			Activator.logMessage("Registration reminder = " + reminder, null, IStatus.INFO);//$NON-NLS-1$

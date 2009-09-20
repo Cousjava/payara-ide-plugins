@@ -15,7 +15,7 @@ public class Messages extends NLS {
 	public static String MISSING_DOMAIN_XML_PATH;
     
     public static String CreatingGlassfishv21ServerConfiguration;
-    public static String CreatingGlassfishvv3PreludeConfiguration;
+    public static String CreatingGlassfishv3Configuration;
     public static String CreatingDemoDerbyDatabase;
     public static String UnzippingDemoDerbyDatabase;
 	// workaround for eclipse bug 94497

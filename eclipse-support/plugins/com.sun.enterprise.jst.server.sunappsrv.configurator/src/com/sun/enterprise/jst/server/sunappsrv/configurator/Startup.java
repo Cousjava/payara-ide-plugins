@@ -34,11 +34,14 @@ holder.
  */
 package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
+import java.io.File;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 
@@ -52,15 +55,47 @@ public class Startup {
 			preferences.setShowOnActivity(false);
 			progressMonitor.setTaskName(Messages.CreatingGlassfishServerInstances);
 			progressMonitor.worked(10);
-			String sampleDB = GlassFishConfigurator.createSampleDerbyDB(progressMonitor);
-			GlassFishConfigurator.createV2Server(progressMonitor, sampleDB);
+	        progressMonitor.setTaskName(Messages.UnzippingDemoDerbyDatabase);
+            String sampleDB = DerbyConfigurator.configureSample(progressMonitor);			
+			
+	
+            //v2 config if present:
+            progressMonitor.setTaskName(Messages.CreatingGlassfishv21ServerConfiguration);
+            V2Configurator.configure(progressMonitor, sampleDB);   
+                    
+            
             progressMonitor.worked(30);
-			String domainXml = GlassFishConfigurator.createV3Server(progressMonitor, sampleDB);
+            
+            progressMonitor.setTaskName(Messages.CreatingGlassfishv3Configuration);
+            String domainXml = null;
+            File glassfishv3PreludeLocation = new File(new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
+                    + "glassfishv3-prelude");
+            if (glassfishv3PreludeLocation.exists() && glassfishv3PreludeLocation.isDirectory()) {
+
+                domainXml = new V3Configurator(Constants.SERVER_PRELUDE_ID, "glassfishv3-prelude", Constants.V3PRELUDE_ADMIN_PORT,
+                        Constants.V3PRELUDE_HTTP_PORT).configure(progressMonitor, sampleDB);
+            }
+            File glassfishLocation = new File(new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString() + "glassfishv3");
+            if (glassfishLocation.exists() && glassfishLocation.isDirectory()) {
+
+                domainXml = new V3Configurator(Constants.SERVER_GLASSFISH_V3_ID, "glassfishv3", Constants.V3_ADMIN_PORT,
+                        Constants.V3_HTTP_PORT).configure(progressMonitor, sampleDB);
+                progressMonitor.worked(30);
+                //we prefer v3 derby to v3prelude derby setup
+                progressMonitor.setTaskName(Messages.CreatingDemoDerbyDatabase);
+                DerbyConfigurator.configure(progressMonitor, glassfishLocation, domainXml);
+            } else {
+                progressMonitor.worked(30);
+                //we use v3 prelude derby
+                progressMonitor.setTaskName(Messages.CreatingDemoDerbyDatabase);
+                DerbyConfigurator.configure(progressMonitor, glassfishv3PreludeLocation, domainXml);
+            }
             progressMonitor.worked(30);
-			GlassFishConfigurator.createDerbyDB(progressMonitor, domainXml);
-            progressMonitor.worked(30);
+            
             // workaround for eclipse bug 94497
-            GlassFishConfigurator.configureExternalBrowser(progressMonitor);
+            progressMonitor.setTaskName(Messages.RegisteringDefaultSolarisBrowser);
+            SolarisBrowserConfigurator.configure(progressMonitor);
+            
             // end workaround
 			preferences.setShowOnActivity(showOnActivity);
 		} catch (CoreException e) {

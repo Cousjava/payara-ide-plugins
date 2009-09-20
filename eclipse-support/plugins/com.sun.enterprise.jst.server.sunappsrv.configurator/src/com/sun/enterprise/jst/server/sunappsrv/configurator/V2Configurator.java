@@ -72,7 +72,11 @@ public class V2Configurator {
 	public static void configure(IProgressMonitor progressMonitor, String sampleDB) throws CoreException {
 
 		String glassfishLoc = getGlassfishLocation();
-
+        File glassfishv2Location = new File(glassfishLoc);
+        if (!glassfishv2Location.exists() || !glassfishv2Location.isDirectory()) {
+            Activator.getDefault().getLog().log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "v2 not present, skipping configuration")); //$NON-NLS-1$
+            return;
+        }
 		progressMonitor.subTask(Messages.CreatingRuntime);
 
 		IServerType st = ServerCore.findServerType(Constants.SERVER_GLASSFISH_2_ID);
