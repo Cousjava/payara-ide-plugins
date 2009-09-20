@@ -20,12 +20,12 @@
 		<component id="m2" /> <!-- Maven eclipse plugin -->
 		<component id="eclipse-cvs" />
 		<component id="feature" />
-		<component id="glassfish-prelude-root" />
+		<component id="glassfish-v3" />
 		<component id="glassfish-plugins" />
-		<component id="glassfish-v2-mac" />
+		<!--component id="glassfish-v2-mac" />
 		<component id="glassfish-v2-linux-x86" />
 		<component id="glassfish-v2-opensolaris-x86" />
-		<component id="glassfish-v2-win32-x86" />
+		<component id="glassfish-v2-win32-x86" /-->
 		<component id="metro-plugins" />
 		<component id="mysql" />
 
@@ -37,9 +37,8 @@
 	</package>
         <mac-postflight-script>
 
-# Don't forget the quotes, there could be a space...
-chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv2.1"
-chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv3-prelude"
+# Don't forget the quotes, there could be a space... * is for v2.1 or v3-prelude or v3 directories
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv"*
 
     </mac-postflight-script>
 </configuration>
