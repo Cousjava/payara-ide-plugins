@@ -67,7 +67,7 @@ public class RegisterService {
 	private static String proxyHost = null;
 	private static int proxyPort = 0;
 
-	public static String getv3PreludeLocation() {
+	private static String getv3Location() {
 		String property = System.getProperty("gf3location"); //$NON-NLS-1$
 		String glassfishLoc = null;
 		if (property != null) {
@@ -77,6 +77,11 @@ public class RegisterService {
 			// installation directory.
 			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
 					+ "glassfishv3-prelude"; //$NON-NLS-1$
+			File loc = new File(glassfishLoc);
+            if (!loc.exists() || !loc.isDirectory()) {
+    			glassfishLoc = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString()
+				+ "glassfishv3"; //$NON-NLS-1$
+            }
 
 			Activator.logMessage("glassfishLoc =" + glassfishLoc, null, IStatus.INFO); //$NON-NLS-1$
 		}
@@ -84,7 +89,7 @@ public class RegisterService {
 		
 	}
 	public static String getv3PreludeServiceTagRegistryLocation() {
-		String glassfishLoc = getv3PreludeLocation();
+		String glassfishLoc = getv3Location();
 		return glassfishLoc + File.separator + "glassfish" + File.separator + "lib" + File.separator + "registration" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ File.separator + "servicetag-registry.xml"; //$NON-NLS-1$
 

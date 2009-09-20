@@ -36,9 +36,9 @@ package com.sun.enterprise.jst.server.sunappsrv.configurator;
 
 public abstract class Constants {
 
-	public final static String GLASSFISH3_BUNDLE = "com.sun.enterprise.jst.server.sunappsrv.glassfishv3prelude"; //$NON-NLS-1$
 	public final static String SERVER_GLASSFISH_2_ID = "com.sun.enterprise.jst.server.sunappsrv91"; //$NON-NLS-1$
-	public final static String SERVER_PRELUDE_ID = "com.sun.enterprise.jst.server.glassfishv3prelude"; //$NON-NLS-1$
+    public final static String SERVER_PRELUDE_ID = "com.sun.enterprise.jst.server.glassfishv3prelude"; //$NON-NLS-1$
+    public final static String SERVER_GLASSFISH_V3_ID = "com.sun.enterprise.jst.server.sunappsrv92"; //$NON-NLS-1$
 	public final static String DERBY_SAMPLE_ID = "com.sun.enterprise.jst.server.derbysample"; //$NON-NLS-1$
 
 	public static final String GLASSFISHV2_1 = "glassfishv2.1";
@@ -63,8 +63,12 @@ public abstract class Constants {
 	public static final String V2_USER = "admin"; //$NON-NLS-1$
 	public static final String V2_PASS = "adminadmin"; //$NON-NLS-1$
 
-	// V3 Prelude configuration constants
-	public static final int V3_ADMIN_PORT = 4850;
-    public static final int V3_HTTP_PORT = 8083;
+    // V3 Prelude configuration constants
+    public static final int V3PRELUDE_ADMIN_PORT = 4850;
+    public static final int V3PRELUDE_HTTP_PORT = 8083;
+
+    // V3 Prelude configuration constants
+    public static final int V3_ADMIN_PORT = 4860;
+    public static final int V3_HTTP_PORT = 8084;
 
 }

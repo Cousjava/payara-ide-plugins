@@ -54,7 +54,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.ConnectionProfileConstants;
@@ -74,7 +73,7 @@ public class DerbyConfigurator {
 	private static final String DERBY_FOR_SAMPLE_DB = "DerbyForSampleDB"; //$NON-NLS-1$
 	public final static String DERBY_SAMPLE_INSTALL = "derby_sample_dir"; //$NON-NLS-1$
 
-	static void configure(IProgressMonitor progressMonitor, String domainXml) throws CoreException {
+	static public void configure(IProgressMonitor progressMonitor, File serverDirectory, String domainXml) throws CoreException {
 		DriverManager dm = DriverManager.getInstance();
 
 		DriverInstance sample = dm.getDriverInstanceByName(DERBY_FOR_SAMPLE_DB);//$NON-NLS-1$
@@ -89,12 +88,12 @@ public class DerbyConfigurator {
 					Messages.EXCEPTION_OCCURRED);
 			return;
 		}
-		readProperties(domainXml, properties);
+		readProperties(serverDirectory, domainXml, properties);
 
 		String profileName = Messages.SAMPLE_JAVADB_DATABASE;
 		String description = Messages.SAMPLE_JAVADB_DATABASE_DESCRIPTION;
 
-		DriverInstance di = dm.createNewDriverInstance(DERBY_TEMPLATE_ID, DERBY_FOR_SAMPLE_DB, getJarLocation());
+		DriverInstance di = dm.createNewDriverInstance(DERBY_TEMPLATE_ID, DERBY_FOR_SAMPLE_DB, getDerbyClientJarLocation(serverDirectory));
 		properties.setProperty(ConnectionProfileConstants.PROP_DRIVER_DEFINITION_ID, di.getId());
 
 		try {
@@ -106,7 +105,7 @@ public class DerbyConfigurator {
 		}
 	}
 
-	private static void readProperties(String domainXml, Properties properties) {
+	private static void readProperties(File serverDirectory, String domainXml, Properties properties) {
 		String db = ""; //$NON-NLS-1$
 		String pass = ""; //$NON-NLS-1$
 		String user = ""; //$NON-NLS-1$
@@ -155,7 +154,7 @@ public class DerbyConfigurator {
 		properties.setProperty("org.eclipse.datatools.connectivity.db.connectionProperties", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		properties.setProperty("org.eclipse.datatools.connectivity.db.savePWD", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 		properties.setProperty("org.eclipse.datatools.connectivity.drivers.defnType", DERBY_TEMPLATE_ID); //$NON-NLS-1$
-		properties.setProperty("jarList", getJarLocation()); //$NON-NLS-1$
+		properties.setProperty("jarList", getDerbyClientJarLocation(serverDirectory)); //$NON-NLS-1$
 		properties.setProperty("org.eclipse.datatools.connectivity.db.username", user); //$NON-NLS-1$
 		properties.setProperty("org.eclipse.datatools.connectivity.db.driverClass", //$NON-NLS-1$
 				"org.apache.derby.jdbc.ClientDriver"); //$NON-NLS-1$
@@ -169,34 +168,16 @@ public class DerbyConfigurator {
 		properties.setProperty("org.eclipse.datatools.connectivity.db.vendor", "Derby"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	}
+	
+    // Get the derby location from the server location in eclipse installation 
 
-	private static String getJarLocation() {
-		String property = System.getProperty("gf3location"); //$NON-NLS-1$
-		String glassfishLocation = null;
-		if (property != null) {
-			glassfishLocation = new Path(property).append("javadb").append("lib").append("derbyclient.jar") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					.toPortableString();
+	private static String getDerbyClientJarLocation(File glassfishLocation) {
 
-		} else {
-			try {
-				// Get the eclipse installation location and from it V2
-				// installation directory.
-				glassfishLocation = new Path(Platform.getInstallLocation().getURL().getFile()).append(
-						"glassfishv3-prelude").append("javadb").append("lib").append("derbyclient.jar") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						.toPortableString();
+        String derbyLocation = glassfishLocation.getAbsolutePath() + "/javadb/lib/derbyclient.jar"; //$NON-NLS-1$ 
 
-				Activator.getDefault().getLog().log(
-						new Status(IStatus.INFO, Activator.PLUGIN_ID, "derbyJar =" + glassfishLocation)); //$NON-NLS-1$
-				return glassfishLocation;
-			} catch (Exception e) {
-				Activator
-						.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-								MessageFormat
-								.format(Messages.PROBLEM_GETTING_DERBY_JAR_LOCATION, e.getMessage()), e), e.getMessage(),
-								Messages.EXCEPTION_OCCURRED);
-			}
-		}
-		return glassfishLocation;
+        Activator.getDefault().getLog().log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "derbyJar =" + glassfishLocation)); //$NON-NLS-1$
+
+        return derbyLocation;
 	}
 
 	public static String configureSample(IProgressMonitor progressMonitor) throws CoreException {
