@@ -32,6 +32,9 @@ public class MySQLDriverValuesProvider extends DefaultDriverValuesProvider {
 		String installLocation = new Path(Platform.getInstallLocation().getURL().getFile()).toPortableString();
 		String driverLocation = installLocation + "mysql-driver";
 		File file = new File(driverLocation);
+		if (!file.exists() || !file.isDirectory()){ //test if it exists.
+			return new File[0];
+		}
 		File[] jars = file.listFiles(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
 				return name.endsWith(".jar");
