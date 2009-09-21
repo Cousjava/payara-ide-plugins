@@ -72,6 +72,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.server.core.ServerProfilerDelegate;
 import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.osgi.service.resolver.State;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -125,6 +126,15 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
         final SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
 
+        // test if the server is not there anymore... (scenario: upgrade from 1.1 to 1.2 bundle: no more v2.1
+        File serverloc = new File(serverBehavior.getSunApplicationServerInstallationDirectory());
+        if (!serverloc.exists()){
+            abort(
+            		NLS.bind(Messages.serverDirectoryGone,serverloc.getAbsolutePath()),
+            		null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
+       	
+        }
+        
         SunAppServer sunserver = serverBehavior.getSunAppServer();
         SunAppServer.ServerStatus status = SunAppServer.ServerStatus.CONNEXTION_ERROR;
         sunserver.SunInitialize(); // force reread of domain info if necessary
