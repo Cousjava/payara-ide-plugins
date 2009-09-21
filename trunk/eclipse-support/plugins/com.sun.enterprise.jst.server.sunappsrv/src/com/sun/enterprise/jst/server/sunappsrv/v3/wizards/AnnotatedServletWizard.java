@@ -53,15 +53,31 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
+import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MemberValuePair;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
+import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.QualifiedName;
+import org.eclipse.jdt.core.dom.ReturnStatement;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.TextElement;
+import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -146,6 +162,7 @@ public class AnnotatedServletWizard extends AddServletWizard {
 										super.generateTemplateSource(plugin, tempModel, template_file, monitor), tempModel);
 							}
 
+							@SuppressWarnings("unchecked")
 							private String operateOnSourceGeneratedBySuper(String source, CreateJavaEEArtifactTemplateModel tempModel) {
 								ASTParser parser = ASTParser.newParser(AST.JLS3);  // handles JDK 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6
 								parser.setSource(source.toCharArray());
@@ -157,7 +174,10 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								result.imports().add(addWebAnnotationImport(ast, "WebServlet"));	//$NON-NLS-1$
 								firstType.modifiers().add(0, addWebServletAnnotation(ast, tempModel, result));
 								cleanupJavadoc(firstType.getJavadoc());
-
+								addHelpfulMethodBodies(ast, firstType);
+								addProcessRequestMethod(ast, firstType, result, 
+										((CreateServletTemplateModel)tempModel).getServletName());
+								addGetServletInfoMethod(ast, firstType, result);
 								return getRewrittenSource(source, result);
 							}
 
@@ -175,6 +195,293 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								return source;
 							}
 
+							@SuppressWarnings("unchecked")
+							private void addHelpfulMethodBodies(AST ast, TypeDeclaration firstType) {
+								MethodDeclaration[] methods = firstType.getMethods();
+
+								for (int i = 0; i < methods.length; i++) {
+									MethodDeclaration methodDeclaration = methods[i];
+									if (!methodDeclaration.isConstructor()) {
+										SimpleName methodName = methodDeclaration.getName();
+										
+										// only add to doGet and doPost
+										// generate this:
+										// processRequest(request, response);
+										if (methodName.getIdentifier().startsWith("do")) { //$NON-NLS-1$
+											List<Statement> statements = methodDeclaration.getBody().statements();
+											MethodInvocation methodInvocation = ast.newMethodInvocation();
+											ExpressionStatement expressionStatement = ast.newExpressionStatement(methodInvocation);
+
+											methodInvocation.setName(ast.newSimpleName("processRequest")); //$NON-NLS-1$
+											methodInvocation.arguments().add(ast.newSimpleName("request")); //$NON-NLS-1$
+											methodInvocation.arguments().add(ast.newSimpleName("response")); //$NON-NLS-1$
+											statements.add(expressionStatement);
+										}
+									}
+								}
+							}
+							@SuppressWarnings("unchecked")
+							private void addProcessRequestMethod(AST ast, TypeDeclaration firstType, CompilationUnit result, 
+									String servletName) {
+								MethodDeclaration methodDeclaration = generateProcessRequestMethodDeclaration(ast);
+								List<Statement> statements = methodDeclaration.getBody().statements();
+
+								methodDeclaration.setJavadoc(getProcessRequestJavadocComment(ast));
+								firstType.bodyDeclarations().add(methodDeclaration);
+
+								// generate this:
+								// response.setContentType("text/html;charset=UTF-8");
+								statements.add(getExpressionStatement(ast, "response", //$NON-NLS-1$
+										"setContentType", "text/html;charset=UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
+
+								// generate this:
+								// PrintWriter out = response.getWriter();
+								VariableDeclarationFragment vdf = ast.newVariableDeclarationFragment();
+								vdf.setName(ast.newSimpleName("out")); //$NON-NLS-1$
+								VariableDeclarationStatement vds = ast.newVariableDeclarationStatement(vdf);
+								vds.setType(ast.newSimpleType(ast.newSimpleName("PrintWriter"))); //$NON-NLS-1$
+								MethodInvocation methodInvocation = ast.newMethodInvocation();
+								methodInvocation.setExpression(ast.newSimpleName("response")); //$NON-NLS-1$
+								methodInvocation.setName(ast.newSimpleName("getWriter")); //$NON-NLS-1$
+								vdf.setInitializer(methodInvocation);
+								statements.add(vds);
+
+								// add corresponding import for PrintWriter:
+								ImportDeclaration importDecl = ast.newImportDeclaration();
+								QualifiedName name = ast.newQualifiedName(
+										ast.newSimpleName("java"),			//$NON-NLS-1$
+										ast.newSimpleName("io"));		//$NON-NLS-1$
+								name = ast.newQualifiedName(name, 
+										ast.newSimpleName("PrintWriter")); //$NON-NLS-1$
+								importDecl.setName(name);
+								result.imports().add(importDecl);
+
+								statements.add(getProcessRequestTryStatement(ast, servletName));
+							}
+							
+							@SuppressWarnings("unchecked")
+							private void addGetServletInfoMethod(AST ast, TypeDeclaration firstType, CompilationUnit result) {
+								MethodDeclaration methodDeclaration = generateGetServletInfoMethodDeclaration(ast);
+								List<Statement> statements = methodDeclaration.getBody().statements();
+
+								methodDeclaration.setJavadoc(getGetServletInfoJavadocComment(ast));
+								firstType.bodyDeclarations().add(methodDeclaration);
+
+								// generate this: 
+								// return "Short description";
+								ReturnStatement returnStatement = ast.newReturnStatement();
+								StringLiteral literal = ast.newStringLiteral();
+								literal.setLiteralValue("Short description"); //$NON-NLS-1$
+								returnStatement.setExpression(literal);
+								statements.add(returnStatement);
+							}
+
+							// generate this: 
+							// protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+							// 	throws ServletException, IOException {
+							@SuppressWarnings("unchecked")
+							private MethodDeclaration generateProcessRequestMethodDeclaration(AST ast) {
+								MethodDeclaration methodDeclaration = ast.newMethodDeclaration();
+
+								methodDeclaration.setBody(ast.newBlock());
+								methodDeclaration.setConstructor(false);
+								methodDeclaration.modifiers().add(ast.newModifier(Modifier.ModifierKeyword.PROTECTED_KEYWORD));
+								methodDeclaration.setName(ast.newSimpleName("processRequest")); //$NON-NLS-1$
+								methodDeclaration.setReturnType2(ast.newPrimitiveType(PrimitiveType.VOID));
+								SingleVariableDeclaration variableDeclaration = ast.newSingleVariableDeclaration();
+								variableDeclaration.setType(ast.newSimpleType(ast.newSimpleName("HttpServletRequest"))); //$NON-NLS-1$
+								variableDeclaration.setName(ast.newSimpleName("request")); //$NON-NLS-1$
+								methodDeclaration.parameters().add(variableDeclaration);
+								variableDeclaration = ast.newSingleVariableDeclaration();
+								variableDeclaration.setType(ast.newSimpleType(ast.newSimpleName("HttpServletResponse"))); //$NON-NLS-1$
+								variableDeclaration.setName(ast.newSimpleName("response")); //$NON-NLS-1$
+								methodDeclaration.parameters().add(variableDeclaration);
+								methodDeclaration.thrownExceptions().add(ast.newSimpleName("ServletException")); //$NON-NLS-1$
+								methodDeclaration.thrownExceptions().add(ast.newSimpleName("IOException")); //$NON-NLS-1$
+
+								return methodDeclaration;
+							}
+
+							// generate this: 
+						    /** 
+						     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+						     * @param request servlet request
+						     * @param response servlet response
+						     * @throws ServletException if a servlet-specific error occurs
+						     * @throws IOException if an I/O error occurs
+						     */
+							@SuppressWarnings("unchecked")
+							private Javadoc getProcessRequestJavadocComment(AST ast) {
+								Javadoc docComment = ast.newJavadoc();
+								List tags = docComment.tags();
+
+								tags.add(getTagElement(ast, null, null, 
+									"Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.")); //$NON-NLS-1$
+								tags.add(getTagElement(ast, TagElement.TAG_PARAM, "request", "servlet request")); //$NON-NLS-1$ //$NON-NLS-2$
+								tags.add(getTagElement(ast, TagElement.TAG_PARAM, "response", "servlet response")); //$NON-NLS-1$ //$NON-NLS-2$
+								tags.add(getTagElement(ast, TagElement.TAG_THROWS, "ServletException", //$NON-NLS-1$
+									"if a servlet-specific error occurs")); //$NON-NLS-1$
+								tags.add(getTagElement(ast, TagElement.TAG_THROWS, "IOException", //$NON-NLS-1$ 
+									"if an I/O error occurs")); //$NON-NLS-1$
+
+								return docComment;
+							}
+
+							@SuppressWarnings("unchecked")
+							private TagElement getTagElement(AST ast, String tagName, String fragmentName, String textValue) {
+								TagElement tagElement = ast.newTagElement();
+								tagElement.setTagName(tagName);
+								if (fragmentName != null) {
+									tagElement.fragments().add(ast.newSimpleName(fragmentName));
+								}
+								TextElement te = ast.newTextElement();
+								tagElement.fragments().add(te);
+								te.setText(textValue);
+								return tagElement;
+
+							}
+
+							@SuppressWarnings("unchecked")
+							private MethodInvocation getMethodInvocation(AST ast, String methodExpr, 
+									String methodName, Expression methodExpression) {
+								MethodInvocation methodInvocation = ast.newMethodInvocation();
+								methodInvocation.setExpression(ast.newSimpleName(methodExpr));
+								methodInvocation.setName(ast.newSimpleName(methodName));
+								if (methodExpression != null) {
+									methodInvocation.arguments().add(methodExpression);
+								}
+								return methodInvocation;
+							}
+
+							private MethodInvocation getMethodInvocation(AST ast, String methodExpr, 
+									String methodName, String methodLiteral) {
+								StringLiteral literal = null;
+								if (methodLiteral != null) {
+									literal = ast.newStringLiteral();
+									literal.setLiteralValue(methodLiteral);
+								}
+								return getMethodInvocation(ast, methodExpr, methodName, literal);
+							}
+
+							private ExpressionStatement getExpressionStatement(AST ast, String methodExpr, 
+									String methodName, String methodLiteral) {
+								return ast.newExpressionStatement(
+										getMethodInvocation(ast, methodExpr, methodName, methodLiteral));
+							}
+
+							private ExpressionStatement getExpressionStatement(AST ast, String methodExpr, 
+									String methodName, Expression methodExpression) {
+								return ast.newExpressionStatement(
+										getMethodInvocation(ast, methodExpr, methodName, methodExpression));
+							}
+
+							// generate this: 
+					        // try { 
+				            //	out.println("<html>");
+				            //	out.println("<head>");
+				            //	out.println("<title>Servlet <servletname></title>");  
+				            //	out.println("</head>");
+				            //	out.println("<body>");
+				            //	out.println("<h1>Servlet <servletname> at " + request.getContextPath () + "</h1>");
+				            //	out.println("</body>");
+				            //	out.println("</html>");
+					        // }
+							@SuppressWarnings("unchecked")
+							private TryStatement getProcessRequestTryStatement(AST ast, String servletName) {
+								TryStatement tryStatement = ast.newTryStatement();
+								Block tryBlock = ast.newBlock();
+								List<Statement> tryStatements = tryBlock.statements();
+
+								tryStatements.add(getExpressionStatement(ast, "out", "println", "<html>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(getExpressionStatement(ast, "out", "println", "<head>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(getExpressionStatement(ast, "out", "println", //$NON-NLS-1$ //$NON-NLS-2$
+										"<title>Servlet " + servletName + "</title>")); //$NON-NLS-1$ //$NON-NLS-2$
+								tryStatements.add(getExpressionStatement(ast, "out", "println", "</head>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(getExpressionStatement(ast, "out", "println", "<body>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(getExpressionStatement(ast, "out", "println",  //$NON-NLS-1$ //$NON-NLS-2$
+										getProcessRequestInfixExpression(ast, servletName)));
+								tryStatements.add(getExpressionStatement(ast, "out", "println", "</body>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(getExpressionStatement(ast, "out", "println", "</html>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatement.setBody(tryBlock);
+								tryStatement.setFinally(getProcessRequestFinallyBlock(ast));
+
+								return tryStatement;
+							}
+							
+							// generate this: 
+							// <h1>Servlet <servletname> at " + request.getContextPath () + "</h1>"" +
+							private InfixExpression getProcessRequestInfixExpression(AST ast, String servletName) {
+								MethodInvocation methodInvocation = 
+									getMethodInvocation(ast, "request", "getContextPath", (Expression)null); //$NON-NLS-1$ //$NON-NLS-2$
+								InfixExpression infixExpression = ast.newInfixExpression();
+								InfixExpression infixExpression2 = ast.newInfixExpression();
+								StringLiteral literal = ast.newStringLiteral();
+
+								infixExpression.setOperator(InfixExpression.Operator.PLUS);
+								literal.setLiteralValue("<h1>Servlet " + servletName + " at "); //$NON-NLS-1$ //$NON-NLS-2$
+								infixExpression.setLeftOperand(literal);
+								infixExpression.setRightOperand(methodInvocation);
+								infixExpression2.setOperator(InfixExpression.Operator.PLUS);
+								infixExpression2.setLeftOperand(infixExpression);
+								literal = ast.newStringLiteral();
+								literal.setLiteralValue("</h1>"); //$NON-NLS-1$
+								infixExpression2.setRightOperand(literal);
+
+								return infixExpression2;
+							}
+
+							// generate this: 
+					        // } finally { 
+					        //    out.close();
+					        // }
+							@SuppressWarnings("unchecked")
+							private Block getProcessRequestFinallyBlock(AST ast) {
+								Block finallyBlock = ast.newBlock();
+								finallyBlock.statements().add(
+										getExpressionStatement(ast, "out", "close", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
+								return finallyBlock;
+							}
+
+							// generate this: 
+							// @Override
+							// public String getServletInfo() {
+							@SuppressWarnings("unchecked")
+							private MethodDeclaration generateGetServletInfoMethodDeclaration(AST ast) {
+								MethodDeclaration methodDeclaration = ast.newMethodDeclaration();
+								
+
+								methodDeclaration.setBody(ast.newBlock());
+								methodDeclaration.setConstructor(false);
+								methodDeclaration.modifiers().add(ast.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD));
+								methodDeclaration.setName(ast.newSimpleName("getServletInfo")); //$NON-NLS-1$
+								methodDeclaration.setReturnType2(ast.newSimpleType(ast.newSimpleName("String"))); //$NON-NLS-1$
+
+								Annotation ann = ast.newMarkerAnnotation();
+								ann.setTypeName(ast.newSimpleName("Override"));	//$NON-NLS-1$
+								methodDeclaration.modifiers().add(0, ann);
+
+								return methodDeclaration;
+							}
+
+							// generate this: 
+							/** 
+							 * Returns a short description of the servlet.
+							 * @return a String containing servlet description
+							 */
+							@SuppressWarnings("unchecked")
+							private Javadoc getGetServletInfoJavadocComment(AST ast) {
+								Javadoc docComment = ast.newJavadoc();
+								List tags = docComment.tags();
+
+								tags.add(getTagElement(ast, null, null, 
+									"Returns a short description of the servlet.")); //$NON-NLS-1$
+								tags.add(getTagElement(ast, TagElement.TAG_RETURN, null, 
+									"a String containing servlet description")); //$NON-NLS-1$
+
+								return docComment;
+							}
+
+							@SuppressWarnings("unchecked")
 							private void cleanupJavadoc(Javadoc javadoc) {
 								Iterator it = javadoc.tags().iterator();
 								while (it.hasNext()) {
@@ -186,6 +493,7 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								}
 							}
 
+							@SuppressWarnings("unchecked")
 							private Annotation addWebServletAnnotation(AST ast, CreateJavaEEArtifactTemplateModel tempModel,
 									CompilationUnit result) {
 								Annotation ann = ast.newNormalAnnotation();
@@ -193,7 +501,7 @@ public class AnnotatedServletWizard extends AddServletWizard {
 
 								if (tempModel instanceof CreateServletTemplateModel) {
 									CreateServletTemplateModel servletModel = (CreateServletTemplateModel)tempModel;
-									List annValues = ((NormalAnnotation) ann).values();
+									List<MemberValuePair> annValues = ((NormalAnnotation) ann).values();
 									List<String[]> initParams = servletModel.getInitParams();
 
 									annValues.add(addName(ast, servletModel.getServletName()));
@@ -217,13 +525,14 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								return annotationProperty;
 							}
 
+							@SuppressWarnings("unchecked")
 							private MemberValuePair addURLPatterns(AST ast, List<String[]> servletMappings) {
 								MemberValuePair annotationProperty = ast.newMemberValuePair();
 								ArrayInitializer arrayInit = ast.newArrayInitializer();
 
 								annotationProperty.setName(ast.newSimpleName("urlPatterns"));	//$NON-NLS-1$
-								for (Iterator iterator = servletMappings.iterator(); iterator.hasNext();) {
-									String[] strings = (String[]) iterator.next();
+								for (Iterator<String[]> iterator = servletMappings.iterator(); iterator.hasNext();) {
+									String[] strings = iterator.next();
 									StringLiteral literal = ast.newStringLiteral();
 
 									literal.setLiteralValue(strings[0]);
@@ -233,6 +542,7 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								return annotationProperty;
 							}
 
+							@SuppressWarnings("unchecked")
 							private MemberValuePair addInitParams(AST ast, List<String[]> initParams, CompilationUnit result) {
 								MemberValuePair annotationProperty = ast.newMemberValuePair();
 								ArrayInitializer arrayInit = ast.newArrayInitializer();
@@ -240,12 +550,12 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								result.imports().add(addWebAnnotationImport(ast, "WebInitParam"));	//$NON-NLS-1$
 
 								annotationProperty.setName(ast.newSimpleName("initParams"));	//$NON-NLS-1$
-								for (Iterator iterator = initParams.iterator(); iterator.hasNext();) {
-									String[] strings = (String[]) iterator.next();
+								for (Iterator<String[]> iterator = initParams.iterator(); iterator.hasNext();) {
+									String[] strings = iterator.next();
 									StringLiteral literal = ast.newStringLiteral();
 									Annotation ann = ast.newNormalAnnotation();
 									MemberValuePair annotationProperty1 = ast.newMemberValuePair();
-									List annValues = ((NormalAnnotation) ann).values();
+									List<MemberValuePair> annValues = ((NormalAnnotation) ann).values();
 
 									ann.setTypeName(ast.newSimpleName("WebInitParam"));	//$NON-NLS-1$
 									literal.setLiteralValue(strings[0]);
