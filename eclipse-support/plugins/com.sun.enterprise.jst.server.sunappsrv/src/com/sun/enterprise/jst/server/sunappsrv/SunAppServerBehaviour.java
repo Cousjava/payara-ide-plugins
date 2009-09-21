@@ -59,8 +59,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.componentcore.internal.util.ComponentUtilities;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
@@ -255,6 +257,15 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 	 */	
 	public void publishModule(int kind, int deltaKind, IModule[] module,
 			IProgressMonitor monitor) throws CoreException {
+
+		
+		//first, test if the server is still existing 
+		File serverloc=new File(getSunApplicationServerInstallationDirectory());
+        if (!serverloc.exists()){
+			SunAppSrvPlugin.logMessage(NLS.bind(Messages.serverDirectoryGone,serverloc.getAbsolutePath()),null);
+			return;
+       	
+        }		
 		
 		needARedeploy = true; //by default
 		
