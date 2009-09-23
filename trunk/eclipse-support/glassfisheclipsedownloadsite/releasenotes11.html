@@ -181,7 +181,17 @@ release.</P>
 supported in this release. To install a new version of software,
 uninstall the previous installation and then install the new version.</FONT></P>
 <H4>Known Issues</H4>
-<P STYLE="margin-bottom: 0in">None</P>
+<H4>Issue 233: Permission problem when updating plugin from new server wizard</H4>
+<H5>Description</H5>
+<P>If you are updating the GlassFish plugin which comes with GlassFish Tools Bundle for Eclipse 1.1
+version, and use the New->Server wizard approach to do so, it will result in failure because of
+a permission problem.</P>
+<P>For a complete description of the issue, see <A HREF="https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=233"><SPAN STYLE="text-decoration: none">Issue
+233.</SPAN></A></P>
+<H5>Workaround</H5>
+<P>The workaround for this issue is to use Eclipse's update site mechanism to
+update the plugin instead of the New->Server wizard approach.</P>
+<P>This issue will be fixed in version 1.2 of the bundle.</P>
 <H3><A NAME="fixedissues"></A>Fixed Issues</H3>
 <P>This section provides a list of fixed issues in the current
 releases of the product.</P>
