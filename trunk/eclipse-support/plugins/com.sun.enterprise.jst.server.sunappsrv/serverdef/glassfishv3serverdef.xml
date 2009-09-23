@@ -178,6 +178,7 @@
 		<include name="modules/jersey-*.jar" />
 		<include name="modules/grizzly-comet*.jar" />
 		<include name="modules/glassfish-api*.jar" />
+		<include name="modules/endorsed/*.jar" />
 	</fileset>
 	<!-- leave at least one generic jar as an archive so that validation works -->
 	<archive path="${sunappserver.rootdirectory}/modules/jsf-api.jar" />
