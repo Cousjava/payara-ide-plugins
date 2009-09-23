@@ -39,6 +39,7 @@
 
 # Don't forget the quotes, there could be a space... * is for v2.1 or v3-prelude or v3 directories
 chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv"*
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/dropins"
 
     </mac-postflight-script>
 </configuration>
