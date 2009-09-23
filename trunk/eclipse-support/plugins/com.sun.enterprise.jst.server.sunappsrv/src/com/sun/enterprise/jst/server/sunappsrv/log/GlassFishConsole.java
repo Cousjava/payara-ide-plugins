@@ -39,6 +39,7 @@
 package com.sun.enterprise.jst.server.sunappsrv.log;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Display;
@@ -97,6 +98,7 @@ public class GlassFishConsole extends MessageConsole {
 			thread.halt();
 			thread=null;
 		}
+		file = null;
 		super.dispose();
 	}
 	
@@ -141,6 +143,11 @@ public class GlassFishConsole extends MessageConsole {
 							String output = list.getCompleteDocument();
 							
 							out.println(output);
+							try {
+								out.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					});
 				}
