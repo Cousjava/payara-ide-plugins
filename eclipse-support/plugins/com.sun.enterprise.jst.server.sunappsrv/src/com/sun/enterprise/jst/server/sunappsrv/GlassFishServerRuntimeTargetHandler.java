@@ -43,7 +43,14 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
 
                     ClasspathEntry cpe = (ClasspathEntry) entries[i];
                     IClasspathAttribute[] newa = new IClasspathAttribute[1];
-                    newa[0] = JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, javadocPath);
+                    if ((""+entries[i].getPath()).endsWith("grizzly-comet.jar")){ //for comet apis
+                    	newa[0] = JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, 
+                                "jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "!/cometdoc");
+
+                    }else { //for Java ee 
+                        newa[0] = JavaCore.newClasspathAttribute(IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, javadocPath);
+
+                    }
                     try {
                         Field f = cpe.getClass().getDeclaredField("extraAttributes");
                         f.setAccessible(true);

@@ -54,6 +54,8 @@
 		</copy>
 		<mkdir dir="plugins/${plugin.id}_${plugin.version}/javaee6doc" />
 		<unzip dest="plugins/${plugin.id}_${plugin.version}/javaee6doc" src="javadocee6.jar"/>
+		<mkdir dir="plugins/${plugin.id}_${plugin.version}/cometdoc" />
+		<unzip dest="plugins/${plugin.id}_${plugin.version}/cometdoc" src="grizzly-comet-1.9.19-SNAPSHOT-javadoc.jar"/>
 
 		<zip destfile="${plugin.id}_${plugin.version}.jar"
 			basedir="plugins/${plugin.id}_${plugin.version}" includes="**" />
