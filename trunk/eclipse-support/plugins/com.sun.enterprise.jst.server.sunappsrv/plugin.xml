@@ -968,7 +968,10 @@
            <public publicId="-//Java Community Process//DTD SIP Application 1.0//ENN"
                     uri="dtds/sip-app_1_0.dtd"
                     webURL="http://www.jcp.org/dtd/sip-app_1_0.dtd" />
-            
+            <uri
+                name="http://www.jcp.org/xml/ns/sipservlet/sip-app_1_1.xsd"
+                uri="ee6_schemas/sip-app_1_1.xsd" /> 
+                           
            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 SIP Servlet 1.1//EN"
                     uri="dtds/sun-sip-app_1_1-0.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-sip-app_1_1-0.dtd" />
