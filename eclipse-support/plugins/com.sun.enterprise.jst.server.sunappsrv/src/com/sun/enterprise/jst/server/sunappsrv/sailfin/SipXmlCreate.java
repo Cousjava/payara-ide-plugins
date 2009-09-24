@@ -106,6 +106,7 @@ public class SipXmlCreate extends AbstractDataModelOperation {
     private String getDefautSipXml(String contextRoot) {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + //$NON-NLS-1$
                 "<sip-app xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" //$NON-NLS-1$
+        		+ "  xmlns=\"http://www.jcp.org/xml/ns/sipservlet\"\n"  //$NON-NLS-1$
                 + "  xsi:schemaLocation=\"http://www.jcp.org/xml/ns/sipservlet http://www." //$NON-NLS-1$
                 + "jcp.org/xml/ns/sipservlet/sip-app_" //$NON-NLS-1$
                 + version.replace(".", "_") + ".xsd\"\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
