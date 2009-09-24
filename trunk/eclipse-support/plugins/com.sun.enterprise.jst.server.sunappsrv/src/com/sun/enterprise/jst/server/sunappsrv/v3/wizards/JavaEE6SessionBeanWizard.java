@@ -39,7 +39,9 @@
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
 import static org.eclipse.jst.j2ee.ejb.internal.operations.INewEnterpriseBeanClassDataModelProperties.EJB_NAME;
+import static org.eclipse.jst.j2ee.ejb.internal.operations.INewEnterpriseBeanClassDataModelProperties.MAPPED_NAME;
 import static org.eclipse.jst.j2ee.ejb.internal.operations.INewSessionBeanClassDataModelProperties.LOCAL;
+import static org.eclipse.jst.j2ee.ejb.internal.operations.INewSessionBeanClassDataModelProperties.REMOTE;
 import static org.eclipse.jst.j2ee.ejb.internal.operations.INewSessionBeanClassDataModelProperties.STATE_TYPE;
 
 import java.lang.reflect.InvocationTargetException;
@@ -57,6 +59,7 @@ import org.eclipse.emf.codegen.jet.JETException;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jst.ejb.ui.internal.util.EJBUIMessages;
 import org.eclipse.jst.ejb.ui.internal.wizard.AddSessionBeanWizard;
 import org.eclipse.jst.ejb.ui.internal.wizard.AddSessionBeanWizardPage;
 import org.eclipse.jst.ejb.ui.internal.wizard.NewSessionBeanClassWizardPage;
@@ -69,10 +72,13 @@ import org.eclipse.jst.j2ee.internal.common.operations.NewJavaEEArtifactClassOpe
 import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
 import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelPropertyDescriptor;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
@@ -80,6 +86,7 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.WTPPlugin;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelSynchHelper;
+import org.eclipse.wst.common.frameworks.internal.plugin.WTPCommonPlugin;
 import org.eclipse.wst.server.core.IRuntime;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
@@ -96,6 +103,7 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 	// share help context with superclass, but copy the string here so no dependency issues
 	private static final String PLUGIN_EJB_UI = "org.eclipse.jst.ejb.ui."; //$NON-NLS-1$
 	private static final String EJB_SESSION_BEAN_WIZARD_ADD_SESSION_BEAN_PAGE_1 = PLUGIN_EJB_UI + "sessbw1100"; //$NON-NLS-1$
+	private static final String EJB_SESSION_BEAN_WIZARD_ADD_SESSION_BEAN_PAGE_2 = PLUGIN_EJB_UI + "sessbw1200"; //$NON-NLS-1$
 
 	private static final String NO_INTERFACE = "INewSessionBeanClassDataModelProperties.NO_INTERFACE"; //$NON-NLS-1$
 	private static final String IEjbWizardConstants_NO_INTERFACE = "No-interface"; //$NON-NLS-1$
@@ -114,10 +122,6 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 	 */
 	@Override
 	public void addPage(IWizardPage page) {
-		// we don't need the second page
-		if (page instanceof AddSessionBeanWizardPage) {
-			return;
-		}
 		// replace first page with a subclass that lets us do different project validation
 		if (page instanceof NewSessionBeanClassWizardPage) {
 			NewSessionBeanClassWizardPage page1 = new NewSessionBeanClassWizardPage(
@@ -184,9 +188,112 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 							}
 							return null;
 						}
+
+						/* (non-Javadoc)
+						 * @see org.eclipse.jst.ejb.ui.internal.wizard.NewSessionBeanClassWizardPage#getValidationPropertyNames()
+						 */
+						@Override
+						protected String[] getValidationPropertyNames() {
+							String[] retVal = null;
+							String[] baseVals = super.getValidationPropertyNames();
+							retVal = new String[baseVals.length+3];
+							for (int cnt=0; cnt < baseVals.length; cnt++)
+							{
+								retVal[cnt] = baseVals[cnt];
+							}
+							retVal[baseVals.length] = LOCAL;
+							retVal[baseVals.length+1] = REMOTE;
+							retVal[baseVals.length+2] = NO_INTERFACE;
+							return retVal;
+						}
 			};
 			page1.setInfopopID(EJB_SESSION_BEAN_WIZARD_ADD_SESSION_BEAN_PAGE_1);
 			page = page1;
+		}
+		// replace second page with a subclass that lets us have a different title and remove some unneeded components
+		if (page instanceof AddSessionBeanWizardPage) {
+			AddSessionBeanWizardPage page2 = new AddSessionBeanWizardPage(
+					getDataModel(), page.getName()) {
+				@Override
+				protected Composite createTopLevelComposite(Composite parent) {
+					Composite composite = super.createTopLevelComposite(parent);
+
+					// find and remove mapped name label, text and entire expandable ejb 2.1 section
+					hideControl(lookupControlWithPropertyName(MAPPED_NAME));
+					hideControl(findLabelWithName(composite, EJBUIMessages.MAPPED_NAME));
+					hideControl(findFirstControlOfType(composite, ExpandableComposite.class));
+
+					return composite;
+				}
+				/* (non-Javadoc)
+				 * @see org.eclipse.jst.ejb.ui.internal.wizard.AddEnterpriseBeanWizardPage#createStubsComposite(org.eclipse.swt.widgets.Composite)
+				 */
+				@Override
+				protected void createStubsComposite(Composite parent) {
+					// skip this
+				}
+				/* (non-Javadoc)
+				 * @see org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage#initializeSynchHelper(org.eclipse.wst.common.frameworks.datamodel.IDataModel)
+				 */
+				@Override
+				public DataModelSynchHelper initializeSynchHelper(
+						IDataModel dm) {
+					return new ExposedControlSynchHelper(dm);
+				}
+				private void hideControl(Control control) {
+					if (control != null) {
+						control.setVisible(false);
+						GridData data = new GridData();
+					    data.exclude = true;
+					    data.horizontalSpan = 2;
+					    data.horizontalAlignment = SWT.FILL;
+					    control.setLayoutData(data);
+					}
+				}
+				private Label findLabelWithName(Composite composite, String nameToFind) {
+					Control[] children = composite.getChildren();
+					for (int i = 0; i < children.length; i++) {
+						Control control = children[i];
+						if ((control instanceof Label) && ((Label)control).getText().equals(nameToFind)) {
+							return (Label)control;
+						}
+						if (control instanceof Composite) {
+							Control innerControl = findLabelWithName((Composite)control, nameToFind);
+							if (innerControl != null) {
+								return (Label)innerControl;
+							}
+						}
+					}
+					return null;
+				}
+				@SuppressWarnings("unchecked")
+				private Control findFirstControlOfType(Composite composite, Class typeToFind) {
+					Control[] children = composite.getChildren();
+					for (int i = 0; i < children.length; i++) {
+						Control control = children[i];
+						if (typeToFind.isAssignableFrom(control.getClass())) {
+							return control;
+						}
+						if (control instanceof Composite) {
+							Control innerControl = findFirstControlOfType((Composite)control, typeToFind);
+							if (innerControl != null) {
+								return innerControl;
+							}
+						}
+					}
+					return null;
+				}
+				private Control lookupControlWithPropertyName(String propertyName) {
+					if (synchHelper instanceof ExposedControlSynchHelper) {
+						return ((ExposedControlSynchHelper)synchHelper).getControl(propertyName);
+						
+					}
+					return null;
+				}
+			};
+			page2.setTitle(Messages.wizardTitle);
+			page2.setInfopopID(EJB_SESSION_BEAN_WIZARD_ADD_SESSION_BEAN_PAGE_2);
+			page = page2;
 		}
 		super.addPage(page);
 	}
@@ -290,7 +397,24 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 				if (EJB_NAME.equals(propertyName)){
 					return null;
 				}
+				// need to make sure at least one of these are set to true
+				if (propertyName.equals(LOCAL) || 
+						propertyName.equals(REMOTE) ||
+						propertyName.equals(NO_INTERFACE)) {
+					boolean oneCheckbox = validateOneCheckboxTrue();
+					if (!oneCheckbox) {
+						return WTPCommonPlugin.createErrorStatus(
+								Messages.errorBusinessInterfaceMissing);
+					}
+				}
+
 				return super.validate(propertyName);
+			}
+			private boolean validateOneCheckboxTrue() {
+				boolean hasLocal = getBooleanProperty(LOCAL);
+				boolean hasRemote = getBooleanProperty(REMOTE);
+				boolean hasNoInterface = getBooleanProperty(NO_INTERFACE);
+				return (hasLocal || hasRemote || hasNoInterface);
 			}
 			@Override
 			public DataModelPropertyDescriptor[] getValidPropertyDescriptors(String propertyName) {
@@ -323,9 +447,12 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 			 */
 			@Override
 			public Object getDefaultProperty(String propertyName) {
-				// local checkbox should not be on by default in the Java EE 6 case
+				// no-interface checkbox should be default instead of local checkbox in the Java EE 6 case
 				if (propertyName.equals(LOCAL)) {
 					return Boolean.FALSE;
+				}
+				if (propertyName.equals(NO_INTERFACE)) {
+					return Boolean.TRUE;
 				}
 				return super.getDefaultProperty(propertyName);
 			}

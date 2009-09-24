@@ -48,4 +48,5 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     
 	public static String ProjectName;
     public static String wizardTitle;
+    public static String errorBusinessInterfaceMissing;
 }
