@@ -68,7 +68,6 @@ import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.ReturnStatement;
-import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.StringLiteral;
@@ -202,12 +201,12 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								for (int i = 0; i < methods.length; i++) {
 									MethodDeclaration methodDeclaration = methods[i];
 									if (!methodDeclaration.isConstructor()) {
-										SimpleName methodName = methodDeclaration.getName();
+										String methodName = methodDeclaration.getName().getIdentifier();
 										
 										// only add to doGet and doPost
 										// generate this:
 										// processRequest(request, response);
-										if (methodName.getIdentifier().startsWith("do")) { //$NON-NLS-1$
+										if (methodName.equals("doPost") || methodName.equals("doGet")) { //$NON-NLS-1$ //$NON-NLS-2$
 											List<Statement> statements = methodDeclaration.getBody().statements();
 											MethodInvocation methodInvocation = ast.newMethodInvocation();
 											ExpressionStatement expressionStatement = ast.newExpressionStatement(methodInvocation);
