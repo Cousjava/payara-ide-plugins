@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="jMaki" version="1.8.1.2">
+    <package no-download="no">
+        <size os="win32">4.3M</size>
+        <size os="macosx">4.2M</size>
+        <size os="linux">4.2M</size>
+    </package>
+    <shortdescription>jMaki Core Feature</shortdescription>
+    <status>packaged</status>
+    <eclipse-help>don't know</eclipse-help>
+    <description> The jMaki Plugin provides support for page templates, project
+        templates, and widget templates. Included is a custom snippet
+        palette along with a property editor for editing widget properties.
+        This plugin provides support for HTML and JSP projects. Known
+        project types that are supported include Web Tools Projects (WTP),
+        static Web Projects, and Aptana Studio Projects.</description>
+    <getting-started/>
+    <changelog release="1.2.2">
+        <entry date="2008-11-28" type="creation"/>
+    </changelog>
+    <build patched="no" type="binary">
+        <updatesite url="https://ajax.dev.java.net/eclipse">
+            <feature id="org.jmaki.eclipse.core.feature" version="1.8.1.2"/>
+            <feature id="org.jvnet.ajax.eclipse.jmaki.feature" version="1.8.1.2"/>
+        </updatesite>
+    </build>
+    <copyright> jMaki is copyright 2008 the jMaki team and Sun MicroSystems.</copyright>
+    <license type="bsd">
+        <terms> Software License Agreement (BSD License)
+            
+            Redistribution and use of this software in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+            
+            * Redistributions of source code must retain the above copyright notice, this list of conditions and the
+            following disclaimer.
+            * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+            * Neither the name of Yahoo! Inc. nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission of Yahoo! Inc.
+            
+            THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &amp;quot;AS IS&amp;quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</terms>
+    </license>
+    <dependencies>
+        <component id="eclipse-wtp"/>
+    </dependencies>
+</component>
