@@ -38,20 +38,58 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
+import org.eclipse.jst.ejb.ui.internal.wizard.IEjbWizardConstants;
+import org.eclipse.jst.ejb.ui.internal.wizard.NewEnterpriseBeanClassWizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.common.frameworks.datamodel.DataModelPropertyDescriptor;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 
+public class AddEjbTimerWizardPage extends NewEnterpriseBeanClassWizardPage {
 
-public class Messages extends org.eclipse.osgi.util.NLS {
-    static {
-        org.eclipse.osgi.util.NLS.initializeMessages(
-                "com.sun.enterprise.jst.server.sunappsrv.v3.wizards.Messages", Messages.class);
-    }
-    
-	public static String ProjectName;
-    public static String sessionWizardTitle;
-    public static String errorBusinessInterfaceMissing;
-    
-    public static String timerWizardTitle;
-    public static String timerWizardDescription;
-    public static String timerScheduleLabel;
-    public static String timerScheduleDefault;
+	private Text scheduleText;
+
+	public AddEjbTimerWizardPage(IDataModel model, String pageName,
+			String pageDesc, String pageTitle, String moduleType) {
+		super(model, pageName, pageDesc, pageTitle, moduleType);
+	}
+
+	protected Composite createTopLevelComposite(Composite parent) {
+		Composite composite = super.createTopLevelComposite(parent);
+
+		addSeperator(composite, 3);
+		
+		new Label(composite, SWT.LEFT).setText(Messages.timerScheduleLabel);
+		scheduleText = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		scheduleText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		synchHelper.synchText(scheduleText,
+				AddEjbTimerDataModelProvider.SCHEDULE, null);
+
+		return composite;
+	}
+	
+	private static GridData gdhspan(int span) {
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		gd.horizontalSpan = span;
+		return gd;
+	}
+
+	@Override
+	protected String[] getValidationPropertyNames() {
+		String[] base = super.getValidationPropertyNames();
+		// String[] result = new String[base.length + 1];
+		// System.arraycopy(base, 0, result, 0, base.length);
+		// result[base.length] = ;
+		// return result;
+		return base;
+	}
+
+	@Override
+	protected void updateControls() {
+		super.updateControls();
+	}
 }

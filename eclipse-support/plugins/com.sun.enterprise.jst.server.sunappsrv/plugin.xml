@@ -1153,8 +1153,37 @@
             %sunappserver.sessionbean.BeanWebRegionWizard.description
          </description>
        </wizard>
+       <wizard
+             category="com.sun.enterprise.jst.server.sunappsrv"
+             class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEjbTimerWizard"
+             icon="icons/obj16/glassfishserver.gif"
+             id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEjbTimerWizard"
+             name="%sunappserver.ejbtimerlabel">
+		 <class
+               class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEjbTimerWizard">
+            <parameter
+                  name="javaeeartifact"
+                  value="true">
+            </parameter>
+            <parameter
+                  name="menuIndex"
+                  value="35">
+            </parameter>
+         </class>
+         <description>
+            %sunappserver.ejbtimer.BeanWebRegionWizard.description
+         </description>
+       </wizard>
+       
     </extension>
- 
+
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension targetID="org.eclipse.jst.j2ee.J2EEPerspective">
+	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard"/>
+	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard"/>
+	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEjbTimerWizard"/>
+		</perspectiveExtension>
+	</extension>
 
     <extension point="org.eclipse.ui.popupMenus">
         <objectContribution
