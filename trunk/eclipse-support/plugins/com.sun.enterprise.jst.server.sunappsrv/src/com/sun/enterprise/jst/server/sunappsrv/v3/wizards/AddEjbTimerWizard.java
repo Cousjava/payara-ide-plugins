@@ -38,20 +38,40 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
+import java.net.URI;
+import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.ejb.ui.internal.wizard.NewEnterpriseBeanWizard;
+import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 
-public class Messages extends org.eclipse.osgi.util.NLS {
-    static {
-        org.eclipse.osgi.util.NLS.initializeMessages(
-                "com.sun.enterprise.jst.server.sunappsrv.v3.wizards.Messages", Messages.class);
-    }
-    
-	public static String ProjectName;
-    public static String sessionWizardTitle;
-    public static String errorBusinessInterfaceMissing;
-    
-    public static String timerWizardTitle;
-    public static String timerWizardDescription;
-    public static String timerScheduleLabel;
-    public static String timerScheduleDefault;
+public class AddEjbTimerWizard extends NewEnterpriseBeanWizard {
+
+	public AddEjbTimerWizard() {
+		this(null);
+	}
+
+	public AddEjbTimerWizard(IDataModel model) {
+		super(model);
+		setWindowTitle(Messages.timerWizardTitle);
+		// setDefaultPageImageDescriptor(ImageDescriptor.createFromURL((URL)
+		// J2EEPlugin.getDefault().getImage("timer_bean_wiz")));
+	}
+
+	@Override
+	protected void doAddPages() {
+		AddEjbTimerWizardPage page1 = new AddEjbTimerWizardPage(getDataModel(),
+				"page1", Messages.timerWizardDescription,
+				Messages.timerWizardTitle, J2EEProjectUtilities.EJB);
+		// page1.setInfopopID(IEJBUIContextIds.EJB_MESSAGE_BEAN_WIZARD_ADD_MESSAGE_BEAN_PAGE_1);
+		addPage(page1);
+	}
+
+	@Override
+	protected IDataModelProvider getDefaultProvider() {
+		return (IDataModelProvider) new AddEjbTimerDataModelProvider();
+	}
 }

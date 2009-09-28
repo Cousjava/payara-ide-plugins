@@ -110,7 +110,7 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 
 	public JavaEE6SessionBeanWizard(IDataModel model) {
 		super(model);
-		setWindowTitle(Messages.wizardTitle);
+		setWindowTitle(Messages.sessionWizardTitle);
 	}
 
 	public JavaEE6SessionBeanWizard() {
@@ -126,7 +126,7 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 		if (page instanceof NewSessionBeanClassWizardPage) {
 			NewSessionBeanClassWizardPage page1 = new NewSessionBeanClassWizardPage(
 					getDataModel(), page.getName(), page.getDescription(),
-					Messages.wizardTitle, J2EEProjectUtilities.DYNAMIC_WEB + J2EEProjectUtilities.EJB) {
+					Messages.sessionWizardTitle, J2EEProjectUtilities.DYNAMIC_WEB + J2EEProjectUtilities.EJB) {
 
 						/* (non-Javadoc)
 						 * @see org.eclipse.jst.j2ee.internal.wizard.NewJavaClassWizardPage#isProjectValid(org.eclipse.core.resources.IProject)
@@ -291,7 +291,7 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 					return null;
 				}
 			};
-			page2.setTitle(Messages.wizardTitle);
+			page2.setTitle(Messages.sessionWizardTitle);
 			page2.setInfopopID(EJB_SESSION_BEAN_WIZARD_ADD_SESSION_BEAN_PAGE_2);
 			page = page2;
 		}
