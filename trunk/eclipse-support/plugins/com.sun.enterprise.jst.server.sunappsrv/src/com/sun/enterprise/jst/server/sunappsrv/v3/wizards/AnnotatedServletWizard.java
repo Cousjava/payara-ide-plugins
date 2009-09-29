@@ -39,6 +39,7 @@
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
 import static org.eclipse.jst.j2ee.application.internal.operations.IAnnotationsDataModel.USE_ANNOTATIONS;
+import static org.eclipse.jst.j2ee.internal.web.operations.INewServletClassDataModelProperties.GET_SERVLET_INFO;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -176,7 +177,10 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								addHelpfulMethodBodies(ast, firstType);
 								addProcessRequestMethod(ast, firstType, result, 
 										((CreateServletTemplateModel)tempModel).getServletName());
-								addGetServletInfoMethod(ast, firstType, result);
+								if (model.getBooleanProperty(GET_SERVLET_INFO)) {
+									removeGetServletInfoMethodStub(ast, firstType);
+									addGetServletInfoMethod(ast, firstType, result);
+								}
 								return getRewrittenSource(source, result);
 							}
 
@@ -258,6 +262,24 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								statements.add(getProcessRequestTryStatement(ast, servletName));
 							}
 							
+							private void removeGetServletInfoMethodStub(AST ast, TypeDeclaration firstType) {
+								MethodDeclaration[] methods = firstType.getMethods();
+								MethodDeclaration foundMethod = null;
+
+								for (int i = 0; i < methods.length; i++) {
+									MethodDeclaration methodDeclaration = methods[i];
+									if (!methodDeclaration.isConstructor()) {
+										if ("getServletInfo".equals(methodDeclaration.getName().getIdentifier())) { //$NON-NLS-1$
+											foundMethod = methodDeclaration;
+											break;
+										}
+									}
+								}
+								if (foundMethod != null) {
+									firstType.bodyDeclarations().remove(foundMethod);
+								}
+							}
+
 							@SuppressWarnings("unchecked")
 							private void addGetServletInfoMethod(AST ast, TypeDeclaration firstType, CompilationUnit result) {
 								MethodDeclaration methodDeclaration = generateGetServletInfoMethodDeclaration(ast);
@@ -592,6 +614,19 @@ public class AnnotatedServletWizard extends AddServletWizard {
 					}
 
 				};
+			}
+
+			/* (non-Javadoc)
+			 * @see org.eclipse.jst.j2ee.internal.web.operations.NewServletClassDataModelProvider#getDefaultProperty(java.lang.String)
+			 */
+			@Override
+			public Object getDefaultProperty(String propertyName) {
+				// Generate a getServletInfo method by default
+				if (propertyName.equals(GET_SERVLET_INFO)) {
+					return Boolean.TRUE;
+				}
+				
+				return super.getDefaultProperty(propertyName);
 			}
 		};
 	}
