@@ -26,7 +26,8 @@
 		<component id="glassfish-v2-linux-x86" />
 		<component id="glassfish-v2-opensolaris-x86" />
 		<component id="glassfish-v2-win32-x86" /-->
-		<component id="metro-plugins" />
+<!--		<component id="metro-plugins" /> ivar: I have no access to metro so disabling it
+-->
 		<component id="mysql" />
 
 	</include>
