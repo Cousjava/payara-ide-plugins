@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<!-- first release 2008-11-27 -->
 <configuration name="Tools Bundle For Eclipse"
-	releaseDate="2009-05-09" version="1.1.1">
+	releaseDate="2009-05-09" version="1.2">
 
 	<shortdescription>GlassFish Tools Bundle for Eclipse.
 	</shortdescription>
@@ -11,7 +11,7 @@
 		<component id="eclipse-platform" />
 		<assembly id="eclipse-tools" />
 		<component id="eclipse-jdt" />
-		<assembly id="eclipse-wtp-no-servers-nightly" />
+		<assembly id="eclipse-wtp-no-servers" />
 		<component id="eclipse-emf-sdo-xsd" />
 		<component id="eclipse-gef" />
 		<component id="eclipse-dtp" />
