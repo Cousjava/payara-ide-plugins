@@ -49,6 +49,7 @@ import java.util.Properties;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -72,6 +73,7 @@ import org.eclipse.wst.server.core.util.PublishUtil;
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
+import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.ResourceUtils;
 
 
 /**
@@ -747,7 +749,18 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 				SunAppSrvPlugin.logMessage("optimal: NO NEED TO TO A REDEPLOYMENT, !!!");
 				
 			}
-			File sunResource = new File(spath,"WEB-INF/sun-resources.xml");
+			
+			//Get correct location for sun-resources.xml
+			IProject project = module[0].getProject();
+			String location = ResourceUtils.getResourceLocation(project, false);
+			if(location != null){
+				if(location.trim().length() > 0){
+					location = location + File.separatorChar + ResourceUtils.RESOURCE_FILE_NAME;
+				}else {
+					location = ResourceUtils.RESOURCE_FILE_NAME;
+				}
+			}
+			File sunResource = new File(spath,location);
 			if (sunResource.exists()){
 				Commands.AddResourcesCommand register = new Commands.AddResourcesCommand(sunResource.getAbsolutePath());
 				try {

@@ -145,7 +145,7 @@ public class JDBCWizard extends Wizard implements INewWizard {
 
 	private void doFinish(String jndiName, JDBCInfo jdbcInfo, IProject selectedProject, 
 		IProgressMonitor monitor) throws CoreException {
-		dirName = ResourceUtils.getResourceLocation(selectedProject);
+		dirName = ResourceUtils.getResourceLocation(selectedProject, true);
 		if(dirName == null) {
 			IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK, //$NON-NLS-1$
 					NLS.bind(Messages.errorFolderNull, dirName), null);

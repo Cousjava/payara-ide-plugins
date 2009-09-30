@@ -144,7 +144,7 @@ public class MailWizard extends Wizard implements INewWizard {
 	 */
 
 	private void doFinish(String jndiName, MailInfo mailInfo, IProject selectedProject, IProgressMonitor monitor) throws CoreException {
-		dirName = ResourceUtils.getResourceLocation(selectedProject);
+		dirName = ResourceUtils.getResourceLocation(selectedProject, true);
 		if(dirName == null) {
 			IStatus status = new Status(IStatus.ERROR, "MailWizard", IStatus.OK, //$NON-NLS-1$
 					NLS.bind(Messages.errorFolderNull, dirName), null);
