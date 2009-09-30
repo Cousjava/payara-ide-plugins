@@ -48,6 +48,7 @@ import org.eclipse.jst.j2ee.internal.common.operations.NewJavaEEArtifactClassOpe
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 
+@SuppressWarnings("restriction")
 public class AddEjbTimerDataModelProvider extends
 		NewEnterpriseBeanClassDataModelProvider {
 

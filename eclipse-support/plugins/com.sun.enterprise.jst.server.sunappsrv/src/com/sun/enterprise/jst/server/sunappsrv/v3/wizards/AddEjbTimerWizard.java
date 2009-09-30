@@ -38,16 +38,12 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
-import java.net.URI;
-import java.net.URL;
-
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.ejb.ui.internal.wizard.NewEnterpriseBeanWizard;
 import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 
+@SuppressWarnings("restriction")
 public class AddEjbTimerWizard extends NewEnterpriseBeanWizard {
 
 	public AddEjbTimerWizard() {

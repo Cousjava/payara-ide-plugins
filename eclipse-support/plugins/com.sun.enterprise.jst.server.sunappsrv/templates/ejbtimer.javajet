@@ -1,6 +1,7 @@
 <%@ jet package="com.sun.enterprise.jst.server.sunappsrv.v3.wizards" 
 	imports="java.util.* org.eclipse.jst.j2ee.internal.common.operations.*" 
 	class="EjbTimerTemplate" 
+	skeleton="generator.skeleton"
 %>
 <% AddEjbTimerTemplateModel model = (AddEjbTimerTemplateModel) argument; %>
 <%@ include file="_flags.template" %>
