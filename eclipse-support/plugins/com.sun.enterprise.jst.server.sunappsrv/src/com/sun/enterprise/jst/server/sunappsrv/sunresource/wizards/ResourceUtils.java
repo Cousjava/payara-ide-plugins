@@ -56,9 +56,11 @@ import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 public class ResourceUtils {
 	public static final String RESOURCE_FILE_TEMPLATE = "templates/sun-resources-xml-template.resource"; //$NON-NLS-1$
 	public static final String RESOURCE_FILE_NAME = "sun-resources.xml"; //$NON-NLS-1$
-	public static final String WEB_SETUP_DIR_NAME = "WebContent/WEB-INF"; //$NON-NLS-1$
-	public static final String EAR_SETUP_DIR_NAME = "EarContent"; //$NON-NLS-1$
-	public static final String EJB_SETUP_DIR_NAME = "ejbModule/META-INF"; //$NON-NLS-1$
+	public static final String WEB_CONTENT = "WebContent"; //$NON-NLS-1$
+	public static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
+	public static final String EAR_CONTENT = "EarContent"; //$NON-NLS-1$
+	public static final String EJB_CONTENT = "ejbModule"; //$NON-NLS-1$
+	public static final String META_INF = "META-INF"; //$NON-NLS-1$
 	
 	private static final String SUN_RESOURCES_XML_HEADER = 
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<!DOCTYPE resources PUBLIC " +  //$NON-NLS-1$ //$NON-NLS-2$
@@ -156,14 +158,24 @@ public class ResourceUtils {
 		return originalLine;
 	}
 	
-	public static String getResourceLocation(IProject project){
+	public static String getResourceLocation(IProject project, boolean isWizard){
 		String setUpLocation = null;
-		if(JavaEEProjectUtilities.isDynamicWebProject(project)){
-			setUpLocation = WEB_SETUP_DIR_NAME;			
-		}else if (JavaEEProjectUtilities.isEARProject(project)){
-			setUpLocation = EAR_SETUP_DIR_NAME;
-		}else if (JavaEEProjectUtilities.isEJBProject(project)){
-			setUpLocation = EJB_SETUP_DIR_NAME;
+		if(isWizard) {
+			if(JavaEEProjectUtilities.isDynamicWebProject(project)){
+				setUpLocation = WEB_CONTENT + File.separatorChar + WEB_INF;			
+			}else if (JavaEEProjectUtilities.isEARProject(project)){
+				setUpLocation = EAR_CONTENT;
+			}else if (JavaEEProjectUtilities.isEJBProject(project)){
+				setUpLocation = EJB_CONTENT + File.separatorChar + META_INF;
+			}
+		}else {
+			if(JavaEEProjectUtilities.isDynamicWebProject(project)){
+				setUpLocation = WEB_INF;			
+			}else if (JavaEEProjectUtilities.isEARProject(project)){
+				setUpLocation = "";
+			}else if (JavaEEProjectUtilities.isEJBProject(project)){
+				setUpLocation = META_INF;
+			}
 		}
 		return setUpLocation;
 	}

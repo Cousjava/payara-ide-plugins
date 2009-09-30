@@ -147,7 +147,7 @@ public class JMSWizard extends Wizard implements INewWizard {
 	 */
 
 	private void doFinish(String jndiName, JMSInfo jmsInfo, IProject selectedProject, IProgressMonitor monitor) throws CoreException {
-		dirName = ResourceUtils.getResourceLocation(selectedProject);
+		dirName = ResourceUtils.getResourceLocation(selectedProject, true);
 		if(dirName == null) {
 			IStatus status = new Status(IStatus.ERROR, "JMSWizard", IStatus.OK, //$NON-NLS-1$
 					NLS.bind(Messages.errorFolderNull, dirName), null);
