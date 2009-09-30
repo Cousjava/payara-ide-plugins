@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.codegen.jet.JETException;
@@ -70,7 +69,6 @@ import org.eclipse.jst.j2ee.ejb.internal.operations.NewSessionBeanClassOperation
 import org.eclipse.jst.j2ee.internal.common.operations.CreateJavaEEArtifactTemplateModel;
 import org.eclipse.jst.j2ee.internal.common.operations.NewJavaEEArtifactClassOperation;
 import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
-import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -79,7 +77,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelPropertyDescriptor;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
@@ -87,7 +84,6 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.WTPPlugin;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelSynchHelper;
 import org.eclipse.wst.common.frameworks.internal.plugin.WTPCommonPlugin;
-import org.eclipse.wst.server.core.IRuntime;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
@@ -131,7 +127,10 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 						 */
 						@Override
 						protected boolean isProjectValid(IProject project) {
-							return WizardUtil.hasGF3Runtime(project);
+							// super's test for isProjectValid requires an ejb project and we don't 
+							// want to do that, so result is basically a test of the grandsuper's isProjectValid
+							// with the addition of allowing both ejb and web projects
+							return WizardUtil.isWebOrEJBProjectWithGF3Runtime(project);
 						}
 
 						@Override
