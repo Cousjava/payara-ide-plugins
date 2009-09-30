@@ -94,8 +94,6 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 @SuppressWarnings("restriction")
 public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 
-	private static final String V3_RUNTIME = "com.sun.enterprise.jst.server.runtime.sunappsrv92"; //$NON-NLS-1$
-
 	// mimic state type enumeration and value with our own constants
 	private static final String StateType_SINGLETON = "SINGLETON"; //$NON-NLS-1$
 	private static final String EJBCreationResourceHandler_STATE_TYPE_SINGLETON = "Singleton"; //$NON-NLS-1$
@@ -133,26 +131,7 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 						 */
 						@Override
 						protected boolean isProjectValid(IProject project) {
-							// super's test for isProjectValid requires an ejb project and we don't 
-							// want to do that, so result is basically a test of the grandsuper's isProjectValid
-							// with the addition of allowing both ejb and web projects
-							try {
-								boolean result = project.isAccessible() && 
-									project.hasNature(IModuleConstants.MODULE_NATURE_ID) && 
-									(JavaEEProjectUtilities.isDynamicWebProject(project) ||
-									JavaEEProjectUtilities.isEJBProject(project));
-
-								if (result) {
-									IRuntime runtime = J2EEProjectUtilities.getServerRuntime(project);
-									if ((runtime != null) && runtime.getRuntimeType().getId().equals(V3_RUNTIME)){
-										return true;
-									}
-								}
-							} catch (CoreException e) {
-								e.printStackTrace();
-							}
-
-							return false;
+							return WizardUtil.hasGF3Runtime(project);
 						}
 
 						@Override
