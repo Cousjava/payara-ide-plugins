@@ -38,6 +38,7 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jst.ejb.ui.internal.wizard.NewEnterpriseBeanClassWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -83,5 +84,10 @@ public class AddEjbTimerWizardPage extends NewEnterpriseBeanClassWizardPage {
 	@Override
 	protected void updateControls() {
 		super.updateControls();
+	}
+
+	@Override
+	protected boolean isProjectValid(IProject project) {
+		return WizardUtil.hasGF3Runtime(project);
 	}
 }
