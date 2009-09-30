@@ -78,8 +78,6 @@ import com.sun.enterprise.jst.server.sunappsrv.sunresource.MailInfo;
  */
 
 public class JMSWizard extends Wizard implements INewWizard {
-	private static final String RESOURCE_FILE_TEMPLATE = "templates/mail-resources-fragment-template.resource"; //$NON-NLS-1$
-	
 	private JMSResourceWizardPage page;
 	private ISelection selection;
 	private String dirName;
@@ -149,8 +147,12 @@ public class JMSWizard extends Wizard implements INewWizard {
 	 */
 
 	private void doFinish(String jndiName, JMSInfo jmsInfo, IProject selectedProject, IProgressMonitor monitor) throws CoreException {
-		//TODO - for now, just force WebContent/WEB-INF
-		dirName = ResourceUtils.SETUP_DIR_NAME;
+		dirName = ResourceUtils.getResourceLocation(selectedProject);
+		if(dirName == null) {
+			IStatus status = new Status(IStatus.ERROR, "JMSWizard", IStatus.OK, //$NON-NLS-1$
+					NLS.bind(Messages.errorFolderNull, dirName), null);
+					throw new CoreException(status);
+		}
 		
 		IContainer containerResource = selectedProject;
 		final IFolder folder = containerResource.getFolder(new Path(dirName));
@@ -159,7 +161,6 @@ public class JMSWizard extends Wizard implements INewWizard {
 			NLS.bind(Messages.errorFolderMissing, dirName), null);
 			throw new CoreException(status);
 		}
-
 		monitor.beginTask("Creating " + ResourceUtils.RESOURCE_FILE_NAME, 2);
 
 		final IFile file = folder.getFile(new Path(ResourceUtils.RESOURCE_FILE_NAME));
@@ -210,7 +211,7 @@ public class JMSWizard extends Wizard implements INewWizard {
 		boolean matchEnd = false;
 		
 		try {
-			InputStream input = MailInfo.class.getResourceAsStream(RESOURCE_FILE_TEMPLATE);
+			InputStream input = MailInfo.class.getResourceAsStream(ResourceUtils.RESOURCE_FILE_TEMPLATE);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					input));
 			try {

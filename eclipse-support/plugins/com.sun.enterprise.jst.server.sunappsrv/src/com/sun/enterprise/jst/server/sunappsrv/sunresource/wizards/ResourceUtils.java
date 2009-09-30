@@ -48,13 +48,17 @@ import java.io.Reader;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 
 public class ResourceUtils {
-	
+	public static final String RESOURCE_FILE_TEMPLATE = "templates/sun-resources-xml-template.resource"; //$NON-NLS-1$
 	public static final String RESOURCE_FILE_NAME = "sun-resources.xml"; //$NON-NLS-1$
-	public static final String SETUP_DIR_NAME = "WebContent/WEB-INF"; //$NON-NLS-1$
+	public static final String WEB_SETUP_DIR_NAME = "WebContent/WEB-INF"; //$NON-NLS-1$
+	public static final String EAR_SETUP_DIR_NAME = "EarContent"; //$NON-NLS-1$
+	public static final String EJB_SETUP_DIR_NAME = "ejbModule/META-INF"; //$NON-NLS-1$
 	
 	private static final String SUN_RESOURCES_XML_HEADER = 
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<!DOCTYPE resources PUBLIC " +  //$NON-NLS-1$ //$NON-NLS-2$
@@ -150,5 +154,17 @@ public class ResourceUtils {
 				originalLine.replaceAll(pattern, value));
 		}
 		return originalLine;
+	}
+	
+	public static String getResourceLocation(IProject project){
+		String setUpLocation = null;
+		if(JavaEEProjectUtilities.isDynamicWebProject(project)){
+			setUpLocation = WEB_SETUP_DIR_NAME;			
+		}else if (JavaEEProjectUtilities.isEARProject(project)){
+			setUpLocation = EAR_SETUP_DIR_NAME;
+		}else if (JavaEEProjectUtilities.isEJBProject(project)){
+			setUpLocation = EJB_SETUP_DIR_NAME;
+		}
+		return setUpLocation;
 	}
 }
