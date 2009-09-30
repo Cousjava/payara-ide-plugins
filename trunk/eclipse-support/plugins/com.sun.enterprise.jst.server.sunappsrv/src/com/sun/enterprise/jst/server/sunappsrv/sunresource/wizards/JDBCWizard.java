@@ -39,7 +39,6 @@
 package com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -77,10 +76,6 @@ import com.sun.enterprise.jst.server.sunappsrv.sunresource.JDBCInfo;
  */
 
 public class JDBCWizard extends Wizard implements INewWizard {
-	private static final String RESOURCE_FILE_TEMPLATE = "templates/sun-resources-xml-template.resource"; //$NON-NLS-1$
-	private static final String RESOURCE_FILE_NAME = "sun-resources.xml"; //$NON-NLS-1$
-	private static final String SETUP_DIR_NAME = "WebContent/WEB-INF"; //$NON-NLS-1$
-	
 	private JDBCResourceWizardPage page;
 	private ISelection selection;
 	private String dirName;
@@ -150,31 +145,28 @@ public class JDBCWizard extends Wizard implements INewWizard {
 
 	private void doFinish(String jndiName, JDBCInfo jdbcInfo, IProject selectedProject, 
 		IProgressMonitor monitor) throws CoreException {
-		// TODO in the case the file already exists, it
-		// would be best to do this much earlier
-
-		//TODO - for now, just force WebContent/WEB-INF
-		dirName = SETUP_DIR_NAME;
+		dirName = ResourceUtils.getResourceLocation(selectedProject);
+		if(dirName == null) {
+			IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK, //$NON-NLS-1$
+					NLS.bind(Messages.errorFolderNull, dirName), null);
+					throw new CoreException(status);
+		}
 		
 		IContainer containerResource = selectedProject;
 		final IFolder folder = containerResource.getFolder(new Path(dirName));
-if (!folder.exists()) {
-	IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK, //$NON-NLS-1$
-			NLS.bind(Messages.errorFolderMissing, dirName), null);
-	throw new CoreException(status);
-}
+		if (!folder.exists()) {
+			IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK, //$NON-NLS-1$
+					NLS.bind(Messages.errorFolderMissing, dirName), null);
+			throw new CoreException(status);
+		}
 
-		monitor.beginTask("Creating " + RESOURCE_FILE_NAME, 2);
+		monitor.beginTask("Creating " + ResourceUtils.RESOURCE_FILE_NAME, 2);
 
-//		final IFolder folder = containerResource.getFolder(new Path(SETUP_DIR_NAME));
-		final IFile file = folder.getFile(new Path(RESOURCE_FILE_NAME));
-if (file.exists()) {
-	IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK, //$NON-NLS-1$
-			Messages.errorFileExists, null);
-	throw new CoreException(status);
-}
+		final IFile file = folder.getFile(new Path(ResourceUtils.RESOURCE_FILE_NAME));
+
 		try {
-			InputStream stream = openContentStream(jndiName, jdbcInfo);
+			String fragment = createFragment(jndiName, jdbcInfo);
+			InputStream stream = ResourceUtils.appendResource(file, fragment);
 			if (!folder.exists()) {
 				folder.create(true, true, monitor);
 			}
@@ -204,7 +196,7 @@ if (file.exists()) {
 	/**
 	 * Initialize the file contents to contents of the given resource.
 	 */
-	public static InputStream openContentStream(String jndiName, JDBCInfo jdbcInfo)
+	public static String createFragment(String jndiName, JDBCInfo jdbcInfo)
 		throws CoreException {
 
 		/* We want to be truly OS-agnostic */
@@ -222,26 +214,36 @@ if (file.exists()) {
 		final String datasourceClass = jdbcInfo.getDatasourceClass();
 		final String password = jdbcInfo.getUserPassword();
 		final String url = jdbcInfo.getURL();
-
+		boolean matchStart = false;
+		boolean matchEnd = false;
+		
 		try {
-			InputStream input = JDBCInfo.class.getResourceAsStream(RESOURCE_FILE_TEMPLATE);
+			InputStream input = JDBCInfo.class.getResourceAsStream(ResourceUtils.RESOURCE_FILE_TEMPLATE);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					input));
 			try {
 				while ((line = reader.readLine()) != null) {
-					line = line.replaceAll("\\$\\{jndiName\\}", jndiName); //$NON-NLS-1$
-					line = line.replaceAll("\\$\\{poolName\\}", poolName); //$NON-NLS-1$
-					line = replaceOrRemove(line, "\\$\\{serverName\\}", serverName); //$NON-NLS-1$
-					line = replaceOrRemove(line, "\\$\\{port\\}", portNumber); //$NON-NLS-1$
-					line = replaceOrRemove(line, "\\$\\{databaseName\\}", databaseName); //$NON-NLS-1$
-					line = replaceOrRemove(line, "\\$\\{driverClass\\}", driverClass); //$NON-NLS-1$
-					line = replaceOrRemove(line, "\\$\\{datasourceClass\\}", datasourceClass); //$NON-NLS-1$
-					line = replaceOrRemove(line, "\\$\\{user\\}", user); //$NON-NLS-1$
-					line = replaceOrRemove(line, "\\$\\{password\\}", password); //$NON-NLS-1$
-					line = replaceOrRemove(line, "\\$\\{url\\}", url); //$NON-NLS-1$
-					if (line != null) {
-						sb.append(line);
-						sb.append(newline);
+					if( line.indexOf("<jdbc-resource") != -1) { //$NON-NLS-1$
+						matchStart = true;
+					}
+					if ( (matchStart) && (! matchEnd) ) {
+						if(line.indexOf("</jdbc-connection-pool>") != -1) { //$NON-NLS-1$
+							matchEnd = true;
+						}
+						line = line.replaceAll("\\$\\{jndiName\\}", jndiName); //$NON-NLS-1$
+						line = line.replaceAll("\\$\\{poolName\\}", poolName); //$NON-NLS-1$
+						line = replaceOrRemove(line, "\\$\\{serverName\\}", serverName); //$NON-NLS-1$
+						line = replaceOrRemove(line, "\\$\\{port\\}", portNumber); //$NON-NLS-1$
+						line = replaceOrRemove(line, "\\$\\{databaseName\\}", databaseName); //$NON-NLS-1$
+						line = replaceOrRemove(line, "\\$\\{driverClass\\}", driverClass); //$NON-NLS-1$
+						line = replaceOrRemove(line, "\\$\\{datasourceClass\\}", datasourceClass); //$NON-NLS-1$
+						line = replaceOrRemove(line, "\\$\\{user\\}", user); //$NON-NLS-1$
+						line = replaceOrRemove(line, "\\$\\{password\\}", password); //$NON-NLS-1$
+						line = replaceOrRemove(line, "\\$\\{url\\}", url); //$NON-NLS-1$
+						if (line != null) {
+							sb.append(line);
+							sb.append(newline);
+						}
 					}
 				}
 
@@ -254,8 +256,7 @@ if (file.exists()) {
 					ioe.getLocalizedMessage(), null);
 			throw new CoreException(status);
 		}
-
-		return new ByteArrayInputStream(sb.toString().getBytes());
+		return sb.toString();
 
 	}
 

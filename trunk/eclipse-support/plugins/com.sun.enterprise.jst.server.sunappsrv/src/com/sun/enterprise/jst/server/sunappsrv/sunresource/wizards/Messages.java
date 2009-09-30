@@ -82,4 +82,5 @@ public class Messages extends org.eclipse.osgi.util.NLS {
 	public static String lblTopicConnectionFactory;
 	public static String lblConnectionFactory;
 	public static String errorResourceTypeMissing;
+	public static String errorFolderNull;
 }
