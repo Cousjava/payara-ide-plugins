@@ -41,17 +41,15 @@ package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.codegen.jet.JETException;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jst.j2ee.ejb.internal.operations.NewEnterpriseBeanClassOperation;
-import org.eclipse.jst.j2ee.internal.common.operations.CreateJavaEEArtifactTemplateModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
-import org.eclipse.wst.common.frameworks.internal.WTPPlugin;
 import org.eclipse.wst.common.frameworks.internal.enablement.nonui.WFTWrappedException;
 
+@SuppressWarnings("restriction")
 public class AddEjbTimerClassOperation extends NewEnterpriseBeanClassOperation {
 
 	/**
@@ -80,8 +78,7 @@ public class AddEjbTimerClassOperation extends NewEnterpriseBeanClassOperation {
 							new Class[] { Object.class });
 					String source = (String) method.invoke(tempImpl, tempModel);
 					String javaFileName = tempModel.getClassName() + ".java"; //$NON-NLS-1$
-					IFile aFile = createJavaFile(monitor, fragment, source,
-							javaFileName);
+					createJavaFile(monitor, fragment, source, javaFileName);
 				} catch (SecurityException e) {
 					throw new JETException(e);
 				} catch (NoSuchMethodException e) {
