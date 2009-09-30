@@ -47,7 +47,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.codegen.jet.JETException;
 import org.eclipse.jdt.core.dom.AST;
@@ -96,7 +95,6 @@ import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.WTPPlugin;
-import org.eclipse.wst.server.core.IRuntime;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
@@ -109,8 +107,6 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
 public class AnnotatedServletWizard extends AddServletWizard {
-
-	private static final String V3_RUNTIME = "com.sun.enterprise.jst.server.runtime.sunappsrv92"; //$NON-NLS-1$
 
 	@Override
 	protected IDataModelProvider getDefaultProvider() {
@@ -648,15 +644,7 @@ public class AnnotatedServletWizard extends AddServletWizard {
 						@Override
 						protected boolean isProjectValid(IProject project) {
 							if (super.isProjectValid(project)) {
-								try {
-									IRuntime runtime = J2EEProjectUtilities.getServerRuntime(project);
-									if ((runtime != null) && runtime.getRuntimeType().getId().equals(V3_RUNTIME)){
-										return true;
-									}
-								} catch (CoreException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
+								return WizardUtil.hasGF3Runtime(project);
 							}
 							return false;
 						}			

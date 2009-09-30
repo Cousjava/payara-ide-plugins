@@ -60,6 +60,7 @@ public class AddEjbTimerWizardPage extends NewEnterpriseBeanClassWizardPage {
 	protected Composite createTopLevelComposite(Composite parent) {
 		Composite composite = super.createTopLevelComposite(parent);
 
+		projectNameLabel.setText(Messages.ProjectName);
 		addSeperator(composite, 3);
 		
 		new Label(composite, SWT.LEFT).setText(Messages.timerScheduleLabel);
@@ -88,6 +89,9 @@ public class AddEjbTimerWizardPage extends NewEnterpriseBeanClassWizardPage {
 
 	@Override
 	protected boolean isProjectValid(IProject project) {
-		return WizardUtil.hasGF3Runtime(project);
+		// super's test for isProjectValid requires an ejb project and we don't 
+		// want to do that, so result is basically a test of the grandsuper's isProjectValid
+		// with the addition of allowing both ejb and web projects
+		return WizardUtil.isWebOrEJBProjectWithGF3Runtime(project);
 	}
 }
