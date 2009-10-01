@@ -20,6 +20,7 @@
 		<component id="eclipse-cvs" />
 		<component id="feature" />
 		<component id="glassfish-plugins" />
+		<component id="jsf-facelets" />
 		<component id="glassfish-v3" />
 		<!--component id="glassfish-prelude-root" />
 		<component id="glassfish-v2-mac" />
@@ -38,9 +39,13 @@
 	</package>
 	<mac-postflight-script>
 
-		# Don't forget the quotes, there could be a space...
-                chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv"*
-                chmod -R a+xrw "$ECLIPSE_TARGET_DIR/dropins"
+# Don't forget the quotes, there could be a space... * is for v2.1 or v3-prelude or v3 directories
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv"*
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/dropins"
+
+# Eclipse 3.5 want's to write quite a lot to the install directory
+chmod -R a+w "$ECLIPSE_TARGET_DIR"
+
 
 	</mac-postflight-script>
 </configuration>
