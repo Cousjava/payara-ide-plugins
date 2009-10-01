@@ -1677,7 +1677,7 @@
        </classpathContainerPage>
     </extension-->
     
-   <!--extension point="org.eclipse.hyades.trace.ui.launchConfigMechanismAssociator">
+   <extension point="org.eclipse.hyades.trace.ui.launchConfigMechanismAssociator">
        <association launchConfigID="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType">
            <mechanism mechanismID="org.eclipse.tptp.trace.ui.jvmpiMechanism">
  	           <configuration
@@ -1695,7 +1695,7 @@
  	                 associatedAgent="org.eclipse.tptp.platform.jvmti.TIAgent"       
  	                 filter="org.eclipse.tptp.platform.profile.server.core.internal.TICollectorFiltration">                                                  
  	            </configuration>                        
- 	       </mechanism-->
+ 	       </mechanism>
  	
  	  <!--
  	                        
@@ -1709,7 +1709,7 @@
  	                        </mechanism>
  	        -->
  	                
- 	                <!--/association>
+ 	                </association>
  	        
- 	        </extension-->
+ 	        </extension>
     </plugin>
