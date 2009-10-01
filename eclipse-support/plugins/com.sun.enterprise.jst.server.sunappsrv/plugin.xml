@@ -1176,12 +1176,135 @@
        </wizard>
        
     </extension>
+    
+    <!-- New XHTML wizard -->
+	<extension point="org.eclipse.ui.newWizards">
+		<wizard
+            category="com.sun.enterprise.jst.server.sunappsrv"
+			class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard"
+            icon="icons/obj16/glassfishserver.gif"
+			id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard"
+			name="%sunappserver.xhtmllabel">
+			<selection class="org.eclipse.core.resources.IResource" />
+			<class class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard">
+	            <parameter
+					name="javaeeartifact"
+					value="true">
+				</parameter>
+				<parameter
+					name="menuIndex"
+					value="36">
+				</parameter>
+			</class>
+			<description>
+				%sunappserver.xhtml.BeanWebRegionWizard.description
+			</description>
+		</wizard>
+	</extension>
+
+	<!-- Add new XHTML wizard to J2EE Project Navigator -->
+	<extension
+		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTML"
+		point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard
+        menuGroupId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards"
+        type="new"
+        wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard">
+			<enablement>
+				<or>
+					<adapt type="org.eclipse.core.resources.IResource">
+						<or>
+							<test
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="wst.web"/>
+							<test
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="jst.web"/>
+						</or>
+					</adapt>
+				</or>
+			</enablement>
+		</commonWizard>
+	</extension>
+	
+	<extension
+		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEJBTimer"
+		point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard
+        menuGroupId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards"
+        type="new"
+        wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEjbTimerWizard">
+			<enablement>
+				<or>
+					<adapt type="org.eclipse.core.resources.IResource">
+						<or>
+							<test
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="wst.web"/>
+							<test
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="jst.web"/>
+						</or>
+					</adapt>
+				</or>
+			</enablement>
+		</commonWizard>
+	</extension>
+
+	<extension
+		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServlet"
+		point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard
+        menuGroupId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards"
+        type="new"
+        wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard">
+			<enablement>
+				<or>
+					<adapt type="org.eclipse.core.resources.IResource">
+						<or>
+							<test
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="wst.web"/>
+							<test
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="jst.web"/>
+						</or>
+					</adapt>
+				</or>
+			</enablement>
+		</commonWizard>
+	</extension>
+
+	<extension
+		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBean"
+		point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard
+        menuGroupId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards"
+        type="new"
+        wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard">
+			<enablement>
+				<or>
+					<adapt type="org.eclipse.core.resources.IResource">
+						<or>
+							<test
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="wst.web"/>
+							<test
+								property="org.eclipse.wst.common.project.facet.core.projectFacet"
+								value="jst.web"/>
+						</or>
+					</adapt>
+				</or>
+			</enablement>
+		</commonWizard>
+	</extension>
 
 	<extension point="org.eclipse.ui.perspectiveExtensions">
 		<perspectiveExtension targetID="org.eclipse.jst.j2ee.J2EEPerspective">
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard"/>
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard"/>
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEjbTimerWizard"/>
+	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard"/>
 		</perspectiveExtension>
 	</extension>
 
@@ -1554,7 +1677,7 @@
        </classpathContainerPage>
     </extension-->
     
-   <extension point="org.eclipse.hyades.trace.ui.launchConfigMechanismAssociator">
+   <!--extension point="org.eclipse.hyades.trace.ui.launchConfigMechanismAssociator">
        <association launchConfigID="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType">
            <mechanism mechanismID="org.eclipse.tptp.trace.ui.jvmpiMechanism">
  	           <configuration
@@ -1572,7 +1695,7 @@
  	                 associatedAgent="org.eclipse.tptp.platform.jvmti.TIAgent"       
  	                 filter="org.eclipse.tptp.platform.profile.server.core.internal.TICollectorFiltration">                                                  
  	            </configuration>                        
- 	       </mechanism>
+ 	       </mechanism-->
  	
  	  <!--
  	                        
@@ -1586,7 +1709,7 @@
  	                        </mechanism>
  	        -->
  	                
- 	                </association>
+ 	                <!--/association>
  	        
- 	        </extension>
+ 	        </extension-->
     </plugin>
