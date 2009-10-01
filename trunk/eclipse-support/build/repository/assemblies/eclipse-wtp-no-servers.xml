@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <assembly
-name="Eclipse Webtools without server runtimes" releaseDate="2009-02-05" type="eclipse-plugin" version="3.0.2">
+name="Eclipse Webtools without server runtimes" releaseDate="2009-02-05" type="eclipse-plugin" version="3.1.1">
     <!-- Copyright (c) 2003-2008 by nexB, Inc. http://www.nexb.com/ - All rights reserved. This software is licensed under the terms of the Open Software License version 2.1. A copy of the license is available at http://opensource.org/licenses/osl-2.1.php -->
     <description> This plugin is classical WTP with no server runtimes included
         </description>
@@ -8,7 +8,7 @@ name="Eclipse Webtools without server runtimes" releaseDate="2009-02-05" type="e
         <terms/>
     </license>
    <include>
-        <component id="eclipse-wtp" patternset="wtp-no-servers" version="3.0.2"/>
+        <component id="eclipse-wtp" patternset="wtp-no-servers" version="3.1.1"/>
     </include>
     <build type="binary">
         <antscript>
