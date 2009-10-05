@@ -54,6 +54,7 @@ Import-Package: org.eclipse.jdt.ui.wizards,
  org.eclipse.jface.text,
  org.eclipse.jst.j2ee.ejb.internal.operations,
  org.eclipse.jst.j2ee.internal.web.operations,
+ org.eclipse.jst.jee.ui.internal.navigator.web,
  org.eclipse.ui.console
 
 
