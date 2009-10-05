@@ -40,6 +40,7 @@ package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jst.ejb.ui.internal.wizard.NewEnterpriseBeanClassWizardPage;
+import org.eclipse.jst.jee.ui.internal.navigator.web.WebAppProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -64,8 +65,12 @@ public class AddEjbTimerWizardPage extends NewEnterpriseBeanClassWizardPage {
 		addSeperator(composite, 3);
 		
 		new Label(composite, SWT.LEFT).setText(Messages.timerScheduleLabel);
-		scheduleText = new Text(composite, SWT.SINGLE | SWT.BORDER);
-		scheduleText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		scheduleText = new Text(composite, SWT.MULTI | SWT.BORDER | SWT.WRAP /*| SWT.V_SCROLL*/);
+		GridData layoutData = new GridData(GridData.FILL_BOTH);
+		layoutData.verticalSpan = 2;
+		initializeDialogUnits(scheduleText);
+		layoutData.heightHint = convertHeightInCharsToPixels(2);
+		scheduleText.setLayoutData(layoutData);
 		synchHelper.synchText(scheduleText,
 				AddEjbTimerDataModelProvider.SCHEDULE, null);
 
@@ -75,11 +80,10 @@ public class AddEjbTimerWizardPage extends NewEnterpriseBeanClassWizardPage {
 	@Override
 	protected String[] getValidationPropertyNames() {
 		String[] base = super.getValidationPropertyNames();
-		// String[] result = new String[base.length + 1];
-		// System.arraycopy(base, 0, result, 0, base.length);
-		// result[base.length] = ;
-		// return result;
-		return base;
+		String[] result = new String[base.length + 1];
+		System.arraycopy(base, 0, result, 0, base.length);
+		result[base.length] = AddEjbTimerDataModelProvider.SCHEDULE;
+		return result;
 	}
 
 	@Override
@@ -93,5 +97,14 @@ public class AddEjbTimerWizardPage extends NewEnterpriseBeanClassWizardPage {
 		// want to do that, so result is basically a test of the grandsuper's isProjectValid
 		// with the addition of allowing both ejb and web projects
 		return WizardUtil.isWebOrEJBProjectWithGF3Runtime(project);
+	}
+	
+	@Override
+	protected IProject getExtendedSelectedProject(Object selection) {
+		if (selection instanceof WebAppProvider) {
+			return ((WebAppProvider) selection).getProject();
+		}
+		
+		return super.getExtendedSelectedProject(selection);
 	}
 }
