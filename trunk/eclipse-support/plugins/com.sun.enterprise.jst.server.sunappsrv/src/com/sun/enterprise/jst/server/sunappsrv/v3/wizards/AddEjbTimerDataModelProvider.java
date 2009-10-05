@@ -40,13 +40,20 @@ package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
 import java.util.Set;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.j2ee.ejb.internal.operations.AddEnterpriseBeanOperation;
 import org.eclipse.jst.j2ee.ejb.internal.operations.NewEnterpriseBeanClassDataModelProvider;
 import org.eclipse.jst.j2ee.internal.common.operations.NewJavaClassDataModelProvider;
 import org.eclipse.jst.j2ee.internal.common.operations.NewJavaEEArtifactClassOperation;
+import org.eclipse.jst.j2ee.model.IModelProvider;
+import org.eclipse.jst.j2ee.model.ModelProviderManager;
+import org.eclipse.jst.javaee.ejb.EJBJar;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
+
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
 public class AddEjbTimerDataModelProvider extends
@@ -102,14 +109,29 @@ public class AddEjbTimerDataModelProvider extends
 	}
 
 	public IStatus validate(String propertyName) {
-		// TODO
-		// if (propertyName.equals(SCHEDULE)) {
-		// String value = (String) getProperty(SCHEDULE);
-		// if (value == null || value.trim().length() == 0){
-		// return
-		// WTPCommonPlugin.createErrorStatus(EJBCreationResourceHandler.ERR_WRONG_SCHEDULE);
-		// }
-		// }
-		return super.validate(propertyName);
+		if (SCHEDULE.equals(propertyName)) {
+			String value = (String) getProperty(SCHEDULE);
+			if (value == null || value.trim().length() == 0) {
+				return SunAppSrvPlugin.createErrorStatus(
+						"The schedule cannot be empty.", null); // TODO i18n
+			}
+		}
+		IStatus status = super.validate(propertyName);
+		return status;
 	}
+
+	/**
+	 * Super method breaks with CCE when we have non-EJB project, so leave it for the future to fix itself and no check atm.
+	 */
+	@Override
+	protected IStatus validateEjbName() {
+		try {
+			return super.validateEjbName();
+		} catch (ClassCastException e) {
+			// ignore atm
+			// SunAppSrvPlugin.logMessage("failed to validate EjbName", e);
+			return Status.OK_STATUS;
+		}
+	}
+
 }

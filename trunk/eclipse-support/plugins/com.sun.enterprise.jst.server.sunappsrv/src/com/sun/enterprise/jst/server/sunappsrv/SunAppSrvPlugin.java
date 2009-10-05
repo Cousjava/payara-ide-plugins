@@ -111,4 +111,8 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
         getInstance().getLog().log(status);
     }
     
+    public static IStatus createErrorStatus(String mess, Exception e) {
+        return new Status(IStatus.ERROR, SUNPLUGIN_ID, -1, mess, e);        
+    }
+    
 }
