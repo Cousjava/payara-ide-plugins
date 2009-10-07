@@ -38,10 +38,11 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
+import static org.eclipse.jst.j2ee.ejb.internal.operations.INewEnterpriseBeanClassDataModelProperties.EJB_NAME;
+
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.j2ee.ejb.internal.operations.AddEnterpriseBeanOperation;
 import org.eclipse.jst.j2ee.ejb.internal.operations.NewEnterpriseBeanClassDataModelProvider;
 import org.eclipse.jst.j2ee.internal.common.operations.NewJavaClassDataModelProvider;
@@ -105,6 +106,11 @@ public class AddEjbTimerDataModelProvider extends
 	}
 
 	public IStatus validate(String propertyName) {
+		// we need to override to remove the error condition for EJB_NAME
+		if (EJB_NAME.equals(propertyName)){
+			return null;
+		}
+
 		if (SCHEDULE.equals(propertyName)) {
 			String value = (String) getProperty(SCHEDULE);
 			if (value == null || value.trim().length() == 0) {
@@ -115,19 +121,4 @@ public class AddEjbTimerDataModelProvider extends
 		IStatus status = super.validate(propertyName);
 		return status;
 	}
-
-	/**
-	 * Super method breaks with CCE when we have non-EJB project, so leave it for the future to fix itself and no check atm.
-	 */
-	@Override
-	protected IStatus validateEjbName() {
-		try {
-			return super.validateEjbName();
-		} catch (ClassCastException e) {
-			// ignore atm
-			// SunAppSrvPlugin.logMessage("failed to validate EjbName", e);
-			return Status.OK_STATUS;
-		}
-	}
-
 }

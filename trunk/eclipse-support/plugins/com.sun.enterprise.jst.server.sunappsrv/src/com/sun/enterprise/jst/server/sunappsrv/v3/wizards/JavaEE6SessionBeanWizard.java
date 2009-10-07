@@ -54,7 +54,6 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.codegen.jet.JETException;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaModelException;
@@ -434,20 +433,6 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 					return Boolean.TRUE;
 				}
 				return super.getDefaultProperty(propertyName);
-			}
-			
-			/**
-			 * Super method breaks with CCE when we have non-EJB project, so leave it for the future to fix itself and no check atm.
-			 */
-			@Override
-			protected IStatus validateEjbName() {
-				try {
-					return super.validateEjbName();
-				} catch (ClassCastException e) {
-					// ignore atm
-					// SunAppSrvPlugin.logMessage("failed to validate EjbName", e);
-					return Status.OK_STATUS;
-				}
 			}
 		};
 	}
