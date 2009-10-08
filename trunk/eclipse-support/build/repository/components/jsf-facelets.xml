@@ -6,8 +6,7 @@
 		<size os="macosx">TODO</size>
 		<size os="linux">TODO</size>
 	</package>
-	<shortdescription>Configures Glassfish domains in your
-		workspace.
+	<shortdescription>Add the JSF Facelet support from Eclipse incubator area.
     </shortdescription>
 	<status>packaged</status>
 	<eclipse-help>don't know</eclipse-help>
@@ -79,9 +78,8 @@
 			</project>
 		</antscript>
 	</build>
-    <copyright>Copyright 2009 Sun Microsystems, Inc., 4150 Network Circle, Santa Clara, California 95054, U.S.A. All rights reserved.</copyright>
-
-    <license type="epl">
+    <copyright>Copyright (c) Eclipse contributors and others. 2000-2009. All rights reserved.</copyright>
+    <license type="epl-1.0">
     <terms/>
     </license>
 	<dependencies>
