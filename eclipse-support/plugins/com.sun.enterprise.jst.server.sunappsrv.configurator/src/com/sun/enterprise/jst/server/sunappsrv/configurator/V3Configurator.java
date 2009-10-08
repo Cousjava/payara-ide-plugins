@@ -69,6 +69,7 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 
@@ -272,7 +273,7 @@ public class V3Configurator {
 			XPath xpath = factory.newXPath();
 			XPathExpression expr = xpath.compile("//http-listener[@id='http-listener-1']"); //$NON-NLS-1$
 			Node node = (Node) expr.evaluate(doc, XPathConstants.NODE);
-			if (node == null) {
+			if (node == null) { //gf v3 has different config: network-listener
                 expr = xpath.compile("//network-listener[@name='http-listener-1']"); //$NON-NLS-1$
                 node = (Node) expr.evaluate(doc, XPathConstants.NODE);
             }
@@ -281,9 +282,19 @@ public class V3Configurator {
 
 			expr = xpath.compile("//http-listener[@id='admin-listener']"); //$NON-NLS-1$
 			node = (Node) expr.evaluate(doc, XPathConstants.NODE);
-	         if (node == null) {
+	         if (node == null) {//gf v3 has different config: network-listener
                 expr = xpath.compile("//network-listener[@name='admin-listener']"); //$NON-NLS-1$
                 node = (Node) expr.evaluate(doc, XPathConstants.NODE);
+                
+                //for gf v3, on mac and with jdk 6 installed, we can optimized by running in 32 bits instead of 64: much faster
+                //  <jvm-options>-d32</jvm-options>
+                if (System.getProperty("os.name").equalsIgnoreCase("Mac OS X")) {
+                    Node newel = doc.createElement("jvm-options");
+                    newel.setTextContent("-d32");
+                    NodeList nn = doc.getElementsByTagName("java-config");
+                    nn.item(0).appendChild(newel);
+
+                }
             }
 			port = node.getAttributes().getNamedItem("port"); //$NON-NLS-1$
 			port.setNodeValue("" + admin); //$NON-NLS-1$
