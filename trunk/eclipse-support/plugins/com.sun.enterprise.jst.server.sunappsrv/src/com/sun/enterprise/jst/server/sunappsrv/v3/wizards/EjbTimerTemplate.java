@@ -88,7 +88,7 @@ public class EjbTimerTemplate {
   protected final String TEXT_33 = NL + "    }";
   protected final String TEXT_34 = NL + "\t";
   protected final String TEXT_35 = NL + "\t@SuppressWarnings(\"unused\")" + NL + "\t@Schedule(";
-  protected final String TEXT_36 = ")" + NL + "    private void scheduledTimeout(final Timer t) {" + NL + "        System.out.println(\"@Scheduled called at: \" + new java.util.Date());" + NL + "    }" + NL + "}";
+  protected final String TEXT_36 = ")" + NL + "    private void scheduledTimeout(final Timer t) {" + NL + "        System.out.println(\"@Schedule called at: \" + new java.util.Date());" + NL + "    }" + NL + "}";
 
 	public String generate(Object argument)
   {
