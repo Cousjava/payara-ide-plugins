@@ -17,6 +17,6 @@
 	@SuppressWarnings("unused")
 	@Schedule(<%= schedule %>)
     private void scheduledTimeout(final Timer t) {
-        System.out.println("@Scheduled called at: " + new java.util.Date());
+        System.out.println("@Schedule called at: " + new java.util.Date());
     }
 }
