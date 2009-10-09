@@ -1211,18 +1211,10 @@
         type="new"
         wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard">
 			<enablement>
-				<or>
-					<adapt type="org.eclipse.core.resources.IResource">
-						<or>
-							<test
-								property="org.eclipse.wst.common.project.facet.core.projectFacet"
-								value="wst.web"/>
-							<test
-								property="org.eclipse.wst.common.project.facet.core.projectFacet"
-								value="jst.web"/>
-						</or>
-					</adapt>
-				</or>
+				<adapt type="org.eclipse.core.resources.IResource">
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3"
+						value="true"/>
+				</adapt>
 			</enablement>
 		</commonWizard>
 	</extension>
@@ -1235,18 +1227,10 @@
         type="new"
         wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEjbTimerWizard">
 			<enablement>
-				<or>
-					<adapt type="org.eclipse.core.resources.IResource">
-						<or>
-							<test
-								property="org.eclipse.wst.common.project.facet.core.projectFacet"
-								value="wst.web"/>
-							<test
-								property="org.eclipse.wst.common.project.facet.core.projectFacet"
-								value="jst.web"/>
-						</or>
-					</adapt>
-				</or>
+				<adapt type="org.eclipse.core.resources.IResource">
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3"
+						value="true"/>
+				</adapt>
 			</enablement>
 		</commonWizard>
 	</extension>
@@ -1259,18 +1243,10 @@
         type="new"
         wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard">
 			<enablement>
-				<or>
-					<adapt type="org.eclipse.core.resources.IResource">
-						<or>
-							<test
-								property="org.eclipse.wst.common.project.facet.core.projectFacet"
-								value="wst.web"/>
-							<test
-								property="org.eclipse.wst.common.project.facet.core.projectFacet"
-								value="jst.web"/>
-						</or>
-					</adapt>
-				</or>
+				<adapt type="org.eclipse.core.resources.IResource">
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3"
+						value="true"/>
+				</adapt>
 			</enablement>
 		</commonWizard>
 	</extension>
@@ -1283,21 +1259,23 @@
         type="new"
         wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard">
 			<enablement>
-				<or>
-					<adapt type="org.eclipse.core.resources.IResource">
-						<or>
-							<test
-								property="org.eclipse.wst.common.project.facet.core.projectFacet"
-								value="wst.web"/>
-							<test
-								property="org.eclipse.wst.common.project.facet.core.projectFacet"
-								value="jst.web"/>
-						</or>
-					</adapt>
-				</or>
+				<adapt type="org.eclipse.core.resources.IResource">
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3"
+						value="true"/>
+				</adapt>
 			</enablement>
 		</commonWizard>
 	</extension>
+	
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+	    <propertyTester
+    		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.GFv3RuntimeTester1"
+     		type="org.eclipse.core.resources.IResource"
+     		namespace="com.sun.enterprise.jst.server.sunappsrv.v3.wizards"
+     		properties="enableForGFv3"
+     		class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.GFv3RuntimeTester">
+	    </propertyTester>
+    </extension>
 
 	<extension point="org.eclipse.ui.perspectiveExtensions">
 		<perspectiveExtension targetID="org.eclipse.jst.j2ee.J2EEPerspective">
