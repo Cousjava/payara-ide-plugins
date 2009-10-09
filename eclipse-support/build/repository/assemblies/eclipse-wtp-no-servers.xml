@@ -30,7 +30,7 @@ name="Eclipse Webtools without server runtimes" releaseDate="2009-02-05" type="e
     </package>
     <shortdescription>WTP-</shortdescription>
     <provider name="Eclipse Foundation"/>
-    <copyright>Copyright (c) Eclipse contributors and others. 2000-2008. All rights reserved.</copyright>
+    <copyright>Copyright (c) Eclipse contributors and others. 2000-2009. All rights reserved.</copyright>
     <link type="homepage" url="http://eclipse.org/webtools"/>
     <link type="project-home" url="http://www.eclipse.org/webtools/wst/main.html"/>
     <dependencies>
