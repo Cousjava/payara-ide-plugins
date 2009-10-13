@@ -53,6 +53,9 @@
 					<mkdir dir="${jsffacelets.work.folder}" />
 					<mkdir dir="${jsffacelets.work.folder}/plugins" />
 					<mkdir dir="${jsffacelets.work.folder}/features" />
+
+					<unzip src="${patches.folder}/org.eclipse.jsf.plugins_200910121551.zip" 
+						   dest="${jsffacelets.download.folder}/incubator/"/>
 					
 					<copy todir="${jsffacelets.work.folder}/plugins">
 						<fileset
@@ -67,7 +70,6 @@
 							<exclude name="**/*sdk*"/>
 						</fileset>
 					</copy>
-
                                         <!-- this value should be set by the main build.xml -->
 					<build-feature-from-sources-with-base
 						builddirectory="${jsffacelets.work.folder}" componentId="${component.id}"
@@ -83,7 +85,6 @@
     <terms/>
     </license>
 	<dependencies>
-		<component id="feature" />
 		<assembly id="eclipse-tools" />
 		<component id="eclipse-wtp-web" />
 		<component id="eclipse-wtp" />
