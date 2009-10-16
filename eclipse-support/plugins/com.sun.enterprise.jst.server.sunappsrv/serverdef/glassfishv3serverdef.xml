@@ -184,6 +184,9 @@
 	<archive path="${sunappserver.rootdirectory}/modules/jsf-api.jar" />
 	<!--  jar needed for tld files (html_basic and jsf_core) -->
 	<archive path="${sunappserver.rootdirectory}/modules/jsf-impl.jar" />
+	<fileset dir="${sunappserver.rootdirectory}">
+		<include name="modules/jsf-taglib*.jar" />
+	</fileset>
 	<archive path="${sunappserver.rootdirectory}/modules/jstl-impl.jar" />
 	<!--  jars needed for integration with JPA tools (eclipselink) -->
 	<fileset dir="${sunappserver.rootdirectory}">
