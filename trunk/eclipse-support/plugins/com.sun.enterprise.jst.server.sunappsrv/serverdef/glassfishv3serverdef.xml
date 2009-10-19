@@ -173,6 +173,7 @@
 		<include name="modules/web/javax.*.jar" />
 		<include name="modules/ejb/javax.*.jar" />
 		<include name="modules/webbeans-osgi*.jar" />
+		<include name="modules/weld-osgi*.jar" />
 		<include name="modules/bean-validator*.jar" />
 		<include name="modules/jsr311-api*.jar" />
 		<include name="modules/jersey-*.jar" />
