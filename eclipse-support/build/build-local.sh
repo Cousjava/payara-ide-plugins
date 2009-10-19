@@ -13,6 +13,7 @@ rsync -avz ../../org.nexb.easyeclipse.releng easyeclipse/easyeclipse/
 
 cp -f build.properties easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
 cp -f servicetag-registry.xml easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
+cp -f jsf-taglib.jar easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
 pushd easyeclipse/easyeclipse/org.nexb.easyeclipse.releng
 ./build.sh tools-bundle-for-eclipse-local
 popd
