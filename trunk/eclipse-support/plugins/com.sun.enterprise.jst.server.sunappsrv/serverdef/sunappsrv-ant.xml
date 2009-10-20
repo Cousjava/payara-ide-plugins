@@ -158,6 +158,9 @@
 	
     <target name="deploy.j2ee.ejb" depends="replace.module.name.space">
         <property name="app.module" value="${module.name.nospace}.jar"/>
+        <antcall target="addresources">
+        	<param name="subdirectory" value="META-INF" />
+        </antcall>
         <jar destfile="${project.working.dir}/${module.name.nospace}.jar"> 
             <!-- <zipfileset dir="${module.dir}"> -->
             <zipfileset dir="${project.working.dir}/${module.name}">
@@ -241,6 +244,9 @@
 
     <target name="deploy.j2ee.ear" depends="replace.module.name.space">
         <property name="app.module" value="${module.name.nospace}.ear"/>
+    	<antcall target="addresources">
+    		<param name="subdirectory" value="" />
+    	</antcall>
     <jar destfile="${project.working.dir}/${module.name.nospace}.ear"> 
         <!-- <zipfileset dir="${module.dir}"> -->
         <zipfileset dir="${project.working.dir}/${module.name}">
