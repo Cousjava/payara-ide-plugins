@@ -55,7 +55,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 
 /**
- * This is a wizard that creates a new JDBC resource.
+ * This is a superclass for wizards to create resources
  */
 
 public abstract class ResourceWizard extends Wizard implements INewWizard {
@@ -63,7 +63,7 @@ public abstract class ResourceWizard extends Wizard implements INewWizard {
 	protected String dirName;
 
 	/**
-	 * Constructor for JDBC Wizard.
+	 * Constructor 
 	 */
 	public ResourceWizard() {
 		super();
@@ -73,7 +73,7 @@ public abstract class ResourceWizard extends Wizard implements INewWizard {
 	protected void checkDir(IProject selectedProject) throws CoreException {
 		dirName = ResourceUtils.getResourceLocation(selectedProject);
 		if(dirName == null) {
-			IStatus status = new Status(IStatus.ERROR, "JDBCWizard", IStatus.OK, //$NON-NLS-1$
+			IStatus status = new Status(IStatus.ERROR, getClass().getName(), IStatus.OK, 
 					NLS.bind(Messages.errorFolderNull, dirName), null);
 			throw new CoreException(status);
 		}

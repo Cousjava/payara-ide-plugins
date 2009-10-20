@@ -47,7 +47,7 @@ public class Utils {
         String moduleID = null;
 
         moduleID = candidateID.replace(' ', '_');
-        if (moduleID.startsWith("/")) {
+        if (moduleID.startsWith("/")) { //$NON-NLS-1$
             moduleID = moduleID.substring(1);
         }
 
