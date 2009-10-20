@@ -56,7 +56,9 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
+import org.eclipse.wst.common.componentcore.internal.util.ComponentUtilities;
 
+@SuppressWarnings("restriction")
 public class SunWebXmlCreate extends AbstractDataModelOperation  {
     private String version;
 
@@ -83,13 +85,12 @@ public class SunWebXmlCreate extends AbstractDataModelOperation  {
     }
     
     
-    private  void createDeploymentPlan(IFile deployPlanFile) {
+    	private  void createDeploymentPlan(IFile deployPlanFile) {
 
     	ByteArrayInputStream is=null;
         try {
-            
-            String moduleName =         model.getStringProperty(IFacetDataModelProperties.FACET_PROJECT_NAME);
-             is = new ByteArrayInputStream(getDefautSunWeb(moduleName).getBytes());
+            String contextRoot = getContextRoot();
+            is = new ByteArrayInputStream(getDefautSunWeb(contextRoot).getBytes());
 
             deployPlanFile.create(is, false, null);
       //      SunAppSrvPlugin.logMessage(getDefautSunWeb(moduleName));
@@ -159,5 +160,11 @@ public class SunWebXmlCreate extends AbstractDataModelOperation  {
 		}
 		return null;
 	}   
-    
+
+    public String getContextRoot() {
+        String moduleName = model.getStringProperty(IFacetDataModelProperties.FACET_PROJECT_NAME);
+        String projectContextRoot = ComponentUtilities.getServerContextRoot(getProject());
+        String contextRoot = (((projectContextRoot != null) && (projectContextRoot.length() > 0)) ? projectContextRoot : moduleName);
+        return contextRoot;
+    }
 }

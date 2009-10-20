@@ -73,6 +73,7 @@ import org.eclipse.wst.server.core.util.PublishUtil;
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
+import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.ResourceUtils;
 
 
@@ -642,23 +643,24 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			String publishPath = (String) p.get(module[0].getId());
 			SunAppSrvPlugin.logMessage("REMOVED in publishPath" +publishPath);
 			if (isV3()){
-			Commands.UndeployCommand command = new Commands.UndeployCommand(module[0].getName());
-			try {
-				Future<OperationState> result = getSunAppServer().execute(command);
-				//wait 120 seconds max
-				if(result.get(120, TimeUnit.SECONDS) == OperationState.RUNNING) {
+				String name = Utils.simplifyModuleID(module[0].getName());
+				Commands.UndeployCommand command = new Commands.UndeployCommand(name);
+				try {
+					Future<OperationState> result = getSunAppServer().execute(command);
+					//wait 120 seconds max
+					if(result.get(120, TimeUnit.SECONDS) == OperationState.RUNNING) {
+						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+								"cannot UnDeploy in less than 120 sec "+name, null));
+					}
+					if(result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
+						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+								"Error during undeploy of module "+name+": "+command.message, null));
+					}
+				} catch(Exception ex) {
+					SunAppSrvPlugin.logMessage("Undeploy is failing=",ex );
 					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-							"cannot UnDeploy in less than 120 sec "+module[0].getName(), null));
+							"cannot UnDeploy "+name, ex));
 				}
-				if(result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
-					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-							"Error during undeploy of module "+module[0].getName()+": "+command.message, null));
-				}
-			} catch(Exception ex) {
-				SunAppSrvPlugin.logMessage("Undeploy is failing=",ex );
-				throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-						"cannot UnDeploy "+module[0].getName(), ex));
-			}
 			}else { //v2
 		/*not used yet		boolean ret= getV2DeploymentFacility().unDeploy(module[0].getName());
 				SunAppSrvPlugin.logMessage("gfv2depl.unDeploy"+ret );
@@ -713,28 +715,28 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			String spath =""+ path;
 			///BUG NEED ALSO to test if it has been deployed once...isDeployed()
 			if (needARedeploy ){
-				String name =module[0].getName();
+				String name = Utils.simplifyModuleID(module[0].getName());
 	
 				Boolean preserveSessions=getSunAppServer().getKeepSessions().equals("true");
 				if (isV3()){
-				Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions , getSunAppServer().isV3Prelude());
-				try {
-					Future<OperationState> result = getSunAppServer().execute(command);
-					OperationState res=result.get(120, TimeUnit.SECONDS);
-					SunAppSrvPlugin.logMessage("res="+res);
-					if( res== OperationState.RUNNING) {
+					Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions , getSunAppServer().isV3Prelude());
+					try {
+						Future<OperationState> result = getSunAppServer().execute(command);
+						OperationState res=result.get(120, TimeUnit.SECONDS);
+						SunAppSrvPlugin.logMessage("res="+res);
+						if( res== OperationState.RUNNING) {
+							throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+									"Timeout after 120s when trying to deploy "+name+". Please try again ", null));
+						}
+						if( res== OperationState.FAILED) {
+							throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+									"Deployment Error for module: "+name+": "+command.message, null));
+						}	
+					} catch(Exception ex) {
+						SunAppSrvPlugin.logMessage("deploy is failing=",ex );
 						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-								"Timeout after 120s when trying to deploy "+module[0].getName()+". Please try again ", null));
+								"cannot Deploy "+name, ex));	            
 					}
-					if( res== OperationState.FAILED) {
-						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-								"Deployment Error for module: "+module[0].getName()+": "+command.message, null));
-					}	
-				} catch(Exception ex) {
-					SunAppSrvPlugin.logMessage("deploy is failing=",ex );
-					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-							"cannot Deploy "+module[0].getName(), ex));	            
-				}
 				}else{
 				/*not used yet	
 					boolean ret= getV2DeploymentFacility().directoryDeploy(new File(spath),name,contextRoot);
