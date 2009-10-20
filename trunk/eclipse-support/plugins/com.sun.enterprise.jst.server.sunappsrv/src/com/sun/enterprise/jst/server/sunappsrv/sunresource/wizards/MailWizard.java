@@ -48,7 +48,6 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -56,14 +55,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -74,11 +67,9 @@ import com.sun.enterprise.jst.server.sunappsrv.sunresource.MailInfo;
  * This is a wizard that creates a new JavaMail Session resource.
  */
 
-public class MailWizard extends Wizard implements INewWizard {
+public class MailWizard extends ResourceWizard {
 	private MailResourceWizardPage page;
-	private ISelection selection;
-	private String dirName;
-
+	
 	/**
 	 * Constructor for MailWizard.
 	 */
@@ -144,12 +135,7 @@ public class MailWizard extends Wizard implements INewWizard {
 	 */
 
 	private void doFinish(String jndiName, MailInfo mailInfo, IProject selectedProject, IProgressMonitor monitor) throws CoreException {
-		dirName = ResourceUtils.getResourceLocation(selectedProject, true);
-		if(dirName == null) {
-			IStatus status = new Status(IStatus.ERROR, "MailWizard", IStatus.OK, //$NON-NLS-1$
-					NLS.bind(Messages.errorFolderNull, dirName), null);
-					throw new CoreException(status);
-		}
+		checkDir(selectedProject);
 		
 		IContainer containerResource = selectedProject;
 		final IFolder folder = containerResource.getFolder(new Path(dirName));
@@ -248,32 +234,4 @@ public class MailWizard extends Wizard implements INewWizard {
 
 	}
 
-	private IContainer getContainerResource() {
-		if (selection != null && selection.isEmpty() == false
-				&& selection instanceof IStructuredSelection) {
-			IStructuredSelection ssel = (IStructuredSelection) selection;
-			if (ssel.size() > 1)
-				return null;
-			Object obj = ssel.getFirstElement();
-			if (obj instanceof IResource) {
-				IContainer containerResource;
-				if (obj instanceof IContainer)
-					containerResource = (IContainer) obj;
-				else
-					containerResource = ((IResource) obj).getParent();
-				
-				return ((containerResource != null) ? containerResource.getProject() : null);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * We will accept the selection in the workbench to see if
-	 * we can initialize from it.
-	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
-	 */
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		this.selection = selection;
-	}
 }
