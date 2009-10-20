@@ -213,21 +213,28 @@ public class CommandRunner extends BasicTask<OperationState> {
     public Map<String, String> getResourceData(String name) {
         try {
             GetPropertyCommand cmd;
-            if (null != name) {
-                cmd = new ServerCommand.GetPropertyCommand("resources.*."+name+".*"); // NOI18N
-            } else {
-                cmd = new ServerCommand.GetPropertyCommand("resources.*"); // NOI18N
-            }
+            String query;
+            // see https:/glassfish.dev.java.net/issues/show_bug.cgi?id=7296
+            // revert this, when the server side of issue is resolved
+            //if (null != name) {
+            //    query = "resources.*."+name+".*"; //$NON-NLS-1$ //$NON-NLS-2$
+            //} else {
+                query = "resources.*"; //$NON-NLS-1$
+            //}
+            cmd = new ServerCommand.GetPropertyCommand(query); 
             serverCmd = cmd;
             Future<OperationState> task = executor().submit(this);
             OperationState state = task.get();
             if (state == OperationState.COMPLETED) {
-                return cmd.getData();
+                Map<String,String> retVal = cmd.getData();
+                if (retVal.isEmpty())
+                    Logger.getLogger("glassfish").log(Level.INFO, null, new IllegalStateException(query+" has no data"));  //$NON-NLS-1$
+                return retVal;
             }
         } catch (InterruptedException ex) {
-            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
+            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  //$NON-NLS-1$
         } catch (ExecutionException ex) {
-            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
+            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  //$NON-NLS-1$
         }
         return new HashMap<String,String>();
     }
