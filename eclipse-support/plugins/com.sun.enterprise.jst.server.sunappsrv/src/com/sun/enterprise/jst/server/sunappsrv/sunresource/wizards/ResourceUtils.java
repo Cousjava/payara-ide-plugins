@@ -158,24 +158,26 @@ public class ResourceUtils {
 		return originalLine;
 	}
 	
-	public static String getResourceLocation(IProject project, boolean isWizard){
+	public static String getResourceLocation(IProject project){
 		String setUpLocation = null;
-		if(isWizard) {
-			if(JavaEEProjectUtilities.isDynamicWebProject(project)){
-				setUpLocation = WEB_CONTENT + File.separatorChar + WEB_INF;			
-			}else if (JavaEEProjectUtilities.isEARProject(project)){
-				setUpLocation = EAR_CONTENT;
-			}else if (JavaEEProjectUtilities.isEJBProject(project)){
-				setUpLocation = EJB_CONTENT + File.separatorChar + META_INF;
-			}
-		}else {
-			if(JavaEEProjectUtilities.isDynamicWebProject(project)){
-				setUpLocation = WEB_INF;			
-			}else if (JavaEEProjectUtilities.isEARProject(project)){
-				setUpLocation = "";
-			}else if (JavaEEProjectUtilities.isEJBProject(project)){
-				setUpLocation = META_INF;
-			}
+		if(JavaEEProjectUtilities.isDynamicWebProject(project)){
+			setUpLocation = WEB_CONTENT + File.separatorChar + WEB_INF;			
+		}else if (JavaEEProjectUtilities.isEARProject(project)){
+			setUpLocation = EAR_CONTENT;
+		}else if (JavaEEProjectUtilities.isEJBProject(project)){
+			setUpLocation = EJB_CONTENT + File.separatorChar + META_INF;
+		}
+		return setUpLocation;
+	}
+	
+	public static String getRuntimeResourceLocation(IProject project){
+		String setUpLocation = null;
+		if(JavaEEProjectUtilities.isDynamicWebProject(project)){
+			setUpLocation = WEB_INF;			
+		}else if (JavaEEProjectUtilities.isEARProject(project)){
+			setUpLocation = "";
+		}else if (JavaEEProjectUtilities.isEJBProject(project)){
+			setUpLocation = META_INF;
 		}
 		return setUpLocation;
 	}

@@ -752,7 +752,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			
 			//Get correct location for sun-resources.xml
 			IProject project = module[0].getProject();
-			String location = ResourceUtils.getResourceLocation(project, false);
+			String location = ResourceUtils.getRuntimeResourceLocation(project);
 			if(location != null){
 				if(location.trim().length() > 0){
 					location = location + File.separatorChar + ResourceUtils.RESOURCE_FILE_NAME;
