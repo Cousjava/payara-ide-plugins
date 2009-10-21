@@ -110,6 +110,9 @@ public class SunAppServer extends GenericServer {
 
     public static final String SAMPLEDBDIR = "sunappserver.sampledbdir";	//$NON-NLS-1$
    
+    // used only for v2, populated from project properties or module name with no space
+    public static final String CONTEXTROOT = "sunappserver.contextroot";	//$NON-NLS-1$
+
     //Default values
     String serverPortNumber="1118080";	//$NON-NLS-1$
     String adminServerPortNumber="1114848";	//$NON-NLS-1$
@@ -284,6 +287,10 @@ public class SunAppServer extends GenericServer {
   }
   public void setUseAnonymousConnections(String value) {
   	getProps().put(USEANONYMOUSCONNECTIONS, value);
+  }
+
+  public void setV2ContextRoot(String value) {
+	  	getProps().put(CONTEXTROOT, value);
   }
 
   public String getServerPort() {

@@ -97,6 +97,7 @@
             </not>
         </condition>
         <property name="failonerror" value="true"/>
+    	<!--echo message="Context root: ${sunappserver.contextroot}"/-->
         <exec executable="${asadmin}" failonerror="${failonerror}">
             <arg line=" deploy "/>
             <arg line=" --host ${sunappserver.serveraddress}" />
@@ -105,7 +106,7 @@
             <arg line=" --passwordfile passw" />
 
             <arg line=" --name ${module.name.nospace}"/>
-            <arg line=" --contextroot ${module.name.nospace}"/>
+            <arg line=" --contextroot ${sunappserver.contextroot}"/>
             <arg line=" --force=true "/>
             <arg line=" --upload=true "/>
 
@@ -126,6 +127,7 @@
             </not>
         </condition>
         <property name="failonerror" value="true"/>
+    	<!--echo message="Context root: ${sunappserver.contextroot}"/-->
         <exec executable="${asadmin}" failonerror="${failonerror}">
             <arg line=" deploydir "/>
             <arg line=" --port ${sunappserver.adminserverportnumber}" />
@@ -133,7 +135,7 @@
             <arg line=" --passwordfile passw" />
 
             <arg line=" --name ${module.name.nospace}"/>
-            <arg line=" --contextroot ${module.name.nospace}"/>
+            <arg line=" --contextroot ${sunappserver.contextroot}"/>
             <arg line=" --force=true "/>
  
             <arg line="'${project.working.dir}/${module.name}'" />
