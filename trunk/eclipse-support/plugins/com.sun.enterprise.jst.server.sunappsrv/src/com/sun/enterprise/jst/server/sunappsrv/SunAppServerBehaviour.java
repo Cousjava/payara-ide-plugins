@@ -288,8 +288,14 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 				SunAppSrvPlugin.logMessage("done V2.x publishModule in " +(System.currentTimeMillis()-t)+" ms");
 			}
 			else {*/
-				super.publishModule(kind, deltaKind, module, monitor);
-				
+			String projectContextRoot = ComponentUtilities.getServerContextRoot(module[0].getProject());
+			SunAppServer sunserver = getSunAppServer();
+
+			if ((projectContextRoot == null) || (projectContextRoot.length() <= 0)) {
+				projectContextRoot = module[0].getName().replace(' ', '_');
+			}
+			sunserver.setV2ContextRoot(projectContextRoot);
+			super.publishModule(kind, deltaKind, module, monitor);
 			//}
 		}
 
