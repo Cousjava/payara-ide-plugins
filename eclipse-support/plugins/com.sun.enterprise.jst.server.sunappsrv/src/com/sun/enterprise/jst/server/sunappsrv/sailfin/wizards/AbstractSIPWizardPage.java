@@ -77,25 +77,27 @@ public abstract class AbstractSIPWizardPage extends NewJavaClassWizardPage {
 	protected boolean isProjectValid(IProject project) {
 		// returns true if super's check is true and the project either has the sip facet or 
 		// is targeted to a sailfin v1 or v2 runtime
-		if (super.isProjectValid(project)) {
-			try {
-				if (FacetedProjectFramework.hasProjectFacet(project, "sip.facet")) { //$NON-NLS-1$
-					return true;
-				}
+		return (super.isProjectValid(project) && isValidSailfinProject(project));
+	}
 
-				IRuntime runtime = J2EEProjectUtilities.getServerRuntime(project);
-
-				if (runtime != null) {
-					String runtimeType = runtime.getRuntimeType().getId();
-					
-					return (runtimeType.equals(SAILFIN1_RUNTIME) || 
-							runtimeType.equals(SAILFIN2_RUNTIME));
-					
-				}
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	protected static boolean isValidSailfinProject(IProject project) {
+		try {
+			if (FacetedProjectFramework.hasProjectFacet(project, "sip.facet")) { //$NON-NLS-1$
+				return true;
 			}
+
+			IRuntime runtime = J2EEProjectUtilities.getServerRuntime(project);
+
+			if (runtime != null) {
+				String runtimeType = runtime.getRuntimeType().getId();
+				
+				return (runtimeType.equals(SAILFIN1_RUNTIME) || 
+						runtimeType.equals(SAILFIN2_RUNTIME));
+				
+			}
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return false;
 	}

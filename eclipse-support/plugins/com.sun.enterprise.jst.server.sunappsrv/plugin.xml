@@ -1227,7 +1227,39 @@
 			</enablement>
 		</commonWizard>
 	</extension>
-	
+
+	<extension
+		id="com.sun.enterprise.jst.server.sunappsrv.wizards.SIPServletWizard"
+		point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard
+        menuGroupId="com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards"
+        type="new"
+        wizardId="com.sun.enterprise.jst.server.sunappsrv.wizards.SIPServletWizard">
+			<enablement>
+				<adapt type="org.eclipse.core.resources.IResource">
+					<test property="com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards.enableForSailfin"
+						value="true"/>
+				</adapt>
+			</enablement>
+		</commonWizard>
+	</extension>
+
+	<extension
+		id="com.sun.enterprise.jst.server.sunappsrv.wizards.SIPListenerWizard"
+		point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard
+        menuGroupId="com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards"
+        type="new"
+        wizardId="com.sun.enterprise.jst.server.sunappsrv.wizards.SIPListenerWizard">
+			<enablement>
+				<adapt type="org.eclipse.core.resources.IResource">
+					<test property="com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards.enableForSailfin"
+						value="true"/>
+				</adapt>
+			</enablement>
+		</commonWizard>
+	</extension>
+
 	<extension
 		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEJBTimer"
 		point="org.eclipse.ui.navigator.navigatorContent">
@@ -1299,6 +1331,13 @@
      		namespace="com.sun.enterprise.jst.server.sunappsrv.v3.wizards"
      		properties="enableForGFv3Web,enableForGFv3WebOrEJB"
      		class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.GFv3RuntimeTester">
+	    </propertyTester>
+	    <propertyTester
+    		id="com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards.SailfinTester1"
+     		type="org.eclipse.core.resources.IResource"
+     		namespace="com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards"
+     		properties="enableForSailfin"
+     		class="com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards.SailfinTester">
 	    </propertyTester>
     </extension>
 
