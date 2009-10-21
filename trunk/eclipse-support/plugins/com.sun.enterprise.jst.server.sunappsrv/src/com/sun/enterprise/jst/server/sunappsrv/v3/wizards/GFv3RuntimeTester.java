@@ -8,7 +8,7 @@ import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 public class GFv3RuntimeTester extends PropertyTester {
 
-	@Override
+	//@Override
 	public boolean test(Object receiver, String property, Object[] args,
 			Object expectedValue) {
 		try {
