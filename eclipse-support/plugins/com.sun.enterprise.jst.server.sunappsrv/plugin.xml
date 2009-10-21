@@ -1221,7 +1221,7 @@
         wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard">
 			<enablement>
 				<adapt type="org.eclipse.core.resources.IResource">
-					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3"
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3WebOrEJB"
 						value="true"/>
 				</adapt>
 			</enablement>
@@ -1237,7 +1237,7 @@
         wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEjbTimerWizard">
 			<enablement>
 				<adapt type="org.eclipse.core.resources.IResource">
-					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3"
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3WebOrEJB"
 						value="true"/>
 				</adapt>
 			</enablement>
@@ -1253,7 +1253,7 @@
         wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard">
 			<enablement>
 				<adapt type="org.eclipse.core.resources.IResource">
-					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3"
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3Web"
 						value="true"/>
 				</adapt>
 			</enablement>
@@ -1269,7 +1269,7 @@
         wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedFilterWizard">
 			<enablement>
 				<adapt type="org.eclipse.core.resources.IResource">
-					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3"
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3Web"
 						value="true"/>
 				</adapt>
 			</enablement>
@@ -1285,7 +1285,7 @@
         wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard">
 			<enablement>
 				<adapt type="org.eclipse.core.resources.IResource">
-					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3"
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3WebOrEJB"
 						value="true"/>
 				</adapt>
 			</enablement>
@@ -1297,7 +1297,7 @@
     		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.GFv3RuntimeTester1"
      		type="org.eclipse.core.resources.IResource"
      		namespace="com.sun.enterprise.jst.server.sunappsrv.v3.wizards"
-     		properties="enableForGFv3"
+     		properties="enableForGFv3Web,enableForGFv3WebOrEJB"
      		class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.GFv3RuntimeTester">
 	    </propertyTester>
     </extension>

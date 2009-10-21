@@ -22,7 +22,11 @@ public class GFv3RuntimeTester extends PropertyTester {
 					.booleanValue()
 					: Boolean.parseBoolean((String) expectedValue);
 
-			return WizardUtil.isWebOrEJBProjectWithGF3Runtime(pj) == expected;
+			if (property.equals("enableForGFv3Web")) { //$NON-NLS-1$
+				return WizardUtil.isWebProjectWithGF3Runtime(pj) == expected;
+			} else if (property.equals("enableForGFv3WebOrEJB")) { //$NON-NLS-1$
+				return WizardUtil.isWebOrEJBProjectWithGF3Runtime(pj) == expected;
+			}
 		} catch (Exception e) {
 			SunAppSrvPlugin.logMessage(
 					"failed to check GFv3 enablement property", e);
