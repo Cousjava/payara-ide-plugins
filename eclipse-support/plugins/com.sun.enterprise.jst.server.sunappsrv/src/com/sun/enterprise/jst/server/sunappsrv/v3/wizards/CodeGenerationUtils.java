@@ -38,9 +38,12 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.codegen.jet.JETException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
@@ -61,7 +64,31 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+
 public class CodeGenerationUtils {
+	static String get35SuperTemplateSource(Object templateModel, Object templateImpl) 
+		throws JETException {
+	    try {
+			Method generateTemplateSource = templateImpl.getClass().getMethod("generate", new Class[] { Object.class }); //$NON-NLS-1$
+	        if (generateTemplateSource != null) {
+	        	Object superSource = generateTemplateSource.invoke(templateImpl, templateModel);
+				return (String)superSource;
+	        }
+	    } catch (SecurityException e) {
+	        SunAppSrvPlugin.logMessage("in CodeGenerationUtils get35SuperTemplateSource : security exception"); //$NON-NLS-1$
+	    } catch (NoSuchMethodException e) {
+	        SunAppSrvPlugin.logMessage("in CodeGenerationUtils get35SuperTemplateSource : no such method exception"); //$NON-NLS-1$
+	    } catch (IllegalArgumentException e) {
+	        SunAppSrvPlugin.logMessage("in CodeGenerationUtils get35SuperTemplateSource : illegal argument exception"); //$NON-NLS-1$
+	    } catch (IllegalAccessException e) {
+	        SunAppSrvPlugin.logMessage("in CodeGenerationUtils get35SuperTemplateSource : illegal access exception"); //$NON-NLS-1$
+	    } catch (InvocationTargetException e) {
+	        SunAppSrvPlugin.logMessage("in CodeGenerationUtils get35SuperTemplateSource : invocation target exception"); //$NON-NLS-1$
+	    }
+	    return null;
+	}
+
 	static String getRewrittenSource(String source, CompilationUnit result) {
 		Document doc = new Document(source);
 		TextEdit edits = result.rewrite(doc,null);

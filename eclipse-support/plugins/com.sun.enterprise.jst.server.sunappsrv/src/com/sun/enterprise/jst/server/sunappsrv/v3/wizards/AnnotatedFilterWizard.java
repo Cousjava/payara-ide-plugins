@@ -40,8 +40,6 @@ package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
 import static org.eclipse.jst.j2ee.application.internal.operations.IAnnotationsDataModel.USE_ANNOTATIONS;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -107,8 +105,6 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.WTPPlugin;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-
 /**
  * This is a wizard which creates a new annotated filter, for use 
  * with Java EE 6.  It is provided as a temporary measure to allow for 
@@ -143,23 +139,10 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 							@SuppressWarnings("unused")
 							protected String generateTemplateSource(CreateJavaEEArtifactTemplateModel templateModel, Object templateImpl) 
 								throws JETException {
-					            try {
-					    			Method generateTemplateSource = templateImpl.getClass().getMethod("generate", new Class[] { Object.class }); //$NON-NLS-1$
-					                if (generateTemplateSource != null) {
-					                	Object superSource = generateTemplateSource.invoke(templateImpl, templateModel);
-										return operateOnSourceGeneratedBySuper((String)superSource, templateModel);
-					                }
-					            } catch (SecurityException e) {
-					                SunAppSrvPlugin.logMessage("in AnnotatedFilterWizard generateTemplateSource : security exception"); //$NON-NLS-1$
-					            } catch (NoSuchMethodException e) {
-					                SunAppSrvPlugin.logMessage("in AnnotatedFilterWizard generateTemplateSource : no such method exception"); //$NON-NLS-1$
-					            } catch (IllegalArgumentException e) {
-					                SunAppSrvPlugin.logMessage("in AnnotatedFilterWizard generateTemplateSource : illegal argument exception"); //$NON-NLS-1$
-					            } catch (IllegalAccessException e) {
-					                SunAppSrvPlugin.logMessage("in AnnotatedFilterWizard generateTemplateSource : illegal access exception"); //$NON-NLS-1$
-					            } catch (InvocationTargetException e) {
-					                SunAppSrvPlugin.logMessage("in AnnotatedFilterWizard generateTemplateSource : invocation target exception"); //$NON-NLS-1$
-					            }
+								String superSource = CodeGenerationUtils.get35SuperTemplateSource(templateModel, templateImpl);
+								if (superSource != null) {
+									return operateOnSourceGeneratedBySuper(superSource, templateModel);
+								}
 					            return null;
 							}
 							// this method is the eclipse 3.4.x way of doing things
