@@ -140,7 +140,7 @@ public class JDBCWizard extends ResourceWizard {
 		final IFile file = folder.getFile(new Path(ResourceUtils.RESOURCE_FILE_NAME));
 
 		try {
-			String fragment = createFragment(jndiName, jdbcInfo);
+			String fragment = createFragment(jndiName, jdbcInfo, selectedProject);
 			InputStream stream = ResourceUtils.appendResource(file, fragment);
 			if (!folder.exists()) {
 				folder.create(true, true, monitor);
@@ -171,7 +171,7 @@ public class JDBCWizard extends ResourceWizard {
 	/**
 	 * Initialize the file contents to contents of the given resource.
 	 */
-	public static String createFragment(String jndiName, JDBCInfo jdbcInfo)
+	public static String createFragment(String jndiName, JDBCInfo jdbcInfo, IProject selectedProject)
 		throws CoreException {
 
 		/* We want to be truly OS-agnostic */
@@ -191,6 +191,15 @@ public class JDBCWizard extends ResourceWizard {
 		final String url = jdbcInfo.getURL();
 		boolean matchStart = false;
 		boolean matchEnd = false;
+		boolean createConnPool = true;
+		
+		//Check if pool already exists for this vendor, database and user
+		//If present, don't add another connection pool
+		//TODO
+		//Extend this to do a complete check of the pool attributes like url, driverClass, datasourceClass etc
+		if(ResourceUtils.isDuplicate(poolName, ResourceUtils.TYPE_CONNECTIONPOOL, selectedProject)) {
+			createConnPool = false;
+		}
 		
 		try {
 			InputStream input = JDBCInfo.class.getResourceAsStream(ResourceUtils.RESOURCE_FILE_TEMPLATE);
@@ -202,8 +211,14 @@ public class JDBCWizard extends ResourceWizard {
 						matchStart = true;
 					}
 					if ( (matchStart) && (! matchEnd) ) {
-						if(line.indexOf("</jdbc-connection-pool>") != -1) { //$NON-NLS-1$
-							matchEnd = true;
+						if(createConnPool) {
+							if(line.indexOf("</jdbc-connection-pool>") != -1) { //$NON-NLS-1$
+								matchEnd = true;
+							}
+						} else {
+							if(line.indexOf("/>") != -1) { //$NON-NLS-1$
+								matchEnd = true;
+							}
 						}
 						line = line.replaceAll("\\$\\{jndiName\\}", jndiName); //$NON-NLS-1$
 						line = line.replaceAll("\\$\\{poolName\\}", poolName); //$NON-NLS-1$
@@ -254,7 +269,7 @@ public class JDBCWizard extends ResourceWizard {
 		if (userName != null) {
 			poolName.append("_" + userName); //$NON-NLS-1$
 		}
-		poolName.append("Pool");
+		poolName.append("Pool"); //$NON-NLS-1$
 
 		return poolName.toString();
 	}
