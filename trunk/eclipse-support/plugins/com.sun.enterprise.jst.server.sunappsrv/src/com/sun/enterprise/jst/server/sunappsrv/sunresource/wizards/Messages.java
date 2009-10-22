@@ -65,7 +65,6 @@ public class Messages extends org.eclipse.osgi.util.NLS {
 	public static String MailHost;
 	public static String MailUser;
 	public static String MailFrom;
-	public static String errorMailJndiNameMissing;
 	public static String errorMailHostNameMissing;
 	public static String errorMailUserNameMissing;
 	public static String errorMailReturnAddrMissing;
@@ -81,6 +80,10 @@ public class Messages extends org.eclipse.osgi.util.NLS {
 	public static String lblQueueConnectionFactory;
 	public static String lblTopicConnectionFactory;
 	public static String lblConnectionFactory;
+	
+	//Common
+	public static String errorJndiNameMissing;
 	public static String errorResourceTypeMissing;
 	public static String errorFolderNull;
+	public static String errorDuplicateName;
 }

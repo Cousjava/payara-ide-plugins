@@ -46,12 +46,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
 
 public class ResourceUtils {
 	public static final String RESOURCE_FILE_TEMPLATE = "templates/sun-resources-xml-template.resource"; //$NON-NLS-1$
@@ -61,6 +70,9 @@ public class ResourceUtils {
 	public static final String EAR_CONTENT = "EarContent"; //$NON-NLS-1$
 	public static final String EJB_CONTENT = "ejbModule"; //$NON-NLS-1$
 	public static final String META_INF = "META-INF"; //$NON-NLS-1$
+	public static final String TYPE_JDBC = "JDBC"; //$NON-NLS-1$
+	public static final String TYPE_JAVAMAIL = "JAVAMAIL"; //$NON-NLS-1$
+	public static final String TYPE_CONNECTOR = "CONNECTOR"; //$NON-NLS-1$
 	
 	private static final String SUN_RESOURCES_XML_HEADER = 
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<!DOCTYPE resources PUBLIC " +  //$NON-NLS-1$ //$NON-NLS-2$
@@ -175,10 +187,85 @@ public class ResourceUtils {
 		if(JavaEEProjectUtilities.isDynamicWebProject(project)){
 			setUpLocation = WEB_INF;			
 		}else if (JavaEEProjectUtilities.isEARProject(project)){
-			setUpLocation = "";
+			setUpLocation = ""; //$NON-NLS-1$
 		}else if (JavaEEProjectUtilities.isEJBProject(project)){
 			setUpLocation = META_INF;
 		}
 		return setUpLocation;
+	}
+	
+	public static IFile getSunResourceIFile(IProject selectedProject) {
+		String dirName = getResourceLocation(selectedProject);
+		IContainer containerResource = selectedProject;
+		IFolder folder = containerResource.getFolder(new Path(dirName));
+		IFile file = folder.getFile(new Path(RESOURCE_FILE_NAME));
+		return file;
+	}
+	
+	public static File getSunResourceFile(IProject selectedProject) {
+		File resFile = null;
+		IFile sunResourcesXml = getSunResourceIFile(selectedProject);
+		IPath location = sunResourcesXml.getLocation();
+		if (location != null) {
+			resFile = location.toFile();
+		}
+		return resFile;
+	}
+	
+		
+	public static List<String> getResources(String type, IProject selectedProject){
+		List<String> resources = new ArrayList<String>();
+        File xmlFile = getSunResourceFile(selectedProject);
+		if(xmlFile.exists()) {
+            List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
+            ResourcesList df = new ResourcesList("jndi-name"); //$NON-NLS-1$
+            if(type.equals(TYPE_JDBC)){
+            	pathList.add(new TreeParser.Path("/resources/jdbc-resource", df)); //$NON-NLS-1$
+            } else if(type.equals(TYPE_CONNECTOR)){
+            	pathList.add(new TreeParser.Path("/resources/admin-object-resource", df)); //$NON-NLS-1$
+            	pathList.add(new TreeParser.Path("/resources/connector-resource", df)); //$NON-NLS-1$
+            } else if(type.equals(TYPE_JAVAMAIL)){
+            	pathList.add(new TreeParser.Path("/resources/mail-resource", df)); //$NON-NLS-1$
+            } 	
+            TreeParser.readXml(xmlFile, pathList);
+            resources = df.getResources();
+        }	
+		return resources;
+	}
+	
+	public static class ResourcesList extends TreeParser.NodeReader {
+		private final List<String> resourcesList = new ArrayList<String>();
+		private String attrName;
+
+		public ResourcesList(String attrname) {
+			attrName = attrname;
+		}
+
+		@Override
+		public void readAttributes(String qname, Attributes attributes) throws SAXException {
+			String jndiName = attributes.getValue(attrName);
+			resourcesList.add(jndiName);
+		}
+
+		public List<String> getResources() {
+			return resourcesList;
+		}
+	}
+
+	public static String getUniqueResourceName(String name, List<String> resources){
+		for (int i = 1;; i++) {
+			String resourceName = name + "_" + i; //$NON-NLS-1$
+			if (! resources.contains(resourceName)) {
+				return resourceName;
+			}
+		}
+	}
+	
+	public static boolean isDuplicate (String name, List<String> resources){
+		boolean isDuplicate = false;
+		if (resources.contains(name)) {
+				isDuplicate = true;
+		}
+		return isDuplicate;
 	}
 }

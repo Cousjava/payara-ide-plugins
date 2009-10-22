@@ -60,7 +60,10 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -94,6 +97,9 @@ public class JDBCResourceWizardPage extends WizardPage {
 
 	private WizardDialog wizardDialog;
 
+	private List<String> resources = new ArrayList<String>();
+	private String defaultJndiName = "jdbc/myDatasource"; //$NON-NLS-1$
+	
 	/**
 	 * Constructor for JDBCResourceWizardPage.
 	 * 
@@ -130,7 +136,7 @@ public class JDBCResourceWizardPage extends WizardPage {
 				String newSelection = projectNameCombo.getText();
 				if (newSelection != null) {
 					selectedProject = ProjectUtilities.getProject(newSelection);
-					updateStatus();
+					dialogChanged();
 				}
 			}
 		});
@@ -140,8 +146,13 @@ public class JDBCResourceWizardPage extends WizardPage {
 
 		jndiText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridDataFactory.defaultsFor(jndiText).span(2, 1).applyTo(jndiText);
-		jndiText.setText("jdbc/myDatasource"); //$NON-NLS-1$
-
+		jndiText.setText(defaultJndiName); 
+		jndiText.addModifyListener(new ModifyListener() {
+            public void modifyText(ModifyEvent e) {
+                dialogChanged();
+            }
+        });
+		
 		label = new Label(container, SWT.NULL);
 		label.setText(Messages.Connection);
 
@@ -177,7 +188,7 @@ public class JDBCResourceWizardPage extends WizardPage {
 
 					combo.add(newName);
 					combo.select(combo.indexOf(newName));
-					updateStatus();
+					dialogChanged();
 					combo.pack();
 				}
 			}
@@ -189,23 +200,42 @@ public class JDBCResourceWizardPage extends WizardPage {
 	}
 
 	private void initialize() {
+		resources = ResourceUtils.getResources(ResourceUtils.TYPE_JDBC, selectedProject);
+		if(resources.contains(defaultJndiName)){
+			String jndiName = ResourceUtils.getUniqueResourceName(defaultJndiName, resources);
+			jndiText.setText(jndiName);
+		}
 		populateCombos();
-		updateStatus();
+		dialogChanged();
 	}
 
-	private void updateStatus() {
-		boolean hasConnection = (combo.getSelectionIndex() != -1);
+	private void dialogChanged() {
+		setPageComplete(false);
 		boolean hasProject = (projectNameCombo.getSelectionIndex() != -1);
-		setPageComplete(hasProject && hasConnection);
+		boolean hasConnection = (combo.getSelectionIndex() != -1);
+		
 		if (!hasProject) {
 			setErrorMessage(Messages.errorProjectMissing);
-		} else if (!hasConnection) {
+			return;
+		}
+		String jndiName = getJNDIName();
+		if ((jndiName == null) || (jndiName.length() == 0 )) {
+			setErrorMessage(Messages.errorJndiNameMissing);
+			return;
+		}else {
+			if(ResourceUtils.isDuplicate(jndiName, resources)) {
+				setErrorMessage(NLS.bind(Messages.errorDuplicateName, jndiName));
+				return;
+			}	
+		}
+		if (!hasConnection) {
 			setErrorMessage(Messages.errorConnectionMissing);
-		} else {
-			setErrorMessage(null);
-		}		
+			return;
+		} 
+		setErrorMessage(null);
+		setPageComplete(true);
 	}
-
+	
 	public String getJNDIName() {
 		return jndiText.getText();
 	}

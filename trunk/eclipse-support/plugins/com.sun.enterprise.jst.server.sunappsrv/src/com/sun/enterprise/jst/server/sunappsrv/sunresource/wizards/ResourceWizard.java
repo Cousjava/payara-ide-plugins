@@ -41,10 +41,12 @@ package com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -61,7 +63,8 @@ import org.eclipse.ui.IWorkbenchWizard;
 public abstract class ResourceWizard extends Wizard implements INewWizard {
 	protected ISelection selection;
 	protected String dirName;
-
+	protected IFolder folder;
+	
 	/**
 	 * Constructor 
 	 */
@@ -75,6 +78,13 @@ public abstract class ResourceWizard extends Wizard implements INewWizard {
 		if(dirName == null) {
 			IStatus status = new Status(IStatus.ERROR, getClass().getName(), IStatus.OK, 
 					NLS.bind(Messages.errorFolderNull, dirName), null);
+			throw new CoreException(status);
+		}
+		IContainer containerResource = selectedProject;
+		folder = containerResource.getFolder(new Path(dirName));
+		if (!folder.exists()) {
+			IStatus status = new Status(IStatus.ERROR, getClass().getName(), IStatus.OK, 
+					NLS.bind(Messages.errorFolderMissing, dirName), null);
 			throw new CoreException(status);
 		}
 	}
