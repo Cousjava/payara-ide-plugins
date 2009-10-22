@@ -71,6 +71,7 @@ public class ResourceUtils {
 	public static final String EJB_CONTENT = "ejbModule"; //$NON-NLS-1$
 	public static final String META_INF = "META-INF"; //$NON-NLS-1$
 	public static final String TYPE_JDBC = "JDBC"; //$NON-NLS-1$
+	public static final String TYPE_CONNECTIONPOOL = "CONNECTIONPOOL"; //$NON-NLS-1$
 	public static final String TYPE_JAVAMAIL = "JAVAMAIL"; //$NON-NLS-1$
 	public static final String TYPE_CONNECTOR = "CONNECTOR"; //$NON-NLS-1$
 	
@@ -226,7 +227,10 @@ public class ResourceUtils {
             	pathList.add(new TreeParser.Path("/resources/connector-resource", df)); //$NON-NLS-1$
             } else if(type.equals(TYPE_JAVAMAIL)){
             	pathList.add(new TreeParser.Path("/resources/mail-resource", df)); //$NON-NLS-1$
-            } 	
+            } else if(type.equals(TYPE_CONNECTIONPOOL)){
+            	df = new ResourcesList("name"); //$NON-NLS-1$
+            	pathList.add(new TreeParser.Path("/resources/jdbc-connection-pool", df)); //$NON-NLS-1$
+            }
             TreeParser.readXml(xmlFile, pathList);
             resources = df.getResources();
         }	
@@ -263,6 +267,15 @@ public class ResourceUtils {
 	
 	public static boolean isDuplicate (String name, List<String> resources){
 		boolean isDuplicate = false;
+		if (resources.contains(name)) {
+				isDuplicate = true;
+		}
+		return isDuplicate;
+	}
+	
+	public static boolean isDuplicate (String name, String type, IProject selectedProject){
+		boolean isDuplicate = false;
+		List<String> resources = getResources(type, selectedProject);
 		if (resources.contains(name)) {
 				isDuplicate = true;
 		}
