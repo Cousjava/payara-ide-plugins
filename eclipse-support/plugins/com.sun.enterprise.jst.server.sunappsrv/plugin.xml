@@ -1221,7 +1221,7 @@
         wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard">
 			<enablement>
 				<adapt type="org.eclipse.core.resources.IResource">
-					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3WebOrEJB"
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3Web"
 						value="true"/>
 				</adapt>
 			</enablement>
