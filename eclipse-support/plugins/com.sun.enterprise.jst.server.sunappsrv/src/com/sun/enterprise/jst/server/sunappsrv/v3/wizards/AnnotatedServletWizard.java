@@ -41,6 +41,7 @@ package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 import static org.eclipse.jst.j2ee.application.internal.operations.IAnnotationsDataModel.USE_ANNOTATIONS;
 import static org.eclipse.jst.j2ee.internal.web.operations.INewServletClassDataModelProperties.GET_SERVLET_INFO;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -55,9 +56,7 @@ import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MemberValuePair;
@@ -66,19 +65,15 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.PrimitiveType;
-import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.TagElement;
-import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jst.j2ee.internal.common.operations.CreateJavaEEArtifactTemplateModel;
 import org.eclipse.jst.j2ee.internal.common.operations.NewJavaEEArtifactClassOperation;
@@ -90,8 +85,6 @@ import org.eclipse.jst.j2ee.internal.web.operations.NewServletClassOperation;
 import org.eclipse.jst.servlet.ui.IWebUIContextIds;
 import org.eclipse.jst.servlet.ui.internal.wizard.AddServletWizard;
 import org.eclipse.jst.servlet.ui.internal.wizard.NewServletClassWizardPage;
-import org.eclipse.text.edits.MalformedTreeException;
-import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.WTPPlugin;
@@ -167,9 +160,9 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								AST ast = result.getAST();
 								TypeDeclaration firstType = (TypeDeclaration)result.types().get(0);
 
-								result.imports().add(addWebAnnotationImport(ast, "WebServlet"));	//$NON-NLS-1$
+								result.imports().add(CodeGenerationUtils.addWebAnnotationImport(ast, "WebServlet"));	//$NON-NLS-1$
 								firstType.modifiers().add(0, addWebServletAnnotation(ast, tempModel, result));
-								cleanupJavadoc(firstType.getJavadoc());
+								CodeGenerationUtils.cleanupJavadoc(firstType.getJavadoc(), "@web.servlet"); //$NON-NLS-1$
 								addHelpfulMethodBodies(ast, firstType);
 								addProcessRequestMethod(ast, firstType, result, 
 										((CreateServletTemplateModel)tempModel).getServletName());
@@ -177,21 +170,7 @@ public class AnnotatedServletWizard extends AddServletWizard {
 									removeGetServletInfoMethodStub(ast, firstType);
 									addGetServletInfoMethod(ast, firstType, result);
 								}
-								return getRewrittenSource(source, result);
-							}
-
-							private String getRewrittenSource(String source, CompilationUnit result) {
-								Document doc = new Document(source);
-								TextEdit edits = result.rewrite(doc,null);
-								try {
-									edits.apply(doc);
-									return doc.get();
-								} catch (MalformedTreeException e) {
-									e.printStackTrace();
-								} catch (BadLocationException e) {
-									e.printStackTrace();
-								}
-								return source;
+								return CodeGenerationUtils.getRewrittenSource(source, result);
 							}
 
 							@SuppressWarnings("unchecked")
@@ -230,7 +209,7 @@ public class AnnotatedServletWizard extends AddServletWizard {
 
 								// generate this:
 								// response.setContentType("text/html;charset=UTF-8");
-								statements.add(getExpressionStatement(ast, "response", //$NON-NLS-1$
+								statements.add(CodeGenerationUtils.getExpressionStatement(ast, "response", //$NON-NLS-1$
 										"setContentType", "text/html;charset=UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
 
 								// generate this:
@@ -246,14 +225,7 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								statements.add(vds);
 
 								// add corresponding import for PrintWriter:
-								ImportDeclaration importDecl = ast.newImportDeclaration();
-								QualifiedName name = ast.newQualifiedName(
-										ast.newSimpleName("java"),			//$NON-NLS-1$
-										ast.newSimpleName("io"));		//$NON-NLS-1$
-								name = ast.newQualifiedName(name, 
-										ast.newSimpleName("PrintWriter")); //$NON-NLS-1$
-								importDecl.setName(name);
-								result.imports().add(importDecl);
+								result.imports().add(CodeGenerationUtils.addImport(ast, "java", "io", null, "PrintWriter")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 								statements.add(getProcessRequestTryStatement(ast, servletName));
 							}
@@ -332,64 +304,16 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								Javadoc docComment = ast.newJavadoc();
 								List tags = docComment.tags();
 
-								tags.add(getTagElement(ast, null, null, 
+								tags.add(CodeGenerationUtils.getTagElement(ast, null, null, 
 									"Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.")); //$NON-NLS-1$
-								tags.add(getTagElement(ast, TagElement.TAG_PARAM, "request", "servlet request")); //$NON-NLS-1$ //$NON-NLS-2$
-								tags.add(getTagElement(ast, TagElement.TAG_PARAM, "response", "servlet response")); //$NON-NLS-1$ //$NON-NLS-2$
-								tags.add(getTagElement(ast, TagElement.TAG_THROWS, "ServletException", //$NON-NLS-1$
+								tags.add(CodeGenerationUtils.getTagElement(ast, TagElement.TAG_PARAM, "request", "servlet request")); //$NON-NLS-1$ //$NON-NLS-2$
+								tags.add(CodeGenerationUtils.getTagElement(ast, TagElement.TAG_PARAM, "response", "servlet response")); //$NON-NLS-1$ //$NON-NLS-2$
+								tags.add(CodeGenerationUtils.getTagElement(ast, TagElement.TAG_THROWS, "ServletException", //$NON-NLS-1$
 									"if a servlet-specific error occurs")); //$NON-NLS-1$
-								tags.add(getTagElement(ast, TagElement.TAG_THROWS, "IOException", //$NON-NLS-1$ 
+								tags.add(CodeGenerationUtils.getTagElement(ast, TagElement.TAG_THROWS, "IOException", //$NON-NLS-1$ 
 									"if an I/O error occurs")); //$NON-NLS-1$
 
 								return docComment;
-							}
-
-							@SuppressWarnings("unchecked")
-							private TagElement getTagElement(AST ast, String tagName, String fragmentName, String textValue) {
-								TagElement tagElement = ast.newTagElement();
-								tagElement.setTagName(tagName);
-								if (fragmentName != null) {
-									tagElement.fragments().add(ast.newSimpleName(fragmentName));
-								}
-								TextElement te = ast.newTextElement();
-								tagElement.fragments().add(te);
-								te.setText(textValue);
-								return tagElement;
-
-							}
-
-							@SuppressWarnings("unchecked")
-							private MethodInvocation getMethodInvocation(AST ast, String methodExpr, 
-									String methodName, Expression methodExpression) {
-								MethodInvocation methodInvocation = ast.newMethodInvocation();
-								methodInvocation.setExpression(ast.newSimpleName(methodExpr));
-								methodInvocation.setName(ast.newSimpleName(methodName));
-								if (methodExpression != null) {
-									methodInvocation.arguments().add(methodExpression);
-								}
-								return methodInvocation;
-							}
-
-							private MethodInvocation getMethodInvocation(AST ast, String methodExpr, 
-									String methodName, String methodLiteral) {
-								StringLiteral literal = null;
-								if (methodLiteral != null) {
-									literal = ast.newStringLiteral();
-									literal.setLiteralValue(methodLiteral);
-								}
-								return getMethodInvocation(ast, methodExpr, methodName, literal);
-							}
-
-							private ExpressionStatement getExpressionStatement(AST ast, String methodExpr, 
-									String methodName, String methodLiteral) {
-								return ast.newExpressionStatement(
-										getMethodInvocation(ast, methodExpr, methodName, methodLiteral));
-							}
-
-							private ExpressionStatement getExpressionStatement(AST ast, String methodExpr, 
-									String methodName, Expression methodExpression) {
-								return ast.newExpressionStatement(
-										getMethodInvocation(ast, methodExpr, methodName, methodExpression));
 							}
 
 							// generate this: 
@@ -409,16 +333,16 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								Block tryBlock = ast.newBlock();
 								List<Statement> tryStatements = tryBlock.statements();
 
-								tryStatements.add(getExpressionStatement(ast, "out", "println", "<html>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "out", "println", "<head>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "out", "println", //$NON-NLS-1$ //$NON-NLS-2$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "out", "println", "<html>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "out", "println", "<head>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "out", "println", //$NON-NLS-1$ //$NON-NLS-2$
 										"<title>Servlet " + servletName + "</title>")); //$NON-NLS-1$ //$NON-NLS-2$
-								tryStatements.add(getExpressionStatement(ast, "out", "println", "</head>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "out", "println", "<body>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "out", "println",  //$NON-NLS-1$ //$NON-NLS-2$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "out", "println", "</head>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "out", "println", "<body>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "out", "println",  //$NON-NLS-1$ //$NON-NLS-2$
 										getProcessRequestInfixExpression(ast, servletName)));
-								tryStatements.add(getExpressionStatement(ast, "out", "println", "</body>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "out", "println", "</html>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "out", "println", "</body>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "out", "println", "</html>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 								tryStatement.setBody(tryBlock);
 								tryStatement.setFinally(getProcessRequestFinallyBlock(ast));
 
@@ -429,7 +353,7 @@ public class AnnotatedServletWizard extends AddServletWizard {
 							// <h1>Servlet <servletname> at " + request.getContextPath () + "</h1>"" +
 							private InfixExpression getProcessRequestInfixExpression(AST ast, String servletName) {
 								MethodInvocation methodInvocation = 
-									getMethodInvocation(ast, "request", "getContextPath", (Expression)null); //$NON-NLS-1$ //$NON-NLS-2$
+									CodeGenerationUtils.getMethodInvocation(ast, "request", "getContextPath"); //$NON-NLS-1$ //$NON-NLS-2$
 								InfixExpression infixExpression = ast.newInfixExpression();
 								InfixExpression infixExpression2 = ast.newInfixExpression();
 								StringLiteral literal = ast.newStringLiteral();
@@ -455,7 +379,7 @@ public class AnnotatedServletWizard extends AddServletWizard {
 							private Block getProcessRequestFinallyBlock(AST ast) {
 								Block finallyBlock = ast.newBlock();
 								finallyBlock.statements().add(
-										getExpressionStatement(ast, "out", "close", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
+										CodeGenerationUtils.getExpressionStatement(ast, "out", "close")); //$NON-NLS-1$ //$NON-NLS-2$
 								return finallyBlock;
 							}
 
@@ -490,24 +414,12 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								Javadoc docComment = ast.newJavadoc();
 								List tags = docComment.tags();
 
-								tags.add(getTagElement(ast, null, null, 
+								tags.add(CodeGenerationUtils.getTagElement(ast, null, null, 
 									"Returns a short description of the servlet.")); //$NON-NLS-1$
-								tags.add(getTagElement(ast, TagElement.TAG_RETURN, null, 
+								tags.add(CodeGenerationUtils.getTagElement(ast, TagElement.TAG_RETURN, null, 
 									"a String containing servlet description")); //$NON-NLS-1$
 
 								return docComment;
-							}
-
-							@SuppressWarnings("unchecked")
-							private void cleanupJavadoc(Javadoc javadoc) {
-								Iterator it = javadoc.tags().iterator();
-								while (it.hasNext()) {
-									TagElement tagElement = (TagElement) it.next();
-									String tagName = tagElement.getTagName();
-									if ((tagName != null) && tagName.startsWith("@web.servlet")) {	//$NON-NLS-1$
-										it.remove();
-									}
-								}
 							}
 
 							@SuppressWarnings("unchecked")
@@ -521,25 +433,14 @@ public class AnnotatedServletWizard extends AddServletWizard {
 									List<MemberValuePair> annValues = ((NormalAnnotation) ann).values();
 									List<String[]> initParams = servletModel.getInitParams();
 
-									annValues.add(addName(ast, servletModel.getServletName()));
+									annValues.add(CodeGenerationUtils.addName(ast, servletModel.getServletName(), "name")); //$NON-NLS-1$
 									annValues.add(addURLPatterns(ast, servletModel.getServletMappings()));
 									if (initParams != null) {
-										annValues.add(addInitParams(ast, initParams, result));
+										annValues.add(CodeGenerationUtils.addInitParams(ast, initParams, result));
 									}
 								}
 
 								return ann;
-							}
-
-							private MemberValuePair addName(AST ast, String servletName) {
-								MemberValuePair annotationProperty = ast.newMemberValuePair();
-								StringLiteral literal = ast.newStringLiteral();
-
-								literal.setLiteralValue(servletName);
-								annotationProperty.setName(ast.newSimpleName("name"));	//$NON-NLS-1$
-								annotationProperty.setValue(literal);
-
-								return annotationProperty;
 							}
 
 							@SuppressWarnings("unchecked")
@@ -558,54 +459,6 @@ public class AnnotatedServletWizard extends AddServletWizard {
 								annotationProperty.setValue(arrayInit);
 								return annotationProperty;
 							}
-
-							@SuppressWarnings("unchecked")
-							private MemberValuePair addInitParams(AST ast, List<String[]> initParams, CompilationUnit result) {
-								MemberValuePair annotationProperty = ast.newMemberValuePair();
-								ArrayInitializer arrayInit = ast.newArrayInitializer();
-
-								result.imports().add(addWebAnnotationImport(ast, "WebInitParam"));	//$NON-NLS-1$
-
-								annotationProperty.setName(ast.newSimpleName("initParams"));	//$NON-NLS-1$
-								for (Iterator<String[]> iterator = initParams.iterator(); iterator.hasNext();) {
-									String[] strings = iterator.next();
-									StringLiteral literal = ast.newStringLiteral();
-									Annotation ann = ast.newNormalAnnotation();
-									MemberValuePair annotationProperty1 = ast.newMemberValuePair();
-									List<MemberValuePair> annValues = ((NormalAnnotation) ann).values();
-
-									ann.setTypeName(ast.newSimpleName("WebInitParam"));	//$NON-NLS-1$
-									literal.setLiteralValue(strings[0]);
-									annotationProperty1.setName(ast.newSimpleName("name"));	//$NON-NLS-1$
-									annotationProperty1.setValue(literal);
-									annValues.add(annotationProperty1);
-
-									annotationProperty1 = ast.newMemberValuePair();
-									literal = ast.newStringLiteral();
-									literal.setLiteralValue(strings[1]);
-									annotationProperty1.setName(ast.newSimpleName("value"));	//$NON-NLS-1$
-									annotationProperty1.setValue(literal);
-									annValues.add(annotationProperty1);
-
-									arrayInit.expressions().add(ann);
-								}
-								annotationProperty.setValue(arrayInit);
-
-								return annotationProperty;
-							}
-
-							private ImportDeclaration addWebAnnotationImport(AST ast, String className) {
-								ImportDeclaration importDecl = ast.newImportDeclaration();
-								QualifiedName name = ast.newQualifiedName(
-									ast.newSimpleName("javax"),			//$NON-NLS-1$
-									ast.newSimpleName("servlet"));		//$NON-NLS-1$
-								name = ast.newQualifiedName(name,
-									ast.newSimpleName("annotation"));	//$NON-NLS-1$
-								name = ast.newQualifiedName(name, 
-									ast.newSimpleName(className));
-								importDecl.setName(name);
-								return importDecl;
-							}				
 						};
 					}
 

@@ -66,7 +66,6 @@ import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.InstanceofExpression;
 import org.eclipse.jdt.core.dom.Javadoc;
@@ -85,7 +84,6 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.TagElement;
-import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.ThrowStatement;
 import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -93,8 +91,6 @@ import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.Assignment.Operator;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jst.j2ee.internal.common.operations.CreateJavaEEArtifactTemplateModel;
 import org.eclipse.jst.j2ee.internal.common.operations.NewJavaEEArtifactClassOperation;
@@ -107,8 +103,6 @@ import org.eclipse.jst.j2ee.internal.web.operations.NewFilterClassOperation;
 import org.eclipse.jst.servlet.ui.IWebUIContextIds;
 import org.eclipse.jst.servlet.ui.internal.wizard.AddFilterWizard;
 import org.eclipse.jst.servlet.ui.internal.wizard.NewFilterClassWizardPage;
-import org.eclipse.text.edits.MalformedTreeException;
-import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.WTPPlugin;
@@ -185,9 +179,9 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								TypeDeclaration firstType = (TypeDeclaration)result.types().get(0);
 								String filterName = ((CreateFilterTemplateModel)tempModel).getFilterName();
 
-								result.imports().add(addWebAnnotationImport(ast, "WebFilter"));	//$NON-NLS-1$
+								result.imports().add(CodeGenerationUtils.addWebAnnotationImport(ast, "WebFilter"));	//$NON-NLS-1$
 								firstType.modifiers().add(0, addWebFilterAnnotation(ast, tempModel, result));
-								cleanupJavadoc(firstType.getJavadoc());
+								CodeGenerationUtils.cleanupJavadoc(firstType.getJavadoc(), "@web.filter"); //$NON-NLS-1$
 								addImports(ast, result);
 								addFields(ast, firstType);
 								addHelpfulMethodBodies(ast, firstType, filterName);
@@ -200,31 +194,17 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								addMethod(firstType, generateLogMethodDeclaration(ast));
 								addMethod(firstType, generateGetStackTraceMethodDeclaration(ast));
 
-								return getRewrittenSource(source, result);
-							}
-
-							private String getRewrittenSource(String source, CompilationUnit result) {
-								Document doc = new Document(source);
-								TextEdit edits = result.rewrite(doc,null);
-								try {
-									edits.apply(doc);
-									return doc.get();
-								} catch (MalformedTreeException e) {
-									e.printStackTrace();
-								} catch (BadLocationException e) {
-									e.printStackTrace();
-								}
-								return source;
+								return CodeGenerationUtils.getRewrittenSource(source, result);
 							}
 
 							@SuppressWarnings("unchecked")
 							private void addImports(AST ast, CompilationUnit result) {
 								List imports = result.imports();
 
-								imports.add(addImport(ast, "java", "io", null, "PrintStream")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								imports.add(addImport(ast, "java", "io", null, "PrintWriter")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								imports.add(addImport(ast, "java", "io", null, "StringWriter")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								imports.add(addImport(ast, "java", "util", null, "Enumeration")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								imports.add(CodeGenerationUtils.addImport(ast, "java", "io", null, "PrintStream")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								imports.add(CodeGenerationUtils.addImport(ast, "java", "io", null, "PrintWriter")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								imports.add(CodeGenerationUtils.addImport(ast, "java", "io", null, "StringWriter")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								imports.add(CodeGenerationUtils.addImport(ast, "java", "util", null, "Enumeration")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							}
 
 							@SuppressWarnings("unchecked")
@@ -254,9 +234,9 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								vdf.setInitializer(ast.newNullLiteral());
 								Javadoc docComment = ast.newJavadoc();
 								List tags = docComment.tags();
-								tags.add(getTagElement(ast, null, null, 
+								tags.add(CodeGenerationUtils.getTagElement(ast, null, null, 
 									"The filter configuration object we are associated with.  If this")); //$NON-NLS-1$
-								tags.add(getTagElement(ast, null, null, 
+								tags.add(CodeGenerationUtils.getTagElement(ast, null, null, 
 									"value is null, this filter instance is not currently configured.")); //$NON-NLS-1$
 								vds.setJavadoc(docComment);
 
@@ -397,7 +377,7 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								assignment.setOperator(Operator.ASSIGN);
 								assignment.setRightHandSide(ast.newSimpleName("t"));//$NON-NLS-1$
 								catchStmts.add(ast.newExpressionStatement(assignment));
-								catchStmts.add(getExpressionStatement(ast, "t", "printStackTrace", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
+								catchStmts.add(CodeGenerationUtils.getExpressionStatement(ast, "t", "printStackTrace")); //$NON-NLS-1$ //$NON-NLS-2$
 								tryStatement.catchClauses().add(catchClause);
 
 								// generate this:
@@ -512,9 +492,9 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								vdf.setName(ast.newSimpleName("en")); //$NON-NLS-1$
 								paramType.typeArguments().add(ast.newSimpleType(ast.newSimpleName("String"))); //$NON-NLS-1$
 								vde.setType(paramType);
-								vdf.setInitializer(getMethodInvocation(ast, "request", "getParameterNames", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
+								vdf.setInitializer(CodeGenerationUtils.getMethodInvocation(ast, "request", "getParameterNames")); //$NON-NLS-1$ //$NON-NLS-2$
 								forStatement.initializers().add(vde);
-								forStatement.setExpression(getMethodInvocation(ast, "en", "hasMoreElements", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
+								forStatement.setExpression(CodeGenerationUtils.getMethodInvocation(ast, "en", "hasMoreElements")); //$NON-NLS-1$ //$NON-NLS-2$
 
 								// generate this: 
 						    	// String name = (String)en.nextElement();
@@ -523,7 +503,7 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								List<Statement> forStatements = forBlock.statements();
 								vdf = ast.newVariableDeclarationFragment();
 								VariableDeclarationStatement vds = ast.newVariableDeclarationStatement(vdf);
-								methodInvocation = getMethodInvocation(ast, "en", "nextElement", (Expression)null); //$NON-NLS-1$ //$NON-NLS-2$
+								methodInvocation = CodeGenerationUtils.getMethodInvocation(ast, "en", "nextElement"); //$NON-NLS-1$ //$NON-NLS-2$
 								vdf.setName(ast.newSimpleName("name")); //$NON-NLS-1$
 								vds.setType(ast.newSimpleType(ast.newSimpleName("String"))); //$NON-NLS-1$
 								CastExpression castExpr = ast.newCastExpression();
@@ -538,7 +518,7 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								vds = ast.newVariableDeclarationStatement(vdf);
 								vdf.setName(ast.newSimpleName("values")); //$NON-NLS-1$
 								vds.setType(ast.newArrayType(ast.newSimpleType(ast.newSimpleName("String")))); //$NON-NLS-1$
-								vdf.setInitializer(getMethodInvocation(ast, "request", "getParameterValues", ast.newSimpleName("name"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								vdf.setInitializer(CodeGenerationUtils.getMethodInvocation(ast, "request", "getParameterValues", ast.newSimpleName("name"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 								forStatements.add(vds);
 
 								// generate this: 
@@ -558,8 +538,8 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								// buf.append(name);
 								// buf.append("=");
 								forStatements.add(getConstructorVariableDeclarationStatement(ast, "StringBuffer", "buf", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
-								forStatements.add(getExpressionStatement(ast, "buf", "append", ast.newSimpleName("name"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								forStatements.add(getExpressionStatement(ast, "buf", "append", "=")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								forStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "buf", "append", ast.newSimpleName("name"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								forStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "buf", "append", "=")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 								// generate this: 
 								// for(int i=0; i < n; i++) {
@@ -590,7 +570,7 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								ArrayAccess arrayAcess = ast.newArrayAccess();
 								arrayAcess.setArray(ast.newSimpleName("values")); //$NON-NLS-1$
 								arrayAcess.setIndex(ast.newSimpleName("i")); //$NON-NLS-1$
-								innerForStatements.add(getExpressionStatement(ast, "buf", "append", arrayAcess)); //$NON-NLS-1$ //$NON-NLS-2$
+								innerForStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "buf", "append", arrayAcess)); //$NON-NLS-1$ //$NON-NLS-2$
 
 								// generate this: 
 						    	// if (i < n-1)
@@ -605,14 +585,14 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								infixExpr.setOperator(InfixExpression.Operator.LESS);
 								infixExpr.setRightOperand(innerInfixExpr);
 								ifStatement.setExpression(infixExpr);
-								ifStatement.setThenStatement(getExpressionStatement(ast, "buf", "append", ",")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								ifStatement.setThenStatement(CodeGenerationUtils.getExpressionStatement(ast, "buf", "append", ",")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 								innerForStatements.add(ifStatement);
 
 								// generate this: 
 						    	// log(buf.toString());
 								methodInvocation = ast.newMethodInvocation();
 								methodInvocation.setName(ast.newSimpleName("log")); //$NON-NLS-1$
-								methodInvocation.arguments().add(getMethodInvocation(ast, "buf", "toString", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$ 
+								methodInvocation.arguments().add(CodeGenerationUtils.getMethodInvocation(ast, "buf", "toString")); //$NON-NLS-1$ //$NON-NLS-2$ 
 								forStatements.add(ast.newExpressionStatement(methodInvocation));
 								statements.add(forStatement);
 
@@ -672,9 +652,9 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								vdf.setName(ast.newSimpleName("en")); //$NON-NLS-1$
 								paramType.typeArguments().add(ast.newSimpleType(ast.newSimpleName("String"))); //$NON-NLS-1$
 								vde.setType(paramType);
-								vdf.setInitializer(getMethodInvocation(ast, "request", "getAttributeNames", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
+								vdf.setInitializer(CodeGenerationUtils.getMethodInvocation(ast, "request", "getAttributeNames")); //$NON-NLS-1$ //$NON-NLS-2$
 								forStatement.initializers().add(vde);
-								forStatement.setExpression(getMethodInvocation(ast, "en", "hasMoreElements", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
+								forStatement.setExpression(CodeGenerationUtils.getMethodInvocation(ast, "en", "hasMoreElements")); //$NON-NLS-1$ //$NON-NLS-2$
 
 								// generate this: 
 						    	// String name = (String)en.nextElement();
@@ -683,7 +663,7 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								List<Statement> forStatements = forBlock.statements();
 								vdf = ast.newVariableDeclarationFragment();
 								VariableDeclarationStatement vds = ast.newVariableDeclarationStatement(vdf);
-								methodInvocation = getMethodInvocation(ast, "en", "nextElement", (Expression)null); //$NON-NLS-1$ //$NON-NLS-2$
+								methodInvocation = CodeGenerationUtils.getMethodInvocation(ast, "en", "nextElement"); //$NON-NLS-1$ //$NON-NLS-2$
 								vdf.setName(ast.newSimpleName("name")); //$NON-NLS-1$
 								vds.setType(ast.newSimpleType(ast.newSimpleName("String"))); //$NON-NLS-1$
 								CastExpression castExpr = ast.newCastExpression();
@@ -698,13 +678,13 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								vds = ast.newVariableDeclarationStatement(vdf);
 								vdf.setName(ast.newSimpleName("value")); //$NON-NLS-1$
 								vds.setType(ast.newSimpleType(ast.newSimpleName("Object"))); //$NON-NLS-1$
-								vdf.setInitializer(getMethodInvocation(ast, "request", "getAttribute", ast.newSimpleName("name"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								vdf.setInitializer(CodeGenerationUtils.getMethodInvocation(ast, "request", "getAttribute", ast.newSimpleName("name"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 								forStatements.add(vds);
 
 								// generate this: 
 						    	// log("attribute: " + name + "=" + value.toString());
 								methodInvocation = 
-									getMethodInvocation(ast, "value", "toString", (Expression)null); //$NON-NLS-1$ //$NON-NLS-2$
+									CodeGenerationUtils.getMethodInvocation(ast, "value", "toString"); //$NON-NLS-1$ //$NON-NLS-2$
 								InfixExpression infixExpression = ast.newInfixExpression();
 								InfixExpression infixExpression2 = ast.newInfixExpression();
 								InfixExpression infixExpression3 = ast.newInfixExpression();
@@ -733,8 +713,8 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								// PrintWriter respOut = new PrintWriter(response.getWriter());
 								// respOut.println("<P><B>This has been appended by an intrusive filter.</B>");
 								statements.add(getConstructorVariableDeclarationStatement(ast, "PrintWriter", "respOut",  //$NON-NLS-1$ //$NON-NLS-2$
-										getMethodInvocation(ast, "response", "getWriter", (Expression)null)));	//$NON-NLS-1$ //$NON-NLS-2$
-								statements.add(getExpressionStatement(ast, "respOut", "println", "<P><B>This has been appended by an intrusive filter.</B>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+										CodeGenerationUtils.getMethodInvocation(ast, "response", "getWriter")));	//$NON-NLS-1$ //$NON-NLS-2$
+								statements.add(CodeGenerationUtils.getExpressionStatement(ast, "respOut", "println", "<P><B>This has been appended by an intrusive filter.</B>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 								
 								return methodDeclaration;
 						    } 
@@ -758,8 +738,8 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								// generate this: 
 							    //	filterConfig.getServletContext().log(msg); 
 								List<Statement> statements = methodDeclaration.getBody().statements();
-								MethodInvocation firstCall = getMethodInvocation(ast, "filterConfig", //$NON-NLS-1$
-										"getServletContext", (String)null); //$NON-NLS-1$
+								MethodInvocation firstCall = CodeGenerationUtils.getMethodInvocation(ast, "filterConfig", //$NON-NLS-1$
+										"getServletContext"); //$NON-NLS-1$
 								MethodInvocation methodInvocation = ast.newMethodInvocation();
 								ExpressionStatement expressionStatement = ast.newExpressionStatement(methodInvocation);
 
@@ -811,14 +791,14 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 							    //	    sw.close();
 								tryStatements.add(getConstructorVariableDeclarationStatement(ast, "StringWriter", "sw", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
 								tryStatements.add(getConstructorVariableDeclarationStatement(ast, "PrintWriter", "pw", "sw")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "t", "printStackTrace", ast.newSimpleName("pw"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "pw", "close", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
-								tryStatements.add(getExpressionStatement(ast, "sw", "close", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "t", "printStackTrace", ast.newSimpleName("pw"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "pw", "close")); //$NON-NLS-1$ //$NON-NLS-2$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "sw", "close")); //$NON-NLS-1$ //$NON-NLS-2$
 
 								// generate this: 
 							    //	    stackTrace = sw.getBuffer().toString();
-								MethodInvocation firstCall = getMethodInvocation(ast, "sw", //$NON-NLS-1$
-										"getBuffer", (String)null); //$NON-NLS-1$
+								MethodInvocation firstCall = CodeGenerationUtils.getMethodInvocation(ast, "sw", //$NON-NLS-1$
+										"getBuffer"); //$NON-NLS-1$
 								MethodInvocation methodInvocation = ast.newMethodInvocation();
 								methodInvocation.setExpression(firstCall);
 								methodInvocation.setName(ast.newSimpleName("toString")); //$NON-NLS-1$
@@ -886,7 +866,7 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								infixExprL.setOperator(InfixExpression.Operator.NOT_EQUALS);
 								infixExprL.setRightOperand(ast.newNullLiteral());
 								
-								prefixExprR.setOperand(getMethodInvocation(ast, "stackTrace", "equals", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								prefixExprR.setOperand(CodeGenerationUtils.getMethodInvocation(ast, "stackTrace", "equals", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 								prefixExprR.setOperator(PrefixExpression.Operator.NOT);
 								infixExpr.setLeftOperand(infixExprL);
 								infixExpr.setRightOperand(prefixExprR);
@@ -914,21 +894,21 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 							    //	    pw.close();
 							    //	    ps.close();
 					    		//		response.getOutputStream().close();
-								tryStatements.add(getExpressionStatement(ast, "response", //$NON-NLS-1$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "response", //$NON-NLS-1$
 										"setContentType", "text/html")); //$NON-NLS-1$ //$NON-NLS-2$
 		// TODO - because lines are long, eclipse automatically wraps and the formatting of some of these gened lines is a bit strange
 		// not sure if there's anything we can do
 								tryStatements.add(getConstructorVariableDeclarationStatement(ast, "PrintStream", "ps",  //$NON-NLS-1$ //$NON-NLS-2$
-										getMethodInvocation(ast, "response", "getOutputStream", (Expression)null)));	//$NON-NLS-1$ //$NON-NLS-2$
+										CodeGenerationUtils.getMethodInvocation(ast, "response", "getOutputStream")));	//$NON-NLS-1$ //$NON-NLS-2$
 								tryStatements.add(getConstructorVariableDeclarationStatement(ast, "PrintWriter", "pw", "ps")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "pw", "print", "<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "pw", "print", "<h1>The resource did not process correctly</h1>\n<pre>\n")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "pw", "print", ast.newSimpleName("stackTrace"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "pw", "print", "</pre></body>\n</html>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "pw", "close", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
-								tryStatements.add(getExpressionStatement(ast, "ps", "close", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
-								MethodInvocation firstCall = getMethodInvocation(ast, "response", //$NON-NLS-1$
-										"getOutputStream", (String)null); //$NON-NLS-1$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "pw", "print", "<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "pw", "print", "<h1>The resource did not process correctly</h1>\n<pre>\n")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "pw", "print", ast.newSimpleName("stackTrace"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "pw", "print", "</pre></body>\n</html>")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "pw", "close")); //$NON-NLS-1$ //$NON-NLS-2$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "ps", "close")); //$NON-NLS-1$ //$NON-NLS-2$
+								MethodInvocation firstCall = CodeGenerationUtils.getMethodInvocation(ast, "response", //$NON-NLS-1$
+										"getOutputStream"); //$NON-NLS-1$
 								methodInvocation = ast.newMethodInvocation();
 								ExpressionStatement expressionStatement = ast.newExpressionStatement(methodInvocation);
 
@@ -958,11 +938,11 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 							    //	    ps.close();
 					    		//		response.getOutputStream().close();
 								tryStatements.add(getConstructorVariableDeclarationStatement(ast, "PrintStream", "ps",  //$NON-NLS-1$ //$NON-NLS-2$
-										getMethodInvocation(ast, "response", "getOutputStream", (Expression)null)));	//$NON-NLS-1$ //$NON-NLS-2$
-								tryStatements.add(getExpressionStatement(ast, "t", "printStackTrace", ast.newSimpleName("ps"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								tryStatements.add(getExpressionStatement(ast, "ps", "close", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
-								firstCall = getMethodInvocation(ast, "response", //$NON-NLS-1$
-										"getOutputStream", (String)null); //$NON-NLS-1$
+										CodeGenerationUtils.getMethodInvocation(ast, "response", "getOutputStream")));	//$NON-NLS-1$ //$NON-NLS-2$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "t", "printStackTrace", ast.newSimpleName("ps"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								tryStatements.add(CodeGenerationUtils.getExpressionStatement(ast, "ps", "close")); //$NON-NLS-1$ //$NON-NLS-2$
+								firstCall = CodeGenerationUtils.getMethodInvocation(ast, "response", //$NON-NLS-1$
+										"getOutputStream"); //$NON-NLS-1$
 								methodInvocation = ast.newMethodInvocation();
 								expressionStatement = ast.newExpressionStatement(methodInvocation);
 
@@ -987,7 +967,7 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 							    // /**
 							    //   * Return a String representation of this object.
 							    //   */
-								docComment.tags().add(getTagElement(ast, null, null, 
+								docComment.tags().add(CodeGenerationUtils.getTagElement(ast, null, null, 
 									"Return a String representation of this object.")); //$NON-NLS-1$
 								methodDeclaration.setJavadoc(docComment);
 
@@ -1030,13 +1010,13 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								stringLiteral = ast.newStringLiteral();
 								stringLiteral.setLiteralValue(filterName + "(");	//$NON-NLS-1$;
 								statements.add(getConstructorVariableDeclarationStatement(ast, "StringBuffer", "sb", stringLiteral)); //$NON-NLS-1$ //$NON-NLS-2$
-								statements.add(getExpressionStatement(ast, "sb", "append", ast.newSimpleName("filterConfig"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								statements.add(getExpressionStatement(ast, "sb", "append", ")")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								statements.add(CodeGenerationUtils.getExpressionStatement(ast, "sb", "append", ast.newSimpleName("filterConfig"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								statements.add(CodeGenerationUtils.getExpressionStatement(ast, "sb", "append", ")")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 								// generate this: 
 								// return sb.toString();
 								returnStatement = ast.newReturnStatement();
-								returnStatement.setExpression(getMethodInvocation(ast, "sb", "toString", (Expression)null)); //$NON-NLS-1$ //$NON-NLS-2$
+								returnStatement.setExpression(CodeGenerationUtils.getMethodInvocation(ast, "sb", "toString")); //$NON-NLS-1$ //$NON-NLS-2$
 								statements.add(returnStatement);
 
 								return methodDeclaration;
@@ -1051,7 +1031,7 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 							    // /**
 							    //   * Return the filter configuration object for this filter.
 							    //   */
-								docComment.tags().add(getTagElement(ast, null, null, 
+								docComment.tags().add(CodeGenerationUtils.getTagElement(ast, null, null, 
 									"Return the filter configuration object for this filter.")); //$NON-NLS-1$
 								methodDeclaration.setJavadoc(docComment);
 
@@ -1089,9 +1069,9 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 							    //   *
 							    //   * @param filterConfig The filter configuration object
 							    //   */
-								tags.add(getTagElement(ast, null, null, 
+								tags.add(CodeGenerationUtils.getTagElement(ast, null, null, 
 									"Set the filter configuration object for this filter.")); //$NON-NLS-1$
-								tags.add(getTagElement(ast, TagElement.TAG_PARAM, "filterConfig", "The filter configuration object")); //$NON-NLS-1$ //$NON-NLS-2$
+								tags.add(CodeGenerationUtils.getTagElement(ast, TagElement.TAG_PARAM, "filterConfig", "The filter configuration object")); //$NON-NLS-1$ //$NON-NLS-2$
 								methodDeclaration.setJavadoc(docComment);
 
 								// generate this: 
@@ -1122,20 +1102,6 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								return methodDeclaration;
 							}
 
-							@SuppressWarnings("unchecked")
-							private TagElement getTagElement(AST ast, String tagName, String fragmentName, String textValue) {
-								TagElement tagElement = ast.newTagElement();
-								tagElement.setTagName(tagName);
-								if (fragmentName != null) {
-									tagElement.fragments().add(ast.newSimpleName(fragmentName));
-								}
-								TextElement te = ast.newTextElement();
-								tagElement.fragments().add(te);
-								te.setText(textValue);
-								return tagElement;
-
-							}
-
 							private VariableDeclarationStatement getConstructorVariableDeclarationStatement(AST ast, 
 									String variableType, String variableName, String argument){
 								Expression argExp = ((argument != null) ? ast.newSimpleName(argument) : null);
@@ -1160,39 +1126,6 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 								return vds;
 
 							}
-							@SuppressWarnings("unchecked")
-							private MethodInvocation getMethodInvocation(AST ast, String methodExpr, 
-									String methodName, Expression methodExpression) {
-								MethodInvocation methodInvocation = ast.newMethodInvocation();
-								methodInvocation.setExpression(ast.newSimpleName(methodExpr));
-								methodInvocation.setName(ast.newSimpleName(methodName));
-								if (methodExpression != null) {
-									methodInvocation.arguments().add(methodExpression);
-								}
-								return methodInvocation;
-							}
-
-							private MethodInvocation getMethodInvocation(AST ast, String methodExpr, 
-									String methodName, String methodLiteral) {
-								StringLiteral literal = null;
-								if (methodLiteral != null) {
-									literal = ast.newStringLiteral();
-									literal.setLiteralValue(methodLiteral);
-								}
-								return getMethodInvocation(ast, methodExpr, methodName, literal);
-							}
-
-							private ExpressionStatement getExpressionStatement(AST ast, String methodExpr, 
-									String methodName, String methodLiteral) {
-								return ast.newExpressionStatement(
-										getMethodInvocation(ast, methodExpr, methodName, methodLiteral));
-							}
-
-							private ExpressionStatement getExpressionStatement(AST ast, String methodExpr, 
-									String methodName, Expression methodExpression) {
-								return ast.newExpressionStatement(
-										getMethodInvocation(ast, methodExpr, methodName, methodExpression));
-							}
 
 							// generate this: 
 						    //	  catch(Exception ex) {}
@@ -1207,18 +1140,6 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 							}
 
 							@SuppressWarnings("unchecked")
-							private void cleanupJavadoc(Javadoc javadoc) {
-								Iterator it = javadoc.tags().iterator();
-								while (it.hasNext()) {
-									TagElement tagElement = (TagElement) it.next();
-									String tagName = tagElement.getTagName();
-									if ((tagName != null) && tagName.startsWith("@web.filter")) {	//$NON-NLS-1$
-										it.remove();
-									}
-								}
-							}
-
-							@SuppressWarnings("unchecked")
 							private Annotation addWebFilterAnnotation(AST ast, CreateJavaEEArtifactTemplateModel tempModel,
 									CompilationUnit result) {
 								Annotation ann = ast.newNormalAnnotation();
@@ -1229,25 +1150,14 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 									List<MemberValuePair> annValues = ((NormalAnnotation) ann).values();
 									List<String[]> initParams = filterModel.getInitParams();
 
-									annValues.add(addName(ast, filterModel.getFilterName()));
+									annValues.add(CodeGenerationUtils.addName(ast, filterModel.getFilterName(), "filterName")); //$NON-NLS-1$
 									addFilterMappings(annValues, ast, filterModel.getFilterMappings(), result);
 									if (initParams != null) {
-										annValues.add(addInitParams(ast, initParams, result));
+										annValues.add(CodeGenerationUtils.addInitParams(ast, initParams, result));
 									}
 								}
 
 								return ann;
-							}
-
-							private MemberValuePair addName(AST ast, String servletName) {
-								MemberValuePair annotationProperty = ast.newMemberValuePair();
-								StringLiteral literal = ast.newStringLiteral();
-
-								literal.setLiteralValue(servletName);
-								annotationProperty.setName(ast.newSimpleName("filterName"));	//$NON-NLS-1$
-								annotationProperty.setValue(literal);
-
-								return annotationProperty;
 							}
 
 							@SuppressWarnings("unchecked")
@@ -1335,68 +1245,11 @@ public class AnnotatedFilterWizard extends AddFilterWizard {
 									annValues.add(annotationProperty);
 
 									// add corresponding import for DispatcherType:
-									result.imports().add(addImport(ast, "javax", "servlet", null, "DispatcherType")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+									result.imports().add(CodeGenerationUtils.addImport(ast, "javax", "servlet", null, "DispatcherType")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 								}
 							}
-
-
-							@SuppressWarnings("unchecked")
-							private MemberValuePair addInitParams(AST ast, List<String[]> initParams, CompilationUnit result) {
-								MemberValuePair annotationProperty = ast.newMemberValuePair();
-								ArrayInitializer arrayInit = ast.newArrayInitializer();
-
-								result.imports().add(addWebAnnotationImport(ast, "WebInitParam"));	//$NON-NLS-1$
-
-								annotationProperty.setName(ast.newSimpleName("initParams"));	//$NON-NLS-1$
-								for (Iterator<String[]> iterator = initParams.iterator(); iterator.hasNext();) {
-									String[] strings = iterator.next();
-									StringLiteral literal = ast.newStringLiteral();
-									Annotation ann = ast.newNormalAnnotation();
-									MemberValuePair annotationProperty1 = ast.newMemberValuePair();
-									List<MemberValuePair> annValues = ((NormalAnnotation) ann).values();
-
-									ann.setTypeName(ast.newSimpleName("WebInitParam"));	//$NON-NLS-1$
-									literal.setLiteralValue(strings[0]);
-									annotationProperty1.setName(ast.newSimpleName("name"));	//$NON-NLS-1$
-									annotationProperty1.setValue(literal);
-									annValues.add(annotationProperty1);
-
-									annotationProperty1 = ast.newMemberValuePair();
-									literal = ast.newStringLiteral();
-									literal.setLiteralValue(strings[1]);
-									annotationProperty1.setName(ast.newSimpleName("value"));	//$NON-NLS-1$
-									annotationProperty1.setValue(literal);
-									annValues.add(annotationProperty1);
-
-									arrayInit.expressions().add(ann);
-								}
-								annotationProperty.setValue(arrayInit);
-
-								return annotationProperty;
-							}
-
-							private ImportDeclaration addImport(AST ast, String packagePart1, String packagePart2, 
-									String packagePart3, String className) {
-								ImportDeclaration importDecl = ast.newImportDeclaration();
-								QualifiedName name = ast.newQualifiedName(ast
-										.newSimpleName(packagePart1), ast
-										.newSimpleName(packagePart2));
-								if (packagePart3 != null) {
-									name = ast.newQualifiedName(name, ast
-											.newSimpleName(packagePart3));
-								}
-								name = ast.newQualifiedName(name, 
-										ast.newSimpleName(className));
-								importDecl.setName(name);
-								return importDecl;
-							}
-
-							private ImportDeclaration addWebAnnotationImport(AST ast, String className) {
-								return addImport(ast, "javax", "servlet", "annotation", className); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-							}				
 						};
 					}
-
 				};
 			}
 		};
