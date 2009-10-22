@@ -47,6 +47,7 @@ import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -81,9 +82,11 @@ public class JMSResourceWizardPage extends WizardPage {
 
 	private Combo projectNameCombo;
 
-
+	private List<String> resources = new ArrayList<String>();
+	private String defaultJndiName = "jms/myQueue"; //$NON-NLS-1$
+	
 	/**
-	 * Constructor for MailResourceWizardPage.
+	 * Constructor for JMSResourceWizardPage.
 	 *
 	 * @param selection
 	 */
@@ -128,7 +131,7 @@ public class JMSResourceWizardPage extends WizardPage {
 				
 		jndiText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridDataFactory.defaultsFor(jndiText).span(2, 1).applyTo(jndiText);
-		jndiText.setText("jms/myQueue"); //$NON-NLS-1$
+		jndiText.setText(defaultJndiName); 
 		jndiText.addModifyListener(new ModifyListener() {
             public void modifyText(ModifyEvent e) {
                 dialogChanged();
@@ -191,6 +194,11 @@ public class JMSResourceWizardPage extends WizardPage {
 	}
 
 	private void initialize() {
+		resources = ResourceUtils.getResources(ResourceUtils.TYPE_CONNECTOR, selectedProject);
+		if(resources.contains(defaultJndiName)){
+			String jndiName = ResourceUtils.getUniqueResourceName(defaultJndiName, resources);
+			jndiText.setText(jndiName);
+		}
 		populateCombos();
 		dialogChanged();
 	}
@@ -226,10 +234,17 @@ public class JMSResourceWizardPage extends WizardPage {
 			setErrorMessage(Messages.errorProjectMissing);
 			return;
 		}
-		if (getJNDIName().length() == 0 ) {
-			setErrorMessage(Messages.errorMailJndiNameMissing);
+		String jndiName = getJNDIName();
+		if (jndiName.length() == 0 ) {
+			setErrorMessage(Messages.errorJndiNameMissing);
 			return;
+		} else {
+			if(ResourceUtils.isDuplicate(jndiName, resources)) {
+				setErrorMessage(NLS.bind(Messages.errorDuplicateName, jndiName));
+				return;
+			}
 		}
+		
 		if ((getResourceType() == null) || (getResourceType().length() == 0 )) {
 			setErrorMessage(Messages.errorResourceTypeMissing);
 			return;

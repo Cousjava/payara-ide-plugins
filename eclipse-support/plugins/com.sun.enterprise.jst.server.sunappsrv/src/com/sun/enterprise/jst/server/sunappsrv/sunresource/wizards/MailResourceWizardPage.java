@@ -47,6 +47,7 @@ import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -76,7 +77,9 @@ public class MailResourceWizardPage extends WizardPage {
 
 	private Combo projectNameCombo;
 
-
+	private List<String> resources = new ArrayList<String>();
+	private String defaultJndiName = "mail/mymailSession"; //$NON-NLS-1$
+	
 	/**
 	 * Constructor for MailResourceWizardPage.
 	 *
@@ -123,7 +126,7 @@ public class MailResourceWizardPage extends WizardPage {
 
 		jndiText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridDataFactory.defaultsFor(jndiText).span(2, 1).applyTo(jndiText);
-		jndiText.setText("mail/mymailSession"); //$NON-NLS-1$
+		jndiText.setText(defaultJndiName); 
 		jndiText.addModifyListener(new ModifyListener() {
             public void modifyText(ModifyEvent e) {
                 dialogChanged();
@@ -169,6 +172,11 @@ public class MailResourceWizardPage extends WizardPage {
 	}
 
 	private void initialize() {
+		resources = ResourceUtils.getResources(ResourceUtils.TYPE_JAVAMAIL, selectedProject);
+		if(resources.contains(defaultJndiName)){
+			String jndiName = ResourceUtils.getUniqueResourceName(defaultJndiName, resources);
+			jndiText.setText(jndiName);
+		}
 		populateCombos();
 		dialogChanged();
 	}
@@ -202,8 +210,13 @@ public class MailResourceWizardPage extends WizardPage {
 		}
 		String jndiName = getJNDIName();
 		if ((jndiName == null) || (jndiName.length() == 0 )) {
-			setErrorMessage(Messages.errorMailJndiNameMissing);
+			setErrorMessage(Messages.errorJndiNameMissing);
 			return;
+		}else {
+			if(ResourceUtils.isDuplicate(jndiName, resources)) {
+				setErrorMessage(NLS.bind(Messages.errorDuplicateName, jndiName));
+				return;
+			}	
 		}
 		String mailHost = getMailHost();
 		if ((mailHost == null) || (mailHost.length() == 0 )) {
