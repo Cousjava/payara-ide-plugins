@@ -1794,11 +1794,11 @@
         </import-definitions>
     </extension>
 
-   <extension
+   <!--extension
         point="org.eclipse.jst.j2ee.J2EEModelProvider">
          <provider>
            <modelProvider factoryClass="com.sun.enterprise.jst.server.sunappsrv.v3.Web30ModelProviderFactory"/>
            <facet id="jst.web" versions="2.5"/>
          </provider>
-   </extension> 	        
+   </extension--> 	        
 </plugin>
