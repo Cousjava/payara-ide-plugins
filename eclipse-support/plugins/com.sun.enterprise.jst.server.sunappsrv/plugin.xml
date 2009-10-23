@@ -1155,6 +1155,16 @@
        </wizard>
        <wizard
              category="com.sun.enterprise.jst.server.sunappsrv"
+             class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedListenerWizard"
+             icon="icons/obj16/glassfishserver.gif"
+             id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedListenerWizard"
+             name="%sunappserver.weblistenerlabel">
+         <description>
+            %sunappserver.weblistener.BeanWebRegionWizard.description
+         </description>
+       </wizard>
+       <wizard
+             category="com.sun.enterprise.jst.server.sunappsrv"
              class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard"
              icon="icons/obj16/glassfishserver.gif"
              id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard"
@@ -1309,6 +1319,22 @@
 	</extension>
 
 	<extension
+		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedListener"
+		point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard
+        menuGroupId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards"
+        type="new"
+        wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedListenerWizard">
+			<enablement>
+				<adapt type="org.eclipse.core.resources.IResource">
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3Web"
+						value="true"/>
+				</adapt>
+			</enablement>
+		</commonWizard>
+	</extension>
+
+	<extension
 		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBean"
 		point="org.eclipse.ui.navigator.navigatorContent">
 		<commonWizard
@@ -1345,6 +1371,7 @@
 		<perspectiveExtension targetID="org.eclipse.jst.j2ee.J2EEPerspective">
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard"/>
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedFilterWizard"/>
+	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedListenerWizard"/>
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard"/>
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEjbTimerWizard"/>
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard"/>
