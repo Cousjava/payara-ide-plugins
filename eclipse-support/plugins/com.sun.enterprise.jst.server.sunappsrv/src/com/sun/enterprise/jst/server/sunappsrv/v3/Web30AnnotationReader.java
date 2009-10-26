@@ -41,6 +41,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -369,4 +370,32 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		return modelObject.getSecurityRoles();
 	}
 
+	/** 3.4 had it abstract in super, so have to copy */
+	public void dispose() {
+		IModelProviderEvent modelEvent = createModelProviderEvent();
+		modelEvent.addResource(facetedProject.getProject());
+		modelEvent.setEventCode(IModelProviderEvent.UNLOADED_RESOURCE);
+		JavaCore.removeElementChangedListener(this);
+		modelObject = null;
+		notifyListeners(modelEvent);
+		clearListeners();
+	}
+
+	/** 3.4 had it abstract in super, so have to copy */
+	protected void processRemovedFile(IModelProviderEvent modelEvent, IFile file) throws CoreException {
+		ICompilationUnit icu = JavaCore.createCompilationUnitFrom(file);
+		processRemovedCompilationUnit(modelEvent, icu);
+	}
+
+	/** 3.4 had it abstract in super, so have to copy */
+	protected void processAddedFile(IModelProviderEvent modelEvent, IFile file) throws CoreException {
+		ICompilationUnit icu = JavaCore.createCompilationUnitFrom(file);
+		processAddedCompilationUnit(modelEvent, icu);
+	}
+
+	/** 3.4 had it abstract in super, so have to copy */
+	protected void processChangedFile(IModelProviderEvent modelEvent, IFile file) throws CoreException {
+		ICompilationUnit icu = JavaCore.createCompilationUnitFrom(file);
+		processChangedCompilationUnit(modelEvent, icu);
+	}
 }
