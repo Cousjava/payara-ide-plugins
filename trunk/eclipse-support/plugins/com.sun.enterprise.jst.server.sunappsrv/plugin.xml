@@ -1797,7 +1797,9 @@
    <!--extension
         point="org.eclipse.jst.j2ee.J2EEModelProvider">
          <provider>
-           <modelProvider factoryClass="com.sun.enterprise.jst.server.sunappsrv.v3.Web30ModelProviderFactory"/>
+           <modelProvider
+                 factoryClass="com.sun.enterprise.jst.server.sunappsrv.v3.Web30MergedModelProviderFactory"
+                 priority="99"/>
            <facet id="jst.web" versions="2.5"/>
          </provider>
    </extension--> 	        
