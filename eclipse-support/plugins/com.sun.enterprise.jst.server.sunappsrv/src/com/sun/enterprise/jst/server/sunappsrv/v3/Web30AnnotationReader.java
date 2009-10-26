@@ -79,6 +79,7 @@ import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 
 /** Inspired by {@link org.eclipse.jst.jee.model.internal.WebAnnotationReader} */
 public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebApp> {
+	private static final String WEB_SERVLET = "WebServlet"; //$NON-NLS-1$
 
 	private ManyToOneRelation<JavaEEObject, ICompilationUnit> modelToUnit;
 
@@ -134,6 +135,7 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 	 * @return result from processing the file
 	 * @throws JavaModelException
 	 */
+	@SuppressWarnings("unchecked")
 	private Result analyzeCompilationUnit(ICompilationUnit unit) throws JavaModelException {
 		IType rootType = unit.findPrimaryType();
 		/*
@@ -176,7 +178,7 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		}
 
 		// gets here when mapping is only by annotation and so wasn't processed above
-		IAnnotation serv = rootType.getAnnotation("WebServlet");
+		IAnnotation serv = getAnnotation(WEB_SERVLET, rootType);
 		if (serv != null) {
 			Result servlet = annotationFactory.createServlet(rootType, rootType.getElementName());
 			addUrlPatternsAsRunAs(rootType, servlet);
@@ -186,9 +188,19 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		return null;
 	}
 
+	private IAnnotation getAnnotation(String annName, IType rootType) throws JavaModelException {
+		for (IAnnotation annotation : rootType.getAnnotations()) {
+			String annotationName = annotation.getElementName();
+			if (annName.equals(annotationName)) {
+				return annotation;
+			}
+		}
+		return null;
+	}
+
 	private void addUrlPatternsAsRunAs(IType rootType, Result servlet)
 			throws JavaModelException {
-		IAnnotation serv = rootType.getAnnotation("WebServlet");
+		IAnnotation serv = getAnnotation(WEB_SERVLET, rootType);
 		// original WebAnnotationFactory processes just "value" property
 		if (((Servlet) servlet.getMainObject()).getRunAs() == null) {
 			Object urls = getAnnotatedValue("urlPatterns", serv
@@ -244,6 +256,7 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void servletFound(ICompilationUnit unit, Servlet servlet, Collection<IType> dependedTypes)
 			throws JavaModelException {
 		modelObject.getServlets().add(servlet);
@@ -272,12 +285,14 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 	private void securityIdentityTypeFound(ICompilationUnit file, SecurityIdentityType additional) {
 	}
 
+	@SuppressWarnings("unchecked")
 	private void resourceRefFound(ICompilationUnit unit, ResourceRef resourceRef, Collection<IType> dependedTypes)
 			throws JavaModelException {
 		modelObject.getResourceRefs().add(resourceRef);
 		connectObjectWithFile(unit, resourceRef, dependedTypes);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void ejbLocalRefFound(ICompilationUnit unit, EjbLocalRef localRef, Collection<IType> dependedTypes)
 			throws JavaModelException {
 		modelObject.getEjbLocalRefs().add(localRef);
@@ -358,6 +373,7 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Collection<SecurityRoleRef> getSecurityRoleRefs(JavaEEObject target) {
 		if (Servlet.class.isInstance(target))
@@ -365,6 +381,7 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Collection<SecurityRole> getSecurityRoles() {
 		return modelObject.getSecurityRoles();
