@@ -200,13 +200,13 @@ public class JDBCResourceWizardPage extends WizardPage {
 	}
 
 	private void initialize() {
-		resources = ResourceUtils.getResources(ResourceUtils.TYPE_JDBC, selectedProject);
+		populateCombos();
+		dialogChanged();
+        resources = ResourceUtils.getResources(ResourceUtils.TYPE_JDBC, selectedProject);
 		if(resources.contains(defaultJndiName)){
 			String jndiName = ResourceUtils.getUniqueResourceName(defaultJndiName, resources);
 			jndiText.setText(jndiName);
 		}
-		populateCombos();
-		dialogChanged();
 	}
 
 	private void dialogChanged() {

@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +83,8 @@ public class ResourceUtils {
             "\"http://www.sun.com/software/appserver/dtds/sun-resources_1_3.dtd\">\n" + //$NON-NLS-1$
         "<resources>\n"; //$NON-NLS-1$
     private static final String SUN_RESOURCES_XML_FOOTER = "</resources>\n"; //$NON-NLS-1$
+
+    private static Logger LOGGER = Logger.getLogger("glassfish"); //$NON-NLS-1$
     
     public static InputStream appendResource(IFile sunResourcesXml, String fragment) throws IOException, CoreException {
         String sunResourcesBuf = readResourceFile(sunResourcesXml);
@@ -195,7 +199,7 @@ public class ResourceUtils {
 		return setUpLocation;
 	}
 	
-	public static IFile getSunResourceIFile(IProject selectedProject) {
+	private static IFile getSunResourceIFile(IProject selectedProject) {
 		String dirName = getResourceLocation(selectedProject);
 		IContainer containerResource = selectedProject;
 		IFolder folder = containerResource.getFolder(new Path(dirName));
@@ -216,24 +220,28 @@ public class ResourceUtils {
 		
 	public static List<String> getResources(String type, IProject selectedProject){
 		List<String> resources = new ArrayList<String>();
-        File xmlFile = getSunResourceFile(selectedProject);
-		if(xmlFile.exists()) {
-            List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
-            ResourcesList df = new ResourcesList("jndi-name"); //$NON-NLS-1$
-            if(type.equals(TYPE_JDBC)){
-            	pathList.add(new TreeParser.Path("/resources/jdbc-resource", df)); //$NON-NLS-1$
-            } else if(type.equals(TYPE_CONNECTOR)){
-            	pathList.add(new TreeParser.Path("/resources/admin-object-resource", df)); //$NON-NLS-1$
-            	pathList.add(new TreeParser.Path("/resources/connector-resource", df)); //$NON-NLS-1$
-            } else if(type.equals(TYPE_JAVAMAIL)){
-            	pathList.add(new TreeParser.Path("/resources/mail-resource", df)); //$NON-NLS-1$
-            } else if(type.equals(TYPE_CONNECTIONPOOL)){
-            	df = new ResourcesList("name"); //$NON-NLS-1$
-            	pathList.add(new TreeParser.Path("/resources/jdbc-connection-pool", df)); //$NON-NLS-1$
-            }
-            TreeParser.readXml(xmlFile, pathList);
-            resources = df.getResources();
-        }	
+		if (selectedProject != null) {
+			File xmlFile = getSunResourceFile(selectedProject);
+			if (xmlFile.exists()) {
+				List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
+				ResourcesList df = new ResourcesList("jndi-name"); //$NON-NLS-1$
+				if (type.equals(TYPE_JDBC)) {
+					pathList.add(new TreeParser.Path("/resources/jdbc-resource", df)); //$NON-NLS-1$
+				} else if (type.equals(TYPE_CONNECTOR)) {
+					pathList.add(new TreeParser.Path("/resources/admin-object-resource", df)); //$NON-NLS-1$
+					pathList.add(new TreeParser.Path("/resources/connector-resource", df)); //$NON-NLS-1$
+				} else if (type.equals(TYPE_JAVAMAIL)) {
+					pathList.add(new TreeParser.Path("/resources/mail-resource", df)); //$NON-NLS-1$
+				} else if (type.equals(TYPE_CONNECTIONPOOL)) {
+					df = new ResourcesList("name"); //$NON-NLS-1$
+					pathList.add(new TreeParser.Path("/resources/jdbc-connection-pool", df)); //$NON-NLS-1$
+				}
+				TreeParser.readXml(xmlFile, pathList);
+				resources = df.getResources();
+			}
+		} else {
+			LOGGER.log(Level.INFO, "Project selected is empty = " +  selectedProject);
+		}
 		return resources;
 	}
 	
