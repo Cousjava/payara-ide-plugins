@@ -45,11 +45,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -62,6 +60,7 @@ import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
 
 public class ResourceUtils {
@@ -83,9 +82,7 @@ public class ResourceUtils {
             "\"http://www.sun.com/software/appserver/dtds/sun-resources_1_3.dtd\">\n" + //$NON-NLS-1$
         "<resources>\n"; //$NON-NLS-1$
     private static final String SUN_RESOURCES_XML_FOOTER = "</resources>\n"; //$NON-NLS-1$
-
-    private static Logger LOGGER = Logger.getLogger("glassfish"); //$NON-NLS-1$
-    
+   
     public static InputStream appendResource(IFile sunResourcesXml, String fragment) throws IOException, CoreException {
         String sunResourcesBuf = readResourceFile(sunResourcesXml);
         sunResourcesBuf = insertFragment(sunResourcesBuf, fragment);
@@ -240,7 +237,7 @@ public class ResourceUtils {
 				resources = df.getResources();
 			}
 		} else {
-			LOGGER.log(Level.INFO, "Project selected is empty = " +  selectedProject);
+			SunAppSrvPlugin.logMessage("No valid project selected");
 		}
 		return resources;
 	}
