@@ -116,7 +116,7 @@ public class MailResourceWizardPage extends WizardPage {
 				String newSelection = projectNameCombo.getText();
 				if (newSelection != null) {
 					selectedProject = ProjectUtilities.getProject(newSelection);
-                                        resources = ResourceUtils.getResources(ResourceUtils.TYPE_JDBC, selectedProject);
+					resources = ResourceUtils.getResources(ResourceUtils.TYPE_JDBC, selectedProject);
 					dialogChanged();
 				}
 			}
