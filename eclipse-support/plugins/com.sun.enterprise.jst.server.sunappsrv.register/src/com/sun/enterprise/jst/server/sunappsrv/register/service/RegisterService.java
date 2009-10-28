@@ -37,11 +37,6 @@ package com.sun.enterprise.jst.server.sunappsrv.register.service;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +54,6 @@ import com.sun.enterprise.registration.RegistrationService.RegistrationReminder;
 import com.sun.enterprise.registration.RegistrationService.RegistrationStatus;
 import com.sun.enterprise.registration.impl.SOAccount;
 import com.sun.enterprise.registration.impl.SysnetRegistrationService;
-import com.sun.scn.client.comm.RegSender;
 
 @SuppressWarnings("unchecked")
 public class RegisterService {
