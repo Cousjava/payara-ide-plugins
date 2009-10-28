@@ -40,10 +40,8 @@ import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -65,7 +63,7 @@ import com.sun.enterprise.registration.RegistrationException;
 public class RegisterAccountPage extends WizardPage implements ModifyListener {
 
 	private static final int FIELD_WIDTH = 150;
-	private static final int LABEL_WITDH = 80;
+	//private static final int LABEL_WITDH = 80;
 	private Text tFirstName;
 	private Text tLastName;
 	private Text tEmail;
@@ -73,6 +71,7 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 	private Text tConfirm;
 	private Text tCompanyName;
 	private Combo tCountry;
+	@SuppressWarnings("unchecked")
 	private List countries;
 	private Text tHost;
 	private Text tPort;
@@ -164,6 +163,7 @@ public class RegisterAccountPage extends WizardPage implements ModifyListener {
 		return co;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String getActualCountry(String country) {
 		List dispList = (List) countries.get(1);
 		for (int i = 0; i < dispList.size(); i++) {
