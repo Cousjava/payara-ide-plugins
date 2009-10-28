@@ -204,6 +204,7 @@ public class DerbyConfigurator {
 			// it is available in the ant file (if we don't, it is not copied into the 
 			// relevant osgi directory with the other libs)
 			URL dbURL = bundle.getResource("lib/derbysampledb.zip"); //$NON-NLS-1$
+			@SuppressWarnings("unused")
 			String dbSampleFile = FileLocator.toFileURL(dbURL).getFile();
 			// end required access
 
