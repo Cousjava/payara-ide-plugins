@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -60,7 +59,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.JMSInfo;
 
@@ -78,6 +76,7 @@ public class JMSResourceWizardPage extends WizardPage {
 	private Button connectionRButton;
 		
 	private IProject selectedProject;
+	private List<IProject> candidateProjects;
 	private JMSInfo jmsInfo;
 
 	private Combo projectNameCombo;
@@ -90,11 +89,12 @@ public class JMSResourceWizardPage extends WizardPage {
 	 *
 	 * @param selection
 	 */
-	public JMSResourceWizardPage(IProject project) {
+	public JMSResourceWizardPage(IProject project, List<IProject> projects) {
 		super("wizardPage"); //$NON-NLS-1$
 		setTitle(Messages.jmsWizardTitle);
 		setDescription(Messages.jmsWizardDescription);
 		selectedProject = project;
+		candidateProjects = projects;
 	}
 
 	/**
@@ -254,30 +254,12 @@ public class JMSResourceWizardPage extends WizardPage {
 		setErrorMessage(null);
 	}
 
-	private List<IProject> getSunFacetIProjects() {
-		IProject[] allProjects = ProjectUtilities.getAllProjects();
-		List<IProject> returnProjects = new ArrayList<IProject>();
-
-		for (IProject project2 : allProjects) {
-			try {
-				if (FacetedProjectFramework.hasProjectFacet(project2, "sun.facet")) { //$NON-NLS-1$
-					returnProjects.add(project2);
-				}
-			} catch (CoreException e) {
-				// just skip from list
-			}
-		}
-		return returnProjects;
-	}
-
-
 	private void populateCombos() {
 		projectNameCombo.removeAll();
-		List<IProject> validProjects = getSunFacetIProjects();
 		String selectProjectName = ((selectedProject != null) ? selectedProject.getName() : null);
 		int selectionIndex = -1;
-		for (int i = 0; i < validProjects.size(); i++) {
-			IProject nextProject = validProjects.get(i);
+		for (int i = 0; i < candidateProjects.size(); i++) {
+			IProject nextProject = candidateProjects.get(i);
 			String projectName = nextProject.getName();
 			projectNameCombo.add(projectName);
 			if (projectName.equals(selectProjectName)) {

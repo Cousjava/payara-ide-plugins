@@ -86,7 +86,7 @@ public class JMSWizard extends ResourceWizard {
 	public void addPages() {
 		IContainer containerResource = getContainerResource();
 		IProject selectedProject = ((containerResource != null) ? containerResource.getProject() : null);
-		page = new JMSResourceWizardPage(selectedProject);
+		page = new JMSResourceWizardPage(selectedProject, getGlassFishAndSailfinProjects());
 		addPage(page);
 	}
 

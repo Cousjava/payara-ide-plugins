@@ -84,7 +84,7 @@ public class JDBCWizard extends ResourceWizard {
 	public void addPages() {
 		IContainer containerResource = getContainerResource();
 		IProject selectedProject = ((containerResource != null) ? containerResource.getProject() : null);
-		page = new JDBCResourceWizardPage(selectedProject);
+		page = new JDBCResourceWizardPage(selectedProject, getGlassFishAndSailfinProjects());
 		addPage(page);
 	}
 

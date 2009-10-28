@@ -84,7 +84,7 @@ public class MailWizard extends ResourceWizard {
 	public void addPages() {
 		IContainer containerResource = getContainerResource();
 		IProject selectedProject = ((containerResource != null) ? containerResource.getProject() : null);
-		page = new MailResourceWizardPage(selectedProject);
+		page = new MailResourceWizardPage(selectedProject, getGlassFishAndSailfinProjects());
 		addPage(page);
 	}
 	
