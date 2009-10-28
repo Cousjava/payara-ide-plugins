@@ -38,6 +38,8 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IContainer;
@@ -48,19 +50,27 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
+import org.eclipse.wst.server.core.IRuntime;
 
 /**
  * This is a superclass for wizards to create resources
  */
 
+@SuppressWarnings("restriction")
 public abstract class ResourceWizard extends Wizard implements INewWizard {
+	private static final String GF_RUNTIME = "com.sun.enterprise.jst.server.runtime.sunappsrv"; //$NON-NLS-1$
+	private static final String SAILFIN_RUNTIME = "com.sun.enterprise.jst.server.runtime.sailfin"; //$NON-NLS-1$
+
 	protected ISelection selection;
 	protected String dirName;
 	protected IFolder folder;
@@ -118,6 +128,31 @@ public abstract class ResourceWizard extends Wizard implements INewWizard {
 		}
 		return null;
 	}
+
+	protected List<IProject> getGlassFishAndSailfinProjects() {
+		IProject[] allProjects = ProjectUtilities.getAllProjects();
+		List<IProject> returnProjects = new ArrayList<IProject>();
+
+		for (IProject project2 : allProjects) {
+			try {
+				if (FacetedProjectFramework.hasProjectFacet(project2, "sun.facet")) { //$NON-NLS-1$
+					returnProjects.add(project2);
+				}
+				IRuntime runtime = J2EEProjectUtilities.getServerRuntime(project2);
+				if (runtime != null) {
+					String runtimeId = runtime.getRuntimeType().getId();
+					
+					if (runtimeId.startsWith(GF_RUNTIME) || runtimeId.startsWith(SAILFIN_RUNTIME)) {
+						returnProjects.add(project2);
+					}
+				}
+			} catch (CoreException e) {
+				// just skip from list
+			}
+		}
+		return returnProjects;
+	}
+
 
 	/**
 	 * We will accept the selection in the workbench to see if

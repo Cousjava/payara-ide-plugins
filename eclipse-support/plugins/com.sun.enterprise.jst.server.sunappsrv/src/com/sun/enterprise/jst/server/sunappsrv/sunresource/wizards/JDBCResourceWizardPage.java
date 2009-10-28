@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.datatools.connectivity.ICategory;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
@@ -75,7 +74,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.JDBCInfo;
 
@@ -89,6 +87,7 @@ public class JDBCResourceWizardPage extends WizardPage {
 	private Text jndiText;
 	private IConnectionProfile connectionProfile;
 	private IProject selectedProject;
+	private List<IProject> candidateProjects;
 
 	private Combo combo;
 	private Combo projectNameCombo;
@@ -105,11 +104,12 @@ public class JDBCResourceWizardPage extends WizardPage {
 	 * 
 	 * @param selection
 	 */
-	public JDBCResourceWizardPage(IProject project) {
+	public JDBCResourceWizardPage(IProject project, List<IProject> projects) {
 		super("wizardPage"); //$NON-NLS-1$
 		setTitle(Messages.wizardTitle);
 		setDescription(Messages.wizardDescription);
 		selectedProject = project;
+		candidateProjects = projects;
 	}
 
 	/**
@@ -245,23 +245,6 @@ public class JDBCResourceWizardPage extends WizardPage {
 		return selectedProject;
 	}
 
-	private List<IProject> getSunFacetIProjects() {
-		IProject[] allProjects = ProjectUtilities.getAllProjects();
-		List<IProject> returnProjects = new ArrayList<IProject>();
-	
-		for (IProject project2 : allProjects) {
-			try {
-				if (FacetedProjectFramework.hasProjectFacet(project2, "sun.facet")) { //$NON-NLS-1$
-					returnProjects.add(project2);
-				}
-			} catch (CoreException e) {
-				// just skip from list
-			}
-		}
-		return returnProjects;
-	}
-	
-
 	private IConnectionProfile showCPWizard () {
 		// Filter datasource category
 	  	ViewerFilter viewerFilter = new ViewerFilter() {
@@ -316,11 +299,10 @@ public class JDBCResourceWizardPage extends WizardPage {
 		}
 
 		projectNameCombo.removeAll();
-		List<IProject> validProjects = getSunFacetIProjects();
 		String selectProjectName = ((selectedProject != null) ? selectedProject.getName() : null);
 		int selectionIndex = -1;
-		for (int i = 0; i < validProjects.size(); i++) {
-			IProject nextProject = validProjects.get(i);
+		for (int i = 0; i < candidateProjects.size(); i++) {
+			IProject nextProject = candidateProjects.get(i);
 			String projectName = nextProject.getName();
 			projectNameCombo.add(projectName);
 			if (projectName.equals(selectProjectName)) {
