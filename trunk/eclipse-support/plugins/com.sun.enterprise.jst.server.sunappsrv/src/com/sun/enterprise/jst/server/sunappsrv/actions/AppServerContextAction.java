@@ -43,7 +43,6 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -96,10 +95,10 @@ IWorkbenchWindowActionDelegate {
 			IActionBars a= w.getActionBars();
 			IToolBarManager tb = a.getToolBarManager();
 			///SunAppSrvPlugin.logMessage("IToolBarManager i " +tb);
-			IContributionItem [] ici =tb.getItems();
+		/*	IContributionItem [] ici =tb.getItems();
 			for (IContributionItem item :ici){
 				///SunAppSrvPlugin.logMessage("item i " +item.getId());
-			}
+			}*/
 
 		this.shell = getView("org.eclipse.wst.server.ui.ServersView").getViewSite().getShell();
 		setEnabled(true);
@@ -169,8 +168,6 @@ IWorkbenchWindowActionDelegate {
 		if (targetPart==null){
 			targetPart = viewPArt;
 		}
-		Shell s = targetPart.getSite().getShell();
-
 
 		SunAppServerBehaviour sab = (SunAppServerBehaviour) selectedServer.loadAdapter(
 				SunAppServerBehaviour.class, null);
@@ -212,6 +209,7 @@ IWorkbenchWindowActionDelegate {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void run() {
 		Iterator iterator = getStructuredSelection().iterator();
 		Object obj = iterator.next();
@@ -246,6 +244,7 @@ IWorkbenchWindowActionDelegate {
 	 * 
 	 * @param sel a selection
 	 */
+	@SuppressWarnings("unchecked")
 	public void selectionChanged(IStructuredSelection sel) {
 		if (sel.isEmpty()) {
 			setEnabled(false);
