@@ -110,7 +110,6 @@ public class InteractiveSplashHandler extends AbstractSplashHandler {
 		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
-				final Shell shell = new Shell(Display.getDefault());
 				try {
 
 					Job job = new Job(Messages.SETUP_GLASSFISH) {
