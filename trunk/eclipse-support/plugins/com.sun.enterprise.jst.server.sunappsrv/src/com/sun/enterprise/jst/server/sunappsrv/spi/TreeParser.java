@@ -216,7 +216,8 @@ public final class TreeParser extends DefaultHandler {
         "-//Sun Microsystems Inc.//DTD Application Server 8.1 Domain//EN", "sun-domain_1_1.dtd",
         "-//Sun Microsystems Inc.//DTD Application Server 9.0 Domain//EN", "sun-domain_1_2.dtd",
         "-//Sun Microsystems Inc.//DTD Application Server 9.1 Domain//EN", "sun-domain_1_3.dtd",
-        "-//Sun Microsystems Inc.//DTD GlassFish Communications Server 1.5 Domain//EN", "sun-domain_1_5.dtd"
+        "-//Sun Microsystems Inc.//DTD GlassFish Communications Server 1.5 Domain//EN", "sun-domain_1_5.dtd" ,
+        "-//Sun Microsystems Inc.//DTD GlassFish Communications Server 2.0 Domain//EN", "sun-domain_1_5.dtd"
     };
 
     @Override
