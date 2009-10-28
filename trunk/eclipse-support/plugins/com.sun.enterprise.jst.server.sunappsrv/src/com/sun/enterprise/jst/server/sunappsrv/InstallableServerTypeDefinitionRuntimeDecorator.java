@@ -66,12 +66,14 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
     private static final String ADMIN_SCRIPT_NAME = "asadmin"; //$NON-NLS-1$
 	private String fInstallDirName;
 	private ServerRuntime fDefinition;
-    private Map fProperties;
+    @SuppressWarnings("unchecked")
+	private Map fProperties;
 	private GenericServerRuntime fRuntime;
 	private Property serverDirProperty;
 	private Text path;
 	private Button installButton;
 	
+	@SuppressWarnings("unchecked")
 	public InstallableServerTypeDefinitionRuntimeDecorator(ServerRuntime definition, Map initialProperties, 
 			IWizardHandle wizard, GenericServerRuntime runtime, String installDirName) {
 		super(definition, initialProperties,wizard,runtime);
@@ -86,6 +88,7 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 		serverDirProperty = getServerDirProperty(fDefinition.getProperty());
 	}
 
+	@SuppressWarnings("unchecked")
 	private Property getServerDirProperty(List fProperties) {
 		// assume there's just one property we want and it is the only runtime context property
 		for (int i = 0; i < fProperties.size(); i++) {
@@ -121,6 +124,7 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 					TaskModel taskModel = new TaskModel();
 					taskModel.putObject(LicenseWizardFragment.LICENSE, license);
 					TaskWizard wizard2 = new TaskWizard(GenericServerUIMessages.installServerButton, new WizardFragment() {
+						@SuppressWarnings("unchecked")
 						protected void createChildFragments(List list) {
 							list.add(new LicenseWizardFragment());
 						}
@@ -215,7 +219,8 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
      * a private list of controls which we have no access to, and therefore our controls are not in there
      * @return Map containing the values collected from the user
      */
- 	public Map getValues(){
+ 	@SuppressWarnings("unchecked")
+	public Map getValues(){
  		Map propertyMap = new HashMap();
  		propertyMap.put(serverDirProperty.getId(), path.getText());
      	return propertyMap;
