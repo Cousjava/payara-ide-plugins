@@ -165,7 +165,8 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 
 			}
 		});
-
+		domaindir.selectAll();
+		domaindir.setFocus();
 		createLabel(comp, Messages.AdminName, toolkit);
 
 		username = toolkit.createText(comp, sunserver.getAdminName(), SWT.BORDER);
