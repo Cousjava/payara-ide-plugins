@@ -279,6 +279,15 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                         abort("GlassFish v3 requires JDK 1.6 or later to run. Please select the correct JDK in the Server properties 'Runtime Environment' section.", //$NON-NLS-1$
                                 null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
                     }
+                    String ext = "";//$NON-NLS-1$
+                    if (File.separator.equals("\\")) {//$NON-NLS-1$
+                        ext = ".exe"; //$NON-NLS-1$
+                    }
+                    String javac= vm.getInstallLocation().getAbsolutePath() + "/bin/javac"+ext;
+                    if (new File(javac).exists()!=true){
+                        abort("GlassFish v3 requires a JDK 1.6 and not a JRE. Please add/select the correct JDK in the Server properties 'Runtime Environment' section.", //$NON-NLS-1$
+                                null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);                   	
+                    }
                 }
 
                 pb = new ProcessBuilder(vm.getInstallLocation() + "/bin/java", //$NON-NLS-1$
