@@ -339,9 +339,12 @@ public  class AssembleModules {
 
 				continue;//done! no need to go further
 			}
-			
-			uri = uri.replace (".","_");
-		       SunAppSrvPlugin.logMessage("AssembleModules NEW URIRIRIRIRIRIRIR="+childModules.length +" "+uri);
+			if(!module.getModuleType().getId().equals("jst.utility")) {//$NON-NLS-1$	see bug https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=251				
+				uri = uri.replace (".","_");
+			}
+			//SunAppSrvPlugin.logMessage("AssembleModules module uri="+uri,null);
+			//SunAppSrvPlugin.logMessage("AssembleModules module.getModuleType().getId()="+module.getModuleType().getId(),null);
+			//SunAppSrvPlugin.logMessage("AssembleModules NEW URIRIRIRIRIRIRIR="+childModules.length +" "+uri);
 			if( shouldRepack( module ) ){	
 			       SunAppSrvPlugin.logMessage("AssembleModules shouldRepack="+"yes");
 //				packModuleEARModule(module,uri, parent);
