@@ -194,6 +194,8 @@
 	<fileset dir="${sunappserver.rootdirectory}">
 		<include name="modules/jaxb*.jar" />
 		<include name="modules/webservices*.jar" />
+		<include name="modules/woodstox-osgi*.jar" />
+		
 	</fileset>
 
 	<!--  jar needed for integration with non-built in JPA (toplink) ddl generation -->
