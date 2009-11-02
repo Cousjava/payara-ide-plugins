@@ -5,12 +5,8 @@
     <provider name="Sun Microsystems"/>
     <build type="binary" skip-packaging="yes">
         <archive destination="eclipse" url="http://download.java.net/glassfish/v3/promoted/latest-glassfish.zip"/>
-        <antscript target="additions">
+        <antscript target="servicetag">
             <project>
-
-				<target name="additions" depends="servicetag,jsf-taglib">
-				</target>
-
 
                 <target name="servicetag" >
                     <copy file="servicetag-registry.xml"
@@ -20,16 +16,6 @@
                     <echo message="Done copying service-tag registry for GlassFish v3" />
 
                 </target>
-                
-                <target name="jsf-taglib" >
-                    <copy file="jsf-taglib.jar"
-                    tofile="${build.folder}/${components.folder.name}/extracts/${dist.name}/glassfishv3/glassfish/modules/jsf-taglib.jar"
-                    overwrite="true"/>
-
-                    <echo message="Done copying jsf-taglibs registry for GlassFish v3" />
-
-                </target>
-                
             </project>
         </antscript>
         <note></note>
