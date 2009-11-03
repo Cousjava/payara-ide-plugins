@@ -197,7 +197,11 @@
 		<include name="modules/woodstox-osgi*.jar" />
 		
 	</fileset>
+	<fileset dir="${sunappserver.rootdirectory}/../mq/lib">
+		<include name="jaxm-api*.jar" />
 
+		
+	</fileset>
 	<!--  jar needed for integration with non-built in JPA (toplink) ddl generation -->
 	<!--  note that toplink essentials does not ship with this version of glassfish, so -->
 	<!--  it is intentially included here *after* eclipselink which is shipped with V3 -->
