@@ -58,7 +58,6 @@ Import-Package: org.eclipse.jdt.ui.wizards,
  org.eclipse.jst.javaee.web,
  org.eclipse.jst.jee.model.internal.common,
  org.eclipse.jst.jee.ui.internal.navigator.web,
- org.eclipse.core.runtime.adaptor,
  org.eclipse.ui.console
 
 
