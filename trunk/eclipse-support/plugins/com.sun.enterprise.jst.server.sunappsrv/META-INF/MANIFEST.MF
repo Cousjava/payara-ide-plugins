@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.sun.enterprise.jst.server.sunappsrv; singleton:=true
-Bundle-Version: 1.0.38
+Bundle-Version: 1.0.39
 Bundle-Localization: plugin
 Bundle-Activator: com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin
 Bundle-Vendor: %providerName
@@ -58,6 +58,7 @@ Import-Package: org.eclipse.jdt.ui.wizards,
  org.eclipse.jst.javaee.web,
  org.eclipse.jst.jee.model.internal.common,
  org.eclipse.jst.jee.ui.internal.navigator.web,
+ org.eclipse.core.runtime.adaptor,
  org.eclipse.ui.console
 
 
