@@ -352,6 +352,7 @@ public  class AssembleModules {
 				       SunAppSrvPlugin.logMessage("AssembleModules module type is WEB!!!!");
 					AssembleModules assembler = new AssembleModules(module, assembleRoot.append(uri),server);
 					IPath webAppPath = assembler.assembleWebModule(new NullProgressMonitor());
+				       SunAppSrvPlugin.logMessage("AssembleModules webmodule assembled to path=="+webAppPath,null);
 					childNeedsARedeployment = (childNeedsARedeployment||assembler.needsARedeployment());
 				       SunAppSrvPlugin.logMessage("AssembleModules web need childNeedsARedeployment=="+childNeedsARedeployment,null);
 
