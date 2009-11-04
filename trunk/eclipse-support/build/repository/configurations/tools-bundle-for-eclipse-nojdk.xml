@@ -45,6 +45,8 @@ chmod -R a+xrw "$ECLIPSE_TARGET_DIR/dropins"
 
 # Eclipse 3.5 want's to write quite a lot to the install directory
 chmod -R a+w "$ECLIPSE_TARGET_DIR"
+# but not this file:
+chmod  a-w "$ECLIPSE_TARGET_DIR/configuration/config.ini"
 
 
 	</mac-postflight-script>
