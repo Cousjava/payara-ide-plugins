@@ -319,10 +319,9 @@ public class JavaEE6SessionBeanWizard extends AddSessionBeanWizard {
 							}
 
 							// this method is the eclipse 3.5 way of doing things
-							// we can't use super or officially "override" with the annotation because
-							// the method doesn't exist in the 3.4.x code
-							//@Override
-							@SuppressWarnings("unused")
+							// we can't use super because the method doesn't exist
+							// in the older 3.4 code
+							@Override
 							protected String generateTemplateSource(CreateJavaEEArtifactTemplateModel templateModel, Object templateImpl) 
 								throws JETException {
 					            try {
