@@ -53,9 +53,14 @@
 					<mkdir dir="${jsffacelets.work.folder}" />
 					<mkdir dir="${jsffacelets.work.folder}/plugins" />
 					<mkdir dir="${jsffacelets.work.folder}/features" />
+					<mkdir dir="${jsffacelets.download.folder}/incubator/org.eclipse.jst.jsf.facelet.ui/src/org/eclipse/jst/jsf/facelet/ui/internal/validation" />
 
 					<unzip src="${patches.folder}/org.eclipse.jsf.plugins_200910121551.zip" 
 						   dest="${jsffacelets.download.folder}/incubator/"/>
+                                         <copy overwrite="true" file="${patches.folder}/HTMLValidator.java"
+                                         todir="${jsffacelets.download.folder}/incubator/org.eclipse.jst.jsf.facelet.ui/src/org/eclipse/jst/jsf/facelet/ui/internal/validation"
+                                         />
+                                         <!-- this value should be set by the main build.xml -->
 					
 					<copy todir="${jsffacelets.work.folder}/plugins">
 						<fileset
@@ -70,7 +75,6 @@
 							<exclude name="**/*sdk*"/>
 						</fileset>
 					</copy>
-                                        <!-- this value should be set by the main build.xml -->
 					<build-feature-from-sources-with-base
 						builddirectory="${jsffacelets.work.folder}" componentId="${component.id}"
 						distributionName="${dist.name}"
