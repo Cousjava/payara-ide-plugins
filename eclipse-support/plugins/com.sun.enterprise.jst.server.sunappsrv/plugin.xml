@@ -1198,6 +1198,16 @@
             %sunappserver.ejbtimer.BeanWebRegionWizard.description
          </description>
        </wizard>
+       <wizard
+             category="com.sun.enterprise.jst.server.sunappsrv"
+             class="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddGenericResourceWizard"
+             icon="icons/obj16/glassfishserver.gif"
+             id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddGenericResourceWizard"
+             name="%sunappserver.restfulfrompatternlabel">
+         <description>
+            %sunappserver.restfulfrompattern.BeanWebRegionWizard.description
+         </description>
+       </wizard>
     </extension>
     
     <!-- New XHTML wizard -->
@@ -1339,6 +1349,22 @@
 	</extension>
 
 	<extension
+		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.GenericResource"
+		point="org.eclipse.ui.navigator.navigatorContent">
+		<commonWizard
+        menuGroupId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards"
+        type="new"
+        wizardId="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddGenericResourceWizard">
+			<enablement>
+				<adapt type="org.eclipse.core.resources.IResource">
+					<test property="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.enableForGFv3Web"
+						value="true"/>
+				</adapt>
+			</enablement>
+		</commonWizard>
+	</extension>
+
+	<extension
 		id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBean"
 		point="org.eclipse.ui.navigator.navigatorContent">
 		<commonWizard
@@ -1379,6 +1405,7 @@
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.JavaEE6SessionBeanWizard"/>
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddEjbTimerWizard"/>
 	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard"/>
+	 		<newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddGenericResourceWizard"/>
 		</perspectiveExtension>
 	</extension>
 

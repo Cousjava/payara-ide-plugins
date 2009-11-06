@@ -38,31 +38,56 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
+import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
+import org.eclipse.jst.servlet.ui.internal.wizard.NewWebArtifactWizard;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 
-public class Messages extends org.eclipse.osgi.util.NLS {
-    static {
-        org.eclipse.osgi.util.NLS.initializeMessages(
-                "com.sun.enterprise.jst.server.sunappsrv.v3.wizards.Messages", Messages.class);
-    }
-    
-	public static String ProjectName;
-    public static String sessionWizardTitle;
-    public static String errorBusinessInterfaceMissing;
-    
-    public static String timerWizardTitle;
-    public static String timerWizardDescription;
-    public static String timerScheduleLabel;
-    public static String timerScheduleDefault;
-    public static String errorTimerScheduleMissing;
+@SuppressWarnings("restriction")
+public class AddGenericResourceWizard extends NewWebArtifactWizard {
 
-    public static String genericResourceWizardTitle;
-    public static String genericResourceWizardDescription;
-    public static String mimeTypeLabel;
-    public static String errorMimeTypeMissing;
-    public static String representationClassLabel;
-    public static String representationClassDialogTitle;
-    public static String representationClassDialogLabel;
-    public static String errorRepresentationClassMissing;
-    public static String errorRepresentationClassInvalid;
+	public AddGenericResourceWizard() {
+		this(null);
+	}
+
+	public AddGenericResourceWizard(IDataModel model) {
+		super(model);
+		setWindowTitle(Messages.genericResourceWizardTitle);
+	}
+
+	@Override
+	protected void doAddPages() {
+		AddGenericResourceWizardPage page1 = new AddGenericResourceWizardPage(getDataModel(),
+				"page1", Messages.genericResourceWizardDescription, //$NON-NLS-1$
+				Messages.genericResourceWizardTitle, J2EEProjectUtilities.DYNAMIC_WEB);
+		addPage(page1);
+	}
+
+	@Override
+	protected IDataModelProvider getDefaultProvider() {
+		return (IDataModelProvider) new AddGenericResourceDataModelProvider();
+	}
+
+	@Override
+	protected ImageDescriptor getImage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected String getTitle() {
+		return Messages.genericResourceWizardTitle;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizard#postPerformFinish()
+	 */
+	@Override
+	protected void postPerformFinish() throws InvocationTargetException {
+		openJavaClass();
+		super.postPerformFinish();
+	}
 }
