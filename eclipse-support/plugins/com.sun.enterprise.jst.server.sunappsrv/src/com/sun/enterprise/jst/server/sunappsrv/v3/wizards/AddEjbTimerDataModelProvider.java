@@ -115,7 +115,7 @@ public class AddEjbTimerDataModelProvider extends
 			String value = (String) getProperty(SCHEDULE);
 			if (value == null || value.trim().length() == 0) {
 				return SunAppSrvPlugin.createErrorStatus(
-						"The schedule cannot be empty.", null); // TODO i18n
+						Messages.errorTimerScheduleMissing, null);
 			}
 		}
 		IStatus status = super.validate(propertyName);
