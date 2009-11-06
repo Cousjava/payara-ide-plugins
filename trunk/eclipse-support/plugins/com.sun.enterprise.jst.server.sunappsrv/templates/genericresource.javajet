@@ -1,0 +1,43 @@
+<%@ jet package="com.sun.enterprise.jst.server.sunappsrv.v3.wizards" 
+	imports="java.util.* org.eclipse.jst.j2ee.internal.common.operations.*" 
+	class="GenericResourceTemplate" 
+	skeleton="generator.skeleton"
+%>
+<% AddGenericResourceTemplateModel model = (AddGenericResourceTemplateModel) argument; %>
+<%@ include file="_flags.template" %>
+<%@ include file="_package.template" %>
+<%@ include file="_imports.template" %>
+@Path("generic")
+<%@ include file="_class.template" %>
+	@SuppressWarnings("unused")
+    @Context
+    private UriInfo context;
+
+<%@ include file="_constructors.template" %>
+<%@ include file="_methods.template" %>
+	<%
+		String representationClass = model.getProperty(AddGenericResourceDataModelProvider.REPRESENTATION_CLASS).trim();
+		String mimeType = model.getProperty(AddGenericResourceDataModelProvider.MIME_TYPE).trim();
+		String methodNameFromMimeType = model.getMethodNameSuffixFromMimeType();
+	%>
+    /**
+     * Retrieves representation of an instance of <%= model.getClassName() %>
+     * @return an instance of <%= representationClass %>
+     */
+    @GET
+    @Produces("<%= mimeType %>")
+    public <%= representationClass %> get<%= methodNameFromMimeType %>() {
+        //TODO return proper representation object
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * PUT method for updating or creating an instance of <%= model.getClassName() %>
+     * @param content representation for the resource
+     * @return an HTTP response with content of the updated or created resource.
+     */
+    @PUT
+    @Consumes("<%= mimeType %>")
+    public void put<%= methodNameFromMimeType %>(<%= representationClass %> content) {
+    }
+}
