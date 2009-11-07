@@ -16,6 +16,9 @@
                     <copy file="servicetag-registry.xml"
                     tofile="${build.folder}/${components.folder.name}/extracts/${dist.name}/glassfishv3/glassfish/lib/registration/servicetag-registry.xml"
                     overwrite="true"/>
+                    <copy file="servicetag-registry.xml"
+                    tofile="${build.folder}/${components.folder.name}/dist/${dist.name}/eclipse/glassfishv3/glassfish/lib/registration/servicetag-registry.xml"
+                    overwrite="true"/>
 
                     <echo message="Done copying service-tag registry for GlassFish v3" />
 
@@ -25,7 +28,10 @@
                     <copy file="jsf-taglib.jar"
                     tofile="${build.folder}/${components.folder.name}/extracts/${dist.name}/glassfishv3/glassfish/jsf-taglib.jar"
                     overwrite="true"/>
-
+                    <copy file="jsf-taglib.jar"
+                    tofile="${build.folder}/${components.folder.name}/dist/${dist.name}/eclipse/glassfishv3/glassfish/jsf-taglib.jar"
+                    overwrite="true"/>
+                    
                     <echo message="Done copying jsf-taglibs registry for GlassFish v3" />
 
                 </target>
