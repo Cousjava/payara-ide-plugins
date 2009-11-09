@@ -115,7 +115,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
     	return  null == bd ? null : bd.getVersion();
     }
 
-    public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+    @SuppressWarnings("unchecked")
+	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
         SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch launch"); //$NON-NLS-1$
 
         String command[] = null;
