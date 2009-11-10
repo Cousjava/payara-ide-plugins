@@ -92,7 +92,7 @@ public class GenericResourceTemplate {
   protected final String TEXT_37 = NL + "     */" + NL + "    @GET" + NL + "    @Produces(\"";
   protected final String TEXT_38 = "\")" + NL + "    public ";
   protected final String TEXT_39 = " get";
-  protected final String TEXT_40 = "() {" + NL + "        //TODO return proper representation object" + NL + "        throw new UnsupportedOperationException();" + NL + "    }" + NL + "" + NL + "    /**" + NL + "     * PUT method for updating or creating an instance of ";
+  protected final String TEXT_40 = "() {" + NL + "        // TODO return proper representation object" + NL + "        throw new UnsupportedOperationException();" + NL + "    }" + NL + "" + NL + "    /**" + NL + "     * PUT method for updating or creating an instance of ";
   protected final String TEXT_41 = NL + "     * @param content representation for the resource" + NL + "     * @return an HTTP response with content of the updated or created resource." + NL + "     */" + NL + "    @PUT" + NL + "    @Consumes(\"";
   protected final String TEXT_42 = "\")" + NL + "    public void put";
   protected final String TEXT_43 = "(";
@@ -272,7 +272,7 @@ Copied from org.eclipse.jst.j2ee.ejb plugin. */
 
     stringBuffer.append(TEXT_34);
     
-		String representationClass = model.getProperty(AddGenericResourceDataModelProvider.REPRESENTATION_CLASS).trim();
+		String representationClass = model.getUnqualifiedRepresentationClass();
 		String mimeType = model.getProperty(AddGenericResourceDataModelProvider.MIME_TYPE).trim();
 		String methodNameFromMimeType = model.getMethodNameSuffixFromMimeType();
 	

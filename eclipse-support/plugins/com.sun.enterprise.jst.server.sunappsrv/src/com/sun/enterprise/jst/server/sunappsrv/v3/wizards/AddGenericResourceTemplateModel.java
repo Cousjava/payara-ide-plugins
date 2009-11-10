@@ -41,6 +41,7 @@ package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.eclipse.jst.j2ee.internal.web.operations.CreateWebClassTemplateModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
@@ -93,6 +94,30 @@ public class AddGenericResourceTemplateModel extends CreateWebClassTemplateModel
 		collection.add(QUALIFIED_GET);
 		collection.add(QUALIFIED_PRODUCES);
 
+		// if repClass is not in java.lang, add an import for it as well
+		// actually, the return from super.getImports returns a collection which is 
+		// smart enough to skip adding java.lang classes
+		String repClass = getProperty(AddGenericResourceDataModelProvider.REPRESENTATION_CLASS);
+
+		if (repClass != null) {
+			// so, this is all we should need to do
+			collection.add(repClass);
+			// however, ImportsCollection has a bug that also skips adding
+			// classes like java.lang.reflect.Method, so we need to do this as 
+			// a workaround (for eclipse bug 294688)
+			int index = repClass.lastIndexOf("."); //$NON-NLS-1$
+			if (index != -1) {
+				String packageName = repClass.substring(0, index);
+				if (repClass.startsWith("java.lang.") && //$NON-NLS-1$
+						!packageName.equals("java.lang")) { //$NON-NLS-1$
+					Collection<String> myCollection = new TreeSet<String>();
+					myCollection.addAll(collection);
+					myCollection.add(repClass);
+					return myCollection;
+				}
+			} // end workaround
+		}
+
 		return collection;
 	}
 
@@ -104,5 +129,17 @@ public class AddGenericResourceTemplateModel extends CreateWebClassTemplateModel
 		String mimeType = getProperty(AddGenericResourceDataModelProvider.MIME_TYPE);
 
 		return ((mimeType != null) ? typeToSuffix.get(mimeType) : null);
+	}
+
+	public String getUnqualifiedRepresentationClass() {
+		String repClass = getProperty(AddGenericResourceDataModelProvider.REPRESENTATION_CLASS);
+
+		if (repClass != null) {
+			int index = repClass.lastIndexOf("."); //$NON-NLS-1$
+			if (index != -1) {
+				return repClass.substring(index + 1);
+			}
+		}
+		return null;
 	}
 }
