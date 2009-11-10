@@ -16,7 +16,7 @@
 <%@ include file="_constructors.template" %>
 <%@ include file="_methods.template" %>
 	<%
-		String representationClass = model.getProperty(AddGenericResourceDataModelProvider.REPRESENTATION_CLASS).trim();
+		String representationClass = model.getUnqualifiedRepresentationClass();
 		String mimeType = model.getProperty(AddGenericResourceDataModelProvider.MIME_TYPE).trim();
 		String methodNameFromMimeType = model.getMethodNameSuffixFromMimeType();
 	%>
@@ -27,7 +27,7 @@
     @GET
     @Produces("<%= mimeType %>")
     public <%= representationClass %> get<%= methodNameFromMimeType %>() {
-        //TODO return proper representation object
+        // TODO return proper representation object
         throw new UnsupportedOperationException();
     }
 
