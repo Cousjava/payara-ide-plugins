@@ -1,11 +1,11 @@
 package org.eclipse.jst.jsf.facelet.ui.internal.validation;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
 
 /**
  * The Facelet HTML file validator.
- * 
+ *
  * @author cbateman
  *
  */
@@ -204,23 +204,23 @@ public class HTMLValidator implements IValidatorJob
                     {
                     	if (declaredUri.startsWith("http://java.sun.com/jsf/composite/")){
                     		String compositeName = declaredUri.substring("http://java.sun.com/jsf/composite/".length(), declaredUri.length());
-                    		IFile resFolder= getResourcesFolder( project);
-                    		File resources = new File
-                    		(resFolder.getFullPath( ).toString( ) );
-                    		if (!resources.exists()  || !resources.isDirectory()){
+                    		IFolder resFolder= getResourcesFolder( project);
+
+                    		if (!resFolder.exists() ){
                                 final Diagnostic diag = new BasicDiagnostic(
                                         Diagnostic.WARNING, "", -1,
-                                        "No resources/ directory containing the JSF 2.0 composite element for  "
+                                        "No resources/ directory under WebContent of the project, containing the JSF 2.0 composite element for  "
                                                 + declaredUri, null);
                                 final IDOMAttr domAttr = (IDOMAttr) attr;
                                 reporter.report(diag, domAttr.getValueRegionStartOffset(), domAttr
                                         .getValue().length());
                     		}
-                    		File compDir = new File(resources,compositeName);
-                    		if (!compDir.exists()  || !compDir.isDirectory()){
+                    		IFolder  compDir = resFolder.getFolder(compositeName);
+                    		//File compDir = new File(resources,compositeName);
+                    		if (!compDir.exists()  ){
                                 final Diagnostic diag = new BasicDiagnostic(
                                         Diagnostic.WARNING, "", -1,
-                                        "No resources/"+compDir+" directory containing the JSF 2.0 composite element for  "
+                                        "No "+compDir+" directory under WebContent containing the JSF 2.0 composite element for  "
                                                 + declaredUri, null);
                                 final IDOMAttr domAttr = (IDOMAttr) attr;
                                 reporter.report(diag, domAttr.getValueRegionStartOffset(), domAttr
@@ -241,12 +241,13 @@ public class HTMLValidator implements IValidatorJob
             }
         }
     }
-    
-    private  IFile getResourcesFolder(IProject project) {
-        IVirtualComponent comp = ComponentCore.createComponent(project);       
+
+    private  IFolder getResourcesFolder(IProject project) {
+        IVirtualComponent comp = ComponentCore.createComponent(project);
       IPath res = comp.getRootFolder().getUnderlyingFolder()
         .getProjectRelativePath().append("resources");
-        return comp.getProject().getFile(res);
+
+        return comp.getProject().getFolder(res);
     }
     private boolean shouldValidate(final IFile model)
     {
