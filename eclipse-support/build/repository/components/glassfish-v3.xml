@@ -24,7 +24,7 @@
 
                 </target>
                 
-                <target name="jsf-taglib" >
+                <!--target name="jsf-taglib" >
                     <copy file="jsf-taglib.jar"
                     tofile="${build.folder}/${components.folder.name}/extracts/${dist.name}/glassfishv3/glassfish/jsf-taglib.jar"
                     overwrite="true"/>
@@ -32,7 +32,7 @@
                     tofile="${build.folder}/${components.folder.name}/dist/${dist.name}/eclipse/glassfishv3/glassfish/jsf-taglib.jar"
                     overwrite="true"/>
                     
-                    <echo message="Done copying jsf-taglibs registry for GlassFish v3" />
+                    <echo message="Done copying jsf-taglibs registry for GlassFish v3" /-->
 
                 </target>
                 
