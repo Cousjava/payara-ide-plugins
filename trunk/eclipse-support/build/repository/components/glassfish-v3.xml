@@ -8,7 +8,7 @@
         <antscript target="additions">
             <project>
 
-				<target name="additions" depends="servicetag,jsf-taglib">
+				<target name="additions" depends="servicetag">
 				</target>
 
 
