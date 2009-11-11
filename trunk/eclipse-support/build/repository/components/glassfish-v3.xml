@@ -32,9 +32,9 @@
                     tofile="${build.folder}/${components.folder.name}/dist/${dist.name}/eclipse/glassfishv3/glassfish/jsf-taglib.jar"
                     overwrite="true"/>
                     
-                    <echo message="Done copying jsf-taglibs registry for GlassFish v3" /-->
+                    <echo message="Done copying jsf-taglibs registry for GlassFish v3" />
 
-                </target>
+                </target-->
                 
             </project>
         </antscript>
