@@ -4,7 +4,7 @@
     <copyright>Copyright 2009 Sun Microsystems, Inc., 4150 Network Circle, Santa Clara, California 95054, U.S.A. All rights reserved.</copyright>
     <provider name="Sun Microsystems"/>
     <build type="binary" skip-packaging="yes">
-        <archive destination="eclipse" url="http://download.java.net/glassfish/v3/promoted/latest-glassfish.zip"/>
+        <archive destination="eclipse" url="http://download.java.net/glassfish/v3/nightly/latest-glassfish.zip"/>
         <antscript target="additions">
             <project>
 
