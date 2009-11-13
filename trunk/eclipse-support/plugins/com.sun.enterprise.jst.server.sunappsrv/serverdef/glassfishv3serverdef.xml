@@ -170,6 +170,7 @@
     <classpath id="sunappsrv.project" >
 	<fileset dir="${sunappserver.rootdirectory}">
 		<include name="modules/javax.*.jar" />
+		<include name="modules/mail*.jar" />
 		<include name="modules/web/javax.*.jar" />
 		<include name="modules/ejb/javax.*.jar" />
 		<include name="modules/webbeans-osgi*.jar" />
@@ -180,7 +181,7 @@
 		<include name="modules/grizzly-comet*.jar" />
 		<include name="modules/glassfish-api*.jar" />
 		<include name="modules/endorsed/*.jar" />
-	</fileset>
+	</fileset>	
 	<!-- leave at least one generic jar as an archive so that validation works -->
 	<archive path="${sunappserver.rootdirectory}/modules/jsf-api.jar" />
 	<!--  jar needed for tld files (html_basic and jsf_core) -->
