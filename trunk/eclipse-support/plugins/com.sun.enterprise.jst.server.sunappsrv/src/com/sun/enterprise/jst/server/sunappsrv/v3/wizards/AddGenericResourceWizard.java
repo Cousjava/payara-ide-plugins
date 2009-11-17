@@ -38,10 +38,18 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
+import static org.eclipse.jst.j2ee.internal.common.operations.INewJavaClassDataModelProperties.JAVA_PACKAGE;
+import static org.eclipse.jst.j2ee.internal.common.operations.INewJavaClassDataModelProperties.PROJECT;
+
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jst.j2ee.internal.plugin.J2EEEditorUtility;
 import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
+import org.eclipse.jst.servlet.ui.internal.plugin.ServletUIPlugin;
 import org.eclipse.jst.servlet.ui.internal.wizard.NewWebArtifactWizard;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
@@ -89,5 +97,30 @@ public class AddGenericResourceWizard extends NewWebArtifactWizard {
 	protected void postPerformFinish() throws InvocationTargetException {
 		openJavaClass();
 		super.postPerformFinish();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jst.servlet.ui.internal.wizard.NewWebArtifactWizard#openJavaClass()
+	 */
+	@Override
+	protected void openJavaClass() {
+		IDataModel model = getDataModel();
+		if (model.getBooleanProperty(AddGenericResourceDataModelProvider.IN_CONTAINER_CLASS)) {
+			try {
+				String className = model.getStringProperty(AddGenericResourceDataModelProvider.ORIGINAL_CLASS_NAME);
+				String packageName = model.getStringProperty(JAVA_PACKAGE);
+
+				if (packageName != null && packageName.trim().length() > 0)
+					className = packageName + "." + className; //$NON-NLS-1$
+
+				IProject p = (IProject) model.getProperty(PROJECT);
+				IJavaProject javaProject = J2EEEditorUtility.getJavaProject(p);
+				IFile file = (IFile) javaProject.findType(className).getResource();
+				openEditor(file);
+			} catch (Exception cantOpen) {
+				ServletUIPlugin.log(cantOpen);
+			}	
+		}
+		super.openJavaClass();
 	}
 }

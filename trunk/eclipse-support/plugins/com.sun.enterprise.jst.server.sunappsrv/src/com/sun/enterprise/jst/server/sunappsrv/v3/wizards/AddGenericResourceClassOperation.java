@@ -74,30 +74,39 @@ public class AddGenericResourceClassOperation extends NewWebClassOperation {
 		try {
 			if (fragment != null) {
 				// Create the Generic Resource java file
-				GenericResourceTemplate tempImpl = GenericResourceTemplate.create(null);
-
-				try {
-					Method method = tempImpl.getClass().getMethod("generate", //$NON-NLS-1$
-							new Class[] { Object.class });
-					String source = (String) method.invoke(tempImpl, tempModel);
-					String javaFileName = tempModel.getClassName() + ".java"; //$NON-NLS-1$
-					createJavaFile(monitor, fragment, source, javaFileName);
-				} catch (SecurityException e) {
-					throw new JETException(e);
-				} catch (NoSuchMethodException e) {
-					throw new JETException(e);
-				} catch (IllegalArgumentException e) {
-					throw new JETException(e);
-				} catch (IllegalAccessException e) {
-					throw new JETException(e);
-				} catch (InvocationTargetException e) {
-					throw new JETException(e);
+				doGeneration(monitor, fragment, GenericResourceTemplate.create(null), tempModel);
+				// also generate the second class if necessary
+				if (!tempModel.isSimplePattern()) {
+					tempModel.setIsContainerClass();
+					doGeneration(monitor, fragment, ContainerResourceTemplate.create(null), tempModel);
 				}
 			}
 		} catch (Exception e) {
 			throw new WFTWrappedException(e);
 		}
 	}
+
+	private void doGeneration(IProgressMonitor monitor, IPackageFragment fragment, 
+			Object tempImpl, AddGenericResourceTemplateModel tempModel) throws JavaModelException, JETException {
+		try {
+			Method method = tempImpl.getClass().getMethod("generate", //$NON-NLS-1$
+					new Class[] { Object.class });
+			String source = (String) method.invoke(tempImpl, tempModel);
+			String javaFileName = tempModel.getClassName() + ".java"; //$NON-NLS-1$
+			createJavaFile(monitor, fragment, source, javaFileName);
+		} catch (SecurityException e) {
+			throw new JETException(e);
+		} catch (NoSuchMethodException e) {
+			throw new JETException(e);
+		} catch (IllegalArgumentException e) {
+			throw new JETException(e);
+		} catch (IllegalAccessException e) {
+			throw new JETException(e);
+		} catch (InvocationTargetException e) {
+			throw new JETException(e);
+		}
+	}
+
 	protected IFile createJavaFile(IProgressMonitor monitor, IPackageFragment fragment, String source, String className) throws JavaModelException {
 		if (fragment != null) {
 			ICompilationUnit cu = fragment.getCompilationUnit(className);

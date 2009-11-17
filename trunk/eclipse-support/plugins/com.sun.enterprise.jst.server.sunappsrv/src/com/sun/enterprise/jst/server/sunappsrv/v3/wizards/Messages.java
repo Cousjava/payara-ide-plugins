@@ -58,6 +58,9 @@ public class Messages extends org.eclipse.osgi.util.NLS {
 
     public static String genericResourceWizardTitle;
     public static String genericResourceWizardDescription;
+    public static String patternTypeLabel;
+    public static String patternTypeSimpleValue;
+    public static String patternTypeContainerValue;
     public static String mimeTypeLabel;
     public static String errorMimeTypeMissing;
     public static String representationClassLabel;
@@ -65,4 +68,15 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String representationClassDialogLabel;
     public static String errorRepresentationClassMissing;
     public static String errorRepresentationClassInvalid;
+
+    public static String containerRepresentationClassLabel;
+    public static String containerRepresentationClassDialogTitle;
+    public static String containerRepresentationClassDialogLabel;
+    public static String errorContainerRepresentationClassMissing;
+    public static String errorContainerRepresentationClassInvalid;
+    public static String pathLabel;
+    public static String errorPathMissing;
+    public static String errorPathInvalid;
+    public static String containerPathLabel;
+    public static String errorContainerPathMissing;
 }
