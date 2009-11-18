@@ -132,7 +132,7 @@ public class AddGenericResourceDataModelProvider extends
 		}
 
 		if (PATH.equals(propertyName)) {
-			return (isSimplePattern() ? "generic" : "{id}"); //$NON-NLS-1$ //$NON-NLS-2$
+			return (isSimplePattern() ? "generic" : (isClientControlledPattern() ? "{name}" : "{id}")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		if (CONTAINER_PATH.equals(propertyName)) {
@@ -198,6 +198,10 @@ public class AddGenericResourceDataModelProvider extends
 
 	private boolean isSimplePattern() {
 		return AddGenericResourceTemplateModel.SIMPLE_PATTERN.equals(getStringProperty(PATTERN));
+	}
+
+	private boolean isClientControlledPattern() {
+		return AddGenericResourceTemplateModel.CLIENT_CONTAINER_PATTERN.equals(getStringProperty(PATTERN));
 	}
 
 	protected IStatus validateRepClass(String propertyName, String errorMessageKeyMissing, String errorMessageKeyInvalid) {

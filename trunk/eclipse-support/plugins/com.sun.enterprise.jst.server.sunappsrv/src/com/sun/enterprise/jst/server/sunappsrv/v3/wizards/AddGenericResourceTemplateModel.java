@@ -77,6 +77,7 @@ public class AddGenericResourceTemplateModel extends CreateWebClassTemplateModel
 
 	protected static final String SIMPLE_PATTERN = "Simple"; //$NON-NLS-1$
 	protected static final String CONTAINER_PATTERN = "Container"; //$NON-NLS-1$
+	protected static final String CLIENT_CONTAINER_PATTERN = "Client"; //$NON-NLS-1$
 
 	private static final Map<String, String> typeToSuffix;
 	
@@ -96,6 +97,7 @@ public class AddGenericResourceTemplateModel extends CreateWebClassTemplateModel
 	public Collection<String> getImports() {
 		Collection<String> collection = super.getImports();
 		boolean isContainerClass = isContainerClass();
+		boolean isClientPattern = isClientControlledPattern();
 		boolean usesContext = isSimplePattern() || isContainerClass;
 
 		collection.add(QUALIFIED_CONSUMES);
@@ -110,8 +112,12 @@ public class AddGenericResourceTemplateModel extends CreateWebClassTemplateModel
 			collection.add(QUALIFIED_DELETE);
 		}
 		if (isContainerClass) {
-			collection.add(QUALIFIED_POST);
-			collection.add(QUALIFIED_RESPONSE);
+			if (!isClientPattern) {
+				collection.add(QUALIFIED_POST);
+				collection.add(QUALIFIED_RESPONSE);
+			} else {
+				collection.remove(QUALIFIED_CONSUMES);
+			}
 			if (getParamList() != null) {
 				collection.add(QUALIFIED_PATH_PARAM);
 			}
@@ -150,7 +156,12 @@ public class AddGenericResourceTemplateModel extends CreateWebClassTemplateModel
 
 	protected boolean isSimplePattern() {
 		String patternProp = getProperty(AddGenericResourceDataModelProvider.PATTERN);
-		return patternProp.endsWith(SIMPLE_PATTERN);
+		return patternProp.equals(SIMPLE_PATTERN);
+	}
+
+	protected boolean isClientControlledPattern() {
+		String patternProp = getProperty(AddGenericResourceDataModelProvider.PATTERN);
+		return patternProp.equals(CLIENT_CONTAINER_PATTERN);
 	}
 
 	public String getProperty(String propertyName) {

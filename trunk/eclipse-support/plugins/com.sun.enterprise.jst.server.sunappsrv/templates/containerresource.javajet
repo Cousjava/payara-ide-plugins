@@ -16,6 +16,7 @@
 	boolean hasParam = (paramListStrings != null);
 	String paramListNoTypes = (hasParam ? paramList : "");
 	String pathParams = "";
+	boolean isClientPattern = model.isClientControlledPattern();
 	
 	if (hasParam) { 
 		for (int i=0;i<paramListStrings.length;i++) { 
@@ -31,9 +32,11 @@
 <%@ include file="_imports.template" %>
 @Path("<%= containerPath %>")
 <%@ include file="_class.template" %>
+<% if (isClientPattern) { %>
+    @SuppressWarnings("unused")
+<% } %>
     @Context
     private UriInfo context;
-
 <%@ include file="_constructors.template" %>
 <%@ include file="_methods.template" %>
 
@@ -48,6 +51,7 @@
         throw new UnsupportedOperationException();
     }
 
+<% if (!isClientPattern) { %>
     /**
      * POST method for creating an instance of <%= originalClassName %>
      * @param content representation for the new resource
@@ -61,6 +65,7 @@
         return Response.created(context.getAbsolutePath()).build();
     }
 
+<% } %>
 	/**
      * Sub-resource locator method for <%= path %>
      */

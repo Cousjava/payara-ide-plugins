@@ -61,6 +61,7 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String patternTypeLabel;
     public static String patternTypeSimpleValue;
     public static String patternTypeContainerValue;
+    public static String patternTypeClientContainerValue;
     public static String mimeTypeLabel;
     public static String errorMimeTypeMissing;
     public static String representationClassLabel;

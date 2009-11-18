@@ -67,44 +67,48 @@ public class ContainerResourceTemplate {
   protected final String TEXT_12 = " extends ";
   protected final String TEXT_13 = " implements ";
   protected final String TEXT_14 = ", ";
-  protected final String TEXT_15 = " {" + NL + "    @Context" + NL + "    private UriInfo context;" + NL;
-  protected final String TEXT_16 = NL + NL + "    /**" + NL + "     * Default constructor. " + NL + "     */" + NL + "    public ";
-  protected final String TEXT_17 = "() {" + NL + "        // TODO Auto-generated constructor stub" + NL + "    }";
-  protected final String TEXT_18 = NL + "       " + NL + "    /**" + NL + "     * @see ";
-  protected final String TEXT_19 = "#";
-  protected final String TEXT_20 = "(";
-  protected final String TEXT_21 = ")" + NL + "     */" + NL + "    public ";
+  protected final String TEXT_15 = " {";
+  protected final String TEXT_16 = NL + "    @SuppressWarnings(\"unused\")";
+  protected final String TEXT_17 = NL + "    @Context" + NL + "    private UriInfo context;";
+  protected final String TEXT_18 = NL + NL + "    /**" + NL + "     * Default constructor. " + NL + "     */" + NL + "    public ";
+  protected final String TEXT_19 = "() {" + NL + "        // TODO Auto-generated constructor stub" + NL + "    }";
+  protected final String TEXT_20 = NL + "       " + NL + "    /**" + NL + "     * @see ";
+  protected final String TEXT_21 = "#";
   protected final String TEXT_22 = "(";
-  protected final String TEXT_23 = ") {" + NL + "        super(";
-  protected final String TEXT_24 = ");" + NL + "        // TODO Auto-generated constructor stub" + NL + "    }";
-  protected final String TEXT_25 = NL + NL + "\t/**" + NL + "     * @see ";
-  protected final String TEXT_26 = "#";
-  protected final String TEXT_27 = "(";
-  protected final String TEXT_28 = ")" + NL + "     */" + NL + "    public ";
-  protected final String TEXT_29 = " ";
-  protected final String TEXT_30 = "(";
-  protected final String TEXT_31 = ") {" + NL + "        // TODO Auto-generated method stub";
-  protected final String TEXT_32 = NL + "\t\t\treturn ";
-  protected final String TEXT_33 = ";";
-  protected final String TEXT_34 = NL + "    }";
-  protected final String TEXT_35 = NL + NL + "    /**" + NL + "     * Retrieves representation of an instance of ";
-  protected final String TEXT_36 = NL + "     * @return an instance of ";
-  protected final String TEXT_37 = NL + "     */" + NL + "    @GET" + NL + "    @Produces(\"";
-  protected final String TEXT_38 = "\")" + NL + "    public ";
-  protected final String TEXT_39 = " get";
-  protected final String TEXT_40 = "() {" + NL + "        // TODO return proper representation object" + NL + "        throw new UnsupportedOperationException();" + NL + "    }" + NL + "" + NL + "    /**" + NL + "     * POST method for creating an instance of ";
-  protected final String TEXT_41 = NL + "     * @param content representation for the new resource" + NL + "     * @return an HTTP response with content of the created resource" + NL + "     */" + NL + "    @POST" + NL + "    @Consumes(\"";
-  protected final String TEXT_42 = "\")" + NL + "    @Produces(\"";
-  protected final String TEXT_43 = "\")" + NL + "    public Response post";
-  protected final String TEXT_44 = "(";
-  protected final String TEXT_45 = " content) {" + NL + "        // TODO" + NL + "        return Response.created(context.getAbsolutePath()).build();" + NL + "    }" + NL + "" + NL + "\t/**" + NL + "     * Sub-resource locator method for ";
-  protected final String TEXT_46 = NL + "     */" + NL + "    @Path(\"";
-  protected final String TEXT_47 = "\")" + NL + "    public ";
-  protected final String TEXT_48 = " get";
-  protected final String TEXT_49 = "(";
-  protected final String TEXT_50 = ") {" + NL + "        return ";
-  protected final String TEXT_51 = ".getInstance(";
-  protected final String TEXT_52 = ");" + NL + "    }" + NL + "}";
+  protected final String TEXT_23 = ")" + NL + "     */" + NL + "    public ";
+  protected final String TEXT_24 = "(";
+  protected final String TEXT_25 = ") {" + NL + "        super(";
+  protected final String TEXT_26 = ");" + NL + "        // TODO Auto-generated constructor stub" + NL + "    }";
+  protected final String TEXT_27 = NL + NL + "\t/**" + NL + "     * @see ";
+  protected final String TEXT_28 = "#";
+  protected final String TEXT_29 = "(";
+  protected final String TEXT_30 = ")" + NL + "     */" + NL + "    public ";
+  protected final String TEXT_31 = " ";
+  protected final String TEXT_32 = "(";
+  protected final String TEXT_33 = ") {" + NL + "        // TODO Auto-generated method stub";
+  protected final String TEXT_34 = NL + "\t\t\treturn ";
+  protected final String TEXT_35 = ";";
+  protected final String TEXT_36 = NL + "    }";
+  protected final String TEXT_37 = NL + NL + "    /**" + NL + "     * Retrieves representation of an instance of ";
+  protected final String TEXT_38 = NL + "     * @return an instance of ";
+  protected final String TEXT_39 = NL + "     */" + NL + "    @GET" + NL + "    @Produces(\"";
+  protected final String TEXT_40 = "\")" + NL + "    public ";
+  protected final String TEXT_41 = " get";
+  protected final String TEXT_42 = "() {" + NL + "        // TODO return proper representation object" + NL + "        throw new UnsupportedOperationException();" + NL + "    }" + NL;
+  protected final String TEXT_43 = NL + "    /**" + NL + "     * POST method for creating an instance of ";
+  protected final String TEXT_44 = NL + "     * @param content representation for the new resource" + NL + "     * @return an HTTP response with content of the created resource" + NL + "     */" + NL + "    @POST" + NL + "    @Consumes(\"";
+  protected final String TEXT_45 = "\")" + NL + "    @Produces(\"";
+  protected final String TEXT_46 = "\")" + NL + "    public Response post";
+  protected final String TEXT_47 = "(";
+  protected final String TEXT_48 = " content) {" + NL + "        // TODO" + NL + "        return Response.created(context.getAbsolutePath()).build();" + NL + "    }" + NL;
+  protected final String TEXT_49 = NL + "\t/**" + NL + "     * Sub-resource locator method for ";
+  protected final String TEXT_50 = NL + "     */" + NL + "    @Path(\"";
+  protected final String TEXT_51 = "\")" + NL + "    public ";
+  protected final String TEXT_52 = " get";
+  protected final String TEXT_53 = "(";
+  protected final String TEXT_54 = ") {" + NL + "        return ";
+  protected final String TEXT_55 = ".getInstance(";
+  protected final String TEXT_56 = ");" + NL + "    }" + NL + "}";
 
 	public String generate(Object argument)
   {
@@ -122,6 +126,7 @@ public class ContainerResourceTemplate {
 	boolean hasParam = (paramListStrings != null);
 	String paramListNoTypes = (hasParam ? paramList : "");
 	String pathParams = "";
+	boolean isClientPattern = model.isClientControlledPattern();
 	
 	if (hasParam) { 
 		for (int i=0;i<paramListStrings.length;i++) { 
@@ -228,6 +233,10 @@ Copied from org.eclipse.jst.j2ee.ejb plugin. */
 	}
 
     stringBuffer.append(TEXT_15);
+     if (isClientPattern) { 
+    stringBuffer.append(TEXT_16);
+     } 
+    stringBuffer.append(TEXT_17);
      /* This Content is provided under the terms and conditions of the Eclipse Public License Version 1.0 
 ("EPL"). A copy of the EPL is available at http://www.eclipse.org/org/documents/epl-v10.php 
 For purposes of the EPL, "Program" will mean the Content. 
@@ -236,9 +245,9 @@ Copied from org.eclipse.jst.j2ee.ejb plugin. */
      
 	if (!model.hasEmptySuperclassConstructor()) { 
 
-    stringBuffer.append(TEXT_16);
+    stringBuffer.append(TEXT_18);
     stringBuffer.append( model.getClassName() );
-    stringBuffer.append(TEXT_17);
+    stringBuffer.append(TEXT_19);
      
 	} 
 
@@ -247,19 +256,19 @@ Copied from org.eclipse.jst.j2ee.ejb plugin. */
 		for (Constructor constructor : constructors) {
 			if (constructor.isPublic() || constructor.isProtected()) { 
 
-    stringBuffer.append(TEXT_18);
-    stringBuffer.append( model.getSuperclassName() );
-    stringBuffer.append(TEXT_19);
-    stringBuffer.append( model.getSuperclassName() );
     stringBuffer.append(TEXT_20);
-    stringBuffer.append( constructor.getParamsForJavadoc() );
+    stringBuffer.append( model.getSuperclassName() );
     stringBuffer.append(TEXT_21);
-    stringBuffer.append( model.getClassName() );
+    stringBuffer.append( model.getSuperclassName() );
     stringBuffer.append(TEXT_22);
-    stringBuffer.append( constructor.getParamsForDeclaration() );
+    stringBuffer.append( constructor.getParamsForJavadoc() );
     stringBuffer.append(TEXT_23);
-    stringBuffer.append( constructor.getParamsForCall() );
+    stringBuffer.append( model.getClassName() );
     stringBuffer.append(TEXT_24);
+    stringBuffer.append( constructor.getParamsForDeclaration() );
+    stringBuffer.append(TEXT_25);
+    stringBuffer.append( constructor.getParamsForCall() );
+    stringBuffer.append(TEXT_26);
     
 			} 
 		} 
@@ -274,69 +283,73 @@ Copied from org.eclipse.jst.j2ee.ejb plugin. */
 	if (model.shouldImplementAbstractMethods()) {
 		for (Method method : model.getUnimplementedMethods()) { 
 
-    stringBuffer.append(TEXT_25);
-    stringBuffer.append( method.getContainingJavaClass() );
-    stringBuffer.append(TEXT_26);
-    stringBuffer.append( method.getName() );
     stringBuffer.append(TEXT_27);
-    stringBuffer.append( method.getParamsForJavadoc() );
+    stringBuffer.append( method.getContainingJavaClass() );
     stringBuffer.append(TEXT_28);
-    stringBuffer.append( method.getReturnType() );
-    stringBuffer.append(TEXT_29);
     stringBuffer.append( method.getName() );
+    stringBuffer.append(TEXT_29);
+    stringBuffer.append( method.getParamsForJavadoc() );
     stringBuffer.append(TEXT_30);
-    stringBuffer.append( method.getParamsForDeclaration() );
+    stringBuffer.append( method.getReturnType() );
     stringBuffer.append(TEXT_31);
+    stringBuffer.append( method.getName() );
+    stringBuffer.append(TEXT_32);
+    stringBuffer.append( method.getParamsForDeclaration() );
+    stringBuffer.append(TEXT_33);
      
 			String defaultReturnValue = method.getDefaultReturnValue();
 			if (defaultReturnValue != null) { 
 
-    stringBuffer.append(TEXT_32);
+    stringBuffer.append(TEXT_34);
     stringBuffer.append( defaultReturnValue );
-    stringBuffer.append(TEXT_33);
+    stringBuffer.append(TEXT_35);
     
 			} 
 
-    stringBuffer.append(TEXT_34);
+    stringBuffer.append(TEXT_36);
      
 		}
 	} 
 
-    stringBuffer.append(TEXT_35);
-    stringBuffer.append( model.getClassName() );
-    stringBuffer.append(TEXT_36);
-    stringBuffer.append( representationClass );
     stringBuffer.append(TEXT_37);
-    stringBuffer.append( mimeType );
+    stringBuffer.append( model.getClassName() );
     stringBuffer.append(TEXT_38);
     stringBuffer.append( representationClass );
     stringBuffer.append(TEXT_39);
-    stringBuffer.append( methodNameFromMimeType );
+    stringBuffer.append( mimeType );
     stringBuffer.append(TEXT_40);
-    stringBuffer.append( originalClassName );
-    stringBuffer.append(TEXT_41);
-    stringBuffer.append( mimeType );
-    stringBuffer.append(TEXT_42);
-    stringBuffer.append( mimeType );
-    stringBuffer.append(TEXT_43);
-    stringBuffer.append( methodNameFromMimeType );
-    stringBuffer.append(TEXT_44);
     stringBuffer.append( representationClass );
+    stringBuffer.append(TEXT_41);
+    stringBuffer.append( methodNameFromMimeType );
+    stringBuffer.append(TEXT_42);
+     if (!isClientPattern) { 
+    stringBuffer.append(TEXT_43);
+    stringBuffer.append( originalClassName );
+    stringBuffer.append(TEXT_44);
+    stringBuffer.append( mimeType );
     stringBuffer.append(TEXT_45);
-    stringBuffer.append( path );
+    stringBuffer.append( mimeType );
     stringBuffer.append(TEXT_46);
-    stringBuffer.append( path );
+    stringBuffer.append( methodNameFromMimeType );
     stringBuffer.append(TEXT_47);
-    stringBuffer.append( originalClassName );
+    stringBuffer.append( representationClass );
     stringBuffer.append(TEXT_48);
-    stringBuffer.append( originalClassName );
+     } 
     stringBuffer.append(TEXT_49);
-    stringBuffer.append( pathParams );
+    stringBuffer.append( path );
     stringBuffer.append(TEXT_50);
-    stringBuffer.append( originalClassName );
+    stringBuffer.append( path );
     stringBuffer.append(TEXT_51);
-    stringBuffer.append( paramListNoTypes );
+    stringBuffer.append( originalClassName );
     stringBuffer.append(TEXT_52);
+    stringBuffer.append( originalClassName );
+    stringBuffer.append(TEXT_53);
+    stringBuffer.append( pathParams );
+    stringBuffer.append(TEXT_54);
+    stringBuffer.append( originalClassName );
+    stringBuffer.append(TEXT_55);
+    stringBuffer.append( paramListNoTypes );
+    stringBuffer.append(TEXT_56);
     return stringBuffer.toString();
   }
 }

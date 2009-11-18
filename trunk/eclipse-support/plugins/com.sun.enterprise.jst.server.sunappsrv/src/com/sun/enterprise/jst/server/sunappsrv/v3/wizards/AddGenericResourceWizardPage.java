@@ -38,6 +38,9 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.v3.wizards;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
@@ -78,6 +81,15 @@ public class AddGenericResourceWizardPage extends NewWebClassWizardPage {
 	private Button containerRepButton;
 	private Text containerPathText;
 
+	private static final Map<String, String> patternStringToObject;
+	
+	static {
+		patternStringToObject= new HashMap<String, String>();
+		patternStringToObject.put(Messages.patternTypeSimpleValue, AddGenericResourceTemplateModel.SIMPLE_PATTERN);
+		patternStringToObject.put(Messages.patternTypeContainerValue, AddGenericResourceTemplateModel.CONTAINER_PATTERN);
+		patternStringToObject.put(Messages.patternTypeClientContainerValue, AddGenericResourceTemplateModel.CLIENT_CONTAINER_PATTERN);
+	}
+
 	public AddGenericResourceWizardPage(IDataModel model, String pageName,
 			String pageDesc, String pageTitle, String moduleType) {
 		super(model, pageName, pageDesc, pageTitle, moduleType);
@@ -104,9 +116,8 @@ public class AddGenericResourceWizardPage extends NewWebClassWizardPage {
 			public void widgetSelected(SelectionEvent e) {
 				Combo combo = (Combo) e.getSource();
 				String patternName = combo.getItem(combo.getSelectionIndex());
-				String patternObject = (patternName.equals(Messages.patternTypeSimpleValue) ? 
-						AddGenericResourceTemplateModel.SIMPLE_PATTERN : 
-							AddGenericResourceTemplateModel.CONTAINER_PATTERN);
+				String patternObject = patternStringToObject.get(patternName);
+
 				model.setProperty(AddGenericResourceDataModelProvider.PATTERN, 
 						patternObject);
 				model.setProperty(AddGenericResourceDataModelProvider.PATH, 
@@ -269,6 +280,7 @@ public class AddGenericResourceWizardPage extends NewWebClassWizardPage {
 
 		patternTypeCombo.add(Messages.patternTypeSimpleValue);
 		patternTypeCombo.add(Messages.patternTypeContainerValue);
+		patternTypeCombo.add(Messages.patternTypeClientContainerValue);
 		patternTypeCombo.select(0);
 	}
 
