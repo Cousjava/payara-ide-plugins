@@ -115,7 +115,7 @@ public class ContainerResourceTemplate {
     final StringBuffer stringBuffer = new StringBuffer();
     
 	AddGenericResourceTemplateModel model = (AddGenericResourceTemplateModel) argument;
-	String representationClass = model.getUnqualifiedContainerRepresentationClass();
+	String containerRepresentationClass = model.getUnqualifiedContainerRepresentationClass();
 	String mimeType = model.getProperty(AddGenericResourceDataModelProvider.MIME_TYPE).trim();
 	String path = model.getProperty(AddGenericResourceDataModelProvider.PATH).trim();
 	String containerPath = model.getProperty(AddGenericResourceDataModelProvider.CONTAINER_PATH).trim();
@@ -314,11 +314,11 @@ Copied from org.eclipse.jst.j2ee.ejb plugin. */
     stringBuffer.append(TEXT_37);
     stringBuffer.append( model.getClassName() );
     stringBuffer.append(TEXT_38);
-    stringBuffer.append( representationClass );
+    stringBuffer.append( containerRepresentationClass );
     stringBuffer.append(TEXT_39);
     stringBuffer.append( mimeType );
     stringBuffer.append(TEXT_40);
-    stringBuffer.append( representationClass );
+    stringBuffer.append( containerRepresentationClass );
     stringBuffer.append(TEXT_41);
     stringBuffer.append( methodNameFromMimeType );
     stringBuffer.append(TEXT_42);
@@ -332,7 +332,7 @@ Copied from org.eclipse.jst.j2ee.ejb plugin. */
     stringBuffer.append(TEXT_46);
     stringBuffer.append( methodNameFromMimeType );
     stringBuffer.append(TEXT_47);
-    stringBuffer.append( representationClass );
+    stringBuffer.append( model.getUnqualifiedRepresentationClass() );
     stringBuffer.append(TEXT_48);
      } 
     stringBuffer.append(TEXT_49);

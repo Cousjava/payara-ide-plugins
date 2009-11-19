@@ -5,7 +5,7 @@
 %>
 <%
 	AddGenericResourceTemplateModel model = (AddGenericResourceTemplateModel) argument;
-	String representationClass = model.getUnqualifiedContainerRepresentationClass();
+	String containerRepresentationClass = model.getUnqualifiedContainerRepresentationClass();
 	String mimeType = model.getProperty(AddGenericResourceDataModelProvider.MIME_TYPE).trim();
 	String path = model.getProperty(AddGenericResourceDataModelProvider.PATH).trim();
 	String containerPath = model.getProperty(AddGenericResourceDataModelProvider.CONTAINER_PATH).trim();
@@ -42,11 +42,11 @@
 
     /**
      * Retrieves representation of an instance of <%= model.getClassName() %>
-     * @return an instance of <%= representationClass %>
+     * @return an instance of <%= containerRepresentationClass %>
      */
     @GET
     @Produces("<%= mimeType %>")
-    public <%= representationClass %> get<%= methodNameFromMimeType %>() {
+    public <%= containerRepresentationClass %> get<%= methodNameFromMimeType %>() {
         // TODO return proper representation object
         throw new UnsupportedOperationException();
     }
@@ -60,7 +60,7 @@
     @POST
     @Consumes("<%= mimeType %>")
     @Produces("<%= mimeType %>")
-    public Response post<%= methodNameFromMimeType %>(<%= representationClass %> content) {
+    public Response post<%= methodNameFromMimeType %>(<%= model.getUnqualifiedRepresentationClass() %> content) {
         // TODO
         return Response.created(context.getAbsolutePath()).build();
     }
