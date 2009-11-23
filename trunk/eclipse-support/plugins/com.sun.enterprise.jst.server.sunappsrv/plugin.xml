@@ -1049,7 +1049,11 @@
           <uri
                 name="http://java.sun.com/xml/ns/javaee/web-facesuicomponent_2_0.xsd"
                 uri="ee6_schemas/web-facesuicomponent_2_0.xsd" />
-                
+
+          <uri
+                name="http://java.sun.com/xml/ns/javaee/beans_1_0.xsd"
+                uri="ee6_schemas/beans_1_0.xsd" />
+
 <!-- end of Java EE 6 schemas section -->
             
         </catalogContribution>
