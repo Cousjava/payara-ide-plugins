@@ -53,7 +53,7 @@
 			<fileset dir="${output.library.jar}" />
 		</copy>
 		<mkdir dir="plugins/${plugin.id}_${plugin.version}/javaee6doc" />
-		<unzip dest="plugins/${plugin.id}_${plugin.version}/javaee6doc" src="javadocee6.jar"/>
+		<unzip dest="plugins/${plugin.id}_${plugin.version}/javaee6doc" src="glassfish-all.jar"/>
 		<mkdir dir="plugins/${plugin.id}_${plugin.version}/cometdoc" />
 		<unzip dest="plugins/${plugin.id}_${plugin.version}/cometdoc" src="grizzly-comet-1.9.19-SNAPSHOT-javadoc.jar"/>
 
