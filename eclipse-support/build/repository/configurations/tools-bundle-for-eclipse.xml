@@ -47,6 +47,8 @@ chmod -R a+w "$ECLIPSE_TARGET_DIR"
 # but not this file:
 chmod  a-w "$ECLIPSE_TARGET_DIR/configuration/config.ini"
 
+# fix for https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=257
+chown -R ${USER}:admin "$ECLIPSE_TARGET_DIR/glassfishv"*
 
     </mac-postflight-script>
 </configuration>
