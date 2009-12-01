@@ -57,6 +57,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
+import org.eclipse.wst.common.componentcore.ComponentCore;
+import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
+import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -173,13 +176,21 @@ public class ResourceUtils {
 	}
 	
 	public static String getResourceLocation(IProject project){
-		String setUpLocation = null;
-		if(JavaEEProjectUtilities.isDynamicWebProject(project)){
-			setUpLocation = WEB_CONTENT + File.separatorChar + WEB_INF;			
-		}else if (JavaEEProjectUtilities.isEARProject(project)){
-			setUpLocation = EAR_CONTENT;
-		}else if (JavaEEProjectUtilities.isEJBProject(project)){
-			setUpLocation = EJB_CONTENT + File.separatorChar + META_INF;
+		String setUpLocation = getProjectResourceLocation(project);
+		if(setUpLocation == null) {
+			if(JavaEEProjectUtilities.isDynamicWebProject(project)){
+				setUpLocation = WEB_CONTENT + File.separatorChar + WEB_INF;			
+			}else if (JavaEEProjectUtilities.isEARProject(project)){
+				setUpLocation = EAR_CONTENT;
+			}else if (JavaEEProjectUtilities.isEJBProject(project)){
+				setUpLocation = EJB_CONTENT + File.separatorChar + META_INF;
+			}
+		} else {
+			if(JavaEEProjectUtilities.isDynamicWebProject(project)){
+				setUpLocation = setUpLocation + File.separatorChar + WEB_INF;			
+			}else if (JavaEEProjectUtilities.isEJBProject(project)){
+				setUpLocation = setUpLocation + File.separatorChar + META_INF;
+			}
 		}
 		return setUpLocation;
 	}
@@ -195,6 +206,15 @@ public class ResourceUtils {
 		}
 		return setUpLocation;
 	}
+	
+	private static String getProjectResourceLocation(IProject project){
+		String setUpLocation = null;
+		IVirtualComponent component = ComponentCore.createComponent(project);
+		IVirtualFolder contentFolder = component.getRootFolder();
+		IContainer resourceFolder = contentFolder.getUnderlyingFolder();
+		setUpLocation = resourceFolder.getName();
+		return setUpLocation;
+	}	
 	
 	private static IFile getSunResourceIFile(IProject selectedProject) {
 		String dirName = getResourceLocation(selectedProject);
