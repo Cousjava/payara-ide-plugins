@@ -66,8 +66,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.componentcore.internal.util.ComponentUtilities;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IModuleResource;
-import org.eclipse.wst.server.core.util.PublishUtil;
+import org.eclipse.wst.server.core.util.PublishHelper;
 
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
@@ -272,12 +271,16 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		needARedeploy = true; //by default
 		
 		//if (kind==IServer.PUBLISH_AUTO)
-		SunAppSrvPlugin.logMessage("publishModule kind= " +kind+"  deltaKind=" +deltaKind+" "+module.length+module[0].getName(),null);
+		SunAppSrvPlugin.logMessage("publishModule kind= " +kind+"  deltaKind=" +deltaKind+" "+module.length+" "+module[0].getName(),null);
 			
 		if (isV3()){ //for V3, try to optimize the redeployment process by not using ANT, but V3 commands
 			long t= System.currentTimeMillis();
-			publishModuleForGlassFishV3( kind,  deltaKind, module,  monitor);
-			SunAppSrvPlugin.logMessage("done publishModule in " +(System.currentTimeMillis()-t)+" ms");
+			if (module.length > 1){// only publish root modules, i.e web modules
+				setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
+			}else{
+				publishModuleForGlassFishV3( kind,  deltaKind, module,  monitor);
+			        SunAppSrvPlugin.logMessage("done publishModule in " +(System.currentTimeMillis()-t)+" ms");
+			}
 		}
 		else {
 		/*not used yet	if (getSunAppServer().getFastDeploy().equals("true")){
@@ -565,7 +568,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 	 */
 	protected void publishModuleForGlassFishV3(int kind, int deltaKind, IModule[] module, IProgressMonitor monitor) throws CoreException {
 
-		if (module.length > 1){// only publish root modules, i.e web modules
+            if (module.length > 1){// only publish root modules, i.e web modules
 			setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
 			return ;
 		}
@@ -644,6 +647,10 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 	
 	*/
 	private void publishDeployedDirectory(int deltaKind, Properties p,IModule module[], IProgressMonitor monitor) throws CoreException {
+		//ludo using PublishHelper now to control the temp area to be
+		// in the same file system of the deployed apps so that the mv operation Eclipse is doing sometimes can work.
+		PublishHelper helper = new PublishHelper(new Path (getDomainDirWithDomainName()+"/eclipseAppsTmp").toFile());
+
 		if (deltaKind == REMOVED ) {
 			String publishPath = (String) p.get(module[0].getId());
 			SunAppSrvPlugin.logMessage("REMOVED in publishPath" +publishPath);
@@ -680,27 +687,29 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 					File pub = new File(publishPath);
 					if (pub.exists()) {
 						SunAppSrvPlugin.logMessage("PublishUtil.deleteDirectory called");
-						IStatus[] stat = PublishUtil.deleteDirectory(pub, monitor);
+						IStatus[] stat = PublishHelper.deleteDirectory(pub, monitor);
 						analyseReturnedStatus(stat);
 					}
 				} catch (Exception e) {
 					throw new CoreException(new Status(IStatus.WARNING, SunAppSrvPlugin.SUNPLUGIN_ID, 0,"cannot remove "+module[0].getName(), e));
-				}
+				}				
 			}
 		}
 		else {
 			IPath path = new Path (getDomainDirWithDomainName()+"/eclipseApps/"+module[0].getName());
-			IModuleResource[] moduleResource = getResources(module);
+	//		IModuleResource[] moduleResource = getResources(module);
 	//		SunAppSrvPlugin.logMessage("IModuleResource len="+moduleResource.length);
-	//		for (int j=0;j<moduleResource.length ;j++)
+	//		for (int j=0;j<moduleResource.length ;j++
 	//			SunAppSrvPlugin.logMessage("IModuleResource n="+moduleResource[j].getName()+"-----"+moduleResource[j].getModuleRelativePath());
+									
+			
 
-			IStatus[] stat = PublishUtil.publishSmart(moduleResource, path, monitor);
-			SunAppSrvPlugin.logMessage("PublishUtil.publishSmart called");
-			analyseReturnedStatus(stat);
+
 			
 			String contextRoot=null;
-			AssembleModules assembler = new AssembleModules(module[0], path,getSunAppServer());
+			AssembleModules assembler = new AssembleModules(module[0], path,getSunAppServer() , helper);
+			SunAppSrvPlugin.logMessage("PublishUtil.publishSmart called");
+
 			//either ear or web.
 			if(AssembleModules.isModuleType(module[0], "jst.web")) {
 				SunAppSrvPlugin.logMessage("is WEB");
