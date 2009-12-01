@@ -1,6 +1,13 @@
 
-<!-- The PUBLIC ID (defined in DOCTYPE) associated with this dtd is:
-     "-//Sun Microsystems, Inc.//DTD Application Server 8.1 Servlet 2.4//EN"
+<!--
+  XML DTD for Sun Application Server specific Java EE web
+  deployment descriptor. This is a companion DTD to web-app_3_0.xsd
+  and web-common_3_0.xsd.
+
+  It must include a DOCTYPE of the following form:
+
+  <!DOCTYPE sun-web-app PUBLIC "-//Sun Microsystems, Inc.//DTD GlassFish Application Server 3.0 Servlet 3.0//EN" "http://www.sun.com/software/appserver/dtds/sun-web-app_3_0-0.dtd">
+
 -->
 
 <!ENTITY % boolean "(yes | no | on | off | 1 | 0 | true | false)">
@@ -8,10 +15,11 @@
 <!-- root element for vendor specific web application (module) configuration -->
 <!ELEMENT sun-web-app (context-root?, security-role-mapping*, servlet*, idempotent-url-pattern*, session-config?,
                        ejb-ref*, resource-ref*, resource-env-ref*,  service-ref*,
-                       cache?, class-loader?,
+                       message-destination-ref*, cache?, class-loader?,
                        jsp-config?, locale-charset-info?, parameter-encoding?,
-                       property*, message-destination*, webservice-description*)>
-<!ATTLIST sun-web-app error-url CDATA "">
+                       property*, valve*, message-destination*, webservice-description*)>
+<!ATTLIST sun-web-app error-url CDATA ""
+                      httpservlet-security-provider CDATA #IMPLIED>
 
 <!--
   Idempotent URL Patterns
@@ -24,7 +32,7 @@
 
 <!-- 
  Context Root for the web application when the war file is a standalone module.
- When the war module is part of the J2EE Application, use the application.xml
+ When the war module is part of the Java EE Application, use the application.xml
 -->
 <!ELEMENT context-root (#PCDATA)>
 
@@ -32,22 +40,17 @@
 <!ELEMENT role-name (#PCDATA)>
 
 <!ELEMENT principal-name (#PCDATA)>
+<!ATTLIST principal-name class-name CDATA #IMPLIED>
 <!ELEMENT group-name (#PCDATA)>
 
 <!ELEMENT servlet (servlet-name, principal-name?, webservice-endpoint*)>
 
 <!ELEMENT session-config (session-manager?, session-properties?, cookie-properties?)>
 
-<!--
-The valid values for
-8.1 PE:     memory, file, custom
-8.1 SE/EE:  memory, file, custom, ha
-PWC:        memory, file, s1ws60, mmap 
--->
-<!ENTITY % persistence-type "(memory | file | custom | ha | s1ws60 | mmap)">
+<!ENTITY % persistence-type "(memory | file | custom | ha | s1ws60 | mmap | replicated)">
 
 <!ELEMENT session-manager (manager-properties?, store-properties?)>
-<!ATTLIST session-manager persistence-type %persistence-type; "memory">
+<!ATTLIST session-manager persistence-type CDATA "memory">
 
 <!ELEMENT manager-properties (property*)>
 <!ELEMENT store-properties (property*)>
@@ -58,7 +61,7 @@ PWC:        memory, file, s1ws60, mmap
 
 <!ELEMENT resource-env-ref (resource-env-ref-name, jndi-name)>
 <!ELEMENT resource-env-ref-name (#PCDATA)>
-           
+
 <!ELEMENT resource-ref (res-ref-name, jndi-name, default-resource-principal?)>
 <!ELEMENT res-ref-name (#PCDATA)>
 
@@ -73,6 +76,19 @@ This node holds information about a logical message destination
 This node holds the name of a logical message destination
 -->
 <!ELEMENT message-destination-name (#PCDATA)>
+
+<!--
+message-destination-ref is used to directly bind a message destination reference
+to the jndi-name of a Queue,Topic, or some other physical destination. It should
+only be used when the corresponding message destination reference does not
+specify a message-destination-link to a logical message-destination.
+-->
+<!ELEMENT message-destination-ref (message-destination-ref-name, jndi-name)>
+
+<!--
+name of a message-destination reference.
+-->
+<!ELEMENT message-destination-ref-name (#PCDATA)>
 
 <!--
 This text nodes holds a name string.
@@ -102,7 +118,7 @@ This element holds password text.
         max-entries        Maximum number of entries this cache may hold. [4096]
         timeout-in-seconds Default timeout for the cache entries in seconds. [30]
         enabled            Is this cache enabled? [true]                                                   The default value is changed to true from 8.1
--->                                                                                   
+-->
 <!ELEMENT cache (cache-helper*, default-helper?, property*, cache-mapping*)>
 <!ATTLIST cache  max-entries         CDATA     "4096"
                  timeout-in-seconds  CDATA     "30"
@@ -242,12 +258,36 @@ value element specifies the applicable value and a matching expression for a con
          bogus
     </value>
   </constraint-field>
--->             
+-->
 <!ELEMENT constraint-field-value (#PCDATA)>
 <!ATTLIST constraint-field-value 	match-expr              %expr;    'equals'
                 			cache-on-match          %boolean;  'true'
                 			cache-on-match-failure  %boolean;  'false'>
 
+<!--
+  The class-loader element allows developers to customize the behaviour
+  of their web application's classloader.
+
+  attributes
+    extra-class-path          List of comma-separated JAR files to be
+                              added to the web application's class path
+    delegate                  If set to false, the delegation behavior
+                              of the web application's classloader complies
+                              with the Servlet 2.3 specification,
+                              section 9.7.2, and gives preference to classes
+                              and resources within the WAR file or the
+                              extra-class-path over those higher up in the
+                              classloader hierarchy, unless those classes or
+                              resources are part of the Java EE platform.
+                              If set to its default value of true, classes
+                              and resources residing in container-wide library
+                              JAR files are loaded in preference to classes
+                              and resources packaged within the WAR file or
+                              specified on the extra-class-path.
+    dynamic-reload-interval   Not supported. Included for backward
+                              compatibility with previous Sun Java System
+                              Web Server versions
+-->
 <!ELEMENT class-loader (property*)>
 <!ATTLIST class-loader extra-class-path CDATA  #IMPLIED
                        delegate %boolean; 'true'
@@ -281,10 +321,13 @@ This text nodes holds a value string.
 -->
 <!ELEMENT value (#PCDATA)>
 
+<!ELEMENT valve (description?, property*)>
+<!ATTLIST valve name        CDATA  #REQUIRED
+                class-name  CDATA  #REQUIRED>
 
 <!--
   					W E B   S E R V I C E S 
---> 	
+-->
 <!--
 Runtime settings for a web service reference.  In the simplest case,
 there is no runtime information required for a service ref.  Runtime info
@@ -425,7 +468,7 @@ provider.
 When login-config is specified, a default message-security provider
 is not applied to the endpoint.
 -->
-<!ELEMENT webservice-endpoint ( port-component-name, endpoint-address-uri?, (login-config | message-security-binding)?, transport-guarantee?, service-qname?, tie-class?, servlet-impl-class? )>
+<!ELEMENT webservice-endpoint ( port-component-name, endpoint-address-uri?, (login-config | message-security-binding)?, transport-guarantee?, service-qname?, tie-class?, servlet-impl-class?, debugging-enabled? )>
 
 <!--
 Unique name of a port component within a module
@@ -472,6 +515,14 @@ This is not set by the deployer.  It is derived by the container
 during deployment.
 -->
 <!ELEMENT servlet-impl-class (#PCDATA)>
+
+<!--
+Specify whether or not the debugging servlet should be enabled for this 
+Web Service endpoint. 
+
+Supported values : "true" to debug the endpoint
+-->
+<!ELEMENT debugging-enabled (#PCDATA)>
 
 <!--
 The transport-guarantee element specifies that the communication

@@ -809,6 +809,10 @@
                     uri="dtds/sun-application_5_0-0.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-application_5_0-0.dtd" />
             
+            <public publicId="-//Sun Microsystems, Inc.//DTD GlassFish Application Server 3.0 Java EE Application 6.0//EN"
+                    uri="dtds/sun-application_6_0-0.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application_6_0-0.dtd" />
+
             
             <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 EJB 2.0//EN"
                     uri="dtds/sun-ejb-jar_2_0-0.dtd" 
@@ -838,7 +842,12 @@
             <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.1.1 EJB 3.0//EN"
                     uri="dtds/sun-ejb-jar_3_0-1.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_0-1.dtd" /> 
-            
+ 
+            <public publicId="-//Sun Microsystems, Inc.//DTD GlassFish Application Server 3.0 EJB 3.1//EN"
+                    uri="dtds/sun-ejb-jar_3_1-0.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_1-0.dtd" />
+
+
             
             <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 Application Client 1.3//EN"
                     uri="dtds/sun-application-client_1_3-0.dtd" 
@@ -863,7 +872,11 @@
             <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 Application Client 5.0//EN" 
                     uri="dtds/sun-application-client_5_0-0.dtd" 
                     webURL="http://www.sun.com/software/appserver/dtds/sun-application-client_5_0-0.dtd" />
-            
+
+            <public publicId="-//Sun Microsystems, Inc.//DTD GlassFish Application Server 3.0 Application Client 6.0//EN"
+                    uri="dtds/sun-application-client_6_0-0.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-application-client_6_0-0.dtd" />
+
             
             <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 Connector 1.0//EN" 
                     uri="dtds/sun-connector_1_0-0.dtd" 
@@ -898,10 +911,14 @@
                     uri="dtds/sun-web-app_2_4-1.dtd" 
                     webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_2_4-1.dtd" />
             
-            
-            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 Servlet 2.5//EN" 
-                    uri="dtds/sun-web-app_2_5-0.dtd" 
+
+            <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 Servlet 2.5//EN"
+                    uri="dtds/sun-web-app_2_5-0.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_2_5-0.dtd" />
+
+           <public publicId="-//Sun Microsystems, Inc.//DTD GlassFish Application Server 3.0 Servlet 3.0//EN"
+                    uri="dtds/sun-web-app_3_0-0.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-web-app_3_0-0.dtd" />
             
             
             <public publicId="-//Sun Microsystems, Inc.//DTD Sun ONE Application Server 7.0 Application Client Container 1.0//EN" 
@@ -983,8 +1000,15 @@
            <public publicId="-//Sun Microsystems Inc.//DTD Sun Java System Application Server 9.1//EN"
                     uri="dtds/sun-converged-loadbalancer_1_0.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-converged-loadbalancer_1_0.dtd" />
-            
-       
+
+           <public publicId="-//Sun Microsystems, Inc.//DTD Application Server 9.0 Resource Definitions //EN"
+                    uri="dtds/sun-resources_1_3.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-resources_1_3.dtd" />
+
+           <public publicId="-//Sun Microsystems, Inc.//DTD GlassFish Application Server 3.0 Resource Definitions //EN"
+                    uri="dtds/sun-resources_1_4.dtd"
+                    webURL="http://www.sun.com/software/appserver/dtds/sun-resources_1_4.dtd" />
+
        <!-- New Java EE 6 only schemas... The old ee 5 schemas are alreay known by Eclipse current wtp.
         We might check when we need to remove these schemas from our plugin when Eclipse really support officially
         Java EE 6 -->
