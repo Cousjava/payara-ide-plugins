@@ -40,6 +40,7 @@ package com.sun.enterprise.jst.server.sunappsrv.v3;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -69,6 +70,7 @@ import org.eclipse.jst.javaee.core.UrlPatternType;
 import org.eclipse.jst.javaee.ejb.SecurityIdentityType;
 import org.eclipse.jst.javaee.web.Filter;
 import org.eclipse.jst.javaee.web.Servlet;
+import org.eclipse.jst.javaee.web.ServletMapping;
 import org.eclipse.jst.javaee.web.WebApp;
 import org.eclipse.jst.javaee.web.WebFactory;
 import org.eclipse.jst.jee.model.internal.WebAnnotationFactory;
@@ -265,20 +267,42 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		// FIXME 1) why the mapping is not added in the original WebAnnotationReader? who should manage the mapping in theory?
 		// FIXME 2) atm we just add up mappings and never clean up 
 		if (servlet.getRunAs() != null) {
+			List<ServletMapping> servletMappings = modelObject.getServletMappings();
 			String pattern = servlet.getRunAs().getRoleName();
+			String servletName = servlet.getServletName();
 
+			// Check if there is already a mapping for this pattern and add if necessary
+			for (ServletMapping servletMapping : servletMappings) {
+				if (servletMapping.getServletName().equals(servletName)) {
+					List<UrlPatternType> patterns = servletMapping.getUrlPatterns();
+					
+					for (UrlPatternType urlPatternType : patterns) {
+						if (urlPatternType.getValue().equals(pattern)) {
+							// found a match, no need to add
+							return;
+						}
+					}
+					// TODO - Should we move the case for when we found a servlet name but no pattern to here?
+					// something like:
+					// UrlPatternType url = JavaeeFactory.eINSTANCE.createUrlPatternType();
+					// url.setValue(pattern);
+					// patterns.add(url);
+					// return;
+				}
+			}
+			
+			// if we got to here, did not find a match, so go ahead and add it
 			// Create the servlet mapping instance from the web factory
-			org.eclipse.jst.javaee.web.ServletMapping mapping = WebFactory.eINSTANCE
-					.createServletMapping();
+			ServletMapping mapping = WebFactory.eINSTANCE.createServletMapping();
 
-			mapping.setServletName(servlet.getServletName());
+			mapping.setServletName(servletName);
 			// Set the URL pattern to map the servlet to
 			UrlPatternType url = JavaeeFactory.eINSTANCE.createUrlPatternType();
 			url.setValue(pattern);
 			mapping.getUrlPatterns().add(url);
 
 			// Add the servlet mapping to the web application model list
-			modelObject.getServletMappings().add(mapping);
+			servletMappings.add(mapping);
 		}
 	}
 
