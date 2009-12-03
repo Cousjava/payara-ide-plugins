@@ -441,7 +441,9 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                                                         "localhost:9009") != -1) && events[i].getKind() == DebugEvent.TERMINATE) { //$NON-NLS-1$
                                                     DebugPlugin.getDefault().removeDebugEventListener(
                                                             this);
-                                                    serverBehavior.stop(true);
+                                                   /// serverBehavior.stop(true);
+                                                   //no need to stop the server at that time see 
+                                                  //https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=263
                                                 }
                                             } catch (DebugException e) {
                                                 // TODO Auto-generated catch block
