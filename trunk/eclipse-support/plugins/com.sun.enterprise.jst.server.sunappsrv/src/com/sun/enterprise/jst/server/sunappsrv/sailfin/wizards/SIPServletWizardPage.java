@@ -38,6 +38,8 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards;
 
+import static org.eclipse.jst.j2ee.internal.common.operations.INewJavaClassDataModelProperties.PROJECT;
+
 import org.eclipse.jst.j2ee.internal.web.operations.NewServletClassDataModelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
@@ -59,7 +61,13 @@ public class SIPServletWizardPage extends AbstractSIPWizardPage {
 
 	protected Composite createTopLevelComposite(Composite parent) {
 		Composite superComposite = super.createTopLevelComposite(parent);
-		superText.setText(SIP_SUPERCLASS_NAME);
+
+		// if there is no project which is valid, setting this text will cause NPEs in the model synch helper
+		// so only set this if there is at least one valid project in the workspace
+		if (model.getProperty(PROJECT) != null) {
+			superText.setText(SIP_SUPERCLASS_NAME);
+		}
+
 		superText.setEnabled(false);
 		superButton.setEnabled(false);
 		return superComposite;
