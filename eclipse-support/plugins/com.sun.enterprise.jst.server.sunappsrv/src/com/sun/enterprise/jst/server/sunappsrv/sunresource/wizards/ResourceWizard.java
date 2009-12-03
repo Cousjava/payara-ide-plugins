@@ -137,13 +137,14 @@ public abstract class ResourceWizard extends Wizard implements INewWizard {
 			try {
 				if (FacetedProjectFramework.hasProjectFacet(project2, "sun.facet")) { //$NON-NLS-1$
 					returnProjects.add(project2);
-				}
-				IRuntime runtime = J2EEProjectUtilities.getServerRuntime(project2);
-				if (runtime != null) {
-					String runtimeId = runtime.getRuntimeType().getId();
-					
-					if (runtimeId.startsWith(GF_RUNTIME) || runtimeId.startsWith(SAILFIN_RUNTIME)) {
-						returnProjects.add(project2);
+				} else {
+					IRuntime runtime = J2EEProjectUtilities.getServerRuntime(project2);
+					if (runtime != null) {
+						String runtimeId = runtime.getRuntimeType().getId();
+
+						if (runtimeId.startsWith(GF_RUNTIME) || runtimeId.startsWith(SAILFIN_RUNTIME)) {
+							returnProjects.add(project2);
+						}
 					}
 				}
 			} catch (CoreException e) {
