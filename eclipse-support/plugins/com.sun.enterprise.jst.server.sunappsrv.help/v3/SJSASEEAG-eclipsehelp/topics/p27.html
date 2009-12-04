@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Administering the Transaction Service - Sun GlassFish Enterprise Server v3 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p26.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p28.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="ablsn"></a>Chapter&#160;21<h3>Administering the Transaction Service</h3><a name="indexterm-1006"></a><p>This chapter discusses how to configure the transaction service for the Sun GlassFish<sup>TM</sup> Enterprise
+Server environment and how to recover transactions by using the <tt>asadmin</tt> command-line utility.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ablso">About Transactions</a></p></li>
+<li><p><a href="#giubd">Recovering Transactions</a></p></li></ul>
+<p>Instructions for accomplishing the tasks in this chapter by using the Administration
+Console are contained in the Administration Console online help. For additional information on configuring
+the transaction service, transaction logging, and distributed transaction recovery, see <a href="http://docs.sun.com/doc/820-7695/beanm?a=view">Chapter 15, Using the Transaction Service, in <i>Sun GlassFish Enterprise Server v3 Application Development Guide</i></a>.</p>
+
+<a name="ablso"></a><h3>About Transactions</h3>
+<a name="indexterm-1007"></a><a name="indexterm-1008"></a><p>A <b>transaction</b> is a series of discreet actions in an application that must
+all complete successfully. By enclosing one or more actions in an indivisible unit
+of work, a transaction ensures data integrity and consistency. If all actions do
+not complete, the changes are rolled back. </p><p>For example, to transfer funds from a checking account to a savings account,
+the following steps typically occur:</p>
+<ol><li><p>Check to see if the checking account has enough money to cover the transfer.</p></li>
+<li><p>Debit the amount from the checking account.</p></li>
+<li><p>Credit the amount to the savings account.</p></li>
+<li><p>Record the transfer to the checking account log.</p></li>
+<li><p>Record the transfer to the savings account log.</p></li></ol>
+<p>These steps together are considered a single transaction.</p><p>If all the steps complete successfully, the transaction is <b>committed</b>. If any
+step fails, all changes from the preceding steps are rolled back, and the
+checking account and savings account are returned to the states they were in
+before the transaction started. This type of event is called a <b>rollback</b>. A
+normal transaction ends in either a commit state or a rollback state.</p><p>The following entities contribute to reliable transaction processing by implementing various APIs and
+functionalities:</p>
+<ul><li><p><b>Transaction Manager.</b> Provides the services and management functions required to support transaction demarcation, transactional resource management, synchronization, and transaction context propagation.</p></li>
+<li><p><b>Enterprise Server.</b> Provides the infrastructure required to support the application runtime environment that includes transaction state management.</p></li>
+<li><p><b>Resource Manager.</b> Through a resource adapter, the resource manager provides the application access to resources. The resource manager participates in distributed transactions by implementing a transaction resource interface used by the transaction manager to communicate transaction association, transaction completion, and recovery work. An example of such a resource manager is a relational database server.</p></li>
+<li><p><b>Resource Adapter.</b> A system-level software library is used by Enterprise Server or a client to connect to a resource manager. A resource adapter is typically specific to a resource manager. The resource adapter is available as a library and is used within the address space of the client using it. An example of such a resource adapter is a Java<sup>TM</sup> Database Connectivity (JDBC) driver. For information on supported JDBC drivers, see <a href="p20.html#beamw">Configuration Specifics for JDBC Drivers</a></p></li>
+<li><p><b>Transactional User Application</b> In the Enterprise Server environment, the transactional user application uses Java Naming and Directory Interface (JNDI) to look up transactional data sources and, optionally, the transaction manager). The application might use declarative transaction attribute settings for enterprise beans, or explicit programmatic transaction demarcation.</p></li></ul>
+
+
+<a name="giubd"></a><h3>Recovering Transactions</h3>
+<a name="indexterm-1009"></a><p>There are some situations where the commitment or rollback might be interrupted, typically
+because the server crashed or a resource manager crashed. Crash situations can leave
+some transactions stranded between steps. Enterprise Server is designed to recover from these
+failures and complete the transactions upon server startup.</p><p> If the failed transaction spans multiple servers, the server that started the
+transaction can contact the other servers to get the outcome of the
+transaction. If the other servers are unreachable, the transaction uses heuristic decision information to
+determine the outcome.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giufn">To Stop the Transaction Service</a></p></li>
+<li><p><a href="#giugk">To Roll Back a Transaction</a></p></li>
+<li><p><a href="#giuet">To Restart the Transaction Service</a></p></li>
+<li><p><a href="#giuhe">To Manually Recover Transactions</a></p></li></ul>
+
+
+<a name="giufn"></a><h4>To Stop the Transaction Service</h4><a name="indexterm-1010"></a><a name="indexterm-1011"></a><a name="indexterm-1012"></a><p>Use the <tt>freeze-transaction-service</tt> subcommand in remote mode to stop the transaction service. When
+the transaction service is stopped, all inflight transactions are immediately suspended. You must stop
+the transaction service before rolling back any in-flight transactions.</p><p>Running this subcommand on an stopped transaction subsystem has no effect. The transaction
+service remains suspended until you restart it using the <tt>unfreeze-transaction-service</tt> subcommand.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Stop the transaction service by using the <a href="http://docs.sun.com/doc/820-7701/freeze-transaction-service-1?a=view"><tt>freeze-transaction-service</tt>(1)</a> subcommand.</b></li></ol><a name="giufq"></a><h6>Example&#160;21-1 Stopping the Transaction Service</h6><p>This example stops the transaction service:</p><pre>asadmin> <tt><b>freeze-transaction-service</b></tt>
+Command freeze-transaction-service executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help freeze-transaction-service</tt> at the command line.</p>
+
+<a name="giugk"></a><h4>To Roll Back a Transaction</h4><a name="indexterm-1013"></a><a name="indexterm-1014"></a><a name="indexterm-1015"></a><p>In some situations, you might want to roll back a particular transaction. Before
+you can roll back a transaction, you must first stop the transaction service
+so that transaction operations are suspended. Use the <tt>rollback-transaction</tt> subcommand in remote
+mode to roll back a specific transaction.</p><h6>Before You Begin</h6><p>Stop the transaction service before rolling back an in-flight transaction.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Identify the ID of the transaction you want to roll back.</b></li>
+<li><b>Roll back the transaction by using the <a href="http://docs.sun.com/doc/820-7701/rollback-transaction-1?a=view"><tt>rollback-transaction</tt>(1)</a> subcommand.</b></li></ol><a name="giufy"></a><h6>Example&#160;21-2 Rolling Back a Transaction</h6><p>This example rolls back the <tt>0000000000000001_00</tt> transaction:</p><pre>asadmin> <tt><b>rollback-transaction 0000000000000001_00</b></tt>
+Command rollback-transaction executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help rollback-transaction</tt> at the command line.</p>
+
+<a name="giuet"></a><h4>To Restart the Transaction Service</h4><a name="indexterm-1016"></a><a name="indexterm-1017"></a><a name="indexterm-1018"></a><p>Use the <tt>unfreeze-transaction-service</tt> subcommand in remote mote to resume all the suspended in-flight
+transactions. Run this subcommand to restart the transaction service after it has been
+frozen.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Restart the suspended transaction service by using the <a href="http://docs.sun.com/doc/820-7701/unfreeze-transaction-service-1?a=view"><tt>unfreeze-transaction-service</tt>(1)</a> subcommand.</b></li></ol><a name="giuef"></a><h6>Example&#160;21-3 Restarting the Transaction Service</h6><p>This example rolls back the <tt>0000000000000001_00</tt> transaction:</p><pre>asadmin> <tt><b>unfreeze-transaction-service</b></tt>
+Command unfreeze-transaction-service executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help unfreeze-transaction-service</tt> at the command line.</p>
+
+<a name="giuhe"></a><h4>To Manually Recover Transactions</h4><a name="indexterm-1019"></a><a name="indexterm-1020"></a><a name="indexterm-1021"></a><p>Use the <tt>recover-transactions</tt> subcommand in remote mode to manually recover transactions that were
+pending on a server when the a resource on the server failed. Manual
+transaction recovery cannot be used to recover transactions after a server crash. Manual operations
+are intended for the cases when a resource fails unexpectedly, but the server
+is still running.  If the server crashes, only the full startup recovery
+process can recover in-flight transactions.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Manually recover transactions by using the <a href="http://docs.sun.com/doc/820-7701/recover-transactions-1?a=view"><tt>recover-transactions</tt>(1)</a> subcommand.</b></li></ol><a name="giugn"></a><h6>Example&#160;21-4 Manually Recovering Transactions</h6><p>This example performs manual recovery of transactions on <tt>sampleserver</tt>:</p><pre>asadmin <tt><b>recover-transactions sampleserver</b></tt>
+Transaction recovered.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help recover-transactions</tt> at the command line.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p26.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p28.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

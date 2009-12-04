@@ -1,0 +1,389 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Administering EIS Connectivity - Sun GlassFish Enterprise Server v3 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p20.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p22.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="abllp"></a>Chapter&#160;15<h3>Administering EIS Connectivity</h3><p>This chapter provides information and procedures for administering connections to enterprise information system
+(EIS) data in the Sun GlassFish<sup>TM</sup> Enterprise Server v3 environment by using the
+<tt>asadmin</tt> command-line utility. </p>
+<hr><p><b>Note - </b>If you installed the Web Profile, connector modules that use only outbound communication
+features and work-management that does not involve inbound communication features are supported. Other
+connector features are supported only in the Full Platform Profile.</p>
+<hr>
+<p>The following topics are addressed here:</p>
+<ul><li><p><a href="#abllq">About EIS Connectivity</a></p></li>
+<li><p><a href="#ablls">Administering Connector Connection Pools</a></p></li>
+<li><p><a href="#abllx">Administering Connector Resources</a></p></li>
+<li><p><a href="#giope">Administering the Resource Adapter Configuration</a></p></li>
+<li><p><a href="#gitxy">Administering Connector Security Maps</a></p></li>
+<li><p><a href="#giohl">Administering Connector Work Security Maps</a></p></li>
+<li><p><a href="#ablmc">Administering Administered Objects</a></p></li></ul>
+<p>Instructions for accomplishing the tasks in this chapter by using the Administration Console
+are contained in the Administration Console online help.</p><p>For information about configuring the connector service, see <a href="http://docs.sun.com/doc/821-0027"><i>Sun GlassFish Message Queue 4.4 Administration Guide</i></a>.</p><p> For information about database connectivity for Java<sup>TM</sup> DB, see <a href="p20.html">Chapter&#160;14, Administering Database Connectivity </a>.</p>
+
+<a name="abllq"></a><h3>About EIS Connectivity</h3>
+<p>Enterprise information system (EIS) refers to any system that holds the data of
+an organization. It can be a mainframe, a messaging system, a database system,
+or an application. Connection resources are used by applications and modules to access
+EIS software.)</p><p>The key elements of EIS connectivity are the following:</p>
+<ul><li><p><b>Connector Module.</b> A connector module, also called a <b>resource adapter</b>, is a Java EE component that enables applications to interact with EIS software. A connector module is used by Enterprise Server to implement Java Message Service (JMS). Like other Java EE modules, a connector module is installed when it is deployed. For instructions on creating a connector module, see <a href="http://docs.sun.com/doc/820-7695/bealk?a=view">Chapter 12, Developing Connectors, in <i>Sun GlassFish Enterprise Server v3 Application Development Guide</i></a></p></li>
+<li><p><b>Connector Connection Pool.</b> A connector connection pool is a group of reusable connections for a particular EIS. A connector connection pool is created when you specify the connector module that is associated with the pool. For administration procedures, see <a href="#ablls">Administering Connector Connection Pools</a>.</p></li>
+<li><p><b>Connector Resource.</b> A connector resource is a program object that provides an application with a connection to an EIS. A connector resource is created when you specify its JNDI name and its associated connection pool. The JNDI name of a connector resource for an EIS is usually in the <tt>java:comp/env/</tt><i>eis-specific</i> subcontext. For administration procedures, see <a href="#abllx">Administering Connector Resources</a>.</p></li>
+<li><p><b>Connector Module Configuration.</b> A connector module configuration is the information that resides in the domain configuration file (<tt>domain.xml</tt>) for the particular connector module (resource adapter). For instructions on administration, see <a href="#giope">Administering the Resource Adapter Configuration</a>.</p></li>
+<li><p><b>Connector Security Map.</b></p></li>
+<li><p><b>Connector Work Security Map.</b> A connector work security map associates the caller identity of the work submitted by the connector module (resource adapter) EIS principal or EIS user group to a suitable principal or user group in the Enterprise Server security domain. For administration procedures, see <a href="#giohl">Administering Connector Work Security Maps</a>.</p></li>
+<li><p><b>Administered Object.</b> An administered object provides specialized functionality for an application, such as providing access to a parser that is specific to the connector module and its associated EIS. For administration procedures, see <a href="#ablmc">Administering Administered Objects</a>.</p></li></ul>
+<p>At runtime, the following sequence occurs when an application connects to an EIS:</p>
+<ol><li><p>The application gets the connector resource (data source) associated with the EIS by making a call through the JNDI API.</p><p>Using the JNDI name of the connector resource, the naming and directory service locates the resource. Each EIS resource specifies a connector connection pool.</p></li>
+<li><p>Using the connector resource, the application gets an EIS connection.</p><p>Enterprise Server retrieves a physical connection from the connection pool that corresponds to the EIS resource. The pool defines connection attributes such as the EIS name, user name, and password.</p></li>
+<li><p>After the EIS connection is established, the application can read, modify, and add data to the EIS.</p><p>The application accesses the EIS information by making calls to the JMS API. </p></li>
+<li><p>When the application is finished accessing the EIS, the application closes the connection and returns the connection to the connection pool.</p></li></ol>
+
+
+<a name="ablls"></a><h3>Administering Connector Connection Pools</h3>
+<a name="indexterm-685"></a><p>After a connector module has been deployed, you are ready to create a
+connector connection pool for it. </p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#gioce">To Create a Connector Connection Pool</a></p></li>
+<li><p><a href="#giocg">To List Connector Connection Pools</a></p></li>
+<li><p><a href="#gjiqz">To Connect to (Ping) or Reset (Flush) a Connector Connection Pool</a></p></li>
+<li><p><a href="#gioti">To Update a Connector Connection Pool</a></p></li>
+<li><p><a href="#giocp">To Delete a Connector Connection Pool</a></p></li></ul>
+
+
+<a name="gioce"></a><h4>To Create a Connector Connection Pool</h4><a name="indexterm-686"></a><a name="indexterm-687"></a><a name="indexterm-688"></a><p>Use the <tt>create-connector-connection-pool</tt> subcommand in remote mode to create a connector connection pool
+for a deployed connector module. When you are building the connector connection pool,
+certain data specific to the EIS will be required. The value in the
+mandatory <tt>--connectiondefintion</tt> option provides the EIS info.  </p><p>Multiple connector resources can specify a single connection pool. </p><p>Creating a connector connection pool is a dynamic event and does not require
+server restart. However, there are some parameters that do require server restart. See
+<a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>.</p><h6>Before You Begin</h6><p>Before creating the connector connection pool, the connector must be installed.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create the connector connection pool by using the <a href="http://docs.sun.com/doc/820-7701/create-connector-connection-pool-1?a=view"><tt>create-connector-connection-pool</tt>(1)</a> subcommand. </b><p>Information about properties for this subcommand is included in this help page.</p></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li>
+<li>(Optional) <b>You can verify that a connection pool is usable by using the <tt>ping-connection-pool</tt>
+subcommand.</b><p>For instructions, see <a href="p20.html#ggnwn">To Contact (Ping) a Connection Pool</a>.<a name="indexterm-689"></a><a name="indexterm-690"></a></p></li></ol><a name="giocc"></a><h6>Example&#160;15-1 Creating a Connector Connection Pool</h6><p>This example creates the new <tt>jms/qConnPool</tt> pool for the <tt>javax.jms.QueueConnectionFactory</tt> connector module:</p><pre>asadmin> <tt><b>create-connector-connection-pool --steadypoolsize 20 --maxpoolsize 100 </b></tt>
+<tt><b>--poolresize 2</b></tt> <tt><b>--maxwait 60000 --raname jmsra --connectiondefinition </b></tt>
+<tt><b>javax.jms.QueueConnectionFactory jms/qConnPool </b></tt> 
+Command create-connector-connection-pool executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-connector-connection-pool</tt> at the command line.</p>
+
+<a name="giocg"></a><h4>To List Connector Connection Pools</h4><a name="indexterm-691"></a><a name="indexterm-692"></a><a name="indexterm-693"></a><p>Use the <tt>list-connector-connection-pools</tt> subcommand in remote mode to list the pools that have
+been created.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the connector connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-connection-pools-1?a=view"><tt>list-connector-connection-pools</tt>(1)</a> subcommand.</b></li></ol><a name="giody"></a><h6>Example&#160;15-2 Listing Connector Connection Pools</h6><p>This example lists the existing connector connection pools:</p><pre>asadmin> <tt><b>list-connector-connection-pools</b></tt>
+jms/qConnPool
+Command list-connector-connection-pools executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-connector-connection-pools</tt> at the command line. </p>
+
+<a name="gjiqz"></a><h4>To Connect to (Ping) or Reset (Flush) a Connector Connection Pool</h4><a name="indexterm-694"></a><a name="indexterm-695"></a><p>Use the <tt>ping-connection-pool</tt> or <tt>flushconnection-pool</tt> subcommands in remote mode to perform these
+tasks on a connection pools. See <a href="p20.html#ggnwn">To Contact (Ping) a Connection Pool</a> or <a href="p20.html#gjiqp">To Reset (Flush) a Connection Pool</a> for instructions.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Connect to or reset a connector connection pool by using the<a href="http://docs.sun.com/doc/820-7701/flush-connection-pool-1?a=view"><tt>flush-connection-pool</tt>(1)</a> subcommand
+or the <a href="http://docs.sun.com/doc/820-7701/ping-connection-pool-1?a=view"><tt>ping-connection-pool</tt>(1)</a> subcommand.</b></li></ol>
+
+<a name="gioti"></a><h4>To Update a Connector Connection Pool</h4><a name="indexterm-696"></a><a name="indexterm-697"></a><p>Use the <tt>get</tt> and <tt>set</tt> subcommands to view and change the values of
+the connector connection pool properties. </p><ol>
+<li><b>List the connector connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-connection-pools-1?a=view"><tt>list-connector-connection-pools</tt>(1)</a> subcommand.</b></li>
+<li><b>View the properties of the connector connection pool by using the <a href="http://docs.sun.com/doc/820-7701/get-1?a=view"><tt>get</tt>(1)</a> subcommand.</b><p>For example:</p><pre>asadmin get domain.resources.connector-connection-pool.conectionpoolname.*</pre></li>
+<li><b> Set the property of the connector connection pool by using the
+<a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand.</b><p>For example:</p><pre>asadmin set domain.resources.connector-connection-pool
+.conectionpoolname.validate-atmost-once-period-in-seconds=3</pre></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol>
+
+<a name="giocp"></a><h4>To Delete a Connector Connection Pool</h4><a name="indexterm-698"></a><a name="indexterm-699"></a><a name="indexterm-700"></a><p>Use the <tt>delete-connector-connection-pool</tt> subcommand in remote mode to remove a connector connection pool.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the connector connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-connection-pools-1?a=view"><tt>list-connector-connection-pools</tt>(1)</a> subcommand.</b></li>
+<li><b>If necessary, notify users that the connector connection pool is being deleted.</b></li>
+<li><b>Delete the connector connection pool by using the <a href="http://docs.sun.com/doc/820-7701/delete-connector-connection-pool-1?a=view"><tt>delete-connector-connection-pool</tt>(1)</a> subcommand.</b></li></ol><a name="giohd"></a><h6>Example&#160;15-3 Deleting a Connector Connection Pool</h6><p>This example deletes the connection pool named <tt>jms/qConnPool</tt>:</p><pre>asadmin> <tt><b>delete-connector-connection-pool --cascade=false jms/qConnPool</b></tt>
+Command delete-connector-connection-pool executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-connector-connection-pool</tt> at the command line.</p>
+
+<a name="abllx"></a><h3>Administering Connector Resources</h3>
+<a name="indexterm-701"></a><p>A connector resource provides an application or module with the means of connecting
+to an EIS. Typically, you create a connector resource for each EIS that
+is accessed by the applications deployed in the domain.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giogt">To Create a Connector Resource</a></p></li>
+<li><p><a href="#giohs">To List Connector Resources</a></p></li>
+<li><p><a href="#giosg">To Update a Connector Resource</a></p></li>
+<li><p><a href="#giofs">To Delete a Connector Resource</a></p></li></ul>
+
+
+<a name="giogt"></a><h4>To Create a Connector Resource</h4><a name="indexterm-702"></a><a name="indexterm-703"></a><a name="indexterm-704"></a><p>Use the <tt>create-connector-resource</tt> subcommand in remote mode to register a new connector resource
+with its JNDI name.</p><p>Creating a connector resource is a dynamic event and does not require server
+restart. However, there are some parameters that do require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>.</p><h6>Before You Begin</h6><p>Before creating a connector resource, you must first create a connector connection pool.
+For instructions, see <a href="#gioce">To Create a Connector Connection Pool</a>.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create the connector resource by using the <a href="http://docs.sun.com/doc/820-7701/create-connector-resource-1?a=view"><tt>create-connector-resource</tt>(1)</a> subcommand. </b><p>Information about properties for this subcommand is included in this help page.</p></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giogn"></a><h6>Example&#160;15-4 Creating a Connector Resource</h6><p>This example creates a new resource named <tt>jms/qConnFactory</tt> for the <tt>jms/qConnPool</tt> connection pool:</p><pre>asadmin> <tt><b>create-connector-resource --poolname jms/qConnPool --description "creating sample connector resource" jms/qConnFactory</b></tt>
+Command create-connector-resource executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-connector-resource</tt> at the command line.</p>
+
+<a name="giohs"></a><h4>To List Connector Resources</h4><a name="indexterm-705"></a><a name="indexterm-706"></a><a name="indexterm-707"></a><p>Use the <tt>list-connector-resources</tt> subcommand in remote mode to list the connector resources that
+have been created.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the connector connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-resources-1?a=view"><tt>list-connector-resources</tt>(1)</a> subcommand.</b></li></ol><a name="gioia"></a><h6>Example&#160;15-5 Listing Connector Resources</h6><p>This example lists the existing connector resources:</p><pre>asadmin> <tt><b>list-connector-resources</b></tt>
+jms/qConnFactory
+Command list-connector-resources executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-connector-resources</tt> at the command line.</p>
+
+<a name="giosg"></a><h4>To Update a Connector Resource</h4><a name="indexterm-708"></a><a name="indexterm-709"></a><p>Use the <tt>get</tt> and <tt>set</tt> subcommands to view and change the values of
+the connector resource properties. </p><ol>
+<li><b>List the connector connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-resources-1?a=view"><tt>list-connector-resources</tt>(1)</a> subcommand.</b></li>
+<li><b>View the properties of the connector resource by using the <a href="http://docs.sun.com/doc/820-7701/get-1?a=view"><tt>get</tt>(1)</a> subcommand.</b><p>For example</p><pre>get domain.resources.connector-resource.jms/qConnFactory</pre></li>
+<li><b> Set the property of the connector resource by using the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a>
+subcommand.</b><p>For example:</p><pre>set domain.resources.connector-resource.jms/qConnFactory.enabled=true</pre></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol>
+
+<a name="giofs"></a><h4>To Delete a Connector Resource</h4><a name="indexterm-710"></a><a name="indexterm-711"></a><a name="indexterm-712"></a><p>Use the <tt>delete-connector-resource</tt> subcommand in remote mode to remove a connector resource by
+specifying the JNDI name.</p><h6>Before You Begin</h6><p>Before deleting a resource, all associations with a resource must be removed.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the connector connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-resources-1?a=view"><tt>list-connector-resources</tt>(1)</a> subcommand.</b></li>
+<li><b>If necessary, notify users that the connector resource is being deleted.</b></li>
+<li><b>Delete the connector resource by using the <a href="http://docs.sun.com/doc/820-7701/delete-connector-resource-1?a=view"><tt>delete-connector-resource</tt>(1)</a> subcommand.</b></li></ol><a name="giokh"></a><h6>Example&#160;15-6 Deleting a Connector Resource</h6><p>This example deletes the <tt>jms/qConnFactory</tt> connector resource:</p><pre>asadmin> <tt><b>delete-connector-resource jms/qConnFactory</b></tt> 
+Command delete-connector-resources executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-connector-resource</tt> at the command line.</p>
+
+<a name="giope"></a><h3>Administering the Resource Adapter Configuration</h3>
+<a name="indexterm-713"></a><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#gioqx">To Create Configuration Information for a Resource Adapter</a></p></li>
+<li><p><a href="#giorn">To List Resource Adapter Configurations</a></p></li>
+<li><p><a href="#gioum">To Update a Resource Adapter Configuration</a></p></li>
+<li><p><a href="#gionv">To Delete a Resource Adapter Configuration</a></p></li></ul>
+
+
+<a name="gioqx"></a><h4>To Create Configuration Information for a Resource Adapter</h4><a name="indexterm-714"></a><a name="indexterm-715"></a><a name="indexterm-716"></a><p>Use the <tt>create-resource-adapter-config</tt> subcommand in remote mode to create configuration information for a
+resource adapter, also known as a connector module. You can run the subcommand
+before deploying a resource adapter, so that the configuration information is available at the
+time of deployment. The resource adapter configuration can also be created after the
+resource adapter is deployed. In this situation, the resource adapter is restarted with
+the new configuration.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create configuration information by using the <a href="http://docs.sun.com/doc/820-7701/create-resource-adapter-config-1?a=view"><tt>create-resource-adapter-config</tt>(1)</a> subcommand.</b><p>Information about properties for this subcommand is included in this help page.</p></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="gionp"></a><h6>Example&#160;15-7 Creating a Resource Adapter Configuration</h6><p>This example creates the configuration for resource adapter <tt>ra1</tt>:</p><pre>asadmin> <tt><b>create-resource-adapter-config --property foo=bar --threadpoolid mycustomerthreadpool ra1</b></tt>
+Command create-resource-adapter-config executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-resource-adapter-config</tt> at the command line.</p>
+
+<a name="giorn"></a><h4>To List Resource Adapter Configurations</h4><a name="indexterm-717"></a><a name="indexterm-718"></a><a name="indexterm-719"></a><p>Use the <tt>list-resource-adapter-configs</tt> subcommand in remote mode to list the configuration information contained
+in the domain configuration file (<tt>domain.xml</tt>) for the specified resource adapter (connector module). </p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the configurations for a resource adapter by using the <a href="http://docs.sun.com/doc/820-7701/list-resource-adapter-configs-1?a=view"><tt>list-resource-adapter-configs</tt>(1)</a> subcommand.</b></li></ol><a name="gioof"></a><h6>Example&#160;15-8 Listing Configurations for a Resource Adapter</h6><p>This example lists the configurations for the resource adapter <tt>ra1</tt>:</p><pre>asadmin> <tt><b>list-resource-adapter-configs --raname ra1</b></tt>
+ra1
+ra2
+Command list-resource-adapter-configs executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-resource-adapter-configs</tt> at the command line.</p>
+
+<a name="gioum"></a><h4>To Update a Resource Adapter Configuration</h4><a name="indexterm-720"></a><a name="indexterm-721"></a><p>Use the <tt>get</tt> and <tt>set</tt> subcommands to view and change the values of
+the resource adapter configuration properties.</p><ol>
+<li><b>List the configurations for a resource adapter by using the <a href="http://docs.sun.com/doc/820-7701/list-resource-adapter-configs-1?a=view"><tt>list-resource-adapter-configs</tt>(1)</a> subcommand.</b></li>
+<li><b>View the properties of the connector resource by using the <a href="http://docs.sun.com/doc/820-7701/get-1?a=view"><tt>get</tt>(1)</a> subcommand.</b><p>For example:</p><pre>get domain.resources.resource-adapter-config.ra1.*</pre></li>
+<li><b> Set the property of the connector resource by using the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a>
+subcommand.</b><p>For example:</p><pre>set domain.resources.resource-adapter-config.ra1.*</pre></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol>
+
+<a name="gionv"></a><h4>To Delete a Resource Adapter Configuration</h4><a name="indexterm-722"></a><a name="indexterm-723"></a><a name="indexterm-724"></a><p>Use the <tt>delete-resource-adapter-config</tt> subcommand in remote mode to delete the configuration information contained
+in the domain configuration file (<tt>domain.xml</tt>) for a specified resource adapter (connector module). </p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the configurations for a resource adapter by using the <a href="http://docs.sun.com/doc/820-7701/list-resource-adapter-configs-1?a=view"><tt>list-resource-adapter-configs</tt>(1)</a> subcommand.</b></li>
+<li><b>Delete the configuration for a resource adapter by using the <a href="http://docs.sun.com/doc/820-7701/delete-resource-adapter-config-1?a=view"><tt>delete-resource-adapter-config</tt>(1)</a> subcommand.</b></li></ol><a name="giorj"></a><h6>Example&#160;15-9 Deleting a Resource Adapter Configuration </h6><p>This example deletes the configuration for resource adapter <tt>ra1</tt>:</p><pre>asadmin> <tt><b>delete-resource-adapter-config ra1</b></tt>
+Command delete-resource-adapter-config executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-resource-adapter-config</tt> at the command line.</p>
+
+<a name="gitxy"></a><h3>Administering Connector Security Maps</h3>
+<a name="indexterm-725"></a><p>A security map applies to a particular connector connection pool. One or more
+named security maps may be associated with a connector connection pool.</p><p> The EIS is any system that holds the data of an
+organization. It can be a mainframe, a messaging system, a database system, or
+an application.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#gitzz">To Create a Connector Security Map</a></p></li>
+<li><p><a href="#gitwx">To List Connector Security Maps</a></p></li>
+<li><p><a href="#gityj">To Update a Connector Security Map</a></p></li>
+<li><p><a href="#gitvf">To Delete a Connector Security Map</a></p></li></ul>
+
+
+<a name="gitzz"></a><h4>To Create a Connector Security Map</h4><a name="indexterm-726"></a><a name="indexterm-727"></a><a name="indexterm-728"></a><p>Use the <tt>create-connector-security-map</tt> subcommand in remote mode to create a security map for
+the specified connector connection pool. If the security map is not present, a
+new one is created. You can specify backend EIS principals or backend EIS
+user groups. The connector security map configuration supports the use of the wild
+card asterisk (*) to indicate all users or all user groups.</p><p>You can also use this subcommand to map the caller identity of
+the application (principal or user group) to a suitable EIS principal in container-managed transaction-based
+scenarios. </p><h6>Before You Begin</h6><p>For this subcommand to succeed, you must have first created a connector connection
+pool. For instructions, see <a href="#gioce">To Create a Connector Connection Pool</a>.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create a connector security map by using the <a href="http://docs.sun.com/doc/820-7701/create-connector-security-map-1?a=view"><tt>create-connector-security-map</tt>(1)</a> subcommand.</b><p>Information about the options for this subcommand is included in this help page.</p></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giuxc"></a><h6>Example&#160;15-10 Creating a Connector Security Map</h6><p>This example creates a connector security map <tt>securityMap1</tt> for <tt>connection-pool1</tt>:</p><pre>asadmin> <tt><b>create-connector-security-map --poolname connector-pool1 </b></tt>
+<tt><b>--principals principal1, principal2 --mappedusername backend-username securityMap1</b></tt>
+Command create-connector-security-map executed successfully</pre>
+
+<a name="gitwx"></a><h4>To List Connector Security Maps</h4><a name="indexterm-729"></a><a name="indexterm-730"></a><a name="indexterm-731"></a><p>Use the <tt>list-connector-security-maps</tt> subcommand in remote mode to list the existing security maps
+belonging to the specified connector connection pool. You can get a simple listing
+of the connector security maps for a connector connection pool, or you can
+get a more comprehensive listing that shows the principals of the map.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List existing connector connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-connection-pools-1?a=view"><tt>list-connector-connection-pools</tt>(1)</a> subcommand.</b></li>
+<li><b>List the security maps for a specific connector connection pool by using the
+<a href="http://docs.sun.com/doc/820-7701/list-connector-security-maps-1?a=view"><tt>list-connector-security-maps</tt>(1)</a> subcommand.</b></li></ol><a name="giuwj"></a><h6>Example&#160;15-11 Listing All Connector Security Maps for a Connector Connection Pool</h6><p>This example lists the connector security maps associated with <tt>connector-Pool1</tt>:</p><pre>asadmin> <tt><b>list-connector-security-maps connector-Pool1</b></tt>
+securityMap1 
+Command list-connector-security-maps executed successfully.</pre><a name="giuyc"></a><h6>Example&#160;15-12 Listing Principals for a Specific Security Map for a Connector Connection Pool</h6><p>This example lists the principals associated with <tt>securityMap1</tt>:</p><pre>asadmin> <tt><b>list-connector-security-maps --securitymap securityMap1 connector-Pool1</b></tt>
+principal1
+principal1
+Command list-connector-security-maps executed successfully.</pre><a name="giuuf"></a><h6>Example&#160;15-13 Listing Principals of All Connector Security Maps for a Connector Connection Pool</h6><p>This example lists the connector security maps associated with <tt>connector-Pool1</tt>:</p><pre>asadmin> <tt><b>list-connector-security-maps --verbose connector-Pool1</b></tt>
+securityMap1
+principal1
+principal1
+Command list-connector-security-maps executed successfully.</pre>
+
+<a name="gityj"></a><h4>To Update a Connector Security Map</h4><a name="indexterm-732"></a><a name="indexterm-733"></a><a name="indexterm-734"></a><p>Use the <tt>update-connector-security-map</tt> subcommand in remote mode to create or modify a security
+map for the specified connector connection pool.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List existing connector security maps by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-security-maps-1?a=view"><tt>list-connector-security-maps</tt>(1)</a> subcommand.</b></li>
+<li><b>Modify a security map for a specific connector connection pool by using the
+<a href="http://docs.sun.com/doc/820-7701/update-connector-security-map-1?a=view"><tt>update-connector-security-map</tt>(1)</a> subcommand.</b></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giuwi"></a><h6>Example&#160;15-14 Updating a Connector Security Map</h6><p>This example adds principals to <tt>securityMap1</tt>:</p><pre>asadmin> <tt><b>update-connector-security-map --poolname connector-pool1 --addprincipals principal1, principal2 securityMap1</b></tt>
+Command update-connector-security-map executed successfully.</pre>
+
+<a name="gitvf"></a><h4>To Delete a Connector Security Map</h4><a name="indexterm-735"></a><a name="indexterm-736"></a><a name="indexterm-737"></a><p>Use the <tt>delete-connector-security-map</tt> subcommand in remote mode to delete a security map for
+the specified connector connection pool. </p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List existing connector connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-connection-pools-1?a=view"><tt>list-connector-connection-pools</tt>(1)</a> subcommand.</b></li>
+<li><b>Delete a security map for a specific connector connection pool by using the
+<a href="http://docs.sun.com/doc/820-7701/delete-connector-security-map-1?a=view"><tt>delete-connector-security-map</tt>(1)</a> subcommand.</b><p>Information about options for this subcommand is included in this help page.</p></li></ol><a name="giuvr"></a><h6>Example&#160;15-15 Deleting a Connector Security Map</h6><p>This example deletes <tt>securityMap1</tt> from <tt>connector-pool1</tt>:</p><pre>asadmin> <tt><b>delete-connector-security-map --poolname connector-pool1 securityMap1</b></tt>
+Command delete-connector-security-map executed successfully</pre>
+
+<a name="giohl"></a><h3>Administering Connector Work Security Maps</h3>
+<a name="indexterm-738"></a><p>A security map applies to a particular connector connection pool. </p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giofz">To Create a Connector Work Security Map</a></p></li>
+<li><p><a href="#gioir">To List Connector Work Security Maps</a></p></li>
+<li><p><a href="#giogm">To Update a Connector Work Security Map</a></p></li>
+<li><p><a href="#gioin">To Delete a Connector Work Security Map</a></p></li></ul>
+
+
+<a name="giofz"></a><h4>To Create a Connector Work Security Map</h4><a name="indexterm-739"></a><a name="indexterm-740"></a><a name="indexterm-741"></a><p>Use the <tt>create-connector-work-security-map</tt> subcommand in remote mode to map the caller identity of
+the work submitted by the connector module (resource adapter) EIS principal or EIS
+user group to a suitable principal or user group in the Enterprise Server
+security domain. One or more work security maps can be associated with a
+connector module. </p><p>The connector security map configuration supports the use of the wild card asterisk
+(*) to indicate all users or all user groups. </p><h6>Before You Begin</h6><p>Before creating a connector work security map, you must first create a connector
+connection pool. For instructions, see <a href="#gioce">To Create a Connector Connection Pool</a>.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create the connector work security map by using the <a href="http://docs.sun.com/doc/820-7701/create-connector-work-security-map-1?a=view"><tt>create-connector-work-security-map</tt>(1)</a> subcommand. </b><p>Information about connector work security map properties is included in this help page.</p></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giokw"></a><h6>Example&#160;15-16 Creating Connector Work Security Maps</h6><p>The following examples create <tt>workSecurityMap1</tt> and <tt>workSecurityMap2</tt> for <tt>my-resource-adapter-name</tt>:</p><pre>asadmin> <tt><b>create-connector-work-security-map --raname my-resource-adapter-name --principalsmap eis-principal-1=server-principal-1,eis-principal-2=server-principal-2, eis-principal-3=server-principal-1 workSecurityMap1</b></tt></pre><pre>asadmin> <tt><b>create-connector-work-security-map --raname my-resource-adapter-name --groupsmap eis-group-1=server-group-1,eis-group-2=server-group-2, eis-group-3=server-group-1 workSecurityMap2</b></tt>
+Command create-connector-work-security-map executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-connector-work-security-map</tt> at the command line.</p>
+
+<a name="gioir"></a><h4>To List Connector Work Security Maps</h4><a name="indexterm-742"></a><a name="indexterm-743"></a><a name="indexterm-744"></a><p>Use the <tt>list-connector-work-security-maps</tt> subcommand in remote mode to list the work security maps
+that belong to a specific connector module.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the connector work security maps by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-work-security-maps-1?a=view"><tt>list-connector-work-security-maps</tt>(1)</a> subcommand.</b></li></ol><a name="gionj"></a><h6>Example&#160;15-17 Listing the Connector Work Security Maps</h6><p>This example lists the work security maps for the <tt>my_resource_adapter</tt> connector module:</p><pre>asadmin> <tt><b>list-connector-work-security-maps --raname my_resource_adapter</b></tt>
+worksecuritymap1
+worksecuritymap2
+Command list-connector-work-security-maps executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-connector-work-security-maps</tt> at the command line.</p>
+
+<a name="giogm"></a><h4>To Update a Connector Work Security Map</h4><a name="indexterm-745"></a><a name="indexterm-746"></a><a name="indexterm-747"></a><p>Use the <tt>update-connector&#8211;work-security-map</tt> subcommand in remote to modify a work security map that
+belongs to a specific resource adapter (connector module).</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the connector work security maps by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-work-security-maps-1?a=view"><tt>list-connector-work-security-maps</tt>(1)</a> subcommand.</b></li>
+<li><b>If necessary, notify users that the connector work security map is being modified.</b></li>
+<li><b>Update a connector work security map by using the <a href="http://docs.sun.com/doc/820-7701/update-connector-work-security-map-1?a=view"><tt>update-connector-work-security-map</tt>(1)</a> subcommand.</b></li></ol><a name="gioll"></a><h6>Example&#160;15-18 Updating a Connector Work Security Map</h6><p>This example TBD</p><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help update-connector-work-security-map</tt> at the command line.</p>
+
+<a name="gioin"></a><h4>To Delete a Connector Work Security Map</h4><a name="indexterm-748"></a><a name="indexterm-749"></a><a name="indexterm-750"></a><p>Use the <tt>delete-connector&#8211;work-security-map</tt> subcommand in remote mode to delete a work security map
+that belongs to a specific connector module (resource adapter).</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the connector work security maps by using the <a href="http://docs.sun.com/doc/820-7701/list-connector-work-security-maps-1?a=view"><tt>list-connector-work-security-maps</tt>(1)</a> subcommand.</b></li>
+<li><b>Delete a connector work security map by using the <a href="http://docs.sun.com/doc/820-7701/delete-connector-work-security-map-1?a=view"><tt>delete-connector-work-security-map</tt>(1)</a> subcommand.</b></li></ol><a name="giolk"></a><h6>Example&#160;15-19 Deleting a Connector Work Security Map</h6><p>This example deletes the <tt>worksecuritymap1</tt> map from the <tt>my_ra</tt> connector module:</p><pre>asadmin> <tt><b>delete-connector-work-security-map --raname my_ra worksecuritymap1</b></tt>
+Command delete-connector-work-security-map executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-connector-work-security-map</tt> at the command line.</p>
+
+<a name="ablmc"></a><h3>Administering Administered Objects</h3>
+<p>Packaged within a connector module, an administered object provides specialized functionality for an
+application. For example, an administered object might provide access to a parser that
+is specific to the connector module and its associated EIS. </p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giolr">To Create an Administered Object</a></p></li>
+<li><p><a href="#giokm">To List Administered Objects</a></p></li>
+<li><p><a href="#giots">To Update an Administered Object</a></p></li>
+<li><p><a href="#gioma">To Delete an Administered Object</a></p></li></ul>
+
+
+<a name="giolr"></a><h4>To Create an Administered Object</h4><a name="indexterm-751"></a><a name="indexterm-752"></a><a name="indexterm-753"></a><p>Use the <tt>create-admin-object</tt> subcommand to create an administered object resource. When creating an
+administered object resource, name-value pairs are created, and the object is associated to
+a JNDI name.</p><h6>Before You Begin</h6><p>The resource adapter must be deployed before running this subcommand (<tt>jmsrar.rar</tt>).</p><ol>
+<li><b>Create an administered object by using the <a href="http://docs.sun.com/doc/820-7701/create-admin-object-1?a=view"><tt>create-admin-object</tt>(1)</a> subcommand.</b><p>Information about properties for this subcommand is included in this help page.</p></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giokx"></a><h6>Example&#160;15-20 Creating an Administered Object</h6><p>For This example, the <tt>javax.jms.Queue</tt> resource type is obtained from the <tt>ra.xml</tt> file.
+The JNDI name of the new administered object is <tt>jms/samplequeue</tt>.</p><pre>asadmin> <tt><b>create-admin-object --restype javax.jms.Queue --raname jmsra </b></tt>
+<tt><b>--description "sample administered object" --property Name=sample_jmsqueue jms/samplequeue</b></tt>
+Command create-admin-object executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-admin-object</tt> at the command line.</p>
+
+<a name="giokm"></a><h4>To List Administered Objects</h4><a name="indexterm-754"></a><a name="indexterm-755"></a><a name="indexterm-756"></a><p>Use the <tt>list-admin-object</tt> subcommand in remote mode to list the existing administered objects.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the administered objects by using the <a href="http://docs.sun.com/doc/820-7701/list-admin-objects-1?a=view"><tt>list-admin-objects</tt>(1)</a> subcommand.</b></li></ol><a name="giokg"></a><h6>Example&#160;15-21 Listing Administered Objects</h6><p>This example lists the existing administered objects:</p><pre>asadmin> <tt><b>list-admin-objects</b></tt>
+jms/samplequeue
+Command list-admin-objects executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-admin-object</tt> at the command line.</p>
+
+<a name="giots"></a><h4>To Update an Administered Object</h4><a name="indexterm-757"></a><a name="indexterm-758"></a><p>Use the <tt>get</tt> and <tt>set</tt> subcommands to view and change the values of
+the administered objects properties.</p><ol>
+<li><b>List the administered objects by using the <a href="http://docs.sun.com/doc/820-7701/list-admin-objects-1?a=view"><tt>list-admin-objects</tt>(1)</a> subcommand.</b></li>
+<li><b>View the properties of the administered object by using the <a href="http://docs.sun.com/doc/820-7701/get-1?a=view"><tt>get</tt>(1)</a> subcommand.</b><p>For example</p><pre>get domain.resources.admin-object-resource.jms/samplequeue.* </pre></li>
+<li><b> Set the property of the administered object by using the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a>
+subcommand.</b><p>For example:</p><pre>set domain.resources.admin-object-resource.jms/samplequeue.enabled=false</pre></li>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol>
+
+<a name="gioma"></a><h4>To Delete an Administered Object</h4><a name="indexterm-759"></a><a name="indexterm-760"></a><a name="indexterm-761"></a><p>Use the <tt>delete-admin-object</tt> subcommand to delete an administered objects.</p><ol>
+<li><b>List the administered objects by using the <a href="http://docs.sun.com/doc/820-7701/list-admin-objects-1?a=view"><tt>list-admin-objects</tt>(1)</a> subcommand.</b></li>
+<li><b>If necessary, notify users that the administered object is being deleted.</b></li>
+<li><b>Delete an administered object by using the <a href="http://docs.sun.com/doc/820-7701/delete-admin-object-1?a=view"><tt>delete-admin-object</tt>(1)</a> subcommand.</b></li></ol><a name="giolc"></a><h6>Example&#160;15-22 Deleting an Administered Object</h6><p>This example deletes the administered object with the JNDI name <tt>jms/samplequeue</tt>:</p><pre>asadmin> <tt><b>delete-admin-object jms/samplequeue</b></tt>
+Command delete-admin-object executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-admin-object</tt> at the command line.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p20.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p22.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

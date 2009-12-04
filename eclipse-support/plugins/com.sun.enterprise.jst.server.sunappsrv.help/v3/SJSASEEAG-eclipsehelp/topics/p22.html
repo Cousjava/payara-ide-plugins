@@ -1,0 +1,377 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Administering Internet Connectivity - Sun GlassFish Enterprise Server v3 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p21.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p23.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="ablsw"></a>Chapter&#160;16<h3>Administering Internet Connectivity</h3><a name="indexterm-762"></a><a name="indexterm-763"></a><p>This chapter provides procedures for performing internet connectivity tasks in the Sun GlassFish<sup>TM</sup> Enterprise
+Server v3 environment by using the <tt>asadmin</tt> command-line utility.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giusf">About Internet Connectivity</a></p></li>
+<li><p><a href="#ggnfu">Administering HTTP Network Listeners</a></p></li>
+<li><p><a href="#ggncs">Administering Virtual Servers</a></p></li></ul>
+<p>Instructions for accomplishing the tasks in this chapter by using the Administration
+Console are contained in the Administration Console online help.</p>
+
+<a name="giusf"></a><h3>About Internet Connectivity</h3>
+<p>The HTTP service provides functionality for deploying web applications and for making deployed
+web applications accessible by Internet clients. HTTP services are provided by two kinds
+of related objects: listeners and virtual servers. </p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giuri">About HTTP Network Listeners</a></p></li>
+<li><p><a href="#giupz">About Virtual Servers</a></p></li></ul>
+
+
+<a name="giuri"></a><h4>About HTTP Network Listeners</h4>
+<p>An <b>HTTP listener</b>, also known as a <b>network listener</b>, is a listen socket that
+has an Internet Protocol (IP) address, a port number, a server name, and
+a default virtual server. Each virtual server provides connections between the server and
+clients through one or more listeners. Each listener must have a unique combination
+of port number and IP address. For example, an HTTP listener can listen
+on all configured IP addresses on a given port for a host by
+specifying the IP address 0.0.0.0. Alternatively, the listener can specify a unique IP
+address for each listener while using the same port.</p><p><a name="indexterm-764"></a><a name="indexterm-765"></a><a name="indexterm-766"></a><a name="indexterm-767"></a>Because an HTTP listener is a combination of IP address and port number,
+you can have multiple HTTP listeners with the same IP address and different
+port numbers, or with different IP addresses and the same port number (if
+your host was configured to respond to these addresses). However, if an HTTP
+listener uses the 0.0.0.0 IP address, which listens on all IP addresses on
+a port, you cannot create HTTP listeners for additional IP addresses that listen
+on the same port for a specific IP address. For example, if
+an HTTP listener uses 0.0.0.0:8080 (all IP addresses on port 8080), another HTTP
+listener cannot use 1.2.3.4:8080. The host running the Enterprise Server typically has access to
+only one IP address. HTTP listeners typically use the 0.0.0.0 IP address and
+different port numbers, with each port number serving a different purpose. However, if
+the host does have access to more than one IP address, each address
+can serve a different purpose.</p><p>To access a web application deployed on Enterprise Server, use the URL
+<tt>http://localhost:8080/</tt> (or <tt>https://localhost:8081/</tt> for a secure application), along with the context root specified
+for the web application. </p><p>To access the Administration Console, use the URL <tt>https://localhost:4848/</tt> or <tt>http://localhost:4848/asadmin/</tt> (console
+default context root).</p>
+
+<a name="giupz"></a><h4>About Virtual Servers</h4>
+<p>A <b>virtual server</b>, sometimes called a virtual host, is an object that allows the
+same physical server to host multiple Internet domain names. All virtual servers hosted
+on the same physical server share the IP address of that physical server.
+A virtual server associates a domain name for a server (such as <tt>www.aaa.com</tt>)
+with the particular server on which Enterprise Server is running. Each virtual server
+must be registered with the DNS server for your network. <a name="indexterm-768"></a><a name="indexterm-769"></a></p>
+<hr><p><b>Note - </b>Do not confuse an Internet domain with the administrative domain of Enterprise Server.</p>
+<hr>
+<p>For example, assume that you want to host the following domains on
+your physical server: <tt>www.aaa.com</tt>, <tt>www.bbb.com</tt>, and <tt>www.ccc.com</tt>. Assume that these domains are respectively associated with
+web modules <tt>web1</tt>, <tt>web2</tt>, and <tt>web3</tt>. This means that the following URLs are
+handled by your physical server:</p><pre>http://www.aaa.com:8080/web1
+http://www.bbb.com:8080/web2
+http://www.ccc.com:8080/web3</pre><p>The first URL is mapped to virtual server <tt>www.aaa.com</tt>, the second URL is
+mapped to virtual server <tt>www.bbb.com</tt>, and the third is mapped to virtual server
+<tt>www.ccc.com</tt>. For this mapping to work, <tt>www.aaa.com</tt>, <tt>www.bbb.com</tt>, and <tt>www.ccc.com</tt> must all resolve to
+your physical server&#8217;s IP address and each virtual server must be registered with
+the DNS server for your network. In addition, on a UNIX system, add
+these domains to your <tt>/etc/hosts</tt> file (if the setting for <tt>hosts</tt> in your
+<tt>/etc/nsswitch.conf</tt> file includes <tt>files</tt>).</p>
+
+<a name="ggnfu"></a><h3>Administering HTTP Network Listeners</h3>
+<a name="indexterm-770"></a><a name="indexterm-771"></a><p>By default, when Enterprise Server starts, the following HTTP listeners are started automatically:</p>
+<ul><li><p>HTTP listeners associated with the virtual server named <tt>server</tt>:</p>
+<ul><li><p>The listener named <tt>http-listener-1</tt> does not have security enabled.</p></li>
+<li><p>The listener named <tt>http-listener-2</tt> has security enabled</p></li></ul>
+</li>
+<li><p>An HTTP listener named <tt>admin-listener</tt>, associated with the virtual server named <tt>__asadmin</tt>. For this listener, security is not enabled.</p></li></ul>
+<p><a name="indexterm-772"></a><a name="indexterm-773"></a><a name="indexterm-774"></a><a name="indexterm-775"></a>The following table describes the Enterprise Server default ports for the listeners that
+use ports.</p><a name="ggnpj"></a><h6>Table&#160;16-1 Default Ports for Listeners</h6><table><col width="17%"><col width="12%"><col width="70%"><tr><th align="left" valign="top" scope="column"><p>Listener</p></th>
+<th align="left" valign="top" scope="column"><p>Default Port </p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Administrative server</p></td>
+<td align="left" valign="top" scope="row"><p>4848</p></td>
+<td align="left" valign="top" scope="row"><p>A domain&#8217;s administrative server is accessed by the
+Administration Console and the <tt>asadmin</tt> utility. For the Administration Console, specify the port number
+in the URL of the browser. When running an <tt>asadmin</tt> subcommand remotely, specify
+the port number by using the <tt>--port</tt> option.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>HTTP</p></td>
+<td align="left" valign="top" scope="row"><p>8080</p></td>
+<td align="left" valign="top" scope="row"><p>The web server listens for
+HTTP requests on a port. To access deployed web applications and services, clients
+connect to this port.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>HTTPS</p></td>
+<td align="left" valign="top" scope="row"><p>8181</p></td>
+<td align="left" valign="top" scope="row"><p>Web applications configured for secure communications listen on a
+separate port.</p></td>
+</tr>
+</table><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ggnfh">To Create an Internet Connection</a></p></li>
+<li><p><a href="#gjhot">To Create a Protocol</a></p></li>
+<li><p><a href="#gjhqc">To Create an HTTP Configuration</a></p></li>
+<li><p><a href="#gjhps">To Create a Transport</a></p></li>
+<li><p><a href="#gjimx">To Create an HTTP Network Listener</a></p></li>
+<li><p><a href="#ggnbv">To List HTTP Network Listeners</a></p></li>
+<li><p><a href="#gjhna">To List Protocols</a></p></li>
+<li><p><a href="#gjhmx">To List Transports</a></p></li>
+<li><p><a href="#giwls">To Update an HTTP Network Listener</a></p></li>
+<li><p><a href="#ggndu">To Delete an HTTP Network Listener</a></p></li>
+<li><p><a href="#gjhqa">To Delete an HTTP Configuration</a></p></li>
+<li><p><a href="#gjhnx">To Delete a Protocol</a></p></li>
+<li><p><a href="#gjhqp">To Delete a Transport</a></p></li>
+<li><p><a href="#ggnbj">To Configure an HTTP Listener for SSL</a></p></li>
+<li><p><a href="#ggncl">To Delete SSL From an HTTP Listener</a></p></li>
+<li><p><a href="#gixjb">To Assign a Default Virtual Server to an HTTP Listener</a></p></li></ul>
+
+
+<a name="ggnfh"></a><h4>To Create an Internet Connection</h4><a name="indexterm-776"></a><a name="indexterm-777"></a><a name="indexterm-778"></a><p>Use the subcommands in this procedure to create an internet connection using the
+full range of listener options. A network listener is created behind the scenes.
+For the shortcut version of this process , see <a href="#gjimx">To Create an HTTP Network Listener</a>. </p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create an HTTP or HTTPS protocol by using the <a href="http://docs.sun.com/doc/820-7701/create-protocol-1?a=view"><tt>create-protocol</tt>(1)</a> subcommand.</b><p><tt>--securityenabled</tt><tt>=false|true</tt> </p><p>To use the built-in <tt>http-listener-1</tt> HTTP protocol, or <tt>http-listener-2</tt> HTTPS protocol, skip this
+step.</p></li>
+<li><b>Create an HTTP configuration by using the <a href="http://docs.sun.com/doc/820-7701/create-http-1?a=view"><tt>create-http</tt>(1)</a> subcommand.</b><p>To use a built-in protocol, skip this step.</p></li>
+<li><b>Create a transport by using the <a href="http://docs.sun.com/doc/820-7701/create-transport-1?a=view"><tt>create-transport</tt>(1)</a> subcommand.</b><p>To use the built-in <tt>tcp</tt> transport, skip this step.</p></li>
+<li>(Optional) <b> Create a thread pool by using the <a href="http://docs.sun.com/doc/820-7701/create-threadpool-1?a=view"><tt>create-threadpool</tt>(1)</a> subcommand. </b><p>To not use a thread pool, or to use the built-in <tt>http-thread-pool</tt> thread
+pool, skip this step. </p><p>For additional thread pool information, see <a href="p9.html">Chapter&#160;5, Administering Thread Pools</a>.</p></li>
+<li><b>Create an HTTP listener by using the<a href="http://docs.sun.com/doc/820-7701/create-network-listener-1?a=view"><tt>create-network-listener</tt>(1)</a> subcommand.</b><p>Specify a protocol and transport, optionally a thread pool.</p></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing a command such as <tt>asadmin help create-http-listener</tt> at the command line.</p>
+
+<a name="gjhot"></a><h4>To Create a Protocol</h4><a name="indexterm-779"></a><a name="indexterm-780"></a><a name="indexterm-781"></a><a name="indexterm-782"></a><p>Use the <tt>create-protocol</tt> subcommand in remote mode to create a protocol.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create a protocol by using the <a href="http://docs.sun.com/doc/820-7701/create-protocol-1?a=view"><tt>create-protocol</tt>(1)</a></b><p>Information about options and properties for the subcommand are included in this help
+page.</p></li></ol><a name="gjhos"></a><h6>Example&#160;16-1 Creating an HTTP Protocol</h6><p>This example creates a protocol named <tt>http-1</tt> with security enabled.</p><pre>asadmin> <tt><b>create-protocol --securityenabled=true http-1</b></tt>
+Command create-protocol executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-protocol</tt> at the command line.</p>
+
+<a name="gjhqc"></a><h4>To Create an HTTP Configuration</h4><a name="indexterm-783"></a><a name="indexterm-784"></a><a name="indexterm-785"></a><a name="indexterm-786"></a><p>Use the <tt>create-http</tt> subcommand in remote mode to create a set of HTTP
+parameters for a protocol. This set of parameters configures one or more network
+listeners,</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create an HTTP configuration by using the <a href="http://docs.sun.com/doc/820-7701/create-http-1?a=view"><tt>create-http</tt>(1)</a> subcommand.</b><p>Information about options and properties for the subcommand are included in this help
+page.</p></li></ol><a name="gjhnz"></a><h6>Example&#160;16-2 Creating an HTTP Configuration</h6><p>This example creates an HTTP parameter set for the protocol named <tt>http-1</tt>.</p><pre>asadmin> <tt><b>create-http --timeout-seconds 60 --default-virtual-server server http-1</b></tt>
+Command create-http executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-http</tt> at the command line.</p>
+
+<a name="gjhps"></a><h4>To Create a Transport</h4><a name="indexterm-787"></a><a name="indexterm-788"></a><a name="indexterm-789"></a><a name="indexterm-790"></a><p>Use the <tt>create-transport</tt> subcommand in remote mode to create a transport for a
+network listener,</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create a transport by using the <a href="http://docs.sun.com/doc/820-7701/create-transport-1?a=view"><tt>create-transport</tt>(1)</a> subcommand.</b><p>Information about options and properties for the subcommand are included in this help page.</p></li></ol><a name="gjhpx"></a><h6>Example&#160;16-3 Creating a Transport</h6><p>This example creates a transport named <tt>http1-trans</tt> that uses a non-default number of
+acceptor threads.</p><pre>asadmin> <tt><b>create-transport --acceptorthreads 100 http1-trans</b></tt>
+Command create-transport executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-transport</tt> at the command line.</p>
+
+<a name="gjimx"></a><h4>To Create an HTTP Network Listener</h4><a name="indexterm-791"></a><a name="indexterm-792"></a><a name="indexterm-793"></a><a name="indexterm-794"></a><p>Use the <tt>create-http-listener</tt> subcommand or the <tt>create-network-listener</tt> subcommand in remote mode to
+create a listener.</p><p>The <tt>create-http-listener</tt> subcommand is provided for backward compatibility and as a shortcut for
+creating network listeners that use the HTTP protocol. Behind the scenes, this subcommand
+creates a network listener and its associated protocol, transport, and HTTP configuration. This subcommand
+is a convenient shortcut, but it gives access to only a limited number
+of options.</p><p>Use the <tt>create-network-listener</tt> subcommand when you want to specify the full range of
+options. You must first create a protocol, transport, or HTTP configuration. See <a href="#ggnfh">To Create an Internet Connection</a>.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create an HTTP network listener by using the <a href="http://docs.sun.com/doc/820-7701/create-network-listener-1?a=view"><tt>create-network-listener</tt>(1)</a> subcommand or the
+<a href="http://docs.sun.com/doc/820-7701/create-http-listener-1?a=view"><tt>create-http-listener</tt>(1)</a> subcommand.</b></li>
+<li><b>If needed, restart the server.</b><p>If you edit the special HTTP network listener named <tt>admin-listener</tt>, you must restart the
+server for changes to take effect. See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ggpjk"></a><h6>Example&#160;16-4 Creating an HTTP Listener</h6><p>This example creates an HTTP listener named <tt>sampleListener</tt> that uses a non-default number
+of acceptor threads. Security is not enabled at runtime.</p><pre>asadmin> <tt><b>create-http-listener --listeneraddress 0.0.0.0 --listenerport 7272 --defaultvs server --servername host1.sun.com --acceptorthreads 100 --securityenabled=false --enabled=false sampleListener</b></tt>
+Command create-http-listener executed successfully.</pre><a name="gjimj"></a><h6>Example&#160;16-5 Creating a Network Listener</h6><p>This example a network listener named <tt>sampleListener</tt> that is not enabled at runtime:</p><pre>asadmin> <tt><b>create-network-listener --listenerport 7272 protocol http-1 --enabled=false sampleListener</b></tt>Command create-network-listener executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-http-listener</tt> or <tt>asadmin help create-network-listener</tt> at the command line.</p>
+
+<a name="ggnbv"></a><h4>To List HTTP Network Listeners</h4><a name="indexterm-795"></a><a name="indexterm-796"></a><a name="indexterm-797"></a><a name="indexterm-798"></a><p>Use the <tt>list-http-listeners</tt> subcommand or the <tt>list-network-listeners</tt> subcommand in remote mode to
+list the existing HTTP listeners.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List HTTP listeners by using the <a href="http://docs.sun.com/doc/820-7701/list-http-listeners-1?a=view"><tt>list-http-listeners</tt>(1)</a> or <a href="http://docs.sun.com/doc/820-7701/list-network-listeners-1?a=view"><tt>list-network-listeners</tt>(1)</a> subcommand.</b></li></ol><a name="ggpgw"></a><h6>Example&#160;16-6 Listing HTTP Listeners</h6><p>This example lists the HTTP listeners. The same ouput is given if
+you use the <tt>list-network-listeners</tt> subcommand.</p><pre>asadmin> <tt><b>list-http-listeners</b></tt>
+admin-listener
+http-listener-2
+http-listener-1
+Command list-http-listeners executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-http-listeners</tt> or <tt>asadmin help list-network-listeners</tt> at the command line.</p>
+
+<a name="gjhna"></a><h4>To List Protocols</h4><a name="indexterm-799"></a><a name="indexterm-800"></a><a name="indexterm-801"></a><a name="indexterm-802"></a><p>Use the <tt>list-protocols</tt> subcommand  in remote mode to list the existing HTTP
+protocols.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the existing protocols by using the <a href="http://docs.sun.com/doc/820-7701/list-protocols-1?a=view"><tt>list-protocols</tt>(1)</a> subcommand.</b></li></ol><a name="gjhqg"></a><h6>Example&#160;16-7 Listing the Protocols</h6><p>This example lists the existing protocols.</p><pre>asadmin> <tt><b>list-protocols</b></tt>
+admin-listener
+http-1
+http-listener-1
+http-listener-2
+Command list-protocols executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-protocols</tt> at the command line.</p>
+
+<a name="gjhmx"></a><h4>To List Transports</h4><a name="indexterm-803"></a><a name="indexterm-804"></a><a name="indexterm-805"></a><a name="indexterm-806"></a><p>Use the <tt>list-transports</tt> subcommand in remote mode to list the existing HTTP transports.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the existing transports by using the <a href="http://docs.sun.com/doc/820-7701/list-transports-1?a=view"><tt>list-transports</tt>(1)</a> subcommand.</b></li></ol><a name="gjhqj"></a><h6>Example&#160;16-8 Listing HTTP Transports</h6><p>This example lists the existing transports.</p><pre>asadmin> <tt><b>list-transports</b></tt>
+http1-trans
+tcp
+Command list-transports executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-transports</tt> at the command line.</p>
+
+<a name="giwls"></a><h4>To Update an HTTP Network Listener</h4><a name="indexterm-807"></a><a name="indexterm-808"></a><a name="indexterm-809"></a><a name="indexterm-810"></a><ol>
+<li><b>List HTTP listeners by using the <a href="http://docs.sun.com/doc/820-7701/list-http-listeners-1?a=view"><tt>list-http-listeners</tt>(1)</a> or <a href="http://docs.sun.com/doc/820-7701/list-network-listeners-1?a=view"><tt>list-network-listeners</tt>(1)</a> subcommand.</b></li>
+<li><b>Modify the values for the specified listener by using the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand.</b><p>The listener is identified by its dotted name.</p></li></ol><a name="giwiw"></a><h6>Example&#160;16-9 Updating an HTTP Network Listener</h6><p>tbd</p>
+
+<a name="ggndu"></a><h4>To Delete an HTTP Network Listener</h4><a name="indexterm-811"></a><a name="indexterm-812"></a><a name="indexterm-813"></a><a name="indexterm-814"></a><p>Use the <tt>delete-http-listener</tt> subcommand or the <tt>delete-network-listener</tt> subcommand in remote mode to
+delete an existing HTTP listener. This disables secure communications for the listener.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List HTTP listeners by using the <a href="http://docs.sun.com/doc/820-7701/list-http-listeners-1?a=view"><tt>list-http-listeners</tt>(1)</a> subcommand.</b></li>
+<li><b>Delete an HTTP listener by using the <a href="http://docs.sun.com/doc/820-7701/delete-http-listener-1?a=view"><tt>delete-http-listener</tt>(1)</a> or <a href="http://docs.sun.com/doc/820-7701/delete-network-listener-1?a=view"><tt>delete-network-listener</tt>(1)</a> subcommand.</b></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ggpjr"></a><h6>Example&#160;16-10 Deleting an HTTP Listener</h6><p>This example deletes the HTTP listener named <tt>sampleListener</tt>:</p><pre>asadmin> <tt><b>delete-http-listener sampleListener</b></tt>
+Command delete-http-listener executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-http-listener</tt> or <tt>asadmin help delete-network-listener</tt> at the command line.</p>
+
+<a name="gjhqa"></a><h4>To Delete an HTTP Configuration</h4><a name="indexterm-815"></a><a name="indexterm-816"></a><a name="indexterm-817"></a><p>Use the <tt>delete-http</tt> subcommand in remote mode to remove HTTP parameters from a
+protocol.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Delete the HTTP parameters from a protocol by using the <a href="http://docs.sun.com/doc/820-7701/delete-http-1?a=view"><tt>delete-http</tt>(1)</a> subcommand.</b></li></ol><a name="gjhov"></a><h6>Example&#160;16-11 Deleting an HTTP Configuration</h6><p>This example deletes the HTTP parameter set from a  protocol named
+<tt>http-1</tt>.</p><pre>asadmin> <tt><b>delete-http http-1</b></tt>
+Command delete-http executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-http</tt> at the command line.</p>
+
+<a name="gjhnx"></a><h4>To Delete a Protocol</h4><a name="indexterm-818"></a><a name="indexterm-819"></a><a name="indexterm-820"></a><p>Use the <tt>delete-protocol</tt> subcommand in remote mode to remove a protocol.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Delete a protocol by using the <a href="http://docs.sun.com/doc/820-7701/delete-protocol-1?a=view"><tt>delete-protocol</tt>(1)</a> subcommand</b></li></ol><a name="gjhop"></a><h6>Example&#160;16-12 Deleting a Protocol</h6><p>This example deletes the protocol named <tt>http-1</tt>.</p><pre>asadmin> <tt><b>delete-protocol http-1</b></tt>
+Command delete-protocol executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-protocol</tt> at the command line.</p>
+
+<a name="gjhqp"></a><h4>To Delete a Transport</h4><a name="indexterm-821"></a><a name="indexterm-822"></a><a name="indexterm-823"></a><p>Use the <tt>delete-transport</tt> subcommand in remote mode to remove a transport.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Delete a transport by using the <a href="http://docs.sun.com/doc/820-7701/delete-transport-1?a=view"><tt>delete-transport</tt>(1)</a> subcommand.</b></li></ol><a name="gjhoh"></a><h6>Example&#160;16-13 Deleting a Transport</h6><p>This example deletes  he transport named <tt>http1-trans</tt>.</p><pre>asadmin> <tt><b>delete-transport http1-trans</b></tt>
+Command delete-transport executed successfully. </pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-transport</tt> at the command line.</p>
+
+<a name="ggnbj"></a><h4>To Configure an HTTP Listener for SSL</h4><a name="indexterm-824"></a><a name="indexterm-825"></a><a name="indexterm-826"></a><a name="indexterm-827"></a><p>Use the <tt>create-ssl</tt> subcommand in remote mode to create and configure an SSL
+element in the specified listener. This enables secure communication for the listener. </p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Configure an HTTP listener by using the <a href="http://docs.sun.com/doc/820-7701/create-ssl-1?a=view"><tt>create-ssl</tt>(1)</a> subcommand.</b></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ggphv"></a><h6>Example&#160;16-14 Configuring an HTTP Listener for SSL</h6><p>This example enables the HTTP listener named <tt>http-listener-1</tt> for SSL:</p><pre>asadmin> <tt><b>create-ssl --type http-listener --certname sampleCert http-listener-1</b></tt>
+Command create-ssl executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-ssl</tt> at the command line.</p>
+
+<a name="ggncl"></a><h4>To Delete SSL From an HTTP Listener</h4><a name="indexterm-828"></a><a name="indexterm-829"></a><a name="indexterm-830"></a><a name="indexterm-831"></a><p>Use the <tt>delete-ssl</tt> subcommand in remote mode to delete the SSL element in
+the specified listener. This disables secure communications for the listener.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Delete SSL from an HTTP listener by using the <a href="http://docs.sun.com/doc/820-7701/delete-ssl-1?a=view"><tt>delete-ssl</tt>(1)</a> subcommand.</b></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ggpln"></a><h6>Example&#160;16-15 Deleting SSL From an HTTP Listener</h6><p>This example disables SSL for the HTTP listener named <tt>http-listener-1</tt>:</p><pre>asadmin> <tt><b>delete-ssl --type http-listener http-listener-1</b></tt>
+Command delete-http-listener executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-ssl</tt> at the command line.</p>
+
+<a name="gixjb"></a><h4>To Assign a Default Virtual Server to an HTTP Listener</h4><p>tbd</p><ol>
+<li><b>In the Administration Console, open the HTTP Service component under the relevant configuration.</b></li>
+<li><b>Open the HTTP Listeners component under the HTTP Service component.</b></li>
+<li><b>Select or create a new HTTP listener.</b></li>
+<li><b><a name="indexterm-832"></a><a name="indexterm-833"></a>Select from the Default Virtual Server drop-down list. </b><p>For more information, see <a href="#beaga">To Assign a Default Web Module to a Virtual Server</a>.</p></li></ol><h6>See Also</h6><p>For details, click the Help button in the Administration Console from the
+HTTP Listeners page.</p>
+
+<a name="ggncs"></a><h3>Administering Virtual Servers</h3>
+<a name="indexterm-834"></a><p>A virtual server is a virtual web server that serves content targeted for
+a specific URL. Multiple virtual servers can serve content using the same or
+different host names, port numbers, or IP addresses. The HTTP service directs incoming
+web requests to different virtual servers based on the URL.</p><p>When you first install Enterprise Server, a default virtual server is created. You
+can assign a default virtual server to each new HTTP listener you
+create.</p><p>Web applications and Java EE applications containing web components (web modules) can be
+assigned to virtual servers during deployment. A web module can be assigned to
+more than one virtual server, and a virtual server can have more than
+one web module assigned to it. If you deploy a web application and
+don't specify any assigned virtual servers, the web application is assigned to all
+currently defined virtual servers. If you then create additional virtual servers and want
+to assign existing web applications to them, you must redeploy the web applications.
+For more information about deployment, see the <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Application Deployment Guide</i></a>.</p><p>You can define virtual server properties using the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set server-config.http-service.virtual-server.MyVS.property.sso-enabled="true"</pre><p>Some virtual server properties can be set for a specific web application. For
+details, see <a href="http://docs.sun.com/doc/820-7693/beayb?a=view">sun-web-app in <i>Sun GlassFish Enterprise Server v3 Application Deployment Guide</i></a>.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ggnfr">To Create a Virtual Server</a></p></li>
+<li><p><a href="#ggndw">To List Virtual Servers</a></p></li>
+<li><p><a href="#giwkp">To Update a Virtual Server</a></p></li>
+<li><p><a href="#ggnen">To Delete a Virtual Server</a></p></li>
+<li><p><a href="#beaga">To Assign a Default Web Module to a Virtual Server</a></p></li>
+<li><p><a href="#gixku">To Assign a Virtual Server to an Application or Module</a></p></li></ul>
+
+
+<a name="ggnfr"></a><h4>To Create a Virtual Server</h4><a name="indexterm-835"></a><a name="indexterm-836"></a><a name="indexterm-837"></a><p>By default, when Enterprise Server starts, the following virtual servers are started automatically:</p>
+<ul><li><p>A virtual server named <tt>server</tt>, which hosts all user-defined web modules.</p><p>For development, testing, and deployment of web services in a non-production environment, <tt>server</tt> is often the only virtual server required. </p></li>
+<li><p>A virtual server named <tt>__asadmin</tt>, which hosts all administration-related web modules (specifically, the Administration Console). This server is restricted, which means that you cannot deploy web modules to this virtual server.</p></li></ul>
+<p>In a production environment, additional virtual servers provide hosting facilities for users and
+customers so that each appears to have its own web server, even though
+there is only one physical server.</p><p>Use the <tt>create-virtual-server</tt> subcommand in remote mode to create the named virtual server.
+</p><h6>Before You Begin</h6><p>A virtual server must specify an existing HTTP listener. Because the virtual server
+cannot specify an HTTP listener that is already being used by another virtual
+server, create at least one HTTP listener before creating a new virtual server.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create a virtual server by using the <a href="http://docs.sun.com/doc/820-7701/create-virtual-server-1?a=view"><tt>create-virtual-server</tt>(1)</a> subcommand.</b><p>Information about properties for this subcommand is included in this help page.</p></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ggpha"></a><h6>Example&#160;16-16 Creating a Virtual Server</h6><p>This example creates a virtual server named <tt>sampleServer</tt> for hosts <tt>pigeon</tt> and <tt>localhost</tt>:</p><pre>asadmin> <tt><b>create-virtual-server --hosts pigeon,localhost sampleServer</b></tt>
+Command create-virtual-server executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-virutal-server</tt> at the command line.</p>
+
+<a name="ggndw"></a><h4>To List Virtual Servers</h4><a name="indexterm-838"></a><a name="indexterm-839"></a><a name="indexterm-840"></a><a name="indexterm-841"></a><p>Use the <tt>list-virtual-servers</tt> subcommand in remote mode to list the existing virtual servers.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List virtual servers by using the <a href="http://docs.sun.com/doc/820-7701/list-virtual-servers-1?a=view"><tt>list-virtual-servers</tt>(1)</a> subcommand.</b></li></ol><a name="ggpgr"></a><h6>Example&#160;16-17 Listing Virtual Servers</h6><p>This example lists the virtual servers for <tt>localhost</tt>:</p><pre>asadmin> <tt><b>list-virtual-servers</b></tt>
+sampleListener
+admin-listener
+http-listener-2
+http-listener-1
+
+Command list-http-listeners executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-virutal-servers</tt> at the command line.</p>
+
+<a name="giwkp"></a><h4>To Update a Virtual Server</h4><a name="indexterm-842"></a><a name="indexterm-843"></a><a name="indexterm-844"></a><ol>
+<li><b>List virtual servers by using the <a href="http://docs.sun.com/doc/820-7701/list-virtual-servers-1?a=view"><tt>list-virtual-servers</tt>(1)</a> subcommand.</b></li>
+<li><b>Modify the values for the specified virtual server by using the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a>
+subcommand.</b><p>The virtual server is identified by its dotted name.</p></li></ol>
+
+<a name="ggnen"></a><h4>To Delete a Virtual Server</h4><a name="indexterm-845"></a><a name="indexterm-846"></a><a name="indexterm-847"></a><p>Use the <tt>delete-virtual-server</tt> subcommand in remote mode to delete an existing virtual server.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List virtual servers by using the <a href="http://docs.sun.com/doc/820-7701/list-virtual-servers-1?a=view"><tt>list-virtual-servers</tt>(1)</a> subcommand.</b></li>
+<li><b>If necessary, notify users that the virtual server is being deleted.</b></li>
+<li><b>Delete a virtual server by using the <a href="http://docs.sun.com/doc/820-7701/delete-virtual-server-1?a=view"><tt>delete-virtual-server</tt>(1)</a> subcommand.</b></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ggpmd"></a><h6>Example&#160;16-18 Deleting a Virtual Server</h6><p>This example deletes the virtual server named <tt>sampleServer</tt> from <tt>localhost</tt>:</p><pre>asadmin> <tt><b>delete-virtual-server sampleServer</b></tt>
+Command delete-virtual-server executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-virutal-server</tt> at the command line.</p>
+
+<a name="beaga"></a><h4>To Assign a Default Web Module to a Virtual Server</h4>
+<a name="indexterm-848"></a><a name="indexterm-849"></a><p>A default web module can be assigned to the default virtual server
+and to each new virtual server. To access the default web module for
+a virtual server, point the browser to the URL for the virtual server,
+but do not supply a context root. For example:</p><pre>http://myvserver:3184/</pre><p><a name="indexterm-850"></a>A virtual server with no default web module assigned serves HTML or JavaServer Pages<sup>TM</sup>
+(JSP<sup>TM</sup>) content from its document root, which is usually <i>domain-dir</i><tt>/docroot</tt>. To access
+this HTML or JSP content, point your browser to the URL for the
+virtual server, do not supply a context root, but specify the target file.</p><p>For example:</p><pre>http://myvserver:3184/hellothere.jsp</pre>
+
+<a name="gixku"></a><h4>To Assign a Virtual Server to an Application or Module</h4><p>You can assign a virtual server to a deployed application or web
+module.</p><h6>Before You Begin</h6><p>The application or module must already be deployed. For more information, see <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Application Deployment Guide</i></a>.</p><ol>
+<li><b>In the Administration Console, open the HTTP Service component under the relevant configuration.</b></li>
+<li><b>Open the Virtual Servers component under the HTTP Service component.</b></li>
+<li><b>Select the virtual server to which you want to assign a default web
+module.</b></li>
+<li><b>Select the application or web module from the Default Web Module drop-down list.
+</b><p>For more information, see <a href="#beaga">To Assign a Default Web Module to a Virtual Server</a>.</p></li></ol>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p21.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p23.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

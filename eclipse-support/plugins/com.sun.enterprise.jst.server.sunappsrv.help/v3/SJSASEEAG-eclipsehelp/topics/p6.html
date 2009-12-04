@@ -1,0 +1,390 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>General Administration - Sun GlassFish Enterprise Server v3 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p5.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p7.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="gitya"></a>Chapter&#160;2<h3>General Administration</h3><p>This chapter provides instructions for performing general administration tasks in the Sun GlassFish<sup>TM</sup> Enterprise
+Server v3 environment by using the <tt>asadmin</tt> command-line utility.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giobi">Using the <tt>asadmin</tt> Utility</a></p></li>
+<li><p><a href="#ghcjc">Administering System Properties</a></p></li>
+<li><p><a href="#gixps">Administering Resources</a></p></li>
+<li><p><a href="#ggocm">Listing Various System Elements</a></p></li></ul>
+<p>Instructions for accomplishing the tasks in this chapter by using the Administration
+Console are contained in the Administration Console online help.</p>
+
+<a name="giobi"></a><h3>Using the <tt>asadmin</tt> Utility</h3>
+<a name="indexterm-30"></a><a name="indexterm-31"></a><p>Use the <tt>asadmin</tt> utility to perform administrative tasks for Sun GlassFish Enterprise Server
+from the command line or from a script. You can use this utility
+instead of the Administration Console interface.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giwdb">Path to the <tt>asadmin</tt> Utility</a></p></li>
+<li><p><a href="#givvn"><tt>asadmin</tt> Utility Syntax</a></p></li>
+<li><p><a href="#ghvzx">To Run an <tt>asadmin</tt> Utility Subcommand in Single Mode</a></p></li>
+<li><p><a href="#givlw">To Display Help Information for the <tt>asadmin</tt> Utility or a Subcommand</a></p></li>
+<li><p><a href="#giodz">To Start a Multimode Session</a></p></li>
+<li><p><a href="#givjn">To End a Multimode Session</a></p></li>
+<li><p><a href="#givjd">To Run a Set of <tt>asadmin</tt> Subcommands From a File</a></p></li></ul>
+
+
+<a name="giwdb"></a><h4>Path to the <tt>asadmin</tt> Utility</h4>
+<a name="indexterm-32"></a><a name="indexterm-33"></a><p>The <tt>asadmin</tt> utility is located in the <i>as-install</i><tt>/bin</tt> directory. To run the
+<tt>asadmin</tt> utility without specifying the path, ensure that this directory is in your
+path.</p>
+
+<a name="givvn"></a><h4><tt>asadmin</tt> Utility Syntax</h4>
+<a name="indexterm-34"></a><p>The syntax for running the <tt>asadmin</tt> utility is as follows:</p><pre><tt><b>asadmin </b></tt>[<tt><b></tt><i>asadmin-util-options</i><tt></b></tt>] [<tt><b></tt><i>subcommand</i><tt></b></tt>] [<tt><b></tt><i>subcommand-options</i><tt></b></tt>] [<tt><b></tt><i>operands</i><tt></b></tt>]</pre><p>The replaceable items in this syntax are described in the subsections that follow.
+For full details of this syntax, see the <a href="http://docs.sun.com/doc/820-7701/asadmin-1m?a=view"><tt>asadmin</tt>(1M)</a> help page.</p>
+
+<a name="ghvzn"></a><h5>Subcommands of the <tt>asadmin</tt> Utility</h5>
+<a name="indexterm-35"></a><a name="indexterm-36"></a><a name="indexterm-37"></a><a name="indexterm-38"></a><p>The <b>subcommand</b> identifies the operation or task that you are performing. Subcommands are
+case-sensitive. Each subcommand is either a local subcommand or a remote subcommand.</p>
+<ul><li><p>A <b>local subcommand</b> can be run without a running domain administration server (DAS). However, to run the subcommand and have access to the installation directory and the domain directory, the user must be logged in to the machine that hosts the domain.</p></li>
+<li><p>A <b>remote subcommand</b> is always run by connecting to a DAS and running the subcommand there. A running DAS is required.</p></li></ul>
+<p>For a list of the subcommands for this release of Enterprise Server,
+see Section 1 of <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
+
+<a name="ghvyd"></a><h5><tt>asadmin</tt> Utility Options and Subcommand Options</h5>
+<a name="indexterm-39"></a><a name="indexterm-40"></a><a name="indexterm-41"></a><a name="indexterm-42"></a><p>Options control the behavior of the <tt>asadmin</tt> utility and its subcommands. Options are
+case-sensitive.</p><p>The <tt>asadmin</tt> utility has the following types of options:</p>
+<ul><li><p><tt>asadmin</tt><b> utility options.</b> These options control the behavior of the <tt>asadmin</tt> utility, not the subcommand. The <tt>asadmin</tt> utility options may precede or follow the subcommand, but <tt>asadmin</tt> utility options after the subcommand are deprecated. All <tt>asadmin</tt> utility options must either precede or follow the subcommand. If <tt>asadmin</tt> utility options are specified both before and after the subcommand, an error occurs. For a description of the <tt>asadmin</tt> utility options, see the <a href="http://docs.sun.com/doc/820-7701/asadmin-1m?a=view"><tt>asadmin</tt>(1M)</a> help page.</p></li>
+<li><p><b>Subcommand Options.</b> These options control the behavior of the subcommand, not the <tt>asadmin</tt> utility. Subcommand options must follow the subcommand. For a description of a subcommand&#8217;s options, see the entry for the subcommand in <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
+<hr><p><b>Note - </b>Not all subcommand options are supported for this release of Enterprise Server. If you specify an unsupported option, a syntax error does not occur. Instead, the command runs successfully and the unsupported option is silently ignored.</p>
+<hr>
+</li></ul>
+<p>A subcommand option may have the same name as an <tt>asadmin</tt> utility option,
+but the effects of the two options are different.</p><p>Options have a long form and a short form.</p>
+<ul><li><p>The short form of an option has a single dash (<tt>-</tt>) followed by a single character.</p></li>
+<li><p>The long form of an option has two dashes (<tt>--</tt>) followed by an option word. </p></li></ul>
+<p>For example, the short form and the long form of the option
+for specifying terse output are as follows:</p>
+<ul><li><p>Short form: <tt>-t</tt></p></li>
+<li><p>Long form: <tt>--terse</tt></p></li></ul>
+<p>Most options require argument values, except Boolean options, which toggle to enable or
+disable a feature.</p>
+
+<a name="ghvyj"></a><h5>Operands of <tt>asadmin</tt> Utility Subcommands</h5>
+<a name="indexterm-43"></a><a name="indexterm-44"></a><a name="indexterm-45"></a><p>Operands specify the items on which the subcommand is to act. Operands must
+follow the argument values of subcommand options, and are set off by a
+space, a tab, or double dashes (<tt>--</tt>). The <tt>asadmin</tt> utility treats anything that
+follows the subcommand options and their values as an operand.</p>
+
+<a name="ghvzx"></a><h4>To Run an <tt>asadmin</tt> Utility Subcommand in Single Mode</h4><a name="indexterm-46"></a><a name="indexterm-47"></a><p>In single mode, you must type a separate <tt>asadmin</tt> command for each subcommand
+that you want to use. After the subcommand has run, you are returned
+to the operating system's command shell. Any <tt>asadmin</tt> utility options must be specified
+in each separate <tt>asadmin</tt> command that you run. If you require the same
+<tt>asadmin</tt> utility options for multiple subcommands, use the <tt>asadmin</tt> utility in multimode. For more
+information, see <a href="#giodz">To Start a Multimode Session</a>.</p><ul>
+<li><b>In the operating system's command shell, run the <tt>asadmin</tt> utility, specifying the subcommand.</b><p>If necessary, also specify any required <tt>asadmin</tt> utility options, subcommand options, and
+operands.</p></li></ul><a name="giwdr"></a><h6>Example&#160;2-1 Running an <tt>asadmin</tt> Utility Subcommand in Single Mode</h6><p>This example runs the <a href="http://docs.sun.com/doc/820-7701/list-applications-1?a=view"><tt>list-applications</tt>(1)</a> subcommand in single mode. In this example, the
+default values for all options are used.</p><p>The example shows that the application <tt>hello</tt> is deployed on the local host.</p><pre><tt><b>asadmin list-applications</b></tt>
+hello &#60;web>
+
+Command list-applications executed successfully.</pre><a name="giwbf"></a><h6>Example&#160;2-2 Specifying an <tt>asadmin</tt> Utility Option With a Subcommand in Single Mode</h6><p>This example specifies the <tt>--host</tt> <tt>asadmin</tt> utility option with the <tt>list-applications</tt> subcommand in
+single mode. In this example, the DAS is running on the host
+<tt>srvr1.example.com</tt>.</p><p>The example shows that the applications <tt>basic-ezcomp</tt>, <tt>scrumtoys</tt>, <tt>ejb31-war</tt>, and <tt>automatic-timer-ejb</tt> are
+deployed on the host <tt>srvr1.example.com</tt>.</p><pre><tt><b>asadmin --host srvr1.example.com list-applications</b></tt>
+basic-ezcomp &#60;web>
+scrumtoys &#60;web>
+ejb31-war &#60;ejb, web>
+automatic-timer-ejb &#60;ejb>
+
+Command list-applications executed successfully.</pre><a name="ghvyk"></a><h6>Example&#160;2-3 Specifying an <tt>asadmin</tt> Utility Option and a Subcommand Option in Single Mode</h6><p>This example specifies the <tt>--host</tt> <tt>asadmin</tt> utility option and the <tt>--type</tt> subcommand option
+with the <tt>list-applications</tt> subcommand in single mode. In this example, the DAS is
+running on the host <tt>srvr1.example.com</tt> and applications of type <tt>web</tt> are to be
+listed.</p><pre><tt><b>asadmin --host srvr1.example.com list-applications --type web</b></tt>
+basic-ezcomp &#60;web>
+scrumtoys &#60;web>
+ejb31-war &#60;ejb, web>
+
+Command list-applications executed successfully.</pre>
+
+<a name="givlw"></a><h4>To Display Help Information for the <tt>asadmin</tt> Utility or a Subcommand</h4><a name="indexterm-48"></a><a name="indexterm-49"></a><a name="indexterm-50"></a><a name="indexterm-51"></a><a name="indexterm-52"></a><a name="indexterm-53"></a><a name="indexterm-54"></a><p>Enterprise Server provides help information about the syntax, purpose, and options of the
+<tt>asadmin</tt> utility and its subcommands. This help information is written in the style
+of UNIX<sup>&#174;</sup> platform man pages. This help information is also available in <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p><ol>
+<li><b>If you are displaying help information for a remote subcommand, ensure that the
+server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Specify the subcommand of interest as the operand of the <tt>help</tt> subcommand.</b><p>If you run the <tt>help</tt> subcommand without an operand, help information for the
+<tt>asadmin</tt> utility is displayed.</p></li></ol><a name="giwgs"></a><h6>Example&#160;2-4 Displaying Help Information for the <tt>asadmin</tt> Utility</h6><p>This example displays the help information for the <tt>asadmin</tt> utility.</p><pre><tt><b>asadmin help</b></tt></pre><a name="giusg"></a><h6>Example&#160;2-5 Displaying Help Information for an <tt>asadmin</tt> Utility Subcommand</h6><p>This example displays the help information for the <tt>create-jdbc-resource</tt> subcommand.</p><pre><tt><b>asadmin help create-jdbc-resource</b></tt></pre><h6>See Also</h6><p> To display the available subcommands, use the <a href="http://docs.sun.com/doc/820-7701/list-commands-1?a=view"><tt>list-commands</tt>(1)</a> subcommand. Local subcommands
+are displayed before remote subcommands. If the server is not running, only local
+subcommands are displayed.</p>
+
+<a name="giodz"></a><h4>To Start a Multimode Session</h4><a name="indexterm-55"></a><a name="indexterm-56"></a><a name="indexterm-57"></a><a name="indexterm-58"></a><a name="indexterm-59"></a><a name="indexterm-60"></a><p>The <tt>asadmin</tt> utility can be used in multiple command mode, or <b>multimode</b>. In
+multimode, you run the <tt>asadmin</tt> utility once to start a multimode session.
+During the session, the <tt>asadmin</tt> utility continues to accept subcommands until you end the
+session and return to the operating system's command shell. Any <tt>asadmin</tt> utility
+options that you set for your multimode session are used for all subsequent
+subcommands in the session. </p>
+<hr><p><b>Note - </b>Starting a multimode session does <b>not</b> require a running DAS.</p>
+<hr>
+<ul>
+<li><b>Do one of the following:</b><ul>
+<li><b>Run the <tt>asadmin</tt> utility without a subcommand.</b></li>
+<li><b>Use the <a href="http://docs.sun.com/doc/820-7701/multimode-1?a=view"><tt>multimode</tt>(1)</a> subcommand.</b></li></ul><p>If necessary, also specify any <tt>asadmin</tt> utility options that will apply throughout the
+multimode session.</p><p>In a multimode session, the <tt>asadmin></tt> prompt is displayed on the command line.
+You can now type <tt>asadmin</tt> subcommands at this prompt to administer Enterprise Server.</p></li></ul><a name="givuq"></a><h6>Example&#160;2-6 Starting a Multimode Session With <tt>asadmin</tt> Utility Options</h6><p>This example starts a multimode session in which the <tt>asadmin</tt> utility options <tt>--user</tt>
+and <tt>--passwordfile</tt> are set for the session.</p><pre><tt><b>asadmin --user admin1 --passwordfile pwd.txt multimode</b></tt></pre><a name="giwgh"></a><h6>Example&#160;2-7 Starting a Multimode Session by Using the <tt>multimode</tt> Subcommand</h6><p>This example uses the <tt>multimode</tt> subcommand to start a multimode session in which
+the default <tt>asadmin</tt> utility options are used.</p><pre><tt><b>asadmin multimode</b></tt></pre><p>The <tt>asadmin></tt> prompt is displayed on the command line.</p><a name="ghvzc"></a><h6>Example&#160;2-8 Running a Subcommand in a Multimode Session</h6><p>This example starts a multimode session and runs the <tt>list-domains</tt> subcommand in the
+session.</p><pre><tt><b>asadmin</b></tt>
+Enter commands one per "line", ^D to quit
+asadmin> <tt><b>list-domains</b></tt>
+Name: domain1 Status: Running
+Command list-domains executed successfully.
+asadmin></pre><h6>More Information<br>Starting a Multimode Session From Within an Existing Multimode Session</h6><p>You can start a multimode session from within an existing session by running
+the <tt>multimode</tt> subcommand from within the existing session. After you end the second
+multimode session, you return to your original multimode session.</p><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help multimode</tt> at the command line.</p>
+
+<a name="givjn"></a><h4>To End a Multimode Session</h4><a name="indexterm-61"></a><a name="indexterm-62"></a><a name="indexterm-63"></a><ul>
+<li><b>At the <tt>asadmin></tt> prompt, type one of the following commands or key combinations:</b>
+<ul><li><p><tt><b>exit</b></tt></p></li>
+<li><p><tt><b>quit</b></tt></p></li>
+<li><p>UNIX and Linux systems: Ctrl-D</p></li>
+<li><p>Windows systems: Ctrl-Z</p></li></ul>
+<p>You are returned to the operating system's command shell and the <tt>asadmin></tt>
+prompt is no longer displayed. If the <tt>asadmin></tt> prompt is still displayed,
+you might have opened a multimode session within a multimode session. In this
+situation, repeat this procedure to end the remaining multimode session.</p></li></ul>
+
+<a name="givjd"></a><h4>To Run a Set of <tt>asadmin</tt> Subcommands From a File</h4><a name="indexterm-64"></a><a name="indexterm-65"></a><a name="indexterm-66"></a><a name="indexterm-67"></a><p>Running a set of <tt>asadmin</tt> subcommands from a file enables you to automate
+repetitive tasks. </p><ol>
+<li><b>Create a plain text file that contains the sequence of subcommands that you
+want to run.</b></li>
+<li><b>Run the <a href="http://docs.sun.com/doc/820-7701/multimode-1?a=view"><tt>multimode</tt>(1)</a> subcommand, specifying the file that you created.</b><p>If necessary, also specify any <tt>asadmin</tt> utility options that are required to enable subcommands
+in the file to run.</p></li></ol><a name="givul"></a><h6>Example&#160;2-9 Running a Set of <tt>asadmin</tt> Subcommands From a File</h6><p>This example contains the following:</p>
+<ul><li><p>A listing of a file that is named <tt>commands_file.txt</tt>, which contains a sequence of <tt>asadmin</tt> subcommands</p></li>
+<li><p>The command to run the subcommands in the file <tt>commands_file.txt</tt></p></li></ul>
+<p>The <tt>commands_file.txt</tt> file contains the <tt>asadmin</tt> utility subcommands to perform the following
+sequence of operations:</p>
+<ol><li><p>Creating the domain <tt>customdomain</tt></p></li>
+<li><p>Starting the domain <tt>customdomain</tt></p></li>
+<li><p>Listing all available subcommands</p></li>
+<li><p>Stopping the domain <tt>customdomain</tt></p></li>
+<li><p>Deleting the domain <tt>customdomain</tt></p></li></ol>
+<p>The content of the <tt>commands_file.txt</tt> file is as follows:</p><pre>create-domain --portbase 9000 customdomain
+start-domain customdomain
+list-commands
+stop-domain customdomain
+delete-domain customdomain</pre><p>This example runs the sequence of subcommands in the <tt>commands_file.txt</tt> file. Because
+the <tt>--portbase</tt> option is specified for the <tt>create-domain</tt> subcommand in the file, the <tt>--port</tt>
+<tt>asadmin</tt> utility option must also be set.</p><pre><tt><b>asadmin --port 9048 multimode --file commands_file.txt</b></tt></pre><h6>See Also</h6><p>For more information about the subcommands in the preceding example, see the following
+help pages:</p>
+<ul><li><p><a href="http://docs.sun.com/doc/820-7701/create-domain-1?a=view"><tt>create-domain</tt>(1)</a></p></li>
+<li><p><a href="http://docs.sun.com/doc/820-7701/delete-domain-1?a=view"><tt>delete-domain</tt>(1)</a></p></li>
+<li><p><a href="http://docs.sun.com/doc/820-7701/list-commands-1?a=view"><tt>list-commands</tt>(1)</a></p></li>
+<li><p><a href="http://docs.sun.com/doc/820-7701/multimode-1?a=view"><tt>multimode</tt>(1)</a></p></li>
+<li><p><a href="http://docs.sun.com/doc/820-7701/start-domain-1?a=view"><tt>start-domain</tt>(1)</a></p></li>
+<li><p><a href="http://docs.sun.com/doc/820-7701/stop-domain-1?a=view"><tt>stop-domain</tt>(1)</a></p></li></ul>
+
+
+<a name="ghcjc"></a><h3>Administering System Properties</h3>
+<a name="indexterm-68"></a><a name="indexterm-69"></a><p>Shared  server instances will often need to override attributes defined in their
+referenced configuration. Any configuration attribute can be overridden through a system property of
+the corresponding name.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ggonc">To Create System Properties</a></p></li>
+<li><p><a href="#ggodt">To List System Properties</a></p></li>
+<li><p><a href="#ggomm">To Delete a System Property</a></p></li></ul>
+
+
+<a name="ggonc"></a><h4>To Create System Properties</h4><p>Use the <tt>create-system-properties</tt> subcommand in remote mode to add or update one or
+more system properties of the domain or configuration. <a name="indexterm-70"></a><a name="indexterm-71"></a><a name="indexterm-72"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create system properties by using the <a href="http://docs.sun.com/doc/820-7701/create-system-properties-1?a=view"><tt>create-system-properties</tt>(1)</a> subcommand.</b><p>Information about properties for this subcommand is included in this help page.</p></li></ol><a name="ggovp"></a><h6>Example&#160;2-10 Creating a System Property</h6><p>This example creates a system property associated with <tt>http-listener-port=1088</tt> on <tt>localhost</tt>:</p><pre>asadmin> <tt><b>create-system-properties http-listener-port=1088</b></tt>
+Command create-system-properties executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-system-properties</tt> at the command line.</p>
+
+<a name="ggodt"></a><h4>To List System Properties</h4><p>Use the <tt>list-system-properties</tt> subcommand in remote mode to list the system properties that
+apply to a domain or configuration.<a name="indexterm-73"></a><a name="indexterm-74"></a><a name="indexterm-75"></a><a name="indexterm-76"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List system properties by using the <a href="http://docs.sun.com/doc/820-7701/list-system-properties-1?a=view"><tt>list-system-properties</tt>(1)</a> subcommand.</b><p>The existing system properties are displayed, including predefined properties such as <tt>HTTP_LISTENER_PORT</tt> and
+<tt>HTTP_SSL_LISTENER_PORT</tt>.</p></li></ol><a name="ggopn"></a><h6>Example&#160;2-11 Listing System Properties</h6><p>This example lists the system properties on host <tt>localhost</tt>: </p><pre>asadmin> <tt><b>list-system-properties</b></tt>
+http-listener-port=1088
+Command list-system-properties executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-system-properties</tt> at the command line.</p>
+
+<a name="ggomm"></a><h4>To Delete a System Property</h4><p>Use the <tt>delete-system-property</tt> subcommand in remote mode to delete system properties. Any configuration
+attribute can be overwritten through a system property of the corresponding name. <a name="indexterm-77"></a><a name="indexterm-78"></a><a name="indexterm-79"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the existing system properties by using the <a href="http://docs.sun.com/doc/820-7701/list-system-properties-1?a=view"><tt>list-system-properties</tt>(1)</a> subcommand.</b></li>
+<li><b>Delete the system property by using the <a href="http://docs.sun.com/doc/820-7701/delete-system-property-1?a=view"><tt>delete-system-property</tt>(1)</a> subcommand.</b></li>
+<li><b>If necessary, notify users that the system property has been deleted.</b></li></ol><a name="ggoph"></a><h6>Example&#160;2-12 Deleting a System Property</h6><p>This example deletes a system property named <tt>http-listener-port</tt> from <tt>localhost</tt>: </p><pre>asadmin> <tt><b>delete-system-property http-listener-port</b></tt>
+Command delete-system-property executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-system-property</tt> at the command line.</p>
+
+<a name="gixps"></a><h3>Administering Resources</h3>
+<p>This section contains instructions for integrating resources into the Enterprise Server environment. Information
+about administering specific resources, such as JDBC, is contained in other chapters.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ggoeh">To Add Resources From an XML File</a></p></li></ul>
+
+
+<a name="ggoeh"></a><h4>To Add Resources From an XML File</h4><p>Use the <tt>add-resources</tt> subcommand in remote mode to create the resources named in
+the specified XML file. The following resources are supported: JDBC connection pool and
+resource, JMS, JNDI, and JavaMail resources, custom resource, connector resource and work security
+map, admin object, and resource adapter configuration.</p><p>The XML file must reside in the <i>as-install</i><tt>/domains/domain1/config</tt> directory. If you specify
+a relative path or simply provide the name of the XML file, this
+subcommand will prepend <i>as-install</i><tt>/domains/domain1/config</tt> to this operand.<a name="indexterm-80"></a><a name="indexterm-81"></a><a name="indexterm-82"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Add resources from an XML file by using the <a href="http://docs.sun.com/doc/820-7701/add-resources-1?a=view"><tt>add-resources</tt>(1)</a> subcommand.</b><p>Information about properties for this subcommand is included in this help page.</p></li>
+<li><b>Restart Enterprise Server.</b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ggozc"></a><h6>Example&#160;2-13 Adding Resources</h6><p>This example creates resources using the contents of the <tt>resource.xml</tt> file on
+<tt>localhost</tt>:</p><pre>asadmin> <tt><b>add-resources c:\tmp\resource.xml</b></tt>
+Command : JDBC resource jdbc1 created successfully.
+Command : JDBC connection pool poolA created successfully.
+Command add-resources executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help add-resources</tt> at the command line.</p>
+
+<a name="ggocm"></a><h3>Listing Various System Elements</h3>
+
+<ul><li><p><a href="#ghhox">To Display the Enterprise Server Version</a></p></li>
+<li><p><a href="#ggocy">To List Applications</a></p></li>
+<li><p><a href="#ggocv">To List Containers</a></p></li>
+<li><p><a href="#ghlgf">To List Modules</a></p></li>
+<li><p><a href="#ggoeg">To List Subcommands</a></p></li>
+<li><p><a href="#giojd">To List Timers</a></p></li>
+<li><p><a href="#giyjd">To Show Component Status</a></p></li></ul>
+
+
+<a name="ghhox"></a><h4>To Display the Enterprise Server Version</h4><p>Use the <tt>version</tt> subcommand in remote mode to display information about the Enterprise
+Server version for a particular server. If the subcommand cannot communicate with the
+server by using the specified login (user/password) and target (host/port) information, then the
+local version is displayed along with a warning message.<a name="indexterm-83"></a><a name="indexterm-84"></a><a name="indexterm-85"></a><a name="indexterm-86"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Display the version by using the <a href="http://docs.sun.com/doc/820-7701/version-1?a=view"><tt>version</tt>(1)</a> subcommand.</b></li></ol><a name="ghjnb"></a><h6>Example&#160;2-14 Displaying Version Information</h6><p>This example displays the version of Enterprise Server:</p><pre>asadmin> <tt><b>version</b></tt>
+Version = GlassFish v3 Preview
+Command version executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help version</tt> at the command line.</p>
+
+<a name="ggocy"></a><h4>To List Applications</h4><p>Use the <tt>list-applications</tt> subcommand in remote mode to list the deployed Java<sup>TM</sup> applications.
+If the <tt>--type</tt> option is not specified, all applications are listed.<a name="indexterm-87"></a><a name="indexterm-88"></a><a name="indexterm-89"></a><a name="indexterm-90"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List applications by using the <a href="http://docs.sun.com/doc/820-7701/list-applications-1?a=view"><tt>list-applications</tt>(1)</a> subcommand.</b></li></ol><a name="ggouk"></a><h6>Example&#160;2-15 Listing Applications</h6><p>This example lists the web applications on <tt>localhost</tt>:</p><pre>asadmin> <tt><b>list-applications --type web</b></tt>
+hellojsp &#60;web>
+Command list-applications executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-applications</tt> at the command line.</p>
+
+<a name="ggocv"></a><h4>To List Containers</h4><p>Use the <tt>list-containers</tt> subcommand in remote mode to list application containers.<a name="indexterm-91"></a><a name="indexterm-92"></a><a name="indexterm-93"></a><a name="indexterm-94"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List containers by using the <a href="http://docs.sun.com/doc/820-7701/list-containers-1?a=view"><tt>list-containers</tt>(1)</a> subcommand.</b></li></ol><a name="ggown"></a><h6>Example&#160;2-16 Listing Containers</h6><p>This example lists the containers on <tt>localhost</tt>:</p><pre>asadmin> <tt><b>list-containers</b></tt>
+List all known application containers
+Container : connectors
+    properties=(ContractProvider=connectors)
+Container : jpa
+    properties=(ContractProvider=jpa)
+Container : web
+    properties=(ContractProvider=web)
+Container : jruby
+    properties=(ContractProvider=jruby)
+Container : security
+    properties=(ContractProvider=security)
+Command list-containers executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-containers</tt> at the command line.</p>
+
+<a name="ghlgf"></a><h4>To List Modules</h4><p>Use the <tt>list-modules</tt> subcommand in remote mode to list the modules that are
+accessible to the Enterprise Server module subsystem. The status of each module is
+included. Possible statuses include New and Ready.<a name="indexterm-95"></a><a name="indexterm-96"></a><a name="indexterm-97"></a><a name="indexterm-98"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List modules by using the <a href="http://docs.sun.com/doc/820-7701/list-modules-1?a=view"><tt>list-modules</tt>(1)</a> subcommand.</b></li></ol><a name="ghlfw"></a><h6>Example&#160;2-17 Listing Modules</h6><p>This example lists the accessible modules:</p><pre>asadmin> <tt><b>list-modules</b></tt></pre><p>Information similar to the following is displayed (partial output):</p><pre>List Of Modules
+Module : org.glassfish.web.jstl-connector:10.0.0.b28
+    properties=(visibility=public,State=READY,Sticky=true)
+    Module Characteristics : List of Jars implementing the module
+        Jar : file:/C:/Preview/v3_Preview_release/distributions/web/target/glass
+fish/modules/web/jstl-connector.jar
+    Module Characteristics : List of imported modules
+    Module Characteristics : Provides to following services
+Module : org.glassfish.admingui.console-common:10.0.0.b28
+    properties=(visibility=public,State=NEW,Sticky=true)
+Module : org.glassfish.admin.launcher:10.0.0.b28
+    properties=(visibility=public,State=NEW,Sticky=true)
+Module : org.glassfish.external.commons-codec-repackaged:10.0.0.b28
+    properties=(visibility=public,State=NEW,Sticky=true)
+Module : com.sun.enterprise.tiger-types-osgi:0.3.32.Preview-b28
+    properties=(visibility=public,State=READY,Sticky=true)
+    Module Characteristics : List of imported modules
+    Module Characteristics : Provides to following services
+    Module Characteristics : List of Jars implementing the module
+        Jar : file:/C:/Preview/v3_Preview_release/distributions/web/target/glass
+fish/modules/tiger-types-osgi.jar.
+.
+.
+.
+Command list-modules executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-modules</tt> at the command line.</p>
+
+<a name="ggoeg"></a><h4>To List Subcommands</h4><p>Use the <tt>list-commands</tt> subcommand in remote mode to list the deployed <tt>asadmin</tt> subcommands.
+You can specify that only remote subcommands or only local subcommands are listed.
+By default, this subcommand displays a list of local subcommands followed by a
+list of remote subcommands.<a name="indexterm-99"></a><a name="indexterm-100"></a><a name="indexterm-101"></a><a name="indexterm-102"></a><a name="indexterm-103"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List subcommands by using the <a href="http://docs.sun.com/doc/820-7701/list-commands-1?a=view"><tt>list-commands</tt>(1)</a> subcommand.</b></li></ol><a name="ggpdl"></a><h6>Example&#160;2-18 Listing Subcommands</h6><p>This example lists only local subcommands:</p><pre>asadmin> <tt><b>list-commands --localonly</b></tt>
+create-domain
+delete-domain
+list-commands
+list-domains
+login
+monitor
+start-database
+start-domain
+stop-domain
+stop-database
+version
+Command list-commands executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-commands</tt> at the command line.</p>
+
+<a name="giojd"></a><h4>To List Timers</h4><a name="indexterm-104"></a><a name="indexterm-105"></a><a name="indexterm-106"></a><p>The timer service is a persistent and transactional notification service that is provided
+by the enterprise bean container and is used to schedule notifications or events
+used by enterprise beans. All enterprise beans except stateful session beans can receive
+notifications from the timer service. Persistent timers set by the service are not
+destroyed when the server is shut down or restarted.</p><p>Use the <tt>list-timers</tt> subcommand in remote mode to list the persistent timers owned
+by a specific server instance. You can use this information to decide whether
+to do a timer migration, or to verify that a migration has been
+completed successfully. </p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List timers by using the<a href="http://docs.sun.com/doc/820-7701/list-timers-1?a=view"><tt>list-timers</tt>(1)</a> subcommand.</b></li></ol><a name="giojj"></a><h6>Example&#160;2-19 Listing Timers</h6><p>This example lists the timers in a particular standalone server instance. There is
+one currently active timer set.</p><pre>asadmin> <tt><b>list-timers server</b></tt>
+1
+The list-timers command was executed successfully.</pre>
+
+<a name="giyjd"></a><h4>To Show Component Status</h4><a name="indexterm-107"></a><a name="indexterm-108"></a><a name="indexterm-109"></a><a name="indexterm-110"></a><p>Use the <tt>show-component-status</tt> subcommand in remote mode to get the status (either enabled
+or disabled) of the specified deployed component.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b><a href="http://docs.sun.com/doc/820-7701/show-component-status-1?a=view"><tt>show-component-status</tt>(1)</a></b></li></ol><a name="gjhkk"></a><h6>Example&#160;2-20 Showing Status of a Component</h6><p> This example shows the status of the <tt>MEjbApp</tt> component.   
+    </p><pre>asadmin> <tt><b>show-component-status MEjbApp</b></tt>
+Status of MEjbApp is enabled
+Command show-component-status executed successfully.</pre>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p5.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p7.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+
