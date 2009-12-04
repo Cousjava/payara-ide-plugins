@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Administering the Logging Service - Sun GlassFish Enterprise Server v3 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p10.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p12.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="abluj"></a>Chapter&#160;7<h3>Administering the Logging Service</h3><a name="indexterm-220"></a><p>This chapter provides instructions on how to configure logging and how to view
+log information in the Sun GlassFish<sup>TM</sup> Enterprise Server v3 environment.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#abluk">About Logging</a></p></li>
+<li><p><a href="#ghgwi">Configuring Log Properties and Log Levels</a></p></li>
+<li><p><a href="#givwx">Rotating Logs</a></p></li>
+<li><p><a href="#ghmdy">Viewing Log Information</a></p></li></ul>
+<p>Instructions for accomplishing these tasks by using the Administration Console are contained in
+the Administration Console online help.</p>
+
+<a name="abluk"></a><h3>About Logging</h3>
+<a name="indexterm-221"></a><a name="indexterm-222"></a><p><b>Logging</b> is the process by which Enterprise Server captures information about events that
+occur during Enterprise Server operation, such as configuration errors, security failures, or server
+malfunction. This data is recorded in a log file, and is usually the
+first source of information when Enterprise Server problems occur. Analyzing the log files
+can help you to determine the health of the server.</p><p>Although application components can use the Apache Commons Logging Library to record messages,
+the platform standard JSR 047 API is recommended for better log configuration.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ablul">Log File </a></p></li>
+<li><p><a href="#ablum">Logger Namespaces</a></p></li>
+<li><p><a href="#ghgvc">Logging Configuration File </a></p></li></ul>
+
+
+<a name="ablul"></a><h4>Log File </h4>
+<p>Enterprise Server log records are captured in the server log. The server log
+is named <tt>server.log</tt> by default and is typically located in <i>domain-dir</i><tt>/logs</tt>. You can
+change the default name or location of the server log by following instructions
+in <a href="#ghmek">To Change the Log File Name or Directory</a>. In addition to the server log, the <i>domain-dir</i><tt>/logs</tt> directory contains the
+following additional logs: <a name="indexterm-223"></a><a name="indexterm-224"></a><a name="indexterm-225"></a><a name="indexterm-226"></a></p>
+<ul><li><p>HTTP service access logs, located in the <tt>/access</tt> subdirectory</p></li>
+<li><p>Transaction service logs, located in the <tt>/tx</tt> subdirectory</p></li></ul>
+<p>When the server log reaches the specified size in bytes, the log
+is rotated and renamed with a timestamp name to <tt>server.log_</tt><i>date</i>, where <i>date</i> is
+the date and time that the file was rotated. You can also rotate
+this log manually by following instructions in <a href="#givwx">Rotating Logs</a>.</p><p>Enterprise Server log records follow a uniform format:</p><pre></pre><pre>[#|<i>yyyy</i>-<i>mm</i>-<i>dd</i>T<i>hh</i>:<i>mm</i>:<i>ss</i>.<i>SSS</i>-<i>Z</i>|<i>Log Level</i>|<i>ProductName-Version</i>|<i>LoggerName</i>|<i>Key Value Pairs</i>|<i>Message</i>|#]</pre>
+<ul><li><p><tt>[#</tt> and <tt>#]</tt> mark the beginning and end of the record.</p></li>
+<li><p>The vertical bar (<tt>|</tt>) separates the fields of the record.</p></li>
+<li><p><i>yyyy-mm-ddThh:mm:ss.SSSS-Z</i> specifies the date and time that the record was created. For example: <tt>2006-10-21T13:25:53.852-0400</tt> </p></li>
+<li><p><i>Log Level</i> specifies the desired log level. You can select any of the following values: <tt>SEVERE</tt>, <tt>WARNING</tt>, <tt>INFO</tt>, <tt>CONFIG</tt>, <tt>FINE</tt>, <tt>FINER</tt>, and <tt>FINEST</tt>. The default is <tt>INFO</tt>.</p></li>
+<li><p><i>ProductName-Version</i> refers to the current version of the Enterprise Server. For example: <tt>glassfish</tt></p></li>
+<li><p><i>LoggerName</i> is a hierarchical logger namespace that identifies the source of the log module. For example: <tt>javax.enterprise.system.core</tt></p></li>
+<li><p><i>Key Value Pairs</i> refers to pairs of key names and values, typically a thread ID. For example: <tt>_ThreadID=14;</tt></p></li>
+<li><p><b>Message</b> is the text of the log message. For all Enterprise Server <tt>SEVERE</tt> and <tt>WARNING</tt> messages and for many <tt>INFO</tt> messages, the message begins with a message ID that consists of a module code and a numerical value. For example: <tt>CORE5004</tt></p></li></ul>
+<p>An example log record might look like this:</p><pre>[#|2006-10-21T13:25:53.852-0400|INFO|GlassFish10.0|javax.enterprise.
+system.core|_ThreadID=13;|CORE5004: Resource Deployed: 
+[cr:jms/DurableConnectionFactory].|#]</pre><p>The Administration Console presents log records in a more readable display.</p>
+
+<a name="ablum"></a><h4>Logger Namespaces</h4>
+<p><a name="indexterm-227"></a><a name="indexterm-228"></a>You can use the <a href="http://docs.sun.com/doc/820-7701/list-logger-levels-1?a=view"><tt>list-logger-levels</tt>(1)</a> subcommand to list the existing loggers for the
+modules. For example:</p><pre>javax.enterprise.system.container.cmp: INFO
+       javax.enterprise.system.tools.admin: INFO
+       java.util.logging.ConsoleHandler: FINEST
+       javax.enterprise.system.container.web: INFO
+       javax.enterprise.system.util: INFO
+       javax.enterprise.resource.webcontainer.jsf.timing: INFO
+       javax: INFO
+       javax.enterprise.resource.corba: INFO
+       javax.enterprise.system.core.naming: INFO
+       javax.enterprise.system.core.selfmanagement: INFO
+       javax.enterprise.system.container.ejb: INFO
+       javax.enterprise.resource.webcontainer.jsf.config: INFO
+       javax.enterprise.resource.javamail: INFO
+       org.apache.catalina: INFO
+       javax.enterprise.system.core.config: INFO
+       javax.enterprise.system.webservices.rpc: INFO
+       javax.enterprise.system.webservices.registry: INFO
+       javax.enterprise.system.tools.deployment: INFO
+       javax.enterprise.resource.jms: INFO
+       javax.enterprise.system: INFO
+       javax.enterprise.system.webservices.saaj: INFO
+       org.apache.jasper: INFO
+       javax.enterprise.resource.webcontainer.jsf.lifecycle: INFO
+       javax.enterprise.resource.jta: INFO
+       javax.enterprise.resource.jdo: INFO
+       javax.enterprise.resource.resourceadapter: INFO
+       javax.enterprise.system.core.transaction: INFO
+       javax.enterprise.resource.webcontainer.jsf.resource: INFO
+       javax.enterprise.system.core.security: INFO
+       javax.enterprise.resource.webcontainer.jsf.application: INFO
+       javax.enterprise.system.core.classloading: INFO
+       org.apache.coyote: INFO
+       javax.enterprise.resource.webcontainer.jsf.managedbean: INFO
+       javax.enterprise.system.container.ejb.mdb: INFO
+       javax.enterprise.resource.webcontainer.jsf.context: INFO
+       javax.enterprise.resource.webcontainer.jsf.renderkit: INFO
+       javax.enterprise.resource.webcontainer.jsf.facelets: INFO
+       javax.enterprise.resource.webcontainer.jsf.taglib: INFO</pre>
+
+<a name="ghgvc"></a><h4>Logging Configuration File </h4>
+<p>You can configure logging by editing the <tt>logging.properties</tt> file. The default <tt>logging.properties</tt> file
+is located in the same directory as the <tt>domain.xml</tt> file, typically <i>domain-dir</i><tt>/config</tt>. You
+can choose a different file name by using the <tt>java.util.logging.config.file</tt> system property to specify
+a file name. For example:<a name="indexterm-229"></a><a name="indexterm-230"></a></p><pre><tt><b>java -Djava.util.logging.config.file=myfile</b></tt></pre>
+
+<a name="ghgwi"></a><h3>Configuring Log Properties and Log Levels</h3>
+<a name="indexterm-231"></a><p>This section explains how to configure logging for Enterprise Server by setting properties
+in the <tt>logging.properties</tt> file. All changes in log properties require that you restart
+the server.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ghgwq">Configuring Log Handler Elements</a></p></li>
+<li><p><a href="#ghmah">Setting Log Levels</a></p></li>
+<li><p><a href="#ghmek">To Change the Log File Name or Directory</a></p></li></ul>
+
+
+<a name="ghgwq"></a><h4>Configuring Log Handler Elements</h4>
+<a name="indexterm-232"></a><a name="indexterm-233"></a><p>The following tasks apply to configuring log handler elements:</p>
+<ul><li><p><a href="#ghmbm">To Set Handler-Specific Properties</a></p></li>
+<li><p><a href="#ghmen">To Add a Log Handler</a></p></li></ul>
+
+
+<a name="ghmbm"></a><h5>To Set Handler-Specific Properties</h5>
+<a name="indexterm-234"></a><a name="indexterm-235"></a><a name="indexterm-236"></a><p>You can modify logging behavior by setting properties in the <tt>logging.properties</tt> file
+as follows:</p><h6>Before You Begin</h6><p>If you set a handler using the handlers property, the class that
+implements Handler must be in the server classpath.</p><ol>
+<li><b>In a text editor, find the property that you want to modify
+and make your changes.</b><p>The following properties are available:</p><dl><dt>File Description</dt>
+<dd><p>Contains the name and location of the log file. By default, the name is <tt>server.log</tt> and the location is the <tt>logs</tt> directory. These can be changed.</p><pre>com.sun.enterprise.server.logging.GFFileHandler.file=logs/server.log</pre></dd>
+<dt>File Rotation Time Limit </dt>
+<dd><p>Rotates the log file based on time in minutes. If defined, time limit takes precedence over size limit. If set to 0 (the default), there is no rotation based on time.</p><pre>com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes=0</pre></dd>
+<dt>File Rotation Size Limit</dt>
+<dd><p> Rotates the log file based on limit in bytes. If set to 0 (the default), there is no rotation based on file size. 500000 is the minimum.</p><pre>com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes=0</pre></dd>
+<dt>Formatter</dt>
+<dd><p>Uses <tt>UniformLogFormatter</tt> to format the records in the log file.</p><pre>com.sun.enterprise.server.logging.GFFileHandler.formatter=com.
+sun.enterprise.server.logging.UniformLogFormatter</pre></dd>
+</dl>
+</li>
+<li><b>Save the file.</b></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ghmem"></a><h6>Example&#160;7-1 Changing a Handler-Specific Logging Property</h6><p>This example changes the <tt>rotationTimelimitInMinutes</tt> from 0 (the default) to 90 minutes:</p><p>Before: </p><pre>com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes=0</pre><p>After: :</p><pre>com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes=90</pre>
+
+<a name="ghmen"></a><h5>To Add a Log Handler</h5>
+<a name="indexterm-237"></a><p><a name="indexterm-238"></a>A comma-separated list of log handlers is installed during startup of the Java<sup>TM</sup>
+Virtual Machine (JVM<sup>TM</sup>) host. The default log handler that is provided in the <tt>logging. properties</tt>
+file, <tt>ConsoleHandler</tt>, is configured as follows:</p><pre>handlers= java.util.logging.ConsoleHandler</pre><p>In Enterprise Server, the best approach to developing a handler is to
+define a Hundred-Kilobyte Kernel (HK2) component which implements the handler contract. Enterprise Server
+registers this handler automatically because it is an HK2 component. There is no
+task required of the administrator.</p><p>To implement a new handler that is not developed as an HK2
+component, add the new handler to the <tt>logging.properties</tt> file after the developer has put
+the new handler JAR file into the <tt>/lib</tt> directory.</p><ol>
+<li><b>In a text editor, add the new file handler to the line
+that begins with <tt>handlers=</tt>.</b></li>
+<li><b>Save the file.</b></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ghphb"></a><h6>Example&#160;7-2 Adding a New Log Handler</h6><p>This example adds the new logger <tt>com.example.logging.MyHandler</tt>:</p><p>Before: </p><pre>handlers= java.util.logging.ConsoleHandler</pre><p>After: </p><pre>handlers= java.util.logging.ConsoleHandler, com.example.logging.MyHandler</pre>
+
+<a name="ghmah"></a><h4>Setting Log Levels</h4>
+<a name="indexterm-239"></a><p>The <b>log level</b> describes the type of material that is contained in the message.
+The following values apply: <tt>SEVERE</tt>, <tt>WARNING</tt>, <tt>INFO</tt>, <tt>CONFIG</tt>, <tt>FINE</tt>, <tt>FINER</tt>, and <tt>FINEST</tt>.
+These log levels are hierarchically inclusive, which means that if you set a
+particular log level, such as INFO, the messages that have log levels above
+that level (<tt>SEVERE</tt> and <tt>WARNING</tt>) are also included. If you set the log level
+to the lowest level, <tt>FINEST</tt>, your output will include all the messages in
+the file. The default setting is <tt>INFO</tt>.</p><p>There are two levels of log settings available: global and logger-specific. If you
+have chosen a logger-specific setting that is different from the global setting, the
+logger-specific setting takes precedence. </p><p>Because setting log levels is a dynamic operation, you do not need
+to restart Enterprise Server for changes to take effect.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#gjirr">To List the Logger Levels</a></p></li>
+<li><p><a href="#ghmep">To Set the Global Log Level</a></p></li>
+<li><p><a href="#ghmdu">To Set a Module Logger Level </a></p></li></ul>
+
+
+<a name="gjirr"></a><h5>To List the Logger Levels</h5>
+<a name="indexterm-240"></a><a name="indexterm-241"></a><a name="indexterm-242"></a><a name="indexterm-243"></a><p>Use the <tt>list-logger-levels</tt> subcommand in remote mode to list the modules and their
+current log levels.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the existing module loggers by using the <a href="http://docs.sun.com/doc/820-7701/list-logger-levels-1?a=view"><tt>list-logger-levels</tt>(1)</a> subcommand.</b></li></ol><a name="gjiti"></a><h6>Example&#160;7-3 Listing Logger Levels for Modules</h6><p>This example shows are partial list of the existing loggers and indicates how
+their log levels are set.</p><pre>asadmin> <tt><b>list-logger-levels</b></tt>
+javax.enterprise.system.container.cmp: INFO
+javax.enterprise.system.tools.admin: INFO
+java.util.logging.ConsoleHandler: FINEST
+javax.enterprise.system.container.web: INFO
+javax.enterprise.system.util: INFO
+javax.enterprise.resource.webcontainer.jsf.timing: INFO
+javax: INFO
+javax.enterprise.resource.corba: INF
+...
+Command list-logger-levels executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-logger-levels</tt> at the command line.</p>
+
+<a name="ghmep"></a><h5>To Set the Global Log Level</h5>
+<a name="indexterm-244"></a><a name="indexterm-245"></a><a name="indexterm-246"></a><p>The <b>global log level</b> specifies which kinds of events are logged across all loggers. The
+default level for message output to the console is <tt>INFO</tt> (which also includes
+<tt>SEVERE</tt> and <tt>WARNING</tt> messages). </p><p>The <tt>ConsoleHandler</tt> has a separate log level setting that limits the messages that
+are displayed. For example:</p><pre>java.util.logging.ConsoleHandler.level = INFO 
+java.util.logging.ConsoleHandler.formatter = 
+com.sun.enterprise.server.logging.UniformLogFormatter</pre><ol>
+<li><b>In a text editor, find the <tt>ConsoleHandler</tt> log level line and make your
+changes.</b></li>
+<li><b>Save the file.</b></li></ol><a name="ghmfi"></a><h6>Example&#160;7-4 Changing the Global Log Level for All Loggers</h6><p>If you set the log level at the root level, you are
+setting the level of all loggers. This example sets the log level for
+all loggers to <tt>INFO</tt>:</p><pre>.level= INFO</pre>
+
+<a name="ghmdu"></a><h5>To Set a Module Logger Level </h5>
+<a name="indexterm-247"></a><a name="indexterm-248"></a><a name="indexterm-249"></a><a name="indexterm-250"></a><a name="indexterm-251"></a><p>A <b>log level</b> specifies which kinds of events are logged for a particular logger.
+The default level for message output to the console is <tt>INFO</tt> (which also
+includes <tt>SEVERE</tt> and <tt>WARNING</tt> messages). The global log level is overridden by
+a module-specific log level.</p><p>By default, the module log level is set to <tt>FINE</tt> in the <tt>logging. properties</tt>
+file. The lines for the loggers might look like this (the modules are
+indicated in bold):</p><pre>#javax.enterprise.system.<tt><b>tools</b></tt>.level=FINE
+#javax.enterprise.system.container.<tt><b>ejb</b></tt>.level=FINE
+#javax.enterprise.system.core.<tt><b>security</b></tt>.level=FINE
+#javax.enterprise.system.tools.<tt><b>admin</b></tt>.level=FINE
+#javax.<tt><b>enterprise</b></tt>.level=FINE
+#javax.enterprise.system.container.<tt><b>web</b></tt>.level=FINE</pre><p>Because setting log levels is a dynamic operation, you do not need
+to restart Enterprise Server for changes to take effect.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the existing module loggers by using the <a href="http://docs.sun.com/doc/820-7701/list-logger-levels-1?a=view"><tt>list-logger-levels</tt>(1)</a> subcommand.</b></li>
+<li><b>Set the log level for a module by using the <a href="http://docs.sun.com/doc/820-7701/set-log-level-1?a=view"><tt>set-log-level</tt>(1)</a> subcommand.
+</b><p>Your choices are <tt>SEVERE</tt>, <tt>WARNING</tt>, <tt>INFO</tt>, <tt>CONFIG</tt>, <tt>FINE</tt>, <tt>FINER</tt>, and <tt>FINEST</tt>. </p></li></ol><a name="ghmev"></a><h6>Example&#160;7-5 Setting the Log Level for a Module Logger</h6><p>This example sets the log level for the <tt>ConsoleHandler</tt> logger to FINE:</p><pre>asadmin> <tt><b>set-log-level java.util.logging.ConsoleHandler.level FINE</b></tt></pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help set-log-level</tt> at the command line.</p>
+
+<a name="ghmek"></a><h4>To Change the Log File Name or Directory</h4><a name="indexterm-252"></a><a name="indexterm-253"></a><p>By default, the name of the server log output is <tt>server.log</tt>, located in
+<i>domain-dir</i><tt>/logs</tt>. You can change the name or location of the file by editing
+the <tt>logging.properties</tt> file as described here.</p><ol>
+<li><b>In a text editor, find the following line:</b><pre>com.sun.enterprise.server.logging.GFFileHandler.file=logs/server.log</pre><p>In this line, <tt>logs</tt> indicates the directory where the file is located, and
+<tt>server.log</tt> is the file name.</p></li>
+<li><b>Make your changes and save the file.</b></li>
+<li><b>To apply your changes, restart Enterprise Server.</b><p> See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ghmhd"></a><h6>Example&#160;7-6 Changing the Name and Location of the Log File</h6><p>This example changes the log file name from <tt>server.log</tt> to <tt>myLogging.log</tt> and
+changes the location from the <tt>logs</tt> directory to the <tt>dpin</tt> directory:</p><p>Before: </p><pre>com.sun.enterprise.server.logging.GFFileHandler.file=logs/server.log</pre><p>After:</p><pre>com.sun.enterprise.server.logging.GFFileHandler.file=dpin/myLogging.log</pre>
+
+<a name="givwx"></a><h3>Rotating Logs</h3>
+<a name="indexterm-254"></a><p>Logs are rotated automatically based on settings you made by editing the <tt>logging.properties</tt>
+file. For guidelines on these settings, see <a href="#ghmbm">To Set Handler-Specific Properties</a>. </p>
+
+<a name="givti"></a><h4>To Rotate a Log File Manually</h4><p><a name="indexterm-255"></a><a name="indexterm-256"></a>You can rotate the server log file manually by using the <tt>rotate-log</tt> subcommand in
+remote mode. The server log in the default location is immediately moved to
+a time-stamped file and a new server log is created.</p><p>Because log rotation is a dynamic operation, you do not need to
+restart Enterprise Server for changes to take effect.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Rotate a log by using the <a href="http://docs.sun.com/doc/820-7701/rotate-log-1?a=view"><tt>rotate-log</tt>(1)</a> subcommand.</b></li></ol><a name="givzf"></a><h6>Example&#160;7-7 Rotating a Log File Manually</h6><p>This example moves the <tt>server.log</tt> file to <tt>yyyy-mm-dd_server.log</tt> and creates a new
+<tt>server.log</tt> file in the default location:</p><pre>asadmin> <tt><b>rotate-log</b></tt>
+Command rotate-log executed successfuly.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help rotate-log</tt> at the command line.</p>
+
+<a name="ghmdy"></a><h3>Viewing Log Information</h3>
+<a name="indexterm-257"></a><a name="indexterm-258"></a><p>By default, all logging information is captured in the <tt>server.log</tt> file, typically
+located in <i>domain-dir</i><tt>/logs</tt>. You can view logging information by using the Administration
+Console or <tt>asadmin</tt> utility. Instructions for using the Administration Console logging functions are
+contained in the Administration Console online help.</p><p>To view information that has been collected for a module, you can
+open the <tt>server.log</tt> file in a text editor and search for the module that
+you are interested in. You can also use the command-line file viewing subco.
+or the <tt>asadmin display-log-records</tt> subcommand.<a name="indexterm-259"></a></p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p10.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p12.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

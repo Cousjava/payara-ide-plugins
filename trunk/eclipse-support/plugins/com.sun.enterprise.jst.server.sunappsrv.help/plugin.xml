@@ -18,21 +18,22 @@
     </toc>
   </extension>
   <extension point="org.eclipse.help.toc">
-    <toc file="v3preludedevguide/toc.xml" primary="true">
+    <toc file="v3/SJSASEEADG-eclipsehelp/toc.xml" primary="true">
     </toc>
   </extension>
   <extension point="org.eclipse.help.toc">
-    <toc file="v3AdministrationGuide/toc.xml" primary="true">
+    <toc file="v3/SJSASEEAG-eclipsehelp/toc.xml" primary="true">
     </toc>
   </extension>
   <extension point="org.eclipse.help.toc">
-    <toc file="v3ApplicationDeploymentGuide/toc.xml" primary="true">
+    <toc file="v3/SJSASEEDG-eclipsehelp/toc.xml" primary="true">
     </toc>
   </extension>
   <extension point="org.eclipse.help.toc">
-    <toc file="v3QuickStartGuide/toc.xml" primary="true">
+    <toc file="v3/SJSASEEQSG-eclipsehelp/toc.xml" primary="true">
     </toc>
   </extension>
+
 
   <extension point="org.eclipse.help.toc">
     <toc file="v21AdministrationGuide/toc.xml" primary="true">

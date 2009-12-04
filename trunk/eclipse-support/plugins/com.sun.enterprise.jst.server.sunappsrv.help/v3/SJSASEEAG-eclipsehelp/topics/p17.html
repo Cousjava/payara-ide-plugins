@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Administering User Security - Sun GlassFish Enterprise Server v3 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p16.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p18.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="ggnqj"></a>Chapter&#160;12<h3>Administering User Security</h3><a name="indexterm-510"></a><p>This chapter provides instructions for administering user security in the Sun GlassFish<sup>TM</sup> Enterprise Server
+environment by using the <tt>asadmin</tt> command-line utility. Enterprise Server enforces its authentication and authorization
+policies upon realms, users, and groups. This chapter assumes that you are familiar
+with security features such as authentication, authorization, and certificates. If you are not,
+see <a href="p16.html">Chapter&#160;11, Administering System Security</a>.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ggkuk">Administering Authentication Realms</a></p></li>
+<li><p><a href="#ggnxq">Administering File Users</a></p></li></ul>
+<p>Instructions for accomplishing these tasks by using the Administration Console are contained in
+the Administration Console online help.</p>
+
+<a name="ggkuk"></a><h3>Administering Authentication Realms</h3>
+<a name="indexterm-511"></a><a name="indexterm-512"></a><a name="indexterm-513"></a><p>An <b>authentication realm</b>, also called a security policy domain or security domain, is a
+scope over which the Enterprise Server defines and enforces a common security policy.
+Enterprise Server is preconfigured with the file, certificate, and administration realms. In addition,
+you can set up LDAP, JDBC, digest, Solaris, or custom realms. An application
+can specify which realm to use in its deployment descriptor. If the application
+does not specify a realm, Enterprise Server uses its default realm (<tt>file</tt>).</p><dl><dt>File realm</dt>
+<dd><p>Enterprise Server stores user credentials locally in a file named <tt>keyfile</tt>. The file realm is the initial default realm. <a name="indexterm-514"></a></p></dd>
+<dt>Administration realm</dt>
+<dd><p>The administration realm is also a file realm and stores administrator user credentials locally in a file named <tt>admin-keyfile</tt>. <a name="indexterm-515"></a></p></dd>
+<dt>Certificate realm</dt>
+<dd><p>Enterprise Server stores user credentials in a certificate database. When using the certificate realm, the server uses certificates with the HTTPS protocol to authenticate web clients.<a name="indexterm-516"></a></p></dd>
+<dt>LDAP realm</dt>
+<dd><p>Enterprise Server gets user credentials from a Lightweight Directory Access Protocol (LDAP) server such as the Directory Server. LDAP is a protocol for enabling anyone to locate organizations, individuals, and other resources such as files and devices in a network, whether on the public Internet or on a corporate intranet. Consult your LDAP server documentation for information about managing users and groups in the LDAP realm.<a name="indexterm-517"></a></p></dd>
+<dt>JDBC realm</dt>
+<dd><p>Enterprise Server gets user credentials from a database. The server uses the database information and the enabled JDBC realm option in the configuration file.<a name="indexterm-518"></a></p></dd>
+<dt>Digest realm</dt>
+<dd><p>Digest Authentication authenticates a user based on a user name and a password. However, the authentication is performed by transmitting the password in an encrypted form.<a name="indexterm-519"></a></p></dd>
+<dt>Solaris realm</dt>
+<dd><p><a name="indexterm-520"></a>Enterprise Server gets user credentials from the Solaris operating system. This realm is supported on the Solaris 9 and Solaris 10 operating systems. Consult your Solaris documentation for information about managing users and groups in the Solaris realm.</p></dd>
+<dt>Custom realm</dt>
+<dd><p>You can create other repositories for user credentials, such as a relational database or third-party components. For more information about custom realms, see the Administration Console online help. For instructions on creating a custom realm, see <a href="http://docs.sun.com/doc/820-7695/beabs?a=view">Creating a Custom Realm in <i>Sun GlassFish Enterprise Server v3 Application Development Guide</i></a>.</p></dd>
+</dl>
+<p>The Enterprise Server authentication service can govern users in multiple realms. </p><p>The following tasks and information are used to administer authentication realms:</p>
+<ul><li><p><a href="#ggnca">To Create an Authentication Realm</a></p></li>
+<li><p><a href="#ggngh">To List Authentication Realms</a></p></li>
+<li><p><a href="#giwlt">To Update an Authentication Realm</a></p></li>
+<li><p><a href="#ggngf">To Delete an Authentication Realm</a></p></li>
+<li><p><a href="#ggmww">To Configure a JDBC or Digest Authentication Realm</a></p></li></ul>
+
+
+<a name="ggnca"></a><h4>To Create an Authentication Realm</h4><a name="indexterm-521"></a><a name="indexterm-522"></a><a name="indexterm-523"></a><p>Use the <tt>create-auth-realm</tt> subcommand in remote mode to create an authentication realm.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create a realm by using the <a href="http://docs.sun.com/doc/820-7701/create-auth-realm-1?a=view"><tt>create-auth-realm</tt>(1)</a> subcommand.</b><p>Information about properties for this subcommand is included in this help page.</p></li></ol><a name="ggpjx"></a><h6>Example&#160;12-1 Creating a Realm</h6><p>This example creates a realm named <tt>db</tt>:</p><pre>asadmin> <tt><b>create-auth-realm --classname com.iplanet.ias.security.auth.realm.DB.Database --property defaultuser=admin:Password=admin db</b></tt>
+Command create-auth-realm executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-auth-realm</tt> at the command line.</p><p><a name="indexterm-524"></a><a name="indexterm-525"></a>For information on creating a custom realm, see <a href="http://docs.sun.com/doc/820-7695/beabs?a=view">Creating a Custom Realm in <i>Sun GlassFish Enterprise Server v3 Application Development Guide</i></a>.</p>
+
+<a name="ggngh"></a><h4>To List Authentication Realms</h4><a name="indexterm-526"></a><a name="indexterm-527"></a><a name="indexterm-528"></a><a name="indexterm-529"></a><p>Use the <tt>list-auth-realms</tt> subcommand in remote mode to list the existing authentication realms.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List realms by using the <a href="http://docs.sun.com/doc/820-7701/list-auth-realms-1?a=view"><tt>list-auth-realms</tt>(1)</a> subcommand.</b></li></ol><a name="ggpkw"></a><h6>Example&#160;12-2 Listing Realms</h6><p>This example lists the authentication realms on <tt>localhost</tt>:</p><pre>asadmin> <tt><b>list-auth-realms</b></tt>
+db
+certificate
+file
+admin-realm
+Command list-auth-realms executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-auth-realms</tt> at the command line.</p>
+
+<a name="giwlt"></a><h4>To Update an Authentication Realm</h4><a name="indexterm-530"></a><a name="indexterm-531"></a><a name="indexterm-532"></a><p>Use the <tt>set</tt> subcommand to modify an existing authentication realm.</p>
+<hr><p><b>Note - </b>A custom realm does not require server restart.</p>
+<hr>
+<ol>
+<li><b>List realms by using the <a href="http://docs.sun.com/doc/820-7701/list-auth-realms-1?a=view"><tt>list-auth-realms</tt>(1)</a> subcommand.</b></li>
+<li><b>Modify the values for the specified thread pool by using the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a>
+subcommand.</b><p>The thread pool is identified by its dotted name.</p></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giwks"></a><h6>Example&#160;12-3 Updating an Authentication Realm</h6><p>tbd</p>
+
+<a name="ggngf"></a><h4>To Delete an Authentication Realm</h4><a name="indexterm-533"></a><a name="indexterm-534"></a><a name="indexterm-535"></a><p>Use the <tt>delete-auth-realm</tt> subcommand in remote mode to delete an existing authentication realm.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List realms by using the <a href="http://docs.sun.com/doc/820-7701/list-auth-realms-1?a=view"><tt>list-auth-realms</tt>(1)</a> subcommand.</b></li>
+<li><b>If necessary, notify users that the realm is being deleted.</b></li>
+<li><b>Delete the realm by using the <a href="http://docs.sun.com/doc/820-7701/delete-auth-realm-1?a=view"><tt>delete-auth-realm</tt>(1)</a> subcommand.</b></li>
+<li><b>To apply your changes, restart Enterprise Server. See <a href="p7.html#ginqj">To Restart a Domain</a>.</b></li></ol><a name="ggpjf"></a><h6>Example&#160;12-4 Deleting a Realm</h6><p>This example deletes an authentication realm named <tt>db</tt> <tt>localhost</tt>:</p><pre>asadmin> <tt><b>delete-auth-realm db</b></tt>
+Command delete-auth-realm executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-auth-realm</tt> at the command line.</p>
+
+<a name="ggmww"></a><h4>To Configure a JDBC or Digest Authentication Realm</h4><a name="indexterm-536"></a><a name="indexterm-537"></a><a name="indexterm-538"></a><a name="indexterm-539"></a><a name="indexterm-540"></a><a name="indexterm-541"></a><p>Enterprise Server enables you to specify a user's credentials (user name and password)
+in the JDBC realm instead of in the connection pool. Using the
+<tt>jdbc</tt> type realm instead of the connection pool prevents other applications from browsing
+the database tables for user credentials.</p>
+<hr><p><b>Note - </b>By default, storage of passwords as clear text is not supported in the
+JDBC realm. Under normal circumstances, passwords should not be stored as clear text.</p>
+<hr>
+<ol>
+<li><a name="ggmxh"></a><b>Create the database tables in which to store user credentials for the realm.</b><p>How you create the database tables depends on the database that you are
+using.</p></li>
+<li><b>Add user credentials to the database tables that you created.</b><p>How you add user credentials to the database tables depends on the
+database that you are using.</p></li>
+<li><b>Create a JDBC connection pool for the database.</b><p>See <a href="p20.html#ggnfv">To Create a JDBC Connection Pool</a>.</p></li>
+<li><b>Create a JDBC resource for the database.</b><p><a href="p20.html#ggnda">To Create a JDBC Resource</a></p></li>
+<li><a name="ggmvo"></a><b>Create a realm.</b><p>For instructions, see <a href="#ggnca">To Create an Authentication Realm</a>. </p>
+<hr><p><b>Note - </b>The JAAS context should be <tt>jdbcDigestRealm</tt> for digest authentication or <tt>jdbcRealm</tt> for other
+authentication types. </p>
+<hr>
+</li>
+<li><a name="ggmtc"></a><b>Modify the deployment descriptor to specify the <tt>jdbc</tt> realm.</b><p>Modify the deployment descriptor that is associated with your application.</p><ul>
+<li><b>For an enterprise application in an Enterprise Archive (EAR) file, modify the <tt>sun-application.xml</tt>
+file.</b></li>
+<li><b>For a web application in a Web Application Archive (WAR) file, modify the
+<tt>web.xml</tt> file.</b></li>
+<li><b>For an enterprise bean in an EJB JAR file, modify the <tt>sun-ejb-jar.xml</tt>
+ file.</b></li></ul><p>For more information about how to specify a realm, see <a href="http://docs.sun.com/doc/820-7695/beabq?a=view">How to Configure a Realm in <i>Sun GlassFish Enterprise Server v3 Application Development Guide</i></a>.</p></li>
+<li><b>Assign security roles to users in the realm.</b><p>To assign a security role to a user, add a <tt>security-role-mapping</tt> element to the
+deployment descriptor that you modified.</p></li>
+<li><b>Verify that the database is running.</b><p>If needed, see <a href="p20.html#ggndz">To Start the Database</a></p></li>
+<li><b>To apply the authentication, restart the server.</b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ghysu"></a><h6>Example&#160;12-5 Assigning a Security Role</h6><p>This example shows a <tt>security-role-mapping</tt> element that assigns the security role <tt>Employee</tt> to
+user <tt>Calvin</tt>:</p><pre>&#60;security-role-mapping>
+    &#60;role-name>Employee&#60;/role-name>
+    &#60;principal-name>Calvin&#60;/principal-name>
+  &#60;/security-role-mapping></pre>
+
+<a name="ggnxq"></a><h3>Administering File Users</h3>
+<a name="indexterm-542"></a><a name="indexterm-543"></a><p>A <b>user</b> is an individual (or application program) identity that is defined in
+Enterprise Server. A user who has been authenticated is sometimes called a <b>principal</b>.</p><p>As the administrator, you are responsible for integrating users into the Enterprise Server
+environment so that their credentials are securely established and they are provided with
+access to the applications and services that they are entitled to use.</p><p>The following tasks are used to manage users:</p>
+<ul><li><p><a href="#ggocf">To Create a File User</a></p></li>
+<li><p><a href="#ggoab">To List File Users</a></p></li>
+<li><p><a href="#ghlgs">To List File Groups</a></p></li>
+<li><p><a href="#ggoaw">To Update a File User</a></p></li>
+<li><p><a href="#ggoah">To Delete a File User</a></p></li></ul>
+
+
+<a name="ggocf"></a><h4>To Create a File User</h4><a name="indexterm-544"></a><a name="indexterm-545"></a><a name="indexterm-546"></a><a name="indexterm-547"></a><p>Use the <tt>create-file-user</tt> subcommand in remote mode to create a new user by
+adding a new entry to the <tt>keyfile</tt>. The entry includes the user name,
+password, and any groups for the user. Multiple groups can be specified by
+separating the groups with colons (:). </p><p> Creating a new <tt>file</tt> realm user is a dynamic event and does
+not require server restart.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>If the user will belong to a particular group, see the current groups
+by using the <a href="http://docs.sun.com/doc/820-7701/list-file-groups-1?a=view"><tt>list-file-groups</tt>(1)</a> subcommand.</b></li>
+<li><b>Create a file user by using the <a href="http://docs.sun.com/doc/820-7701/create-file-user-1?a=view"><tt>create-file-user</tt>(1)</a> subcommand.</b></li></ol><a name="ggpkq"></a><h6>Example&#160;12-6 Creating a User</h6><p>This example create user <tt>Jennifer</tt> on the default realm <tt>file</tt> (no groups are
+specified):</p><pre>asadmin> <tt><b>create-file-user --user admin --passwordfile=c:\tmp\asadminpassword.txt Jennifer</b></tt>
+Command create-file-user executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-file-user</tt> at the command line.</p>
+
+<a name="ggoab"></a><h4>To List File Users</h4><a name="indexterm-548"></a><a name="indexterm-549"></a><a name="indexterm-550"></a><a name="indexterm-551"></a><a name="indexterm-552"></a><p>Use the <tt>list-file-users</tt> subcommand in remote mode to list the users that are
+in the <tt>keyfile</tt>.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List users by using the <a href="http://docs.sun.com/doc/820-7701/list-file-users-1?a=view"><tt>list-file-users</tt>(1)</a> subcommand.</b></li></ol><a name="ggpgf"></a><h6>Example&#160;12-7 Listing File Users</h6><p>This example lists file users on the default <tt>file</tt> realm file:</p><pre>asadmin> <tt><b>list-file-users</b></tt>
+Jennifer
+Command list-file-users executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-file-users</tt> at the command line.</p>
+
+<a name="ghlgs"></a><h4>To List File Groups</h4><a name="indexterm-553"></a><a name="indexterm-554"></a><a name="indexterm-555"></a><a name="indexterm-556"></a><a name="indexterm-557"></a><p>A <b>group</b> is a category of users classified by common traits, such as
+job title or customer profile. For example, users of an e-commerce application might
+belong to the <tt>customer</tt> group, and the big spenders might also belong to
+the <tt>preferred</tt> group. Categorizing users into groups makes it easier to control the
+access of large numbers of users. A group is defined for an entire
+server and realm. A user can be associated with multiple groups of users.
+</p><p>A group is different from a role in that a role defines
+a function in an application, while a group is a set of users
+who are related in some way. For example, in the personnel application there
+might be groups such as <tt>full-time</tt>, <tt>part-time</tt>, and <tt>on-leave</tt>. Users in these groups
+are all employees (the <tt>employee</tt> role). In addition, each user has its own
+designation that defines an additional level of employment.</p><p>Use the <tt>list-file-groups</tt> subcommand in remote mode to list groups for a file
+user, or all file groups if the <tt>--name</tt> option is not specified.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List file groups by using the <a href="http://docs.sun.com/doc/820-7701/list-file-groups-1?a=view"><tt>list-file-groups</tt>(1)</a> subcommand.</b></li></ol><a name="ghlgb"></a><h6>Example&#160;12-8 Listing Groups for a User</h6><p>This example lists the groups for user <tt>joesmith</tt>:</p><pre>asadmin> <tt><b>list-file-groups --name joesmith</b></tt>
+staff
+manager
+Command list-file-groups executed successfully</pre>
+
+<a name="ggoaw"></a><h4>To Update a File User</h4><a name="indexterm-558"></a><a name="indexterm-559"></a><a name="indexterm-560"></a><a name="indexterm-561"></a><p>Use the <tt>update-file-user</tt> subcommand in remote mode to modify the information in the
+<tt>keyfile</tt> for a specified user.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Update the user information by using the <a href="http://docs.sun.com/doc/820-7701/update-file-user-1?a=view"><tt>update-file-user</tt>(1)</a> subcommand.</b></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="ggpgh"></a><h6>Example&#160;12-9 Updating a User</h6><p>The following subcommand updates the groups for user <tt>Jennifer</tt>:</p><pre>asadmin> <tt><b>update-file-user --passwordfile c:\tmp\asadminpassword.txt --groups staff:manager:engineer Jennifer</b></tt>
+Command update-file-user executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help update-file-user</tt> at the command line.</p>
+
+<a name="ggoah"></a><h4>To Delete a File User</h4><a name="indexterm-562"></a><a name="indexterm-563"></a><a name="indexterm-564"></a><a name="indexterm-565"></a><p>Use the <tt>delete-file-user</tt> subcommand in remote mode to remove a user entry from
+the <tt>keyfile</tt> by specifying the user name. You cannot delete yourself, that is,
+the user you are logged in as cannot be deleted during your session.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List users by using the <a href="http://docs.sun.com/doc/820-7701/list-file-users-1?a=view"><tt>list-file-users</tt>(1)</a> subcommand.</b></li>
+<li><b>Delete the user by using the <a href="http://docs.sun.com/doc/820-7701/delete-file-user-1?a=view"><tt>delete-file-user</tt>(1)</a> subcommand.</b></li></ol><a name="ggpib"></a><h6>Example&#160;12-10 Deleting a User</h6><p>This example deletes user <tt>Jennifer</tt> from the default <tt>file</tt> realm:</p><pre>asadmin> <tt><b>delete-file-user Jennifer</b></tt>
+Command delete-file-user executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-file-user </tt> at the command line.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p16.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p18.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,974 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Using Container-Managed Persistence - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p14.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p16.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="beajj"></a>Chapter&#160;10<h3>Using Container-Managed Persistence</h3><p>This chapter contains information on how EJB 2.1 container-managed persistence (CMP) works in
+the Sun GlassFish Enterprise Server in the following topics:</p>
+<ul><li><p><a href="#beajk">Enterprise Server Support for CMP</a></p></li>
+<li><p><a href="#beajl">CMP Mapping</a></p></li>
+<li><p><a href="#beajv">Automatic Schema Generation for CMP</a></p></li>
+<li><p><a href="#beajy">Schema Capture</a></p></li>
+<li><p><a href="#beakb">Configuring the CMP Resource</a></p></li>
+<li><p><a href="#beaki">Performance-Related Features</a></p></li>
+<li><p><a href="#beakc">Configuring Queries for 1.1 Finders</a></p></li>
+<li><p><a href="#beakm">CMP Restrictions and Optimizations</a></p></li></ul>
+
+<hr><p><b>Note - </b>The Web Profile of the Enterprise Server supports the EJB 3.1 Lite specification, which
+allows enterprise beans within web applications, among other features. The full Enterprise Server
+supports the entire EJB 3.1 specification. For details, see <a href="http://jcp.org/en/jsr/detail?id=318">JSR 318</a>.</p>
+<hr>
+
+
+<a name="beajk"></a><h3>Enterprise Server Support for CMP</h3>
+<a name="indexterm-564"></a><a name="indexterm-565"></a><p>Enterprise Server support for EJB 2.1 CMP beans includes:</p>
+<ul><li><p><a name="indexterm-566"></a>Full support for the J2EE v1.4 specification&#8217;s CMP model. Extensive information on CMP is contained in chapters 10, 11, and 14 of the Enterprise JavaBeans Specification, v2.1. This includes the following:</p>
+<ul><li><p>Support for commit options B and C for transactions. See <a href="p14.html#beajh">Commit Options</a>.</p></li>
+<li><p><a name="indexterm-567"></a>The primary key class must be a subclass of <tt>java.lang.Object</tt>. This ensures portability, and is noted because some vendors allow primitive types (such as <tt>int</tt>) to be used as the primary key class.</p></li></ul>
+</li>
+<li><p>The Enterprise Server CMP implementation, which provides the following:</p>
+<ul><li><p>An Object/Relational (O/R) mapping tool that creates XML deployment descriptors for EJB JAR files that contain beans that use CMP.</p></li>
+<li><p>Support for compound (multi-column) primary keys.</p></li>
+<li><p>Support for sophisticated custom finder methods.</p></li>
+<li><p>Standards-based query language (EJB QL).</p></li>
+<li><p>CMP runtime support. See <a href="#beakb">Configuring the CMP Resource</a>.</p></li></ul>
+</li>
+<li><p>Enterprise Server performance-related features, including the following:</p>
+<ul><li><p>Version column consistency checking</p></li>
+<li><p>Relationship prefetching</p></li>
+<li><p>Read-Only Beans</p></li></ul>
+<p>For details, see <a href="#beaki">Performance-Related Features</a>.</p></li></ul>
+
+
+<a name="beajl"></a><h3>CMP Mapping</h3>
+<p>Implementation for entity beans that use CMP is mostly a matter of mapping
+CMP fields and CMR fields (relationships) to the database. This section addresses the
+following topics:</p>
+<ul><li><p><a href="#beajm">Mapping Capabilities</a></p></li>
+<li><p><a href="#beajn">The Mapping Deployment Descriptor File</a></p></li>
+<li><p><a href="#beajo">Mapping Considerations</a></p></li></ul>
+
+
+<a name="beajm"></a><h4>Mapping Capabilities</h4>
+<a name="indexterm-568"></a><p><b>Mapping</b> refers to the ability to tie an object-based model to a relational
+model of data, usually the schema of a relational database. The CMP implementation
+provides the ability to tie a set of interrelated beans containing data and
+associated behaviors to the schema. This object representation of the database becomes part of
+the Java application. You can also customize this mapping to optimize these beans
+for the particular needs of an application. The result is a single data
+model through which both persistent database information and regular transient program data are
+accessed.</p><p><a name="indexterm-569"></a>The mapping capabilities provided by the Enterprise Server include:</p>
+<ul><li><p>Mapping a CMP bean to one or more tables</p></li>
+<li><p>Mapping CMP fields to one or more columns</p></li>
+<li><p>Mapping CMP fields to different column types</p></li>
+<li><p>Mapping tables with compound primary keys</p></li>
+<li><p>Mapping tables with unknown primary keys</p></li>
+<li><p>Mapping CMP relationships to foreign keys</p></li>
+<li><p>Mapping tables with overlapping primary and foreign keys</p></li></ul>
+
+
+<a name="beajn"></a><h4>The Mapping Deployment Descriptor File</h4>
+<a name="indexterm-570"></a><p>Each module with CMP beans must have the following files:</p>
+<ul><li><p><tt>ejb-jar.xml</tt> &#8211; The J2EE standard file for assembling enterprise beans. For a detailed description, see the Enterprise JavaBeans Specification, v2.1.</p></li>
+<li><p><tt>sun-ejb-jar.xml</tt> &#8211; The Enterprise Server standard file for assembling enterprise beans. For a detailed description, see <a href="http://docs.sun.com/doc/820-7693/beaqm?a=view">The sun-ejb-jar.xml File in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p></li>
+<li><p><a name="indexterm-571"></a><tt>sun-cmp-mappings.xml</tt> &#8211; The <b>mapping deployment descriptor file</b>, which describes the mapping of CMP beans to tables in a database. For a detailed description, see <a href="http://docs.sun.com/doc/820-7693/beaqn?a=view">The sun-cmp-mappings.xml File in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p></li></ul>
+<p>The <tt>sun-cmp-mappings.xml</tt> file can be automatically generated and does not have to exist
+prior to deployment. For details, see <a href="#beajx">Generation Options for CMP</a>.</p><p><a name="indexterm-572"></a>The <tt>sun-cmp-mappings.xml</tt> file maps CMP fields and CMR fields (relationships) to the database.
+A primary table must be selected for each CMP bean, and optionally, multiple
+secondary tables. CMP fields are mapped to columns in either the primary or
+secondary table(s). CMR fields are mapped to pairs of column lists (normally, column
+lists are the lists of columns associated with primary and foreign keys).</p>
+<hr><p><b>Note - </b>Table names in databases can be case-sensitive. Make sure that the table names
+in the <tt>sun-cmp-mappings.xml</tt> file match the names in the database.</p><p>Relationships should always be mapped to the primary key field(s) of the related
+table.</p>
+<hr>
+<p>The <tt>sun-cmp-mappings.xml</tt> file conforms to the <tt>sun-cmp-mapping_1_2.dtd</tt> file and is packaged with the user-defined
+bean classes in the EJB JAR file under the <tt>META-INF</tt> directory.</p><p>The Enterprise Server creates the mappings in the <tt>sun-cmp-mappings.xml</tt> file automatically during
+deployment if the file is not present.</p><p>To map the fields and relationships of your entity beans manually, edit the
+<tt>sun-cmp-mappings.xml</tt> deployment descriptor. Only do this if you are proficient in editing XML.</p><p>The mapping information is developed in conjunction with the database schema (<tt>.dbschema</tt>) file,
+which can be automatically captured when you deploy the bean (see <a href="#beajz">Automatic Database Schema Capture</a>). You can
+manually generate the schema using the <tt>capture-schema</tt> utility (<a href="#beaka">Using the <tt>capture-schema</tt> Utility</a>).</p>
+
+<a name="beajo"></a><h4>Mapping Considerations</h4>
+<a name="indexterm-573"></a><p>This section addresses the following topics:</p>
+<ul><li><p><a href="#beajp">Join Tables and Relationships</a></p></li>
+<li><p><a href="#beajq">Automatic Primary Key Generation</a></p></li>
+<li><p><a href="#beajr">Fixed Length CHAR Primary Keys</a></p></li>
+<li><p><a href="#beajs">Managed Fields</a></p></li>
+<li><p><a href="#beajt">BLOB Support</a></p></li>
+<li><p><a href="#beaju">CLOB Support</a></p></li></ul>
+<p>The data types used in automatic schema generation are also suggested for manual
+mapping. These data types are described in <a href="#beajw">Supported Data Types for CMP</a>.</p>
+
+<a name="beajp"></a><h5>Join Tables and Relationships</h5>
+<a name="indexterm-574"></a><p>Use of join tables in the database schema is supported for all types
+of relationships, not just many-to-many relationships. For general information about relationships, see section
+10.3.7 of the Enterprise JavaBeans Specification, v2.1.</p>
+
+<a name="beajq"></a><h5>Automatic Primary Key Generation</h5>
+<a name="indexterm-575"></a><p>The Enterprise Server supports automatic primary key generation for EJB 1.1, 2.0, and
+2.1 CMP beans. To specify automatic primary key generation, give the <tt>prim-key-class</tt> element in
+the <tt>ejb-jar-xml</tt> file the value <tt>java.lang.Object</tt>. CMP beans with automatically generated primary
+keys can participate in relationships with other CMP beans. The Enterprise Server does not
+support database-generated primary key values.</p><p>If the database schema is created during deployment, the Enterprise Server creates the
+schema with the primary key column, then generates unique values for the primary
+key column at runtime.</p><p>If the database schema is not created during deployment, the primary key column
+in the mapped table must be of type <tt>NUMERIC</tt> with a precision of
+19 or more, and must not be mapped to any CMP field. The
+Enterprise Server generates unique values for the primary key column at runtime.</p>
+
+<a name="beajr"></a><h5>Fixed Length CHAR Primary Keys</h5>
+<a name="indexterm-576"></a><p>If an existing database table has a primary key column in which the
+values vary in length, but the type is <tt>CHAR</tt> instead of <tt>VARCHAR</tt>, the
+Enterprise Server automatically trims any extra spaces when retrieving primary key values. It
+is not a good practice to use a fixed length <tt>CHAR</tt> column as
+a primary key. Use this feature with schemas that cannot be changed, such as
+a schema inherited from a legacy application.</p>
+
+<a name="beajs"></a><h5>Managed Fields</h5>
+<a name="indexterm-577"></a><p>A managed field is a CMP or CMR field that is mapped
+to the same database column as another CMP or CMR field. CMP fields
+mapped to the same column and CMR fields mapped to exactly the same
+column lists always have the same value in memory. For CMR fields that
+share only a subset of their mapped columns, changes to the columns affect the
+relationship fields in memory differently. Basically, the Enterprise Server always tries to keep
+the state of the objects in memory synchronized with the database.</p><p>A managed field can have any <tt>fetched-with</tt> subelement. If the <tt>fetched-with</tt> subelement is
+<tt>&#60;default/></tt>, the <tt>-DAllowManagedFieldsInDefaultFetchGroup</tt> flag must be set to <tt>true</tt>. See <a href="#gemln">Default Fetch Group Flags</a> and <a href="http://docs.sun.com/doc/820-7693/beatc?a=view">fetched-with in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
+
+<a name="beajt"></a><h5>BLOB Support</h5>
+<a name="indexterm-578"></a><p>Binary Large Object (BLOB) is a data type used to store values that
+do not correspond to other types such as numbers, strings, or dates. Java
+fields whose types implement <tt>java.io.Serializable</tt> or are represented as <tt>byte[]</tt> can be stored
+as BLOBs.</p><p>If a CMP field is defined as <tt>Serializable</tt>, it is serialized into a
+<tt>byte[]</tt> before being stored in the database. Similarly, the value fetched from the
+database is deserialized. However, if a CMP field is defined as <tt>byte[]</tt>, it is
+stored directly instead of being serialized and deserialized when stored and fetched, respectively.</p><p>To enable BLOB support in the Enterprise Server environment, define a CMP field
+of type <tt>byte[]</tt> or a user-defined type that implements the <tt>java.io.Serializable</tt> interface. If you
+map the CMP bean to an existing database schema, map the field to
+a column of type BLOB.</p><p><a name="indexterm-579"></a><a name="indexterm-580"></a>To use BLOB or CLOB data types larger than 4 KB for CMP
+using the Inet Oraxo JDBC Driver for Oracle Databases, you must set the
+<tt>streamstolob</tt> property value to <tt>true</tt>.</p><p>For a list of the JDBC drivers currently supported by the Enterprise
+Server, see the <a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Preview Release Notes</i></a>. For configurations of supported and other drivers, see <a href="http://docs.sun.com/doc/820-7692/beamw?a=view">Configuration Specifics for JDBC Drivers in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p><p>For automatic mapping, you might need to change the default BLOB column length
+for the generated schema using the <tt>schema-generator-properties</tt> element in <tt>sun-ejb-jar.xml</tt>. See your database
+vendor documentation to determine whether you need to specify the length. For example:</p><pre>&#60;schema-generator-properties>
+   &#60;property>
+      &#60;name>Employee.voiceGreeting.jdbc-type&#60;/name>
+      &#60;value>BLOB&#60;/value>
+   &#60;/property>
+   &#60;property>
+      &#60;name>Employee.voiceGreeting.jdbc-maximum-length&#60;/name>
+      &#60;value>10240&#60;/value>
+   &#60;/property>
+   ...
+&#60;/schema-generator-properties></pre>
+
+<a name="beaju"></a><h5>CLOB Support</h5>
+<a name="indexterm-581"></a><p>Character Large Object (CLOB) is a data type used to store and retrieve
+very long text fields. CLOBs translate into long strings.</p><p>To enable CLOB support in the Enterprise Server environment, define a CMP field
+of type <tt>java.lang.String</tt>. If you map the CMP bean to an existing database
+schema, map the field to a column of type CLOB.</p><p><a name="indexterm-582"></a><a name="indexterm-583"></a>To use BLOB or CLOB data types larger than 4 KB for CMP
+using the Inet Oraxo JDBC Driver for Oracle Databases, you must set the
+<tt>streamstolob</tt> property value to <tt>true</tt>.</p><p>For a list of the JDBC drivers currently supported by the Enterprise
+Server, see the <i><a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Preview Release Notes</i></a></i>. For configurations of supported and other drivers, see <a href="http://docs.sun.com/doc/820-7692/beamw?a=view">Configuration Specifics for JDBC Drivers in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p><p>For automatic mapping, you might need to change the default CLOB column length
+for the generated schema using the <tt>schema-generator-properties</tt> element in <tt>sun-ejb-jar.xml</tt>. See your database
+vendor documentation to determine whether you need to specify the length. For example:</p><pre>&#60;schema-generator-properties>
+   &#60;property>
+      &#60;name>Employee.resume.jdbc-type&#60;/name>
+      &#60;value>CLOB&#60;/value>
+   &#60;/property>
+   &#60;property>
+      &#60;name>Employee.resume.jdbc-maximum-length&#60;/name>
+      &#60;value>10240&#60;/value>
+   &#60;/property>
+   ...
+&#60;/schema-generator-properties></pre>
+
+<a name="beajv"></a><h3>Automatic Schema Generation for CMP</h3>
+<a name="indexterm-584"></a><a name="indexterm-585"></a><p>The automatic schema generation feature provided in the Enterprise Server defines database tables
+based on the fields in entity beans and the relationships between the fields.
+This insulates developers from many of the database related aspects of development, allowing
+them to focus on entity bean development. The resulting schema is usable as-is
+or can be given to a database administrator for tuning with respect to
+performance, security, and so on.</p><p>This section addresses the following topics:</p>
+<ul><li><p><a href="#beajw">Supported Data Types for CMP</a></p></li>
+<li><p><a href="#beajx">Generation Options for CMP</a></p></li></ul>
+
+<hr><p><b>Note - </b>Automatic schema generation is supported on an all-or-none basis: it expects that no
+tables exist in the database before it is executed. It is not intended
+to be used as a tool to generate extra tables or constraints.</p><p>Deployment won't fail if all tables are not created, and undeployment won't fail
+if not all tables are dropped. This is done to allow you to
+investigate the problem and fix it manually. You should not rely on the
+partially created database schema to be correct for running the application.</p>
+<hr>
+
+
+<a name="beajw"></a><h4>Supported Data Types for CMP</h4>
+<a name="indexterm-586"></a><a name="indexterm-587"></a><a name="indexterm-588"></a><p>CMP supports a set of JDBC data types that are used in
+mapping Java data fields to SQL types. Supported JDBC data types are as
+follows: BIGINT, BIT, BLOB, CHAR, CLOB, DATE, DECIMAL, DOUBLE, FLOAT, INTEGER, NUMERIC, REAL, SMALLINT,
+TIME, TIMESTAMP, TINYINT, VARCHAR.</p><p>The following table contains the mappings of Java types to JDBC types when
+automatic mapping is used.</p><a name="fvyaq"></a><h6>Table&#160;10-1 Java Type to JDBC Type Mappings for CMP</h6><table><col width="39%"><col width="40%"><col width="20%"><tr><th align="left" valign="top" scope="column"><p>Java Type</p></th>
+<th align="left" valign="top" scope="column"><p>JDBC Type</p></th>
+<th align="left" valign="top" scope="column"><p>Nullability</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>boolean</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BIT</tt></p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.lang.Boolean</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BIT</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>byte</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TINYINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.lang.Byte</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TINYINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>double</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DOUBLE</tt></p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.lang.Double</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DOUBLE</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>float</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>REAL</tt></p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.lang.Float</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>REAL</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>int</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>INTEGER</tt></p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.lang.Integer</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>INTEGER</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>long</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BIGINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.lang.Long</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BIGINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>short</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.lang.Short</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.math.BigDecimal</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DECIMAL</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.math.BigInteger</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DECIMAL</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>char</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>CHAR</tt></p></td>
+<td align="left" valign="top" scope="row"><p>No</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.lang.Character</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>CHAR</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.lang.String</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>VARCHAR</tt> or <tt>CLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>Serializable</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>byte[]</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.util.Date</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATE</tt> (Oracle only)</p><p><tt>TIMESTAMP</tt> (all other
+databases)</p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.sql.Date</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATE</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.sql.Time</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TIME</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java.sql.Timestamp</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TIMESTAMP</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Yes</p></td>
+</tr>
+</table>
+<hr><p><b>Note - </b>Java types assigned to CMP fields must be restricted to Java primitive types,
+Java <tt>Serializable</tt> types, <tt>java.util.Date</tt>, <tt>java.sql.Date</tt>, <tt>java.sql.Time</tt>, or <tt>java.sql.Timestamp</tt>. An entity bean local interface
+type (or a collection of such) can be the type of a CMR
+field.</p>
+<hr>
+<p>The following table contains the mappings of JDBC types to database vendor-specific types
+when automatic mapping is used. For a list of the JDBC drivers currently
+supported by the Enterprise Server, see the <a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Preview Release Notes</i></a>. For configurations of supported and
+other drivers, see <a href="http://docs.sun.com/doc/820-7692/beamw?a=view">Configuration Specifics for JDBC Drivers in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p><a name="fvymp"></a><h6>Table&#160;10-2 Mappings of JDBC Types to Database Vendor Specific Types for CMP</h6><table><col width="16%"><col width="16%"><col width="16%"><col width="16%"><col width="16%"><col width="16%"><tr><th align="left" valign="top" scope="column"><p>JDBC Type</p></th>
+<th align="left" valign="top" scope="column"><p>Java DB, Derby, CloudScape</p></th>
+<th align="left" valign="top" scope="column"><p>Oracle </p></th>
+<th align="left" valign="top" scope="column"><p>DB2</p></th>
+<th align="left" valign="top" scope="column"><p>Sybase ASE 12.5</p></th>
+<th align="left" valign="top" scope="column"><p>MS-SQL Server</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>BIT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TINYINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BIT</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>TINYINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TINYINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TINYINT</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>SMALLINT</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>INTEGER</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>INTEGER</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>INTEGER</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>INTEGER</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>INTEGER</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>INTEGER</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>BIGINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BIGINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>NUMBER</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BIGINT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>NUMERIC</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>NUMERIC</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>REAL</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>REAL</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>REAL</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>FLOAT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>FLOAT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>REAL</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>DOUBLE</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DOUBLE PRECISION</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DOUBLE PRECISION</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DOUBLE</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DOUBLE PRECISION</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>FLOAT</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>DECIMAL(p,s)</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DECIMAL(p,s)</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>NUMBER(p,s)</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DECIMAL(p,s)</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DECIMAL(p,s)</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DECIMAL(p,s)</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>VARCHAR</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>VARCHAR</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>VARCHAR2</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>VARCHAR</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>VARCHAR</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>VARCHAR</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>DATE</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATE</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATE</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATE</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATETIME</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATETIME</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>TIME</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TIME</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATE</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TIME</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATETIME</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATETIME</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>TIMESTAMP</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TIMESTAMP</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TIMESTAMP(9)</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TIMESTAMP</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATETIME</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>DATETIME</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>BLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>BLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>IMAGE</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>IMAGE</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>CLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>CLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>CLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>CLOB</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>TEXT</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>NTEXT</tt></p></td>
+</tr>
+</table>
+
+<a name="beajx"></a><h4>Generation Options for CMP</h4>
+<p>Deployment descriptor elements or <tt>asadmin</tt> command line options can control automatic schema generation
+by the following:</p>
+<ul><li><p>Creating tables during deployment</p></li>
+<li><p>Dropping tables during undeployment</p></li>
+<li><p>Dropping and creating tables during redeployment</p></li>
+<li><p>Specifying the database vendor</p></li>
+<li><p>Specifying that table names are unique</p></li>
+<li><p>Specifying type mappings for individual CMP fields</p></li></ul>
+
+<hr><p><b>Note - </b>Before using these options, make sure you have a properly configured CMP resource.
+See <a href="#beakb">Configuring the CMP Resource</a>.</p><p>For a read-only bean, do not create the database schema during deployment. Instead,
+work with your database administrator to populate the data into the tables. See
+<a href="p14.html#beail">Using Read-Only Beans</a>.</p><p>Automatic schema generation is not supported for beans with version column consistency checking. Instead,
+work with your database administrator to create the schema and add the required
+triggers. See <a href="#beakj">Version Column Consistency Checking</a>.</p>
+<hr>
+<p>The following optional data subelements of the <tt>cmp-resource</tt> element in the <tt>sun-ejb-jar.xml</tt>
+file control the automatic creation of database tables at deployment. For more information about
+the <tt>cmp-resource</tt> element, see <a href="http://docs.sun.com/doc/820-7693/bearv?a=view">cmp-resource in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a> and <a href="#beakb">Configuring the CMP Resource</a>.</p><a name="fvymo"></a><h6>Table&#160;10-3 The <tt>sun-ejb-jar.xml</tt> Generation Elements</h6><table><col width="29%"><col width="7%"><col width="62%"><tr><th align="left" valign="top" scope="column"><p>Element</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="http://docs.sun.com/doc/820-7693/beasi?a=view"><tt>create-tables-at-deploy</tt></a></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>If <tt>true</tt>, causes database tables to be
+created for beans that are automatically mapped by the EJB container. If <tt>false</tt>,
+does not create tables.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="http://docs.sun.com/doc/820-7693/beasq?a=view"><tt>drop-tables-at-undeploy</tt></a></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>If <tt>true</tt>, causes database tables that were automatically created when
+the bean(s) were last deployed to be dropped when the bean(s) are undeployed.
+If <tt>false</tt>, does not drop tables.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="http://docs.sun.com/doc/820-7693/beask?a=view"><tt>database-vendor-name</tt></a></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>Specifies the name of the database vendor for
+which tables are created. Allowed values are <tt>javadb</tt>, <tt>db2</tt>, <tt>mssql</tt>, <tt>oracle</tt>, <tt>postgresql</tt>, <tt>pointbase</tt>,
+<tt>derby</tt> (also for CloudScape), and <tt>sybase</tt>, case-insensitive.</p><p>If no value is specified, a connection
+is made to the resource specified by the <tt>jndi-name</tt> subelement of the <tt>cmp-resource</tt>
+element in the <tt>sun-ejb-jar.xml</tt> file, and the database vendor name is read. If
+the connection cannot be established, or if the value is not recognized, SQL-92
+compliance is presumed.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="http://docs.sun.com/doc/820-7693/beaxd?a=view"><tt>schema-generator-properties</tt></a></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>Specifies field-specific column attributes in <tt>property</tt> subelements. Each property name is of
+the following format:</p><p><i>bean-name</i><tt>.</tt><i>field-name</i><tt>.</tt><i>attribute</i></p><p>For example:</p><p><tt>Employee.firstName.jdbc-type</tt></p><p><a name="indexterm-589"></a>Also allows you to set the <tt>use-unique-table-names</tt> property. If <tt>true</tt>,
+this property specifies that generated table names are unique within each application server
+domain. The default is <tt>false</tt>.</p><p>For further information and an example, see <a href="http://docs.sun.com/doc/820-7693/beaxd?a=view">schema-generator-properties in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p></td>
+</tr>
+</table><p><a name="indexterm-590"></a><a name="indexterm-591"></a><a name="indexterm-592"></a><a name="indexterm-593"></a>The following options of the <tt>asadmin deploy</tt> or <tt>asadmin deploydir</tt> command control the automatic creation
+of database tables at deployment.</p><a name="fvymn"></a><h6>Table&#160;10-4 The <tt>asadmin deploy</tt> and <tt>asadmin deploydir</tt> Generation Options for CMP</h6><table><col width="28%"><col width="7%"><col width="63%"><tr><th align="left" valign="top" scope="column"><p>Option</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--createtables</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>If <tt>true</tt>, causes database tables to be created for beans
+that need them. If <tt>false</tt>, does not create tables. If not specified, the
+value of the <tt>create-tables-at-deploy</tt> attribute in <tt>sun-ejb-jar.xml</tt> is used.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--dropandcreatetables</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>If <tt>true</tt>, and if
+tables were automatically created when this application was last deployed, tables from the
+earlier deployment are dropped and fresh ones are created.</p><p>If <tt>true</tt>, and if tables
+were <b>not</b> automatically created when this application was last deployed, no attempt is
+made to drop any tables. If tables with the same names as those
+that would have been automatically created are found, the deployment proceeds, but a warning
+indicates that tables could not be created.</p><p>If <tt>false</tt>, settings of <tt>create-tables-at-deploy</tt> or
+<tt>drop-tables-at-undeploy</tt> in the <tt>sun-ejb-jar.xml</tt> file are overridden.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--uniquetablenames</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>If <tt>true</tt>, specifies that table names
+are unique within each application server domain. If not specified, the value of the
+<tt>use-unique-table-names</tt> property in <tt>sun-ejb-jar.xml</tt> is used.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--dbvendorname</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>Specifies the name of the database vendor
+for which tables are created. Allowed values are <tt>javadb</tt>, <tt>db2</tt>, <tt>mssql</tt>, <tt>oracle</tt>, <tt>postgresql</tt>,
+<tt>pointbase</tt>, <tt>derby</tt> (also for CloudScape), and <tt>sybase</tt>, case-insensitive.</p><p>If not specified, the value of
+the <tt>database-vendor-name</tt> attribute in <tt>sun-ejb-jar.xml</tt> is used.</p><p>If no value is specified, a connection
+is made to the resource specified by the <tt>jndi-name</tt> subelement of the <tt>cmp-resource</tt>
+element in the <tt>sun-ejb-jar.xml</tt> file, and the database vendor name is read. If
+the connection cannot be established, or if the value is not recognized, SQL-92
+compliance is presumed.</p></td>
+</tr>
+</table><p>If one or more of the beans in the module are manually
+mapped and you use any of the <tt>asadmin deploy</tt> or <tt>asadmin deploydir</tt> options, the deployment
+is not harmed in any way, but the options have no effect, and
+a warning is written to the server log.</p><p><a name="indexterm-594"></a><a name="indexterm-595"></a>The following options of the <tt>asadmin undeploy</tt> command control the automatic removal of database tables
+at undeployment.</p><a name="fvymt"></a><h6>Table&#160;10-5 The <tt>asadmin undeploy</tt> Generation Options for CMP</h6><table><col width="17%"><col width="8%"><col width="73%"><tr><th align="left" valign="top" scope="column"><p>Option</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>--droptables</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>If <tt>true</tt>, causes database tables that were automatically created when the bean(s)
+were last deployed to be dropped when the bean(s) are undeployed. If <tt>false</tt>,
+does not drop tables.</p><p>If not specified, the value of the <tt>drop-tables-at-undeploy</tt> attribute in
+<tt>sun-ejb-jar.xml</tt> is used.</p></td>
+</tr>
+</table><p>For more information about the <tt>asadmin deploy</tt>, <tt>asadmin deploydir</tt>, and <tt>asadmin undeploy</tt> commands, see the <i><a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a></i>.</p><p>When command line and <tt>sun-ejb-jar.xml</tt> options are both specified, the <tt>asadmin</tt> options take
+precedence.</p><p>The <tt>asant</tt> tasks <tt>sun-appserv-deploy</tt> and <tt>sun-appserv-undeploy</tt> are equivalent to <tt>asadmin deploy</tt> and <tt>asadmin undeploy</tt>,
+respectively. These <tt>asant</tt> tasks also override the <tt>sun-ejb-jar.xml</tt> options. For details, see <a href="p7.html">Chapter&#160;3, Using Ant with Enterprise Server</a>.</p>
+
+<a name="beajy"></a><h3>Schema Capture</h3>
+<p>This section addresses the following topics:</p>
+<ul><li><p><a href="#beajz">Automatic Database Schema Capture</a></p></li>
+<li><p><a href="#beaka">Using the <tt>capture-schema</tt> Utility</a></p></li></ul>
+
+
+<a name="beajz"></a><h4>Automatic Database Schema Capture</h4>
+<a name="indexterm-596"></a><a name="indexterm-597"></a><p>You can configure a CMP bean in Enterprise Server to automatically capture the
+database metadata and save it in a <tt>.dbschema</tt> file during deployment. If the
+<tt>sun-cmp-mappings.xml</tt> file contains an empty <tt>&#60;schema/></tt> entry, the <tt>cmp-resource</tt> entry in the <tt>sun-ejb-jar.xml</tt>
+file is used to get a connection to the database, and automatic generation of
+the schema is performed.</p>
+<hr><p><b>Note - </b>Before capturing the database schema automatically, make sure you have a properly configured
+CMP resource. See <a href="#beakb">Configuring the CMP Resource</a>.</p>
+<hr>
+
+
+<a name="beaka"></a><h4>Using the <tt>capture-schema</tt> Utility</h4>
+<a name="indexterm-598"></a><p>You can use the <tt>capture-schema</tt> command to manually generate the database metadata (<tt>.dbschema</tt>) file.
+For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p><p>The <tt>capture-schema</tt> utility does <b>not</b> modify the schema in any way. Its only
+purpose is to provide the persistence engine with information about the structure of
+the database (the schema).</p><p>Keep the following in mind when using the <tt>capture-schema</tt> command:</p>
+<ul><li><p>The name of a <tt>.dbschema</tt> file must be unique across all deployed modules in a domain.</p></li>
+<li><p>If more than one schema is accessible for the schema user, more than one table with the same name might be captured if the <tt>-schemaname</tt> parameter of <tt>capture-schema</tt> is not set.</p></li>
+<li><p>The schema name must be upper case.</p></li>
+<li><p>Table names in databases are case-sensitive. Make sure that the table name matches the name in the database.</p></li>
+<li><p>PostgreSQL databases internally convert all names to lower case. Before running the <tt>capture-schema</tt> command on a PostgreSQL database, make sure table and column names are lower case in the <tt>sun-cmp-mappings.xml</tt> file.</p></li>
+<li><p>An Oracle database user running the <tt>capture-schema</tt> command needs ANALYZE ANY TABLE privileges if that user does not own the schema. These privileges are granted to the user by the database administrator.</p></li></ul>
+
+
+<a name="beakb"></a><h3>Configuring the CMP Resource</h3>
+<a name="indexterm-599"></a><a name="indexterm-600"></a><a name="indexterm-601"></a><a name="indexterm-602"></a><p>An EJB module that contains CMP beans requires the JNDI name of a
+JDBC resource in the <tt>jndi-name</tt> subelement of the <tt>cmp-resource</tt> element in the <tt>sun-ejb-jar.xml</tt>
+file. Set <tt>PersistenceManagerFactory</tt> properties as properties of the <tt>cmp-resource</tt> element in the <tt>sun-ejb-jar.xml</tt>
+file. See <a href="http://docs.sun.com/doc/820-7693/bearv?a=view">cmp-resource in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p><p><a name="indexterm-603"></a>In the Administration Console, open the Resources component, then select JDBC. Click the
+Help button in the Administration Console for information on creating a new JDBC
+resource.</p><p>For a list of the JDBC drivers currently supported by the Enterprise
+Server, see the <a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Preview Release Notes</i></a>. For configurations of supported and other drivers, see <a href="http://docs.sun.com/doc/820-7692/beamw?a=view">Configuration Specifics for JDBC Drivers in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p><p>For example, if the JDBC resource has the JNDI name <tt>jdbc/MyDatabase</tt>, set
+the CMP resource in the <tt>sun-ejb-jar.xml</tt> file as follows:</p><pre>&#60;cmp-resource>
+   &#60;jndi-name>jdbc/MyDatabase&#60;/jndi-name>
+&#60;/cmp-resource></pre>
+
+<a name="beaki"></a><h3>Performance-Related Features</h3>
+<a name="indexterm-604"></a><p>The Enterprise Server provides the following features to enhance performance or allow more
+fine-grained data checking. These features are supported only for entity beans with container
+managed persistence.</p>
+<ul><li><p><a href="#beakj">Version Column Consistency Checking</a></p></li>
+<li><p><a href="#beakk">Relationship Prefetching</a></p></li>
+<li><p><a href="#beakl">Read-Only Beans</a></p></li>
+<li><p><a href="#gemln">Default Fetch Group Flags</a></p></li></ul>
+
+<hr><p><b>Note - </b>Use of any of these features results in a non-portable application.</p>
+<hr>
+
+
+<a name="beakj"></a><h4>Version Column Consistency Checking</h4>
+<a name="indexterm-605"></a><a name="indexterm-606"></a><p><a name="indexterm-607"></a>The version consistency feature saves the bean state at first transactional access and
+caches it between transactions. The state is copied from the cache instead of being
+read from the database. The bean state is verified by primary key and
+version column values at flush for custom queries (for dirty instances only) and
+at commit (for clean and dirty instances).</p>
+
+<a name="fwbei"></a><h5>To Use Version Consistency</h5>
+<ol>
+<li><b>Create the version column in the primary table.</b></li>
+<li><b>Give the version column a numeric data type.</b></li>
+<li><b>Provide appropriate update triggers on the version column. </b><p>These triggers must increment the version column on each update of the specified
+row.</p></li>
+<li><b>Specify the version column. </b><p>This is specified in the <tt>check-version-of-accessed-instances</tt> subelement of the <tt>consistency</tt> element in the <tt>sun-cmp-mappings.xml</tt>
+file. See <a href="http://docs.sun.com/doc/820-7693/beasd?a=view">consistency in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p></li>
+<li><b>Map the CMP bean to an existing schema. </b><p>Automatic schema generation is not supported for beans with version column consistency checking. Instead,
+work with your database administrator to create the schema and add the required
+triggers.</p></li></ol>
+
+<a name="beakk"></a><h4>Relationship Prefetching</h4>
+<a name="indexterm-608"></a><a name="indexterm-609"></a><p>In many cases when an entity bean&#8217;s state is fetched from the database,
+its relationship fields are always accessed in the same transaction. Relationship prefetching saves
+database round trips by fetching data for an entity bean and those beans
+referenced by its CMR fields in a single database round trip.</p><p>To enable relationship prefetching for a CMR field, use the <tt>default</tt> subelement
+of the <tt>fetched-with</tt> element in the <tt>sun-cmp-mappings.xml</tt> file. By default, these CMR fields are
+prefetched whenever <tt>findByPrimaryKey</tt> or a custom finder is executed for the entity, or
+when the entity is navigated to from a relationship. (Recursive prefetching is not
+supported, because it does not usually enhance performance.) See <a href="http://docs.sun.com/doc/820-7693/beatc?a=view">fetched-with in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p><p>To disable prefetching for specific custom finders, use the <tt>prefetch-disabled</tt> element in
+the <tt>sun-ejb-jar.xml</tt> file. See <a href="http://docs.sun.com/doc/820-7693/beavu?a=view">prefetch-disabled in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p><p>Multilevel relationship prefetching is supported for CMP 2.1 entity beans. To enable multilevel
+relationship prefetching, set the following property using the <tt>asadmin create-jvm-options</tt> command:</p><pre>asadmin create-jvm-options -Dcom.sun.jdo.spi.persistence.support.sqlstore.MULTILEVEL_PREFETCH=true</pre>
+
+<a name="beakl"></a><h4>Read-Only Beans</h4>
+<a name="indexterm-610"></a><p>Another feature that the Enterprise Server provides is the <b>read-only bean</b>, an entity
+bean that is never modified by an EJB client. Read-only beans avoid database
+updates completely.</p>
+<hr><p><b>Note - </b>Read-only beans are specific to the Enterprise Server and are not part of
+the Enterprise JavaBeans Specification, v2.1. Use of this feature for an EJB 2.1
+bean results in a non-portable application.</p>
+<hr>
+<p><a name="indexterm-611"></a>A read-only bean can be used to cache a database entry that is
+frequently accessed but rarely updated (externally by other beans). When the data that
+is cached by a read-only bean is updated by another bean, the read-only
+bean can be notified to refresh its cached data.</p><p>The Enterprise Server provides a number of ways by which a read-only bean&#8217;s
+state can be refreshed. By setting the <tt>refresh-period-in-seconds</tt> element in the <tt>sun-ejb-jar.xml</tt>
+file and the <tt>trans-attribute</tt> element (or <tt>@TransactionAttribute</tt> annotation) in the <tt>ejb-jar.xml</tt> file, it is
+easy to configure a read-only bean that is one of the following:</p>
+<ul><li><p>Always refreshed</p></li>
+<li><p>Periodically refreshed</p></li>
+<li><p>Never refreshed</p></li>
+<li><p>Programmatically refreshed</p></li></ul>
+<p>Access to CMR fields of read-only beans is not supported. Deployment will succeed,
+but an exception will be thrown at runtime if a get or set
+method is invoked.</p><p>Read-only beans are best suited for situations where the underlying data never changes,
+or changes infrequently. For further information and usage guidelines, see <a href="p14.html#beail">Using Read-Only Beans</a>.</p>
+
+<a name="gemln"></a><h3>Default Fetch Group Flags</h3>
+<a name="indexterm-612"></a><p>Using the following flags can improve performance.</p><p><a name="indexterm-613"></a>Setting <tt>-DAllowManagedFieldsInDefaultFetchGroup=true</tt> allows CMP fields that by default cannot be placed into the
+default fetch group to be loaded along with all other fields that are
+fetched when the CMP state is loaded into memory. These could be multiple
+fields mapped to the same column in the database table, for example, an
+instance field and a CMR. By default this flag is set to <tt>false</tt>.</p><p>For additional information, see <a href="http://docs.sun.com/doc/820-7693/beaub?a=view">level in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p><p><a name="indexterm-614"></a>Setting <tt>-DAllowMediatedWriteInDefaultFetchGroup</tt> specifies how updated CMP fields are written back to the database.
+If the flag is <tt>false</tt>, all fields in the CMP bean are written back
+to the database if at least one field in the default fetch
+group has been changed in a transaction. If the flag is <tt>true</tt>, only fields
+modified by the bean are written back to the database. Specifying <tt>true</tt> can
+improve performance, particularly on database tables with many columns that have not been
+updated. By default this flag is set to <tt>false</tt>.</p><p><a name="indexterm-615"></a><a name="indexterm-616"></a>To set one of these flags, use the <tt>asadmin create-jvm-options</tt> command. For example:</p><pre>asadmin create-jvm-options -DAllowManagedFieldsInDefaultFetchGroup=true</pre>
+
+<a name="beakc"></a><h3>Configuring Queries for 1.1 Finders</h3>
+<p>This section contains the following topics:</p>
+<ul><li><p><a href="#ganjq">About JDOQL Queries</a></p></li>
+<li><p><a href="#gankm">Query Filter Expression</a></p></li>
+<li><p><a href="#ganjt">Query Parameters</a></p></li>
+<li><p><a href="#ganky">Query Variables</a></p></li>
+<li><p><a href="#ganla">JDOQL Examples</a></p></li></ul>
+
+
+<a name="ganjq"></a><h4>About JDOQL Queries</h4>
+<a name="indexterm-617"></a><a name="indexterm-618"></a><a name="indexterm-619"></a><a name="indexterm-620"></a><p><a name="indexterm-621"></a>The Enterprise JavaBeans Specification, v1.1 does not specify the format of the finder
+method description. The Enterprise Server uses an extension of Java Data Objects Query Language
+(JDOQL) queries to implement finder and selector methods. You can specify the following
+elements of the underlying JDOQL query:</p>
+<ul><li><p><b>Filter expression</b> - A Java-like expression that specifies a condition that each object returned by the query must satisfy. Corresponds to the WHERE clause in EJB QL.</p></li>
+<li><p><b>Query parameter declaration</b> - Specifies the name and the type of one or more query input parameters. Follows the syntax for formal parameters in the Java language.</p></li>
+<li><p><b>Query variable declaration</b> - Specifies the name and type of one or more query variables. Follows the syntax for local variables in the Java language. A query filter might use query variables to implement joins.</p></li>
+<li><p><b>Query ordering declaration</b> - Specifies the ordering expression of the query. Corresponds to the ORDER BY clause of EJB QL.</p></li></ul>
+<p>The Enterprise Server specific deployment descriptor (<tt>sun-ejb-jar.xml</tt>) provides the following elements to
+store the EJB 1.1 finder method settings:</p><pre>query-filter
+query-params
+query-variables
+query-ordering</pre><p>The bean developer uses these elements to construct a query. When the finder
+method that uses these elements executes, the values of these elements are used
+to execute a query in the database. The objects from the JDOQL query
+result set are converted into primary key instances to be returned by the
+EJB 1.1 <tt>ejbFind</tt> method.</p><p><a name="indexterm-622"></a>The JDO specification, <a href="http://jcp.org/en/jsr/detail?id=12">JSR 12</a>, provides a comprehensive description of JDOQL. The following information summarizes
+the elements used to define EJB 1.1 finders.</p>
+
+<a name="gankm"></a><h4>Query Filter Expression</h4>
+<p>The filter expression is a String containing a Boolean expression evaluated for each
+instance of the candidate class. If the filter is not specified, it defaults
+to true. Rules for constructing valid expressions follow the Java language, with the
+following differences:</p>
+<ul><li><p>Equality and ordering comparisons between primitives and instances of wrapper classes are valid.</p></li>
+<li><p>Equality and ordering comparisons of Date fields and Date parameters are valid.</p></li>
+<li><p>Equality and ordering comparisons of String fields and String parameters are valid.</p></li>
+<li><p>White space (non-printing characters space, tab, carriage return, and line feed) is a separator and is otherwise ignored.</p></li>
+<li><p>The following assignment operators are not supported.</p>
+<ul><li><p>Comparison operators such as =, +=, and so on</p></li>
+<li><p>Pre- and post-increment</p></li>
+<li><p>Pre- and post-decrement</p></li></ul>
+</li>
+<li><p>Methods, including object construction, are not supported, except for these methods.</p><pre>Collection.contains(Object o)
+Collection.isEmpty()
+String.startsWith(String s)
+String.endsWith(String e)</pre><p>In addition, the Enterprise Server supports the following nonstandard JDOQL methods.</p><pre>String.like(String pattern)
+String.like(String pattern, char escape)
+String.substring(int start, int length)
+String.indexOf(String str)
+String.indexOf(String str, int start)
+String.length()
+Math.abs(numeric n)
+Math.sqrt(double d)</pre></li>
+<li><p>Navigation through a null-valued field, which throws a <tt>NullPointerException</tt>, is treated as if the sub-expression returned <tt>false</tt>.</p></li></ul>
+
+<hr><p><b>Note - </b>Comparisons between floating point values are by nature inexact. Therefore, equality comparisons (==
+and !=) with floating point values should be used with caution. Identifiers in
+the expression are considered to be in the name space of the candidate
+class, with the addition of declared parameters and variables. As in the Java language,
+<tt>this</tt> is a reserved word, and refers to the current instance being evaluated.</p>
+<hr>
+<p>The following expressions are supported.</p>
+<ul><li><p>Relational operators (==, !=, >, &#60;, >=, &#60;=)</p></li>
+<li><p>Boolean operators (&#38;, &#38;&#38;, |, ||, ~, !)</p></li>
+<li><p>Arithmetic operators (+, -, *, /)</p></li>
+<li><p>String concatenation, only for String + String</p></li>
+<li><p>Parentheses to explicitly mark operator precedence</p></li>
+<li><p>Cast operator</p></li>
+<li><p>Promotion of numeric operands for comparisons and arithmetic operations</p></li></ul>
+<p>The rules for promotion follow the Java rules extended by BigDecimal, BigInteger, and
+numeric wrapper classes. See the numeric promotions of the Java language specification.</p>
+
+<a name="ganjt"></a><h4>Query Parameters</h4>
+<p>The parameter declaration is a String containing one or more parameter type declarations
+separated by commas. This follows the Java syntax for method signatures.</p>
+
+<a name="ganky"></a><h4>Query Variables</h4>
+<p>The type declarations follow the Java syntax for local variable declarations.</p>
+
+<a name="ganla"></a><h4>JDOQL Examples</h4>
+<p>This section provides a few query examples.</p>
+
+<a name="gankk"></a><h5>Example 1</h5>
+<p>The following query returns all players called Michael. It defines a filter that
+compares the name field with a string literal:</p><pre>name == "Michael"</pre><p>The <tt>finder</tt> element of the <tt>sun-ejb-jar.xml</tt> file looks like this:</p><pre>&#60;finder>
+   &#60;method-name>findPlayerByName&#60;/method-name>
+   &#60;query-filter>name == "Michael"&#60;/query-filter>
+&#60;/finder></pre>
+
+<a name="ganjz"></a><h5>Example 2</h5>
+<p>This query returns all products in a specified price range. It defines two
+query parameters which are the lower and upper bound for the price: double
+low, double high. The filter compares the query parameters with the price field:</p><pre>low &#60; price &#38;&#38; price &#60; high</pre><p>Query ordering is set to <tt>price ascending</tt>.</p><p>The <tt>finder</tt> element of the <tt>sun-ejb-jar.xml</tt> file looks like this:</p><pre>&#60;finder>
+   &#60;method-name>findInRange&#60;/method-name>
+   &#60;query-params>double low, double high&#60;/query-params>
+   &#60;query-filter>low &#38;lt; price &#38;amp;&#38;amp; price &#38;lt high&#60;/query-filter>
+   &#60;query-ordering>price ascending&#60;/query-ordering>
+&#60;/finder></pre>
+
+<a name="gankz"></a><h5>Example 3</h5>
+<p>This query returns all players having a higher salary than the player with
+the specified name. It defines a query parameter for the name <tt>java.lang.String name</tt>. Furthermore,
+it defines a variable to which the player&#8217;s salary is compared. It has the
+type of the persistence capable class that corresponds to the bean:</p><pre>    mypackage.PlayerEJB_170160966_JDOState player</pre><p>The filter compares the salary of the current player denoted by the <tt>this</tt>
+keyword with the salary of the player with the specified name:</p><pre>    (this.salary > player.salary) &#38;&#38; (player.name == name)</pre><p>The <tt>finder</tt> element of the <tt>sun-ejb-jar.xml</tt> file looks like this:</p><pre>&#60;finder>
+   &#60;method-name>findByHigherSalary&#60;/method-name>
+   &#60;query-params>java.lang.String name&#60;/query-params>
+   &#60;query-filter>
+      (this.salary &#38;gt; player.salary) &#38;amp;&#38;amp; (player.name == name)
+   &#60;/query-filter>
+   &#60;query-variables>
+      mypackage.PlayerEJB_170160966_JDOState player
+   &#60;/query-variables>
+&#60;/finder></pre>
+
+<a name="beakm"></a><h3>CMP Restrictions and Optimizations</h3>
+<a name="indexterm-623"></a><p>This section discusses restrictions and performance optimizations that pertain to using CMP.</p>
+<ul><li><p><a href="#gdtfj">Disabling ORDER BY Validation</a></p></li>
+<li><p><a href="#geprt">Setting the Heap Size on DB2</a></p></li>
+<li><p><a href="#beakn">Eager Loading of Field State</a></p></li>
+<li><p><a href="#beako">Restrictions on Remote Interfaces</a></p></li>
+<li><p><a href="#gcnto">PostgreSQL Case Insensitivity</a></p></li>
+<li><p><a href="#beakr">No Support for <tt>lock-when-loaded</tt> on Sybase</a></p></li>
+<li><p><a href="#beakp">Sybase Finder Limitation</a></p></li>
+<li><p><a href="#beakq">Date and Time Fields</a></p></li>
+<li><p><a href="#beaks">Set <tt>RECURSIVE_TRIGGERS</tt> to <tt>false</tt> on MSSQL</a></p></li>
+<li><p><a href="#gbhbr">MySQL Database Restrictions</a></p></li></ul>
+
+
+<a name="gdtfj"></a><h4>Disabling ORDER BY Validation</h4>
+<a name="indexterm-624"></a><p>EJB QL as defined in the EJB 2.1 Specification defines certain restrictions for
+the SELECT clause of an ORDER BY query (see section 11.2.8 ORDER BY
+Clause). This ensures that a query does not order by a field that
+is not returned by the query. By default, the EJB QL compiler checks
+the above restriction and throws an exception if the query does not conform.</p><p>However, some databases support SQL statements with an ORDER BY column that is
+not included in the SELECT clause. To disable the validation of the ORDER
+BY clause against the SELECT clause, set the <tt>DISABLE_ORDERBY_VALIDATION</tt> JVM option as
+follows:</p><pre>asadmin create-jvm-options 
+-Dcom.sun.jdo.spi.persistence.support.ejb.ejbqlc.DISABLE_ORDERBY_VALIDATION=true</pre><p>The <tt>DISABLE_ORDERBY_VALIDATION</tt> option is set to <tt>false</tt> by default. Setting it to <tt>true</tt>
+results in a non-portable module or application.</p>
+
+<a name="geprt"></a><h4>Setting the Heap Size on DB2</h4>
+<p>On DB2, the database configuration parameter <tt>APPLHEAPSZ</tt> determines the heap size. If you
+are using the Sun GlassFish or DataDirect database driver, set this parameter to
+at least <tt>2048</tt> for CMP. For more information, see <a href="http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.doc/opt/tsbp2024.htm">http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.doc/opt/tsbp2024.htm</a>.</p>
+
+<a name="beakn"></a><h4>Eager Loading of Field State</h4>
+<p>By default, the EJB container loads the state for all persistent fields (excluding
+relationship, BLOB, and CLOB fields) before invoking the <tt>ejbLoad</tt> method of the abstract
+bean. This approach might not be optimal for entity objects with large state
+if most business methods require access to only parts of the state.</p><p>Use the <tt>fetched-with</tt> element in <tt>sun-cmp-mappings.xml</tt> for fields that are used infrequently.
+See <a href="http://docs.sun.com/doc/820-7693/beatc?a=view">fetched-with in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
+
+<a name="beako"></a><h4>Restrictions on Remote Interfaces</h4>
+<p>The following restrictions apply to the remote interface of an EJB 2.1 bean
+that uses CMP:</p>
+<ul><li><p>Do not expose the <tt>get</tt> and <tt>set</tt> methods for CMR fields or the persistence collection classes that are used in container-managed relationships through the remote interface of the bean.</p><p>However, you are free to expose the <tt>get</tt> and <tt>set</tt> methods that correspond to the CMP fields of the entity bean through the bean&#8217;s remote interface.</p></li>
+<li><p>Do not expose the container-managed collection classes that are used for relationships through the remote interface of the bean.</p></li>
+<li><p>Do not expose local interface types or local home interface types through the remote interface or remote home interface of the bean.</p></li></ul>
+<p>Dependent value classes can be exposed in the remote interface or remote home
+interface, and can be included in the client EJB JAR file.</p>
+
+<a name="gcnto"></a><h4>PostgreSQL Case Insensitivity</h4>
+<p>Case-sensitive behavior cannot be achieved for PostgresSQL databases. PostgreSQL databases internally convert all
+names to lower case, which makes the following workarounds necessary:</p>
+<ul><li><p>In the CMP 2.1 runtime, PostgreSQL table and column names are not quoted, which makes these names case insensitive.</p></li>
+<li><p>Before running the <tt>capture-schema</tt> command on a PostgreSQL database, make sure table and column names are lower case in the <tt>sun-cmp-mappings.xml</tt> file.</p></li></ul>
+
+
+<a name="beakr"></a><h4>No Support for <tt>lock-when-loaded</tt> on Sybase</h4>
+<a name="indexterm-625"></a><a name="indexterm-626"></a><p>For EJB 2.1 beans, the <tt>lock-when-loaded</tt> consistency level is implemented by placing update
+locks on the data corresponding to a bean when the data is loaded
+from the database. There is no suitable mechanism available on Sybase databases to
+implement this feature. Therefore, the <tt>lock-when-loaded</tt> consistency level is not supported on Sybase databases.
+See <a href="http://docs.sun.com/doc/820-7693/beasd?a=view">consistency in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
+
+<a name="beakp"></a><h4>Sybase Finder Limitation</h4>
+<a name="indexterm-627"></a><a name="indexterm-628"></a><p>If a finder method with an input greater than 255 characters is executed
+and the primary key column is mapped to a VARCHAR column, Sybase attempts
+to convert type VARCHAR to type TEXT and generates the following error:</p><pre>com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype 
+'TEXT' to 'VARCHAR' is not allowed.  Use the CONVERT function to run this 
+query.</pre><p>To avoid this error, make sure the finder method input is less than
+255 characters.</p>
+
+<a name="beakq"></a><h4>Date and Time Fields</h4>
+<p>If a field type is a Java date or time type (<tt>java.util.Date</tt>,
+<tt>java.sql.Date</tt>, <tt>java.sql.Time</tt>, <tt>java.sql.Timestamp</tt>), make sure that the field value exactly matches the value
+in the database.</p><p>For example, the following code uses a <tt>java.sql.Date</tt> type as a primary key
+field:</p><pre>java.sql.Date myDate = new java.sql.Date(System.currentTimeMillis())
+BeanA.create(myDate, ...);</pre><p>For some databases, this code results in only the year, month, and date
+portion of the field value being stored in the database. Later if the
+client tries to find this bean by primary key as follows, the bean
+is not found in the database because the value does not match the
+one that is stored in the database.</p><pre>myBean = BeanA.findByPrimaryKey(myDate);</pre><p>Similar problems can happen if the database truncates the timestamp value while storing
+it, or if a custom query has a date or time value comparison
+in its WHERE clause.</p><p><a name="indexterm-629"></a>For automatic mapping to an Oracle database, fields of type <tt>java.util.Date</tt>, <tt>java.sql.Date</tt>, and <tt>java.sql.Time</tt>
+are mapped to Oracle&#8217;s DATE data type. Fields of type <tt>java.sql.Timestamp</tt> are mapped to
+Oracle&#8217;s <tt>TIMESTAMP(9)</tt> data type.</p>
+
+<a name="beaks"></a><h4>Set <tt>RECURSIVE_TRIGGERS</tt> to <tt>false</tt> on MSSQL</h4>
+<a name="indexterm-630"></a><a name="indexterm-631"></a><p>For version consistency triggers on MSSQL, the property <tt>RECURSIVE_TRIGGERS</tt> must be set
+to <tt>false</tt>, which is the default. If set to <tt>true</tt>, triggers throw a
+<tt>java.sql.SQLException</tt>.</p><p>Set this property as follows:</p><pre>EXEC sp_dboption '<i>database-name</i>', 'recursive triggers', 'FALSE'
+go</pre><p>You can test this property as follows:</p><pre>SELECT DATABASEPROPERTYEX('<i>database-name</i>', 'IsRecursiveTriggersEnabled')
+go</pre>
+
+<a name="gbhbr"></a><h4>MySQL Database Restrictions</h4>
+<a name="indexterm-632"></a><p>The following restrictions apply when you use a MySQL database with the Enterprise
+Server for persistence.</p>
+<ul><li><p>MySQL treats <tt>int1</tt> and <tt>int2</tt> as reserved words. If you want to define <tt>int1</tt> and <tt>int2</tt> as fields in your table, use <tt>`int1`</tt> and <tt>`int2`</tt> field names in your SQL file. </p></li>
+<li><p>When <tt>VARCHAR</tt> fields get truncated, a warning is displayed instead of an error. To get an error message, start the MySQL database in strict SQL mode. </p></li>
+<li><p>The order of fields in a foreign key index must match the order in the explicitly created index on the primary table.</p></li>
+<li><p>The <tt>CREATE TABLE</tt> syntax in the SQL file must end with the following line.</p><pre>)  Engine=InnoDB;</pre><p><tt>InnoDB</tt> provides MySQL with a transaction-safe (ACID compliant) storage engine having commit, rollback, and crash recovery capabilities.</p></li>
+<li><p>For a <tt>FLOAT</tt> type field, the correct precision must be defined. By default, MySQL uses four bytes to store a <tt>FLOAT</tt> type that does not have an explicit precision definition. For example, this causes a number such as 12345.67890123 to be rounded off to 12345.7 during an <tt>INSERT</tt>. To prevent this, specify <tt>FLOAT(10,2)</tt> in the DDL file, which forces the database to use an eight-byte double-precision column. For more information, see <a href="http://dev.mysql.com/doc/mysql/en/numeric-types.html">http://dev.mysql.com/doc/mysql/en/numeric-types.html</a>.</p></li>
+<li><p>To use <tt>||</tt> as the string concatenation symbol, start the MySQL server with the <tt>--sql-mode="PIPES_AS_CONCAT"</tt> option. For more information, see <a href="http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html">http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html</a> and <a href="http://dev.mysql.com/doc/mysql/en/ansi-mode.html">http://dev.mysql.com/doc/mysql/en/ansi-mode.html</a>.</p></li>
+<li><p>MySQL always starts a new connection when <tt>autoCommit==true</tt> is set. This ensures that each SQL statement forms a single transaction on its own. If you try to rollback or commit an SQL statement, you get an error message.</p><pre>javax.transaction.SystemException: java.sql.SQLException: 
+Can't call rollback when autocommit=true</pre><pre>javax.transaction.SystemException: java.sql.SQLException: 
+Error open transaction is not closed</pre><p>To resolve this issue, add <tt>relaxAutoCommit=true</tt> to the JDBC URL. For more information, see <a href="http://forums.mysql.com/read.php?39,31326,31404">http://forums.mysql.com/read.php?39,31326,31404</a>.</p></li>
+<li><p>Change the trigger create format from the following:</p><pre>CREATE TRIGGER T_UNKNOWNPKVC1 
+BEFORE UPDATE ON UNKNOWNPKVC1
+FOR EACH ROW
+        WHEN (NEW.VERSION = OLD.VERSION)
+BEGIN
+        :NEW.VERSION := :OLD.VERSION + 1;
+END;
+/</pre><p>To the following:</p><pre>DELIMITER |
+CREATE TRIGGER T_UNKNOWNPKVC1
+BEFORE UPDATE ON UNKNOWNPKVC1
+FOR EACH ROW
+        WHEN (NEW.VERSION = OLD.VERSION)
+BEGIN
+        :NEW.VERSION := :OLD.VERSION + 1;
+END
+|
+DELIMITER ;</pre><p>For more information, see <a href="http://dev.mysql.com/doc/mysql/en/create-trigger.html">http://dev.mysql.com/doc/mysql/en/create-trigger.html</a>.</p></li>
+<li><p>MySQL does not allow a <tt>DELETE</tt> on a row that contains a reference to itself. Here is an example that illustrates the issue.</p><pre>create table EMPLOYEE (
+        empId   int         NOT NULL,
+        salary  float(25,2) NULL,
+        mgrId   int         NULL,
+        PRIMARY KEY (empId),
+        FOREIGN KEY (mgrId) REFERENCES EMPLOYEE (empId)
+        ) ENGINE=InnoDB;
+
+        insert into Employee values (1, 1234.34, 1);
+        delete from Employee where empId = 1;</pre><p>This example fails with the following error message.</p><pre>ERROR 1217 (23000): Cannot delete or update a parent row: 
+a foreign key constraint fails</pre><p>To resolve this issue, change the table creation script to the following:</p><pre>create table EMPLOYEE (
+        empId   int         NOT NULL,
+        salary  float(25,2) NULL,
+        mgrId   int         NULL,
+        PRIMARY KEY (empId),
+        FOREIGN KEY (mgrId) REFERENCES EMPLOYEE (empId)
+        ON DELETE SET NULL
+        ) ENGINE=InnoDB;
+
+        insert into Employee values (1, 1234.34, 1);
+        delete from Employee where empId = 1;</pre><p>This can be done only if the foreign key field is allowed to be null. For more information, see <a href="http://bugs.mysql.com/bug.php?id=12449">http://bugs.mysql.com/bug.php?id=12449</a> and <a href="http://dev.mysql.com/doc/mysql/en/innodb-foreign-key-constraints.html">http://dev.mysql.com/doc/mysql/en/innodb-foreign-key-constraints.html</a>.</p></li>
+<li><p>When an SQL script has foreign key constraints defined, <tt>capture-schema</tt> fails to capture the table information correctly. To work around the problem, remove the constraints and then run <tt>capture-schema</tt>. Here is an example that illustrates the issue.</p><pre>CREATE TABLE ADDRESSBOOKBEANTABLE (ADDRESSBOOKNAME VARCHAR(255) 
+    NOT NULL PRIMARY KEY, 
+CONNECTEDUSERS              BLOB NULL, 
+OWNER                       VARCHAR(256), 
+FK_FOR_ACCESSPRIVILEGES     VARCHAR(256), 
+CONSTRAINT FK_ACCESSPRIVILEGE FOREIGN KEY (FK_FOR_ACCESSPRIVILEGES) 
+    REFERENCES ACCESSPRIVILEGESBEANTABLE (ROOT) 
+) ENGINE=InnoDB;  </pre><p>To resolve this issue, change the table creation script to the following:</p><pre>CREATE TABLE ADDRESSBOOKBEANTABLE (ADDRESSBOOKNAME VARCHAR(255) 
+    NOT NULL PRIMARY KEY, 
+CONNECTEDUSERS              BLOB NULL, 
+OWNER                       VARCHAR(256), 
+FK_FOR_ACCESSPRIVILEGES     VARCHAR(256) 
+) ENGINE=InnoDB;</pre></li></ul>
+
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p14.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p16.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

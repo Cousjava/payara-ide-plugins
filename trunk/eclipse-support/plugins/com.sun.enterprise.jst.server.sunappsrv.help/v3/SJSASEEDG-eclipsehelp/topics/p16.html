@@ -1,0 +1,509 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Developing Java Clients - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p15.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p17.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="beakt"></a>Chapter&#160;11<h3>Developing Java Clients</h3><p>This chapter describes how to develop, assemble, and deploy Java clients in the
+following sections:</p>
+<ul><li><p><a href="#beaku">Introducing the Application Client Container</a></p></li>
+<li><p><a href="#beakv">Developing Clients Using the ACC</a></p></li></ul>
+
+<hr><p><b>Note - </b>The Web Profile of the Enterprise Server supports the EJB 3.1 Lite specification, which
+allows enterprise beans within web applications, among other features. The full Enterprise Server
+supports the entire EJB 3.1 specification. For details, see <a href="http://jcp.org/en/jsr/detail?id=318">JSR 318</a>.</p><p>Accordingly, the Application Client Container is supported only in the full Enterprise Server,
+not in the Web Profile.</p><p>JMS resources are supported only in the full Enterprise Server, not in the
+Web Profile. See <a href="p23.html">Chapter&#160;17, Using the Java Message Service</a>.</p>
+<hr>
+
+
+<a name="beaku"></a><h3>Introducing the Application Client Container</h3>
+<a name="indexterm-633"></a><a name="indexterm-634"></a><p>The Application Client Container (ACC) includes a set of Java classes, libraries, and
+other files that are required for and distributed with Java client programs that
+execute in their own Java Virtual Machine (JVM). The ACC manages the execution
+of Java EE application client components (application clients), which are used to access
+a variety of Java EE services (such as JMS resources, EJB components, web
+services, security, and so on.) from a JVM outside the Sun GlassFish Enterprise
+Server.</p><p>The ACC communicates with the Enterprise Server using RMI-IIOP protocol and manages the
+details of RMI-IIOP communication using the client ORB that is bundled with it.
+Compared to other Java EE containers, the ACC is lightweight.</p><p>For information about debugging application clients, see <a href="p8.html#gekvq">Application Client Debugging</a>.</p>
+<hr><p><b>Note - </b>Interoperability between application clients and Enterprise Servers running under different major versions is
+not supported.</p>
+<hr>
+
+
+<a name="fvymq"></a><h4>ACC Security</h4>
+<a name="indexterm-635"></a><a name="indexterm-636"></a><a name="indexterm-637"></a><a name="indexterm-638"></a><p>The ACC determines when authentication is needed. This typically occurs when the client
+refers to an EJB component that requires authorization or when annotations in the
+client's <tt>main</tt> class trigger injection which, in turn, requires contact with the Enterprise
+Server's naming service. To authenticate the end user, the ACC prompts for any required
+information, such as a username and password. The ACC itself provides a very
+simple dialog box to prompt for and read these values.</p><p>The ACC integrates with the Enterprise Server&#8217;s authentication system. It also supports SSL
+(Secure Socket Layer)/IIOP if configured and when necessary; see <a href="#gckgn">Using RMI/IIOP Over SSL</a>.</p><p>You can provide an alternate implementation to gather authentication information, tailored to the
+needs of the application client.  To do so, include the class to
+perform these duties in the application client and identify the fully-qualified name of
+this class in the <tt>callback-handler</tt> element of the <tt>application-client.xml</tt> descriptor for the
+client. The ACC uses this class instead of its default class for asking
+for and reading the authentication information. The class must implement the <tt>javax.security.auth.callback.CallbackHandler</tt> interface.
+See the Java EE specification, section 9.2, <i>Application Clients: Security</i>, for more details.</p><p>Application clients can use <a href="p10.html#beacm">Programmatic Login</a>.</p><p><a name="indexterm-639"></a>For more information about security for application clients, see the Java EE 5
+Specification, Section EE.9.7, &#8220;Java EE Application Client XML Schema.&#8221;</p>
+
+<a name="fvymv"></a><h4>ACC Naming</h4>
+<a name="indexterm-640"></a><p>The client container enables the application clients to use the Java Naming and
+Directory Interface (JNDI) to look up Java EE services (such as JMS resources,
+EJB components, web services, security, and so on.) and to reference configurable parameters
+set at the time of deployment.</p>
+
+<a name="gbgfe"></a><h4>ACC Annotation</h4>
+<a name="indexterm-641"></a><a name="indexterm-642"></a><a name="indexterm-643"></a><p>Annotation is supported for the main class and the optional callback handler class
+in application clients. For more information, see section 9.4 of the Java EE
+5 Specification and <a href="http://docs.sun.com/doc/820-7693/gihzc?a=view">Deployment Descriptors and Annotations in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
+
+<a name="gavkg"></a><h4>Java Web Start</h4>
+<p>Java Web Start allows your application client to be easily launched and automatically
+downloaded and updated. It is enabled for all application clients by default. For
+more information, see <a href="#gavmf">Using Java Web Start</a>.</p>
+
+<a name="gipjj"></a><h4>Application Client JAR File</h4>
+<p>In Enterprise Server v3, the appclient JAR file is smaller than in previous
+releases, with dependent classes in separate JAR files. When copying the appclient to
+another location, make sure to include the JAR files containing the dependent classes
+as well. You can also use the <tt>asadmin get-client-stubs</tt> command to retrieve the appclient and
+all associated application JAR files and place them in another location.</p>
+
+<a name="beakv"></a><h3>Developing Clients Using the ACC</h3>
+<p>This section describes the procedure to develop, assemble, and deploy client applications using
+the ACC. This section describes the following topics:</p>
+<ul><li><p><a href="#beakw">To Access an EJB Component From an Application Client</a></p></li>
+<li><p><a href="#beakx">To Access a JMS Resource From an Application Client</a></p></li>
+<li><p><a href="#gavmf">Using Java Web Start</a></p></li>
+<li><p><a href="#gipkt">Using the Embeddable ACC</a></p></li>
+<li><p><a href="#beaky">Running an Application Client Using the <tt>appclient</tt> Script</a></p></li>
+<li><p><a href="#beakz">Using the <tt>package-appclient</tt> Script</a></p></li>
+<li><p><a href="#fvymy">The <tt>client.policy</tt> File</a></p></li>
+<li><p><a href="#gckgn">Using RMI/IIOP Over SSL</a></p></li>
+<li><p><a href="#ghbpc">Connecting to a Remote EJB Module Through a Firewall</a></p></li>
+<li><p><a href="#gipmo">Using JavaFX Code</a></p></li>
+<li><p><a href="#gipkj">Specifying a Splash Screen</a></p></li>
+<li><p><a href="#gjiec">Setting Login Retries</a></p></li></ul>
+
+
+<a name="beakw"></a><h4>To Access an EJB Component From an Application Client</h4><a name="indexterm-644"></a><ol>
+<li><b>In your client code, reference the EJB component by using an <tt>@EJB</tt> annotation
+or by looking up the JNDI name as defined in the <tt>ejb-jar.xml</tt> file.</b><p>For more information about annotations in application clients, see section 9.4 of the Java
+EE 5 Specification.</p><p>For more information about naming and lookups, see <a href="p22.html#beans">Accessing the Naming Context</a>.</p></li>
+<li><b>Define the <tt>@EJB</tt> annotations or the <tt>ejb-ref</tt> elements in the <tt>application-client.xml</tt> file. Define
+the corresponding <tt>ejb-ref</tt> elements in the <tt>sun-application-client.xml</tt> file.</b><p>For more information on the <tt>application-client.xml</tt> file, see the Java EE 5 Specification, Section
+EE.9.7, &#8220;Java EE Application Client XML Schema.&#8221;</p><p>For more information on the <tt>sun-application-client.xml</tt> file, see <a href="http://docs.sun.com/doc/820-7693/beaqo?a=view">The sun-application-client.xml file in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>. For a general explanation
+of how to map JNDI names using reference elements, see <a href="p22.html#beaoa">Mapping References</a>.</p></li>
+<li><b>Deploy the application client and EJB component together in an application. </b><p><a name="indexterm-645"></a><a name="indexterm-646"></a>For more information on deployment, see the <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>. To get the client JAR file,
+use the <tt>--retrieve</tt> option of the <tt>asadmin deploy</tt> command.</p><p><a name="indexterm-647"></a><a name="indexterm-648"></a>To retrieve the stubs and ties whether or not you requested their generation
+during deployment, use the <tt>asadmin get-client-stubs</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><b>Ensure that the client JAR file includes the following files:</b>
+<ul><li><p>A Java class to access the bean.</p></li>
+<li><p><tt>application-client.xml</tt> - (optional) Java EE application client deployment descriptor. For information on the <tt>application-client.xml</tt> file, see the Java EE 5 Specification, Section EE.9.7, &#8220;Java EE Application Client XML Schema.&#8221;</p></li>
+<li><p><tt>sun-application-client.xml</tt> - (optional) Enterprise Server specific client deployment descriptor. For information on the <tt>sun-application-client.xml</tt> file, see <a href="http://docs.sun.com/doc/820-7693/beaqo?a=view">The sun-application-client.xml file in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p></li>
+<li><p>The <tt>MANIFEST.MF</tt> file. This file contains a reference to the <tt>main</tt> class, which states the complete package prefix and class name of the Java client.</p></li></ul>
+</li>
+<li><b>Prepare the client machine. This step is not needed for Java Web Start.</b><p>If you are using the <tt>appclient</tt> script, package the Enterprise Server system files
+required to launch application clients on remote systems using the <tt>package-appclient</tt> script, then retrieve
+the application client itself using the <tt>asadmin get-client-stubs</tt> command.</p><p>For more information, see <a href="#beakz">Using the <tt>package-appclient</tt> Script</a> and the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><b><a name="indexterm-649"></a>To access EJB components that are residing in a remote system, make the
+following changes to the <tt>sun-acc.xml</tt> file or the <tt>appclient</tt> script. This step is
+not needed for Java Web Start.</b>
+<ul><li><p>Define the <tt>target-server</tt> element&#8217;s <tt>address</tt> and <tt>port</tt> attributes to reference the remote server machine and its ORB port. See <a href="http://docs.sun.com/doc/820-7693/beaye?a=view">target-server in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p></li>
+<li><p>Use the <tt>-targetserver</tt> option of the appclient script to reference the remote server machine and its ORB port. For more information, see <a href="#beaky">Running an Application Client Using the <tt>appclient</tt> Script</a>.</p></li></ul>
+<p>To determine the ORB port on the remote server, use the <tt>asadmin get</tt>
+command. For example:</p><pre>asadmin --host rmtsrv get server-config.iiop-service.iiop-listener.iiop-listener1.port</pre><p>For more information about the <tt>asadmin get</tt> command, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><b>Run the application client.</b><p>See <a href="#gavmf">Using Java Web Start</a> or <a href="#beaky">Running an Application Client Using the <tt>appclient</tt> Script</a>.</p></li></ol>
+
+<a name="beakx"></a><h4>To Access a JMS Resource From an Application Client</h4><a name="indexterm-650"></a><ol>
+<li><b>Create a JMS client.</b></li>
+<li><b>Next, configure a JMS resource on the Enterprise Server. </b><p>For information on configuring JMS resources, see <a href="p23.html#beaok">Creating JMS Resources: Destinations and Connection Factories</a>.</p></li>
+<li><b>Define the <tt>@Resource</tt> or <tt>@Resources</tt> annotations or the <tt>resource-ref</tt> elements in the <tt>application-client.xml</tt>
+file. Define the corresponding <tt>resource-ref</tt> elements in the <tt>sun-application-client.xml</tt> file.</b><p>For more information on the <tt>application-client.xml</tt> file, see the Java EE 5
+Specification, Section EE.9.7, &#8220;Java EE Application Client XML Schema.&#8221;</p><p>For more information on the <tt>sun-application-client.xml</tt> file, see <a href="http://docs.sun.com/doc/820-7693/beaqo?a=view">The sun-application-client.xml file in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>. For a general explanation
+of how to map JNDI names using reference elements, see <a href="p22.html#beaoa">Mapping References</a>.</p></li>
+<li><b>Ensure that the client JAR file includes the following files:</b>
+<ul><li><p>A Java class to access the resource.</p></li>
+<li><p><tt>application-client.xml</tt> - (optional) Java EE application client deployment descriptor. For information on the <tt>application-client.xml</tt> file, see the Java EE 5 Specification, Section EE.9.7, &#8220;Java EE Application Client XML Schema.&#8221;</p></li>
+<li><p><tt>sun-application-client.xml</tt> - (optional) Enterprise Server specific client deployment descriptor. For information on the <tt>sun-application-client.xml</tt> file, see <a href="http://docs.sun.com/doc/820-7693/beaqo?a=view">The sun-application-client.xml file in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p></li>
+<li><p><tt>The MANIFEST.MF</tt> file. This file contains a reference to the <tt>main</tt> class, which states the complete package prefix and class name of the Java client.</p></li></ul>
+</li>
+<li><b>Prepare the client machine. This step is not needed for Java Web Start.</b><p>If you are using the <tt>appclient</tt> script, package the Enterprise Server system files
+required to launch application clients on remote systems using the <tt>package-appclient</tt> script, then retrieve
+the application client itself using the <tt>asadmin get-client-stubs</tt> command.</p><p>For more information, see <a href="#beakz">Using the <tt>package-appclient</tt> Script</a> and the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><b>Run the application client. </b><p>See <a href="#gavmf">Using Java Web Start</a> or <a href="#beaky">Running an Application Client Using the <tt>appclient</tt> Script</a>.</p></li></ol>
+
+<a name="gavmf"></a><h4>Using Java Web Start</h4>
+<a name="indexterm-651"></a><a name="indexterm-652"></a><a name="indexterm-653"></a><p>Java Web Start allows your application client to be easily launched and automatically
+downloaded and updated. General information about Java Web Start is available at <a href="http://java.sun.com/products/javawebstart/reference/api/index.html">http://java.sun.com/products/javawebstart/reference/api/index.html</a>.</p><p>Java Web Start is discussed in the following topics:</p>
+<ul><li><p><a href="#gavqb">Enabling and Disabling Java Web Start</a></p></li>
+<li><p><a href="#gavmk">Downloading and Launching an Application Client</a></p></li>
+<li><p><a href="#gavor">The Application Client URL</a></p></li>
+<li><p><a href="#gcjlg">Signing JAR Files Used in Java Web Start</a></p></li>
+<li><p><a href="#geqxg">Error Handling</a></p></li>
+<li><p><a href="#geqwd">Vendor Icon, Splash Screen, and Text</a></p></li></ul>
+
+
+<a name="gavqb"></a><h5>Enabling and Disabling Java Web Start</h5>
+<p>Java Web Start is enabled for all application clients by default.</p><p>The application developer or deployer can specify that Java Web Start is always
+disabled for an application client by setting the value of the <tt>eligible</tt> element
+to <tt>false</tt> in the <tt>sun-application-client.xml</tt> file. See the <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p><p><a name="indexterm-654"></a><a name="indexterm-655"></a>The Enterprise Server administrator can disable Java Web Start for a previously deployed
+eligible application client using the <tt>asadmin set</tt> command.</p><p>To disable Java Web Start for all eligible application clients in an application,
+use the following command:</p><pre>asadmin set domain1.applications.j2ee-application.<i>app-name</i>.java-web-start-enabled="false"</pre><p>To disable Java Web Start for a stand-alone eligible application client, use the
+following command:</p><pre>asadmin set domain1.applications.appclient-module.<i>module-name</i>.java-web-start-enabled="false"</pre><p>Setting <tt>java-web-start-enabled="true"</tt> re-enables Java Web Start for an eligible application client. For more
+information about the <tt>asadmin set</tt> command, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
+
+<a name="gavmk"></a><h5>Downloading and Launching an Application Client</h5>
+<p><a name="indexterm-656"></a>If Java Web Start is enabled for your deployed application client, you can
+launch it for testing. Simply click on the Launch button next to the
+application client or application's listing on the App Client Modules page in the
+Administration Console.</p><p>On other machines, you can download and launch the application client using Java
+Web Start in the following ways:</p>
+<ul><li><p>Using a web browser, directly enter the URL for the application client. See <a href="#gavor">The Application Client URL</a>.</p></li>
+<li><p>Click on a link to the application client from a web page.</p></li>
+<li><p>Use the Java Web Start command <tt>javaws</tt>, specifying the URL of the application client as a command line argument.</p></li>
+<li><p>If the application has previously been downloaded using Java Web Start, you have additional alternatives.</p>
+<ul><li><p>Use the desktop icon that Java Web Start created for the application client. When Java Web Start downloads an application client for the first time it asks you if such an icon should be created.</p></li>
+<li><p>Use the Java Web Start control panel to launch the application client.</p></li></ul>
+</li></ul>
+<p>When you launch an application client, Java Web Start contacts the server to
+see if a newer client version is available. This means you can redeploy
+an application client without having to worry about whether client machines have the
+latest version.</p>
+
+<a name="gavor"></a><h5>The Application Client URL</h5>
+<p>The default URL for an application or module generally is as follows:</p><pre>http://<i>host</i>:<i>port</i>/<i>context-root</i></pre><p>The default URL for a stand-alone application client module is as follows:</p><pre>http://<i>host</i>:<i>port</i>/<i>appclient-module-id</i></pre><p>The default URL for an application client module embedded within an application is
+as follows. Note that the relative path to the application client JAR file
+is included. </p><pre>http://<i>host</i>:<i>port</i>/<i>application-id</i>/<i>appclient-path</i></pre><p>If the <i>context-root</i>, <i>appclient-module-id</i>, or <i>application-id</i> is not specified during deployment, the name
+of the JAR or EAR file without the extension is used. If the
+application client module or application is not in JAR or EAR file format,
+an <i>appclient-module-id</i> or <i>application-id</i> is generated. </p><p>Regardless of how the <i>context-root</i> or <i>id</i> is determined, it is written
+to the server log. For details about naming, see <a href="http://docs.sun.com/doc/820-7693/gihzk?a=view">Naming Standards in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p><p>To set a different URL for an application client, use the <tt>context-root</tt>
+subelement of the <tt>java-web-start-access</tt> element in the <tt>sun-application-client.xml</tt> file. This overrides the <i>appclient-module-id</i> or
+<i>application-id</i>. See <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p><p>You can also pass arguments to the ACC or to the application client's
+<tt>main</tt> method as query parameters in the URL. If multiple application client arguments
+are specified, they are passed in the order specified. </p><p>A question mark separates the context root from the arguments. Ampersands (<tt>&#38;</tt>) separate
+the arguments and their values. Each argument and each value must begin with
+<tt>arg=</tt>. Here is an example URL with a <tt>-color</tt> argument for a stand-alone application
+client. The <tt>-color</tt> argument is passed to the application client's <tt>main</tt> method.</p><pre>http://localhost:8080/testClient?arg=-color&#38;arg=red</pre>
+<hr><p><b>Note - </b>If you are using the <tt>javaws</tt> <i>URL</i> command to launch Java Web
+Start with a URL that contains arguments, enclose the URL in double quotes
+(<tt>"</tt>) to avoid breaking the URL at the ampersand (<tt>&#38;</tt>) symbol.</p>
+<hr>
+<p>Ideally, you should build your production application clients with user-friendly interfaces that collect
+information which might otherwise be gathered as command-line arguments.  This minimizes the degree
+to which users must customize the URLs that launch application clients using Java
+Web Start.  Command-line argument support is useful in a development environment and
+for existing application clients that depend on it.</p>
+
+<a name="gcjlg"></a><h5>Signing JAR Files Used in Java Web Start</h5>
+<a name="indexterm-657"></a><a name="indexterm-658"></a><p>Java Web Start enforces a security sandbox. By default it grants any application,
+including application clients, only minimal privileges.  Because Java Web Start applications can
+be so easily downloaded, Java Web Start provides protection from potentially harmful programs that
+might be accessible over the network. If an application requires a higher privilege
+level than the sandbox permits, the code that needs privileges must be in
+a JAR file that was signed. When Java Web Start downloads such a
+signed JAR file, it displays information about the certificate that was used to
+sign the JAR, and it asks you whether you want to trust that
+signed code. If you agree, the code receives elevated permissions and runs. If
+you reject the signed code, Java Web Start does not start the downloaded
+application.</p><p><a name="indexterm-659"></a>The Enterprise Server serves two types of signed JAR files in response to
+Java Web Start requests. One type is a JAR file installed as part
+of the Enterprise Server, which starts an application client during a Java Web
+Start launch: <i>as-install</i><tt>/lib/appserv-jwsacc.jar</tt>.</p><p><a name="indexterm-660"></a><a name="indexterm-661"></a><a name="indexterm-662"></a><a name="indexterm-663"></a><a name="indexterm-664"></a>The other type is a generated application client JAR file. As part of
+deployment, the Enterprise Server generates a new application client JAR file that contains
+classes, resources, and descriptors needed to run the application client on end-user systems. When
+you deploy an application with the <tt>asadmin deploy</tt> command's <tt>--retrieve</tt> option, use the
+<tt>asadmin get-client-stubs</tt> command, or select the Generate RMIStubs option from the EJB Modules deployment page
+in the Administration Console, this is the JAR file retrieved to your system.
+Because application clients need access beyond the minimal sandbox permissions to work in
+the Java Web Start environment, the generated application client JAR file must be
+signed before it can be downloaded to and executed on an end-user system.</p><p>A JAR file can be signed automatically or manually. The following sections describe
+the ways of signing JAR files.</p>
+<ul><li><p><a href="#gcjmd">Automatically Signing JAR Files</a></p></li>
+<li><p><a href="#gcjlr">Manually Signing <tt>appserv-jwsacc.jar</tt></a></p></li>
+<li><p><a href="#gcjmf">Manually Signing the Generated Application Client JAR File</a></p></li></ul>
+
+
+<a name="gcjmd"></a><h5>Automatically Signing JAR Files</h5>
+<p>The Enterprise Server automatically creates a signed version of the required JAR file
+if none exists. When a Java Web Start request for the <tt>appserv-jwsacc.jar</tt> file
+arrives, the Enterprise Server looks for <i>domain-dir</i><tt>/java-web-start/appserv-jwsacc.jar</tt>. When a request for an application's generated
+application client JAR file arrives, the Enterprise Server looks in the directory 
+<i>domain-dir</i><tt>/java-web-start/</tt><i>app-name</i> for a file with the same name as the generated JAR file
+created during deployment.</p><p>In either case, if the requested signed JAR file is absent or older
+than its unsigned counterpart, the Enterprise Server creates a signed version of the
+JAR file automatically and deposits it in the relevant directory. Whether the Enterprise
+Server just signed the JAR file or not, it serves the file from
+the <i>domain-dir</i><tt>/java-web-start</tt> directory tree in response to the Java Web Start request.</p><p><a name="indexterm-665"></a><a name="indexterm-666"></a>To sign these JAR files, the Enterprise Server uses its self-signed certificate. When
+you create a new domain, either by installing the Enterprise Server or by
+using the <tt>asadmin create-domain</tt> command, the Enterprise Server creates a self-signed certificate and adds
+it to the domain's key store.</p><p>A self-signed certificate is generally untrustworthy because no certification authority vouches for its
+authenticity. The automatic signing feature uses the same certificate to create all required
+signed JAR files. To sign different JAR files with different certificates, do the signing
+manually.</p>
+
+<a name="gcjlr"></a><h5>Manually Signing <tt>appserv-jwsacc.jar</tt></h5>
+<p>You can sign the <tt>appserv-jwsacc.jar</tt> file manually any time after you have installed
+the Enterprise Server. Copy the unsigned file from <i>as-install</i><tt>/lib</tt> to a different working directory
+and use the <tt>jarsigner</tt> command provided with the JDK to create a signed
+version of exactly the same name using your certificate. Then manually copy the
+signed file into <i>domain-dir</i><tt>/java-web-start</tt>. From then on, the Enterprise Server serves the JAR
+file signed with your certificate whenever a Java Web Start request asks that
+domain for the <tt>appserv-jwsacc.jar</tt> file. Note that you can sign each domain's <tt>appserv-jwsacc.jar</tt>
+file differently.</p><p>Remember that if you create a new domain and do not sign
+<tt>appserv-jwsacc.jar</tt> manually for that domain, the Enterprise Server creates an auto-signed version of
+it for use by the new domain. Also, if you create a domain-specific
+signed <tt>appserv-jwsacc.jar</tt>, delete the domain, and then create a new domain with the
+same name as the just-deleted domain, the Enterprise Server does not remember the earlier
+signed <tt>appserv-jwsacc.jar</tt>. You must recreate the manually signed version.</p>
+
+<a name="gcjmf"></a><h5>Manually Signing the Generated Application Client JAR File</h5>
+<p>You can sign the generated application client JAR file for an application any
+time after you have deployed the application. As you deploy the application, you
+can specify the <tt>asadmin deploy</tt> command's <tt>--retrieve</tt> option or select the Generate RMIStubs
+option on the EJB Modules deployment page in the Administration Console. Doing either of
+these tasks returns a copy of the generated application client JAR file to
+a directory you specify. Or, after you have deployed an application, you can
+download the generated application client JAR file using the <tt>asadmin get-client-stubs</tt> command.</p><p>Once you have a copy of the generated application client JAR file, you
+can sign it using the <tt>jarsigner</tt> tool and your certificate. Then place the
+signed JAR file in the <i>domain-dir</i><tt>/java-web-start/</tt><i>app-name</i> directory. You do not need to restart
+the server to start using the new signed JAR file.</p>
+
+<a name="geqxg"></a><h5>Error Handling</h5>
+<p>When an application client is launched using Java Web Start, any error that
+the application client logic does not catch and handle is written to <tt>System.err</tt>
+and displayed in a dialog box. This display appears if an error occurs
+even before the application client logic receives control. It also appears if the
+application client code does not catch and handle errors itself.</p>
+
+<a name="geqwd"></a><h5>Vendor Icon, Splash Screen, and Text</h5>
+<p>To specify a vendor-specific icon, splash screen, text string, or a combination of
+these for Java Web Start download and launch screens, use the <tt>vendor</tt> element
+in the <tt>sun-application-client.xml</tt> file. The complete format of this element's data is
+as follows:</p><pre>&#60;vendor><i>icon-image-URI</i>::<i>splash-screen-image-URI</i>::<i>vendor-text</i>&#60;/vendor></pre><p>The following example vendor element contains an icon, a splash screen, and a
+text string:</p><pre>&#60;vendor>images/icon.jpg::otherDir/splash.jpg::MyCorp, Inc.&#60;/vendor></pre><p>The following example vendor element contains an icon and a text string:</p><pre>&#60;vendor>images/icon.jpg::MyCorp, Inc.&#60;/vendor></pre><p>The following example vendor element contains a splash screen and a text string;
+note the initial double colon:</p><pre>&#60;vendor>::otherDir/splash.jpg::MyCorp, Inc.&#60;/vendor></pre><p>The following example vendor element contains only a text string:</p><pre>&#60;vendor>MyCorp, Inc.&#60;/vendor></pre><p>The default value is the text string <tt>Application Client</tt>.</p><p>For more information about the <tt>sun-application-client.xml</tt> file, see the <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
+
+<a name="gipkt"></a><h4>Using the Embeddable ACC</h4>
+<p>You can embed the ACC into your application client. If you place the
+<i>as-install</i><tt>/modules/gf-client.jar</tt> file in your runtime classpath, your application creates the ACC after your application
+code has started, then requests that the ACC start the application client portion.
+ The basic model for coding is as follows:</p>
+<ol><li><p>Create a builder object.</p></li>
+<li><p>Operate on the builder to configure the ACC.</p></li>
+<li><p>Obtain a new ACC instance from the builder.</p></li>
+<li><p>Present a client archive or class to the ACC instance.</p></li>
+<li><p>Start the client running within the newly created ACC instance.</p></li></ol>
+<p>Your code should follow this general pattern:</p><pre>// one TargetServer for each ORB endpoint for bootstrapping
+TargetServer[] servers = ...;
+
+// Get a builder to set up the ACC
+AppClientContainer.Builder builder = AppClientContainer.newBuilder(servers);
+
+// Fine-tune the ACC's configuration.  Note ability to "chain" invocations.
+builder.callbackHandler("com.acme.MyHandler").authRealm("myRealm"); // Modify config
+
+// Get a container for a client.  
+URI clientURI = ...; // URI to the client JAR
+AppClientContainer acc = builder.newContainer(clientURI);
+
+or
+
+Class mainClass = ...;
+AppClientContainer acc = builder.newContainer(mainClass);
+
+// In either case, start the client running.
+String[] appArgs = ...;
+acc.startClient(appArgs); // Start the client
+
+...
+
+acc.close(); // close the ACC(optional)</pre><p>The ACC loads the application client's <tt>main</tt> class, performs any required injection, and
+transfers control to the <tt>static main</tt> method. The ACC's <tt>run</tt> method returns to the
+calling application as soon as the client's <tt>main</tt> method returns to the ACC.</p><p> If the application client's <tt>main</tt> method starts any asynchronous activity, that work
+continues after the ACC returns. The ACC has no knowledge of whether the
+client's <tt>main</tt> method triggers asynchronous work. Therefore, if the client causes work on threads
+other than the calling thread, and if the embedding application needs to know
+when the client's asynchronous work completes, the embedding application and the client must
+agree on how this happens.</p><p>The ACC's shutdown handling is invoked from the ACC's <tt>close</tt> method. The
+calling application can invoke <tt>acc.close()</tt> to close down any services started by
+the ACC. If the application client code started any asynchronous activity that might
+still depend on ACC services, invoking <tt>close</tt> before that asynchronous activity completes could cause
+unpredictable and undesirable results. The shutdown handling is also run automatically at VM
+shutdown if the code has not invoked <tt>close</tt> before then.</p><p>The ACC does not prevent the calling application from creating or running more
+than one ACC instance during a single execution of the application either serially
+or concurrently. However, other services used by the ACC (transaction manager, security, ORB,
+and so on) might or might not support such serial or concurrent reuse.</p>
+
+<a name="beaky"></a><h4>Running an Application Client Using the <tt>appclient</tt> Script</h4>
+<a name="indexterm-667"></a><a name="indexterm-668"></a><a name="indexterm-669"></a><p>To run an application client that does <b>not</b> have Java Web Start enabled,
+you can launch the ACC using the <tt>appclient</tt> script. This is optional.
+This script is located in the <i>as-install</i><tt>/bin</tt> directory. Enterprise Server v3 introduces
+new features and syntax for the <tt>appclient</tt> script, including the <tt>-targetserver</tt> option and
+the ability to specify JVM options more conveniently. For details, see the
+<a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
+
+<a name="beakz"></a><h4>Using the <tt>package-appclient</tt> Script</h4>
+<a name="indexterm-670"></a><a name="indexterm-671"></a><p>You can package the Enterprise Server system files required to launch application clients
+on remote systems into a single JAR file using the <tt>package-appclient</tt> script. This
+is optional. This script is located in the <i>as-install</i><tt>/bin</tt> directory. For details,
+see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
+
+<a name="fvymy"></a><h4>The <tt>client.policy</tt> File</h4>
+<a name="indexterm-672"></a><a name="indexterm-673"></a><p>The <tt>client.policy</tt> file is the J2SE policy file used by the application client.
+Each application client has a <tt>client.policy</tt> file. The default policy file limits
+the permissions of Java EE deployed application clients to the minimal set of
+permissions required for these applications to operate correctly. If an application client requires more
+than this default set of permissions, edit the <tt>client.policy</tt> file to add
+the custom permissions that your application client needs. Use the J2SE standard policy
+tool or any text editor to edit this file.</p><p>For more information on using the J2SE policy tool, see <a href="http://java.sun.com/docs/books/tutorial/security1.2/tour2/index.html">http://java.sun.com/docs/books/tutorial/security1.2/tour2/index.html</a>.</p><p>For more information about the permissions you can set in the <tt>client.policy</tt>
+file, see <a href="http://java.sun.com/javase/6/docs/technotes/guides/security/permissions.html">http://java.sun.com/javase/6/docs/technotes/guides/security/permissions.html</a>.</p>
+
+<a name="gckgn"></a><h4>Using RMI/IIOP Over SSL</h4>
+<a name="indexterm-674"></a><a name="indexterm-675"></a><a name="indexterm-676"></a><a name="indexterm-677"></a><p>You can configure RMI/IIOP over SSL in two ways: using a username and
+password, or using a client certificate.</p><p>To use a username and password, configure the <tt>ior-security-config</tt> element in the
+<tt>sun-ejb-jar.xml</tt> file. The following configuration establishes SSL between an application client and an EJB
+component using a username and password. The user has to login to the
+ACC using either the <tt>sun-acc.xml</tt> mechanism or the <a href="p10.html#beacm">Programmatic Login</a> mechanism.</p><pre>&#60;ior-security-config>
+  &#60;transport-config>
+    &#60;integrity>required&#60;/integrity>
+    &#60;confidentiality>required&#60;/confidentiality>
+    &#60;establish-trust-in-target>supported&#60;/establish-trust-in-target>
+    &#60;establish-trust-in-client>none&#60;/establish-trust-in-client>
+  &#60;/transport-config>
+  &#60;as-context>
+    &#60;auth-method>username_password&#60;/auth-method>
+    &#60;realm>default&#60;/realm>
+    &#60;required>true&#60;/required>
+  &#60;/as-context>
+ &#60;sas-context>
+    &#60;caller-propagation>none&#60;/caller-propagation>
+ &#60;/sas-context>
+&#60;/ior-security-config></pre><p>For more information about the <tt>sun-ejb-jar.xml</tt> and <tt>sun-acc.xml</tt> files, see the <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p><p>To use a client certificate, configure the <tt>ior-security-config</tt> element in the <tt>sun-ejb-jar.xml</tt>
+file. The following configuration establishes SSL between an application client and an EJB component
+using a client certificate.</p><pre>&#60;ior-security-config>
+  &#60;transport-config>
+    &#60;integrity>required&#60;/integrity>
+    &#60;confidentiality>required&#60;/confidentiality>
+    &#60;establish-trust-in-target>supported&#60;/establish-trust-in-target>
+    &#60;establish-trust-in-client>required&#60;/establish-trust-in-client>
+  &#60;/transport-config>
+  &#60;as-context>
+    &#60;auth-method>none&#60;/auth-method>
+    &#60;realm>default&#60;/realm>
+    &#60;required>false&#60;/required>
+  &#60;/as-context>
+  &#60;sas-context>
+    &#60;caller-propagation>none&#60;/caller-propagation>
+  &#60;/sas-context>
+&#60;/ior-security-config></pre><p>To use a client certificate, you must also specify the system properties for
+the keystore and truststore to be used in establishing SSL. To use SSL
+with the Application Client Container (ACC), you need to set these system properties in
+one of the following ways:</p>
+<ul><li><p>Use the new syntax of the <tt>appclient</tt> script and specify the system properties as JVM options. See <a href="#beaky">Running an Application Client Using the <tt>appclient</tt> Script</a>.</p></li>
+<li><p>Set the environment variable <tt>VMARGS</tt> in the shell. For example, in the <tt>ksh</tt> or <tt>bash</tt> shell, the command to set this environment variable would be as follows:</p><pre>export VMARGS="-Djavax.net.ssl.keyStore=${keystore.db.file} 
+-Djavax.net.ssl.trustStore=${truststore.db.file} 
+-Djavax.net.ssl.keyStorePass word=${ssl.password} 
+-Djavax.net.ssl.trustStorePassword=${ssl.password}"</pre></li>
+<li><p>Set the <tt>env</tt> element using Ant (see <a href="p7.html">Chapter&#160;3, Using Ant with Enterprise Server</a>). For example:</p><pre>&#60;target name="runclient">
+  &#60;exec executable="${S1AS_HOME}/bin/appclient">
+    &#60;env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${keystore.db.file} 
+      -Djavax.net.ssl.trustStore=${truststore.db.file} 
+      -Djavax.net.ssl.keyStorePasword=${ssl.password} 
+      -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
+    &#60;arg value="-client"/>
+    &#60;arg value="${appClient.jar}"/>
+  &#60;/exec>
+&#60;/target></pre></li></ul>
+
+
+<a name="ghbpc"></a><h4>Connecting to a Remote EJB Module Through a Firewall</h4>
+<p>To deploy and run an application client that connects to an EJB module
+on a Enterprise Server instance that is behind a firewall, you must set
+ORB Virtual Address Agent Implementation (ORBVAA) options. Use the <tt>asadmin create-jvm-options</tt> command as follows:</p><pre>asadmin create-jvm-options -Dcom.sun.corba.ee.ORBVAAHost=<i>public-IP-adress</i>
+asadmin create-jvm-options -Dcom.sun.corba.ee.ORBVAAPort=<i>public-port</i>
+asadmin create-jvm-options 
+-Dcom.sun.corba.ee.ORBUserConfigurators.com.sun.corba.ee.impl.plugin.hwlb.VirtualAddressAgentImpl=x</pre><p>Set the <tt>ORBVAAHost</tt> and <tt>ORBVAAPort</tt> options to the host and port of the
+public address. The <tt>ORBUserConfigurators</tt> option tells the ORB to create an instance
+of the <tt>VirtualAddressAgentImpl</tt> class and invoke the <tt>configure</tt> method on the resulting object,
+which must implement the <tt>com.sun.corba.ee.spi.orb.ORBConfigurator</tt> interface. The <tt>ORBUserConfigurators</tt> value doesn't matter. Together, these
+options create an ORB that in turn creates <tt>Object</tt> references (the underlying implementation of
+remote EJB references) containing the public address, while the ORB listens on the
+private address specified for the IIOP port in the Enterprise Server configuration.</p>
+
+<a name="gipmo"></a><h4>Using JavaFX Code</h4>
+<a name="indexterm-678"></a><p>To use JavaFX<sup>TM</sup> code in an application client, compile the JavaFX script into
+a Java class and place the Java class in the appclient JAR file.
+To access back-end resources such as EJB components from a JavaFX script, you
+can write static public methods in your application client main class that refer
+to injected resources. The JavaFX script code can then refer to those static methods.</p>
+
+<a name="gipkj"></a><h4>Specifying a Splash Screen</h4>
+<p>Java SE 6 offers splash screen support, either through a Java command-line option
+or a manifest entry in the application's JAR file. To take advantage of
+this Java SE feature in your application client, you can do one of
+the following:</p>
+<ul><li><p>Use the new <tt>appclient ... -jar</tt> launch format, using the <tt>-splash</tt> command-line option at runtime or the <tt>SplashScreen-Image</tt> manifest entry at development time. See <a href="#beaky">Running an Application Client Using the <tt>appclient</tt> Script</a>.</p></li>
+<li><p>In the environment that runs the <tt>appclient</tt> script, set the <tt>VMOPTS</tt> environment variable to include the <tt>-splash</tt> option before invoking the <tt>appclient</tt> script to launch the client.</p></li>
+<li><p>Build an application client that uses the embeddable ACC feature and specify the splash screen image using one of the following:</p>
+<ul><li><p>The <tt>-splash</tt> option of the <tt>java</tt> command</p></li>
+<li><p><tt>SplashScreen-Image</tt> in the manifest for your program (not the manifest for the application client)</p></li></ul>
+<p>See <a href="#gipkt">Using the Embeddable ACC</a>.</p></li></ul>
+<p>During application (EAR file) deployment, the Enterprise Server generates fa&#231;ade JAR files, one
+for the application and one for each application client in the application. During
+application client module deployment, the Enterprise Server generates a single facade JAR for
+the application client. The <tt>appclient</tt> script supports splash screens inside the application client JAR
+only if you launch an application client facade or appclient client JAR. If
+you launch the facade for an application or the undeployed application itself, the <tt>appclient</tt>
+script cannot take advantage of the Java SE 6 splash screen feature.</p>
+
+<a name="gjiec"></a><h4>Setting Login Retries</h4>
+<a name="indexterm-679"></a><p>You can set a JVM option using the <tt>appclient</tt> script that determines the
+number of login retries allowed. This option is <tt>-Dorg.glassfish.appclient.acc.maxLoginRetries=</tt><i>n</i> where <i>n</i> is
+a positive integer. The default number of retries is 3.</p><p>This retry loop happens when the ACC attempts to perform injection if you
+annotated the client's <tt>main</tt> class (for example, using <tt>@Resource</tt>). If instead of annotations
+your client uses the <tt>InitialContext</tt> explicitly to look up remote resources, the retry loop
+does not apply. In this case, you could write logic to catch an
+exception around the lookup and retry explicitly.</p><p>For details about the <tt>appclient</tt> script syntax, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p15.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p17.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

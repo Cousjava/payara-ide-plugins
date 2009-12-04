@@ -1,0 +1,347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Administering Domains - Sun GlassFish Enterprise Server v3 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-11-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p6.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p8.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="ggnop"></a>Chapter&#160;3<h3>Administering Domains</h3><a name="indexterm-111"></a><p>This chapter provides procedures for administering domains in the Sun GlassFish<sup>TM</sup> Enterprise Server
+v3 environment by using the <tt>asadmin</tt> command-line utility.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ggoek">About Administering Domains (or Servers)</a></p></li>
+<li><p><a href="#gitvz">Creating, Logging In To, and Deleting a Domain</a></p></li>
+<li><p><a href="#gitwj">Starting and Stopping a Domain</a></p></li>
+<li><p><a href="#gitvn">Additional Domain Tasks</a></p></li></ul>
+<p>Instructions for accomplishing the tasks in this chapter by using the Administration
+Console are contained in the Administration Console online help.</p>
+
+<a name="ggoek"></a><h3>About Administering Domains (or Servers)</h3>
+<p>A <b>domain</b> is a group of instances that are administered together. The domain
+provides a preconfigured runtime for user applications. In addition to providing an administration
+boundary, a domain provides the basic security structure whereby separate administrators can administer
+specific groups of server instances. By grouping the server instances into separate domains, different
+organizations and administrators can share a single installation of Enterprise Server. A domain
+has its own configuration, log files, and application deployment areas that are independent
+of other domains. If the configuration is changed for a domain, the configurations
+for other domains are not affected.<a name="indexterm-112"></a><a name="indexterm-113"></a></p><p>The Enterprise Server installer creates a default administrative domain named <tt>domain1</tt>, as well
+as an associated domain administration server (DAS) named <tt>server</tt>. The DAS is a
+specially-designated instance that authenticates the administrator, accepts requests from administration tools, and communicates with
+server instances in the domain to carry out requests. The DAS is sometimes
+referred to as the <b>default server</b> because it is the only server instance created
+during Enterprise Server installation that can be used for deployment. </p><p><a name="indexterm-114"></a>The default administration port is 4848, but a different port can be specified
+during installation. When a domain is created, you are prompted for the administration
+user name and password, but you can accept the default in which case
+user name is <tt>admin</tt> and there is no password. To reset the
+administration password, see <a href="p16.html#ghgpu">To Change the Administration Password</a>.</p><p>The graphical Administration Console communicates with a specific DAS to administer the domain
+associated with the DAS. Each Administration Console session enables you to configure and
+manage the specific domain. If you create multiple domains, you must start a
+separate Administration Console session to manage each domain. </p>
+
+<a name="gitvz"></a><h3>Creating, Logging In To, and Deleting a Domain</h3>
+<p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ggoei">To Create a Domain</a></p></li>
+<li><p><a href="#ggoco">To List Domains</a></p></li>
+<li><p><a href="#ghhjz">To Log In to a Domain</a></p></li>
+<li><p><a href="#ggofa">To Delete a Domain</a></p></li></ul>
+
+
+<a name="ggoei"></a><h4>To Create a Domain</h4><p>After installing Enterprise Server and creating the default domain (<tt>domain1</tt>), you can
+create additional domains by using the local <tt>create-domain</tt> subcommand. This subcommand creates
+the configuration of a domain. Any user who has access to the <tt>asadmin</tt>
+utility on a given system can create a domain and store the domain
+configuration in a folder of choice. By default, the domain configuration is created
+in the default directory for domains. You can override this location to store
+the configuration elsewhere.</p><p>You are required to specify an administrative user when you create a domain,
+or you can accept the default login identity which is username <tt>admin</tt>
+with no password.<a name="indexterm-115"></a><a name="indexterm-116"></a><a name="indexterm-117"></a><a name="indexterm-118"></a><a name="indexterm-119"></a></p><h6>Before You Begin</h6><p> Determine which profile will apply to the domain.</p><ol>
+<li><b>Select a name for the domain that you are creating.</b><p>You can verify that a name is not already in use by using
+the <a href="http://docs.sun.com/doc/820-7701/list-domains-1?a=view"><tt>list-domains</tt>(1)</a> subcommand</p></li>
+<li><b>Create a domain by using the <a href="http://docs.sun.com/doc/820-7701/create-domain-1?a=view"><tt>create-domain</tt>(1)</a> subcommand.</b><p>Information about the options for this subcommand is included in this help page.</p></li>
+<li><b>Type an admin user name and password for the domain.</b><p>To avoid setting up an admin login, you can accept the default <tt>admin</tt>, with
+no password. Pressing Return also selects the default. </p></li></ol><a name="ggoeu"></a><h6>Example&#160;3-1 Creating a Domain</h6><p>This example creates a domain named <tt>domain1</tt> . When you type the command,
+you might be prompted for login information.</p><pre>asadmin> <tt><b>create-domain --adminport 4848 domain1</b></tt>
+Enter admin user name[Enter to accept default]>
+Using port 4848 for Admin.
+Default port 8080 for HTTP Instance is in use. Using 1161
+Using default port 7676 for JMS.
+Using default port 3700 for IIOP.
+Using default port 8081 for HTTP_SSL.
+Using default port 3820 for IIOP_SSL.
+Using default port 3920 for IIOP_MUTUALAUTH.
+Default port 8686 for JMX_ADMIN is in use. Using 1162
+Distinguished Name of the self-signed X.509 Server Certificate is:
+[CN=moonbeam.gateway.2wire.net,OU=GlassFish,O=Sun Microsystems,L=Santa Clara,ST
+California,C=US]
+Domain domain1 created.
+Command create-domain executed successfully.</pre><p>To start the Administration Console in a browser, enter the URL in
+the following format:</p><pre>http://<i>hostname</i>:5000</pre><p>For this example, the domain&#8217;s log files, configuration files, and deployed applications now
+reside in the following directory:</p><p><i>domain-root-dir</i><tt>/mydomain</tt></p><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-domain</tt> at the command line.</p>
+
+<a name="ggoco"></a><h4>To List Domains</h4><a name="indexterm-120"></a><p>Use the <tt>list-domains</tt> subcommand to display a list of domains and their statuses.
+If the domain directory is not specified, the contents of the default <i>as-install</i><tt>/domains</tt>
+directory is listed. If there is more than one domain, the domain name
+must be specified. </p><p>To list domains that were created in other directories, specify the <tt>--domaindir</tt>
+option.</p><ul>
+<li><b>List domains by using the <a href="http://docs.sun.com/doc/820-7701/list-domains-1?a=view"><tt>list-domains</tt>(1)</a> subcommand.</b></li></ul><a name="ggpfv"></a><h6>Example&#160;3-2 Listing Domains</h6><p>This example lists the domains in the default <i>as-install</i><tt>/domains</tt> directory:</p><pre>asadmin> <tt><b>list-domains</b></tt>
+Name: domain1 Status: Running
+Name: domain4 Status: Not Running
+Name: domain6 Status: Not Running
+Command list-domains executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-domain</tt> at the command line.</p>
+
+<a name="ghhjz"></a><h4>To Log In to a Domain</h4><a name="indexterm-121"></a><a name="indexterm-122"></a><a name="indexterm-123"></a><a name="indexterm-124"></a><p>All remote subcommands require that credentials be specified in terms of an admin
+user name and its password. By default, the domain is created with an
+identity that allows an <tt>asadmin</tt> user to perform administrative operations when no identity
+is explicitly or implicitly specified. The <b>default identity</b> is in the form of a
+user whose name is <tt>admin</tt> and has no password.  If you specify
+no user name on the command line or on prompt, and specify no
+password in the <tt>--passwordfile</tt> option or on prompt, and you have never logged
+in to a domain using either the <tt>login</tt> subcommand or the <tt>create-domain</tt> subcommand
+with the <tt>----savelogin</tt> option, then the <tt>asadmin</tt> utility will attempt to perform a
+given administrative operation without specifying any identity.  A server (domain) allows administrative
+operations to be run using this default identity if the following conditions are
+true:</p>
+<ul><li><p>The server (domain) uses file realm for authentication of admin users. </p></li>
+<li><p>The file realm has one and only one user (what the user name is does not matter).</p></li>
+<li><p>That one user has no password.</p></li></ul>
+<p> By default, all of these conditions are true, unless you have
+created the domain with a specific user name and password. Thus, by default,
+the only admin user is <tt>admin</tt> with no password.  If #3 is
+not true, you will need to specify the password. If #2 is not
+true, you will also need to specify the user name. If #1 is
+not true, you will need to specify the user name and password.</p><p>Use the <tt>login</tt> subcommand in local mode to authenticate yourself (log in to)
+a specific domain. After such login, you do not need to specify the
+administration user or password for subsequent operations on the domain. The <tt>login</tt> subcommand
+can only be used to specify the administration password. For other passwords that
+remote subcommands require, use the <tt>--passwordfile</tt> option, or specify the passwords at the command
+prompt. You are always prompted for the administration user name and password. </p><p>There is no logout subcommand. If you want to login to another
+domain, invoke <tt>asadmin login</tt> with new values for <tt>--host</tt> and <tt>--port</tt>. </p><ol>
+<li><b>Determine the name of the domain that you are logging in to.</b><p>To list the existing domains:</p><pre><tt><b>asadmin list-domains</b></tt></pre></li>
+<li><b>Log in to the domain by using the <a href="http://docs.sun.com/doc/820-7701/login-1?a=view"><tt>login</tt>(1)</a>command.</b></li></ol><a name="ghlfx"></a><h6>Example&#160;3-3 Logging In To a Domain Located on Another Machine</h6><p>This example logs you in to the running domain on port 4848
+of host <tt>moonbeam</tt>:</p><pre>asadmin> <tt><b>login --host moonbeam --port 4848</b></tt>
+Enter admin user name[Enter to accept default]>admin
+Enter admin password>adminadmin
+GlassFish v3 Prelude (build Jennifer-private)
+Login information relevant to admin user name [admin] for host [localhost] and
+dmin port [4848] stored at [C:\Documents and Settings\Jennifer\.asadminpass] su
+cessfully.
+Make sure that this file remains protected. Information stored in this file will
+be used by asadmin commands to manage associated domain.
+Command login executed successfully.</pre><a name="ghldv"></a><h6>Example&#160;3-4 Logging In to a Domain on the Default Port of Localhost</h6><p>This example logs you in to the default domain of <tt>localhost</tt>:</p><pre>asadmin> <tt><b>login</b></tt>
+Enter admin user name[Enter to accept default]>
+GlassFish v3 Preview (build Jennifer-private)
+Admin login information for host [localhost] and port [4848] is being 
+overwrittn with credentials provided. This is because the --savelogin option 
+was used during create-domain command.
+Login information relevant to admin user name [admin] for host [localhost]
+nd admin port [4848] stored at [C:\Documents and Settings\Jennifer\.asadminpass
+successfully.
+Make sure that this file remains protected. Information stored in this file will
+be used by asadmin commands to manage associated domain.
+Command login executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help login</tt> at the command line. For additional information about passwords, see
+<a href="p16.html#ghgrp">Administering Passwords</a>.</p>
+
+<a name="ggofa"></a><h4>To Delete a Domain</h4><a name="indexterm-125"></a><a name="indexterm-126"></a><a name="indexterm-127"></a><p>Use the <tt>delete-domain</tt> subcommand to delete an existing domain from a server. Only
+the root user or the operating system user who is authorized to administer
+the domain can run this subcommand. </p><h6>Before You Begin</h6><p>A domain must be stopped before it can be deleted.</p><ol>
+<li><b>List domains by using the <a href="http://docs.sun.com/doc/820-7701/list-domains-1?a=view"><tt>list-domains</tt>(1)</a> subcommand.</b></li>
+<li><b>If necessary, notify domain users that the domain is being deleted.</b></li>
+<li><b>Ensure that the domain you want to delete is stopped.</b><p>If needed, see <a href="#ggoch">To Stop a Domain</a>.</p></li>
+<li><b>Delete the domain by using the <a href="http://docs.sun.com/doc/820-7701/delete-domain-1?a=view"><tt>delete-domain</tt>(1)</a> subcommand.</b></li></ol><a name="ggoiy"></a><h6>Example&#160;3-5 Deleting a Domain</h6><p>This example deletes a domain named <tt>domain1</tt> from the location specified:</p><pre>asadmin> <tt><b>delete-domain --domaindir ..\domains domain1</b></tt>
+Domain domain1 deleted.
+Command delete-domain executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-domain</tt> at the command line.</p>
+
+<a name="gitwj"></a><h3>Starting and Stopping a Domain</h3>
+<p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ggoda">To Start a Domain</a></p></li>
+<li><p><a href="#ggoch">To Stop a Domain</a></p></li>
+<li><p><a href="#ginqj">To Restart a Domain</a></p></li>
+<li><p><a href="#gglqp">Automatically Restarting a Domain</a></p></li></ul>
+
+
+<a name="ggoda"></a><h4>To Start a Domain</h4><p>When you start a domain or server, the domain administration server (DAS) is
+started. After startup, the DAS runs constantly, listening for and accepting requests. <a name="indexterm-128"></a><a name="indexterm-129"></a><a name="indexterm-130"></a><a name="indexterm-131"></a><a name="indexterm-132"></a><a name="indexterm-133"></a></p><p>If the domain directory is not specified, the domain in the default
+<i>as-install</i><tt>/domains</tt> directory is started. If there are two or more domains, the <tt>domain_name</tt>
+operand must be specified. Each domain must be started separately.</p><p>If you want the domain you are starting to be able to
+use the <tt>restart-domain</tt> subcommand, the <tt>--watchdog</tt> option must be set to true (true
+is the default). If you have set the <tt>--watchdog</tt> option to false,
+the domain will not be able to use the <tt>restart-domain</tt> subcommand.</p>
+<hr><p><b>Note - </b>For Microsoft Windows, you can use an alternate method to start a domain.
+From the Windows Start menu, select Programs -&gt; Sun Microsystems -&gt;Enterprise Server
+-&gt; Start Admin Server.</p>
+<hr>
+<p>This subcommand is supported in local mode only.</p><ul>
+<li><b>Start a domain by using the <a href="http://docs.sun.com/doc/820-7701/start-domain-1?a=view"><tt>start-domain</tt>(1)</a> subcommand.</b></li></ul><a name="ggocw"></a><h6>Example&#160;3-6 Starting a Domain</h6><p>This example starts <tt>domain1</tt>:</p><pre>asadmin> <tt><b>start-domain domain1</b></tt></pre><p>If there is only one domain, you can omit the domain name. If
+you do not include the password, you might be prompted to supply it.
+</p><pre>Name of the domain started: [domain1] and its location: 
+[C:\prelude\v3_prelude_release\distributions\web\target\glassfish
+domains\domain1].
+Admin port for the domain: [4848].</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help start-domain</tt> at the command line.</p>
+
+<a name="ggoch"></a><h4>To Stop a Domain</h4><p>Stopping a domain or server shuts down its domain administration server (DAS). When
+stopping a domain, the DAS stops accepting new connections and then waits for
+all outstanding connections to complete. This shutdown process takes a few seconds. While
+the domain is stopped, the Administration Console and most of the <tt>asadmin</tt> subcommands
+cannot be used. This subcommand is particularly useful in stopping a runaway server.
+For more controlled situations, you can use the <a href="http://docs.sun.com/doc/820-7701/restart-domain-1?a=view"><tt>restart-domain</tt>(1)</a> subcommand.<a name="indexterm-134"></a><a name="indexterm-135"></a><a name="indexterm-136"></a><a name="indexterm-137"></a></p>
+<hr><p><b>Note - </b><a name="indexterm-138"></a><a name="indexterm-139"></a>For Microsoft Windows, you can use an alternate method to stop a domain.
+From the Start menu, select Programs -&gt; Sun Microsystems -&gt; Enterprise Server -&gt;
+Stop Admin Server.</p>
+<hr>
+<ol>
+<li><b>If necessary, notify users that you are going to stop the domain.</b></li>
+<li><b>Stop the domain by using the <a href="http://docs.sun.com/doc/820-7701/stop-domain-1?a=view"><tt>stop-domain</tt>(1)</a> subcommand.</b></li></ol><a name="gioes"></a><h6>Example&#160;3-7 Stopping a Domain (or Server)</h6><p>This example stops <tt>domain1</tt>:</p><pre>asadmin> <tt><b>stop-domain domain1</b></tt>
+Waiting for the domain to stop ...........
+Command stop-domain executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help stop-domain</tt> at the command line.</p>
+
+<a name="ginqj"></a><h4>To Restart a Domain</h4><p>Use the <tt>restart-domain</tt> subcommand in remote mode to restart the Domain Administration Server
+(DAS) of the specified host. When restarting a domain, the DAS stops accepting
+new connections and then waits for all outstanding connections to complete. This shutdown
+process takes a few seconds. Until the domain has restarted, the Administration Console
+and most of the <tt>asadmin</tt> subcommands cannot be used.<a name="indexterm-140"></a><a name="indexterm-141"></a><a name="indexterm-142"></a></p><p>This subcommand is particularly useful for environments where the server machine is secured
+and difficult to get to.  With the right credentials, you can restart
+the server from a remote location as well as from the same
+machine.</p><p>If the server will not restart, use the <a href="http://docs.sun.com/doc/820-7701/stop-domain-1?a=view"><tt>stop-domain</tt>(1)</a> subcommand followed by
+the <a href="http://docs.sun.com/doc/820-7701/start-domain-1?a=view"><tt>start-domain</tt>(1)</a> subcommand.</p><h6>Before You Begin</h6><p>For the <tt>restart-domain</tt> subcommand to work, the <tt>--watchdog</tt> option of the <tt>start-domain</tt>
+subcommand must have been set to True (the default) when the domain was
+started. If this option was set to False and you attempt to restart
+the domain, the domain is stopped and a warning message is logged. If
+the <tt>--watchdog</tt> option is set to False, you can only restart the
+domain by using the <tt>stop-domain</tt> and <tt>start-domain</tt> subcommands</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Restart the domain by using the <a href="http://docs.sun.com/doc/820-7701/restart-domain-1?a=view"><tt>restart-domain</tt>(1)</a> subcommand.</b></li></ol><a name="ggoet"></a><h6>Example&#160;3-8 Restarting a Domain (or Server)</h6><p>This example restarts <tt>yourhost</tt>:</p><pre>asadmin> <tt><b>--host yourhost restart-domain</b></tt>
+Waiting for the domain to restart ...........
+Command restart-domain executed successfully.</pre><a name="giupx"></a><h6>Example&#160;3-9 Restarting a Domain in a Browser</h6><p>This example invokes the <tt>restart-domain</tt> subcommand in a browser:</p><pre>http://yourhost:4848/__asadmin/restart-domain</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help restart-domain</tt> at the command line.</p>
+
+<a name="gglqp"></a><h4>Automatically Restarting a Domain</h4>
+<p>You can configure your system to automatically restart the domain as described in
+the following sections:</p>
+<ul><li><p><a href="#giusi">To Automatically Restart a Domain on Solaris 10</a></p></li>
+<li><p><a href="#giurs">To Restart Automatically on Linux</a></p></li>
+<li><p><a href="#giurf">To Prevent Service Shutdown When User Logs Out on Windows</a></p></li></ul>
+
+
+<a name="giusi"></a><h5>To Automatically Restart a Domain on Solaris 10</h5>
+<p>On Solaris 10, you can use the <tt>asadmin create-service</tt> subcommand to create a Solaris
+Service Management Facility (SMF) service that restarts a  Domain Administration Server (DAS).
+The service grants to the process the privileges of the user that runs
+the process. When you create an SMF service, the default user is the
+superuser. If you require a different user to run the process, specify the
+user in <tt>method_credential</tt>.<a name="indexterm-143"></a><a name="indexterm-144"></a><a name="indexterm-145"></a><a name="indexterm-146"></a></p><p>If your process is to bind to a privileged port of Solaris
+10, the process requires the <tt>net_privaddr</tt> privilege. The privileged ports of the Solaris operating
+system have port numbers less than 1024.</p><p>To determine if a user has the <tt>net_privaddr</tt> privilege, log in as that
+user and type the command <tt>ppriv -l | grep net_privaddr</tt>. </p><p>After you create and enable the SMF service, if the domain goes
+down, SMF restarts it.</p><h6>Before You Begin</h6><p>To run the <tt>asadmin create-service</tt> subcommand, you must have <tt>solaris.smf.*</tt> authorization. See the <tt>useradd</tt>
+and <tt>usermod</tt> man pages to find out how to set the authorizations. You
+must also have write permission in the directory tree: <tt>/var/svc/manifest/application/SUNWappserver</tt>. Usually, the
+superuser has both of these permissions. Additionally, the Solaris 10 administration commands such as
+<tt>svccfg</tt>, <tt>svcs</tt>, and <tt>auths</tt> must be available in the PATH.</p><p>If a particular Enterprise Server domain should not have default user privileges, modify
+the manifest of the service and reimport the service. </p><ol>
+<li><b>Create the service by using the <a href="http://docs.sun.com/doc/820-7701/create-service-1?a=view"><tt>create-service</tt>(1)</a> subcommand.</b><p>Information about properties for this subcommand is included in this help page.</p></li>
+<li><b>After the service is created, enable the service by using the <tt>svacdm enable</tt>
+subcommand.</b><p>For example:</p><pre><tt><b>svacdm enable /appserver/domains/domain1</b></tt></pre></li></ol><a name="giuqp"></a><h6>Example&#160;3-10 Creating a Service to Restart a Domain Automatically on Solaris 10</h6><p>This example creates a service for restarting <tt>domain1</tt>:</p><pre>asadmin> <tt><b>create-service --type das /appserver/domains/domain1</b></tt></pre><h6>See Also</h6><p>As you administer your service, the following Solaris commands are useful: <tt>auths</tt>,
+<tt>smf_security</tt>, <tt>svcadm</tt>, <tt>svccfg</tt>, <tt>rbac</tt>, <tt>useradd</tt>, and <tt>usermod</tt>.</p>
+
+<a name="giurs"></a><h5>To Restart Automatically on Linux</h5>
+<p>To set up automatic restart on Linux, you edit the <tt>/etc/inittab</tt> file. If
+you use <tt>/etc/rc.local,</tt> or your system&#8217;s equivalent, place a line in <tt>/etc/rc.local</tt> that
+calls the desired <tt>asadmin</tt> subcommand.</p><ul>
+<li><b>Add a line of text to the <tt>/etc/inittab</tt> file.</b><p>For example:</p><pre>das:3:respawn:/opt/SUNWappserver/bin/asadmin start-domain --user admin 
+--passwordfile /opt/SUNWappserver/password.txt domain1</pre><p>The text must be on a single line. The first three letters
+are a unique designator for the process and can be altered.</p></li></ul>
+
+<a name="giurf"></a><h5>To Prevent Service Shutdown When User Logs Out on Windows</h5>
+<p>By default, the Java Virtual Machine (JVM) receives signals from Windows that indicate
+that Windows is shutting down, or that a user is logging out of
+Windows, which causes the system to shut itself down cleanly. This behavior causes
+the Enterprise Server service to shut down. To prevent the service from shutting
+down when a user logs out, you must set the <tt>-Xrs</tt> <a href="http://java.sun.com/j2se/1.3/docs/tooldocs/solaris/java.html#Xrs">Java VM option</a>.</p><ol>
+<li><b>Add the following line to the section of the <i>as-install</i><tt>\domains\</tt><i>domain-name</i><tt>\config\domain.xml</tt> file that defines
+Java VM options:</b><pre>&#60;jvm-options>-Xrs&#60;/jvm-options></pre>
+<hr><p><b>Note - </b>In some Windows 2003 Server installations, adding the <tt>-Xrs</tt> option to the <tt>domain.xml</tt>
+file fails to prevent the service from shutting down. In this situation, add
+the option to the <i>as-install</i><tt>\lib\processLauncher.xml</tt> file as follows:</p><pre>&#60;process name="<i>as-service-name</i>">
+   ...
+   &#60;sysproperty key="-Xrs"/>
+   ...</pre>
+<hr>
+</li>
+<li><b>If the Enterprise Server service is running, restart the service for your changes
+to take affect.</b></li></ol>
+
+<a name="gitvn"></a><h3>Additional Domain Tasks</h3>
+<p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ghhnt">To Display Domain Uptime</a></p></li>
+<li><p><a href="#ghmbn">To Switch a Domain to Another Supported Java Version</a></p></li></ul>
+
+
+<a name="ghhnt"></a><h4>To Display Domain Uptime</h4><p>Use the <tt>uptime</tt> subcommand in remote mode to display the length of time
+that the domain administration server (DAS) has been running since it was last
+started.<a name="indexterm-147"></a><a name="indexterm-148"></a><a name="indexterm-149"></a><a name="indexterm-150"></a><a name="indexterm-151"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Display uptime by using the <a href="http://docs.sun.com/doc/820-7701/uptime-1?a=view"><tt>uptime</tt>(1)</a> subcommand.</b></li></ol><a name="ghlds"></a><h6>Example&#160;3-11 Displaying the DAS Uptime</h6><p>This example displays the length of time that the DAS has been
+running:</p><pre>asadmin> <tt><b>uptime</b></tt>
+Uptime: 31 minutes, 54 seconds
+Command uptime executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help uptime</tt> at the command line.</p>
+
+<a name="ghmbn"></a><h4>To Switch a Domain to Another Supported Java Version</h4><p> Enterprise Server v3 requires Version 6 Java SE platform as the underlying
+virtual machine for the Java<sup>TM</sup> platform (Java Virtual Machine or JVM<sup>TM</sup> machine). <a name="indexterm-152"></a><a name="indexterm-153"></a></p>
+<hr><p><b>Note - </b>Do not downgrade to an earlier Java version after a domain has been
+created with a newer JVM machine. If you must downgrade your JVM
+machine, downgrade it only for individual domains.</p>
+<hr>
+<ol>
+<li><b>If you have not already done so, download the desired Java SDK (not
+the JRE) and install it on your system.</b><p>The Java SDK can be downloaded from <a href="http://java.sun.com/j2se">http://java.sun.com/j2se</a>.</p></li>
+<li><b>Start the domain for which you are changing the JDK.</b><p>Use the following format:</p><pre><i>as-install</i>/bin/asadmin start-domain <i>domain-name</i></pre><p>For a valid JVM installation, locations are checked in the following order:</p><ol style="list-style-type: lower-alpha">
+<li><b><tt>domain.xml</tt>  (<tt>java-home</tt> inside <tt>java-config</tt>)</b></li>
+<li><b><tt>asenv.conf</tt> (setting <tt>AS_JAVA="path to java home"</tt>)</b></li>
+<li><b><tt>JAVA_HOME</tt>  environmental variable</b></li>
+<li><b><tt>system.getProperty ("java.home") + "../" </tt></b></li>
+<li><b><tt>system.getProperty ("java.home") </tt></b></li></ol></li>
+<li><b>If necessary, change the JVM machine attributes for the domain.</b><p>In particular, you might need to change the <tt>JAVA_HOME</tt> environment variable. For example,
+to change the <tt>JAVA_HOME</tt> variable, type:</p><pre><i>as-install</i>/bin/asadmin set "server.java-config.java-home=path-to-java-home"</pre></li></ol>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p6.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p8.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+
