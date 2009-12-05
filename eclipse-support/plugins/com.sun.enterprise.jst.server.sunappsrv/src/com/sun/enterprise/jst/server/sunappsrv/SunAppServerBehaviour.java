@@ -719,12 +719,16 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 						 String projectContextRoot = ComponentUtilities.getServerContextRoot(module[0].getProject());
 						 contextRoot = (((projectContextRoot != null) && (projectContextRoot.length() > 0)) ? 
 									projectContextRoot : module[0].getName());			
-			}
+			} else
 			if(AssembleModules.isModuleType(module[0], "jst.ear")) {
 				SunAppSrvPlugin.logMessage("is EAR");
 				assembler.assembleDirDeployedEARModule(monitor);
 				needARedeploy = assembler.needsARedeployment();
 				
+			} else {//default
+				assembler.assembleNonWebOrNonEARModule(monitor);
+				needARedeploy = assembler.needsARedeployment();
+
 			}
 			String spath =""+ path;
 			///BUG NEED ALSO to test if it has been deployed once...isDeployed()
