@@ -1464,7 +1464,7 @@
             </menu>
       
               <action
-                label="View Log File"
+                label="%menu.viewlogfile"
                 icon="icons/obj16/logfile.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.ViewLogAction"
                 tooltip="View GlassFish Log File"
