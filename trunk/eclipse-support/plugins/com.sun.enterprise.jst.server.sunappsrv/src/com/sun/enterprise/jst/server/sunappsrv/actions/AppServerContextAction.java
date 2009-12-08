@@ -172,7 +172,7 @@ IWorkbenchWindowActionDelegate {
 		SunAppServerBehaviour sab = (SunAppServerBehaviour) selectedServer.loadAdapter(
 				SunAppServerBehaviour.class, null);
 		SunAppSrvPlugin.logMessage("Message is:" + action + sab.getDomainDir() + selectedServer );
-		execute(selectedServer);
+		perform(selectedServer);
 	}
 
 
@@ -203,7 +203,7 @@ IWorkbenchWindowActionDelegate {
 	 * Perform action on this server.
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
-	public void execute(IServer server) {
+	public void perform(IServer server) {
 		
 		SunAppSrvPlugin.logMessage(">>>>>>execute(IServer server) called on " +server);
 
@@ -216,7 +216,7 @@ IWorkbenchWindowActionDelegate {
 		if (obj instanceof IServer) {
 			IServer server = (IServer) obj;
 			if (accept(server))
-				execute(server);
+				perform(server);
 			selectionChanged(getStructuredSelection());
 		}
 	}

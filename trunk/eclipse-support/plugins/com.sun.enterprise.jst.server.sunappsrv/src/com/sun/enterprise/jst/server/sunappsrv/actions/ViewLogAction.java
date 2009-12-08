@@ -55,7 +55,8 @@ public class ViewLogAction extends AppServerContextAction{
 	}
 
 
-	public void execute(IServer server) {
+	@Override
+	public void perform(IServer server) {
 		
 
 		try {

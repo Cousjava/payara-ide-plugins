@@ -62,7 +62,8 @@ public class PreludeUpdateCenterAction extends OpenBrowserEditorAction {
     }
 
 
-    public void execute(IServer server) {
+	@Override
+    public void perform(IServer server) {
     	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
     	if (!sab.isV3()) { // V2 only
 			String loc=sab.getSunApplicationServerInstallationDirectory()+"/updatecenter/bin/updatetool";    	
@@ -72,6 +73,7 @@ public class PreludeUpdateCenterAction extends OpenBrowserEditorAction {
     		String[] command = new String[]{
     				loc    		}; 
     		try {
+    			// TODO - show an error if !File.exists?
     			Execute.launch(null, command, null, new File(sab.getSunApplicationServerInstallationDirectory()), true);
     			return;
     		} catch (Exception ioe) {

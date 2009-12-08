@@ -53,7 +53,8 @@ public class PreludeRegistrationAction extends OpenBrowserEditorAction  {
     	super ("Register your GlassFish Enterprise Server...",getImageDescriptorFromlocalImage("icons/obj16/registration.png"));
     }
 
- 	public void execute (IServer server) {
+	@Override
+ 	public void perform (IServer server) {
  		// for now, do registration through url whether v2 or v3
  		// once registration plugin is ready, consider using it (eclipse gui) instead
  		// if we do, we will need a plugin dependency on that module or to do some refactoring here

@@ -48,7 +48,8 @@ public class OpenBrowserAction extends AppServerContextAction {
 		super("Open GlassFish Admin Console...",getImageDescriptorFromlocalImage("icons/obj16/glassfishserver.gif"));
 	}
 
-	public void execute(IServer server) {
+	@Override
+	public void perform(IServer server) {
 		
 		if (accept(server)==false){
 			showMessageDialog();
