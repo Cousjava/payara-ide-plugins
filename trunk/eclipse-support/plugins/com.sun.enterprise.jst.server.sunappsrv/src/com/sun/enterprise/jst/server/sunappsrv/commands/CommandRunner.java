@@ -248,7 +248,7 @@ public class CommandRunner extends BasicTask<OperationState> {
             String compValue = data.get(k);
 
             try {
-                SetPropertyCommand cmd = new ServerCommand.SetPropertyCommand(compName, compValue);
+                SetPropertyCommand cmd = server.getCommandFactory().getSetPropertyCommand(compName, compValue);
                 serverCmd = cmd;
                 Future<OperationState> task = executor().submit(this);
                 OperationState state = task.get();
