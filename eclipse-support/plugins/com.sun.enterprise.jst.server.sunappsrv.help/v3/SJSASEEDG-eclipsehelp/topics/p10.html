@@ -6,7 +6,7 @@
 <title>Securing Applications - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,9 +25,9 @@
 </table>
 
 
-<a name="beabg"></a>Chapter&#160;5<h3>Securing Applications</h3><a name="indexterm-229"></a><p>This chapter describes how to write secure Java EE applications, which contain components
+<a name="beabg"></a>Chapter&#160;5<h3>Securing Applications</h3><a name="indexterm-228"></a><p>This chapter describes how to write secure Java EE applications, which contain components
 that perform user authentication and access authorization for the business logic of Java
-EE components. </p><p>For information about administrative security for the Enterprise Server, see <a href="http://docs.sun.com/doc/820-7692/ablnk?a=view">Chapter 11, Administering System Security, in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p><p>For general information about Java EE security, see <a href="http://docs.sun.com/doc/820-7627/gijrp?a=view">Part&#160;VI, Security, in <i>The Java EE 6 Tutorial, Volume I</i></a>.</p><p>This chapter contains the following sections:</p>
+EE components. </p><p>For information about administrative security for the Sun GlassFish<sup>TM</sup> Enterprise Server, see <a href="http://docs.sun.com/doc/820-7692/ablnk?a=view">Chapter 11, Administering System Security, in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p><p>For general information about Java EE security, see <a href="http://docs.sun.com/doc/820-7627/gijrp?a=view">Part&#160;VI, Security, in <i>The Java EE 6 Tutorial, Volume I</i></a>.</p><p>This chapter contains the following sections:</p>
 <ul><li><p><a href="#beabh">Security Goals</a></p></li>
 <li><p><a href="#beabi">Enterprise Server Specific Security Features</a></p></li>
 <li><p><a href="#beabj">Container Security</a></p></li>
@@ -48,22 +48,22 @@ Server supports the entire EJB 3.1 specification. For details, see <a href="http
 
 
 <a name="beabh"></a><h3>Security Goals</h3>
-<a name="indexterm-230"></a><p>In an enterprise computing environment, there are many security risks. The goal of
-the Sun GlassFish Enterprise Server is to provide highly secure, interoperable, and distributed
-component computing based on the Java EE security model. Security goals include:</p>
+<a name="indexterm-229"></a><p>In an enterprise computing environment, there are many security risks. The goal of
+the Enterprise Server is to provide highly secure, interoperable, and distributed component computing
+based on the Java EE security model. Security goals include:</p>
 <ul><li><p>Full compliance with the Java EE security model. This includes EJB and servlet role-based authorization.</p></li>
 <li><p>Support for single sign-on across all Enterprise Server applications within a single security domain.</p></li>
 <li><p>Support for web services message security.</p></li>
 <li><p>Security support for application clients.</p></li>
 <li><p>Support for several underlying authentication realms, such as simple file and Lightweight Directory Access Protocol (LDAP). Certificate authentication is also supported for Secure Socket Layer (SSL) client authentication. For Solaris, OS platform authentication is supported in addition to these.</p></li>
 <li><p>Support for declarative security through Enterprise Server specific XML-based role mapping.</p></li>
-<li><p><a name="indexterm-231"></a>Support for Java Authorization Contract for Containers (JACC) pluggable authorization as included in the Java EE specification and defined by <a href="http://www.jcp.org/en/jsr/detail?id=115">Java Specification Request (JSR) 115</a>.</p></li>
-<li><p><a name="indexterm-232"></a>Support for Java<sup>TM</sup> Authentication Service Provider Interface for Containers as included in the Java EE specification and defined by <a href="http://www.jcp.org/en/jsr/detail?id=196">JSR 196</a>.</p></li>
-<li><p><a name="indexterm-233"></a>Support for Web Services Interoperability Technologies (WSIT) as described in <a href="https://metro.dev.java.net/guide/">Metro Users Guide</a>.</p></li></ul>
+<li><p><a name="indexterm-230"></a>Support for Java Authorization Contract for Containers (JACC) pluggable authorization as included in the Java EE specification and defined by <a href="http://www.jcp.org/en/jsr/detail?id=115">Java Specification Request (JSR) 115</a>.</p></li>
+<li><p><a name="indexterm-231"></a>Support for Java<sup>TM</sup> Authentication Service Provider Interface for Containers as included in the Java EE specification and defined by <a href="http://www.jcp.org/en/jsr/detail?id=196">JSR 196</a>.</p></li>
+<li><p><a name="indexterm-232"></a>Support for Web Services Interoperability Technologies (WSIT) as described in <a href="https://metro.dev.java.net/guide/">Metro Users Guide</a>.</p></li></ul>
 
 
 <a name="beabi"></a><h3>Enterprise Server Specific Security Features</h3>
-<a name="indexterm-234"></a><a name="indexterm-235"></a><a name="indexterm-236"></a><p>The Enterprise Server supports the Java EE security model, as well as the
+<a name="indexterm-233"></a><a name="indexterm-234"></a><a name="indexterm-235"></a><p>The Enterprise Server supports the Java EE security model, as well as the
 following features which are specific to the Enterprise Server:</p>
 <ul><li><p>Message security; see <a href="#beaca">Configuring Message Security for Web Services</a></p></li>
 <li><p>Single sign-on across all Enterprise Server applications within a single security domain; see <a href="#beacq">User Authentication for Single Sign-on</a></p></li>
@@ -71,17 +71,17 @@ following features which are specific to the Enterprise Server:</p>
 
 
 <a name="beabj"></a><h3>Container Security</h3>
-<a name="indexterm-237"></a><p>The component containers are responsible for providing Java EE application security. The container
+<a name="indexterm-236"></a><p>The component containers are responsible for providing Java EE application security. The container
 provides two security forms:</p>
 <ul><li><p><a href="#beabl">Declarative Security</a></p></li>
 <li><p><a href="#beabk">Programmatic Security</a></p></li></ul>
-<p><a name="indexterm-238"></a><a name="indexterm-239"></a><b>Annotations</b> (also called metadata) enable a declarative style of programming, and so encompass
+<p><a name="indexterm-237"></a><a name="indexterm-238"></a><b>Annotations</b> (also called metadata) enable a declarative style of programming, and so encompass
 both the declarative and programmatic security concepts. Users can specify information about security within
 a class file using annotations. When the application is deployed, this information can
 either be used by or overridden by the application or module deployment descriptor.</p>
 
 <a name="beabl"></a><h4>Declarative Security</h4>
-<p><a name="indexterm-240"></a><b>Declarative security</b> means that the security mechanism for an application is declared and handled
+<p><a name="indexterm-239"></a><b>Declarative security</b> means that the security mechanism for an application is declared and handled
 externally to the application. Deployment descriptors describe the Java EE application&#8217;s security structure, including
 security roles, access control, and authentication requirements.</p><p>The Enterprise Server supports the deployment descriptors specified by Java EE and has
 additional security elements included in its own deployment descriptors. Declarative security is the
@@ -91,7 +91,7 @@ application deployer&#8217;s responsibility. For more information about Sun-spec
 
 
 <a name="beabm"></a><h5>Application Level Security</h5>
-<a name="indexterm-241"></a><p>For an application, roles used by any application must be defined in <tt>@DeclareRoles</tt>
+<a name="indexterm-240"></a><p>For an application, roles used by any application must be defined in <tt>@DeclareRoles</tt>
 annotations in the code or <tt>role-name</tt> elements in the application deployment descriptor
 (<tt>application.xml</tt>). Those role names are scoped to the EJB XML deployment descriptors (<tt>ejb-jar.xml</tt>
 and <tt>sun-ejb-jar.xml</tt> files) and to the servlet XML deployment descriptors (<tt>web.xml</tt> and <tt>sun-web.xml</tt>
@@ -102,18 +102,18 @@ the <tt>sun-application.xml</tt>, <tt>sun-ejb-jar.xml</tt>, or <tt>sun-web.xml</
 For more information, see <a href="#beacr">Roles, Principals, and Principal to Role Mapping</a>.</p>
 
 <a name="beabn"></a><h5>Component Level Security</h5>
-<a name="indexterm-242"></a><a name="indexterm-243"></a><p>Component level security encompasses web components and EJB components.</p><p>A secure web container authenticates users and authorizes access to a servlet or
+<a name="indexterm-241"></a><a name="indexterm-242"></a><p>Component level security encompasses web components and EJB components.</p><p>A secure web container authenticates users and authorizes access to a servlet or
 JSP by using the security policy laid out in the servlet XML deployment
-descriptors (<tt>web.xml</tt> and <tt>sun-web.xml</tt> files).</p><p><a name="indexterm-244"></a><a name="indexterm-245"></a>The EJB container is responsible for authorizing access to a bean method by
+descriptors (<tt>web.xml</tt> and <tt>sun-web.xml</tt> files).</p><p><a name="indexterm-243"></a><a name="indexterm-244"></a>The EJB container is responsible for authorizing access to a bean method by
 using the security policy laid out in the EJB XML deployment descriptors (<tt>ejb-jar.xml</tt>
 and <tt>sun-ejb-jar.xml</tt> files).</p>
 
 <a name="beabk"></a><h4>Programmatic Security</h4>
-<p><a name="indexterm-246"></a><b>Programmatic security</b> involves an EJB component or servlet using method calls to the security
+<p><a name="indexterm-245"></a><b>Programmatic security</b> involves an EJB component or servlet using method calls to the security
 API, as specified by the Java EE security model, to make business logic
 decisions based on the caller or remote user&#8217;s security role. Programmatic security should only
 be used when declarative security alone is insufficient to meet the application&#8217;s security
-model.</p><p><a name="indexterm-247"></a>The Java EE specification defines programmatic security as consisting of two methods of
+model.</p><p><a name="indexterm-246"></a>The Java EE specification defines programmatic security as consisting of two methods of
 the EJB <tt>EJBContext</tt> interface and two methods of the servlet <tt>HttpServletRequest</tt> interface.
 The Enterprise Server supports these interfaces as specified in the specification.</p><p>For more information on programmatic security, see the following:</p>
 <ul><li><p>The Java EE Specification</p></li>
@@ -121,7 +121,7 @@ The Enterprise Server supports these interfaces as specified in the specificatio
 
 
 <a name="beacr"></a><h3>Roles, Principals, and Principal to Role Mapping</h3>
-<a name="indexterm-248"></a><a name="indexterm-249"></a><a name="indexterm-250"></a><a name="indexterm-251"></a><p>For applications, you define roles in <tt>@DeclareRoles</tt> annotations or the Java EE deployment
+<a name="indexterm-247"></a><a name="indexterm-248"></a><a name="indexterm-249"></a><a name="indexterm-250"></a><p>For applications, you define roles in <tt>@DeclareRoles</tt> annotations or the Java EE deployment
 descriptor file <tt>application.xml</tt>. You define the corresponding role mappings in the Enterprise Server
 deployment descriptor file <tt>sun-application.xml</tt>. For individually deployed web or EJB modules, you define roles
 in <tt>@DeclareRoles</tt> annotations or the Java EE deployment descriptor files <tt>web.xml</tt> or <tt>ejb-jar.xml</tt>.
@@ -160,8 +160,8 @@ omit the <tt>run-as</tt> element in <tt>web.xml</tt> use the default principal. 
 modules that omit the <tt>security-role-mapping</tt> element use the default principal to role mapping. These
 defaults are part of the Security Service, which you can access in the
 following ways:</p>
-<ul><li><p><a name="indexterm-252"></a>In the Administration Console, select the Security component under the relevant configuration. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-253"></a><a name="indexterm-254"></a>Use the <tt>asadmin set</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>. For example, you can set the default principal as follows.</p><pre>asadmin set server-config.security-service.default-principal=dsmith
+<ul><li><p><a name="indexterm-251"></a>In the Administration Console, select the Security component under the relevant configuration. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-252"></a><a name="indexterm-253"></a>Use the <tt>asadmin set</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>. For example, you can set the default principal as follows.</p><pre>asadmin set server-config.security-service.default-principal=dsmith
 asadmin set server-config.security-service.default-principal-password=secret</pre><p>You can set the default principal to role mapping as follows.</p><pre>asadmin set server-config.security-service.activate-default-principal-to-role-mapping=true
 asadmin set server-config.security-service.mapped-principal-class=CustomPrincipalImplClass</pre></li></ul>
 
@@ -175,22 +175,22 @@ asadmin set server-config.security-service.mapped-principal-class=CustomPrincipa
 
 
 <a name="beabp"></a><h4>Supported Realms</h4>
-<a name="indexterm-255"></a><a name="indexterm-256"></a><p>The following realms are supported in the current release of the Enterprise Server:</p>
-<ul><li><p><a name="indexterm-257"></a><tt>file</tt> &#8211; Stores user information in a file. This is the default realm when you first install the Enterprise Server.</p></li>
-<li><p><a name="indexterm-258"></a><tt>ldap</tt> &#8211; Stores user information in an LDAP directory.</p></li>
-<li><p><a name="indexterm-259"></a><a name="indexterm-260"></a><tt>jdbc</tt> &#8211; Stores user information in a database.</p><p>In the JDBC realm, the server gets user credentials from a database. The Enterprise Server uses the database information and the enabled JDBC realm option in the configuration file. For digest authentication, a JDBC realm should be created with <tt>jdbcDigestRealm</tt> as the JAAS context.</p></li>
-<li><p><a name="indexterm-261"></a><tt>certificate</tt> &#8211; Sets up the user identity in the Enterprise Server security context, and populates it with user data obtained from cryptographically verified client certificates.</p></li>
-<li><p><a name="indexterm-262"></a><tt>solaris</tt> &#8211; Allows authentication using Solaris <tt>username+password</tt> data. This realm is only supported on the Solaris operating system, version 9 and above.</p></li></ul>
+<a name="indexterm-254"></a><a name="indexterm-255"></a><p>The following realms are supported in the current release of the Enterprise Server:</p>
+<ul><li><p><a name="indexterm-256"></a><tt>file</tt> &#8211; Stores user information in a file. This is the default realm when you first install the Enterprise Server.</p></li>
+<li><p><a name="indexterm-257"></a><tt>ldap</tt> &#8211; Stores user information in an LDAP directory.</p></li>
+<li><p><a name="indexterm-258"></a><a name="indexterm-259"></a><tt>jdbc</tt> &#8211; Stores user information in a database.</p><p>In the JDBC realm, the server gets user credentials from a database. The Enterprise Server uses the database information and the enabled JDBC realm option in the configuration file. For digest authentication, a JDBC realm should be created with <tt>jdbcDigestRealm</tt> as the JAAS context.</p></li>
+<li><p><a name="indexterm-260"></a><tt>certificate</tt> &#8211; Sets up the user identity in the Enterprise Server security context, and populates it with user data obtained from cryptographically verified client certificates.</p></li>
+<li><p><a name="indexterm-261"></a><tt>solaris</tt> &#8211; Allows authentication using Solaris <tt>username+password</tt> data. This realm is only supported on the Solaris operating system, version 9 and above.</p></li></ul>
 <p>For information about configuring realms, see <a href="#beabq">How to Configure a Realm</a>.</p>
 
 <a name="beabq"></a><h4>How to Configure a Realm</h4>
-<a name="indexterm-263"></a><p>You can configure a realm in one of these ways:</p>
-<ul><li><p><a name="indexterm-264"></a>In the Administration Console, open the Security component under the relevant configuration and go to the Realms page. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-265"></a><a name="indexterm-266"></a>Use the <tt>asadmin create-auth-realm</tt> command to configure realms on local servers. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<a name="indexterm-262"></a><p>You can configure a realm in one of these ways:</p>
+<ul><li><p><a name="indexterm-263"></a>In the Administration Console, open the Security component under the relevant configuration and go to the Realms page. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-264"></a><a name="indexterm-265"></a>Use the <tt>asadmin create-auth-realm</tt> command to configure realms on local servers. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="beabr"></a><h4>How to Set a Realm for an Application or Module</h4>
-<p><a name="indexterm-267"></a>The following deployment descriptor elements have optional <tt>realm</tt> or <tt>realm-name</tt> data subelements or attributes
+<p><a name="indexterm-266"></a>The following deployment descriptor elements have optional <tt>realm</tt> or <tt>realm-name</tt> data subelements or attributes
 that override the domain&#8217;s default realm:</p>
 <ul><li><p><tt>sun-application</tt> element in <tt>sun-application.xml</tt></p></li>
 <li><p><tt>web-app</tt> element in <tt>web.xml</tt></p></li>
@@ -204,17 +204,17 @@ realm defined in <tt>sun-application.xml</tt> is used, otherwise the domain&#821
 &#60;/sun-application></pre><p>For more information about the deployment descriptor files and elements, see <a href="http://docs.sun.com/doc/820-7693/beaqi?a=view">Appendix C, <i>Elements of the Enterprise Server Deployment Descriptors,</i> in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
 
 <a name="beabs"></a><h4>Creating a Custom Realm</h4>
-<a name="indexterm-268"></a><a name="indexterm-269"></a><a name="indexterm-270"></a><a name="indexterm-271"></a><p>You can create a custom realm by providing a custom Java Authentication and
+<a name="indexterm-267"></a><a name="indexterm-268"></a><a name="indexterm-269"></a><a name="indexterm-270"></a><p>You can create a custom realm by providing a custom Java Authentication and
 Authorization Service (JAAS) login module class and a custom realm class. Note that
 client-side JAAS login modules are not suitable for use with the Enterprise Server.
 </p><p>To activate the custom login modules and realms, place the JAR files in
 the <i>domain-dir</i><tt>/lib</tt> directory or the class files in the <i>domain-dir</i><tt>/lib/classes</tt> directory. For more
-information about class loading in the Enterprise Server, see <a href="p6.html">Chapter&#160;2, Class Loaders</a>.</p><p><a name="indexterm-272"></a>JAAS is a set of APIs that enable services to authenticate and enforce
+information about class loading in the Enterprise Server, see <a href="p6.html">Chapter&#160;2, Class Loaders</a>.</p><p><a name="indexterm-271"></a>JAAS is a set of APIs that enable services to authenticate and enforce
 access controls upon users. JAAS provides a pluggable and extensible framework for programmatic
 user authentication and authorization. JAAS is a core API and an underlying technology
 for Java EE security mechanisms. For more information about JAAS, refer to the JAAS
-specification for Java SDK, available at <a href="http://java.sun.com/products/jaas/">http://java.sun.com/products/jaas/</a>.</p><p>For general information about realms and login modules, see <a href="http://docs.sun.com/doc/820-7627/bnbxj?a=view">Working with Realms, Users, Groups, and Roles in <i>The Java EE 6 Tutorial, Volume I</i></a>.</p><p>For Javadoc tool pages relevant to custom realms, go to <a href="http://java.sun.com/javaee/6/docs/api/">http://java.sun.com/javaee/6/docs/api/</a> and click
-on the <tt>com.sun.appserv.security</tt> package.</p><p><a name="indexterm-273"></a><a name="indexterm-274"></a>Custom login modules must extend the <tt>com.sun.appserv.security.AppservPasswordLoginModule</tt> class. This class implements <tt>javax.security.auth.spi.LoginModule</tt>. Custom
+specification for Java SDK, available at <a href="http://java.sun.com/products/jaas/">http://java.sun.com/products/jaas/</a>.</p><p>For general information about realms and login modules, see <a href="http://docs.sun.com/doc/820-7627/bnbxj?a=view">Working with Realms, Users, Groups, and Roles in <i>The Java EE 6 Tutorial, Volume I</i></a>.</p><p>For Javadoc tool pages relevant to custom realms, go to <a href="http://javadoc.glassfish.org/v3/apidoc/">http://javadoc.glassfish.org/v3/apidoc/</a> and click
+on the <tt>com.sun.appserv.security</tt> package.</p><p><a name="indexterm-272"></a><a name="indexterm-273"></a>Custom login modules must extend the <tt>com.sun.appserv.security.AppservPasswordLoginModule</tt> class. This class implements <tt>javax.security.auth.spi.LoginModule</tt>. Custom
 login modules must not implement <tt>LoginModule</tt> directly.</p><p>Custom login modules must provide an implementation for one abstract method defined in
 <tt>AppservPasswordLoginModule</tt>:</p><pre>abstract protected void authenticateUser() throws LoginException</pre><p>This method performs the actual authentication. The custom login module must not implement
 any of the other methods, such as <tt>login()</tt>, <tt>logout()</tt>, <tt>abort()</tt>, <tt>commit()</tt>, or
@@ -225,7 +225,7 @@ protected String _password;</pre><p>The <tt>authenticateUser()</tt> method must 
 // populate grpList with the set of groups to which
 // _username belongs in this realm, if any
 commitUserAuthentication(_username, _password, 
-  _currentRealm, grpList);</pre><p><a name="indexterm-275"></a>Custom realms must extend the <tt>com.sun.appserv.security.AppservRealm</tt> class and implement the following methods:</p><pre>public void init(Properties props) throws BadRealmException, 
+  _currentRealm, grpList);</pre><p><a name="indexterm-274"></a>Custom realms must extend the <tt>com.sun.appserv.security.AppservRealm</tt> class and implement the following methods:</p><pre>public void init(Properties props) throws BadRealmException, 
     NoSuchRealmException</pre><p>This method is invoked during server startup when the realm is initially loaded.
 The <tt>props</tt> argument contains the properties defined for this realm. The realm can
 do any initialization it needs in this method. If the method returns without
@@ -251,21 +251,21 @@ use <tt>clone</tt> on the member variables.</p>
 
 
 <a name="beabt"></a><h3>JACC Support</h3>
-<p><a name="indexterm-276"></a><a name="indexterm-277"></a><a name="indexterm-278"></a><a name="indexterm-279"></a><a name="indexterm-280"></a>JACC (Java Authorization Contract for Containers) is part of the Java EE specification and
+<p><a name="indexterm-275"></a><a name="indexterm-276"></a><a name="indexterm-277"></a><a name="indexterm-278"></a><a name="indexterm-279"></a>JACC (Java Authorization Contract for Containers) is part of the Java EE specification and
 defined by <a href="http://www.jcp.org/en/jsr/detail?id=115">JSR 115</a>. JACC defines an interface for pluggable authorization providers. Specifically, JACC
 is used to plug in the Java policy provider used by the container
 to perform Java EE caller access decisions. The Java policy provider performs Java
 policy decisions during application execution. This provides third parties with a mechanism to
 develop and plug in modules that are responsible for answering authorization decisions during Java
 EE application execution. The interfaces and rules used for developing JACC providers are
-defined in the JACC 1.0 specification.</p><p><a name="indexterm-281"></a>The Enterprise Server provides a simple file-based JACC-compliant authorization engine as a default
+defined in the JACC 1.0 specification.</p><p><a name="indexterm-280"></a>The Enterprise Server provides a simple file-based JACC-compliant authorization engine as a default
 JACC provider, named <tt>default</tt>. An alternate provider named <tt>simple</tt> is also provided. To
 configure an alternate provider using the Administration Console, open the Security component under
 the relevant configuration, and select the JACC Providers component. For details, click the
 Help button in the Administration Console.</p>
 
 <a name="beabu"></a><h3>Pluggable Audit Module Support</h3>
-<a name="indexterm-282"></a><a name="indexterm-283"></a><p>Audit modules collect and store information on incoming requests (servlets, EJB components) and
+<a name="indexterm-281"></a><a name="indexterm-282"></a><p>Audit modules collect and store information on incoming requests (servlets, EJB components) and
 outgoing responses. You can create a custom audit module. This section covers the
 following topics:</p>
 <ul><li><p><a href="#beabv">Configuring an Audit Module</a></p></li>
@@ -274,21 +274,21 @@ following topics:</p>
 
 <a name="beabv"></a><h4>Configuring an Audit Module</h4>
 <p>To configure an audit module, you can perform one of the following tasks:</p>
-<ul><li><p><a name="indexterm-284"></a>To specify an audit module using the Administration Console, open the Security component under the relevant configuration, and select the Audit Modules component. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-285"></a><a name="indexterm-286"></a>You can use the <tt></tt><tt>asadmin create-audit-module</tt> command to configure an audit module. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-283"></a>To specify an audit module using the Administration Console, open the Security component under the relevant configuration, and select the Audit Modules component. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-284"></a><a name="indexterm-285"></a>You can use the <tt></tt><tt>asadmin create-audit-module</tt> command to configure an audit module. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="beabw"></a><h4>The <tt>AuditModule</tt> Class</h4>
-<a name="indexterm-287"></a><p>You can create a custom audit module by implementing a class that extends
-<tt>com.sun.appserv.security.audit.AuditModule</tt>. </p><p>For Javadoc tool pages relevant to audit modules, go to <a href="http://java.sun.com/javaee/6/docs/api/">http://java.sun.com/javaee/6/docs/api/</a> and click
-on the <tt>com.sun.appserv.security.audit</tt> package.</p><p>The <tt>AuditModule</tt> class provides default &#8220;no-op&#8221; implementations for each of the following methods,
+<a name="indexterm-286"></a><p>You can create a custom audit module by implementing a class that extends
+<tt>com.sun.enterprise.security.audit.AuditModule</tt>. </p><p>For Javadoc tool pages relevant to audit modules, go to <a href="http://javadoc.glassfish.org/v3/apidoc/">http://javadoc.glassfish.org/v3/apidoc/</a> and click
+on the <tt>com.sun.enterprise.security.audit</tt> package.</p><p>The <tt>AuditModule</tt> class provides default &#8220;no-op&#8221; implementations for each of the following methods,
 which your custom class can override.</p><pre>public void init(Properties props)</pre><p>The preceding method is invoked during server startup when the audit module is
 initially loaded. The <tt>props</tt> argument contains the properties defined for this module. The
 module can do any initialization it needs in this method. If the method
 returns without throwing an exception, the Enterprise Server assumes the module realm is ready
-to service audit requests. If an exception is thrown, the module is disabled.</p><pre>public void authentication(String user, String realm, boolean success)</pre><p><a name="indexterm-288"></a><a name="indexterm-289"></a>This method is invoked when an authentication request has been processed by a
+to service audit requests. If an exception is thrown, the module is disabled.</p><pre>public void authentication(String user, String realm, boolean success)</pre><p><a name="indexterm-287"></a><a name="indexterm-288"></a>This method is invoked when an authentication request has been processed by a
 realm for the given user. The <tt>success</tt> flag indicates whether the authorization was granted
-or denied.</p><pre>public void webInvocation(String user, HttpServletRequest req, String type, boolean success)</pre><p><a name="indexterm-290"></a>This method is invoked when a web container call has been processed by
+or denied.</p><pre>public void webInvocation(String user, HttpServletRequest req, String type, boolean success)</pre><p><a name="indexterm-289"></a>This method is invoked when a web container call has been processed by
 authorization. The <tt>success</tt> flag indicates whether the authorization was granted or denied. The <tt>req</tt>
 object is the standard <tt>HttpServletRequest</tt> object for this request. The <tt>type</tt> string is
 one of <tt>hasUserDataPermission</tt> or <tt>hasResourcePermission</tt> (see <a href="http://www.jcp.org/en/jsr/detail?id=115">JSR 115</a>).</p><pre>public void ejbInvocation(String user, String ejb, String method, boolean success)</pre><p>This method is invoked when an EJB container call has been processed by
@@ -303,8 +303,8 @@ the endpoint representation. The <tt>success</tt> flag indicates whether the aut
 denied.</p>
 
 <a name="beabx"></a><h3>The <tt>server.policy</tt> File</h3>
-<a name="indexterm-291"></a><a name="indexterm-292"></a><p>Each Enterprise Server domain has its own global J2SE policy file, located in
-<i>domain-dir</i><tt>/config</tt>. The file is named <tt>server.policy</tt>.</p><p><a name="indexterm-293"></a>The Enterprise Server is a Java EE compliant application server. As such, it
+<a name="indexterm-290"></a><a name="indexterm-291"></a><p>Each Enterprise Server domain has its own global J2SE policy file, located in
+<i>domain-dir</i><tt>/config</tt>. The file is named <tt>server.policy</tt>.</p><p><a name="indexterm-292"></a>The Enterprise Server is a Java EE compliant application server. As such, it
 follows the requirements of the Java EE specification, including the presence of the
 security manager (the Java component that enforces the policy) and a limited permission set
 for Java EE application code.</p><p>This section covers the following topics:</p>
@@ -315,7 +315,7 @@ for Java EE application code.</p><p>This section covers the following topics:</p
 
 
 <a name="beaby"></a><h4>Default Permissions</h4>
-<a name="indexterm-294"></a><a name="indexterm-295"></a><p>Internal server code is granted all permissions. These are covered by the <tt>AllPermission</tt>
+<a name="indexterm-293"></a><a name="indexterm-294"></a><p>Internal server code is granted all permissions. These are covered by the <tt>AllPermission</tt>
 grant blocks to various parts of the server infrastructure code. Do not modify
 these entries.</p><p>Application permissions are granted in the default grant block. These permissions apply to
 all code not part of the internal server code listed previously. The Enterprise
@@ -379,7 +379,7 @@ used to customize configuration.</p></td>
 </table>
 
 <a name="beabz"></a><h4>Changing Permissions for an Application</h4>
-<a name="indexterm-296"></a><a name="indexterm-297"></a><p>The default policy for each domain limits the permissions of Java EE deployed
+<a name="indexterm-295"></a><a name="indexterm-296"></a><p>The default policy for each domain limits the permissions of Java EE deployed
 applications to the minimal set of permissions required for these applications to operate
 correctly. Do not add extra permissions to the default set (the grant block
 with no codebase, which applies to all code). Instead, add a new grant
@@ -420,13 +420,13 @@ overhead associated with it.</p>
 <p>As noted in the Java EE specification, an application should provide documentation of
 the additional permissions it needs. If an application requires extra permissions but does
 not document the set it needs, contact the application author for details.</p><p>As a last resort, you can iteratively determine the permission set an application
-needs by observing <tt>AccessControlException</tt> occurrences in the server log. </p><p><a name="indexterm-298"></a><a name="indexterm-299"></a>If this is not sufficient, you can add the <tt>-Djava.security.debug=failure</tt> JVM option to the
+needs by observing <tt>AccessControlException</tt> occurrences in the server log. </p><p><a name="indexterm-297"></a><a name="indexterm-298"></a>If this is not sufficient, you can add the <tt>-Djava.security.debug=failure</tt> JVM option to the
 domain. Use the following <tt>asadmin create-jvm-options</tt> command, then restart the server:</p><pre>asadmin create-jvm-options -Djava.security.debug=failure</pre><p>For more information about the <tt>asadmin create-jvm-options</tt> command, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p><p>You can use the J2SE standard <tt>policytool</tt> or any text editor to edit
 the <tt>server.policy</tt> file. For more information, see <a href="http://java.sun.com/docs/books/tutorial/security/tour2/index.html">http://java.sun.com/docs/books/tutorial/security/tour2/index.html</a>.</p><p>For detailed information about policy file syntax, see <a href="http://java.sun.com/javase/6/docs/technotes/guides/security/PolicyFiles.html#FileSyntax">http://java.sun.com/javase/6/docs/technotes/guides/security/PolicyFiles.html#FileSyntax</a>.</p><p>For information about using system properties in the <tt>server.policy</tt> file, see <a href="http://java.sun.com/javase/6/docs/technotes/guides/security/PolicyFiles.html#PropertyExp">http://java.sun.com/javase/6/docs/technotes/guides/security/PolicyFiles.html#PropertyExp</a>.</p><p>For detailed information about the permissions you can set in the <tt>server.policy</tt> file,
 see <a href="http://java.sun.com/javase/6/docs/technotes/guides/security/permissions.html">http://java.sun.com/javase/6/docs/technotes/guides/security/permissions.html</a>.</p><p>The Javadoc for the <tt>Permission</tt> class is at <a href="http://java.sun.com/javase/6/docs/api/java/security/Permission.html">http://java.sun.com/javase/6/docs/api/java/security/Permission.html</a>.</p>
 
 <a name="gbyah"></a><h4>Enabling and Disabling the Security Manager</h4>
-<a name="indexterm-300"></a><p>The security manager is disabled by default.</p><p>In a production environment, you may be able to safely disable the security
+<a name="indexterm-299"></a><p>The security manager is disabled by default.</p><p>In a production environment, you may be able to safely disable the security
 manager if all of the following are true:</p>
 <ul><li><p>Performance is critical</p></li>
 <li><p>Deployment to the production server is carefully controlled</p></li>
@@ -434,12 +434,12 @@ manager if all of the following are true:</p>
 <li><p>Applications don't need policy enforcement</p></li></ul>
 <p>Disabling the security manager may improve performance significantly for some types of applications.
 To disable the security manager, do one of the following:</p>
-<ul><li><p><a name="indexterm-301"></a>To use the Administration Console, open the Security component under the relevant configuration, and uncheck the Security Manager Enabled box. Then restart the server. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-302"></a><a name="indexterm-303"></a>Use the following <tt>asadmin delete-jvm-options</tt> command, then restart the server:</p><pre>asadmin delete-jvm-options -Djava.security.manager</pre><p>To re-enable the security manager, use the corresponding <tt>create-jvm-options</tt> command. For more information about the <tt>create-jvm-options</tt> and <tt>asadmin delete-jvm-options</tt> commands, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-300"></a>To use the Administration Console, open the Security component under the relevant configuration, and uncheck the Security Manager Enabled box. Then restart the server. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-301"></a><a name="indexterm-302"></a>Use the following <tt>asadmin delete-jvm-options</tt> command, then restart the server:</p><pre>asadmin delete-jvm-options -Djava.security.manager</pre><p>To re-enable the security manager, use the corresponding <tt>create-jvm-options</tt> command. For more information about the <tt>create-jvm-options</tt> and <tt>asadmin delete-jvm-options</tt> commands, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="beaca"></a><h3>Configuring Message Security for Web Services</h3>
-<a name="indexterm-304"></a><a name="indexterm-305"></a><a name="indexterm-306"></a><p>In <b>message security</b>, security information is applied at the message layer and travels along
+<a name="indexterm-303"></a><a name="indexterm-304"></a><a name="indexterm-305"></a><p>In <b>message security</b>, security information is applied at the message layer and travels along
 with the web services message. Web Services Security (WSS) is the use of
 XML Encryption and XML Digital Signatures to secure messages. WSS profiles the use of
 various security tokens including X.509 certificates, Security Assertion Markup Language (SAML) assertions, and
@@ -450,14 +450,14 @@ after transmission, regardless of how many hops they travel.</p>
 in the Web Profile.</p>
 <hr>
 
-<hr><p><b>Note - </b><a name="indexterm-307"></a>In this release of the Enterprise Server, message layer annotations are not supported.</p>
+<hr><p><b>Note - </b><a name="indexterm-306"></a>In this release of the Enterprise Server, message layer annotations are not supported.</p>
 <hr>
 <p>For more information about web services, see <a href="p11.html">Chapter&#160;6, Developing Web Services</a>.</p><p>For more information about message security, see the following:</p>
 <ul><li><p><a href="http://docs.sun.com/doc/820-7627/bnbwj?a=view">Chapter 19, Introduction to Security in the Java EE Platform, in <i>The Java EE 6 Tutorial, Volume I</i></a></p></li>
 <li><p><a href="http://docs.sun.com/doc/820-7692/ablrk?a=view">Chapter 13, Administering Message Security, in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a></p></li>
-<li><p><a name="indexterm-308"></a><a href="http://www.jcp.org/en/jsr/detail?id=196">JSR 196</a>, Java Authentication Service Provider Interface for Containers</p></li>
-<li><p><a name="indexterm-309"></a>The Liberty Alliance Project specifications at <a href="http://www.projectliberty.org/resources/specifications.php">http://www.projectliberty.org/resources/specifications.php</a></p></li>
-<li><p><a name="indexterm-310"></a><a name="indexterm-311"></a><a name="indexterm-312"></a>The Oasis Web Services Security (WSS) specification at <a href="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf</a></p></li>
+<li><p><a name="indexterm-307"></a><a href="http://www.jcp.org/en/jsr/detail?id=196">JSR 196</a>, Java Authentication Service Provider Interface for Containers</p></li>
+<li><p><a name="indexterm-308"></a>The Liberty Alliance Project specifications at <a href="http://www.projectliberty.org/resources/specifications.php">http://www.projectliberty.org/resources/specifications.php</a></p></li>
+<li><p><a name="indexterm-309"></a><a name="indexterm-310"></a><a name="indexterm-311"></a>The Oasis Web Services Security (WSS) specification at <a href="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf">http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf</a></p></li>
 <li><p>The Web Services Interoperability Organization (WS-I) Basic Security Profile (BSP) specification at <a href="http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html">http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html</a></p></li>
 <li><p>The XML and Web Services Security page at <a href="https://xwss.dev.java.net/">https://xwss.dev.java.net/</a></p></li>
 <li><p>The WSIT page at <a href="https://wsit.dev.java.net/">https://wsit.dev.java.net/</a></p></li></ul>
@@ -472,50 +472,50 @@ in the Web Profile.</p>
 <p>When you first install the Enterprise Server, the providers <tt>XWS_ClientProvider</tt> and <tt>XWS_ServerProvider</tt>
 are configured but disabled. You can enable them in one of the following
 ways:</p>
-<ul><li><p><a name="indexterm-313"></a>To enable the message security providers using the Administration Console, open the Security component under the relevant configuration, select the Message Security component, and select SOAP. Then select <tt>XWS_ServerProvider</tt> from the Default Provider list and <tt>XWS_ClientProvider</tt> from the Default Client Provider list. For details, click the Help button in the Administration Console.</p></li>
+<ul><li><p><a name="indexterm-312"></a>To enable the message security providers using the Administration Console, open the Security component under the relevant configuration, select the Message Security component, and select SOAP. Then select <tt>XWS_ServerProvider</tt> from the Default Provider list and <tt>XWS_ClientProvider</tt> from the Default Client Provider list. For details, click the Help button in the Administration Console.</p></li>
 <li><p>You can enable the message security providers using the following commands.</p><pre>asadmin set 
 server-config.security-service.message-security-config.SOAP.default_provider=XWS_ServerProvider
 asadmin set 
-server-config.security-service.message-security-config.SOAP.default_client_provider=XWS_ClientProvider</pre><p>For more information about the <tt>asadmin set</tt> command, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.<a name="indexterm-314"></a><a name="indexterm-315"></a></p></li></ul>
+server-config.security-service.message-security-config.SOAP.default_client_provider=XWS_ClientProvider</pre><p>For more information about the <tt>asadmin set</tt> command, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.<a name="indexterm-313"></a><a name="indexterm-314"></a></p></li></ul>
 <p>The example described in <a href="#beaci">Understanding and Running the Sample Application</a> uses the <tt>ClientProvider</tt> and <tt>ServerProvider</tt> providers, which are
-enabled when the <tt>asant</tt> targets are run. You don&#8217;t need to enable these
+enabled when the Ant targets are run. You don&#8217;t need to enable these
 on the Enterprise Server prior to running the example.</p><p>If you install the Access Manager, you have these additional provider choices:</p>
 <ul><li><p><tt>AMClientProvider</tt> and <tt>AMServerProvider</tt> &#8211; These providers secure web services and Simple Object Access Protocol (SOAP) messages using either WS-I BSP or Liberty ID-WSF tokens. These providers are used automatically if they are configured as the default providers. If you wish to override any provider settings, you can configure these providers in <tt>message-security-binding</tt> elements in the <tt>sun-web.xml</tt>, <tt>sun-ejb-jar.xml</tt>, and <tt>sun-application-client.xml</tt> deployment descriptor files.</p></li>
 <li><p><tt>AMHttpProvider</tt> &#8211; This provider handles the initial end user authentication for securing web services using Liberty ID-WSF tokens and redirects requests to the Access Manager for single sign-on. To use this provider, specify it in the <tt>httpservlet-security-provider</tt> attribute of the <tt>sun-web-app</tt> element in the <tt>sun-web.xml</tt> file.</p></li></ul>
 <p>Liberty specifications can be viewed at <a href="http://www.projectliberty.org/resources/specifications.php">http://www.projectliberty.org/resources/specifications.php</a>. The WS-I BSP specification can
 be viewed at <a href="http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html">http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html</a>.</p><p>For more information about the Sun-specific deployment descriptor files, see the <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p><p>For information about configuring these providers in the Enterprise Server, see <a href="http://docs.sun.com/doc/820-7692/ablrk?a=view">Chapter 13, Administering Message Security, in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>. For additional
 information about overriding provider settings, see <a href="#beacf">Application-Specific Message Protection</a>.</p><p>You can create new message security providers in one of the following ways:</p>
-<ul><li><p><a name="indexterm-316"></a>To create a message security provider using the Administration Console, open the Security component under the relevant configuration, and select the Message Security component. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-317"></a><a name="indexterm-318"></a>You can use the <tt></tt><tt>asadmin create-message-security-provider</tt> command to create a message security provider. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-315"></a>To create a message security provider using the Administration Console, open the Security component under the relevant configuration, and select the Message Security component. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-316"></a><a name="indexterm-317"></a>You can use the <tt></tt><tt>asadmin create-message-security-provider</tt> command to create a message security provider. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 <p>In addition, you can set a few optional provider properties using the
 <tt>asadmin set</tt> command. For example:</p><pre>asadmin set server-config.security-service.message-security-config.provider-config.property.debug=true</pre><p>The following table describes these message security provider properties.</p><h6>Table&#160;5-2 Message Security Provider Properties</h6><table><col width="15%"><col width="13%"><col width="70%"><tr><th align="left" valign="top" scope="column"><p>Property</p></th>
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-319"></a><tt>security.config</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-318"></a><tt>security.config</tt></p></td>
 <td align="left" valign="top" scope="row"><p><i>domain-dir</i><tt>/config/wss-server-config-1.0.xml</tt></p></td>
 <td align="left" valign="top" scope="row"><p>Specifies the location of the
 message security configuration file. To point to a configuration file in the <i>domain-dir</i><tt>/config</tt>
 directory, use the system property <tt>${com.sun.aas.instanceRoot}/config/</tt>, for example:</p><p><tt>${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml</tt></p><p>See <a href="#gilzz">System Properties</a>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-320"></a><tt>debug</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-319"></a><tt>debug</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>If <tt>true</tt>, enables dumping
 of server provider debug messages to the server log.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-321"></a><tt>dynamic.username.password</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-320"></a><tt>dynamic.username.password</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>If <tt>true</tt>, signals the provider
 runtime to collect the user name and password from the <tt>CallbackHandler</tt> for each request.
 If <tt>false</tt>, the user name and password for <tt>wsse:UsernameToken(s)</tt> is collected once, during module
 initialization. This property is only applicable for a <tt>ClientAuthModule</tt>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-322"></a><tt>encryption.key.alias</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-321"></a><tt>encryption.key.alias</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>s1as</tt></p></td>
 <td align="left" valign="top" scope="row"><p>Specifies the encryption key
 used by the provider. The key is identified by its <tt>keystore</tt> alias.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-323"></a><tt>signature.key.alias</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-322"></a><tt>signature.key.alias</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>s1as</tt></p></td>
 <td align="left" valign="top" scope="row"><p>Specifies the
 signature key used by the provider. The key is identified by its <tt>keystore</tt>
@@ -524,7 +524,7 @@ alias.</p></td>
 </table>
 
 <a name="beacb"></a><h4>Message Security Responsibilities</h4>
-<p><a name="indexterm-324"></a>In the Enterprise Server, the system administrator and application deployer roles are expected
+<p><a name="indexterm-323"></a>In the Enterprise Server, the system administrator and application deployer roles are expected
 to take primary responsibility for configuring message security. In some situations, the application developer
 may also contribute, although in the typical case either of the other roles
 may secure an existing application without changing its implementation and without involving the
@@ -563,7 +563,7 @@ are stored in key stores and are managed with <tt>keytool</tt>. System administr
 are discussed in <a href="http://docs.sun.com/doc/820-7692/ablrk?a=view">Chapter 13, Administering Message Security, in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p>
 
 <a name="beacf"></a><h4>Application-Specific Message Protection</h4>
-<a name="indexterm-325"></a><p>When the Enterprise Server provided configuration is insufficient for your security needs, and
+<a name="indexterm-324"></a><p>When the Enterprise Server provided configuration is insufficient for your security needs, and
 you want to override the default protection, you can apply <b>application-specific message security</b> to a web
 service.</p><p>Application-specific security is implemented by adding the message security binding to the web
 service endpoint, whether it is an EJB or servlet web service endpoint. Modify
@@ -661,7 +661,7 @@ mechanisms.</p>
 <li><b>Compile, deploy, and run the application as described in <a href="#beack">To Run the Sample Application</a>.</b></li></ol>
 
 <a name="beaci"></a><h4>Understanding and Running the Sample Application</h4>
-<a name="indexterm-326"></a><p>This section discusses the WSS sample application. This sample application is installed on
+<a name="indexterm-325"></a><p>This section discusses the WSS sample application. This sample application is installed on
 your system only if you installed the J2EE 1.4 samples. If you have
 not installed these samples, see <a href="#beacj">To Set Up the Sample Application</a>.</p><p>The objective of this sample application is to demonstrate how a web service
 can be secured with WSS. The web service in the <tt>xms</tt> example
@@ -673,7 +673,7 @@ WSDL file for the service endpoint interface at <i>app-dir</i><tt>/xms-ejb/src/c
 in <a href="#beacj">To Set Up the Sample Application</a>.</p><p>In this application, the client looks up the service using the JNDI name
 <tt>java:comp/env/service/HelloWorld</tt> and gets the port information using a static stub to invoke the
 operation using a given name. For the name Duke, the client gets the
-response <tt>Hello Duke!</tt></p><p><a name="indexterm-327"></a>This example shows how to use message security for web services at the
+response <tt>Hello Duke!</tt></p><p><a name="indexterm-326"></a>This example shows how to use message security for web services at the
 Enterprise Server level. For information about using message security at the application level,
 see <a href="#beacf">Application-Specific Message Protection</a>. The WSS message security mechanisms implement message-level authentication (for example, XML digital
 signature and encryption) of SOAP web services invocations using the X.509 and username/password
@@ -699,7 +699,7 @@ following command.</p><pre>unzip j2eesdk-1_4_03-samples.zip -d j2ee14-samples</p
 
 <a name="beack"></a><h5>To Run the Sample Application</h5>
 <ol>
-<li><b>Make sure that the Enterprise Server is running.</b><p>Message security providers are set up when the <tt>asant</tt> targets are run, so you
+<li><b>Make sure that the Enterprise Server is running.</b><p>Message security providers are set up when the Ant targets are run, so you
 do not need to configure these on the Enterprise Server prior to running
 this example.</p></li>
 <li><b>If you are not running HTTP on the default port of 8080, change
@@ -714,12 +714,12 @@ your installation and environment. If you need a more detailed description of th
 file, refer to the &#8220;Configuration&#8221; section for the web services security applications at
 <i>as-install</i><tt>/j2ee14&#8211;samples/samples/webservices/security/docs/common.html#Logging</tt>.</p></li>
 <li><b>Change to the <i>app-dir</i> directory.</b></li>
-<li><b>Run the following <tt>asant</tt> targets to compile, deploy, and run the example application:</b><ol style="list-style-type: lower-alpha">
-<li><b>To compile samples:</b><p><tt>asant</tt></p></li>
-<li><b>To deploy samples:</b><p><tt>asant deploy</tt></p></li>
-<li><b>To run samples:</b><p><tt>asant run</tt></p></li></ol><p>If the sample has compiled and deployed properly, you see the following response
+<li><b>Run the following Ant targets to compile, deploy, and run the example application:</b><ol style="list-style-type: lower-alpha">
+<li><b>To compile samples:</b><p><tt>ant</tt></p></li>
+<li><b>To deploy samples:</b><p><tt>ant deploy</tt></p></li>
+<li><b>To run samples:</b><p><tt>ant run</tt></p></li></ol><p>If the sample has compiled and deployed properly, you see the following response
 on your screen after the application has run:</p><p><tt>run:[echo] Running the xms program:[exec] Established message level security : Hello Duke!</tt></p></li>
-<li><b>To undeploy the sample, run the following <tt>asant</tt> target:</b><pre>asant undeploy</pre><p>All of the web services security examples use the same web service name
+<li><b>To undeploy the sample, run the following Ant target:</b><pre>ant undeploy</pre><p>All of the web services security examples use the same web service name
 (<tt>HelloWorld</tt>) and web service ports. These examples show only the differences necessary for
 protecting web services using various mechanisms. Make sure to undeploy an application when you
 have completed running it. If you do not, you receive an <tt>Already in Use</tt>
@@ -727,7 +727,7 @@ error and deployment failures when you try to deploy another web services exampl
 application.</p></li></ol>
 
 <a name="beacm"></a><h3>Programmatic Login</h3>
-<p><a name="indexterm-328"></a><a name="indexterm-329"></a><a name="indexterm-330"></a><a name="indexterm-331"></a>Programmatic login allows a deployed Java EE application or module to invoke a
+<p><a name="indexterm-327"></a><a name="indexterm-328"></a><a name="indexterm-329"></a><a name="indexterm-330"></a>Programmatic login allows a deployed Java EE application or module to invoke a
 login method. If the login is successful, a <tt>SecurityContext</tt> is established as if the
 client had authenticated using any of the conventional Java EE mechanisms. Programmatic login
 is supported for servlet and EJB components on the server side, and for
@@ -763,17 +763,17 @@ catch the access control or security exception, perform a programmatic login, an
 the request.</p>
 
 <a name="beaco"></a><h4>Granting Programmatic Login Permission</h4>
-<a name="indexterm-332"></a><p>The <tt>ProgrammaticLoginPermission</tt> permission is required to invoke the programmatic login mechanism for an
+<a name="indexterm-331"></a><p>The <tt>ProgrammaticLoginPermission</tt> permission is required to invoke the programmatic login mechanism for an
 application if the security manager is enabled. For information about the security manager, see
 <a href="#beabx">The <tt>server.policy</tt> File</a>. This permission is not granted by default to deployed applications because this is
-not a standard Java EE mechanism.</p><p><a name="indexterm-333"></a>To grant the required permission to the application, add the following to the
+not a standard Java EE mechanism.</p><p><a name="indexterm-332"></a>To grant the required permission to the application, add the following to the
 <i>domain-dir</i><tt>/config/server.policy</tt> file:</p><pre>grant codeBase "file:<i>jar-file-path</i>" {
      permission com.sun.appserv.security.ProgrammaticLoginPermission
      "login";
  };</pre><p>The <i>jar-file-path</i> is the path to the application&#8217;s JAR file.</p>
 
 <a name="beacp"></a><h4>The <tt>ProgrammaticLogin</tt> Class</h4>
-<p><a name="indexterm-334"></a><a name="indexterm-335"></a>The <tt>com.sun.appserv.security.ProgrammaticLogin</tt> class enables a user to perform login programmatically.</p><p>For Javadoc tool pages relevant to programmatic login, go to <a href="http://java.sun.com/javaee/6/docs/api/">http://java.sun.com/javaee/6/docs/api/</a> and click
+<p><a name="indexterm-333"></a><a name="indexterm-334"></a>The <tt>com.sun.appserv.security.ProgrammaticLogin</tt> class enables a user to perform login programmatically.</p><p>For Javadoc tool pages relevant to programmatic login, go to <a href="http://javadoc.glassfish.org/v3/apidoc/">http://javadoc.glassfish.org/v3/apidoc/</a> and click
 on the <tt>com.sun.appserv.security</tt> package.</p><p>The <tt>ProgrammaticLogin</tt> class has four <tt>login</tt> methods, two for servlets or JSP
 files and two for EJB components.</p><p>The login methods for servlets or JSP files have the following signatures:</p><pre>public java.lang.Boolean login(String user, String password, 
     javax.servlet.http.HttpServletRequest request, 
@@ -798,7 +798,7 @@ logout failed.</p><p>If the <tt>errors</tt> flag is set to <tt>true</tt>, any ex
 logout are propagated to the caller. If set to <tt>false</tt>, exceptions are thrown.</p>
 
 <a name="beacq"></a><h3>User Authentication for Single Sign-on</h3>
-<a name="indexterm-336"></a><a name="indexterm-337"></a><p>The single sign-on feature of the Enterprise Server allows multiple web applications deployed
+<a name="indexterm-335"></a><a name="indexterm-336"></a><p>The single sign-on feature of the Enterprise Server allows multiple web applications deployed
 to the same virtual server to share the user authentication state. With single
 sign-on enabled, users who log in to one web application become implicitly logged into
 other web applications on the same virtual server that require the same authentication
@@ -823,7 +823,7 @@ asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-max-ina
 asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-reap-interval-seconds="60"</pre><p>For more information about the <tt>asadmin set</tt> command, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
 
 <a name="gizel"></a><h3>Adding Authentication Mechanisms to the Servlet Container</h3>
-<p>You can use JSR 196 in the web tier to facilitate the
+<a name="indexterm-337"></a><a name="indexterm-338"></a><a name="indexterm-339"></a><a name="indexterm-340"></a><p>You can use JSR 196 in the web tier to facilitate the
 injection of pluggable authentication modules within the servlet constraint processing engine. The Enterprise Server
 includes implementations of a number of HTTP layer authentication mechanisms such as basic,
 form, and digest authentication. You can add alternative implementations of the included mechanisms or
@@ -1097,7 +1097,7 @@ a JAR file containing the compiled SAM to the <i>as-install</i><tt>/lib</tt> dir
 
 <a name="gizfe"></a><h4>Configuring a Server Authentication Module</h4>
 <p>You can configure a SAM in one of these ways:</p>
-<ul><li><p><a name="indexterm-338"></a>In the Administration Console, open the Security component under the relevant configuration and go to the Message Security page. Set the following options:</p>
+<ul><li><p><a name="indexterm-341"></a>In the Administration Console, open the Security component under the relevant configuration and go to the Message Security page. Set the following options:</p>
 <ul><li><p>Authentication Layer &#8212; <tt>HttpServlet</tt></p></li>
 <li><p>Provider Type &#8212; <tt>server</tt> or <tt>client-server</tt></p></li>
 <li><p>Provider ID &#8212; Specify a unique name for the SAM, for example <tt>MySAM</tt></p></li>
@@ -1105,7 +1105,7 @@ a JAR file containing the compiled SAM to the <i>as-install</i><tt>/lib</tt> dir
 <li><p>Additional Property &#8212; Name: <tt>group-name</tt> Value: <tt>user</tt></p></li>
 <li><p>Additional Property &#8212; Name: <tt>realm-name</tt> Value: <tt>Sam</tt></p></li></ul>
 <p>For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-339"></a><a name="indexterm-340"></a>Use the <tt>asadmin create-message-security-provider</tt> command to configure a SAM. Set the following options:</p>
+<li><p><a name="indexterm-342"></a><a name="indexterm-343"></a>Use the <tt>asadmin create-message-security-provider</tt> command to configure a SAM. Set the following options:</p>
 <ul><li><p><tt>--layer HttpServlet</tt></p></li>
 <li><p><tt>--providertype server</tt> or <tt>--providertype client-server</tt></p></li>
 <li><p><tt>--classname tip.sam.MySam</tt></p></li>

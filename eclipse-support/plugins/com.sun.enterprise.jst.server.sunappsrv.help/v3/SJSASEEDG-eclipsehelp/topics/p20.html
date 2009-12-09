@@ -6,7 +6,7 @@
 <title>Using the JDBC API for Database Access - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,11 +25,11 @@
 </table>
 
 
-<a name="beamj"></a>Chapter&#160;14<h3>Using the JDBC API for Database Access</h3><a name="indexterm-768"></a><p>This chapter describes how to use the Java<sup>TM</sup> Database Connectivity (JDBC<sup>TM</sup>) API for
-database access with the Sun GlassFish Enterprise Server. This chapter also provides high level
+<a name="beamj"></a>Chapter&#160;14<h3>Using the JDBC API for Database Access</h3><a name="indexterm-790"></a><p>This chapter describes how to use the Java<sup>TM</sup> Database Connectivity (JDBC<sup>TM</sup>) API for
+database access with the Sun GlassFish<sup>TM</sup> Enterprise Server. This chapter also provides high level
 JDBC implementation instructions for servlets and EJB components using the Enterprise Server. If
 the JDK version 1.6 is used, the Enterprise Server supports the JDBC 4.0
-API.</p><p><a name="indexterm-769"></a><a name="indexterm-770"></a>The JDBC specifications are available at <a href="http://java.sun.com/products/jdbc/download.html">http://java.sun.com/products/jdbc/download.html</a>.</p><p><a name="indexterm-771"></a>A useful JDBC tutorial is located at <a href="http://java.sun.com/docs/books/tutorial/jdbc/index.html">http://java.sun.com/docs/books/tutorial/jdbc/index.html</a>.</p>
+API.</p><p><a name="indexterm-791"></a><a name="indexterm-792"></a>The JDBC specifications are available at <a href="http://java.sun.com/products/jdbc/download.html">http://java.sun.com/products/jdbc/download.html</a>.</p><p><a name="indexterm-793"></a>A useful JDBC tutorial is located at <a href="http://java.sun.com/docs/books/tutorial/jdbc/index.html">http://java.sun.com/docs/books/tutorial/jdbc/index.html</a>.</p>
 <hr><p><b>Note - </b>The Enterprise Server does not support connection pooling or transactions for an application&#8217;s
 database access if it does not use standard Java EE <tt>DataSource</tt> objects.</p>
 <hr>
@@ -44,6 +44,7 @@ database access if it does not use standard Java EE <tt>DataSource</tt> objects.
 the Enterprise Server, perform the following tasks:</p>
 <ul><li><p><a href="#beaml">Integrating the JDBC Driver</a></p></li>
 <li><p><a href="#beamo">Creating a JDBC Connection Pool</a></p></li>
+<li><p><a href="#gjkag">Modifying a JDBC Connection Pool</a></p></li>
 <li><p><a href="#beamp">Testing a JDBC Connection Pool</a></p></li>
 <li><p><a href="#giyeb">Flushing a JDBC Connection Pool</a></p></li>
 <li><p><a href="#beamq">Creating a JDBC Resource</a></p></li></ul>
@@ -55,11 +56,11 @@ the Enterprise Server, then you must set up the driver. This section covers
 these topics:</p>
 <ul><li><p><a href="#beamm">Supported Database Drivers</a></p></li>
 <li><p><a href="#beamn">Making the JDBC Driver JAR Files Accessible</a></p></li>
-<li><p><a href="#giyff">Detecting Installed Drivers</a></p></li></ul>
+<li><p><a href="#giyff">Automatic Detection of Installed Drivers</a></p></li></ul>
 
 
 <a name="beamm"></a><h5>Supported Database Drivers</h5>
-<a name="indexterm-772"></a><a name="indexterm-773"></a><p>Supported JDBC drivers are those that have been fully tested by Sun. For
+<a name="indexterm-794"></a><a name="indexterm-795"></a><p>Supported JDBC drivers are those that have been fully tested by Sun. For
 a list of the JDBC drivers currently supported by the Enterprise Server, see
 the <i><a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Preview Release Notes</i></a></i>. For configurations of supported and other drivers, see <a href="http://docs.sun.com/doc/820-7692/beamw?a=view">Configuration Specifics for JDBC Drivers in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p>
 <hr><p><b>Note - </b>Because the drivers and databases supported by the Enterprise Server are constantly being
@@ -69,37 +70,52 @@ Sun technical support for the latest database support information.</p>
 
 
 <a name="beamn"></a><h5>Making the JDBC Driver JAR Files Accessible</h5>
-<a name="indexterm-774"></a><p>To integrate the JDBC driver into an Enterprise Server domain, copy the JAR
-files into the <i>domain-dir</i><tt>/lib</tt> directory, then restart the server. This makes classes accessible to
-all applications or modules deployed on servers that share the same configuration. For
-more information about Enterprise Server class loaders, see <a href="p6.html">Chapter&#160;2, Class Loaders</a>.</p><p>If you are using an Oracle database with EclipseLink extensions, copy the JAR files
-into the <i>domain-dir</i><tt>/lib/ext</tt> directory, then restart the server. For details, see <a href="p12.html#giqbi">Oracle Database Enhancements</a>.</p>
+<a name="indexterm-796"></a><p>To integrate the JDBC driver into an Enterprise Server domain, copy the JAR
+files into the <i>domain-dir</i><tt>/lib</tt> directory, then restart the server. This makes classes accessible
+to all applications or modules deployed on servers that share the same configuration. For
+more information about Enterprise Server class loaders, see <a href="p6.html">Chapter&#160;2, Class Loaders</a>.</p><p>If you are using an Oracle database with EclipseLink extensions, copy the JAR
+files into the <i>domain-dir</i><tt>/lib/ext</tt> directory, then restart the server. For details, see <a href="p12.html#giqbi">Oracle Database Enhancements</a>.</p>
 
-<a name="giyff"></a><h5>Detecting Installed Drivers</h5>
-<a name="indexterm-775"></a><a name="indexterm-776"></a><p>You can detect installed JDBC drivers when you create a JDBC connection pool
-using the Administration Console. Open the Resources component, open the JDBC component, select
-Connection Pools, and select the Detect Installed Drivers button. For details, click the
-Help button in the Administration Console from the JDBC Connection Pools page.</p>
+<a name="giyff"></a><h5>Automatic Detection of Installed Drivers</h5>
+<a name="indexterm-797"></a><a name="indexterm-798"></a><p>The Administration Console detects installed JDBC Drivers automatically when you create a JDBC
+connection pool. To create a JDBC connection pool using the Administration Console, open
+the Resources component, open the JDBC component, select Connection Pools, and click on
+the New button. This displays the New JDBC Connection Pool page.</p><p>Based on the Resource Type and Database Vendor you select on the New
+JDBC Connection Pool page, data source or driver implementation class names are listed
+in the Datasource Classname or Driver Classname field when you click on the
+Next button. When you choose a specific implementation class name on the next
+page, additional properties relevant to the installed JDBC driver are displayed in the
+Additional Properties section.</p>
 
 <a name="beamo"></a><h4>Creating a JDBC Connection Pool</h4>
-<a name="indexterm-777"></a><p>When you create a connection pool that uses JDBC technology (a <b>JDBC connection pool</b>) in
+<a name="indexterm-799"></a><p>When you create a connection pool that uses JDBC technology (a <b>JDBC connection pool</b>) in
 the Enterprise Server, you can define many of the characteristics of your database
 connections.</p><p>You can create a JDBC connection pool in one of these ways:</p>
-<ul><li><p><a name="indexterm-778"></a>In the Administration Console, open the Resources component, open the JDBC component, and select Connection Pools. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-779"></a><a name="indexterm-780"></a>Use the <tt>asadmin create-jdbc-connection-pool</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-800"></a>In the Administration Console, open the Resources component, open the JDBC component, select Connection Pools, and click on the New button. This displays the New JDBC Connection Pool page. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-801"></a><a name="indexterm-802"></a>Use the <tt>asadmin create-jdbc-connection-pool</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 <p>For a complete description of JDBC connection pool features, see the <a href="http://docs.sun.com/doc/820-7692"><i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p>
+
+<a name="gjkag"></a><h4>Modifying a JDBC Connection Pool</h4>
+<a name="indexterm-803"></a><p>In the Administration Console, some JDBC connection pool attributes are advanced, and you
+cannot set them during JDBC connection pool creation. You can only set them
+when modifying an existing JDBC connection pool. You can also use the <tt>asadmin set</tt>
+command to set or reset a JDBC connection pool's attributes.</p><p>You can modify a JDBC connection pool in one of these ways:</p>
+<ul><li><p><a name="indexterm-804"></a><a name="indexterm-805"></a>In the Administration Console, open the Resources component, open the JDBC component, select Connection Pools, and click on the name of the connection pool you want to modify. This displays the Edit Connection Pool page. To edit advanced attributes, click on the Advanced tab. This displays the Edit Connection Pool Advanced Attributes page. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-806"></a><a name="indexterm-807"></a>Use the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.pooling=false</pre><p>For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+
 
 <a name="beamp"></a><h4>Testing a JDBC Connection Pool</h4>
 <p>You can test a JDBC connection pool for usability in one of these
 ways:</p>
-<ul><li><p><a name="indexterm-781"></a>In the Administration Console, open the Resources component, open the JDBC component, select Connection Pools, and select the connection pool you want to test. Then select the Ping button in the top right corner of the page. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-782"></a><a name="indexterm-783"></a>Use the <tt>asadmin ping-connection-pool</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-808"></a>In the Administration Console, open the Resources component, open the JDBC component, select Connection Pools, and select the connection pool you want to test. Then select the Ping button in the top left corner of the page. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-809"></a><a name="indexterm-810"></a>Use the <tt>asadmin ping-connection-pool</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 <p>Both these commands fail and display an error message unless they successfully connect
 to the connection pool.</p><p>You can also specify that a connection pool is automatically tested when created or
 reconfigured by setting the Ping attribute to <tt>true</tt> (the default is <tt>false</tt>) in
 one of the following ways:</p>
-<ul><li><p><a name="indexterm-784"></a>Enter a Ping value in the JDBC Connection Pools page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-785"></a><a name="indexterm-786"></a>Specify the <tt>--ping</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-811"></a><a name="indexterm-812"></a>Enter a Ping value in the New JDBC Connection Pool or Edit Connection Pool page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-813"></a><a name="indexterm-814"></a>Specify the <tt>--ping</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><p><a name="indexterm-815"></a><a name="indexterm-816"></a>Specify the <tt>ping</tt> option in the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.ping=true</pre><p>For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="giyeb"></a><h4>Flushing a JDBC Connection Pool</h4>
@@ -108,15 +124,15 @@ brings the pool to the steady pool size without the need for reconfiguring
 the pool. Connection pool reconfiguration can result in application redeployment, which is a
 time-consuming operation. Flushing destroys existing connections, and any existing transactions are lost and must
 be retired.</p><p>You can flush a JDBC connection pool in one of these ways:</p>
-<ul><li><p><a name="indexterm-787"></a>In the Administration Console, open the Resources component, open the JDBC component, select Connection Pools, and select the connection pool you want to flush. Then select the Flush button in the top right corner of the page. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-788"></a><a name="indexterm-789"></a>Use the <tt>asadmin flush-connection-pool</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-817"></a>In the Administration Console, open the Resources component, open the JDBC component, select Connection Pools, and select the connection pool you want to flush. Then select the Flush button in the top left corner of the page. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-818"></a><a name="indexterm-819"></a>Use the <tt>asadmin flush-connection-pool</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="beamq"></a><h4>Creating a JDBC Resource</h4>
-<a name="indexterm-790"></a><p>A JDBC resource, also called a data source, lets you make connections to
+<a name="indexterm-820"></a><p>A JDBC resource, also called a data source, lets you make connections to
 a database using <tt>getConnection()</tt>. Create a JDBC resource in one of these ways:</p>
-<ul><li><p><a name="indexterm-791"></a>In the Administration Console, open the Resources component, open the JDBC component, and select JDBC Resources. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-792"></a><a name="indexterm-793"></a>Use the <tt>asadmin create-jdbc-resource</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-821"></a>In the Administration Console, open the Resources component, open the JDBC component, and select JDBC Resources. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-822"></a><a name="indexterm-823"></a>Use the <tt>asadmin create-jdbc-resource</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="beamr"></a><h3>Creating Applications That Use the JDBC API</h3>
@@ -138,13 +154,15 @@ and connects to one or more databases. This section covers these topics:</p>
 
 
 <a name="giyfu"></a><h5>Using an Initialization Statement</h5>
-<p>You can specify a statement that executes each time a connection is created
-(not reused) in a JDBC connection pool. This is useful for setting request
-or session specific properties and is suited for homogeneous requests in a single
-application. Set the Init SQL attribute of the JDBC connection pool to the
-SQL string to be executed in one of the following ways:</p>
-<ul><li><p><a name="indexterm-794"></a>Enter an Init SQL value in the JDBC Connection Pools page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-795"></a><a name="indexterm-796"></a>Specify the <tt>--initsql</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<p>You can specify a statement that executes each time a physical connection to
+the database is created (not reused) from a JDBC connection pool. This is
+useful for setting request or session specific properties and is suited for homogeneous
+requests in a single application. Set the Init SQL attribute of the JDBC
+connection pool to the SQL string to be executed in one of the
+following ways:</p>
+<ul><li><p><a name="indexterm-824"></a>Enter an Init SQL value in the Edit Connection Pool Advanced Attributes page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-825"></a><a name="indexterm-826"></a>Specify the <tt>--initsql</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><p><a name="indexterm-827"></a><a name="indexterm-828"></a>Specify the <tt>init-sql</tt> option in the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.init-sql="<i>sql-string</i>"</pre><p>For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="ghqrx"></a><h5>Setting a Statement Timeout</h5>
@@ -154,8 +172,8 @@ Setting a statement timeout guarantees that all queries automatically time out i
 completed within the specified period. When statements are created, the <tt>queryTimeout</tt> is set according
 to the statement timeout setting. This works only when the underlying JDBC driver
 supports <tt>queryTimeout</tt> for <tt>Statement</tt>, <tt>PreparedStatement</tt>, <tt>CallableStatement</tt>, and <tt>ResultSet</tt>.</p><p>You can specify a statement timeout in the following ways:</p>
-<ul><li><p><a name="indexterm-797"></a>Enter a Statement Timeout value in the JDBC Connection Pools page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-798"></a><a name="indexterm-799"></a>Specify the <tt>--statementtimeout</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-829"></a>Enter a Statement Timeout value in the Edit Connection Pool Advanced Attributes page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-830"></a><a name="indexterm-831"></a>Specify the <tt>--statementtimeout</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="giyci"></a><h5>Statement Caching</h5>
@@ -166,32 +184,36 @@ and creating new statements each time is eliminated.</p><p>Statement caching is 
 Server provides caching for drivers that do not support caching. To enable this
 feature, set the Statement Cache Size for the JDBC connection pool in one
 of the following ways:</p>
-<ul><li><p><a name="indexterm-800"></a>Enter a Statement Cache Size value in the JDBC Connection Pools page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-801"></a><a name="indexterm-802"></a>Specify the <tt>--statementcachesize</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-832"></a>Enter a Statement Cache Size value in the Edit Connection Pool Advanced Attributes page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-833"></a><a name="indexterm-834"></a>Specify the <tt>--statementcachesize</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><p><a name="indexterm-835"></a><a name="indexterm-836"></a>Specify the <tt>statement-cache-size</tt> option in the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.statement-cache-size=10</pre><p>For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 <p>By default, this attribute is set to zero and the statement caching is
-turned off. You can set any value between <tt>0</tt> and <tt>10</tt>. The
-built-in cache eviction strategy is LRU-based (Least Recently Used). When a connection pool
-is flushed, the connections in the statement cache are recreated. </p>
+turned off. To enable statement caching, you can set any positive nonzero value.
+The built-in cache eviction strategy is LRU-based (Least Recently Used). When a connection
+pool is flushed, the connections in the statement cache are recreated. </p>
 
 <a name="giygg"></a><h5>Statement Tracing</h5>
 <p>You can trace the SQL statements executed by applications that use a JDBC
 connection pool. Set the SQL Trace Listeners attribute to a comma-separated list of
 trace listener implementation classes in one of the following ways:</p>
-<ul><li><p><a name="indexterm-803"></a>Enter an SQL Trace Listeners value in the JDBC Connection Pools page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-804"></a><a name="indexterm-805"></a>Specify the <tt>--sqltracelisteners</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-837"></a>Enter an SQL Trace Listeners value in the Edit Connection Pool Advanced Attributes page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-838"></a><a name="indexterm-839"></a>Specify the <tt>--sqltracelisteners</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><p><a name="indexterm-840"></a><a name="indexterm-841"></a>Specify the <tt>sql-trace-listeners</tt> option in the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.sql-trace-listeners=<i>listeners</i></pre><p>For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 <p>The Enterprise Server provides a public interface, <tt>org.glassfish.api.jdbc.SQLTraceListener</tt>, that implements a means
-of recording <tt>SQLTraceRecord</tt> objects. The Enterprise Server provides an SQL tracing logger to
-log the SQL operations in the form of <tt>SQLTraceRecord</tt> objects in the <tt>server.log</tt>
-file. The module name under which the SQL operation is logged is <tt>javax.enterprise.resource.jdbc.sqltrace</tt>. SQL
-traces are logged as FINE messages along with the module name to enable
-easy filtering of the SQL logs. A sample SQL trace record looks like
-this:</p><pre>[#|2009-05-21T18:43:01.968+0530|FINE|glassfish|javax.enterprise.resource.jdbc.sqltrace|
-_ThreadID=18;_ThreadName=Thread-1;|java.sql.PreparedStatement|executeUpdate|
-arg[0] [ insert into table1(colName) values (100) ], arg[1] [colName]|#]</pre><p>This trace shows that an <tt>executeUpdate(String sql, String columnNames)</tt> operation is being done.</p>
+of recording <tt>SQLTraceRecord</tt> objects. To make custom implementations of this interface available to
+the Enterprise Server, place the implementation classes in <i>as-install</i><tt>/lib</tt>.</p><p>The Enterprise Server provides an SQL tracing logger to log the SQL operations
+in the form of <tt>SQLTraceRecord</tt> objects in the <tt>server.log</tt> file. The module name
+under which the SQL operation is logged is <tt>javax.enterprise.resource.sqltrace</tt>. SQL traces are logged
+as FINE messages along with the module name to enable easy filtering of
+the SQL logs. A sample SQL trace record looks like this:</p><pre>[#|2009-11-27T15:46:52.202+0530|FINE|glassfishv3.0|javax.enterprise.resource.sqltrace.com.sun.gjc.util
+|_ThreadID=29;_ThreadName=Thread-1;ClassName=com.sun.gjc.util.SQLTraceLogger;MethodName=sqlTrace;
+|ThreadID=77 | ThreadName=p: thread-pool-1; w: 6 | TimeStamp=1259317012202 
+| ClassName=com.sun.gjc.spi.jdbc40.PreparedStatementWrapper40 | MethodName=executeUpdate 
+| arg[0]=insert into table1(colName) values(100) | arg[1]=columnNames | |#]</pre><p>This trace shows that an <tt>executeUpdate(String sql, String columnNames)</tt> operation is being done.</p>
 
 <a name="giyeq"></a><h4>Connections</h4>
 <p>The following features pertain to connections:</p>
-<ul><li><p><a href="#giygl">Disabling Pooling for a Connection</a></p></li>
+<ul><li><p><a href="#giygl">Disabling Pooling</a></p></li>
 <li><p><a href="#giydr">Associating Connections with Threads</a></p></li>
 <li><p><a href="#giyfg">Custom Connection Validation</a></p></li>
 <li><p><a href="#beams">Sharing Connections</a></p></li>
@@ -199,12 +221,23 @@ arg[0] [ insert into table1(colName) values (100) ], arg[1] [colName]|#]</pre><p
 <li><p><a href="#gipzl">Handling Invalid Connections</a></p></li></ul>
 
 
-<a name="giygl"></a><h5>Disabling Pooling for a Connection</h5>
+<a name="giygl"></a><h5>Disabling Pooling</h5>
 <p>To disable connection pooling, set the Pooling attribute to false. The default is
 true. You can enable or disable connection pooling in one of the following
 ways:</p>
-<ul><li><p><a name="indexterm-806"></a>Enter a Pooling value in the JDBC Connection Pools page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-807"></a><a name="indexterm-808"></a>Specify the <tt>--pooling</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-842"></a>Enter a Pooling value in the Edit Connection Pool Advanced Attributes page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-843"></a><a name="indexterm-844"></a>Specify the <tt>--pooling</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><p><a name="indexterm-845"></a><a name="indexterm-846"></a>Specify the <tt>pooling</tt> option in the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.pooling=false</pre><p>For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<p>The <tt>pooling</tt> option and the system property <tt>com.sun.enterprise.connectors.SwitchoffACCConnectionPooling</tt>, which turns off connection
+pooling in the Application Client Container, do not affect each other.</p><p>An exception is thrown if <tt>associate-with-thread</tt> is set to <tt>true</tt> and pooling is
+disabled. An exception is thrown if you attempt to flush a connection pool
+when pooling is disabled. A warning is logged if the following attributes are
+used, because they are useful only in a pooled environment:</p>
+<ul><li><p><tt>connection-validation</tt></p></li>
+<li><p><tt>validate-atmost-once-period</tt></p></li>
+<li><p><tt>match-connections</tt></p></li>
+<li><p><tt>max-connection-usage</tt></p></li>
+<li><p><tt>idle-timeout</tt></p></li></ul>
 
 
 <a name="giydr"></a><h5>Associating Connections with Threads</h5>
@@ -224,27 +257,31 @@ Max Thread Pool Size value is much higher than the Max Pool Size
 value, a lot of time is spent associating connections with a new thread
 after dissociating them from an older one. Use this attribute in cases where
 the thread pool should reuse connections to avoid this overhead.</p><p>You can set the Associate With Thread attribute in the following ways:</p>
-<ul><li><p><a name="indexterm-809"></a><a name="indexterm-810"></a>Enter an Associate With Thread value in the JDBC Connection Pools page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-811"></a><a name="indexterm-812"></a><a name="indexterm-813"></a><a name="indexterm-814"></a>Specify the <tt>--associatewiththread</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-847"></a>Enter an Associate With Thread value in the Edit Connection Pool Advanced Attributes page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-848"></a><a name="indexterm-849"></a>Specify the <tt>--associatewiththread</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><p><a name="indexterm-850"></a><a name="indexterm-851"></a>Specify the <tt>associate-with-thread</tt> option in the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.associate-with-thread=true</pre><p>For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="giyfg"></a><h5>Custom Connection Validation</h5>
-<p>You can specify a custom implementation for connection validation that is faster or
-optimized for a specific database. Set the Connection Validation Method attribute to the
-value Custom Validation. (Other validation methods available are Table (the default), Auto Commit, and
-Metadata.) The Enterprise Server provides a public interface, <tt>org.glassfish.api.jdbc.ConnectionValidation</tt>, which you can
-implement to plug in your implementation. A new attribute, Validation Classname, specifies the
-fully qualified name of the class that implements the <tt>ConnectionValidation</tt> interface. The Validation Classname
-attribute is required if Connection Validation Method is set to Custom Validation.</p><p>To enable this feature, set Connection Validation Method and Validation Classname for the
-JDBC connection pool in one of the following ways:</p>
-<ul><li><p><a name="indexterm-815"></a><a name="indexterm-816"></a>Enter Connection Validation Method and Validation Classname values in the JDBC Connection Pools page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-817"></a><a name="indexterm-818"></a><a name="indexterm-819"></a><a name="indexterm-820"></a>Specify the <tt>--connectionvalidation</tt> and <tt>--validationclassname</tt> options in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<p>You can specify a custom implementation for Connection Validation that is faster or
+optimized for a specific database. Set the Validation Method attribute to the value
+<tt>custom-validation</tt>. (Other validation methods available are <tt>table</tt> (the default), <tt>auto-commit</tt>, and <tt>meta-data</tt>.) The Enterprise Server
+provides a public interface, <tt>org.glassfish.api.jdbc.ConnectionValidation</tt>, which you can implement to plug in
+your implementation. A new attribute, Validation Classname, specifies the fully qualified name of the
+class that implements the <tt>ConnectionValidation</tt> interface. The Validation Classname attribute is required if
+Connection Validation is enabled and Validation Method is set to Custom Validation.</p><p>To enable this feature, set Connection Validation, Validation Method, and Validation Classname for
+the JDBC connection pool in one of the following ways:</p>
+<ul><li><p><a name="indexterm-852"></a><a name="indexterm-853"></a><a name="indexterm-854"></a>Enter Connection Validation, Validation Method, and Validation Classname values in the Edit Connection Pool Advanced Attributes page in the Administration Console. You can select from among validation class names for common databases in the Validation Classname field. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-855"></a><a name="indexterm-856"></a><a name="indexterm-857"></a><a name="indexterm-858"></a><a name="indexterm-859"></a><a name="indexterm-860"></a>Specify the <tt>--isconnectionvalidatereq</tt>, <tt>--validationmethod</tt>, and <tt>--validationclassname</tt> options in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><p><a name="indexterm-861"></a><a name="indexterm-862"></a><a name="indexterm-863"></a><a name="indexterm-864"></a><a name="indexterm-865"></a><a name="indexterm-866"></a>Specify the <tt>is-connection-validation-required</tt>, <tt>connection-validation-method</tt>, and <tt>validation-classname</tt> options in the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.MyPool.is-connection-validation-required=true
+asadmin set domain1.resources.jdbc-connection-pool.MyPool.connection-validation-method=custom-validation
+asadmin set domain1.resources.jdbc-connection-pool.MyPool.validation-classname=<i>impl-class</i></pre><p>For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 <p>By default, optimized validation mechanisms are provided for Java DB, MySQL, Oracle, and
 PostgreSQL databases. Additionally, for JDBC 4.0 compliant database drivers, a validation mechanism is
 provided that uses the <tt>Connection.isValid(0)</tt> implementation.</p>
 
 <a name="beams"></a><h5>Sharing Connections</h5>
-<a name="indexterm-821"></a><a name="indexterm-822"></a><p>When multiple connections acquired by an application use the same JDBC resource, the
+<a name="indexterm-867"></a><a name="indexterm-868"></a><p>When multiple connections acquired by an application use the same JDBC resource, the
 connection pool provides connection sharing within the same transaction scope. For example, suppose
 Bean A starts a transaction and obtains a connection, then calls a method
 in Bean B. If Bean B acquires a connection to the same JDBC
@@ -255,7 +292,7 @@ in a component&#8217;s deployment descriptor by setting the <tt>res-sharing-scop
 particular resource reference. To turn off connection sharing, set <tt>res-sharing-scope</tt> to <tt>Unshareable</tt>.</p><p>For general information about connections and JDBC URLs, see <a href="http://docs.sun.com/doc/820-7692/ablih?a=view">Chapter 15, Administering Database Connectivity , in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p>
 
 <a name="gezfh"></a><h5>Marking Bad Connections</h5>
-<a name="indexterm-823"></a><p>The <tt>DataSource</tt> implementation in the Enterprise Server provides a <tt>markConnectionAsBad</tt> method. A marked
+<a name="indexterm-869"></a><p>The <tt>DataSource</tt> implementation in the Enterprise Server provides a <tt>markConnectionAsBad</tt> method. A marked
 bad connection is removed from its connection pool when it is closed. The
 method signature is as follows:</p><pre>public void markConnectionAsBad(java.sql.Connection con)</pre><p>For example:</p><pre>com.sun.appserv.jdbc.DataSource ds=
    (com.sun.appserv.jdbc.DataSource)context.lookup("dataSource");
@@ -274,7 +311,7 @@ finally{
 }</pre>
 
 <a name="gipzl"></a><h5>Handling Invalid Connections</h5>
-<a name="indexterm-824"></a><a name="indexterm-825"></a><a name="indexterm-826"></a><a name="indexterm-827"></a><p>If a <tt>ConnectionErrorOccured</tt> event occurs, the Enterprise Server considers the connection invalid and
+<a name="indexterm-870"></a><a name="indexterm-871"></a><a name="indexterm-872"></a><a name="indexterm-873"></a><p>If a <tt>ConnectionErrorOccured</tt> event occurs, the Enterprise Server considers the connection invalid and
 removes the connection from the connection pool. Typically, a JDBC driver generates a <tt>ConnectionErrorOccured</tt>
 event when it finds a <tt>ManagedConnection</tt> object unusable. Reasons can be database failure,
 network failure with the database, fatal problems with the connection pool, and so
@@ -283,15 +320,15 @@ and a single connection fails, all connections are closed and recreated. If this
 is <tt>false</tt>, individual connections are recreated only when they are used. The default
 is <tt>false</tt>.</p><p>The <tt>is-connection-validation-required</tt> setting specifies whether connections have to be validated before being given to
 the application. If a resource&#8217;s validation fails, it is destroyed, and a new
-resource is created and returned. The default is <tt>false</tt>.</p><p>The <tt>PreferValidateOverRecreate</tt> property specifies that validating idle connections is preferable to closing them.
-This property has no effect on non-idle connections. If set to <tt>true</tt>, idle connections
+resource is created and returned. The default is <tt>false</tt>.</p><p>The <tt>prefer-validate-over-recreate</tt> property specifies that validating idle connections is preferable to closing them. This
+property has no effect on non-idle connections. If set to <tt>true</tt>, idle connections
 are validated during pool resizing, and only those found to be invalid are
-destroyed and recreated. If <tt>false</tt>, all idle connections are destroyed and recreated during
-pool resizing. The default is <tt>false</tt>.</p><p>You can set the <tt>fail-all-connections</tt>, <tt>is-connection-validation-required</tt>, and <tt>PreferValidateOverRecreate</tt> configuration settings during creation of
+destroyed and recreated. If <tt>false</tt>, all idle connections are destroyed and recreated during pool
+resizing. The default is <tt>false</tt>.</p><p>You can set the <tt>fail-all-connections</tt>, <tt>is-connection-validation-required</tt>, and <tt>prefer-validate-over-recreate</tt> configuration settings during creation of
 a JDBC connection pool. Or, you can use the <tt>asadmin set</tt> command to dynamically
 reconfigure a setting. For example:</p><pre>asadmin set server.resources.jdbc-connection-pool.JCPool1.fail-all-connections="true"
 asadmin set server.resources.jdbc-connection-pool.JCPool1.is-connection-validation-required="true"
-asadmin set server.resources.jdbc-connection-pool.JCPool1.property.PreferValidateOverRecreate="true"</pre><p>For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p><p>The interface <tt>ValidatingManagedConnectionFactory</tt> exposes the method <tt>getInvalidConnections</tt> to allow retrieval of the invalid connections.
+asadmin set server.resources.jdbc-connection-pool.JCPool1.property.prefer-validate-over-recreate="true"</pre><p>For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p><p>The interface <tt>ValidatingManagedConnectionFactory</tt> exposes the method <tt>getInvalidConnections</tt> to allow retrieval of the invalid connections.
 The Enterprise Server checks if the JDBC driver implements this interface, and if
 it does, invalid connections are removed when the connection pool is resized.</p>
 
@@ -305,14 +342,13 @@ it does, invalid connections are removed when the connection pool is resized.</p
 <a name="ghqxi"></a><h5>Wrapping Connections</h5>
 <p>If the Wrap JDBC Objects option is <tt>true</tt> (the default), wrapped JDBC objects
 are returned for <tt>Statement</tt>, <tt>PreparedStatement</tt>, <tt>CallableStatement</tt>, <tt>ResultSet</tt>, and <tt>DatabaseMetaData</tt>.</p><p>This option ensures that <tt>Statement.getConnection()</tt> is the same as <tt>DataSource.getConnection()</tt>. Therefore, this option should
-be <tt>true</tt> when both <tt>Statement.getConnection()</tt> and <tt>DataSource.getConnection()</tt> are done. The default is <tt>false</tt>
-to avoid breaking existing applications.</p><p>You can specify the Wrap JDBC Objects option in the following ways:</p>
-<ul><li><p><a name="indexterm-828"></a>Check or uncheck the Wrap JDBC Objects box on the JDBC Connection Pools page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-829"></a><a name="indexterm-830"></a>Specify the <tt>--wrapjdbcobjects</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+be <tt>true</tt> when both <tt>Statement.getConnection()</tt> and <tt>DataSource.getConnection()</tt> are done.</p><p>You can specify the Wrap JDBC Objects option in the following ways:</p>
+<ul><li><p><a name="indexterm-874"></a>Check or uncheck the Wrap JDBC Objects box on the Edit Connection Pool Advanced Attributes page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-875"></a><a name="indexterm-876"></a>Specify the <tt>--wrapjdbcobjects</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="beamt"></a><h5>Obtaining a Physical Connection From a Wrapped Connection</h5>
-<a name="indexterm-831"></a><a name="indexterm-832"></a><p>The <tt>DataSource</tt> implementation in the Enterprise Server provides a <tt>getConnection</tt> method that retrieves
+<a name="indexterm-877"></a><a name="indexterm-878"></a><p>The <tt>DataSource</tt> implementation in the Enterprise Server provides a <tt>getConnection</tt> method that retrieves
 the JDBC driver&#8217;s <tt>SQLConnection</tt> from the Enterprise Server&#8217;s <tt>Connection</tt> wrapper. The method signature is
 as follows:</p><pre>public java.sql.Connection getConnection(java.sql.Connection con) 
 throws java.sql.SQLException</pre><p>For example:</p><pre>InitialContext ctx = new InitialContext();
@@ -325,7 +361,7 @@ Connection drivercon = ds.getConnection(con); //get physical connection from wra
 con.close(); // return wrapped connection to pool.</pre>
 
 <a name="ggrum"></a><h5>Using the <tt>Connection.unwrap()</tt> Method</h5>
-<a name="indexterm-833"></a><a name="indexterm-834"></a><p>If the JDK version 1.6 is used, the Enterprise Server supports JDBC 4.0
+<a name="indexterm-879"></a><a name="indexterm-880"></a><p>If the JDK version 1.6 is used, the Enterprise Server supports JDBC 4.0
  if the JDBC driver is JDBC 4.0 compliant. Using the <tt>Connection.unwrap()</tt>
 method on a vendor-provided interface returns an object or a wrapper object implementing
 the vendor-provided interface, which the application can make use of to do vendor-specific
@@ -340,9 +376,10 @@ vendor's documentation for information on these interfaces.</p>
 
 
 <a name="beamu"></a><h5>Using Non-Transactional Connections</h5>
-<a name="indexterm-835"></a><p>You can specify a non-transactional database connection in any of these ways:</p>
-<ul><li><p><a name="indexterm-836"></a>Check the Non-Transactional Connections box on the JDBC Connection Pools page in the Administration Console. The default is unchecked. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-837"></a><a name="indexterm-838"></a>Specify the <tt>--nontransactionalconnections</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<a name="indexterm-881"></a><p>You can specify a non-transactional database connection in any of these ways:</p>
+<ul><li><p><a name="indexterm-882"></a><a name="indexterm-883"></a>Check the Non-Transactional Connections box on the New JDBC Connection Pool or Edit Connection Pool page in the Administration Console. The default is unchecked. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-884"></a><a name="indexterm-885"></a>Specify the <tt>--nontransactionalconnections</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><p><a name="indexterm-886"></a><a name="indexterm-887"></a>Specify the <tt>non-transactional-connections</tt> option in the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.non-transactional-connections=true</pre><p>For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
 <li><p>Use the <tt>DataSource</tt> implementation in the Enterprise Server, which provides a <tt>getNonTxConnection</tt> method. This method retrieves a JDBC connection that is not in the scope of any transaction. There are two variants.</p><pre>public java.sql.Connection getNonTxConnection() throws java.sql.SQLException</pre><pre>public java.sql.Connection getNonTxConnection(String user, String password) 
    throws java.sql.SQLException</pre></li>
 <li><p>Create a resource with the JNDI name ending in <tt>__nontx</tt>. This forces all connections looked up using this resource to be non transactional.</p></li></ul>
@@ -355,38 +392,39 @@ a transaction is in progress that modifies the database, the query retrieves the
 unmodified data in the database. This is because the in-progress transaction hasn&#8217;t committed. For
 another example, if a non-transactional connection modifies the database and a transaction that
 is running simultaneously rolls back, the changes made by the non-transactional connection are
-not rolled back.</p><p><a name="indexterm-839"></a>Here is a typical use case for a non-transactional connection: a component that
+not rolled back.</p><p><a name="indexterm-888"></a>Here is a typical use case for a non-transactional connection: a component that
 is updating a database in a transaction context spanning over several iterations of a
 loop can refresh cached data by using a non-transactional connection to read data
 before the transaction commits.</p>
 
 <a name="beamv"></a><h5>Using JDBC Transaction Isolation Levels</h5>
 <p>For general information about transactions, see <a href="p21.html">Chapter&#160;15, Using the Transaction Service</a> and <a href="http://docs.sun.com/doc/820-7692/ablsn?a=view">Chapter 22, Administering the Transaction Service, in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>. For information about last
-agent optimization, which can improve performance, see <a href="p21.html#beano">Transaction Scope</a>.</p><p><a name="indexterm-840"></a><a name="indexterm-841"></a>Not all database vendors support all transaction isolation levels available in the JDBC API.
+agent optimization, which can improve performance, see <a href="p21.html#beano">Transaction Scope</a>.</p><p><a name="indexterm-889"></a><a name="indexterm-890"></a>Not all database vendors support all transaction isolation levels available in the JDBC API.
 The Enterprise Server permits specifying any isolation level your database supports. The following
 table defines transaction isolation levels.</p><a name="fvyoi"></a><h6>Table&#160;14-1 Transaction Isolation Levels</h6><table><col width="36%"><col width="63%"><tr><th align="left" valign="top" scope="column"><p>Transaction Isolation Level</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>TRANSACTION_READ_UNCOMMITTED</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><tt>read-uncommitted</tt></p></td>
 <td align="left" valign="top" scope="row"><p>Dirty reads, non-repeatable reads, and phantom reads
 can occur.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>TRANSACTION_READ_COMMITTED</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><tt>read-committed</tt></p></td>
 <td align="left" valign="top" scope="row"><p>Dirty reads are prevented; non-repeatable reads and phantom reads can occur.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>TRANSACTION_REPEATABLE_READ</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><tt>repeatable-read</tt></p></td>
 <td align="left" valign="top" scope="row"><p>Dirty reads
 and non-repeatable reads are prevented; phantom reads can occur.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>TRANSACTION_SERIALIZABLE</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><tt>serializable</tt></p></td>
 <td align="left" valign="top" scope="row"><p>Dirty reads, non-repeatable reads and
 phantom reads are prevented.</p></td>
 </tr>
 </table><p>You can specify the transaction isolation level in the following ways:</p>
-<ul><li><p><a name="indexterm-842"></a>Select the value from the Transaction Isolation drop-down list on the JDBC Connection Pools page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-843"></a><a name="indexterm-844"></a>Specify the <tt>--isolationlevel</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
-<p><a name="indexterm-845"></a>Note that you cannot call <tt>setTransactionIsolation()</tt> during a transaction.</p><p>You can set the default transaction isolation level for a JDBC connection pool.
-For details, see <a href="#beamo">Creating a JDBC Connection Pool</a>.</p><p><a name="indexterm-846"></a>To verify that a level is supported by your database management system, test
+<ul><li><p><a name="indexterm-891"></a><a name="indexterm-892"></a>Select the value from the Transaction Isolation drop-down list on the New JDBC Connection Pool or Edit Connection Pool page in the Administration Console. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-893"></a><a name="indexterm-894"></a>Specify the <tt>--isolationlevel</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><p><a name="indexterm-895"></a><a name="indexterm-896"></a>Specify the <tt>transaction-isolation-level</tt> option in the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.transaction-isolation-level=serializable</pre><p>For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<p><a name="indexterm-897"></a>Note that you cannot call <tt>setTransactionIsolation()</tt> during a transaction.</p><p>You can set the default transaction isolation level for a JDBC connection pool.
+For details, see <a href="#beamo">Creating a JDBC Connection Pool</a>.</p><p><a name="indexterm-898"></a>To verify that a level is supported by your database management system, test
 your database programmatically using the <tt>supportsTransactionIsolationLevel()</tt> method in <tt>java.sql.DatabaseMetaData</tt>, as shown in the
 following example:</p><pre>InitialContext ctx = new InitialContext();
 DataSource ds = (DataSource)
@@ -403,30 +441,25 @@ the pool, which can lead to errors.</p>
 
 <a name="giydy"></a><h4>Other Features</h4>
 <p>The following additional features related to JDBC are provided:</p>
-<ul><li><p><a href="#gavro">Allowing Non-Component Callers</a></p></li>
-<li><p><a href="#giydx">Using Application-Scoped Databases</a></p></li></ul>
+<ul><li><p><a href="#gavro">Allowing Non-Component Callers</a></p></li></ul>
 
 
 <a name="gavro"></a><h5>Allowing Non-Component Callers</h5>
-<a name="indexterm-847"></a><p>You can allow non-Java-EE components, such as servlet filters, lifecycle modules, and third
+<a name="indexterm-899"></a><p>You can allow non-Java-EE components, such as servlet filters, lifecycle modules, and third
 party persistence managers, to use this JDBC connection pool. The returned connection is
 automatically enlisted with the transaction context obtained from the transaction manager. Standard Java EE
 components can also use such pools. Connections obtained by non-component callers are not
 automatically closed at the end of a transaction by the container. They must
 be explicitly closed by the caller.</p><p>You can enable non-component callers in the following ways:</p>
-<ul><li><p><a name="indexterm-848"></a>Check the Allow Non Component Callers box on the JDBC Connection Pools page in the Administration Console. The default is <tt>false</tt>. For more information, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-849"></a><a name="indexterm-850"></a>Specify the <tt>--allownoncomponentcallers</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<ul><li><p><a name="indexterm-900"></a>Check the Allow Non Component Callers box on the Edit Connection Pool Advanced Attributes page in the Administration Console. The default is <tt>false</tt>. For more information, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-901"></a><a name="indexterm-902"></a>Specify the <tt>--allownoncomponentcallers</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
+<li><p><a name="indexterm-903"></a><a name="indexterm-904"></a>Specify the <tt>allow-non-component-callers</tt> option in the <tt>asadmin set</tt> command. For example:</p><pre>asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.allow-non-component-callers=true</pre><p>For more information, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li>
 <li><p>Create a JDBC resource with a <tt>__pm</tt> suffix.</p></li></ul>
-<p><a name="indexterm-851"></a>Accessing a <tt>DataSource</tt> using the <tt>Synchronization.beforeCompletion()</tt> method requires setting Allow Non Component Callers to
+<p><a name="indexterm-905"></a>Accessing a <tt>DataSource</tt> using the <tt>Synchronization.beforeCompletion()</tt> method requires setting Allow Non Component Callers to
 <tt>true</tt>. For more information about the Transaction Synchronization Registry, see <a href="p21.html#gaxit">The Transaction Manager, the Transaction Synchronization Registry, and <tt>UserTransaction</tt></a>.</p>
 
-<a name="giydx"></a><h5>Using Application-Scoped Databases</h5>
-<a name="indexterm-852"></a><a name="indexterm-853"></a><p>You can define an application-scoped database or other resource for an enterprise application,
-web module, EJB module, connector module, or application client module by supplying a
-<tt>sun-resources.xml</tt> deployment descriptor file. For details, see <a href="http://docs.sun.com/doc/820-7693/giydj?a=view">Application-Scoped Resources in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
-
 <a name="geqvg"></a><h3>Restrictions and Optimizations</h3>
-<a name="indexterm-854"></a><p>This section discusses restrictions and performance optimizations that affect using the JDBC API.</p>
+<a name="indexterm-906"></a><p>This section discusses restrictions and performance optimizations that affect using the JDBC API.</p>
 
 <a name="geqvy"></a><h4>Disabling Stored Procedure Creation on Sybase</h4>
 <p>By default, DataDirect and Sun GlassFish JDBC drivers for Sybase databases create a

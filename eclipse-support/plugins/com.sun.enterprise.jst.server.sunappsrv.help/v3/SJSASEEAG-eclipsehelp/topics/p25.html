@@ -6,7 +6,7 @@
 <title>Administering the Java Message Service (JMS)  - Sun GlassFish Enterprise Server v3 Administration Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -32,7 +32,7 @@ JMS resources in the Enterprise Server environment by using the <tt>asadmin</tt>
 not in the Web Profile.</p>
 <hr>
 <p>The following topics are addressed here:</p>
-<ul><li><p><a href="#gipit">About JMS</a></p></li>
+<ul><li><p><a href="#gipit">About the JMS</a></p></li>
 <li><p><a href="#ablkj">Administering JMS Physical Destinations</a></p></li>
 <li><p><a href="#ablkb">Administering JMS Connection Factories and Destinations</a></p></li>
 <li><p><a href="#gipbg">Administering JMS Hosts</a></p></li>
@@ -42,8 +42,8 @@ not in the Web Profile.</p>
 <p>Instructions for accomplishing the task in this chapter by using the Administration
 Console are contained in the Administration Console online help. </p>
 
-<a name="gipit"></a><h3>About JMS</h3>
-<a name="indexterm-888"></a><a name="indexterm-889"></a><p>The JMS API is a messaging standard that allows Java EE applications and
+<a name="gipit"></a><h3>About the JMS</h3>
+<a name="indexterm-935"></a><a name="indexterm-936"></a><p>The JMS API is a messaging standard that allows Java EE applications and
 components to create, send, receive, and read messages. It enables distributed communication that
 is loosely coupled, reliable, and asynchronous. </p><p>Enterprise Server support for JMS messaging, in general, and for message-driven beans in
 particular, requires a <b>JMS provider</b>. Enterprise Server uses the Sun GlassFish Message Queue software
@@ -66,7 +66,7 @@ can be updated without restarting Enterprise Server is the default JMS host.</p>
 
 <a name="giplw"></a><h4>Message Queue Broker Modes</h4>
 <p>Message Queue can be integrated with Enterprise Server in LOCAL, REMOTE, or EMBEDDED
-mode. These modes are represented by the JMS <tt>type</tt> attribute.<a name="indexterm-890"></a></p>
+mode. These modes are represented by the JMS <tt>type</tt> attribute.<a name="indexterm-937"></a></p>
 <ul><li><p><b>LOCAL Mode.</b> Enterprise Server starts and stops the Message Queue broker that is specified as the default JMS host. The Message Queue process is started in a separate virtual machine from the Enterprise Server process. Enterprise Server supplies an additional port to the broker, which is used by the broker to start the RMI registry. This port number will be equal to the configured JMS port for that instance, plus 100. For example, if the JMS port number is 37676, then this additional port number is 37776.</p><p>In LOCAL mode, use the Start Arguments attribute to specify Message Queue broker startup parameters.</p></li>
 <li><p><b>REMOTE Mode.</b> When the type attribute is set to REMOTE, the Message Queue broker must be started and stopped separately from Enterprise Server. Message Queue tools must be used to configure and tune the broker. In this situation, Enterprise Server uses an externally&#8211;configured broker or broker cluster. REMOTE type is most suitable for clusters. </p><p>In REMOTE mode, you must specify Message Queue broker startup parameters using Message Queue tools. The Start Arguments attribute is ignored.</p></li>
 <li><p><b>EMBEDDED Mode (default).</b> When the JMS type attribute is set to EMBEDDED, Enterprise Server and the JMS broker are colocated in the same virtual machine. The JMS Service is started in-process and managed by Enterprise Server. </p><p>In EMBEDDED mode, the JMS operations bypass the networking stack, which leads to performance optimization.</p></li></ul>
@@ -91,47 +91,48 @@ period specified by a Message Queue configuration property.</p><p>The following 
 <li><p><a href="#giouv">To Delete a JMS Physical Destination</a></p></li></ul>
 
 
-<a name="gioue"></a><h4>To Create a JMS Physical Destination</h4><a name="indexterm-891"></a><a name="indexterm-892"></a><a name="indexterm-893"></a><a name="indexterm-894"></a><a name="indexterm-895"></a><a name="indexterm-896"></a><p>For production purposes, always create physical destinations. During the development and testing phase,
+<a name="gioue"></a><h4>To Create a JMS Physical Destination</h4><a name="indexterm-938"></a><a name="indexterm-939"></a><a name="indexterm-940"></a><a name="indexterm-941"></a><a name="indexterm-942"></a><a name="indexterm-943"></a><p>For production purposes, always create physical destinations. During the development and testing phase,
 however, this step is not required. Use the <tt>create-jmsdest</tt> subcommand in remote mode
 to create a physical destination.</p><p>Because a physical destination is actually a Message Queue object rather than a
 server object, you use Message Queue broker commands to update properties. For information
 on Message Queue properties, see <a href="http://docs.sun.com/doc/821-0027"><i>Sun GlassFish Message Queue 4.4 Administration Guide</i></a>.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>Create a JMS physical destination by using the <a href="http://docs.sun.com/doc/820-7701/create-jmsdest-1?a=view"><tt>create-jmsdest</tt>(1)</a> subcommand.</b><p>Information about the properties for this subcommand is included in this help page.</p></li>
+<li><b>Create a JMS physical destination by using the <a href="http://docs.sun.com/doc/820-7701/create-jmsdest-1?a=view"><tt>create-jmsdest</tt>(1)</a> subcommand.</b><p>Information about the properties for the subcommand is included in this help page.</p></li>
 <li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
-restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="gioxt"></a><h6>Example&#160;19-1 Creating a JMS Physical Destination</h6><p>This example creates a queue named <tt>PhysicalQueue</tt>:</p><pre>asadmin> <tt><b>create-jmsdest --desttype queue --property User=public:Password=public PhysicalQueue</b></tt>
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="gioxt"></a><h6>Example&#160;19-1 Creating a JMS Physical Destination</h6><p>This example creates a queue named <tt>PhysicalQueue</tt>.</p><pre>asadmin> <tt><b>create-jmsdest --desttype queue --property </b></tt>
+<tt><b>User=public:Password=public PhysicalQueue</b></tt>
 Command create-jmsdest executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help create-jmsdest</tt> at the command line.</p>
 
-<a name="gioyp"></a><h4>To List JMS Physical Destinations</h4><a name="indexterm-897"></a><a name="indexterm-898"></a><a name="indexterm-899"></a><p>Use the <tt>list-jmsdest</tt> subcommand in remote mode to list the existing JMS physical
+<a name="gioyp"></a><h4>To List JMS Physical Destinations</h4><a name="indexterm-944"></a><a name="indexterm-945"></a><a name="indexterm-946"></a><p>Use the <tt>list-jmsdest</tt> subcommand in remote mode to list the existing JMS physical
 destinations.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>List the existing JMS physical destinations by using the <a href="http://docs.sun.com/doc/820-7701/list-jmsdest-1?a=view"><tt>list-jmsdest</tt>(1)</a> subcommand.</b></li></ol><a name="gioxo"></a><h6>Example&#160;19-2 Listing JMS Physical Destinations</h6><p>This example lists the physical destinations for the default server instance:</p><pre>asadmin> <tt><b>list-jmsdest</b></tt>
+<li><b>List the existing JMS physical destinations by using the <a href="http://docs.sun.com/doc/820-7701/list-jmsdest-1?a=view"><tt>list-jmsdest</tt>(1)</a> subcommand.</b></li></ol><a name="gioxo"></a><h6>Example&#160;19-2 Listing JMS Physical Destinations</h6><p>This example lists the physical destinations for the default server instance.</p><pre>asadmin> <tt><b>list-jmsdest</b></tt>
 PhysicalQueue queue {} 
 PhysicalTopic topic {}
 Command list-jmsdest executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help list-jmsdest</tt> at the command line.</p>
 
-<a name="giowx"></a><h4>To Purge Messages From a Physical Destination</h4><a name="indexterm-900"></a><a name="indexterm-901"></a><a name="indexterm-902"></a><a name="indexterm-903"></a><p>Use the <tt>flush-jmsdest</tt> subcommand in remote mode to purge the messages from a
+<a name="giowx"></a><h4>To Purge Messages From a Physical Destination</h4><a name="indexterm-947"></a><a name="indexterm-948"></a><a name="indexterm-949"></a><a name="indexterm-950"></a><p>Use the <tt>flush-jmsdest</tt> subcommand in remote mode to purge the messages from a
 physical destination in the specified target's JMS service configuration.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>Purge messages from the a JMS physical destination by using the <a href="http://docs.sun.com/doc/820-7701/flush-jmsdest-1?a=view"><tt>flush-jmsdest</tt>(1)</a>
 subcommand.</b></li>
 <li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
-restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giows"></a><h6>Example&#160;19-3 Flushing Messages From a JMS Physical Destination</h6><p>This example purges messages from the queue named <tt>PhysicalQueue</tt>:</p><pre>asadmin> <tt><b>flush-jmsdest --desttype queue PhysicalQueue</b></tt>
+restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giows"></a><h6>Example&#160;19-3 Flushing Messages From a JMS Physical Destination</h6><p>This example purges messages from the queue named <tt>PhysicalQueue</tt>.</p><pre>asadmin> <tt><b>flush-jmsdest --desttype queue PhysicalQueue</b></tt>
 Command flush-jmsdest executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help flush-jmsdest</tt> at the command line.</p>
 
-<a name="giouv"></a><h4>To Delete a JMS Physical Destination</h4><a name="indexterm-904"></a><a name="indexterm-905"></a><a name="indexterm-906"></a><a name="indexterm-907"></a><a name="indexterm-908"></a><p>Use the <tt>delete-jmsdest</tt> subcommand in remote mode to remove the specified JMS physical
+<a name="giouv"></a><h4>To Delete a JMS Physical Destination</h4><a name="indexterm-951"></a><a name="indexterm-952"></a><a name="indexterm-953"></a><a name="indexterm-954"></a><a name="indexterm-955"></a><p>Use the <tt>delete-jmsdest</tt> subcommand in remote mode to remove the specified JMS physical
 destination.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>List the existing JMS physical destinations by using the <a href="http://docs.sun.com/doc/820-7701/list-jmsdest-1?a=view"><tt>list-jmsdest</tt>(1)</a> subcommand.</b></li>
-<li><b>Delete the physical resource by using the <a href="http://docs.sun.com/doc/820-7701/delete-jmsdest-1?a=view"><tt>delete-jmsdest</tt>(1)</a> subcommand.</b></li></ol><a name="gioxx"></a><h6>Example&#160;19-4 Deleting a Physical Destination</h6><p>This example deletes the queue named <tt>PhysicalQueue</tt>:</p><pre>asadmin> <tt><b>delete-jmsdest --desttype queue PhysicalQueue</b></tt>
+<li><b>Delete the physical resource by using the <a href="http://docs.sun.com/doc/820-7701/delete-jmsdest-1?a=view"><tt>delete-jmsdest</tt>(1)</a> subcommand.</b></li></ol><a name="gioxx"></a><h6>Example&#160;19-4 Deleting a Physical Destination</h6><p>This example deletes the queue named <tt>PhysicalQueue</tt>.</p><pre>asadmin> <tt><b>delete-jmsdest --desttype queue PhysicalQueue</b></tt>
 Command delete-jmsdest executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help delete-jmsdest</tt> at the command line.</p>
 
 <a name="ablkb"></a><h3>Administering JMS Connection Factories and Destinations</h3>
-<a name="indexterm-909"></a><a name="indexterm-910"></a><p>The JMS API uses two kinds of administered objects. <b>Connection factory objects</b> allow an
+<a name="indexterm-956"></a><a name="indexterm-957"></a><p>The JMS API uses two kinds of administered objects. <b>Connection factory objects</b> allow an
 application to create other JMS objects programmatically. <b>Destination objects</b> serve as repositories for messages. How
 these objects are created is specific to each implementation of JMS. In Enterprise
 Server, JMS is implemented by performing the following tasks:</p>
@@ -156,7 +157,7 @@ The order in which the resources are created does not matter.</p><p>Enterprise S
 connection factory resources and the destination resources. For instructions on administering physical destinations, see
 <a href="#ablkj">Administering JMS Physical Destinations</a>.</p>
 
-<a name="giotd"></a><h4>To Create a Connection Factory or Destination Resource</h4><a name="indexterm-911"></a><a name="indexterm-912"></a><a name="indexterm-913"></a><a name="indexterm-914"></a><a name="indexterm-915"></a><a name="indexterm-916"></a><a name="indexterm-917"></a><a name="indexterm-918"></a><a name="indexterm-919"></a><a name="indexterm-920"></a><p>For each JMS connection factory that you create, Enterprise Server creates a connector
+<a name="giotd"></a><h4>To Create a Connection Factory or Destination Resource</h4><a name="indexterm-958"></a><a name="indexterm-959"></a><a name="indexterm-960"></a><a name="indexterm-961"></a><a name="indexterm-962"></a><a name="indexterm-963"></a><a name="indexterm-964"></a><a name="indexterm-965"></a><a name="indexterm-966"></a><a name="indexterm-967"></a><p>For each JMS connection factory that you create, Enterprise Server creates a connector
 connection pool and connector resource. For each JMS destination that you create, Enterprise
 Server creates a connector admin object resource. If you delete a JMS resource,
 Enterprise Server automatically deletes the connector resources.</p><p>Use the <tt>create-jms-resource</tt> command in remote mode to create a JMS connection factory
@@ -169,37 +170,37 @@ escape characters, see the <a href="http://docs.sun.com/doc/820-7701/asadmin-1m?
 connector connection pool, See <a href="p21.html#gioti">To Update a Connector Connection Pool</a>. </p><p>To update a destination, use the <tt>set</tt> subcommand for the admin object resource.
 See <a href="p21.html#giots">To Update an Administered Object</a>.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>Create a JMS resource by using the <a href="http://docs.sun.com/doc/820-7701/create-jms-resource-1?a=view"><tt>create-jms-resource</tt>(1)</a> command.</b><p>Information about the properties for this command is included in this help page.</p></li>
+<li><b>Create a JMS resource by using the <a href="http://docs.sun.com/doc/820-7701/create-jms-resource-1?a=view"><tt>create-jms-resource</tt>(1)</a> command.</b><p>Information about the properties for the subcommand is included in this help page.</p></li>
 <li>(Optional) <b>If needed, restart the server.</b><p>Some properties require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>. If your server needs to be
 restarted, see <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giovy"></a><h6>Example&#160;19-5 Creating a JMS Connection Factory</h6><p>This example creates a connection factory resource of type <tt>javax.jms.ConnectionFactory</tt> whose JNDI
 name is <tt>jms/DurableConnectionFactory</tt>. The <tt>ClientId</tt> property sets a client ID on the connection factory
 so that it can be used for durable subscriptions. The JNDI name
 for a JMS resource customarily includes the <tt>jms/</tt> naming subcontext. </p><pre>asadmin> <tt><b>create-jms-resource --restype javax.jms.ConnectionFactory --description "connection factory for durable subscriptions" --property ClientId=MyID jms/DurableConnectionFactory</b></tt>
-Command create-jms-resource executed successfully.</pre><a name="giovn"></a><h6>Example&#160;19-6 Creating a JMS Destination</h6><p>This example creates a destination resource whose JNDI name is <tt>jms/MyQueue</tt>:</p><pre>asadmin> <tt><b>create-jms-resource --restype javax.jms.Queue </b></tt>
+Command create-jms-resource executed successfully.</pre><a name="giovn"></a><h6>Example&#160;19-6 Creating a JMS Destination</h6><p>This example creates a destination resource whose JNDI name is <tt>jms/MyQueue</tt>.</p><pre>asadmin> <tt><b>create-jms-resource --restype javax.jms.Queue </b></tt>
 <tt><b>--property Name=PhysicalQueue jms/MyQueue</b></tt>
 Command create-jms-resource executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help create-jms-resource</tt> at the command line.</p>
 
-<a name="giosx"></a><h4>To List JMS Resources</h4><a name="indexterm-921"></a><a name="indexterm-922"></a><a name="indexterm-923"></a><p>Use the <tt>list-jms-resources</tt> subcommand in remote mode to list the existing connection factory
+<a name="giosx"></a><h4>To List JMS Resources</h4><a name="indexterm-968"></a><a name="indexterm-969"></a><a name="indexterm-970"></a><p>Use the <tt>list-jms-resources</tt> subcommand in remote mode to list the existing connection factory
 and destination resources.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>List the existing JMS resources by using the <a href="http://docs.sun.com/doc/820-7701/list-jms-resources-1?a=view"><tt>list-jms-resources</tt>(1)</a> subcommand.</b></li></ol><a name="giovz"></a><h6>Example&#160;19-7 Listing All JMS Resources</h6><p>This example lists all the existing JMS connection factory and destination resources:</p><pre>asadmin> <tt><b>list-jms-resources</b></tt>
+<li><b>List the existing JMS resources by using the <a href="http://docs.sun.com/doc/820-7701/list-jms-resources-1?a=view"><tt>list-jms-resources</tt>(1)</a> subcommand.</b></li></ol><a name="giovz"></a><h6>Example&#160;19-7 Listing All JMS Resources</h6><p>This example lists all the existing JMS connection factory and destination resources.</p><pre>asadmin> <tt><b>list-jms-resources</b></tt>
 jms/Queue
 jms/ConnectionFactory
 jms/DurableConnectionFactory
 jms/Topic
-Command list-jms-resources executed successfully</pre><a name="giovq"></a><h6>Example&#160;19-8 Listing a JMS Resources of a Specific Type</h6><p>This example lists the resources for the resource type <tt>javax</tt>:</p><pre>asadmin> <tt><b>list-jms-resources --restype javax.jms.TopicConnectionFactory </b></tt>
+Command list-jms-resources executed successfully</pre><a name="giovq"></a><h6>Example&#160;19-8 Listing a JMS Resources of a Specific Type</h6><p>This example lists the resources for the resource type <tt>javax</tt>.</p><pre>asadmin> <tt><b>list-jms-resources --restype javax.jms.TopicConnectionFactory </b></tt>
 jms/DurableTopicConnectionFactory 
 jms/TopicConnectionFactory 
 Command list-jms-resources executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help list-jms-resources</tt> at the command line.</p>
 
-<a name="giouw"></a><h4>To Delete a Connection Factory or Destination Resource</h4><a name="indexterm-924"></a><a name="indexterm-925"></a><a name="indexterm-926"></a><a name="indexterm-927"></a><a name="indexterm-928"></a><p>Use the <tt>delete-jms-resource</tt> subcommand in remote mode to remove the specified connection factory
+<a name="giouw"></a><h4>To Delete a Connection Factory or Destination Resource</h4><a name="indexterm-971"></a><a name="indexterm-972"></a><a name="indexterm-973"></a><a name="indexterm-974"></a><a name="indexterm-975"></a><p>Use the <tt>delete-jms-resource</tt> subcommand in remote mode to remove the specified connection factory
 or destination resource.</p><h6>Before You Begin</h6><p>Ensure that you remove all references to the specified JMS resource before running
 this subcommand.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>List the existing JMS resources by using the <a href="http://docs.sun.com/doc/820-7701/list-jms-resources-1?a=view"><tt>list-jms-resources</tt>(1)</a> subcommand.</b></li>
-<li><b>Delete the JMS resource by using the <a href="http://docs.sun.com/doc/820-7701/delete-jms-resource-1?a=view"><tt>delete-jms-resource</tt>(1)</a> subcommand.</b></li></ol><a name="giovi"></a><h6>Example&#160;19-9 Deleting a JMS Resource</h6><p>This example deletes the <tt>jms/Queue</tt> resource:</p><pre>asadmin> <tt><b>delete-jms-resource --host pigeon --port 5001 jms/Queue</b></tt>
+<li><b>Delete the JMS resource by using the <a href="http://docs.sun.com/doc/820-7701/delete-jms-resource-1?a=view"><tt>delete-jms-resource</tt>(1)</a> subcommand.</b></li></ol><a name="giovi"></a><h6>Example&#160;19-9 Deleting a JMS Resource</h6><p>This example deletes the <tt>jms/Queue</tt> resource.</p><pre>asadmin> <tt><b>delete-jms-resource jms/Queue</b></tt>
 Command delete-jms-resource executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help delete-jms-resource</tt> at the command line.</p>
 
@@ -218,7 +219,7 @@ Queue broker mode is configured as type LOCAL.</p><p>The following topics are ad
 <li><p><a href="#gipbv">To Delete a JMS Host</a></p></li></ul>
 
 
-<a name="gipbh"></a><h4>To Create a JMS Host</h4><a name="indexterm-929"></a><a name="indexterm-930"></a><a name="indexterm-931"></a><p>A default JMS host, <tt>default_JMS_host</tt>, is provided by Enterprise Server. The default JMS
+<a name="gipbh"></a><h4>To Create a JMS Host</h4><a name="indexterm-976"></a><a name="indexterm-977"></a><a name="indexterm-978"></a><p>A default JMS host, <tt>default_JMS_host</tt>, is provided by Enterprise Server. The default JMS
 host is used by Enterprise Server to perform all Message Queue broker administrative
 operations, such as creating and deleting JMS destinations.</p><p>Creating a new JMS host is not often necessary and is a
 task for advanced users. Use the <tt>create-jms-host</tt> subcommand in remote mode to create an
@@ -226,27 +227,33 @@ additional JMS host. </p><p>Because a JMS is actually a Message Queue object rat
 server object, you use Message Queue broker commands to update properties. For information on
 Message Queue properties, see <a href="http://docs.sun.com/doc/821-0027"><i>Sun GlassFish Message Queue 4.4 Administration Guide</i></a>.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>Create the JMS host by using the <a href="http://docs.sun.com/doc/820-7701/create-jms-host-1?a=view"><tt>create-jms-host</tt>(1)</a> subcommand.</b><p>Information about the properties for this subcommand is included in this help page.</p></li></ol><a name="gipbb"></a><h6>Example&#160;19-10 Creating a JMS Host</h6><p>This example creates a JMS host named <tt>MyNewHost</tt>: </p><pre>asadmin> <tt><b>create-jms-host --user admin --passwordfile passwords.txt --mqhost pigeon --mqport 7677 MyNewHost</b></tt>
+<li><b>Create the JMS host by using the <a href="http://docs.sun.com/doc/820-7701/create-jms-host-1?a=view"><tt>create-jms-host</tt>(1)</a> subcommand.</b><p>Information about the properties for this the subcommand is included in this help
+page.</p></li></ol><a name="gipbb"></a><h6>Example&#160;19-10 Creating a JMS Host</h6><p>This example creates a JMS host named <tt>MyNewHost</tt>.</p><pre>asadmin> <tt><b>create-jms-host --mqhost pigeon --mqport 7677 MyNewHost</b></tt>
 Command create-jms-host executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help create-jms-host</tt> at the command line.</p>
 
-<a name="gipbz"></a><h4>To List JMS Hosts</h4><a name="indexterm-932"></a><a name="indexterm-933"></a><a name="indexterm-934"></a><p>Use the <tt>list-jms-hosts</tt> subcommand in remote mode to list the existing JMS hosts.
+<a name="gipbz"></a><h4>To List JMS Hosts</h4><a name="indexterm-979"></a><a name="indexterm-980"></a><a name="indexterm-981"></a><p>Use the <tt>list-jms-hosts</tt> subcommand in remote mode to list the existing JMS hosts.
 </p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>List the JMS hosts by using the <a href="http://docs.sun.com/doc/820-7701/list-jms-hosts-1?a=view"><tt>list-jms-hosts</tt>(1)</a> subcommand.</b></li></ol><a name="gipdw"></a><h6>Example&#160;19-11 Listing JMS Hosts</h6><p>The following subcommand lists the existing JMS hosts: </p><pre>asadmin> <tt><b>list-jms-hosts</b></tt>
+<li><b>List the JMS hosts by using the <a href="http://docs.sun.com/doc/820-7701/list-jms-hosts-1?a=view"><tt>list-jms-hosts</tt>(1)</a> subcommand.</b></li></ol><a name="gipdw"></a><h6>Example&#160;19-11 Listing JMS Hosts</h6><p>The following subcommand lists the existing JMS hosts.</p><pre>asadmin> <tt><b>list-jms-hosts</b></tt>
 default_JMS_host
 MyNewHost
 Command list-jmsdest executed successfully</pre>
 
-<a name="givno"></a><h4>To Update a JMS Host</h4><a name="indexterm-935"></a><a name="indexterm-936"></a><a name="indexterm-937"></a><ol>
+<a name="givno"></a><h4>To Update a JMS Host</h4><a name="indexterm-982"></a><a name="indexterm-983"></a><a name="indexterm-984"></a><ol>
 <li><b>List the JMS hosts by using the <a href="http://docs.sun.com/doc/820-7701/list-jms-hosts-1?a=view"><tt>list-jms-hosts</tt>(1)</a> subcommand.</b></li>
-<li><b>Use the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand to modify a JMS host.</b></li></ol><a name="givlz"></a><h6>Example&#160;19-12 Updating a JMS Host</h6><p>tbd</p>
+<li><b>Use the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand to modify a JMS host.</b></li></ol><a name="givlz"></a><h6>Example&#160;19-12 Updating a JMS Host</h6><p>This example changes the value of the host attribute of the default JMS
+host. By default this value is <tt>localhost</tt>.</p><pre>asadmin>  <tt><b>set server-config.jms-service.jms-host.default_JMS_host.host=</b></tt>
+<tt><b>"archie.india.sun.com"</b></tt></pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help set</tt> at the command line.</p>
 
-<a name="gipbv"></a><h4>To Delete a JMS Host</h4><a name="indexterm-938"></a><a name="indexterm-939"></a><a name="indexterm-940"></a><p>Use the <tt>delete-jms-host</tt> subcommand in remote mode to delete a JMS host from
-the JMS service. </p><ol>
+<a name="gipbv"></a><h4>To Delete a JMS Host</h4><a name="indexterm-985"></a><a name="indexterm-986"></a><a name="indexterm-987"></a><p>Use the <tt>delete-jms-host</tt> subcommand in remote mode to delete a JMS host from
+the JMS service. If you delete the only JMS host, you will not
+be able to start the Message Queue broker until you create a new
+JMS host.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>List the JMS hosts by using the <a href="http://docs.sun.com/doc/820-7701/list-jms-hosts-1?a=view"><tt>list-jms-hosts</tt>(1)</a> subcommand.</b></li>
-<li><b>Delete a JMS host by using the <a href="http://docs.sun.com/doc/820-7701/delete-jms-host-1?a=view"><tt>delete-jms-host</tt>(1)</a> subcommand.</b></li></ol><a name="gipbj"></a><h6>Example&#160;19-13 Deleting a JMS Host</h6><p>This example deletes a JMS host named <tt>MyNewHost</tt>: </p><pre>asadmin> <tt><b>delete-jms-host MyNewHost</b></tt>
+<li><b>Delete a JMS host by using the <a href="http://docs.sun.com/doc/820-7701/delete-jms-host-1?a=view"><tt>delete-jms-host</tt>(1)</a> subcommand.</b></li></ol><a name="gipbj"></a><h6>Example&#160;19-13 Deleting a JMS Host</h6><p>This example deletes a JMS host named <tt>MyNewHost</tt>.</p><pre>asadmin> <tt><b>delete-jms-host MyNewHost</b></tt>
 Command delete-jms-host executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help delete-jms-host</tt> at the command line.</p>
 
@@ -257,31 +264,28 @@ The JMS host list is updated whenever a JMS host configuration changes. The
 JMS host list is inherited by any JMS resource when it is created,
 and by any message-driven bean when it is deployed.</p><p>In the Message Queue software, the <tt>AddressList</tt> property is called <tt>imqAddressList</tt>.</p><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#gipsg">Setting JMS Connection Pooling</a></p></li>
-<li><p><a href="#gipry">Setting Connection Failover for Brokers</a></p></li>
 <li><p><a href="#geqab">Accessing Remote Servers</a></p></li></ul>
 
 
 <a name="gipsg"></a><h4>Setting JMS Connection Pooling</h4>
-<a name="indexterm-941"></a><a name="indexterm-942"></a><p>Enterprise Server pools JMS connections automatically. When a JMS connection pool is created,
+<a name="indexterm-988"></a><a name="indexterm-989"></a><p>Enterprise Server pools JMS connections automatically. When a JMS connection pool is created,
 there is one <tt>ManagedConnectionFactory</tt> instance associated with it. If you configure the <tt>AddressList</tt>
 property as a <tt>ManagedConnectionFactory</tt> property, the <tt>AddressList</tt> configuration in the <tt>ManagedConnectionFactory</tt> value takes precedence
-over the value defined in Enterprise Server.</p><p>Use the <tt>create-connector-connection-pool</tt> subcommand to manage an existing pool. <a name="indexterm-943"></a> For instructions, see
+over the value defined in Enterprise Server.</p><p>Use the <tt>create-connector-connection-pool</tt> subcommand to manage an existing pool. <a name="indexterm-990"></a><a name="indexterm-991"></a><a name="indexterm-992"></a><a name="indexterm-993"></a> For instructions, see
 <a href="p21.html#ablls">Administering Connector Connection Pools</a>.</p><p>By default, the <tt>addresslist-behavior</tt> JMS service attribute is set to <tt>random</tt>. This means
 that each physical connection (<tt>ManagedConnection</tt>) created from the <tt>ManagedConnectionFactory</tt> selects its primary broker
-in a random way from the <tt>AddressList</tt> property. </p>
-
-<a name="gipry"></a><h4>Setting Connection Failover for Brokers</h4>
-<a name="indexterm-944"></a><a name="indexterm-945"></a><a name="indexterm-946"></a><p>To specify whether Enterprise Server tries to reconnect to the primary broker if
+in a random way from the <tt>AddressList</tt> property. </p><p>To specify whether Enterprise Server tries to reconnect to the primary broker if
 the connection is lost, set the <tt>reconnect-enabled</tt> attribute in the JMS service by
 using the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand. To specify the number of retries and the time
 between retries, set the <tt>reconnect-attempts</tt> and <tt>reconnect-interval-in-seconds</tt> attributes, respectively.</p><p>If reconnection is enabled and the primary broker fails, Enterprise Server tries to
 reconnect to another broker in the JMS host list (<tt>AddressList</tt>). The logic for
 scanning is decided by two JMS service attributes, <tt>addresslist-behavior</tt> and <tt>addresslist-iterations</tt>. You
-can override these settings by using JMS connection factory settings.</p><p>The Sun GlassFish Message Queue software transparently transfers the load to another broker
-when the failover occurs. JMS semantics are maintained during failover.</p>
+can override these settings by using JMS connection factory settings. The Sun GlassFish
+Message Queue software transparently transfers the load to another broker when the failover
+occurs. JMS semantics are maintained during failover.</p>
 
 <a name="geqab"></a><h4>Accessing Remote Servers</h4>
-<a name="indexterm-947"></a><a name="indexterm-948"></a><p>Changing the provider and host to a remote system causes all JMS
+<a name="indexterm-994"></a><a name="indexterm-995"></a><p>Changing the provider and host to a remote system causes all JMS
 applications to run on the remote server. To use both the local server
 and one or more remote servers, create a connection factory resource with the
 <tt>AddressList</tt> property. This creates connections that access remote servers.</p>
@@ -296,20 +300,15 @@ one uses JNDI as the means of integration. In this situation, administered objec
 are set up in the JMS provider's JNDI tree and will be
 looked up for use by the generic resource adapter. If that mode is
 not suitable for integration, it is also possible to use the Java reflection
-of JMS administered object javabean classes as the mode of integration. </p><p>The following topics are addressed here:</p>
-<ul><li><p><a href="#gbtwa">Configuring Foreign JMS Providers</a></p></li>
-<li><p><a href="#giosy">To Configure the Generic Resource Adapter</a></p></li></ul>
-
-
-<a name="gbtwa"></a><h4>Configuring Foreign JMS Providers</h4>
-<a name="indexterm-949"></a><a name="indexterm-950"></a><p>Generic resource adapter 1.6 for JMS is a Java EE connector 1.6
+of JMS administered object javabean classes as the mode of integration. </p><p>Generic resource adapter 1.6 for JMS is a Java EE connector 2.0
 resource adapter that can wrap the JMS client library of external JMS providers
 such as IBM WebSphere MQ, Tibco EMS, and Sonic MQ among others. This
-integrates any JMS provider with a Java EE 6application server, such as the
-Sun GlassFish Enterprise Server. The adapter is a <tt>.rar</tt> archive that can be
-deployed and configured using Java EE 6 application server administration tools.  </p>
+integrates any JMS provider with a Java EE 6 application server, such as
+the Sun GlassFish Enterprise Server. The adapter is a <tt>.rar</tt> archive that can
+be deployed and configured using Java EE 6 application server administration tools. 
+<a name="indexterm-996"></a><a name="indexterm-997"></a></p>
 
-<a name="giosy"></a><h4>To Configure the Generic Resource Adapter</h4><a name="indexterm-951"></a><a name="indexterm-952"></a><a name="indexterm-953"></a><a name="indexterm-954"></a><p>Before deploying the generic resource adapter, JMS client libraries must be made available
+<a name="giosy"></a><h4>To Configure the Generic Resource Adapter</h4><a name="indexterm-998"></a><a name="indexterm-999"></a><a name="indexterm-1000"></a><a name="indexterm-1001"></a><p>Before deploying the generic resource adapter, JMS client libraries must be made available
 to Enterprise Server. For some JMS providers, client libraries might also include native
 libraries. In such cases, these native libraries must be made available to any
 Enterprise Server JVMs.</p><ol>
@@ -325,11 +324,11 @@ module.</b></li>
 </li></ol>
 
 <a name="gipnh"></a><h3>Troubleshooting JMS</h3>
-<a name="indexterm-955"></a><a name="indexterm-956"></a><a name="indexterm-957"></a><p>When you start Enterprise Server, the JMS service is available but is not
+<a name="indexterm-1002"></a><a name="indexterm-1003"></a><a name="indexterm-1004"></a><p>When you start Enterprise Server, the JMS service is available but is not
 loaded until it is needed (for example, when you create a JMS
 resource). Use the <a href="http://docs.sun.com/doc/820-7701/jms-ping-1?a=view"><tt>jms-ping</tt>(1)</a>subcommand to check if the JMS service is running or, if
 it is not yet running, to start it. If the<tt>jms-ping</tt> subcommand is unable
-to contact a built-in JMS service, an error message is displayed.<a name="indexterm-958"></a></p><p>If you encounter problems, consider the following:</p>
+to contact a built-in JMS service, an error message is displayed.<a name="indexterm-1005"></a></p><p>If you encounter problems, consider the following:</p>
 <ul><li><p>View the Enterprise Server log file, typically located at <i>domain-dir</i><tt>/logs/server.log</tt>.</p><p> If a the log file indicates that a Message Queue broker did not respond to a message, stop the broker and then restart it.</p></li>
 <li><p>View the broker log, typically available at <i>as-install</i><tt>/domains/domain1/imq/instances/imqbroker/log/log.txt</tt>.</p></li>
 <li><p>For JMS REMOTE mode, be sure to start Message Queue brokers first, then Enterprise Server.</p></li>

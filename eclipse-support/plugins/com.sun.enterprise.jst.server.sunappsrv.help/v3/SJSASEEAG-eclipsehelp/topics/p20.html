@@ -6,7 +6,7 @@
 <title>Administering Database Connectivity  - Sun GlassFish Enterprise Server v3 Administration Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 </table>
 
 
-<a name="ablih"></a>Chapter&#160;14<h3>Administering Database Connectivity </h3><a name="indexterm-600"></a><a name="indexterm-601"></a><a name="indexterm-602"></a><p>This chapter provides procedures for performing database connectivity tasks in the Sun GlassFish<sup>TM</sup>
+<a name="ablih"></a>Chapter&#160;14<h3>Administering Database Connectivity </h3><a name="indexterm-647"></a><a name="indexterm-648"></a><a name="indexterm-649"></a><p>This chapter provides procedures for performing database connectivity tasks in the Sun GlassFish<sup>TM</sup>
 Enterprise Server v3 environment by using the <tt>asadmin</tt> command-line utility. </p><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#gipbp">About Database Connectivity</a></p></li>
 <li><p><a href="#ggkon">Setting Up the Database</a></p></li>
@@ -52,7 +52,7 @@ Java Database Connectivity (JDBC) API.</p><p>The key elements of database connec
 
 
 <a name="ggkon"></a><h3>Setting Up the Database</h3>
-<a name="indexterm-603"></a><a name="indexterm-604"></a><a name="indexterm-605"></a><p>Most applications use relational databases to store, organize, and retrieve data. Applications access
+<a name="indexterm-650"></a><a name="indexterm-651"></a><a name="indexterm-652"></a><p>Most applications use relational databases to store, organize, and retrieve data. Applications access
 relational databases through the Java<sup>TM</sup> Database Connectivity (JDBC) API. </p><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#gharl">To Install the Database and Database Driver</a></p></li>
 <li><p><a href="#ggndz">To Start the Database</a></p></li>
@@ -60,51 +60,33 @@ relational databases through the Java<sup>TM</sup> Database Connectivity (JDBC) 
 <li><p><a href="#ghmbq">Java DB Utility Scripts</a></p></li></ul>
 
 
-<a name="gharl"></a><h4>To Install the Database and Database Driver</h4><a name="indexterm-606"></a><ol>
+<a name="gharl"></a><h4>To Install the Database and Database Driver</h4><a name="indexterm-653"></a><ol>
 <li><b>Install a supported database product.</b><p>To see the current list of database products supported by Enterprise Server, refer
 to the <a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Release Notes</i></a>.</p></li>
 <li><b>Install a supported JDBC driver for the database product.</b><p>For a list of drivers supported by Enterprise Server, see <a href="#beamw">Configuration Specifics for JDBC Drivers</a>.</p></li>
 <li><b>Make the JDBC driver JAR file accessible to the domain administration server (DAS).</b><p>See <a href="#ghatb">Integrating the JDBC Driver</a>.</p></li>
 <li><b>Create the database.</b><p>The application provider usually delivers scripts for creating and populating the database.</p></li></ol>
 
-<a name="ggndz"></a><h4>To Start the Database</h4><a name="indexterm-607"></a><a name="indexterm-608"></a><a name="indexterm-609"></a><p>Enterprise Server includes an implementation of Java DB, however, you can use any
-JDBC-compliant database. The database is not started automatically when you start Enterprise Server,
-so if you have applications that require a database, you need to start
-Java DB manually by using the local <tt>start-database</tt> subcommand.</p><ul>
+<a name="ggndz"></a><h4>To Start the Database</h4><a name="indexterm-654"></a><a name="indexterm-655"></a><a name="indexterm-656"></a><p>Enterprise Server includes an implementation of Java DB (formerly known as Derby), however,
+you can use any JDBC-compliant database. The database is not started automatically when
+you start Enterprise Server, so if you have applications that require a database,
+you need to start Java DB manually by using the local <tt>start-database</tt> subcommand.</p><ul>
 <li><b>Start the database by using the <a href="http://docs.sun.com/doc/820-7701/start-database-1?a=view"><tt>start-database</tt>(1)</a> subcommand.</b><p>When the database server starts, or a client connects to it successfully, the
 following files are created at the location that is specified by the <tt>--dbhome</tt>
 option: </p>
 <ul><li><p> The <tt>derby.log</tt> file contains the database server process log along with its standard output and standard error information.</p></li>
 <li><p>The database files contain your schema (for example, database tables).</p></li></ul>
-</li></ul><a name="ggooc"></a><h6>Example&#160;14-1 Starting a Database</h6><p>This example starts Java DB on port 5001 of <tt>localhost</tt>:</p><pre>asadmin> <tt><b>start-database --dbhost=localhost --dbport=5001</b></tt>
-Database started in Network Server mode on host localhost and port 5001.
---------- Derby Network Server Information --------
-Version: CSS10020/10.2.2.1 - (538595)  Build: 538595  DRDA Product Id: CSS10020
--- listing properties --
-derby.drda.traceDirectory=C:\preview\v3_preview_release\distrib...
-derby.drda.maxThreads=0
-derby.drda.keepAlive=true
-derby.drda.minThreads=0
-derby.drda.portNumber=5001
-derby.drda.logConnections=false
-derby.drda.timeSlice=0
-derby.drda.startNetworkServer=false
-derby.drda.host=localhost
-derby.drda.traceAll=false
-.
-.
-.
-Starting database in the background.
-Log redirected to C:\preview\v3_preview_release\distributions\web\target\glassfi
-sh\databases\derby.log.
+</li></ul><a name="ggooc"></a><h6>Example&#160;14-1 Starting a Database</h6><p>This example starts Derby on the host host1 and port 5001.</p><pre>asadmin> <tt><b>start-database --dbhost host1 --dbport 5001 --terse=true</b></tt>
+Starting database in the background. 
+Log redirected to /opt/SUNWappserver/databases/javadb.log.
 Command start-database executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help start-database</tt> at the command line.</p>
 
-<a name="ggnbw"></a><h4>To Stop the Database</h4><a name="indexterm-610"></a><a name="indexterm-611"></a><a name="indexterm-612"></a><p>Use the local <tt>stop-database</tt> subcommand to stop Java DB on a specified port.
+<a name="ggnbw"></a><h4>To Stop the Database</h4><a name="indexterm-657"></a><a name="indexterm-658"></a><a name="indexterm-659"></a><p>Use the local <tt>stop-database</tt> subcommand to stop Java DB on a specified port.
 A single host can have multiple database server processes running on different ports.
 </p><ol>
 <li><b>If necessary, notify users that the database is being stopped.</b></li>
-<li><b>Stop the database by using the <a href="http://docs.sun.com/doc/820-7701/stop-database-1?a=view"><tt>stop-database</tt>(1)</a> subcommand.</b></li></ol><a name="ggorc"></a><h6>Example&#160;14-2 Stopping a Database</h6><p>This example stops Java DB on port 5001 of <tt>localhost</tt>:</p><pre>asadmin> <tt><b>stop-database --dbhost=localhost --dbport=5001</b></tt>
+<li><b>Stop the database by using the <a href="http://docs.sun.com/doc/820-7701/stop-database-1?a=view"><tt>stop-database</tt>(1)</a> subcommand.</b></li></ol><a name="ggorc"></a><h6>Example&#160;14-2 Stopping a Database</h6><p>This example stops Java DB on port 5001 of <tt>localhost</tt>.</p><pre>asadmin> <tt><b>stop-database --dbhost=localhost --dbport=5001</b></tt>
 onnection obtained for host: localhost, port number 5001.
 Apache Derby Network Server - 10.2.2.1 - (538595) shutdown at 2008-10-17 23:34:2
 7.218 GMT
@@ -117,7 +99,7 @@ following to stop the database:</p><p><tt>asadmin stop-database <tt>--dbhost</tt
 by typing <tt>asadmin help stop-database</tt> at the command line.</p>
 
 <a name="ghmbq"></a><h4>Java DB Utility Scripts</h4>
-<a name="indexterm-613"></a><a name="indexterm-614"></a><p>The Java DB configuration that is available for use with Enterprise Server
+<a name="indexterm-660"></a><a name="indexterm-661"></a><p>The Java DB configuration that is available for use with Enterprise Server
 includes scripts that can help you use Java DB. The following scripts are
 available in the <i>as-install</i><tt>/javadb/frameworks/NetworkServer/bin</tt> directory:</p><dl><dt><tt>startNetworkServer,startNetworkServer.bat</tt></dt>
 <dd><p>Script to start the network server</p></dd>
@@ -138,13 +120,13 @@ available in the <i>as-install</i><tt>/javadb/frameworks/NetworkServer/bin</tt> 
 <ol>
 <li><b>Ensure that the <tt>JAVA_HOME</tt> environment variable specifies the directory where the JDK is
 installed.</b></li>
-<li><b>Set the <tt>DERBY_HOME</tt> environment variable to point to the <i>as-install</i><tt>/javadb</tt> directory. </b></li></ol><h6>See Also</h6><p>For more information about these utilities, see the following documentation:</p>
+<li><b>Set the <tt>JAVADB_HOME</tt> environment variable to point to the <i>as-install</i><tt>/derby</tt> directory. </b></li></ol><h6>See Also</h6><p>For more information about these utilities, see the following documentation:</p>
 <ul><li><p><b>Derby Tools and Utilities Guide</b> <a href="http://db.apache.org/derby/docs/10.1/tools/"></a></p></li>
 <li><p><b>Derby Server and Administration Guide</b> (<a href="http://db.apache.org/derby/docs/10.1/adminguide/">http://db.apache.org/derby/docs/10.1/adminguide/</a>)</p></li></ul>
 
 
 <a name="ggndx"></a><h3>Configuring Access to the Database</h3>
-<a name="indexterm-615"></a><a name="indexterm-616"></a><p>After establishing the database, you are ready to set up access for
+<a name="indexterm-662"></a><a name="indexterm-663"></a><p>After establishing the database, you are ready to set up access for
 Enterprise Server applications. Before an application can access a database, the application must
 get a connection. </p><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#gharo">Administering JDBC Connection Pools</a></p></li>
@@ -153,7 +135,7 @@ get a connection. </p><p>The following topics are addressed here:</p>
 
 
 <a name="gharo"></a><h4>Administering JDBC Connection Pools</h4>
-<a name="indexterm-617"></a><p>A <b>JDBC connection pool</b> is a group of reusable connections for a particular database. Because
+<a name="indexterm-664"></a><p>A <b>JDBC connection pool</b> is a group of reusable connections for a particular database. Because
 creating each new physical connection is time consuming, Enterprise Server maintains a pool
 of available connections. When an application requests a connection, it obtains one from the
 pool. When an application closes a connection, the connection is returned to the
@@ -170,7 +152,7 @@ are the database name (URL), the user name, and the password.</p><p>The followin
 
 
 <a name="ggnfv"></a><h5>To Create a JDBC Connection Pool</h5>
-<a name="indexterm-618"></a><a name="indexterm-619"></a><a name="indexterm-620"></a><a name="indexterm-621"></a><p>Use the <tt>create-jdbc-connection-pool</tt> subcommand in remote mode to register a new JDBC connection
+<a name="indexterm-665"></a><a name="indexterm-666"></a><a name="indexterm-667"></a><a name="indexterm-668"></a><p>Use the <tt>create-jdbc-connection-pool</tt> subcommand in remote mode to register a new JDBC connection
 pool with the specified JDBC connection pool name. A JDBC connection pool or
 a connector connection pool can be created with authentication. You can either use
 a subcommand option to specify user, password, or other connection information using the
@@ -188,15 +170,15 @@ require server restart. However, there are some parameters that do require serve
 and its associated JDBC driver. For instructions, see <a href="#ggkon">Setting Up the Database</a>.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>Create the JDBC connection pool by using the <a href="http://docs.sun.com/doc/820-7701/create-jdbc-connection-pool-1?a=view"><tt>create-jdbc-connection-pool</tt>(1)</a> subcommand.</b></li>
-<li>(Optional) <b>If needed, restart the server.</b><p>Some parameters require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>.</p></li></ol><a name="ggrgh"></a><h6>Example&#160;14-3 Creating a JDBC Connection Pool</h6><p>This example creates a JDBC connection pool named <tt>sample_derby_pool</tt> on <tt>localhost</tt>:</p><pre>asadmin> <tt><b>create-jdbc-connection-pool --datasourceclassname org.apache.derby.jdbc.ClientDataSource --restype javax.sql.XADataSource --property portNumber=1527:password=APP:user=APP:serverName= localhost:databaseName=sun-appserv-samples:connectionAttribut es=\;create\\=true sample_derby_pool</b></tt>
+<li>(Optional) <b>If needed, restart the server.</b><p>Some parameters require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>.</p></li></ol><a name="ggrgh"></a><h6>Example&#160;14-3 Creating a JDBC Connection Pool</h6><p>This example creates a JDBC connection pool named <tt>sample_derby_pool</tt> on <tt>localhost</tt>.</p><pre>asadmin> <tt><b>create-jdbc-connection-pool --datasourceclassname org.apache.derby.jdbc.ClientDataSource --restype javax.sql.XADataSource --property portNumber=1527:password=APP:user=APP:serverName= localhost:databaseName=sun-appserv-samples:connectionAttribut es=\;create\\=true sample_derby_pool</b></tt>
 Command create-jdbc-connection-pool executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help create-jdbc-connection-pool</tt> at the command line.</p>
 
 <a name="ggnby"></a><h5>To List JDBC Connection Pools</h5>
-<a name="indexterm-622"></a><a name="indexterm-623"></a><a name="indexterm-624"></a><a name="indexterm-625"></a><a name="indexterm-626"></a><a name="indexterm-627"></a><p>Use the <tt>list-jdbc-connection-pools</tt> subcommand in remote mode to list all existing JDBC connection
+<a name="indexterm-669"></a><a name="indexterm-670"></a><a name="indexterm-671"></a><a name="indexterm-672"></a><a name="indexterm-673"></a><a name="indexterm-674"></a><p>Use the <tt>list-jdbc-connection-pools</tt> subcommand in remote mode to list all existing JDBC connection
 pools.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>List the JDBC connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-jdbc-connection-pools-1?a=view"><tt>list-jdbc-connection-pools</tt>(1)</a> subcommand.</b></li></ol><a name="ggpcf"></a><h6>Example&#160;14-4 Listing JDBC Connection Pools</h6><p>This example lists the JDBC connection pools that are on <tt>localhost</tt>:</p><pre>asadmin> <tt><b>list-jdbc-connection-pools</b></tt>
+<li><b>List the JDBC connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-jdbc-connection-pools-1?a=view"><tt>list-jdbc-connection-pools</tt>(1)</a> subcommand.</b></li></ol><a name="ggpcf"></a><h6>Example&#160;14-4 Listing JDBC Connection Pools</h6><p>This example lists the JDBC connection pools that are on <tt>localhost</tt>.</p><pre>asadmin> <tt><b>list-jdbc-connection-pools</b></tt>
 sample_derby_pool2
 poolA
 __TimerPool
@@ -206,23 +188,24 @@ Command list-jdbc-connection-pools executed successfully.</pre><h6>See Also</h6>
 by typing <tt>asadmin help list-jdbc-connection-pools</tt> at the command line.</p>
 
 <a name="ggnwn"></a><h5>To Contact (Ping) a Connection Pool</h5>
-<a name="indexterm-628"></a><a name="indexterm-629"></a><a name="indexterm-630"></a><a name="indexterm-631"></a><a name="indexterm-632"></a><p>Use the <tt>ping-connection-pool</tt> subcommand in remote mode to test if a connection pool
+<a name="indexterm-675"></a><a name="indexterm-676"></a><a name="indexterm-677"></a><a name="indexterm-678"></a><a name="indexterm-679"></a><p>Use the <tt>ping-connection-pool</tt> subcommand in remote mode to test if a connection pool
 is usable. For example, if you create a new JDBC connection pool for
 an application that is expected to be deployed later, you can test the
 JDBC pool with this subcommand before the application is deployed. Running a ping
 will force the creation of the pool if it hasn't already been created.</p><h6>Before You Begin</h6><p>Before you can contact a connection pool, the connection pool must be created
 with authentication, and the server or database must be running.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>Ping a connection pool by using the <a href="http://docs.sun.com/doc/820-7701/ping-connection-pool-1?a=view"><tt>ping-connection-pool</tt>(1)</a> subcommand.</b></li></ol><a name="ggpcs"></a><h6>Example&#160;14-5 Contacting a Connection Pool</h6><p>This example tests to see if the <tt>DerbyPool</tt> connection pool is usable:</p><pre>asadmin> <tt><b>ping-connection-pool DerbyPool</b></tt>
+<li><b>Ping a connection pool by using the <a href="http://docs.sun.com/doc/820-7701/ping-connection-pool-1?a=view"><tt>ping-connection-pool</tt>(1)</a> subcommand.</b></li></ol><a name="ggpcs"></a><h6>Example&#160;14-5 Contacting a Connection Pool</h6><p>This example tests to see if the <tt>DerbyPool</tt> connection pool is usable.</p><pre>asadmin> <tt><b>ping-connection-pool DerbyPool</b></tt>
 Command ping-connection-pool executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help ping-connection-pool</tt> at the command line.</p>
 
 <a name="gjiqp"></a><h5>To Reset (Flush) a Connection Pool</h5>
-<a name="indexterm-633"></a><a name="indexterm-634"></a><a name="indexterm-635"></a><a name="indexterm-636"></a><a name="indexterm-637"></a><p>Use the <tt>flush-connection-pool</tt> in remote mode to reintialize all connections established in the
-specified connection. The JDBC connection pool or connector connection pool is reset to
-its initial state. Any existing live connections are destroyed, which means that the
-transactions associated with these connections are lost. The subcommand then recreates the initial connections
-for the pool, and restores the pool to its steady pool size.</p><ol>
+<a name="indexterm-680"></a><a name="indexterm-681"></a><a name="indexterm-682"></a><a name="indexterm-683"></a><a name="indexterm-684"></a><p>Use the <tt>flush-connection-pool</tt> in remote mode to reinitialize all connections established in the
+specified connection pool. The JDBC connection pool or connector connection pool is reset
+to its initial state. Any existing live connections are destroyed, which means that
+the transactions associated with these connections are lost. The subcommand then recreates the
+initial connections for the pool, and restores the pool to its steady pool
+size.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>Reset a connection pool by using the<a href="http://docs.sun.com/doc/820-7701/flush-connection-pool-1?a=view"><tt>flush-connection-pool</tt>(1)</a> subcommand.</b></li></ol><a name="gjirk"></a><h6>Example&#160;14-6 Resetting (Flushing) a Connection Pool</h6><p>This example resets the JDBC connection pool named <tt>__TimerPool</tt> to its steady pool
 size. </p><pre>asadmin> <tt><b>flush-connection-pool __TimerPool</b></tt> 
@@ -230,7 +213,7 @@ Command flush-connection-pool executed successfully.</pre><h6>See Also</h6><p>Yo
 by typing <tt>asadmin help flush-connection-pool</tt> at the command line.</p>
 
 <a name="giosk"></a><h5>To Update a JDBC Connection Pool</h5>
-<a name="indexterm-638"></a><a name="indexterm-639"></a><p>Use the <tt>get</tt> and <tt>set</tt> subcommands to view and change the values of
+<a name="indexterm-685"></a><a name="indexterm-686"></a><p>Use the <tt>get</tt> and <tt>set</tt> subcommands to view and change the values of
 the JDBC connection pool properties.</p><ol>
 <li><b>List the JDBC connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-jdbc-connection-pools-1?a=view"><tt>list-jdbc-connection-pools</tt>(1)</a> subcommand.</b></li>
 <li><b>View the attributes of the JDBC connection pool by using the get subcommand.</b><p>For example:</p><pre><tt><b>asadmin get resources.jdbc-connection-pool.DerbyPool.property</b></tt></pre></li>
@@ -238,23 +221,23 @@ the JDBC connection pool properties.</p><ol>
 <li>(Optional) <b>If needed, restart the server.</b><p>Some parameters require server restart. See <a href="p4.html#ghciy">Configuration Changes That Require Server Restart</a>.</p></li></ol>
 
 <a name="ggngb"></a><h5>To Delete a JDBC Connection Pool</h5>
-<a name="indexterm-640"></a><a name="indexterm-641"></a><a name="indexterm-642"></a><a name="indexterm-643"></a><a name="indexterm-644"></a><p>Use the <tt>delete-jdbc-connection-pool</tt> subcommand in remote mode to delete an existing JDBC connection
+<a name="indexterm-687"></a><a name="indexterm-688"></a><a name="indexterm-689"></a><a name="indexterm-690"></a><a name="indexterm-691"></a><p>Use the <tt>delete-jdbc-connection-pool</tt> subcommand in remote mode to delete an existing JDBC connection
 pool. Deleting a JDBC connection pool is a dynamic event and does not
 require server restart.</p><h6>Before You Begin</h6><p>Before deleting a JDBC connection pool, all associations to the resource must be
 removed.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>List the JDBC connection pools by using the <a href="http://docs.sun.com/doc/820-7701/list-jdbc-connection-pools-1?a=view"><tt>list-jdbc-connection-pools</tt>(1)</a> subcommand.</b></li>
 <li><b>If necessary, notify users that the JDBC connection pool is being deleted.</b></li>
-<li><b>Delete the connection pool by using the <a href="http://docs.sun.com/doc/820-7701/delete-jdbc-connection-pool-1?a=view"><tt>delete-jdbc-connection-pool</tt>(1)</a> subcommand.</b></li></ol><a name="ggpis"></a><h6>Example&#160;14-7 Deleting a JDBC Connection Pool</h6><p>This example deletes the JDBC connection pool named <tt>DerbyPool</tt>:</p><pre>asadmin> <tt><b>delete-jdbc-connection-pool jdbc/DerbyPool</b></tt>
+<li><b>Delete the connection pool by using the <a href="http://docs.sun.com/doc/820-7701/delete-jdbc-connection-pool-1?a=view"><tt>delete-jdbc-connection-pool</tt>(1)</a> subcommand.</b></li></ol><a name="ggpis"></a><h6>Example&#160;14-7 Deleting a JDBC Connection Pool</h6><p>This example deletes the JDBC connection pool named <tt>DerbyPool</tt>.</p><pre>asadmin> <tt><b>delete-jdbc-connection-pool jdbc/DerbyPool</b></tt>
 Command delete-jdbc-connection-pool executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help delete-jdbc-connection-pool</tt> at the command line.</p>
 
 <a name="ggndp"></a><h4>Administering JDBC Resources</h4>
-<a name="indexterm-645"></a><a name="indexterm-646"></a><a name="indexterm-647"></a><p>A<b> JDBC resource</b>, also known as a data source, provides an application with a means
+<a name="indexterm-692"></a><a name="indexterm-693"></a><a name="indexterm-694"></a><p>A<b> JDBC resource</b>, also known as a data source, provides an application with a means
 of connecting to a database. Typically, you create a JDBC resource for each
 database that is accessed by the applications deployed in a domain. Multiple JDBC
 resources can be specified for a database.</p><p>A JDBC resource is created by specifying the connection pool with which the
-resource will be associated . Ue a unique Java Naming and Directory
+resource will be associated . Use a unique Java Naming and Directory
 Interface (JNDI)  name to identify the resource. For example, the JNDI name
 for the resource of a payroll database might be <tt>java:comp/env/jdbc/payrolldb</tt>. </p><p>The following tasks and information are used to administer JDBC resources:</p>
 <ul><li><p><a href="#ggnda">To Create a JDBC Resource</a></p></li>
@@ -264,21 +247,21 @@ for the resource of a payroll database might be <tt>java:comp/env/jdbc/payrolldb
 
 
 <a name="ggnda"></a><h5>To Create a JDBC Resource</h5>
-<a name="indexterm-648"></a><a name="indexterm-649"></a><a name="indexterm-650"></a><p>Use the <tt>create-jdbc-resource</tt> subcommand in remote mode to create a JDBC resource. Creating
+<a name="indexterm-695"></a><a name="indexterm-696"></a><a name="indexterm-697"></a><p>Use the <tt>create-jdbc-resource</tt> subcommand in remote mode to create a JDBC resource. Creating
 a JDBC resource is a dynamic event and does not require server restart.</p><p>Because all JNDI names are in the <tt>java:comp/env</tt> subcontext, when specifying the JNDI
 name of a JDBC resource in the Administration Console, use only the <tt>jdbc/</tt><b>name</b>
 format. For example, a payroll database might be specified as <tt>jdbc/payrolldb</tt>.</p><h6>Before You Begin</h6><p>Before creating a JDBC resource, you must first create a JDBC connection pool.
 For instructions, see <a href="#ggnfv">To Create a JDBC Connection Pool</a>.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>Create a JDBC resource by using the <a href="http://docs.sun.com/doc/820-7701/create-jdbc-resource-1?a=view"><tt>create-jdbc-resource</tt>(1)</a> subcommand.</b><p>Information about properties for this subcommand is included in this help page.</p></li>
-<li><b>If necessary, notify users that the new resource has been created.</b></li></ol><a name="ggplj"></a><h6>Example&#160;14-8 Creating a JDBC Resource</h6><p>This example creates a JDBC resource named <tt>DerbyPool</tt>:</p><pre>asadmin> <tt><b>create-jdbc-resource --connectionpoolid DerbyPool jdbc/DerbyPool</b></tt>
+<li><b>Create a JDBC resource by using the <a href="http://docs.sun.com/doc/820-7701/create-jdbc-resource-1?a=view"><tt>create-jdbc-resource</tt>(1)</a> subcommand.</b><p>Information about properties for the subcommand is included in this help page.</p></li>
+<li><b>If necessary, notify users that the new resource has been created.</b></li></ol><a name="ggplj"></a><h6>Example&#160;14-8 Creating a JDBC Resource</h6><p>This example creates a JDBC resource named <tt>DerbyPool</tt>.</p><pre>asadmin> <tt><b>create-jdbc-resource --connectionpoolid DerbyPool jdbc/DerbyPool</b></tt>
 Command create-jdbc-resource executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help create-jdbc-resource</tt> at the command line.</p>
 
 <a name="ggnhl"></a><h5>To List JDBC Resources</h5>
-<a name="indexterm-651"></a><a name="indexterm-652"></a><a name="indexterm-653"></a><a name="indexterm-654"></a><p>Use the <tt>list-jdbc-resources</tt> subcommand in remote mode to list the existing JDBC resources.</p><ol>
+<a name="indexterm-698"></a><a name="indexterm-699"></a><a name="indexterm-700"></a><a name="indexterm-701"></a><p>Use the <tt>list-jdbc-resources</tt> subcommand in remote mode to list the existing JDBC resources.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>List JDBC resources by using the <a href="http://docs.sun.com/doc/820-7701/list-jdbc-resources-1?a=view"><tt>list-jdbc-resources</tt>(1)</a> subcommand.</b></li></ol><a name="ggpgi"></a><h6>Example&#160;14-9 Listing JDBC Resources</h6><p>This example lists JDBC resources for <tt>localhost</tt>:</p><pre>asadmin> <tt><b>list-jdbc-resources</b></tt>
+<li><b>List JDBC resources by using the <a href="http://docs.sun.com/doc/820-7701/list-jdbc-resources-1?a=view"><tt>list-jdbc-resources</tt>(1)</a> subcommand.</b></li></ol><a name="ggpgi"></a><h6>Example&#160;14-9 Listing JDBC Resources</h6><p>This example lists JDBC resources for <tt>localhost</tt>.</p><pre>asadmin> <tt><b>list-jdbc-resources</b></tt>
 jdbc/__TimerPool
 jdbc/DerbyPool
 jdbc/__default
@@ -287,33 +270,32 @@ Command list-jdbc-resources executed successfully.</pre><h6>See Also</h6><p>You 
 by typing <tt>asadmin help list-jdbc-resources</tt> at the command line.</p>
 
 <a name="giwjv"></a><h5>To Update a JDBC Resource</h5>
-<a name="indexterm-655"></a><a name="indexterm-656"></a><a name="indexterm-657"></a><p>You can enable or disable a JDBC resource by using the <tt>set</tt>
+<a name="indexterm-702"></a><a name="indexterm-703"></a><a name="indexterm-704"></a><p>You can enable or disable a JDBC resource by using the <tt>set</tt>
 subcommand. The JDBC resource is identified by its dotted name.</p><ol>
 <li><b>List JDBC resources by using the <a href="http://docs.sun.com/doc/820-7701/list-jdbc-resources-1?a=view"><tt>list-jdbc-resources</tt>(1)</a> subcommand.</b></li>
 <li><b>Modify the values for the specified JDBC resource by using the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a>
-subcommand.</b><p>For example:</p><pre>asadmin><tt><b>set resources.jdbc-resource.res1.enabled=false</b></tt></pre></li></ol>
+subcommand.</b><p>For example:</p></li></ol><a name="gjkrz"></a><h6>Example&#160;14-10 Updating a JDBC Resource</h6><p>This example changes the <tt>res1</tt> enabled setting to false.</p><pre>asadmin><tt><b>set resources.jdbc-resource.res1.enabled=false</b></tt></pre>
 
 <a name="ggnhz"></a><h5>To Delete a JDBC Resource</h5>
-<a name="indexterm-658"></a><a name="indexterm-659"></a><a name="indexterm-660"></a><p>Use the <tt>delete-jdbc-resource</tt> subcommand in remote mode to delete an existing JDBC resource.
+<a name="indexterm-705"></a><a name="indexterm-706"></a><a name="indexterm-707"></a><p>Use the <tt>delete-jdbc-resource</tt> subcommand in remote mode to delete an existing JDBC resource.
 Deleting a JDBC resource is a dynamic event and does not require server
 restart.</p><h6>Before You Begin</h6><p> Before deleting a JDBC resource, all associations with this resource must be
 removed.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>List JDBC resources by using the <a href="http://docs.sun.com/doc/820-7701/list-jdbc-resources-1?a=view"><tt>list-jdbc-resources</tt>(1)</a> subcommand.</b></li>
 <li><b>If necessary, notify users that the JDBC resource is being deleted.</b></li>
-<li><b>Delete a JDBC resource by using the <a href="http://docs.sun.com/doc/820-7701/delete-jdbc-resource-1?a=view"><tt>delete-jdbc-resource</tt>(1)</a> subcommand.</b></li></ol><a name="ggpga"></a><h6>Example&#160;14-10 Deleting a JDBC Resource</h6><p>This example deletes a JDBC resource named <tt>DerbyPool</tt>:</p><pre>asadmin> <tt><b>delete-jdbc-resource jdbc/DerbyPool</b></tt>
+<li><b>Delete a JDBC resource by using the <a href="http://docs.sun.com/doc/820-7701/delete-jdbc-resource-1?a=view"><tt>delete-jdbc-resource</tt>(1)</a> subcommand.</b></li></ol><a name="ggpga"></a><h6>Example&#160;14-11 Deleting a JDBC Resource</h6><p>This example deletes a JDBC resource named <tt>DerbyPool</tt>.</p><pre>asadmin> <tt><b>delete-jdbc-resource jdbc/DerbyPool</b></tt>
 Command delete-jdbc-resource executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help delete-jdbc-resource</tt> at the command line.</p>
 
 <a name="ghatb"></a><h4>Integrating the JDBC Driver</h4>
 <p>After setting up the connection pool and resources, integrate the JDBC driver in
 either of the following ways:</p>
-<ul><li><p>Make the driver accessible to the common class loader, and restart the domain.</p><p>Copy the driver&#8217;s JAR and ZIP files into the <i>domain-dir</i><tt>/lib</tt> directory, or copy its class files into the <i>domain-dir</i><tt>/lib/ext</tt> directory.</p></li>
-<li><p>Identify the fully-qualified path name for the driver's JAR file.</p></li></ul>
+<ul><li><p>Make the driver accessible to the common class loader, and restart the domain.</p><p>Copy the driver&#8217;s JAR and ZIP files into the <i>domain-dir</i><tt>/lib</tt> directory, or <tt>glassfish_home/lib</tt>, or copy its class files into the <i>domain-dir</i><tt>/lib/ext</tt> directory. Identify the fully-qualified path name for the driver's JAR file.</p></li></ul>
 
 
 <a name="beamw"></a><h3>Configuration Specifics for JDBC Drivers</h3>
-<a name="indexterm-661"></a><a name="indexterm-662"></a><p>Enterprise Server is designed to support connectivity to any database management system by
+<a name="indexterm-708"></a><a name="indexterm-709"></a><p>Enterprise Server is designed to support connectivity to any database management system by
 using a corresponding JDBC driver. </p>
 <ul><li><p><a href="#ghhvc">JDBC Drivers, Full Support </a></p></li>
 <li><p><a href="#ghhvx">JDBC Drivers, Limited Support </a></p></li></ul>
@@ -323,19 +305,20 @@ using a corresponding JDBC driver. </p>
 <p>The following JDBC driver and database combinations have been tested and are supported
 for container-managed persistence:</p>
 <ul><li><p><a href="#beamy">Sun GlassFish JDBC Driver for DB2 Databases</a></p></li>
-<li><p><a href="#beamz">Sun GlassFish JDBC Driver for Oracle 8.1.7 and 9.x Databases</a></p></li>
+<li><p><a href="#beamz">Sun GlassFish JDBC Driver for Oracle 11 Databases</a></p></li>
 <li><p><a href="#beana">Sun GlassFish JDBC Driver for Microsoft SQL Server Databases</a></p></li>
+<li><p><a href="#gjksd">Sun GlassFish JDBC Driver for MySQL Server Databases</a></p></li>
 <li><p><a href="#beanb">Sun GlassFish JDBC Driver for Sybase Databases</a></p></li>
 <li><p><a href="#beanc">IBM DB2 Type 2 Driver</a></p></li>
 <li><p><a href="#beamx">Java DB/Derby Type 4 Driver</a></p></li>
-<li><p><a href="#beand">JConnect Type 4 Driver for Sybase ASE 12.5 Databases</a></p></li>
-<li><p><a href="#gbsok">MM MySQL Type 4 Driver (Non-XA)</a></p></li></ul>
+<li><p><a href="#gbsor">MySQL Type 4 JDBC Driver</a></p></li>
+<li><p><a href="#gjksj">PostgreSQL Driver</a></p></li></ul>
 <p>To see the most current list of supported JDBC drivers, refer to
 the <a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Release Notes</i></a>.</p>
 
 <a name="beamy"></a><h5>Sun GlassFish JDBC Driver for DB2 Databases</h5>
-<a name="indexterm-663"></a><p>The JAR files for this driver are <tt>smbase.jar</tt>, <tt>smdb2.jar</tt>, and <tt>smutil.jar</tt>. Configure
-the connection pool using the following settings:</p>
+<a name="indexterm-710"></a><p>The JAR file for this driver is <tt>smdb2.jar</tt>. Configure the connection pool using
+the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
 <li><p><b>Database Vendor:</b> DB2</p></li>
@@ -346,13 +329,12 @@ the connection pool using the following settings:</p>
 <li><p><tt><b>databaseName</b></tt> &#8211; Set as appropriate.</p></li>
 <li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
 <li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li></ul>
-</li>
-<li><p><b>URL:</b> <tt>jdbc:sun:db2://</tt><i>serverName</i><tt>:</tt><i>portNumber</i><tt>;databaseName=</tt><i>databaseName</i></p></li></ul>
+</li></ul>
 
 
-<a name="beamz"></a><h5>Sun GlassFish JDBC Driver for Oracle 8.1.7 and 9.x Databases</h5>
-<a name="indexterm-664"></a><p>The JAR files for this driver are <tt>smbase.jar</tt>, <tt>smoracle.jar</tt>, and <tt>smutil.jar</tt>. Configure
-the connection pool using the following settings:</p>
+<a name="beamz"></a><h5>Sun GlassFish JDBC Driver for Oracle 11 Databases</h5>
+<a name="indexterm-711"></a><p>The JAR file for this driver is <tt>smoracle.jar</tt>. Configure the connection pool using
+the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
 <li><p><b>Database Vendor:</b> Oracle</p></li>
@@ -360,16 +342,14 @@ the connection pool using the following settings:</p>
 <li><p><b>Properties:</b></p>
 <ul><li><p><tt><b>serverName</b></tt> &#8211; Specify the host name or IP address of the database server.</p></li>
 <li><p><tt><b>portNumber</b></tt> &#8211; Specify the port number of the database server.</p></li>
-<li><p><tt><b>SID</b></tt> &#8211; Set as appropriate.</p></li>
 <li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
 <li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li></ul>
-</li>
-<li><p><b>URL:</b> <tt>jdbc:sun:oracle://</tt><i>serverName</i><tt>[:</tt><i>portNumber</i><tt>][;SID=</tt><i>databaseName</i><tt>]</tt></p></li></ul>
+</li></ul>
 
 
 <a name="beana"></a><h5>Sun GlassFish JDBC Driver for Microsoft SQL Server Databases</h5>
-<a name="indexterm-665"></a><p>The JAR files for this driver are <tt>smbase.jar</tt>, <tt>smsqlserver.jar</tt>, and <tt>smutil.jar</tt>. Configure
-the connection pool using the following settings:</p>
+<a name="indexterm-712"></a><p>The JAR file for this driver is <tt>smsqlserver.jar</tt>. Configure the connection pool using
+the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
 <li><p><b>Database Vendor:</b> Microsoft SQL Server</p></li>
@@ -380,13 +360,28 @@ the connection pool using the following settings:</p>
 <li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
 <li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li>
 <li><p><tt><b>selectMethod</b></tt> &#8211; Set to <tt>cursor</tt>.</p></li></ul>
-</li>
-<li><p><b>URL:</b> <tt>jdbc:sun:sqlserver://</tt><i>serverName</i><tt>[:</tt><i>portNumber</i><tt>]</tt></p></li></ul>
+</li></ul>
+
+
+<a name="gjksd"></a><h5>Sun GlassFish JDBC Driver for MySQL Server Databases</h5>
+<a name="indexterm-713"></a><p>/the Sun MySQL driver only works with MySQL Enterprise. The JAR file for
+this driver is <tt>smmysql.jar</tt>. Configure the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b>SQL Server</p></li>
+<li><p><b>DataSource Classname:</b> <tt>com.sun.sql.jdbcx.mysql.MySQLDataSource</tt></p></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> &#8211; Specify the host name or IP address and the port of the database server.</p></li>
+<li><p><tt><b>portNumber</b></tt> &#8211; Specify the port number of the database server.</p></li>
+<li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li>
+<li><p><tt><b>selectMethod</b></tt> &#8211; Set to <tt>cursor</tt>.</p></li></ul>
+</li></ul>
 
 
 <a name="beanb"></a><h5>Sun GlassFish JDBC Driver for Sybase Databases</h5>
-<a name="indexterm-666"></a><p>The JAR files for this driver are <tt>smbase.jar</tt>, <tt>smsybase.jar</tt>, and <tt>smutil.jar</tt>. Configure
-the connection pool using the following settings:</p>
+<a name="indexterm-714"></a><p>The JAR file for this driver is <tt>smsybase.jar</tt>. Configure the connection pool using
+the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
 <li><p><b>Database Vendor:</b> Sybase</p></li>
@@ -397,12 +392,11 @@ the connection pool using the following settings:</p>
 <li><p><tt><b>databaseName</b></tt> &#8211; Set as appropriate. This is optional.</p></li>
 <li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
 <li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li></ul>
-</li>
-<li><p><b>URL:</b> <tt>jdbc:sun:sybase://</tt><i>serverName</i><tt>[:</tt><i>portNumber</i><tt>]</tt></p></li></ul>
+</li></ul>
 
 
 <a name="beanc"></a><h5>IBM DB2 Type 2 Driver</h5>
-<a name="indexterm-667"></a><p>The JAR files for the DB2 driver are <tt>db2jcc.jar</tt>, <tt>db2jcc_license_cu.jar</tt>, and <tt>db2java.zip</tt>.
+<a name="indexterm-715"></a><p>The JAR files for the DB2 driver are <tt>db2jcc.jar</tt>, <tt>db2jcc_license_cu.jar</tt>, and <tt>db2java.zip</tt>.
 Set your environment variables . For example:</p><pre>LD_LIBRARY_PATH=/usr/db2user/sqllib/lib:${Java EE.home}/lib
 DB2DIR=/opt/IBM/db2/V8.2
 DB2INSTANCE=db2user
@@ -423,56 +417,52 @@ THREADS_FLAG=native</pre><p>Configure the connection pool using the following se
 
 
 <a name="beamx"></a><h5>Java DB/Derby Type 4 Driver</h5>
-<a name="indexterm-668"></a><a name="indexterm-669"></a><p>The JAR file for the Java DB/Derby driver is <tt>derbyclient.jar</tt>. (Java DB is
+<a name="indexterm-716"></a><a name="indexterm-717"></a><p>The JAR file for the Java DB driver is <tt>derbyclient.jar</tt>. (Java DB is
 based upon Apache Derby.) Configure the connection pool using the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
-<li><p><b>Database Vendor:</b> Java DB/Derby</p></li>
+<li><p><b>Database Vendor:</b> Java DB</p></li>
 <li><p><b>DataSource Classname:</b> Specify one of the following:</p><pre>org.apache.derby.jdbc.ClientDataSource
 org.apache.derby.jdbc.ClientXADataSource</pre></li>
 <li><p><b>Properties:</b></p>
 <ul><li><p><tt><b>serverName</b></tt> &#8211; Specify the host name or IP address of the database server.</p></li>
 <li><p><tt><b>portNumber</b></tt> &#8211; Specify the port number of the database server if it is different from the default.</p></li>
 <li><p><tt><b>databaseName</b></tt> &#8211; Specify the name of the database.</p></li>
-<li><p><tt><b>user</b></tt> - Specify the database user.</p><p>This is only necessary if Derby is configured to use authentication. Derby does <b>not</b> use authentication by default. When the user is provided, it is the name of the schema where the tables reside.</p></li>
-<li><p><tt><b>password</b></tt> &#8211; Specify the database password.</p><p>This is only necessary if Java DB/Derby is configured to use authentication.</p></li></ul>
-</li>
-<li><p><b>URL:</b> <tt>jdbc:derby://</tt><i>serverName</i><tt>:</tt><i>portNumber</i><tt>/</tt><i>databaseName</i><tt>;create=true</tt></p><p>Include the <tt>;create=true</tt> part only if you want the database to be created if it does not exist.</p></li></ul>
-
-
-<a name="beand"></a><h5>JConnect Type 4 Driver for Sybase ASE 12.5 Databases</h5>
-<a name="indexterm-670"></a><p>The JAR file for the Sybase driver is <tt>jconn2.jar</tt>. Configure the connection pool
-using the following settings:</p>
-<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
-<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
-<li><p><b>Database Vendor:</b> Sybase</p></li>
-<li><p><b>DataSource Classname:</b> Specify one of the following:</p><pre>com.sybase.jdbc2.jdbc.SybDataSource
-com.sybase.jdbc2.jdbc.SybXADataSource</pre></li>
-<li><p><b>Properties:</b></p>
-<ul><li><p><tt><b>serverName</b></tt> &#8211; Specify the host name or IP address of the database server.</p></li>
-<li><p><tt><b>portNumber</b></tt> &#8211; Specify the port number of the database server.</p></li>
-<li><p><tt><b>databaseName</b></tt> &#8211; Set as appropriate. Do not specify the complete URL, only the database name.</p></li>
-<li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
-<li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li>
-<li><p><tt><b>BE_AS_JDBC_COMPLIANT_AS_POSSIBLE</b></tt> &#8211; Set to <tt>true</tt>.</p></li>
-<li><p><tt><b>FAKE_METADATA</b></tt> &#8211; Set to <tt>true</tt>.</p></li></ul>
+<li><p><tt><b>user</b></tt> - Specify the database user.</p><p>This is only necessary if Java DB is configured to use authentication. Java DBdoes <b>not</b> use authentication by default. When the user is provided, it is the name of the schema where the tables reside.</p></li>
+<li><p><tt><b>password</b></tt> &#8211; Specify the database password.</p><p>This is only necessary if Java DB is configured to use authentication.</p></li></ul>
 </li></ul>
 
 
-<a name="gbsok"></a><h5>MM MySQL Type 4 Driver (Non-XA)</h5>
-<a name="indexterm-671"></a><p>The JAR file for the MySQL driver is <tt>mysql-connector-java-</tt><i>version</i><tt>-bin-g.jar</tt>, for example, <tt>mysql-connector-java-3.1.12-bin-g.jar</tt>.
-Configure the connection pool using the following settings:</p>
+<a name="gbsor"></a><h5>MySQL Type 4 JDBC Driver</h5>
+<a name="indexterm-718"></a><p>The JAR file for the MySQL<sup>TM</sup> driver is <tt>mysql-connector-java-5.1.7-bin.jar</tt>. Configure the connection
+pool using the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
 <li><p><b>Database Vendor:</b> Microsoft SQL Server</p></li>
-<li><p><b>DataSource Classname:</b> Specify one of the following:</p><pre>com.mysql.jdbc.jdbc2.optional.MysqlDataSource</pre></li>
+<li><p><b>DataSource Classname:</b> </p><pre>com.mysql.jdbc.jdbc2.optional.MysqlDataSource
+com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</pre></li>
 <li><p><b>Properties:</b></p>
 <ul><li><p><tt><b>serverName</b></tt> &#8211; Specify the host name or IP address of the database server.</p></li>
 <li><p><tt><b>portNumber</b></tt> &#8211; Specify the port number of the database server.</p></li>
 <li><p><tt><b>databaseName</b></tt> &#8211; Set as appropriate.</p></li>
 <li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
-<li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li>
-<li><p><tt><b>URL</b></tt> &#8211; If you are using global transactions, you can set this property instead of <tt>serverName</tt>, <tt>port</tt>, and <tt>databaseName</tt>.</p><p>The MM MySQL Type 4 driver doesn&#8217;t provide a method to set the required <tt>relaxAutoCommit</tt> property, so you must set it indirectly by setting the <tt><b>URL</b></tt> property:</p><pre>jdbc:mysql://<i>host</i>:<i>port</i>/<i>database</i>?relaxAutoCommit="true"</pre></li></ul>
+<li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li></ul>
+</li></ul>
+
+
+<a name="gjksj"></a><h5>PostgreSQL Driver</h5>
+<a name="indexterm-719"></a><p>The JAR file for the PostgreSQL driver is <tt>postgresql-8.4-701.jdbc4.jar</tt>. Configure the connection
+pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> PostgreSQL Server</p></li>
+<li><p><b>DataSource Classname:</b> </p><pre>    * org.postgresql.ds.PGSimpleDataSource</pre></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>serverName</b></tt> &#8211; Specify the host name or IP address of the database server.</p></li>
+<li><p><tt><b>portNumber</b></tt> &#8211; Specify the port number of the database server.</p></li>
+<li><p><tt><b>databaseName</b></tt> &#8211; Set as appropriate.</p></li>
+<li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li></ul>
 </li></ul>
 
 
@@ -481,14 +471,13 @@ Configure the connection pool using the following settings:</p>
 not been fully tested. Although Sun offers no product support for these drivers,
 Sun does offer limited support for the use of these drivers with
 Enterprise Server:</p>
-<ul><li><p><a href="#ghgft">CloudScape 5.1 Type 4 Driver</a></p></li>
-<li><p><a href="#beanj">IBM Informix Type 4 Driver</a></p></li>
-<li><p><a href="#beane">Inet Oraxo JDBC Driver for Oracle 8.1.7 and 9.x Databases</a></p></li>
+<ul><li><p><a href="#beanj">IBM Informix Type 4 Driver</a></p></li>
+<li><p><a href="#beane">Inet Oraxo JDBC Driver for Oracle Databases</a></p></li>
 <li><p><a href="#beanf">Inet Merlia JDBC Driver for Microsoft SQL Server Databases</a></p></li>
 <li><p><a href="#beang">Inet Sybelux JDBC Driver for Sybase Databases</a></p></li>
-<li><p><a href="#gbsor">MM MySQL Type 4 Driver (XA Only)</a></p></li>
-<li><p><a href="#beani">OCI Oracle Type 2 Driver for Oracle 8.1.7 and 9.x Databases</a></p></li>
-<li><p><a href="#beanh">Oracle Thin Type 4 Driver for Oracle 8.1.7 and 9.x Databases</a></p></li></ul>
+<li><p><a href="#beand">JConnect Type 4 Driver for Sybase ASE 12.5 Databases</a></p></li>
+<li><p><a href="#beanh">Oracle Thin Type 4 JDBC Driver for Oracle 11 Databases</a></p></li>
+<li><p><a href="#beani">OCI Oracle Type 2 Driver for Oracle Databases</a></p></li></ul>
 
 <hr><p><b>Note - </b>An Oracle database user running the <tt>capture-schema</tt> command needs ANALYZE ANY TABLE privileges
 if that user does not own the schema. These privileges are granted to
@@ -496,22 +485,8 @@ the user by the database administrator. For information about <tt>capture-schema
 <hr>
 
 
-<a name="ghgft"></a><h5>CloudScape 5.1 Type 4 Driver</h5>
-<a name="indexterm-672"></a><p>The JAR files for the CloudScape driver are <tt>db2j.jar</tt>, <tt>db2jtools.jar</tt>, <tt>db2jcview.jar</tt>, <tt>jh.jar</tt>,
-<tt>db2jcc.jar</tt>, and <tt>db2jnet.jar</tt>. Configure the connection pool using the following settings:</p>
-<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
-<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
-<li><p><b>Database Vendor:</b> Cloudscape</p></li>
-<li><p><b>DataSource Classname:</b> <tt>com.ibm.db2.jcc.DB2DataSource</tt></p></li>
-<li><p><b>Properties:</b></p>
-<ul><li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
-<li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li>
-<li><p><tt><b>databaseName</b></tt> &#8211; Set as appropriate.</p></li></ul>
-</li></ul>
-
-
 <a name="beanj"></a><h5>IBM Informix Type 4 Driver</h5>
-<a name="indexterm-673"></a><p>Configure the connection pool using the following settings:</p>
+<a name="indexterm-720"></a><p>Configure the connection pool using the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
 <li><p><b>Database Vendor:</b> Informix</p></li>
@@ -527,8 +502,8 @@ com.informix.jdbcx.IfxXADataSource</pre></li>
 </li></ul>
 
 
-<a name="beane"></a><h5>Inet Oraxo JDBC Driver for Oracle 8.1.7 and 9.x Databases</h5>
-<a name="indexterm-674"></a><a name="indexterm-675"></a><p>The JAR file for the Inet Oracle driver is <tt>Oranxo.jar</tt>. Configure the connection
+<a name="beane"></a><h5>Inet Oraxo JDBC Driver for Oracle Databases</h5>
+<a name="indexterm-721"></a><a name="indexterm-722"></a><p>The JAR file for the Inet Oracle driver is <tt>Oranxo.jar</tt>. Configure the connection
 pool using the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
@@ -546,7 +521,7 @@ pool using the following settings:</p>
 
 
 <a name="beanf"></a><h5>Inet Merlia JDBC Driver for Microsoft SQL Server Databases</h5>
-<a name="indexterm-676"></a><a name="indexterm-677"></a><p>The JAR file for the Inet Microsoft SQL Server driver is <tt>Merlia.jar</tt>.
+<a name="indexterm-723"></a><a name="indexterm-724"></a><p>The JAR file for the Inet Microsoft SQL Server driver is <tt>Merlia.jar</tt>.
 Configure the connection pool using the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
@@ -561,7 +536,7 @@ Configure the connection pool using the following settings:</p>
 
 
 <a name="beang"></a><h5>Inet Sybelux JDBC Driver for Sybase Databases</h5>
-<a name="indexterm-678"></a><a name="indexterm-679"></a><p>The JAR file for the Inet Sybase driver is <tt>Sybelux.jar</tt>. Configure the connection
+<a name="indexterm-725"></a><a name="indexterm-726"></a><p>The JAR file for the Inet Sybase driver is <tt>Sybelux.jar</tt>. Configure the connection
 pool using the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
@@ -576,42 +551,27 @@ pool using the following settings:</p>
 </li></ul>
 
 
-<a name="gbsor"></a><h5>MM MySQL Type 4 Driver (XA Only)</h5>
-<a name="indexterm-680"></a><p>The JAR file for the MySQL<sup>TM</sup> driver is <tt>mysql-connector-java-</tt><i>version</i><tt>-bin-g.jar</tt>, for example, <tt>mysql-connector-java-3.1.12-bin-g.jar</tt>. Configure the
-connection pool using the following settings:</p>
+<a name="beand"></a><h5>JConnect Type 4 Driver for Sybase ASE 12.5 Databases</h5>
+<a name="indexterm-727"></a><p>The JAR file for the Sybase driver is <tt>jconn4.jar</tt>. Configure the connection pool
+using the following settings:</p>
 <ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
 <li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
-<li><p><b>Database Vendor:</b> Microsoft SQL Server</p></li>
-<li><p><b>DataSource Classname:</b> </p><pre>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</pre></li>
+<li><p><b>Database Vendor:</b> Sybase</p></li>
+<li><p><b>DataSource Classname:</b> Specify one of the following:</p><pre>com.sybase.jdbc4.jdbc.SybDataSource
+com.sybase.jdbc4.jdbc.SybXADataSource</pre></li>
 <li><p><b>Properties:</b></p>
 <ul><li><p><tt><b>serverName</b></tt> &#8211; Specify the host name or IP address of the database server.</p></li>
 <li><p><tt><b>portNumber</b></tt> &#8211; Specify the port number of the database server.</p></li>
-<li><p><tt><b>databaseName</b></tt> &#8211; Set as appropriate.</p></li>
+<li><p><tt><b>databaseName</b></tt> &#8211; Set as appropriate. Do not specify the complete URL, only the database name.</p></li>
 <li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
 <li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li>
-<li><p><tt><b>URL</b></tt> &#8211; If you are using global transactions, you can set this property instead of <tt>serverName</tt>, <tt>port</tt>, and <tt>databaseName</tt>.</p><p>The MM MySQL Type 4 driver doesn&#8217;t provide a method to set the required <tt>relaxAutoCommit</tt> property, so you must set it indirectly by setting the <tt>URL</tt> property:</p><pre>jdbc:mysql://<i>host</i>:<i>port</i>/<i>database</i>?relaxAutoCommit="true"</pre></li></ul>
+<li><p><tt><b>BE_AS_JDBC_COMPLIANT_AS_POSSIBLE</b></tt> &#8211; Set to <tt>true</tt>.</p></li>
+<li><p><tt><b>FAKE_METADATA</b></tt> &#8211; Set to <tt>true</tt>.</p></li></ul>
 </li></ul>
 
 
-<a name="beani"></a><h5>OCI Oracle Type 2 Driver for Oracle 8.1.7 and 9.x Databases</h5>
-<a name="indexterm-681"></a><p>The JAR file for the OCI Oracle driver is <tt>ojdbc14.jar</tt>. Make sure that
-the shared library is available through <tt>LD_LIBRARY_PATH</tt> and that the <tt>ORACLE_HOME</tt> property is
-set. Configure the connection pool using the following settings:</p>
-<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
-<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
-<li><p><b>Database Vendor:</b> Oracle</p></li>
-<li><p><b>DataSource Classname: </b>Specify one of the following:</p><pre>oracle.jdbc.pool.OracleDataSource
-oracle.jdbc.xa.client.OracleXADataSource</pre></li>
-<li><p><b>Properties:</b></p>
-<ul><li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
-<li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li>
-<li><p><tt><b>URL</b></tt> &#8211; Specify the complete database URL using the following syntax:</p><pre>jdbc:oracle:oci:[<i>user</i>/<i>password</i>]@<i>host</i>[:<i>port</i>]/<i>service</i></pre><p>For example:</p><pre>jdbc:oracle:oci:@localhost:1521:customer_db</pre></li>
-<li><p><tt><b>xa-driver-does-not-support-non-tx-operations</b></tt> - Set to the value <tt>true</tt>. Only needed if both non-XA and XA connections are retrieved from the same connection pool. Might degrade performance.</p><p>As an alternative to setting this property, you can create two connection pools, one for non-XA connections and one for XA connections.</p></li></ul>
-</li></ul>
-
-
-<a name="beanh"></a><h5>Oracle Thin Type 4 Driver for Oracle 8.1.7 and 9.x Databases</h5>
-<a name="indexterm-682"></a><p>The JAR file for the Oracle driver is <tt>ojdbc14.jar</tt>. </p>
+<a name="beanh"></a><h5>Oracle Thin Type 4 JDBC Driver for Oracle 11 Databases</h5>
+<a name="indexterm-728"></a><p>The JAR file for the Oracle driver is <tt>ojdbc6.jar</tt>. </p>
 <hr><p><b>Note - </b>When using this driver, keep in mind that you cannot insert more than
 2000 bytes of data into a column. To circumvent this problem, use
 the OCI driver (JDBC type 2).</p>
@@ -625,11 +585,26 @@ oracle.jdbc.xa.client.OracleXADataSource</pre></li>
 <li><p><b>Properties:</b></p>
 <ul><li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
 <li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li>
-<li><p><tt><b>URL</b></tt> &#8211; Specify the complete database URL using the following syntax:</p><pre>jdbc:oracle:thin:[<i>user</i>/<i>password</i>]@<i>host</i>[:<i>port</i>]/<i>service</i></pre><p>For example:</p><pre>jdbc:oracle:thin:@localhost:1521:customer_db</pre></li>
 <li><p><tt><b>xa-driver-does-not-support-non-tx-operations</b></tt> - Set to the value <tt>true</tt>. Optional: only needed if both non-XA and XA connections are retrieved from the same connection pool. Might degrade performance.</p><p>As an alternative to setting this property, you can create two connection pools, one for non-XA connections and one for XA connections.</p></li></ul>
 
-<hr><p><b>Note - </b><a name="indexterm-683"></a>For the Oracle thin driver, the <tt>XAResource.recover</tt> method repeatedly returns the same set of in-doubt Xids regardless of the input flag. According to the XA specifications, the Transaction Manager initially calls this method with <tt>TMSTARTSCAN</tt> and then with <tt>TMNOFLAGS</tt> repeatedly until no Xids are returned. The <tt>XAResource.commit</tt> method also has some issues.</p><p>To disable this Enterprise Server workaround, the <a name="indexterm-684"></a><tt>oracle-xa-recovery-workaround</tt> property value must be set to <tt>false</tt>. </p>
+<hr><p><b>Note - </b><a name="indexterm-729"></a>For the Oracle thin driver, the <tt>XAResource.recover</tt> method repeatedly returns the same set of in-doubt Xids regardless of the input flag. According to the XA specifications, the Transaction Manager initially calls this method with <tt>TMSTARTSCAN</tt> and then with <tt>TMNOFLAGS</tt> repeatedly until no Xids are returned. The <tt>XAResource.commit</tt> method also has some issues.</p><p>To disable this Enterprise Server workaround, the <a name="indexterm-730"></a><tt>oracle-xa-recovery-workaround</tt> property value must be set to <tt>false</tt>. </p>
 <hr>
+</li></ul>
+
+
+<a name="beani"></a><h5>OCI Oracle Type 2 Driver for Oracle Databases</h5>
+<a name="indexterm-731"></a><p>The JAR file for the OCI Oracle driver is <tt>ojdbc14.jar</tt>. Make sure that
+the shared library is available through <tt>LD_LIBRARY_PATH</tt> and that the <tt>ORACLE_HOME</tt> property is
+set. Configure the connection pool using the following settings:</p>
+<ul><li><p><b>Name:</b> Use this name when you configure the JDBC resource later.</p></li>
+<li><p><b>Resource Type:</b> Specify the appropriate value.</p></li>
+<li><p><b>Database Vendor:</b> Oracle</p></li>
+<li><p><b>DataSource Classname: </b>Specify one of the following:</p><pre>oracle.jdbc.pool.OracleDataSource
+oracle.jdbc.xa.client.OracleXADataSource</pre></li>
+<li><p><b>Properties:</b></p>
+<ul><li><p><tt><b>user</b></tt> &#8211; Set as appropriate.</p></li>
+<li><p><tt><b>password</b></tt> &#8211; Set as appropriate.</p></li>
+<li><p><tt><b>xa-driver-does-not-support-non-tx-operations</b></tt> - Set to the value <tt>true</tt>. Only needed if both non-XA and XA connections are retrieved from the same connection pool. Might degrade performance.</p><p>As an alternative to setting this property, you can create two connection pools, one for non-XA connections and one for XA connections.</p></li></ul>
 </li></ul>
 
 

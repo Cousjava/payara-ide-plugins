@@ -6,7 +6,7 @@
 <title>Using the Java Persistence API - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 </table>
 
 
-<a name="gbxjk"></a>Chapter&#160;7<h3>Using the Java Persistence API</h3><a name="indexterm-354"></a><a name="indexterm-355"></a><p><a name="indexterm-356"></a><a name="indexterm-357"></a>Sun GlassFish Enterprise Server support for the Java Persistence API includes all required
+<a name="gbxjk"></a>Chapter&#160;7<h3>Using the Java Persistence API</h3><a name="indexterm-365"></a><a name="indexterm-366"></a><p><a name="indexterm-367"></a><a name="indexterm-368"></a>Sun GlassFish<sup>TM</sup> Enterprise Server support for the Java Persistence API includes all required
 features described in the Java Persistence Specification, also known as <a href="http://jcp.org/en/jsr/detail?id=317">JSR 317</a>. The Java
 Persistence API can be used with non-EJB components outside the EJB container.</p><p>The Java Persistence API provides an object/relational mapping facility to Java developers for
 managing relational data in Java applications. For basic information about the Java Persistence
@@ -42,7 +42,7 @@ in the following topics:</p>
 <li><p><a href="#gdkwf">Changing the Persistence Provider</a></p></li>
 <li><p><a href="#gbxjh">Restrictions and Optimizations</a></p></li></ul>
 
-<hr><p><b>Note - </b><a name="indexterm-358"></a>The default persistence provider in the Enterprise Server is based on the EclipseLink Java
+<hr><p><b>Note - </b><a name="indexterm-369"></a>The default persistence provider in the Enterprise Server is based on the EclipseLink Java
 Persistence API implementation. All configuration options in EclipseLink are available to applications that
 use the Enterprise Server's default persistence provider.</p>
 <hr>
@@ -54,13 +54,13 @@ Server supports the entire EJB 3.1 specification. For details, see <a href="http
 
 
 <a name="gbwmj"></a><h3>Specifying the Database</h3>
-<a name="indexterm-359"></a><a name="indexterm-360"></a><a name="indexterm-361"></a><a name="indexterm-362"></a><p>The Enterprise Server uses the bundled Java DB (Derby) database by default. If
+<a name="indexterm-370"></a><a name="indexterm-371"></a><a name="indexterm-372"></a><a name="indexterm-373"></a><p>The Enterprise Server uses the bundled Java DB (Derby) database by default. If
 the <tt>transaction-type</tt> element is omitted or specified as <tt>JTA</tt> and both the <tt>jta-data-source</tt>
 and <tt>non-jta-data-source</tt> elements are omitted in the <tt>persistence.xml</tt> file, Java DB is used as
 a JTA data source. If <tt>transaction-type</tt> is specified as <tt>RESOURCE_LOCAL</tt> and both <tt>jta-data-source</tt>
 and <tt>non-jta-data-source</tt> are omitted, Java DB is used as a non-JTA data source.</p><p>To use a non-default database, either specify a value for the <tt>jta-data-source</tt>
 element, or set the <tt>transaction-type</tt> element to <tt>RESOURCE_LOCAL</tt> and specify a value for
-the <tt>non-jta-data-source</tt> element.</p><p><a name="indexterm-363"></a>If you are using the default persistence provider, the provider attempts to automatically
+the <tt>non-jta-data-source</tt> element.</p><p><a name="indexterm-374"></a>If you are using the default persistence provider, the provider attempts to automatically
 detect the database type based on the connection metadata. This database type is
 used to issue SQL statements specific to the detected database type's dialect. You
 can specify the optional <tt>eclipselink.target-database</tt> property to guarantee that the database type is correct.
@@ -115,7 +115,7 @@ value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage
 Server, see the <a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Preview Release Notes</i></a>. For configurations of supported and other drivers, see <a href="http://docs.sun.com/doc/820-7692/beamw?a=view">Configuration Specifics for JDBC Drivers in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p><p>To change the persistence provider, see <a href="#gdkwf">Changing the Persistence Provider</a>.</p>
 
 <a name="gcnvb"></a><h3>Additional Database Properties</h3>
-<a name="indexterm-364"></a><a name="indexterm-365"></a><p>If you are using the default persistence provider, you can specify in the
+<a name="indexterm-375"></a><a name="indexterm-376"></a><p>If you are using the default persistence provider, you can specify in the
 <tt>persistence.xml</tt> file the database properties listed at <a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#How_to_Use_EclipseLink_JPA_Extensions_for_JDBC_Connection_Communication">How to Use EclipseLink JPA Extensions for JDBC Connection Communication</a>. </p><p>For schema generation properties, see <a href="#gbwmk">Generation Options</a>. For query hints, see <a href="#gbzgp">Query Hints</a>.</p>
 
 <a name="gdpwv"></a><h3>Configuring the Cache</h3>
@@ -176,14 +176,14 @@ to be correct for running the application.</p>
 
 
 <a name="gcjgl"></a><h4>Annotations</h4>
-<a name="indexterm-366"></a><a name="indexterm-367"></a><p>The following annotations are used in automatic schema generation: <tt>@AssociationOverride</tt>, <tt>@AssociationOverrides</tt>, <tt>@AttributeOverride</tt>,
+<a name="indexterm-377"></a><a name="indexterm-378"></a><p>The following annotations are used in automatic schema generation: <tt>@AssociationOverride</tt>, <tt>@AssociationOverrides</tt>, <tt>@AttributeOverride</tt>,
 <tt>@AttributeOverrides</tt>, <tt>@Column</tt>, <tt>@DiscriminatorColumn</tt>, <tt>@DiscriminatorValue</tt>, <tt>@Embedded</tt>, <tt>@EmbeddedId</tt>, <tt>@GeneratedValue</tt>, <tt>@Id</tt>, <tt>@IdClass</tt>, <tt>@JoinColumn</tt>, <tt>@JoinColumns</tt>, <tt>@JoinTable</tt>,
 <tt>@Lob</tt>, <tt>@ManyToMany</tt>, <tt>@ManyToOne</tt>, <tt>@OneToMany</tt>, <tt>@OneToOne</tt>, <tt>@PrimaryKeyJoinColumn</tt>, <tt>@PrimaryKeyJoinColumns</tt>, <tt>@SecondaryTable</tt>, <tt>@SecondaryTables</tt>, <tt>@SequenceGenerator</tt>, <tt>@Table</tt>, <tt>@TableGenerator</tt>,
 <tt>@UniqueConstraint</tt>, and <tt>@Version</tt>. For information about these annotations, see the Java Persistence Specification.</p><p>For <tt>@Column</tt> annotations, the <tt>insertable</tt> and <tt>updatable</tt> elements are not used in automatic
 schema generation.</p><p>For <tt>@OneToMany</tt> and <tt>@ManyToOne</tt> annotations, no <tt>ForeignKeyConstraint</tt> is created in the resulting DDL files.</p>
 
 <a name="gbwmk"></a><h4>Generation Options</h4>
-<a name="indexterm-368"></a><a name="indexterm-369"></a><a name="indexterm-370"></a><p>Schema generation properties or <tt>asadmin</tt> command line options can control automatic schema generation
+<a name="indexterm-379"></a><a name="indexterm-380"></a><a name="indexterm-381"></a><p>Schema generation properties or <tt>asadmin</tt> command line options can control automatic schema generation
 by the following:</p>
 <ul><li><p>Creating tables during deployment</p></li>
 <li><p>Dropping tables during undeployment</p></li>
@@ -193,8 +193,8 @@ by the following:</p>
 <hr><p><b>Note - </b>Before using these options, make sure you have a properly configured database. See
 <a href="#gbwmj">Specifying the Database</a>.</p>
 <hr>
-<p><a name="indexterm-371"></a>Optional schema generation properties control the automatic creation of database tables. You can specify
-them in the <tt>persistence.xml</tt> file. For more information, see <a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#Using_EclipseLink_JPA_Extensions_for_Schema_Generation">Using EclipseLink JPA Extensions for Schema Generation</a>.</p><p><a name="indexterm-372"></a><a name="indexterm-373"></a><a name="indexterm-374"></a><a name="indexterm-375"></a>The following options of the <tt>asadmin deploy</tt> or <tt>asadmin deploydir</tt> command control the automatic creation
+<p><a name="indexterm-382"></a>Optional schema generation properties control the automatic creation of database tables. You can specify
+them in the <tt>persistence.xml</tt> file. For more information, see <a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#Using_EclipseLink_JPA_Extensions_for_Schema_Generation">Using EclipseLink JPA Extensions for Schema Generation</a>.</p><p><a name="indexterm-383"></a><a name="indexterm-384"></a><a name="indexterm-385"></a><a name="indexterm-386"></a>The following options of the <tt>asadmin deploy</tt> or <tt>asadmin deploydir</tt> command control the automatic creation
 of database tables at deployment.</p><a name="gbwlr"></a><h6>Table&#160;7-1 The <tt>asadmin deploy</tt> and <tt>asadmin deploydir</tt> Generation Options</h6><table><col width="28%"><col width="7%"><col width="63%"><tr><th align="left" valign="top" scope="column"><p>Option</p></th>
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
@@ -216,7 +216,7 @@ that would have been automatically created are found, the deployment proceeds, b
 is thrown to indicate that tables could not be created.</p><p>If <tt>false</tt>, the
 <tt>eclipselink.ddl-generation</tt> property setting in <tt>persistence.xml</tt> is overridden.</p></td>
 </tr>
-</table><p><a name="indexterm-376"></a><a name="indexterm-377"></a>The following options of the <tt>asadmin undeploy</tt> command control the automatic removal of database tables
+</table><p><a name="indexterm-387"></a><a name="indexterm-388"></a>The following options of the <tt>asadmin undeploy</tt> command control the automatic removal of database tables
 at undeployment.</p><a name="gbwmm"></a><h6>Table&#160;7-2 The <tt>asadmin undeploy</tt> Generation Options</h6><table><col width="17%"><col width="8%"><col width="73%"><tr><th align="left" valign="top" scope="column"><p>Option</p></th>
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
@@ -229,11 +229,11 @@ does not drop tables.</p><p>If not specified, tables are dropped only if the <tt
 property setting in <tt>persistence.xml</tt> is <tt>drop-and-create-tables</tt>.</p></td>
 </tr>
 </table><p>For more information about the <tt>asadmin deploy</tt>, <tt>asadmin deploydir</tt>, and <tt>asadmin undeploy</tt> commands, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p><p>When <tt>asadmin</tt> deployment options and <tt>persistence.xml</tt> options are both specified, the <tt>asadmin</tt>
-deployment options take precedence.</p><p>The <tt>asant</tt> tasks <tt>sun-appserv-deploy</tt> and <tt>sun-appserv-undeploy</tt> are equivalent to <tt>asadmin deploy</tt> and <tt>asadmin undeploy</tt>,
-respectively. These <tt>asant</tt> tasks also override the <tt>persistence.xml</tt> options. For details, see <a href="p7.html">Chapter&#160;3, Using Ant with Enterprise Server</a>.</p>
+deployment options take precedence.</p><p>The Ant tasks <tt>sun-appserv-deploy</tt> and <tt>sun-appserv-undeploy</tt> are equivalent to <tt>asadmin deploy</tt> and <tt>asadmin undeploy</tt>,
+respectively. These Ant tasks also override the <tt>persistence.xml</tt> options. For details, see <a href="p7.html">Chapter&#160;3, Using Ant with Enterprise Server</a>.</p>
 
 <a name="gbzgp"></a><h3>Query Hints</h3>
-<a name="indexterm-378"></a><p>Query hints are additional, implementation-specific configuration settings. You can use hints in your
+<a name="indexterm-389"></a><p>Query hints are additional, implementation-specific configuration settings. You can use hints in your
 queries in the following format:</p><pre>setHint("<i>hint-name</i>", <i>hint-value</i>)</pre><p>For example:</p><pre>Customer customer = (Customer)entityMgr.
      createNamedQuery("findCustomerBySSN").
      setParameter("SSN", "123-12-1234").
@@ -242,7 +242,7 @@ queries in the following format:</p><pre>setHint("<i>hint-name</i>", <i>hint-val
 <a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#How_to_Use_EclipseLink_JPA_Query_Hints">How to Use EclipseLink JPA Query Hints</a>.</p>
 
 <a name="gdkwf"></a><h3>Changing the Persistence Provider</h3>
-<a name="indexterm-379"></a>
+<a name="indexterm-390"></a>
 <hr><p><b>Note - </b>The previous sections in this chapter apply only to the default persistence provider.
 If you change the provider for a module or application, the provider-specific database
 properties, query hints, and schema generation features described in this chapter do not
@@ -262,10 +262,10 @@ in the <tt>persistence.xml</tt> file. For example:</p><pre>&#60;?xml version="1.
                 &#60;property name="company22.database.name" value="MyDB"/>
             &#60;/properties>
         &#60;/persistence-unit>
-    &#60;/persistence></pre><p><a name="indexterm-380"></a>To migrate from Oracle TopLink to EclipseLink, see <a href="http://wiki.eclipse.org/EclipseLink/Examples/MigratingFromOracleTopLink">Migrating from Oracle TopLink to EclipseLink</a>.</p>
+    &#60;/persistence></pre><p><a name="indexterm-391"></a>To migrate from Oracle TopLink to EclipseLink, see <a href="http://wiki.eclipse.org/EclipseLink/Examples/MigratingFromOracleTopLink">Migrating from Oracle TopLink to EclipseLink</a>.</p>
 
 <a name="gbxjh"></a><h3>Restrictions and Optimizations</h3>
-<a name="indexterm-381"></a><p>This section discusses restrictions and performance optimizations that affect using the Java Persistence
+<a name="indexterm-392"></a><p>This section discusses restrictions and performance optimizations that affect using the Java Persistence
 API.</p>
 <ul><li><p><a href="#giqbi">Oracle Database Enhancements</a></p></li>
 <li><p><a href="#ghdtr">Extended Persistence Context</a></p></li>
@@ -295,7 +295,7 @@ trade-offs in memory utilization must be carefully examined before choosing this
 an <tt>HttpSession</tt>.</p>
 
 <a name="gezxw"></a><h4>Using @OrderBy with a Shared Session Cache</h4>
-<a name="indexterm-382"></a><a name="indexterm-383"></a><a name="indexterm-384"></a><p>Setting <tt>@OrderBy</tt> on a <tt>ManyToMany</tt> or <tt>OneToMany</tt> relationship field in which a
+<a name="indexterm-393"></a><a name="indexterm-394"></a><a name="indexterm-395"></a><p>Setting <tt>@OrderBy</tt> on a <tt>ManyToMany</tt> or <tt>OneToMany</tt> relationship field in which a
 <tt>List</tt> represents the Many side doesn't work if the session cache is shared.
 Use one of the following workarounds:</p>
 <ul><li><p>Have the application maintain the order so the <tt>List</tt> is cached properly.</p></li>
@@ -304,7 +304,7 @@ Use one of the following workarounds:</p>
 
 
 <a name="gdwqi"></a><h4>Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver</h4>
-<p><a name="indexterm-385"></a><a name="indexterm-386"></a>To use BLOB or CLOB data types larger than 4 KB for persistence
+<p><a name="indexterm-396"></a><a name="indexterm-397"></a>To use BLOB or CLOB data types larger than 4 KB for persistence
 using the Inet Oraxo JDBC Driver for Oracle Databases, you must set the
 database's <tt>streamstolob</tt> property value to <tt>true</tt>.</p>
 
@@ -350,7 +350,7 @@ example:</p><pre>use aliases Select m.ID AS \"ID\" from Department m</pre><p>Use
 in the <tt>persistence.xml</tt> file.</p>
 
 <a name="gbxjg"></a><h4>Sybase Finder Limitation</h4>
-<a name="indexterm-387"></a><a name="indexterm-388"></a><p>If a finder method with an input greater than 255 characters is executed
+<a name="indexterm-398"></a><a name="indexterm-399"></a><p>If a finder method with an input greater than 255 characters is executed
 and the primary key column is mapped to a VARCHAR column, Sybase attempts
 to convert type VARCHAR to type TEXT and generates the following error:</p><pre>com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype 
 'TEXT' to 'VARCHAR' is not allowed.  Use the CONVERT function to run this 
@@ -358,7 +358,7 @@ query.</pre><p>To avoid this error, make sure the finder method input is less th
 255 characters.</p>
 
 <a name="gbxjp"></a><h4>MySQL Database Restrictions</h4>
-<a name="indexterm-389"></a><p>The following restrictions apply when you use a MySQL database with the Enterprise
+<a name="indexterm-400"></a><p>The following restrictions apply when you use a MySQL database with the Enterprise
 Server for persistence.</p>
 <ul><li><p>MySQL treats <tt>int1</tt> and <tt>int2</tt> as reserved words. If you want to define <tt>int1</tt> and <tt>int2</tt> as fields in your table, use <tt>`int1`</tt> and <tt>`int2`</tt> field names in your SQL file. </p></li>
 <li><p>When <tt>VARCHAR</tt> fields get truncated, a warning is displayed instead of an error. To get an error message, start the MySQL database in strict SQL mode. </p></li>

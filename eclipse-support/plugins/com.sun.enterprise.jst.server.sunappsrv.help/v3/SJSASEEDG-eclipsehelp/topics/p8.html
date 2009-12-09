@@ -6,7 +6,7 @@
 <title>Debugging Applications - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 </table>
 
 
-<a name="beafc"></a>Chapter&#160;4<h3>Debugging Applications</h3><a name="indexterm-200"></a><p>This chapter gives guidelines for debugging applications in the Sun GlassFish Enterprise Server.
+<a name="beafc"></a>Chapter&#160;4<h3>Debugging Applications</h3><a name="indexterm-198"></a><p>This chapter gives guidelines for debugging applications in the Sun GlassFish<sup>TM</sup> Enterprise Server.
 It includes the following sections:</p>
 <ul><li><p><a href="#beafd">Enabling Debugging</a></p></li>
 <li><p><a href="#beafe">JPDA Options</a></p></li>
@@ -38,8 +38,8 @@ It includes the following sections:</p>
 
 
 <a name="beafd"></a><h3>Enabling Debugging</h3>
-<a name="indexterm-201"></a><p>When you enable debugging, you enable both local and remote debugging. To start
-the server in debug mode, use the <tt>--debug</tt> option as follows:</p><pre>asadmin start-domain --debug [<i>domain-name</i>]</pre><p><a name="indexterm-202"></a>You can then attach to the server from the Java Debugger (<tt>jdb</tt>) at its
+<a name="indexterm-199"></a><p>When you enable debugging, you enable both local and remote debugging. To start
+the server in debug mode, use the <tt>--debug</tt> option as follows:</p><pre>asadmin start-domain --debug [<i>domain-name</i>]</pre><p><a name="indexterm-200"></a>You can then attach to the server from the Java Debugger (<tt>jdb</tt>) at its
 default Java Platform Debugger Architecture (JPDA) port, which is 9009. For example, for
 UNIX<sup>&#174;</sup> systems:</p><pre>jdb -attach 9009</pre><p>For Windows:</p><pre>jdb -connect com.sun.jdi.SocketAttach:port=9009</pre><p>For more information about the <tt>jdb</tt> debugger, see the following links:</p>
 <ul><li><p>Java Platform Debugger Architecture - The Java Debugger: <a href="http://java.sun.com/products/jpda/doc/soljdb.html">http://java.sun.com/products/jpda/doc/soljdb.html</a></p></li>
@@ -53,7 +53,7 @@ always turned on. </p>
 <a name="fvyit"></a><h4>To Set the Server to Automatically Start Up in Debug Mode</h4><ol>
 <li><b>Use the Administration Console. Select the Enterprise Server component and the JVM Settings
 tab.</b></li>
-<li><b><a name="indexterm-203"></a>Check the Debug Enabled box.</b></li>
+<li><b><a name="indexterm-201"></a>Check the Debug Enabled box.</b></li>
 <li><b>To specify a different port (from 9009, the default) to use when attaching
 the JVM software to a debugger, specify <tt>address=</tt> <i>port-number</i> in the Debug
 Options field.</b></li>
@@ -62,35 +62,36 @@ See <a href="#beafe">JPDA Options</a>.</b></li></ol><h6>See Also</h6><p>For deta
 Settings page.</p>
 
 <a name="beafe"></a><h3>JPDA Options</h3>
-<a name="indexterm-204"></a><a name="indexterm-205"></a><a name="indexterm-206"></a><p>The default JPDA options in Enterprise Server are as follows:</p><pre>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009</pre><p>For Windows, you can change <tt>dt_socket</tt> to <tt>dt_shmem</tt>.</p><p>If you substitute <tt>suspend=y</tt>, the JVM software starts in suspended mode and stays
+<a name="indexterm-202"></a><a name="indexterm-203"></a><a name="indexterm-204"></a><p>The default JPDA options in Enterprise Server are as follows:</p><pre>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009</pre><p>For Windows, you can change <tt>dt_socket</tt> to <tt>dt_shmem</tt>.</p><p>If you substitute <tt>suspend=y</tt>, the JVM software starts in suspended mode and stays
 suspended until a debugger attaches to it. This is helpful if you want
 to start debugging as soon as the JVM software starts.</p><p>To specify a different port (from 9009, the default) to use when attaching
 the JVM software to a debugger, specify <tt>address=</tt><i>port-number</i>.</p><p>You can include additional options. A list of JPDA debugging options is available
 at <a href="http://java.sun.com/products/jpda/doc/conninv.html#Invocation">http://java.sun.com/products/jpda/doc/conninv.html#Invocation</a>.</p>
 
 <a name="beaff"></a><h3>Generating a Stack Trace for Debugging</h3>
-<a name="indexterm-207"></a><a name="indexterm-208"></a><a name="indexterm-209"></a><a name="indexterm-210"></a><p>To generate a Java stack trace for debugging, use the <tt>asadmin generate-jvm-report --type=thread</tt> command.
+<a name="indexterm-205"></a><a name="indexterm-206"></a><a name="indexterm-207"></a><a name="indexterm-208"></a><p>To generate a Java stack trace for debugging, use the <tt>asadmin generate-jvm-report --type=thread</tt> command.
 The stack trace goes to the <i>domain-dir</i><tt>/logs/server.log</tt> file and also appears on the command
 prompt screen. For more information about the <tt>asadmin generate-jvm-report</tt> command, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
 
 <a name="gekvq"></a><h3>Application Client Debugging</h3>
-<p>When the <tt>appclient</tt> script executes the <tt>java</tt> command to run the Application
+<a name="indexterm-209"></a><p>When the <tt>appclient</tt> script executes the <tt>java</tt> command to run the Application
 Client Container (ACC), which in turn runs the client, it includes on the
 command line the value of the <tt>VMARGS</tt> environment variable. You can set this variable
-to any suitable value. The following example debugging setup is for Windows systems:</p><pre>VMARGS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8118</pre><p>The following example debugging setup is for UNIX-based systems:</p><pre>set VMARGS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8118</pre><p>For debugging an application client, you should set suspend to <tt>y</tt> so you
+to any suitable value. For example:</p><pre>VMARGS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8118</pre><p>The following example also works:</p><pre>set VMARGS=-Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8118</pre><p>For debugging an application client, you should set suspend to <tt>y</tt> so you
 can connect the debugger to the client before any code has actually executed.
 Otherwise, the client may start running and execute past the point you want
 to examine.</p><p>You should use different ports for the server and client if you are
-debugging both concurrently. For details about setting the port, see <a href="#beafe">JPDA Options</a>.</p><p>For information about the <tt>appclient</tt> script, see <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
+debugging both concurrently. For details about setting the port, see <a href="#beafe">JPDA Options</a>.</p><p>You can also include JVM options such as <tt>-Xdebug</tt> and <tt>-Xrunjwdp</tt> in the
+<tt>appclient</tt> script directly. For information about the <tt>appclient</tt> script, see <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
 <hr><p><b>Note - </b>The Application Client Container is supported only in the full Enterprise Server, not in
 the Web Profile. See <a href="p16.html">Chapter&#160;11, Developing Java Clients</a>.</p>
 <hr>
 
 
 <a name="beafk"></a><h3>Sun GlassFish Message Queue Debugging</h3>
-<a name="indexterm-211"></a><a name="indexterm-212"></a><a name="indexterm-213"></a><a name="indexterm-214"></a><a name="indexterm-215"></a><a name="indexterm-216"></a><p>Sun GlassFish Message Queue has a broker logger, which can be useful for
-debugging Java Message Service (JMS) applications, including message-driven bean applications. You can adjust
-the logger&#8217;s verbosity, and you can send the logger output to the broker&#8217;s console
+<a name="indexterm-210"></a><a name="indexterm-211"></a><a name="indexterm-212"></a><a name="indexterm-213"></a><a name="indexterm-214"></a><a name="indexterm-215"></a><p>Sun GlassFish Message Queue has a broker logger, which can be useful for
+debugging Java Message Service (JMS) applications, including message-driven bean applications. You can adjust the
+logger&#8217;s verbosity, and you can send the logger output to the broker&#8217;s console
 using the broker&#8217;s <tt>-tty</tt> option. For more information, see the <a href="http://docs.sun.com/doc/821-0027"><i>Sun GlassFish Message Queue 4.4 Administration Guide</i></a>.</p>
 <hr><p><b>Note - </b>JMS resources are supported only in the full Enterprise Server, not in the Web
 Profile. See <a href="p23.html">Chapter&#160;17, Using the Java Message Service</a>.</p>
@@ -98,7 +99,7 @@ Profile. See <a href="p23.html">Chapter&#160;17, Using the Java Message Service<
 
 
 <a name="beafl"></a><h3>Enabling Verbose Mode</h3>
-<a name="indexterm-217"></a><p>To have the server logs and messages printed to <tt>System.out</tt> on your
+<a name="indexterm-216"></a><p>To have the server logs and messages printed to <tt>System.out</tt> on your
 command prompt screen, you can start the server in verbose mode. This makes
 it easy to do simple debugging using print statements, without having to view
 the <tt>server.log</tt> file every time.</p><p>To start the server in verbose mode, use the <tt>--verbose</tt> option as follows:</p><pre>asadmin start-domain --verbose [<i>domain-name</i>]</pre><p>When the server is in verbose mode, messages are logged to the console
@@ -108,12 +109,12 @@ platforms) prints a thread dump. On UNIX platforms, you can also print a
 thread dump using the <tt>jstack</tt> command (see <a href="http://java.sun.com/javase/6/docs/technotes/tools/share/jstack.html">http://java.sun.com/javase/6/docs/technotes/tools/share/jstack.html</a>) or the command <tt>kill -QUIT</tt> <i>process_id</i>.</p>
 
 <a name="beafm"></a><h3>Enterprise Server Logging</h3>
-<a name="indexterm-218"></a><a name="indexterm-219"></a><p>You can use the Enterprise Server&#8217;s log files to help debug your applications.
+<a name="indexterm-217"></a><a name="indexterm-218"></a><p>You can use the Enterprise Server&#8217;s log files to help debug your applications.
 Use the Administration Console. Select the Enterprise Server component. Then click the
 View Log Files button in the General Information page. </p><p>To change logging settings, select the Logging tab.</p><p>For details about logging, click the Help button in the Administration Console.</p>
 
 <a name="beafn"></a><h3>Profiling Tools</h3>
-<a name="indexterm-220"></a><p>You can use a profiler to perform remote profiling on the Enterprise
+<a name="indexterm-219"></a><p>You can use a profiler to perform remote profiling on the Enterprise
 Server to discover bottlenecks in server-side performance. This section describes how to configure these
 profilers for use with the Enterprise Server:</p>
 <ul><li><p><a href="#gcicc">The NetBeans Profiler</a></p></li>
@@ -123,11 +124,11 @@ profilers for use with the Enterprise Server:</p>
 Edition (J2SE<sup>TM</sup> platform) is available at <a href="http://java.sun.com/javase/6/docs/technotes/guides/management/index.html">http://java.sun.com/javase/6/docs/technotes/guides/management/index.html</a>.</p>
 
 <a name="gcicc"></a><h4>The NetBeans Profiler</h4>
-<p><a name="indexterm-221"></a>For information on how to use the NetBeans profiler, see <a href="http://www.netbeans.org">http://www.netbeans.org</a> and
+<p><a name="indexterm-220"></a>For information on how to use the NetBeans profiler, see <a href="http://www.netbeans.org">http://www.netbeans.org</a> and
 <a href="http://blogs.sun.com/roller/page/bhavani?entry=analyzing_the_performance_of_java">http://blogs.sun.com/roller/page/bhavani?entry=analyzing_the_performance_of_java</a>.</p>
 
 <a name="beafo"></a><h4>The HPROF Profiler</h4>
-<a name="indexterm-222"></a><p>The Heap and CPU Profiling Agent (HPROF) is a simple profiler agent shipped
+<a name="indexterm-221"></a><p>The Heap and CPU Profiling Agent (HPROF) is a simple profiler agent shipped
 with the Java 2 SDK. It is a dynamically linked library that interacts
 with the Java Virtual Machine Profiler Interface (JVMPI) and writes out profiling information
 either to a file or to a socket in ASCII or binary format.</p><p>HPROF can monitor CPU usage, heap allocation statistics, and contention profiles. In addition,
@@ -138,13 +139,13 @@ the server process.</p>
 
 <a name="fvylg"></a><h5>To Use HPROF Profiling on UNIX</h5>
 <ol>
-<li><b><a name="indexterm-223"></a>Use the Administration Console. Select the Enterprise Server component and the JVM Settings
+<li><b><a name="indexterm-222"></a>Use the Administration Console. Select the Enterprise Server component and the JVM Settings
 tab. Then select the Profiler tab.</b></li>
 <li><b>Edit the following fields:</b>
 <ul><li><p>Profiler Name &#8211; <tt>hprof</tt></p></li>
 <li><p>Profiler Enabled &#8211; <tt>true</tt></p></li>
 <li><p>Classpath &#8211; (leave blank)</p></li>
-<li><p><a name="indexterm-224"></a>Native Library Path &#8211; (leave blank)</p></li>
+<li><p><a name="indexterm-223"></a>Native Library Path &#8211; (leave blank)</p></li>
 <li><p>JVM Option &#8211; Select Add, type the HPROF JVM option in the Value field, then check its box. The syntax of the HPROF JVM option is as follows:</p><pre>-Xrunhprof[:help]|[:<i>param</i>=<i>value</i>,<i>param2</i>=<i>value2</i>, ...]</pre><p>Here is an example of <i>params</i> you can use:</p><pre>-Xrunhprof:file=log.txt,thread=y,depth=3</pre><p>The <tt>file</tt> parameter determines where the stack dump is written.</p><p>Using <tt>help</tt> lists parameters that can be passed to HPROF. The output is as follows:</p><pre>Hprof usage: -Xrunhprof[:help]|[:&#60;option>=&#60;value>, ...]
 
 Option Name and Value   Description             Default
@@ -168,20 +169,20 @@ doe=y|n                 dump on exit?           y</pre>
 <tt>file</tt> HPROF parameter.</p></li></ol>
 
 <a name="beafr"></a><h4>The JProbe Profiler</h4>
-<a name="indexterm-225"></a><a name="indexterm-226"></a><p>Information about JProbe<sup>TM</sup> from Sitraka is available at <a href="http://www.quest.com/jprobe/">http://www.quest.com/jprobe/</a>.</p><p>After JProbe is installed using the following instructions, its libraries are loaded into
+<a name="indexterm-224"></a><a name="indexterm-225"></a><p>Information about JProbe<sup>TM</sup> from Sitraka is available at <a href="http://www.quest.com/jprobe/">http://www.quest.com/jprobe/</a>.</p><p>After JProbe is installed using the following instructions, its libraries are loaded into
 the server process.</p>
 
 <a name="fvymj"></a><h5>To Enable Remote Profiling With JProbe</h5>
 <ol>
 <li><b>Install JProbe 3.0.1.1. </b><p>For details, see the JProbe documentation.</p></li>
-<li><b><a name="indexterm-227"></a>Configure Enterprise Server using the Administration Console:</b><ol style="list-style-type: lower-alpha">
+<li><b><a name="indexterm-226"></a>Configure Enterprise Server using the Administration Console:</b><ol style="list-style-type: lower-alpha">
 <li><b>Select the Enterprise Server component and the JVM Settings tab. Then select the
 Profiler tab.</b></li>
 <li><b>Edit the following fields before selecting Save and restarting the server:</b>
 <ul><li><p>Profiler Name &#8211; <tt>jprobe</tt></p></li>
 <li><p>Profiler Enabled &#8211; <tt>true</tt></p></li>
 <li><p>Classpath &#8211; (leave blank)</p></li>
-<li><p><a name="indexterm-228"></a>Native Library Path &#8211; <i>JProbe-dir</i><tt>/profiler</tt></p></li>
+<li><p><a name="indexterm-227"></a>Native Library Path &#8211; <i>JProbe-dir</i><tt>/profiler</tt></p></li>
 <li><p>JVM Option &#8211; For each of these options, select Add, type the option in the Value field, then check its box</p><p><tt>-Xbootclasspath/p:</tt><i>JProbe-dir</i><tt>/profiler/jpagent.jar</tt></p><p><tt>-Xrunjprobeagent</tt></p><p><tt>-Xnoclassgc</tt></p></li></ul>
 
 <hr><p><b>Note - </b>If any of the configuration options are missing or incorrect, the profiler might

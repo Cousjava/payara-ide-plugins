@@ -6,7 +6,7 @@
 <title>Deploying Applications - Sun GlassFish Enterprise Server v3 Application Deployment Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,17 +25,16 @@
 </table>
 
 
-<a name="beact"></a>Chapter&#160;2<h3>Deploying Applications</h3><a name="indexterm-52"></a><p>This chapter provides procedures and guidelines for deploying applications and modules in the
+<a name="beact"></a>Chapter&#160;2<h3>Deploying Applications</h3><a name="indexterm-54"></a><p>This chapter provides procedures and guidelines for deploying applications and modules in the
 Sun GlassFish<sup>TM</sup> Enterprise Server environment by using the <tt>asadmin</tt> command-line utility.</p><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#gilfm">Deploying Applications and Modules</a></p></li>
-<li><p><a href="#gjiwk">Modifying the Configuration a Web Application or Module</a></p></li>
+<li><p><a href="#gjiwk">Modifying the Configuration of a Web Application or Module</a></p></li>
 <li><p><a href="#beaej">Web Module Deployment Guidelines</a></p></li>
 <li><p><a href="#beaek">EJB Module Deployment Guidelines</a></p></li>
 <li><p><a href="#gilxc">Deploying a Connector Module</a></p></li>
 <li><p><a href="#beaem">Assembling and Deploying an Application Client Module</a></p></li>
 <li><p><a href="#beael">Lifecycle Module Deployment Guidelines</a></p></li>
-<li><p><a href="#gbiye">Web Service Deployment Guidelines</a></p></li>
-<li><p><a href="#giydj">Application-Scoped Resources</a></p></li></ul>
+<li><p><a href="#gbiye">Web Service Deployment Guidelines</a></p></li></ul>
 <p>Instructions for accomplishing these tasks by using the Administration Console are contained in
 the Administration Console online help.</p>
 
@@ -58,112 +57,125 @@ available.</p><p>The following topics are addressed here:</p>
 <p>Instructions for accomplishing these tasks by using the Administration Console are contained in
 the Administration Console online help.</p>
 
-<a name="gijmq"></a><h4>To Deploy an Application or Module</h4><p><a name="indexterm-53"></a><a name="indexterm-54"></a><a name="indexterm-55"></a><a name="indexterm-56"></a></p><p>Use the <tt>deploy</tt> subcommand in remote mode to deploy an assembled application or
+<a name="gijmq"></a><h4>To Deploy an Application or Module</h4><p>Use the <tt>deploy</tt> subcommand in remote mode to deploy an assembled application or
 module to Enterprise Server. If an error occurs during deployment, the application or
 module is not deployed.  These failures prevent a partial deployment that
-could leave the server in an inconsistent state. </p><p>If the component is already deployed or already exists, you can forcefully redeploy
+could leave the server in an inconsistent state. <a name="indexterm-55"></a><a name="indexterm-56"></a><a name="indexterm-57"></a><a name="indexterm-58"></a></p><p>If the component is already deployed or already exists, you can forcefully redeploy
 if you set the <tt>--force</tt> option of the <tt>deploy</tt> subcommand to true. See
 <a href="#gikiw">Example&#160;2-9</a>. The <tt>redeploy</tt> subcommand also accomplishes this. You can see the status of
-a component by using the <a href="http://docs.sun.com/doc/820-7701/show-component-status-1?a=view"><tt>show-component-status</tt>(1)</a> subcommand.</p><p>The Java EE 6 specification implements the portable application-name, which allows you to
+a component by using the <a href="http://docs.sun.com/doc/820-7701/show-component-status-1?a=view"><tt>show-component-status</tt>(1)</a> subcommand.</p><p>The Java EE 6 specification defines the portable application-name, which allows you to
 specify an application name in the <tt>application.xml</tt> file. For example:</p><pre>&#60;application-name>xyz&#60;/application-name></pre><p>This name is used before the archive name to derive the default
 application registration name. The application will be deployed under <tt>xyz</tt> if the <tt>application.xml</tt> file
-defines <tt>application-name</tt> as <tt>xyz</tt>. The user-specified <tt>--name</tt> option has the highest precedence. If
-no application-name is specified in the <tt>application.xml</tt> file, the application is deployed
-using the archive name (minus suffix) as the application registration name. </p><ol>
+defines <tt>application-name</tt> as <tt>xyz</tt>. The user-specified name has the highest precedence. If
+no application-name is specified in the <tt>application.xml</tt> file, the application is deployed using the
+archive name (minus suffix) as the application registration name. </p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
 <li>(Optional) <b>List deployed components by using the <a href="http://docs.sun.com/doc/820-7701/list-components-1?a=view"><tt>list-components</tt>(1)</a> subcommand.</b></li>
 <li><b>Deploy the application or module by using the <a href="http://docs.sun.com/doc/820-7701/deploy-1?a=view"><tt>deploy</tt>(1)</a> subcommand.</b><p>Information about the options and properties of the subcommand is included in this
 help page.</p></li>
-<li>(Optional) <b>If needed, fix issues and rerun the <tt>deploy</tt> subcommand.</b></li></ol><a name="gijlo"></a><h6>Example&#160;2-1 Deploying an Application</h6><p>This example deploys <tt>newApp.ear</tt> to the default server, <tt>server</tt>.</p><pre>asadmin> <tt><b>deploy newApp.ear</b></tt>
-Command deploy executed successfully</pre><a name="gilcq"></a><h6>Example&#160;2-2 Retrieving a Client Stub JAR File</h6><p>This example retrieves the client stubs in the current path.</p><pre>asadmin> <tt><b>deploy --retrieve ejb.jar</b></tt>
+<li>(Optional) <b>If needed, fix issues and rerun the <tt>deploy</tt> subcommand.</b></li></ol><a name="gijlo"></a><h6>Example&#160;2-1 Deploying an Enterprise Application</h6><p>This example deploys <tt>newApp.ear</tt> to the default server, <tt>server</tt>.</p><pre>asadmin> <tt><b>asadmin> deploy Cart.ear</b></tt>
+Application deployed successfully with name Cart.
+Command deploy executed successfully</pre><a name="gilcq"></a><h6>Example&#160;2-2 Deploying a Connector Module</h6><p>This example deploys a connector modules that is packaged in an RAR file.</p><pre>asadmin> <tt><b>deploy jdbcra.rar</b></tt>
+Application deployed successfully with name jdbcra.
 Command deploy executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help deploy</tt> at the command line.</p>
 
 <a name="giulr"></a><h4>To List Deployed Applications or Modules</h4><p>There are a number of commands that can be used to list
 deployed applications or modules and their subcomponents. Use the commands in this section
-in remote mode.<a name="indexterm-57"></a><a name="indexterm-58"></a><a name="indexterm-59"></a><a name="indexterm-60"></a></p><ol>
+in remote mode.<a name="indexterm-59"></a><a name="indexterm-60"></a><a name="indexterm-61"></a><a name="indexterm-62"></a></p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
 <li><b>List the desired components by using the <a href="http://docs.sun.com/doc/820-7701/list-applications-1?a=view"><tt>list-applications</tt>(1)</a> subcommand, the <a href="http://docs.sun.com/doc/820-7701/list-components-1?a=view"><tt>list-components</tt>(1)</a> subcommand
 , or the <a href="http://docs.sun.com/doc/820-7701/list-sub-components-1?a=view"><tt>list-sub-components</tt>(1)</a>command.</b><p>Information about these commands is included in these help pages.</p></li>
 <li><b>Show the status of a deployed component by using the <a href="http://docs.sun.com/doc/820-7701/show-component-status-1?a=view"><tt>show-component-status</tt>(1)</a>.</b></li></ol><a name="giumj"></a><h6>Example&#160;2-3 Listing Applications</h6><p>The <tt>list-applications</tt> subcommand lists all deployed Java EE applications or modules. If the
 <tt>--type</tt> option is not specified, all components are listed. This example lists deployed
-applications.</p><pre>asadmin> <tt><b>list-applications</b></tt></pre><p>Information similar to the following is displayed:</p><pre>hellojsp
+applications.</p><pre>asadmin> <tt><b>list-applications --type web</b></tt>
+hellojsp &#60;web>
 Command list-applications executed successfully</pre><a name="giumu"></a><h6>Example&#160;2-4 Listing Components</h6><p>The <tt>list-components</tt> subcommand lists the deployed Java EE components. If the <tt>--type</tt> option is
 not specified, all components are listed. This example lists the components of the
-deployed <tt>cciblackbox-tx.rar</tt>.</p><pre>asadmin> <tt><b>list-components --type connector</b></tt></pre><p>Information similar to the following is displayed:</p><pre>cciblackbox-tx &#60;connector>
+deployed <tt>cciblackbox-tx.rar</tt>.</p><pre>asadmin> <tt><b>list-components --type connector</b></tt>
+cciblackbox-tx &#60;connector>
 Command list-components executed successfully</pre><a name="giuot"></a><h6>Example&#160;2-5 Listing Subcomponents</h6><p>The <tt>list-sub-components</tt> subcommand lists EJBs or servlets in a deployed module or in
 a module of the deployed application. If a module is not identified, all
 modules are listed. The <tt>--appname</tt> option functions only when the given module is
 standalone. To display a specific module in an application, you must specify the
 module name and the <tt>--appname</tt> option. This example gets the subcomponents of application
-<tt>MEjbApp</tt> within module <tt>mejb.jar</tt>.</p><pre>asadmin> <tt><b>list-sub-components --appname MEjbApp mejb.jar</b></tt></pre><p>Information similar to the following is displayed.</p><pre>MEJBBean &#60;StatelessSessionBean>
+<tt>MEjbApp</tt> within module <tt>mejb.jar</tt>.</p><pre>asadmin> <tt><b>list-sub-components --appname MEjbApp mejb.jar</b></tt>
+MEJBBean &#60;StatelessSessionBean>
 Command list-sub-components executed successfully</pre><a name="giunl"></a><h6>Example&#160;2-6 Showing Status of a Deployed Component</h6><p>The <tt>show-component-status</tt> subcommand gets the status (enabled or disabled) of the deployed component.
-This example gets the status of the <tt>MEjbApp</tt> component.</p><pre><tt><b>asadmin show-component-status MEjbApp</b></tt></pre><p>Information similar to the following is displayed:</p><pre>Status of MEjbApp is enabled
+This example gets the status of the <tt>MEjbApp</tt> component.</p><pre><tt><b>asadmin show-component-status MEjbApp</b></tt>
+Status of MEjbApp is enabled
 Command show-component-status executed successfully</pre>
 
-<a name="gijmb"></a><h4>To Redeploy an Application or Module</h4><p><a name="indexterm-61"></a><a name="indexterm-62"></a><a name="indexterm-63"></a></p><p>Use the <tt>redeploy</tt> subcommand in remote mode to overwrite a previously&#8211;deployed application or
+<a name="gijmb"></a><h4>To Redeploy an Application or Module</h4><p>Use the <tt>redeploy</tt> subcommand in remote mode to overwrite a previously&#8211;deployed application or
 module. You can also accomplish this task by using the <tt>--force</tt> option of
 the <tt>deploy</tt> subcommand. Whenever a redeployment is done, the sessions in transit at
 that time become invalid unless you use the <tt>keepSessions=true</tt> property of the <tt>redeploy</tt> subcommand.
-</p><h6>Before You Begin</h6><p>You must remove a preconfigured resource before it can be updated.</p><ol>
+<a name="indexterm-63"></a><a name="indexterm-64"></a><a name="indexterm-65"></a></p><h6>Before You Begin</h6><p>You must remove a preconfigured resource before it can be updated.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
 <li><b>Redeploy an application or module by using the <a href="http://docs.sun.com/doc/820-7701/redeploy-1?a=view"><tt>redeploy</tt>(1)</a> subcommand or the <a href="http://docs.sun.com/doc/820-7701/deploy-1?a=view"><tt>deploy</tt>(1)</a>
 subcommand with the <tt>--force</tt> option.</b><p>Information about the options and properties of these commands is included in these
-help page.</p></li></ol><a name="gijzm"></a><h6>Example&#160;2-7 Redeploying a Web Application to Retain Sessions</h6><p>This example redeploys the <tt>hello</tt> web application. In a production environment, you usually
+help page.</p></li></ol><a name="gijzm"></a><h6>Example&#160;2-7 Retaining HTTP Session State During Redeployment</h6><p>This example redeploys the <tt>hello</tt> web application. In a production environment, you usually
 want to retain sessions. If you use the <tt>keepSessions</tt> property, active sessions of the
-application are retained and restored when redeployment is complete.</p><pre>asadmin> <tt><b>redeploy --name hello --properties keepSessions=true hello.war</b></tt></pre><p>Keep Sessions is a checkbox option when you redeploy using the Administration
+application are retained and restored when redeployment is complete.</p><pre>asadmin> <tt><b>redeploy --name hello --properties keepSessions=true hello.war</b></tt>
+Application deployed successfully with name hello.
+Command redeploy executed successfully.</pre><p>Keep Sessions is a checkbox option when you redeploy using the Administration
 Console. For instructions, see the Administration Console online help.</p><a name="gijkr"></a><h6>Example&#160;2-8 Redeploying a Web Application That Was Deployed From a Directory</h6><p>This example redeploys the <tt>hello</tt> web application, which was originally deployed from the
-<tt>hellodir</tt> directory. The path is retrieved from the <tt>domain.xml</tt> file.</p><pre>asadmin><tt><b>redeploy --name hellodir</b></tt></pre><a name="gikiw"></a><h6>Example&#160;2-9 Redeploying an Application by Using <tt>asadmin deploy </tt><tt>--force</tt> </h6><p>The <tt>--force</tt> option is set to <tt>false</tt> by default. This example redeploys
-<tt>newApp.ear</tt> even if has been deployed or already exists.</p><pre>asadmin> <tt><b>deploy --force=true newApp.ear</b></tt></pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+<tt>hellodir</tt> directory. The path is retrieved from the <tt>domain.xml</tt> file.</p><pre>asadmin><tt><b>redeploy --name hellodir</b></tt>
+Application deployed successfully with name hellodir.
+Command redeploy executed successfully.</pre><a name="gikiw"></a><h6>Example&#160;2-9 Redeploying an Application by Using <tt>asadmin deploy </tt><tt>--force</tt> </h6><p>The <tt>--force</tt> option is set to <tt>false</tt> by default. This example redeploys
+<tt>newApp.ear</tt> even if has been deployed or already exists.</p><pre>asadmin> <tt><b>deploy --force=true newApp.ear</b></tt>
+Application deployed successfully with name newApp.
+Command deploy executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help redeploy</tt> at the command line.</p>
 
-<a name="fvyje"></a><h4>To Disable an Application or Module </h4><p><a name="indexterm-64"></a><a name="indexterm-65"></a><a name="indexterm-66"></a></p><p>Use the <tt>disable</tt> subcommand in remote mode to immediately deactivate a deployed application
+<a name="fvyje"></a><h4>To Disable an Application or Module </h4><p>Use the <tt>disable</tt> subcommand in remote mode to immediately deactivate a deployed application
 or module without removing it from the server. Disabling a component makes the
 component inaccessible to clients. However, the component is not overwritten or uninstalled, and
-can be enabled by using the <tt>asadmin enable</tt> subcommand. </p><p>By default, a deployed application or module is enabled.</p><ol>
+can be enabled by using the <tt>asadmin enable</tt> subcommand. <a name="indexterm-66"></a><a name="indexterm-67"></a><a name="indexterm-68"></a></p><p>By default, a deployed application or module is enabled.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
 <li><b>Obtain the exact name of the application or module that you are disabling.</b><p>To list deployed applications or modules, use the <a href="http://docs.sun.com/doc/820-7701/list-applications-1?a=view"><tt>list-applications</tt>(1)</a> subcommand. If you
 do not specify a type, all deployed applications and modules are listed. For
 example, valid types can be <tt>web</tt>, <tt>ejb</tt>, <tt>connector</tt>, <tt>application</tt>, <tt>jruby</tt>, and <tt>webservice</tt>.</p><p>To see the status of deployed components, use the <a href="http://docs.sun.com/doc/820-7701/show-component-status-1?a=view"><tt>show-component-status</tt>(1)</a> subcommand.</p></li>
 <li><b>Deactivate the application or module by using the <a href="http://docs.sun.com/doc/820-7701/disable-1?a=view"><tt>disable</tt>(1)</a> subcommand.</b><p>Information about the options and properties of the subcommand is included in this
-help page.</p></li></ol><a name="gijkp"></a><h6>Example&#160;2-10 Listing Deployed Web Applications</h6><p>This example lists all deployed web applications.</p><pre>asadmin> <tt><b>list-applications --type web</b></tt></pre><p>Information similar to the following is displayed:</p><pre>hellojsp &#60;web>
+help page.</p></li></ol><a name="gijkp"></a><h6>Example&#160;2-10 Listing Deployed Web Applications</h6><p>This example lists all deployed web applications.</p><pre>asadmin> <tt><b>list-applications --type web</b></tt>
+hellojsp &#60;web>
 Command list-applications executed successfully.</pre><a name="gikvy"></a><h6>Example&#160;2-11 Disabling a Web Application</h6><p>This example disables the <tt>hellojsp</tt> application.</p><pre>asadmin> <tt><b>disable hellojsp</b></tt>
 Command disable executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help disable</tt> at the command line.</p>
 
-<a name="gijjy"></a><h4>To Enable an Application or Module</h4><p><a name="indexterm-67"></a><a name="indexterm-68"></a><a name="indexterm-69"></a></p><p>By default, a deployed application or module is enabled, which means that it
+<a name="gijjy"></a><h4>To Enable an Application or Module</h4><p>By default, a deployed application or module is enabled, which means that it
 is runnable and can be accessed by clients if it has been
 deployed to an accessible server instance. Use the <tt>enable</tt> subcommand in remote mode
-to enable an application or module that has been disabled. </p><ol>
+to enable an application or module that has been disabled. <a name="indexterm-69"></a><a name="indexterm-70"></a><a name="indexterm-71"></a></p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
 <li><b>Enable the application or module by using the <a href="http://docs.sun.com/doc/820-7701/enable-1?a=view"><tt>enable</tt>(1)</a> subcommand.</b><p>If the component has not been deployed, an error message is displayed. If
 the component is already enabled, it is re-enabled. To see the status
 of deployed components, use the <a href="http://docs.sun.com/doc/820-7701/show-component-status-1?a=view"><tt>show-component-status</tt>(1)</a> subcommand.</p><p>Information about the options and properties of the subcommand is included in this
-help page.</p></li></ol><a name="gijxl"></a><h6>Example&#160;2-12 Enabling an Application</h6><p>This example enables the <tt>sampleApp</tt> application.</p><pre>asadmin> <tt><b>enable sampleApp</b></tt></pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+help page.</p></li></ol><a name="gijxl"></a><h6>Example&#160;2-12 Enabling an Application</h6><p>This example enables the <tt>sampleApp</tt> application.</p><pre>asadmin> <tt><b>enable sampleApp</b></tt>
+Command enable executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help enable</tt> at the command line.</p>
 
-<a name="gijkl"></a><h4>To Undeploy an Application or Module</h4><p><a name="indexterm-70"></a><a name="indexterm-71"></a><a name="indexterm-72"></a></p><p>Use the <tt>undeploy</tt> subcommand in remote mode to uninstall a deployed application or
+<a name="gijkl"></a><h4>To Undeploy an Application or Module</h4><p>Use the <tt>undeploy</tt> subcommand in remote mode to uninstall a deployed application or
 module and remove it from the repository. To reinstate the component, you must
-deploy the component again using the <tt>deploy</tt> subcommand.</p><ol>
+deploy the component again using the <tt>deploy</tt> subcommand.<a name="indexterm-72"></a><a name="indexterm-73"></a><a name="indexterm-74"></a></p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
 <li><b>Obtain the exact name of the application or module you are undeploying.</b><p>To list deployed applications or modules, use the <a href="http://docs.sun.com/doc/820-7701/list-applications-1?a=view"><tt>list-applications</tt>(1)</a> subcommand. If you
 do not specify a type, all deployed applications and modules are listed. For
 example, valid types can be <tt>web</tt>, <tt>ejb</tt>, <tt>connector</tt>, <tt>application</tt>, <tt>jruby</tt>, and <tt>webservice</tt>.</p><p>To see the status of deployed components, use the <a href="http://docs.sun.com/doc/820-7701/show-component-status-1?a=view"><tt>show-component-status</tt>(1)</a> subcommand.</p></li>
 <li><b>Undeploy the application or module by using the <a href="http://docs.sun.com/doc/820-7701/undeploy-1?a=view"><tt>undeploy</tt>(1)</a> subcommand.</b><p>Information about the options and properties of the subcommand is included in this
-help page.</p></li></ol><a name="gikag"></a><h6>Example&#160;2-13 Listing Deployed Applications or Modules</h6><p>This example lists all applications of type <tt>web</tt>.</p><pre>asadmin> <tt><b>list-applications --type web</b></tt></pre><p>Information similar to the following is displayed:</p><pre>hellojsp &#60;web>
-Command list-applications executed successfully.</pre><a name="gikun"></a><h6>Example&#160;2-14 Undeploying an Application</h6><p>This example uninstalls the <tt>hellojsp</tt> application.</p><pre>asadmin> <tt><b>undeploy hellojsp</b></tt></pre><p>Information similar to the following is displayed:</p><pre>hellojsp &#60;web>
+help page.</p></li></ol><a name="gikag"></a><h6>Example&#160;2-13 Listing Deployed Applications or Modules</h6><p>This example lists all applications of type <tt>web</tt>.</p><pre>asadmin> <tt><b>list-applications --type web</b></tt>
+hellojsp &#60;web>
+Command list-applications executed successfully.</pre><a name="gikun"></a><h6>Example&#160;2-14 Undeploying an Application</h6><p>This example uninstalls the <tt>hellojsp</tt> application.</p><pre>asadmin> <tt><b>undeploy hellojsp</b></tt>
+hellojsp &#60;web>
 Command undeploy executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help undeploy</tt> at the command line.</p>
 
-<a name="fwakh"></a><h4>To Reload Changes to Applications or Modules Dynamically</h4><p><a name="indexterm-73"></a><a name="indexterm-74"></a><a name="indexterm-75"></a></p>
-<hr><p><b>Note - </b>This task is best suited for use in a development environment.</p>
-<hr>
-<p>Dynamic reloading enables you to change the code or deployment descriptors of an
+<a name="fwakh"></a><h4>To Reload Changes to Applications or Modules Dynamically</h4><p>Dynamic reloading enables you to change the code or deployment descriptors of an
 application or module without needing to perform an explicit redeployment. Instead, you can
 copy the changed class files or descriptors into the deployment directory for the
 application or module. The server checks for changes periodically and automatically redeploys the
 changes if the timestamp of the <tt>.reload</tt> file in the root directory
-for the application or module has changed. </p><p>Dynamic reloading is enabled by default, and is available only on the default
+for the application or module has changed. <a name="indexterm-75"></a><a name="indexterm-76"></a><a name="indexterm-77"></a></p><p>Dynamic reloading is enabled by default, and is available only on the default
 server instance. </p><ol>
 <li><b>Create an empty file named <tt>.reload</tt> at the root of the deployed application
 or module.</b><pre><i>domain-dir</i>/applications/<i>module-name</i>/.reload</pre>
@@ -173,13 +185,13 @@ or module.</b><pre><i>domain-dir</i>/applications/<i>module-name</i>/.reload</pr
 <li><b>Update the timestamp of the <tt>.reload</tt> file to load the changes.</b><p>In UNIX: <tt>touch .reload</tt></p></li></ol><h6>See Also</h6><p>Another method for updating an application or module is to use the
 <tt>sun-appserv-update</tt> task with the Enterprise Server Ant tasks. See <a href="http://docs.sun.com/doc/820-7695/beaep?a=view">Chapter 3, Using Ant with Enterprise Server, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>.</p>
 
-<a name="fvxze"></a><h4>To Deploy an Application or Module Automatically</h4><p><a name="indexterm-76"></a><a name="indexterm-77"></a><a name="indexterm-78"></a></p>
+<a name="fvxze"></a><h4>To Deploy an Application or Module Automatically</h4>
 <hr><p><b>Note - </b>This task is best suited for use in a development environment.</p>
 <hr>
 <p>Automatic deployment involves copying an archive file into a special autodeploy directory where
 the archive is automatically deployed by Enterprise Server at predefined intervals. This method
 is useful in a development environment because it allows new code to be
-tested quickly. Automatic deployment is enabled by default.</p><ol>
+tested quickly. Automatic deployment is enabled by default.<a name="indexterm-78"></a><a name="indexterm-79"></a><a name="indexterm-80"></a></p><ol>
 <li>(Optional) <b>Use the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand to adjust the autodeployment interval.</b><p>This sets the interval at which applications and modules are checked for code
 changes and dynamically reloaded. The default is <tt>2</tt>.</p></li>
 <li>(Optional) <b>Use the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand to enable JSP precompilation.</b></li>
@@ -187,19 +199,13 @@ changes and dynamically reloaded. The default is <tt>2</tt>.</p></li>
 the autodeploy directory. </p>
 <hr><p><b>Note - </b>Deployment directories might change between Enterprise Server releases.</p>
 <hr>
-</li></ol><a name="giqrk"></a><h6>Example&#160;2-15 Setting the Autodeployment Interval</h6><p>This example sets the autodeployment inverval to 3 seconds (default is 2).</p><pre>asadmin> <tt><b>set server.admin-service.das-config.autodeploy-polling-interval-in-seconds=3</b></tt></pre><a name="giqtm"></a><h6>Example&#160;2-16 Setting JSP Precompilation</h6><p>This example enables JSP precompilation (default is false).</p><pre>asadmin> <tt><b> </b></tt>
-<tt><b>set server.admin-service.das-config.autodeploy-jsp-precompilation-enabled=true</b></tt></pre><a name="gilck"></a><h6>Example&#160;2-17 Compiling and Deploying a JSR 181 Annotated File Automatically</h6><p> <a name="indexterm-79"></a>By using the following format, you can compile and deploy a web
-service in one step:</p><pre><tt><b>javac -cp javaee.jar -d </tt><i>domain-dir</i><tt>/autodeploy MyWS.java</b></tt></pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
-by typing <tt>asadmin help set</tt> at the command line.</p><p>Autodeployment of a web services JSR 181 annotated file is supported. For more
-information, see <a href="http://www.jcp.org/en/jsr/detail?id=181">JSR 181</a> and <a href="http://docs.sun.com/doc/820-7695/gaszn?a=view">Chapter 6, Developing Web Services, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>.</p>
+</li></ol><a name="giqrk"></a><h6>Example&#160;2-15 Setting the Autodeployment Interval</h6><p>This example sets the autodeployment inverval to 3 seconds (default is 2).</p><pre>asadmin> <tt><b>set server.admin-service.das-config.autodeploy-polling-interval-in-seconds=3</b></tt>
+Command set executed successfully.</pre><a name="giqtm"></a><h6>Example&#160;2-16 Setting JSP Precompilation</h6><p>This example enables JSP precompilation (default is false).</p><pre>asadmin> <tt><b> </b></tt>
+<tt><b>set server.admin-service.das-config.autodeploy-jsp-precompilation-enabled=true</b></tt>
+Command set executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help set</tt> at the command line.</p>
 
-<a name="gijyb"></a><h4>To Deploy an Application or Module by Using a Deployment Plan</h4><p><a name="indexterm-80"></a><a name="indexterm-81"></a><a name="indexterm-82"></a></p>
-<hr><p><b>Note - </b> This task is best suited for use in a development environment.</p>
-<hr>
-<p>A deployment plan is a JAR file that contains only the deployment
-descriptors that are specific to Enterprise Server. This advanced development feature is useful when
-you want to deploy an application or module that does not contain
-the deployment descriptors that are specific to Enterprise Server. </p><p>In the deployment plan for an EAR file, the <tt>sun-application.xml</tt> file is located
+<a name="gijyb"></a><h4>To Deploy an Application or Module by Using a Deployment Plan</h4><p>In the deployment plan for an EAR file, the <tt>sun-application.xml</tt> file is located
 at the root. The deployment descriptor for each module is stored according to
 this syntax: <i>module-name.sun-dd-name</i>, where the <i>sun-dd-name</i> depends on the module type. If a module
 contains a CMP mappings file, the file is named <i>module-name</i><tt>.sun-cmp-mappings.xml</tt>. A <tt>.dbschema</tt>
@@ -208,10 +214,12 @@ by a # (pound sign).</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
 <li><b> Deploy the application or module by using the <a href="http://docs.sun.com/doc/820-7701/deploy-1?a=view"><tt>deploy</tt>(1)</a> subcommand with the
 <tt>--deploymentplan</tt> option.</b>
-<hr><p><b>Note - </b><a name="indexterm-83"></a>Deployment directories might change between Enterprise Server releases.</p>
+<hr><p><b>Note - </b><a name="indexterm-81"></a>Deployment directories might change between Enterprise Server releases.</p>
 <hr>
-</li></ol><a name="gijvy"></a><h6>Example&#160;2-18 Deploying by Using a Deployment Plan</h6><p>This example deploys the application in the <tt>myrostapp.ear</tt> file according to the plan
-specified by the <tt>mydeployplan.jar</tt> file.</p><pre>asadmin><tt><b>deploy --deploymentplan mydeployplan.jar myrostapp.ear</b></tt></pre><a name="gijyn"></a><h6>Example&#160;2-19 Deployment Plan Structure for an Enterprise Application</h6><p>This listing shows the structure of the deployment plan JAR file for an
+</li></ol><a name="gijvy"></a><h6>Example&#160;2-17 Deploying by Using a Deployment Plan</h6><p>This example deploys the application in the <tt>myrostapp.ear</tt> file according to the plan
+specified by the <tt>mydeployplan.jar</tt> file.</p><pre>asadmin><tt><b>deploy --deploymentplan mydeployplan.jar myrostapp.ear</b></tt>
+Application deployed successfully with name myrostapp.
+Command deploy executed successfully.</pre><a name="gijyn"></a><h6>Example&#160;2-18 Deployment Plan Structure for an Enterprise Application</h6><p>This listing shows the structure of the deployment plan JAR file for an
 EAR file.</p><pre>$ jar -tvf mydeployplan.jar
 420 Thu Mar 13 15:37:48 PST 2003 sun-application.xml
 370 Thu Mar 13 15:37:48 PST 2003 RosterClient.war.sun-web.xml
@@ -219,7 +227,7 @@ EAR file.</p><pre>$ jar -tvf mydeployplan.jar
 1281 Thu Mar 13 15:37:48 PST 2003 roster-ejb.jar.sun-ejb-jar.xml
 2317 Thu Mar 13 15:37:48 PST 2003 team-ejb.jar.sun-ejb-jar.xml
 3432 Thu Mar 13 15:37:48 PST 2003 team-ejb.jar.sun-cmp-mappings.xml
-84805 Thu Mar 13 15:37:48 PST 2003 team-ejb.jar.RosterSchema.dbschema</pre><a name="gijwk"></a><h6>Example&#160;2-20 Deployment Plan Structure for a Web Module</h6><p>In the deployment plan for a web module, the deployment descriptor that is
+84805 Thu Mar 13 15:37:48 PST 2003 team-ejb.jar.RosterSchema.dbschema</pre><a name="gijwk"></a><h6>Example&#160;2-19 Deployment Plan Structure for a Web Module</h6><p>In the deployment plan for a web module, the deployment descriptor that is
 specific to Enterprise Server is at the root level. If a standalone EJB
 module contains a CMP bean, the deployment plan includes the <tt>sun-cmp-mappings.xml</tt> and <tt>.dbschema</tt>
 files at the root level. In the following listing, the deployment plan describes a
@@ -227,34 +235,36 @@ CMP bean:</p><pre>$ jar r -tvf myotherplan.jar
 3603 Thu Mar 13 15:24:20 PST 2003 sun-ejb-jar.xml
 3432 Thu Mar 13 15:24:20 PST 2003 sun-cmp-mappings.xml
 84805 Thu Mar 13 15:24:20 PST 2003 RosterSchema.dbschema</pre><h6>See Also</h6><p>The deployment plan is part of the implementation of JSR 88. For
-more information about JSR 88, see <a href="p4.html#giiel">JSR 88 Naming</a> and the JSR 88 page at <a href="http://jcp.org/en/jsr/detail?id=88">http://jcp.org/en/jsr/detail?id=88</a>.<a name="indexterm-84"></a></p>
+more information about JSR 88, see <a href="p4.html#giiel">JSR 88 Naming</a> and the JSR 88 page at <a href="http://jcp.org/en/jsr/detail?id=88">http://jcp.org/en/jsr/detail?id=88</a>.<a name="indexterm-82"></a></p>
 
-<a name="gilcn"></a><h4>To Deploy an Application or Module in a Directory Format</h4><p><a name="indexterm-85"></a><a name="indexterm-86"></a></p>
+<a name="gilcn"></a><h4>To Deploy an Application or Module in a Directory Format</h4>
 <hr><p><b>Note - </b> This task is best suited for use in a development environment.</p>
 <hr>
 <p>An <b>expanded directory</b>, also known as an exploded directory, contains an unassembled (unpackaged) application
-or module. To deploy a directory format instead of an archiveuse the <tt>asadmin deploy</tt> subcommand
-in remote mode and specify a path to a directory instead of to
-an archive file. The contents of the directory must be the same as
-the contents of a corresponding archive file. The directories that hold modules must
-be named with suffixes that identify the type of archive that the structure
-is based on, such as <tt>_jar</tt> or <tt>_war</tt>. </p><p>You can change deployment descriptor files directly in the expanded directory.  </p><p>If your environment is configured to use dynamic reloading, you can also dynamically
+or module. To deploy a directory format instead of an archive, use the <tt>asadmin deploy</tt>
+subcommand in remote mode and specify a path to a directory instead of
+to an archive file. The contents of the directory must be the same
+as the contents of a corresponding archive file. The directories that hold modules
+must be named with suffixes that identify the type of archive that the
+structure is based on, such as <tt>_jar</tt> or <tt>_war</tt>. <a name="indexterm-83"></a><a name="indexterm-84"></a></p><p>You can change deployment descriptor files directly in the expanded directory.  </p><p>If your environment is configured to use dynamic reloading, you can also dynamically
 reload applications or modules that are deployed from the directory. For instructions, see
 <a href="#fwakh">To Reload Changes to Applications or Modules Dynamically</a>.</p><h6>Before You Begin</h6><p>The directory must be accessible to the machine on which Enterprise Server
 runs.</p><p>On Windows, if you are deploying a directory on a mapped drive,
 you must be running Enterprise Server as the same user to which the
 mapped drive is assigned. This enables Enterprise Server to access the directory.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
-<li><b>Verify that the expanded directory contents match the archive file.</b><p>For information about the required directory contents, see the appropriate specifications.<a name="indexterm-87"></a></p></li>
+<li><b>Verify that the expanded directory contents match the archive file.</b><p>For information about the required directory contents, see the appropriate specifications.<a name="indexterm-85"></a></p></li>
 <li><b>Deploy the directory by using the <a href="http://docs.sun.com/doc/820-7701/deploy-1?a=view"><tt>deploy</tt>(1)</a> subcommand and specifying the path to
 the expanded directory.</b>
 <hr><p><b>Note - </b>Deployment directories might change between Enterprise Server releases.</p>
 <hr>
-</li></ol><a name="gilaz"></a><h6>Example&#160;2-21 Deploying an Application From a Directory</h6><p>This example deploys the expanded directory for the <tt>hello</tt> application. The path name
-is accessed in the domain configuration file (<tt>domain.xml</tt>).</p><pre>asadmin> <tt><b>deploy --name hello</b></tt></pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+</li></ol><a name="gilaz"></a><h6>Example&#160;2-20 Deploying an Application From a Directory</h6><p>This example deploys the expanded directory for the <tt>hello</tt> application. The path name
+is stored in the domain configuration file (<tt>domain.xml</tt>).</p><pre>asadmin> <tt><b>deploy --name hello</b></tt>
+Application deployed successfully with name hello.
+Command deploy executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help deploy</tt> at the command line.</p>
 
-<a name="gjiwk"></a><h3>Modifying the Configuration a Web Application or Module</h3>
+<a name="gjiwk"></a><h3>Modifying the Configuration of a Web Application or Module</h3>
 <p>You can modify the configuration of a web application or a module
 by modifying the deployment descriptors and then repackaging and redeploying the application. </p><p>The instructions in this section enable you to change the configuration of a
 deployed application without the need to modify the application's deployment descriptors and repackage
@@ -269,19 +279,25 @@ deployment descriptor.</p><p>The following topics are addressed here:</p>
 <li><p><a href="#giyip">To List Web Environment Entries</a></p></li></ul>
 
 
-<a name="giyce"></a><h4>To Set a Web Context Parameter</h4><a name="indexterm-88"></a><a name="indexterm-89"></a><p>Use the <tt>set-web-context-param</tt> subcommand in remote mode to change the configuration of a
+<a name="giyce"></a><h4>To Set a Web Context Parameter</h4><p>Use the <tt>set-web-context-param</tt> subcommand in remote mode to change the configuration of a
 deployed application without the need to modify the application's deployment descriptors and repackage
-and redeploy the application. This subcommand sets a servlet context-initialization parameter of one of
-the following items: </p>
+and redeploy the application. By using this subcommand, you are either adding a
+new parameter that did not appear in the original web module's descriptor, or
+overriding the descriptor's setting of the parameter.<a name="indexterm-86"></a><a name="indexterm-87"></a></p><p>If the <tt>--ignoreDescriptorItem</tt> option is set to <tt>true</tt>, then the server ignores any
+setting for that context parameter in the descriptor, which means you do not
+need to specify an overriding value on the <tt>set-web-context-param</tt> subcommand. The server behaves as
+if the descriptor had never contained a setting for that context parameter.</p><p>This subcommand sets a servlet context-initialization parameter of one of the following items:
+</p>
 <ul><li><p> A deployed web application</p></li>
 <li><p>A web module in a deployed Java Platform, Enterprise Edition (Java EE) application</p></li></ul>
 <h6>Before You Begin</h6><p>The application must already be deployed. Otherwise, an error occurs.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
-<li><b>Set a servlet context-initialization parameter by using the <a href="http://docs.sun.com/doc/820-7701/set-web-context-param-1?a=view"><tt>set-web-context-param</tt>(1)</a> subcommand.</b><p>Information about the options for the subcommand is included in this help page.</p></li></ol><a name="gjivx"></a><h6>Example&#160;2-22 Setting a Servlet Context-Initialization Parameter for a Web Application</h6><p>This example sets the servlet context-initialization parameter <tt>javax.faces.STATE_SAVING_METHOD</tt> of the web application
-<tt>basic-ezcomp</tt> to client. </p><pre>asadmin> <tt><b>set-web-context-param --name=javax.faces.STATE_SAVING_METHOD --description="The location where the application?s state is preserved" --value=client basic-ezcomp</b></tt>Command set-web-context-param executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+<li><b>Set a servlet context-initialization parameter by using the <a href="http://docs.sun.com/doc/820-7701/set-web-context-param-1?a=view"><tt>set-web-context-param</tt>(1)</a> subcommand.</b><p>Information about the options for the subcommand is included in this help page.</p></li></ol><a name="gjivx"></a><h6>Example&#160;2-21 Setting a Servlet Context-Initialization Parameter for a Web Application</h6><p>This example sets the servlet context-initialization parameter <tt>javax.faces.STATE_SAVING_METHOD</tt> of the web application
+<tt>basic-ezcomp</tt> to client. </p><pre>asadmin> <tt><b>set-web-context-param --name=javax.faces.STATE_SAVING_METHOD --description="The location where the application?s state is preserved" --value=client basic-ezcomp</b></tt>
+Command set-web-context-param executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help set-web-context-param</tt> at the command line.</p>
 
-<a name="giycy"></a><h4>To Unset a Web Context Parameter</h4><a name="indexterm-90"></a><a name="indexterm-91"></a><p>Use the <tt>unset-web-context-param</tt> subcommand in remote mode to unset an environment entry for
+<a name="giycy"></a><h4>To Unset a Web Context Parameter</h4><a name="indexterm-88"></a><a name="indexterm-89"></a><p>Use the <tt>unset-web-context-param</tt> subcommand in remote mode to unset an environment entry for
 a deployed web application or module that has been set by using the
 <tt>set-web-env-entry</tt> subcommand. There is no need to modify the application's deployment descriptors and
 repackage and redeploy the application.</p><p>This subcommand unsets an environment entry for one of the following items:</p>
@@ -293,11 +309,12 @@ to change the value of an environment entry that is set in
 an application's deployment descriptor. Instead, use the <a href="http://docs.sun.com/doc/820-7701/set-web-context-param-1?a=view"><tt>set-web-context-param</tt>(1)</a> subcommand for this purpose.</p><h6>Before You Begin</h6><p>The application must already be deployed, and the entry must have previously been
 set by using the <tt>set-web-env-entry</tt> subcommand. Otherwise, an error occurs.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
-<li><b>Unset an environment entry by using the <a href="http://docs.sun.com/doc/820-7701/unset-web-context-param-1?a=view"><tt>unset-web-context-param</tt>(1)</a> subcommand.</b><p>Information about the options for the subcommand is included in this help page.</p></li></ol><a name="gjivv"></a><h6>Example&#160;2-23 Unsetting a Servlet Context-Initialization Parameter for a Web Application</h6><p>This example unsets the servlet context-initialization parameter <tt>javax.faces.STATE_SAVING_METHOD</tt> of the web application
-<tt>basic-ezcomp</tt>.</p><pre>asadmin> <tt><b>unset-web-context-param --name=javax.faces.STATE_SAVING_METHOD basic-ezcomp</b></tt>Command unset-web-context-param executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+<li><b>Unset an environment entry by using the <a href="http://docs.sun.com/doc/820-7701/unset-web-context-param-1?a=view"><tt>unset-web-context-param</tt>(1)</a> subcommand.</b><p>Information about the options for the subcommand is included in this help page.</p></li></ol><a name="gjivv"></a><h6>Example&#160;2-22 Unsetting a Servlet Context-Initialization Parameter for a Web Application</h6><p>This example unsets the servlet context-initialization parameter <tt>javax.faces.STATE_SAVING_METHOD</tt> of the web application
+<tt>basic-ezcomp</tt>.</p><pre>asadmin> <tt><b>unset-web-context-param --name=javax.faces.STATE_SAVING_METHOD basic-ezcomp</b></tt>
+Command unset-web-context-param executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help unset-web-context-param</tt> at the command line.</p>
 
-<a name="giybo"></a><h4>To List Web Context Parameters</h4><a name="indexterm-92"></a><a name="indexterm-93"></a><p>Use the <tt>list-web-context-param</tt> subcommand in remote mode to list the parameters that have
+<a name="giybo"></a><h4>To List Web Context Parameters</h4><a name="indexterm-90"></a><a name="indexterm-91"></a><p>Use the <tt>list-web-context-param</tt> subcommand in remote mode to list the parameters that have
 previously been set by using the <a href="http://docs.sun.com/doc/820-7701/set-web-context-param-1?a=view"><tt>set-web-context-param</tt>(1)</a> subcommand. The subcommand does not
 list parameters that are set only in the application's deployment descriptor. For each
 parameter, the following information is displayed:</p>
@@ -307,35 +324,41 @@ parameter, the following information is displayed:</p>
 <li><p>The description of the parameter or <tt>null</tt> if no description was specified when the parameter was set</p></li></ul>
 <ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
-<li><b>List servlet context-initialization parameters by using the <a href="http://docs.sun.com/doc/820-7701/list-web-context-param-1?a=view"><tt>list-web-context-param</tt>(1)</a> subcommand.</b></li></ol><a name="gjixd"></a><h6>Example&#160;2-24 Listing Servlet Context-Initialization Parameters for a Web Application</h6><p>This example lists all servlet context-initialization parameters of the web application <tt>basic-ezcomp</tt> that
+<li><b>List servlet context-initialization parameters by using the <a href="http://docs.sun.com/doc/820-7701/list-web-context-param-1?a=view"><tt>list-web-context-param</tt>(1)</a> subcommand.</b></li></ol><a name="gjixd"></a><h6>Example&#160;2-23 Listing Servlet Context-Initialization Parameters for a Web Application</h6><p>This example lists all servlet context-initialization parameters of the web application <tt>basic-ezcomp</tt> that
 have been set by using the <tt>set-web-context-param</tt> subcommand. Because no description was specified when
 the <tt>javax.faces.PROJECT_STAGE</tt> parameter was set, null is displayed instead of a description for
 this parameter.</p><pre>asadmin> <tt><b>list-web-context-param basic-ezcomp javax.faces.STATE_SAVING_METHOD = client ignoreDescriptorItem=false //The location where the application?s state is preserved javax.faces.PROJECT_STAGE = null ignoreDescriptorItem=true //null</b></tt>
 Command list-web-context-param executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help list-web-context-param</tt> at the command line.</p>
 
-<a name="giyhc"></a><h4>To Set a Web Environment Entry</h4><a name="indexterm-94"></a><a name="indexterm-95"></a><p>An application uses the values of environment entries to customize its behavior or
+<a name="giyhc"></a><h4>To Set a Web Environment Entry</h4><a name="indexterm-92"></a><a name="indexterm-93"></a><p>An application uses the values of environment entries to customize its behavior or
 presentation. Use the <tt>set-web-env-entry</tt> subcommand in remote mode to change the configuration of
 a deployed application without the need to modify the application's deployment descriptors and
-repackage and redeploy the application.</p><p>This subcommand sets an environment entry for one of the following items:
+repackage and redeploy the application. By using this subcommand, you are either adding a
+new parameter that did not appear in the original web module's descriptor, or
+overriding the descriptor's setting of the parameter.</p><p>If you the <tt>--ignoreDescriptorItem</tt> option is set to <tt>true</tt>, then the server ignores
+any setting for that environment entry in the descriptor, which means you do
+not need to specify an overriding value on the <tt>set-web-env-entry</tt> subcommand. The server behaves
+as if the descriptor had never contained a setting for that environment entry.</p><p>This subcommand sets an environment entry for one of the following items:
 </p>
 <ul><li><p>A deployed web application</p></li>
 <li><p>A web module in a deployed Java Platform, Enterprise Edition (Java EE) application</p></li></ul>
 <h6>Before You Begin</h6><p>The application must already be deployed. Otherwise, an error occurs.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
 <li><b>Set an environment entry for a deployed web application or module by using
-the <a href="http://docs.sun.com/doc/820-7701/set-web-env-entry-1?a=view"><tt>set-web-env-entry</tt>(1)</a> subcommand.</b><p>Information about the options for the subcommand is included in this help page.</p></li></ol><a name="gjiwe"></a><h6>Example&#160;2-25 Setting an Environment Entry for a Web Application</h6><p>This example sets the environment entry <tt>Hello User</tt> of the application hello to <tt>techscribe</tt>.
-The Java type of this entry is <tt>java.lang.String</tt>.</p><pre>asadmin> <tt><b>set-web-env-entry --name="Hello User" --type=java.lang.String --value=techscribe --description="User authentication for Hello appplication" hello</b></tt>Command set-web-env-entry executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+the <a href="http://docs.sun.com/doc/820-7701/set-web-env-entry-1?a=view"><tt>set-web-env-entry</tt>(1)</a> subcommand.</b><p>Information about the options for the subcommand is included in this help page.</p></li></ol><a name="gjiwe"></a><h6>Example&#160;2-24 Setting an Environment Entry for a Web Application</h6><p>This example sets the environment entry <tt>Hello User</tt> of the application hello to <tt>techscribe</tt>.
+The Java type of this entry is <tt>java.lang.String</tt>.</p><pre>asadmin> <tt><b>set-web-env-entry --name="Hello User" --type=java.lang.String --value=techscribe --description="User authentication for Hello appplication" hello</b></tt>
+Command set-web-env-entry executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help set-web-env-entry</tt> at the command line.</p>
 
-<a name="giyjr"></a><h4>To Unset a Web Environment Entry</h4><a name="indexterm-96"></a><a name="indexterm-97"></a><p>Use the <tt>unset-web-env-entry</tt> subcommand in remote mode to unset an environment entry for
+<a name="giyjr"></a><h4>To Unset a Web Environment Entry</h4><a name="indexterm-94"></a><a name="indexterm-95"></a><p>Use the <tt>unset-web-env-entry</tt> subcommand in remote mode to unset an environment entry for
 a deployed web application or module.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
-<li><b>Unset a web environment entry by using the <a href="http://docs.sun.com/doc/820-7701/unset-web-env-entry-1?a=view"><tt>unset-web-env-entry</tt>(1)</a> subcommand.</b><p>Information about the options for the subcommand is included in this help page.</p></li></ol><a name="gjivj"></a><h6>Example&#160;2-26 Unsetting an Environment Entry for a Web Application</h6><p>This example unsets the environment entry <tt>Hello User</tt> of the web application <tt>hello</tt>.</p><pre>asadmin> <tt><b>unset-web-env-entry --name="Hello User" hello</b></tt>
+<li><b>Unset a web environment entry by using the <a href="http://docs.sun.com/doc/820-7701/unset-web-env-entry-1?a=view"><tt>unset-web-env-entry</tt>(1)</a> subcommand.</b><p>Information about the options for the subcommand is included in this help page.</p></li></ol><a name="gjivj"></a><h6>Example&#160;2-25 Unsetting an Environment Entry for a Web Application</h6><p>This example unsets the environment entry <tt>Hello User</tt> of the web application <tt>hello</tt>.</p><pre>asadmin> <tt><b>unset-web-env-entry --name="Hello User" hello</b></tt>
 Command unset-web-env-entry executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help unset-web-env-entry</tt> at the command line.</p>
 
-<a name="giyip"></a><h4>To List Web Environment Entries</h4><a name="indexterm-98"></a><a name="indexterm-99"></a><p>Use the <tt>list-web-env-entry</tt> subcommand to list environment entries for a deployed web application
+<a name="giyip"></a><h4>To List Web Environment Entries</h4><a name="indexterm-96"></a><a name="indexterm-97"></a><p>Use the <tt>list-web-env-entry</tt> subcommand to list environment entries for a deployed web application
 or module. For each entry, the following information is displayed: </p>
 <ul><li><p>The name of the entry</p></li>
 <li><p>The Java type of the entry </p></li>
@@ -344,20 +367,26 @@ or module. For each entry, the following information is displayed: </p>
 <li><p>The value of the <tt>--ignoreDescriptorItem</tt> option of the <tt>set-web-env-entry</tt> subcommand that was specified when the entry was set</p></li></ul>
 <ol>
 <li><b>Ensure that the server is running.</b><p>Remote commands require a running server.</p></li>
-<li><b>List the environment entries by using the<a href="http://docs.sun.com/doc/820-7701/list-web-env-entry-1?a=view"><tt>list-web-env-entry</tt>(1)</a> subcommand.</b></li></ol><a name="gjiws"></a><h6>Example&#160;2-27 Listing Environment Entries for a Web Application</h6><p>This example lists all environment entries that have been set for the web
-application <tt>hello</tt> by using the <tt>set-web-env-entry</tt> subcommand.</p><pre>asadmin> <tt><b>list-web-env-entry hello Hello User (java.lang.String) = techscribe ignoreDescriptorItem=false //User authentication for Hello appplication Hello Port (java.lang.Integer) = null ignoreDescriptorItem=true //null</b></tt>Command list-web-env-entry executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+<li><b>List the environment entries by using the<a href="http://docs.sun.com/doc/820-7701/list-web-env-entry-1?a=view"><tt>list-web-env-entry</tt>(1)</a> subcommand.</b></li></ol><a name="gjiws"></a><h6>Example&#160;2-26 Listing Environment Entries for a Web Application</h6><p>This example lists all environment entries that have been set for the web
+application <tt>hello</tt> by using the <tt>set-web-env-entry</tt> subcommand.</p><pre>asadmin> <tt><b>list-web-env-entry hello Hello User (java.lang.String) = techscribe ignoreDescriptorItem=false //User authentication for Hello appplication Hello Port (java.lang.Integer) = null ignoreDescriptorItem=true //null</b></tt>
+Command list-web-env-entry executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help list-web-env-entry</tt> at the command line.</p>
 
 <a name="beaej"></a><h3>Web Module Deployment Guidelines</h3>
-<a name="indexterm-100"></a><a name="indexterm-101"></a><a name="indexterm-102"></a><p>The following guidelines apply to deploying a web module in Enterprise Server:</p>
+<a name="indexterm-98"></a><a name="indexterm-99"></a><a name="indexterm-100"></a><p>The following guidelines apply to deploying a web module in Enterprise Server:</p>
 <ul><li><p><b>Context Root.</b> When you deploy a web module, if you do not specify a context root, the default is the name of the WAR file without the <tt>.war</tt> extension. The web module context root must be unique within the server.</p></li>
 <li><p><b>Data Source.</b> If a web application accesses a <tt>DataSource</tt> that is not specified in a <tt>resource-ref</tt> in <tt>sun-web.xml</tt>, or there is no <tt>sun-web.xml</tt> file, the <tt>resource-ref-name</tt> defined in <tt>web.xml</tt> is used. A warning message is logged, recording the JNDI name that was used to look up the resource.</p></li>
-<li><p><b>Virtual Servers.</b> If you deploy a web application and do not specify any assigned virtual servers, the web application is assigned to all currently-defined virtual servers. If you then create additional virtual servers and want to assign existing web applications to them, you must redeploy the web applications.</p></li>
-<li><p><b>HTTP Sessions.</b> If a server instance fails, HTTP sessions in WAR modules can be saved in a persistent store. </p>
-<hr><p><b>Note - </b>After a web application is undeployed, its <tt>HttpSession</tt> information is not immediately removed if sessions are persistent. <tt>HttpSession</tt> information is removed in the subsequent cycle, when timed out sessions are removed. Therefore, you should disable a web application before undeploying it, if sessions are persistent.</p>
-<hr>
-</li>
-<li><p><b>JSP Precompilation.</b> <a name="indexterm-103"></a>You can precompile JSP files during deployment by checking the appropriate box in the Administration Console, or by using the <tt>--precompilejsp</tt> option of the <tt>deploy</tt> subcommand. The Enterprise Server Ant tasks <tt>sun-appserv-deploy</tt> and <tt>sun-appserv-jspc</tt> also allow you to precompile JSP files. For more information, see <a href="http://docs.sun.com/doc/820-7695/beaep?a=view">Chapter 3, Using Ant with Enterprise Server, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>.</p><p><a name="indexterm-104"></a><a name="indexterm-105"></a><a name="indexterm-106"></a>You can keep the generated source for JSP files by adding the <tt>keepgenerated</tt> flag to the <tt>jsp-config</tt> element in <tt>sun-web.xml</tt>. For example:<a name="indexterm-107"></a><a name="indexterm-108"></a></p><pre>&#60;sun-web-app>
+<li><p><b>Virtual Servers.</b> If you deploy a web application and do not specify any assigned virtual servers, the web application is assigned to all currently-defined virtual servers with the exception of the virtual server with ID <tt>__asadmin</tt>, which is reserved for administrative purposes. If you then create additional virtual servers and want to assign existing web applications to them, you must redeploy the web applications.</p></li>
+<li><p><b>HTTP Sessions.</b> If a web application is undeployed, all its HTTP sessions will be invalidated and removed, unless the application is being undeployed as part of a redeployment and the <tt>keepSessions</tt> deployment property was set to true. See <a href="#gijzm">Example&#160;2-7</a>. During a server shutdown, all HTTP sessions of a web application will be persisted to the file specified by the <tt>session-manager</tt> property with name <tt>sessionFilename</tt>in the web application's <tt>sun-web.xml</tt> deployment descriptor. To prevent HTTP sessions from being persisted during a server shutdown, specify the <tt>sessionFilename</tt> property with an empty value, as follows: </p><pre>&#60;sun-web-app>
+     &#60;session-config>
+       &#60;session-manager>
+         &#60;manager-properties>
+           &#60;property name="sessionFilename" value="" />
+         &#60;/manager-properties>
+       &#60;/session-manager>
+     &#60;/session-config>
+   &#60;/sun-web-app> </pre><p>The default location where HTTP sessions will be persisted during a  server shutdown is given as  <i>domain-dir</i><tt>/generated/jsp/</tt><i>module-name</i><tt>/</tt><i>module-name</i><tt>_SESSIONS.ser</tt></p></li>
+<li><p><b>JSP Precompilation.</b> <a name="indexterm-101"></a>You can precompile JSP files during deployment by checking the appropriate box in the Administration Console, or by using the <tt>--precompilejsp</tt> option of the <tt>deploy</tt> subcommand. The Enterprise Server Ant tasks <tt>sun-appserv-deploy</tt> and <tt>sun-appserv-jspc</tt> also allow you to precompile JSP files. For more information, see <a href="http://docs.sun.com/doc/820-7695/beaep?a=view">Chapter 3, Using Ant with Enterprise Server, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>.</p><p><a name="indexterm-102"></a><a name="indexterm-103"></a><a name="indexterm-104"></a>You can keep the generated source for JSP files by adding the <tt>keepgenerated</tt> flag to the <tt>jsp-config</tt> element in <tt>sun-web.xml</tt>. For example:<a name="indexterm-105"></a><a name="indexterm-106"></a></p><pre>&#60;sun-web-app>
    ...
    &#60;jsp-config>
       &#60;property name=keepgenerated value=true />
@@ -376,18 +405,18 @@ by typing <tt>asadmin help list-web-env-entry</tt> at the command line.</p>
 
 
 <a name="beaek"></a><h3>EJB Module Deployment Guidelines</h3>
-<a name="indexterm-109"></a><a name="indexterm-110"></a><a name="indexterm-111"></a>
+<a name="indexterm-107"></a><a name="indexterm-108"></a><a name="indexterm-109"></a>
 <hr><p><b>Note - </b>"The Enterprise Server Web Profile supports the EJB 3.1 Lite specification, which allows
 enterprise beans within web applications, among other features. The Enterprise Server Full Platform
 Profile supports the entire EJB 3.1 specification. For details, see JSR 318 (<a href="http://jcp.org/en/jsr/detail?id=318">http://jcp.org/en/jsr/detail?id=318</a></p>
 <hr>
 <p>The following guidelines apply to deploying an EJB module in Enterprise Server:</p>
 <ul><li><p><b>JNDI Name.</b> If no JNDI name for the EJB JAR module is specified in the <tt>jndi-name</tt> element immediately under the <tt>ejb</tt> element in <tt>sun-ejb-jar.xml</tt>, or there is no <tt>sun-ejb-jar.xml</tt> file, a default, non-clashing JNDI name is derived. A warning message is logged, recording the JNDI name used to look up the EJB JAR module.</p></li>
-<li><p><a name="indexterm-112"></a><a name="indexterm-113"></a><b>Stubs and Ties.</b> Use the <a href="http://docs.sun.com/doc/820-7701/get-client-stubs-1?a=view"><tt>get-client-stubs</tt>(1)</a> subcommand in remote mode to retrieve stubs and ties.</p></li></ul>
+<li><p><a name="indexterm-110"></a><a name="indexterm-111"></a><b>Stubs and Ties.</b> Use the <a href="http://docs.sun.com/doc/820-7701/get-client-stubs-1?a=view"><tt>get-client-stubs</tt>(1)</a> subcommand in remote mode to retrieve stubs and ties.</p></li></ul>
 
 
 <a name="gilxc"></a><h3>Deploying a Connector Module</h3>
-<a name="indexterm-114"></a><a name="indexterm-115"></a><p>Deploying a standalone connector module allows multiple deployed Java EE applications to share
+<a name="indexterm-112"></a><a name="indexterm-113"></a><p>Deploying a standalone connector module allows multiple deployed Java EE applications to share
 the connector module. A resource adapter configuration is automatically created for the connector
 module.</p><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#fvynl">To Deploy and Configure a Standalone Connector Module</a></p></li>
@@ -395,8 +424,8 @@ module.</p><p>The following topics are addressed here:</p>
 <li><p><a href="#bealq">Deploying and Configuring an Embedded Resource Adapter</a></p></li></ul>
 
 
-<a name="fvynl"></a><h4>To Deploy and Configure a Standalone Connector Module</h4><a name="indexterm-116"></a><ol>
-<li><b>Ensure that the server is running.</b><p>Remote commands require a running server.<a name="indexterm-117"></a><a name="indexterm-118"></a><a name="indexterm-119"></a></p></li>
+<a name="fvynl"></a><h4>To Deploy and Configure a Standalone Connector Module</h4><a name="indexterm-114"></a><ol>
+<li><b>Ensure that the server is running.</b><p>Remote commands require a running server.<a name="indexterm-115"></a><a name="indexterm-116"></a><a name="indexterm-117"></a></p></li>
 <li><b>Deploy the connector module by using the <a href="http://docs.sun.com/doc/820-7701/deploy-1?a=view"><tt>deploy</tt>(1)</a> subcommand.</b></li>
 <li><b>Configure connector connection pools for the deployed connector module.</b><p>Use the <tt>create-connector-connection-pool</tt> subcommand. For procedures, see <a href="http://docs.sun.com/doc/820-7692/gioce?a=view">To Create a Connector Connection Pool in <i>Sun GlassFish Enterprise Server v3 Preview Administration Guide</i></a>.</p></li>
 <li><b>Configure connector resources for the connector connection pools.</b><p>Use the <tt>create-resource-adapter-config</tt> subcommand. For procedures, see <a href="http://docs.sun.com/doc/820-7692/gioqx?a=view">To Create Configuration Information for a Resource Adapter in <i>Sun GlassFish Enterprise Server v3 Preview Administration Guide</i></a>. If needed, you can override the
@@ -406,7 +435,7 @@ the default configuration  properties of a resource adapter. </p></li>
 <li>(Optional) <b>If needed, create an administered object for an inbound resource adapter.</b><p>Use the <tt>create-admin-object</tt> subcommand. For procedures, see <a href="http://docs.sun.com/doc/820-7692/giolr?a=view">To Create an Administered Object in <i>Sun GlassFish Enterprise Server v3 Preview Administration Guide</i></a>.</p></li></ol>
 
 <a name="bealp"></a><h4>Redeploying a Standalone Connector Module</h4>
-<p><a name="indexterm-120"></a><a name="indexterm-121"></a>Redeployment of a connector module maintains all connector connection pools, connector resources, and
+<p><a name="indexterm-118"></a><a name="indexterm-119"></a>Redeployment of a connector module maintains all connector connection pools, connector resources, and
 administered objects defined for the previously deployed connector module. You do not need to
 reconfigure any of these resources.</p><p>However, you should redeploy any dependent modules. A dependent module uses or refers
 to a connector resource of the redeployed connector module. Redeployment of a connector
@@ -420,7 +449,7 @@ case, if the connector module has already been deployed, Enterprise Server provi
 error message.</p>
 
 <a name="bealq"></a><h4>Deploying and Configuring an Embedded Resource Adapter</h4>
-<p><a name="indexterm-122"></a><a name="indexterm-123"></a>A connector module can be deployed as a Java EE component in a
+<p><a name="indexterm-120"></a><a name="indexterm-121"></a>A connector module can be deployed as a Java EE component in a
 Java EE application. Such connectors are only visible to components residing in the
 same Java EE application. Deploy this application as you would any other Java
 EE application.</p><p>You can create new connector connection pools and connector resources for a connector
@@ -432,7 +461,7 @@ Server and the logical JNDI name used in the application component is specified
 in the Enterprise Server&#8211;specific XML descriptor <tt>sun-ejb-jar.xml</tt>.</p>
 
 <a name="beaem"></a><h3>Assembling and Deploying an Application Client Module</h3>
-<a name="indexterm-124"></a><a name="indexterm-125"></a><a name="indexterm-126"></a><p>Deployment is necessary for application clients that communicate with EJB components or that
+<a name="indexterm-122"></a><a name="indexterm-123"></a><a name="indexterm-124"></a><p>Deployment is necessary for application clients that communicate with EJB components or that
 use Java Web Start launch support. Java Web Start is supported for application
 clients and for applications that contain application clients. By default, Java Web Start
 is enabled in application clients and in Enterprise Server.</p>
@@ -451,23 +480,22 @@ Profile, not in the Web Profile.</p>
 <li><b>Assemble the client and EJB JAR files together in an EAR.</b><p>An EAR file contains all the components of the application.</p></li>
 <li><b>Deploy the application.</b><p>Instructions are contained in <a href="#gijmq">To Deploy an Application or Module</a>.</p></li>
 <li><b>If you are using the <tt>appclient</tt> script to run the application client, retrieve
-the client JAR file.</b><p>The client JAR file contains the ties and necessary classes for the application
+the client files.</b><p>The client JAR file contains the ties and necessary classes for the application
 client. In this release of Enterprise Server, the client JAR file is made
-up of multiple files.</p><ul>
-<li><b>Use the <a href="http://docs.sun.com/doc/820-7701/deploy-1?a=view"><tt>deploy</tt>(1)</a> subcommand with the <tt>--retrieve</tt> option to retrieve the client JAR file.<a name="indexterm-127"></a></b></li>
-<li><b>Use the <a href="http://docs.sun.com/doc/820-7701/get-client-stubs-1?a=view"><tt>get-client-stubs</tt>(1)</a> subcommand to retrieve the stubs and ties.<a name="indexterm-128"></a></b></li></ul></li>
-<li><b>If you are using the <tt>appclient</tt> script to run the application client, copy
-the client JAR file (and its dependent files) to the client machine.</b></li>
-<li><b>Test the client on the Enterprise Server machine in one of the
-following ways:<a name="indexterm-129"></a></b><ul>
+up of multiple files. Use either <tt>deploy --retrieve</tt> or <tt>get-client-stubs</tt>, but not both.</p><ul>
+<li><b>Use the <a href="http://docs.sun.com/doc/820-7701/deploy-1?a=view"><tt>deploy</tt>(1)</a> subcommand with the <tt>--retrieve</tt> option to retrieve the client files as
+part of deploying the application.<a name="indexterm-125"></a></b></li>
+<li><b>Use the <a href="http://docs.sun.com/doc/820-7701/get-client-stubs-1?a=view"><tt>get-client-stubs</tt>(1)</a> subcommand to retrieve client files for a previously-deployed application. <a name="indexterm-126"></a></b></li></ul></li>
+<li>(Optional) <b>Test the client on the Enterprise Server machine in one of the following
+ways:<a name="indexterm-127"></a></b><ul>
 <li><b>If Java Web Start is enabled for the application client, use the Launch
 link on the Application Client Modules.</b></li>
 <li><b>Run an application client by using the <tt>appclient</tt> script. </b><p>The <tt>appclient</tt> script is located in the <i>as-install</i><tt>/bin</tt> directory.</p><p>If you are using the default server instance, the only required option is
 <tt>-client</tt>, which points to the client JAR file. For example:</p><pre>appclient --client converterClient.jar</pre><p>The <tt>-xml</tt> parameter, which specifies the location of the <tt>sun-acc.xml</tt> file, is also
 required if you are not using the default instance.</p></li></ul></li></ol><h6>See Also</h6><p>For more detailed information about Java Web Start, see <a href="http://docs.sun.com/doc/820-7695/beakt?a=view">Chapter 11, Developing Java Clients, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>. </p><p>For more detailed information about the <tt>appclient</tt> script, see <a href="http://docs.sun.com/doc/820-7701/appclient-1m?a=view"><tt>appclient</tt>(1M)</a>.</p>
 
-<a name="fwahd"></a><h4>To Prepare Another Machine for Running an Application Client</h4><p><a name="indexterm-130"></a></p><p>If Java Web Start is enabled, the default URL format for an
-application is <tt>http://</tt><i>host</i>:<i>port</i>/<i>context-root</i>. For example:</p><pre>http://localhost:80/myapp</pre><p>The default URL format for a standalone application client module is <tt>http://</tt><i>host</i>:<i>port</i>/<i>module-id</i>.
+<a name="fwahd"></a><h4>To Prepare Another Machine for Running an Application Client</h4><p>If Java Web Start is enabled, the default URL format for an
+application is <tt>http://</tt><i>host</i>:<i>port</i>/<i>context-root</i>. For example:<a name="indexterm-128"></a></p><pre>http://localhost:80/myapp</pre><p>The default URL format for a standalone application client module is <tt>http://</tt><i>host</i>:<i>port</i>/<i>module-id</i>.
 For example:</p><pre>http://localhost:80/myclient</pre><p>To set a different URL for an application client, set the <tt>context-root</tt>
 subelement of the <a href="p8.html#gauax"><tt>java-web-start-access</tt></a> element in the <tt>sun-application-client.xml</tt> file.</p><p>If the <i>context-root</i> or <i>module-id</i> is not specified during deployment, the name of
 the EAR or JAR file without the <tt>.ear</tt> or <tt>.jar</tt> extension is
@@ -475,19 +503,19 @@ used. For an application, the relative path to the application client JAR file
 is also included. If the application or module is not in EAR or
 JAR file format, a <i>context-root</i> or <i>module-id</i> is generated. Regardless of how the
 <i>context-root</i> or <i>module-id</i> is determined, it is written to the server log. For
-details about naming, see <a href="p4.html#gihzk">Naming Standards</a>.</p><h6>Before You Begin</h6><p>This tasks only applies if Java Web Start is <b>not</b> enabled for the
-application client.</p><ol>
-<li><b><a name="indexterm-131"></a><a name="indexterm-132"></a><a name="indexterm-133"></a>Create the application client package JAR file.</b><p>Use the <tt>package-appclient</tt> script in the <i>as-install</i><tt>/bin</tt> directory. This JAR file is created in
+details about naming, see <a href="p4.html#gihzk">Naming Standards</a>.</p><h6>Before You Begin</h6><p>This task applies if you want to run the application client on
+a system other than where the server runs.</p><ol>
+<li><b><a name="indexterm-129"></a><a name="indexterm-130"></a><a name="indexterm-131"></a>Create the application client package JAR file.</b><p>Use the <tt>package-appclient</tt> script in the <i>as-install</i><tt>/bin</tt> directory. This JAR file is created in
 the <i>as-install</i><tt>/lib/appclient</tt> directory.</p></li>
 <li><b>Copy the application client package JAR file to the client machine.</b></li>
 <li><b>Extract the contents of the JAR file.</b><p>For example, in UNIX:<tt> jar xf <i>filename</i>.jar </tt></p></li>
-<li><b><a name="indexterm-134"></a>Configure the <tt>sun-acc.xml</tt> file.</b><p>If you used the <tt>package-appclient</tt> script, this file is located in the
+<li><b><a name="indexterm-132"></a>Configure the <tt>sun-acc.xml</tt> file.</b><p>If you used the <tt>package-appclient</tt> script, this file is located in the
 <tt>appclient/appserv/lib/appclient</tt> directory by default.</p></li>
 <li><b>Copy the client JAR file to the client machine. </b><p>You are now ready to run the client.</p></li></ol><h6>See Also</h6><p>For more detailed information about Java Web Start and the <tt>package-appclient</tt> script,
 see <a href="http://docs.sun.com/doc/820-7701/appclient-1m?a=view"><tt>appclient</tt>(1M)</a>.</p>
 
 <a name="gavpv"></a><h4>To Undeploy an Application Client</h4>
-<p><a name="indexterm-135"></a><a name="indexterm-136"></a>After application clients are downloaded, they remain on the client until they are
+<p><a name="indexterm-133"></a><a name="indexterm-134"></a>After application clients are downloaded, they remain on the client until they are
 manually removed.  Use the Java Web Start control panel to discard downloaded
 application clients that used Java Web Start.</p><p> If you undeploy an application client, you can no longer use
 Java Web Start, or any other mechanism, to download that application client because it
@@ -502,59 +530,31 @@ locating a resource, or from <tt>java.rmi.RemoteException</tt> when referring to
 inaccessible.</p>
 
 <a name="beael"></a><h3>Lifecycle Module Deployment Guidelines</h3>
-<a name="indexterm-137"></a><a name="indexterm-138"></a><a name="indexterm-139"></a><p>A <b>lifecycle module</b>, also called a lifecycle listener module, provides a means of running
+<a name="indexterm-135"></a><a name="indexterm-136"></a><a name="indexterm-137"></a><p>A <b>lifecycle module</b>, also called a lifecycle listener module, provides a means of running
 long or short Java-based tasks within the Enterprise Server environment, such as instantiation
 of singletons or RMI servers. Lifecycle modules are automatically initiated at server startup
-and are notified at various phases of the server life cycle.  All
-lifecycle module classes and interfaces are in the <i>as-install</i><tt>/lib/appserv-ext.jar</tt> file.</p><p>For general information about lifecycle modules, see <a href="http://docs.sun.com/doc/820-7695/beamc?a=view">Chapter 13, Developing Lifecycle Listeners, in <i>Sun Java System Application Server 9.1 Developer&#8217;s Guide</i></a>.</p><p>You can deploy a lifecycle module using the <tt>create-lifecycle-module</tt> subcommand. Do not
-use <tt>asadmin deploy</tt> or related commands.<a name="indexterm-140"></a></p><p>After you deploy a lifecycle module, you must restart the server. During server
+and are notified at various phases of the server life cycle. All lifecycle
+module interfaces are in the <i>as-install</i><tt>/modules/glassfish-api.jar</tt> file.</p><p>For general information about lifecycle modules, see <a href="http://docs.sun.com/doc/820-7695/beamc?a=view">Chapter 13, Developing Lifecycle Listeners, in <i>Sun Java System Application Server 9.1 Developer&#8217;s Guide</i></a>.</p><p>You can deploy a lifecycle module using the <tt>create-lifecycle-module</tt> subcommand. Do not
+use <tt>asadmin deploy</tt> or related commands.<a name="indexterm-138"></a></p><p>After you deploy a lifecycle module, you must restart the server. During server
 initialization, the server instantiates the module and registers it as a lifecycle event
 listener.</p>
-<hr><p><b>Note - </b><a name="indexterm-141"></a>If the <tt>--failurefatal</tt> option of <tt>create-lifecycle-module</tt> is set to <tt>true</tt> (the default is <tt>false</tt>), lifecycle
+<hr><p><b>Note - </b><a name="indexterm-139"></a>If the <tt>--failurefatal</tt> option of <tt>create-lifecycle-module</tt> is set to <tt>true</tt> (the default is <tt>false</tt>), lifecycle
 module failure prevents server initialization or startup, but not shutdown or termination.</p>
 <hr>
 
 
 <a name="gbiye"></a><h3>Web Service Deployment Guidelines</h3>
-<a name="indexterm-142"></a><a name="indexterm-143"></a>
+<a name="indexterm-140"></a><a name="indexterm-141"></a>
 <hr><p><b>Note - </b>If you installed the Web Profile, web services are not supported unless the
 optional Metro Web Services Stack add-on component is downloaded from the Update Tool.
 Without the Metro add-on component, a servlet or EJB component cannot be a
 web service endpoint, and the <tt>sun-web.xml</tt> and <tt>sun-ejb-jar.xml</tt> elements related to web
-services are ignored. </p><p>For information about Update Tool, see the <a href="http://docs.sun.com/doc/820-7690/ghnsv?a=view">Chapter 2, Updating an Existing Enterprise Server v3 Preview Installation, in <i>Sun GlassFish Enterprise Server v3 Preview Installation Guide</i></a>.</p>
+services are ignored. </p><p>For information about Update Tool, see <a href="http://docs.sun.com/doc/820-7692/ghgai?a=view">Update Tool in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p>
 <hr>
-<p>The following guidelines apply when deploying a web service in Enterprise Server:<a name="indexterm-144"></a><a name="indexterm-145"></a></p>
+<p>The following guidelines apply when deploying a web service in Enterprise Server:<a name="indexterm-142"></a><a name="indexterm-143"></a></p>
 <ul><li><p><b>Web Service Endpoint.</b> Deploy a web service endpoint to Enterprise Server as you would any servlet or stateless session bean. If the deployed module has a web service endpoint, the endpoint is detected automatically during deployment. The Sun-specific deployment descriptor files, <tt>sun-web.xml</tt> and <tt>sun-ejb-jar.xml</tt>, provide optional web service enhancements in their <a href="p8.html#beayv"><tt>webservice-endpoint</tt></a> and <a href="p8.html#beayt"><tt>webservice-description</tt></a> elements.</p></li>
-<li><p><b>Web Service Management.</b> Web service management is fully supported in the Administration Console. After the module is deployed, click the Web Service component. The table in the right frame lists deployed web service endpoints. Use the <tt>deploy</tt> subcommand in remote mode with the <tt>--registryjndiname</tt> option to publish the web service as part of deployment.</p></li>
 <li><p><b>JSR 181 Annotated File.</b> Use the autodeployment feature to deploy a JSR 181 annotated file. See <a href="#fvxze">To Deploy an Application or Module Automatically</a>.</p><p>For more information about web services, see <a href="http://www.jcp.org/en/jsr/detail?id=181">JSR 181</a> and <a href="http://docs.sun.com/doc/820-7695/gaszn?a=view">Chapter 6, Developing Web Services, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>.</p></li></ul>
 
-
-<a name="giydj"></a><h3>Application-Scoped Resources</h3>
-<a name="indexterm-146"></a><a name="indexterm-147"></a><p>You can define an application-scoped database or other resource for an enterprise application,
-web module, EJB module, connector module, or application client module. This allows single-step
-deployment for resource-dependent modules and applications. An application-scoped resource has the following characteristics:</p>
-<ul><li><p>It is available only to the module or application that defines it.</p></li>
-<li><p>It cannot be referenced or looked up by other modules or applications.</p></li>
-<li><p>It is free from unexpected resource starvation or delay in acquiring connections.</p></li>
-<li><p>It is created during deployment, destroyed during undeployment, and recreated during redeployment.</p></li></ul>
-<p>The following resource types can be application-scoped:</p>
-<ul><li><p>JDBC connection pools</p></li>
-<li><p>JDBC resources</p></li>
-<li><p>Connector connection pools</p></li>
-<li><p>Connector resources</p></li>
-<li><p>Resource adapters</p></li>
-<li><p>External JNDI resources</p></li>
-<li><p>Custom resources</p></li>
-<li><p>Admin object resources</p></li>
-<li><p>JavaMail resources</p></li></ul>
-<p>An application-scoped resource is defined in the <tt>sun-resources.xml</tt> deployment descriptor file. This
-file is placed in the <tt>META-INF</tt> directory of the module or application
-archive. If multiple submodule archives of an enterprise application archive have their own
-<tt>sun-resources.xml</tt> files, the resource definitions are merged and resources are created for the
-merged set. For more information about the <tt>sun-resources.xml</tt> file, see <a href="p7.html">Appendix&#160;B, Enterprise Server Deployment Descriptor Files</a> and <a href="p8.html">Appendix&#160;C, Elements of the Enterprise Server Deployment Descriptors</a>.</p><p>Application-scoped databases have JNDI names in the following format: <tt>java:app/jdbc/</tt><i>DataSourceName</i>. This is in
-accordance with the naming scopes introduced in the Java EE 6 Specification.</p><p>Application-scoped resource definitions with same resource name, resource type, attributes, and properties generate
-<tt>WARNING</tt> level log messages and deployment continues. Definitions with the same resource name and
-type but different attributes or properties cause deployment failure.</p>
 
 
 <table border="0" cellpadding="5" cellspacing="0" width="100%">

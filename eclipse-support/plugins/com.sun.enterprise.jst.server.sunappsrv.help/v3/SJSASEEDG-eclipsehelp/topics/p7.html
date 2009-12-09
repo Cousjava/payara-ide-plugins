@@ -6,7 +6,7 @@
 <title>Using Ant with Enterprise Server - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 </table>
 
 
-<a name="beaep"></a>Chapter&#160;3<h3>Using Ant with Enterprise Server</h3><a name="indexterm-69"></a><a name="indexterm-70"></a><a name="indexterm-71"></a><p>The Sun GlassFish Enterprise Server provides server-specific Ant tasks, which are described in
+<a name="beaep"></a>Chapter&#160;3<h3>Using Ant with Enterprise Server</h3><a name="indexterm-68"></a><a name="indexterm-69"></a><p>The Sun GlassFish<sup>TM</sup> Enterprise Server provides server-specific Ant tasks, which are described in
 the following sections:</p>
 <ul><li><p><a href="#gilww">Setting Up Your Ant Environment</a></p></li>
 <li><p><a href="#beaeq">Enterprise Server Ant Tasks</a></p></li>
@@ -47,7 +47,7 @@ these cases, you must also set the classpath to point to the <tt>sun-appserv-ant
 file.</p>
 
 <a name="gilwt"></a><h4>Defining the <tt>ANT_OPTS</tt> Variable</h4>
-<p>To define the <tt>ANT_OPTS</tt> environment variable on Unix systems, use the following commands,
+<p>To define the <tt>ANT_OPTS</tt> environment variable on UNIX systems, use the following commands,
 where <tt>${ASINSTALLDIR}</tt> is an environment variable defined to point to the Enterprise
 Server installation directory.</p><pre>export ANT_OPTS="-Djava.library.path${ASINSTALLDIR}/modules"
 export CLASSPATH=${CLASSPATH};${ASINSTALLDIR}/modules/sun-appserv-ant.jar</pre><p>To define the <tt>ANT_OPTS</tt> environment variable on Windows systems, use the following commands,
@@ -92,7 +92,7 @@ definitions. For example, the following snippet defines the <tt>sun-appserv-admi
 &#60;/project></pre>
 
 <a name="beaeq"></a><h3>Enterprise Server Ant Tasks</h3>
-<a name="indexterm-72"></a><a name="indexterm-73"></a><p>Use the Ant tasks provided by the Enterprise Server for assembling, deploying, and
+<a name="indexterm-70"></a><a name="indexterm-71"></a><p>Use the Ant tasks provided by the Enterprise Server for assembling, deploying, and
 undeploying modules and applications, and for configuring the server. The tasks are as
 follows:</p>
 <ul><li><p><a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a></p></li>
@@ -107,7 +107,7 @@ follows:</p>
 
 
 <a name="beaer"></a><h4>The <tt>sun-appserv-deploy</tt> Task</h4>
-<a name="indexterm-74"></a><a name="indexterm-75"></a><a name="indexterm-76"></a><p>Deploys any of the following to a local or remote Enterprise Server
+<a name="indexterm-72"></a><a name="indexterm-73"></a><a name="indexterm-74"></a><p>Deploys any of the following to a local or remote Enterprise Server
 instance.</p>
 <ul><li><p>Enterprise application (EAR file)</p></li>
 <li><p>Web application (WAR file)</p></li>
@@ -138,7 +138,7 @@ set of component files that match specified parameters</p></td>
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-77"></a><tt>file</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-75"></a><tt>file</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional if a <tt>component</tt>
 or <tt>fileset</tt> subelement is present, otherwise required) The component to deploy. If this
@@ -152,36 +152,36 @@ be an absolute path on the server machine.</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The
 display name for the component being deployed.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-78"></a><tt>force</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-76"></a><tt>force</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, the component is
 overwritten if it already exists on the server. If <tt>false</tt>, <tt>sun-appserv-deploy</tt> fails if
 the component exists.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-79"></a><tt>retrievestubs</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-77"></a><tt>retrievestubs</tt></p></td>
 <td align="left" valign="top" scope="row"><p>client stubs not saved</p></td>
-<td align="left" valign="top" scope="row"><p>(optional) The directory where client <a name="indexterm-80"></a>stubs are
+<td align="left" valign="top" scope="row"><p>(optional) The directory where client <a name="indexterm-78"></a>stubs are
 saved. This attribute is inherited by nested <tt>component</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-81"></a><a name="indexterm-82"></a><tt>precompilejsp</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-79"></a><a name="indexterm-80"></a><tt>precompilejsp</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, all JSP
 files found in an enterprise application (<tt>.ear</tt>) or web application (<tt>.war</tt>) are precompiled. This
 attribute is ignored for other component types. This attribute is inherited by nested
 <tt>component</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-83"></a><tt>verify</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-81"></a><tt>verify</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, syntax and semantics for all deployment descriptors are automatically
 verified for correctness. This attribute is inherited by nested <tt>component</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-84"></a><tt>contextroot</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-82"></a><tt>contextroot</tt></p></td>
 <td align="left" valign="top" scope="row"><p>file name without
 extension</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The context root for a web module (WAR file). This attribute
 is ignored if the component is not a WAR file.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-85"></a><tt>dbvendorname</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-83"></a><tt>dbvendorname</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>sun-ejb-jar.xml</tt> entry</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The name
 of the database vendor for which tables can be created. Allowed values are
@@ -192,14 +192,14 @@ value is specified, a connection is made to the resource specified by the
 vendor name is read. If the connection cannot be established, or if the
 value is not recognized, SQL-92 compliance is presumed.</p><p>For details, see <a href="p15.html#beajx">Generation Options for CMP</a>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-86"></a><tt>createtables</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-84"></a><tt>createtables</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>sun-ejb-jar.xml</tt> entry</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If
 <tt>true</tt>, causes database tables to be created for beans that need them. If
 <tt>false</tt>, does not create tables. If not specified, the value of the <tt>create-tables-at-deploy</tt>
 attribute in <tt>sun-ejb-jar.xml</tt> is used.</p><p>For details, see <a href="p12.html#gbwmk">Generation Options</a> and <a href="p15.html#beajx">Generation Options for CMP</a>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-87"></a><tt>dropandcreatetables</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-85"></a><tt>dropandcreatetables</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>sun-ejb-jar.xml</tt> entry</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If
 <tt>true</tt>, and if tables were automatically created when this application was last deployed,
@@ -211,48 +211,48 @@ proceeds, but a warning indicates that tables could not be created.</p><p>If <tt
 of <tt>create-tables-at-deploy</tt> or <tt>drop-tables-at-undeploy</tt> in the <tt>sun-ejb-jar.xml</tt> file are overridden.</p><p>For details, see
 <a href="p12.html#gbwmk">Generation Options</a> and <a href="p15.html#beajx">Generation Options for CMP</a>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-88"></a><tt>uniquetablenames</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-86"></a><tt>uniquetablenames</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>sun-ejb-jar.xml</tt> entry</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, specifies that table names are unique within
 each application server domain. If not specified, the value of the <tt>use-unique-table-names</tt> property in
 <tt>sun-ejb-jar.xml</tt> is used.</p><p>For details, see <a href="p15.html#beajx">Generation Options for CMP</a>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-89"></a><tt>enabled</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-87"></a><tt>enabled</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, enables the component.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-90"></a><tt>deploymentplan</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-88"></a><tt>deploymentplan</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) A
 deployment plan is a JAR file containing Sun-specific descriptors. Use this attribute when
 deploying an EAR file that lacks Sun-specific descriptors.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-91"></a><tt>availabilityenabled</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-89"></a><tt>availabilityenabled</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, enables high availability features,
 including persistence of HTTP sessions and checkpointing of the stateful session bean state.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-92"></a><tt>generatermistubs</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-90"></a><tt>generatermistubs</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional)
 If <tt>true</tt>, generates the static RMI-IIOP stubs and puts them in the client
 JAR file.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-93"></a><tt>upload</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-91"></a><tt>upload</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, the component is transferred to the server for deployment.
 If the component is being deployed on the local machine, set upload to
 <tt>false</tt> to reduce deployment time. If a directory is specified for deployment, upload must
 be <tt>false</tt>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-94"></a><tt>virtualservers</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-92"></a><tt>virtualservers</tt></p></td>
 <td align="left" valign="top" scope="row"><p>default virtual server only</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) A comma-separated list of virtual servers to
 be deployment targets. This attribute applies only to application (<tt>.ear</tt>) or web (<tt>.war</tt>) components
 and is ignored for other component types. This attribute is inherited by nested
 <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-95"></a><tt>user</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-93"></a><tt>user</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The user name used when logging into the application server administration
 instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
@@ -263,23 +263,23 @@ instance. This attribute is inherited by nested <tt>server</tt> elements.</p></t
 The password from this file is retrieved for communication with the application server
 administration instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-96"></a><tt>host</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-94"></a><tt>host</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Target server. When
 deploying to a remote server, use the fully qualified host name. This attribute
 is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-97"></a><tt>port</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-95"></a><tt>port</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The administration port on the target server.
 This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-98"></a><tt>target</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-96"></a><tt>target</tt></p></td>
 <td align="left" valign="top" scope="row"><p>name of default instance</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Target application
 server instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-99"></a><tt>asinstalldir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-97"></a><tt>asinstalldir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>see description</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The installation
 directory for the local Enterprise Server installation, which is used to find the
@@ -329,7 +329,7 @@ values.</p><pre>&#60;sun-appserv-deploy passwordfile="${passwordfile}" host="gre
 &#60;/sun-appserv-deploy></pre>
 
 <a name="beaes"></a><h4>The <tt>sun-appserv-undeploy</tt> Task</h4>
-<a name="indexterm-100"></a><a name="indexterm-101"></a><a name="indexterm-102"></a><p><a name="indexterm-103"></a>Undeploys any of the following from a local or remote Enterprise Server instance.</p>
+<a name="indexterm-98"></a><a name="indexterm-99"></a><a name="indexterm-100"></a><p><a name="indexterm-101"></a>Undeploys any of the following from a local or remote Enterprise Server instance.</p>
 <ul><li><p>Enterprise application (EAR file)</p></li>
 <li><p>Web application (WAR file)</p></li>
 <li><p>Enterprise Java Bean (EJB-JAR file)</p></li>
@@ -365,14 +365,14 @@ set of component files that match specified parameters</p></td>
 if a <tt>component</tt> or <tt>fileset</tt> subelement is present or the <tt>file</tt> attribute is
 specified, otherwise required) The display name for the component being undeployed.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-104"></a><tt>file</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-102"></a><tt>file</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The component
 to undeploy. If this attribute refers to a file, it must be a
 valid archive. If this attribute refers to a directory, it must contain a
 valid archive in which all components have been exploded.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-105"></a><tt>droptables</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-103"></a><tt>droptables</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>sun-ejb-jar.xml</tt> entry</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, causes
 database tables that were automatically created when the bean(s) were last deployed to be
@@ -380,14 +380,14 @@ dropped when the bean(s) are undeployed. If <tt>false</tt>, does not drop tables
 specified, the value of the <tt>drop-tables-at-undeploy</tt> attribute in <tt>sun-ejb-jar.xml</tt> is used.</p><p>For details,
 see <a href="p12.html#gbwmk">Generation Options</a> and <a href="p15.html#beajx">Generation Options for CMP</a>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-106"></a><tt>cascade</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-104"></a><tt>cascade</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, deletes all connection pools and connector resources
 associated with the resource adapter being undeployed.</p><p>If <tt>false</tt>, undeployment fails if any pools or
 resources are still associated with the resource adapter.</p><p>This attribute is applicable to
 connectors (resource adapters) and applications with connector modules.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-107"></a><tt>user</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-105"></a><tt>user</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The user name used when
 logging into the application server administration instance. This attribute is inherited by nested
@@ -399,23 +399,23 @@ logging into the application server administration instance. This attribute is i
 communication with the application server administration instance. This attribute is inherited by nested
 <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-108"></a><tt>host</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-106"></a><tt>host</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Target server. When deploying to a remote server, use the fully
 qualified host name. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-109"></a><tt>port</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-107"></a><tt>port</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The administration
 port on the target server. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-110"></a><tt>target</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-108"></a><tt>target</tt></p></td>
 <td align="left" valign="top" scope="row"><p>name
 of default instance</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Target application server instance. This attribute is inherited by nested
 <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-111"></a><tt>asinstalldir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-109"></a><tt>asinstalldir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>see description</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The installation directory for the local Enterprise Server installation, which
 is used to find the administrative classes. If not specified, the command checks
@@ -450,7 +450,7 @@ both instances are the same.</p><pre>&#60;sun-appserv-undeploy passwordfile="${p
 &#60;/sun-appserv-undeploy></pre>
 
 <a name="beaet"></a><h4>The <tt>sun-appserv-instance</tt> Task</h4>
-<a name="indexterm-112"></a><a name="indexterm-113"></a><a name="indexterm-114"></a><p>Starts, stops, restarts, creates, or removes application server instances.</p>
+<a name="indexterm-110"></a><a name="indexterm-111"></a><a name="indexterm-112"></a><p>Starts, stops, restarts, creates, or removes application server instances.</p>
 
 <a name="fvybd"></a><h5>Subelements of <tt>sun-appserv-instance</tt></h5>
 <p>The following table describes subelements for the <tt>sun-appserv-instance</tt> task. These are objects
@@ -467,28 +467,28 @@ upon which this task acts.</p><a name="fvydd"></a><h6>Table&#160;3-5 The <tt>sun
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-115"></a><tt>action</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-113"></a><tt>action</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>The control command for
 the target application server. Valid values are <tt>start</tt>, <tt>stop</tt>, <tt>create</tt>, and <tt>delete</tt>. A
 <tt>restart</tt> sends the <tt>stop</tt> command followed by the <tt>start</tt> command. The <tt>restart</tt> command is
 not supported on Windows.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-116"></a><tt>debug</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-114"></a><tt>debug</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Deprecated. If <tt>action</tt> is set to <tt>start</tt>, specifies
 whether the server starts in debug mode. This attribute is ignored for other
 values of <tt>action</tt>. If <tt>true</tt>, the instance generates additional debugging output throughout its lifetime.
 This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-117"></a><tt>config</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-115"></a><tt>config</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional, applicable only if <tt>action</tt>
 is <tt>create</tt>) The configuration for the new stand-alone instance.</p><p>The configuration must exist
 and must not be <tt>default-config</tt> or an already referenced stand-alone configuration (including the
 administration server configuration <tt>server-config</tt>).</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-118"></a><tt>property</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-116"></a><tt>property</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional, applicable only if <tt>action</tt> is <tt>create</tt>) Defines system properties
 for the server instance. These properties override port settings in the server instance&#8217;s configuration.
@@ -496,7 +496,7 @@ The following properties are defined: <tt>http-listener-1-port</tt>, <tt>http-li
 can be changed after instance creation using the system property commands. For details,
 see the <i><a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a></i>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-119"></a><tt>user</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-117"></a><tt>user</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The user name used when logging into the application server
 administration instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
@@ -507,23 +507,23 @@ administration instance. This attribute is inherited by nested <tt>server</tt> e
 passwords. The password from this file is retrieved for communication with the application
 server administration instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-120"></a><tt>host</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-118"></a><tt>host</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Target server.
 If it is a remote server, use the fully qualified host name. This
 attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-121"></a><tt>port</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-119"></a><tt>port</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The administration port on the
 target server. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-122"></a><tt>instance</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-120"></a><tt>instance</tt></p></td>
 <td align="left" valign="top" scope="row"><p>name of default instance</p></td>
 <td align="left" valign="top" scope="row"><p>(optional)
 Target application server instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-123"></a><tt>asinstalldir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-121"></a><tt>asinstalldir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>see description</p></td>
 <td align="left" valign="top" scope="row"><p>(optional)
 The installation directory for the local Enterprise Server installation, which is used to
@@ -581,7 +581,7 @@ the server subelement:</p><pre>&#60;sun-appserv-instance action="create" passwor
 &#60;/sun-appserv-instance></pre>
 
 <a name="beaeu"></a><h4>The <tt>sun-appserv-component</tt> Task</h4>
-<a name="indexterm-124"></a><a name="indexterm-125"></a><a name="indexterm-126"></a><a name="indexterm-127"></a><a name="indexterm-128"></a><p>Enables or disables the following Java EE component types that have been deployed
+<a name="indexterm-122"></a><a name="indexterm-123"></a><a name="indexterm-124"></a><a name="indexterm-125"></a><a name="indexterm-126"></a><p>Enables or disables the following Java EE component types that have been deployed
 to the Enterprise Server.</p>
 <ul><li><p>Enterprise application (EAR file)</p></li>
 <li><p>Web application (WAR file)</p></li>
@@ -614,7 +614,7 @@ set of component files that match specified parameters</p></td>
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-129"></a><tt>action</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-127"></a><tt>action</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>The control command for
 the target application server. Valid values are <tt>enable</tt> and <tt>disable</tt>.</p></td>
@@ -625,14 +625,14 @@ the target application server. Valid values are <tt>enable</tt> and <tt>disable<
 if a <tt>component</tt> or <tt>fileset</tt> subelement is present or the <tt>file</tt> attribute is
 specified, otherwise required) The display name for the component being enabled or disabled.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-130"></a><tt>file</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-128"></a><tt>file</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The
 component to enable or disable. If this attribute refers to a file, it
 must be a valid archive. If this attribute refers to a directory, it
 must contain a valid archive in which all components have been exploded.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-131"></a><tt>user</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-129"></a><tt>user</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The
 user name used when logging into the application server administration instance. This attribute
@@ -644,23 +644,23 @@ is inherited by nested <tt>server</tt> elements.</p></td>
 this file is retrieved for communication with the application server administration instance. This attribute
 is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-132"></a><tt>host</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-130"></a><tt>host</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Target server. When enabling or disabling
 a remote server, use the fully qualified host name. This attribute is inherited by
 nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-133"></a><tt>port</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-131"></a><tt>port</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The administration port on the target server. This attribute is
 inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-134"></a><tt>target</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-132"></a><tt>target</tt></p></td>
 <td align="left" valign="top" scope="row"><p>name of default instance</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Target application server instance.
 This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-135"></a><tt>asinstalldir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-133"></a><tt>asinstalldir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>see description</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The installation directory for
 the local Enterprise Server installation, which is used to find the administrative classes.
@@ -702,7 +702,7 @@ the same.</p><pre>&#60;sun-appserv-component action="enable" passwordfile="${pas
 &#60;/sun-appserv-component></pre>
 
 <a name="beaev"></a><h4>The <tt>sun-appserv-admin</tt> Task</h4>
-<a name="indexterm-136"></a><a name="indexterm-137"></a><a name="indexterm-138"></a><p>Enables arbitrary administrative commands and scripts to be executed on the Enterprise Server.
+<a name="indexterm-134"></a><a name="indexterm-135"></a><a name="indexterm-136"></a><p>Enables arbitrary administrative commands and scripts to be executed on the Enterprise Server.
 This is useful for cases where a specific Ant task has not been
 developed or a set of related commands are in a single script.</p>
 
@@ -721,7 +721,7 @@ upon which this task acts.</p><a name="fvyfq"></a><h6>Table&#160;3-9 The <tt>sun
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-139"></a><tt>command</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-137"></a><tt>command</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(exactly one of these
 is required: <tt>command</tt> or <tt>explicitcommand</tt>) The command to execute. If the <tt>user</tt>,
@@ -729,7 +729,7 @@ is required: <tt>command</tt> or <tt>explicitcommand</tt>) The command to execut
 the command before execution. If any of these options are specified in the
 command string, the corresponding attribute values are ignored.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-140"></a><tt>explicitcommand</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-138"></a><tt>explicitcommand</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(exactly one of these is required:
 <tt>command</tt> or <tt>explicitcommand</tt>) The exact command to execute. No command processing is done,
@@ -757,7 +757,7 @@ host name. This attribute is inherited by nested <tt>server</tt> elements.</p></
 <td align="left" valign="top" scope="row"><p>(optional) The administration
 port on the target server. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-141"></a><tt>asinstalldir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-139"></a><tt>asinstalldir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>see
 description</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The installation directory for the local Enterprise Server installation, which is used
@@ -770,7 +770,7 @@ to find the administrative classes. If not specified, the command checks if the
 <p>Here is an example of executing the <tt>create-jms-dest</tt> command:</p><pre>&#60;sun-appserv-admin command="create-jms-dest --desttype topic"></pre><p>Here is an example of using <tt>explicitcommand</tt> to execute the <tt>create-jms-dest</tt> command:</p><pre>&#60;sun-appserv-admin explicitcommand="create-jms-dest --desttype topic --target server1 simpleJmsDest"></pre>
 
 <a name="beaew"></a><h4>The <tt>sun-appserv-jspc</tt> Task</h4>
-<a name="indexterm-142"></a><a name="indexterm-143"></a><a name="indexterm-144"></a><p>Precompiles JSP source code into Enterprise Server compatible Java code for initial invocation
+<a name="indexterm-140"></a><a name="indexterm-141"></a><a name="indexterm-142"></a><p>Precompiles JSP source code into Enterprise Server compatible Java code for initial invocation
 by Enterprise Server. Use this task to speed up access to JSP files
 or to check the syntax of JSP source code. You can feed the
 resulting Java code to the <tt>javac</tt> task to generate class files for the
@@ -781,17 +781,17 @@ JSP files.</p>
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-145"></a><tt>destdir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-143"></a><tt>destdir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>The destination directory for
 the generated Java source files.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-146"></a><tt>srcdir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-144"></a><tt>srcdir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(exactly one of these is required: <tt>srcdir</tt> or
 <tt>webapp</tt>) The source directory where the JSP files are located.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-147"></a><tt>webapp</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-145"></a><tt>webapp</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(exactly one of
 these is required: <tt>srcdir</tt> or <tt>webapp</tt>) The directory containing the web application.
@@ -799,28 +799,28 @@ All JSP files within the directory are recursively parsed. The base directory mu
 a <tt>WEB-INF</tt> subdirectory beneath it. When <tt>webapp</tt> is used, <tt>sun-appserv-jspc</tt> hands off all
 dependency checking to the compiler.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-148"></a><tt>verbose</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-146"></a><tt>verbose</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>2</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The verbosity integer to be passed to
 the compiler.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-149"></a><tt>classpath</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-147"></a><tt>classpath</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The classpath for running the JSP compiler.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-150"></a><tt>classpathref</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-148"></a><tt>classpathref</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) A reference to
 the JSP compiler classpath.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-151"></a><tt>uribase</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-149"></a><tt>uribase</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>/</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The URI context of relative URI references in
 the JSP files. If this context does not exist, it is derived from
 the location of the JSP file relative to the declared or derived value of
 <tt>uriroot</tt>. Only pages translated from an explicitly declared JSP file are affected.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-152"></a><tt>uriroot</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-150"></a><tt>uriroot</tt></p></td>
 <td align="left" valign="top" scope="row"><p>see description</p></td>
 <td align="left" valign="top" scope="row"><p>(optional)
 The root directory of the web application, against which URI files are resolved.
@@ -831,11 +831,11 @@ one is used. If no <tt>WEB-INF</tt> directory is found, the directory from which
 was called is used. Only pages translated from an explicitly declared JSP file
 (including tag libraries) are affected.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-153"></a><tt>package</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-151"></a><tt>package</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The destination package for the generated Java classes.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-154"></a><tt>asinstalldir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-152"></a><tt>asinstalldir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>see
 description</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The installation directory for the local Enterprise Server installation, which is used
@@ -863,7 +863,7 @@ the <tt>javac</tt> task must be all on one line with no spaces.</p><pre>&#60;sun
 &#60;/javac></pre>
 
 <a name="beaex"></a><h4>The <tt>sun-appserv-update</tt> Task</h4>
-<a name="indexterm-155"></a><a name="indexterm-156"></a><p>Enables deployed web applications (EAR files) and modules (EJB JAR, RAR, and WAR
+<a name="indexterm-153"></a><a name="indexterm-154"></a><p>Enables deployed web applications (EAR files) and modules (EJB JAR, RAR, and WAR
 files) to be updated and reloaded for fast iterative development. This task copies
 modified class files, XML files, and other contents of the archive files to
 the appropriate subdirectory of the <i>domain-dir</i><tt>/applications</tt> directory, then touches the <tt>.reload</tt> file to cause
@@ -875,12 +875,12 @@ machine as the Enterprise Server.</p><p>For more information about dynamic reloa
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-157"></a><tt>file</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-155"></a><tt>file</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>The component to update,
 which must be a valid archive.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-158"></a><tt>domain</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-156"></a><tt>domain</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>domain1</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The domain in which the application
 has been previously deployed.</p></td>
@@ -901,69 +901,69 @@ invocation.</p>
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-159"></a><tt>sei</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-157"></a><tt>sei</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>Specifies the name of
 the service endpoint interface (SEI) class.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-160"></a><tt>destdir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-158"></a><tt>destdir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>current directory</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies where to place the
 output generated classes.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-161"></a><tt>classpath</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-159"></a><tt>classpath</tt></p></td>
 <td align="left" valign="top" scope="row"><p>system classpath</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies where to find the input class files.
 Same as <tt>cp</tt> attribute.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-162"></a><tt>cp</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-160"></a><tt>cp</tt></p></td>
 <td align="left" valign="top" scope="row"><p>system classpath</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies where to find the input class files.
 Same as <tt>classpath</tt> attribute.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-163"></a><tt>resourcedestdir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-161"></a><tt>resourcedestdir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>current directory</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies where to place generated resource files such as
 WSDL files. Used only if the <tt>genwsdl</tt> attribute is set to <tt>true</tt>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-164"></a><tt>sourcedestdir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-162"></a><tt>sourcedestdir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>current directory</p></td>
 <td align="left" valign="top" scope="row"><p>(optional)
 Specifies where to place generated source files.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-165"></a><tt>keep</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-163"></a><tt>keep</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, keeps generated files.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-166"></a><tt>verbose</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-164"></a><tt>verbose</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional)
 If <tt>true</tt>, outputs compiler messages.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-167"></a><tt>genwsdl</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-165"></a><tt>genwsdl</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, generates a WSDL file.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-168"></a><tt>protocol</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-166"></a><tt>protocol</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>soap1.1</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies
 the protocol to use in the <tt>wsdl:binding</tt>. Used only if the <tt>genwsdl</tt>
 attribute is set to <tt>true</tt>.</p><p>Allowed values are <tt>soap1.1</tt> or <tt>Xsoap1.2</tt>. <tt>Xsoap1.2</tt> is not
 standard and is only used if the extension attribute is set to <tt>true</tt>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-169"></a><tt>servicename</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-167"></a><tt>servicename</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional)
 Specifies a particular <tt>wsdl:service</tt> name for the generated WSDL file. Used only if
 the <tt>genwsdl</tt> attribute is set to <tt>true</tt>. For example:</p><pre>servicename="{http://mynamespace/}MyService"</pre></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-170"></a><tt>portname</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-168"></a><tt>portname</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies a particular <tt>wsdl:port</tt>
 name for the generated WSDL. Used only if the <tt>genwsdl</tt> attribute is set to
 <tt>true</tt>. For example:</p><pre>portname="{http://mynamespace/}MyPort"</pre></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-171"></a><tt>extension</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-169"></a><tt>extension</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, allows vendor extensions not in the specification. Use
 of extensions may result in applications that are not portable and may not
@@ -991,56 +991,56 @@ the WSDL and schema documents along with the endpoint implementation and then de
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-172"></a><tt>wsdl</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-170"></a><tt>wsdl</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>Specifies the name of
 the WSDL file.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-173"></a><tt>destdir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-171"></a><tt>destdir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>current directory</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies where to place the output generated classes.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-174"></a><tt>sourcedestdir</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-172"></a><tt>sourcedestdir</tt></p></td>
 <td align="left" valign="top" scope="row"><p>current
 directory</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies where to place generated source files. Used only if the <tt>keep</tt>
 attribute is set to <tt>true</tt>.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-175"></a><tt>keep</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-173"></a><tt>keep</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, keeps generated files.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-176"></a><tt>verbose</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-174"></a><tt>verbose</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>,
 outputs compiler messages.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-177"></a><tt>binding</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-175"></a><tt>binding</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies external JAX-WS or JAXB binding files. JAX-WS and JAXB
 binding files can customize things like package names and bean names. More information
 on JAX-WS and JAXB binding files can be found in the customization documentation
 included with this release.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-178"></a><tt>extension</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-176"></a><tt>extension</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, allows vendor extensions not in the specification. Use
 of extensions may result in applications that are not portable and may not
 interoperate with other implementations.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-179"></a><tt>wsdllocation</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-177"></a><tt>wsdllocation</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies the value of <tt>@WebService.wsdlLocation</tt> and <tt>@WebServiceClient.wsdlLocation</tt> annotation elements
 for the generated SEI and Service interface. This should be set to the
 URI of the web service WSDL file.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-180"></a><tt>catalog</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-178"></a><tt>catalog</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies the catalog file to
 resolve external entity references. Supported formats are TR9401, XCatalog, and OASIS XML Catalog. Additionally,
 the Ant <tt>xmlcatalog</tt> type can be used to resolve entities.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-181"></a><tt>package</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-179"></a><tt>package</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Specifies the target
 package, overriding any WSDL and schema binding customization for package name, and the
@@ -1065,7 +1065,7 @@ These are objects upon which the Ant tasks act.</p>
 
 
 <a name="beaez"></a><h4>The <tt>server</tt> Subelement</h4>
-<a name="indexterm-182"></a><p>Specifies an Enterprise Server instance. Allows a single task to act on multiple
+<a name="indexterm-180"></a><p>Specifies an Enterprise Server instance. Allows a single task to act on multiple
 server instances. The <tt>server</tt> attributes override corresponding attributes in the parent task; therefore,
 the parent task attributes function as default values.</p>
 
@@ -1074,7 +1074,7 @@ the parent task attributes function as default values.</p>
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-183"></a><tt>user</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-181"></a><tt>user</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The user name
 used when logging into the Enterprise Server domain administration server (DAS).</p></td>
@@ -1085,39 +1085,39 @@ used when logging into the Enterprise Server domain administration server (DAS).
 passwords. The password from this file is retrieved for communication with the Enterprise
 Server DAS.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-184"></a><tt>host</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-182"></a><tt>host</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) Target server. When targeting a remote server, use the fully qualified
 host name.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-185"></a><tt>port</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-183"></a><tt>port</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The administration port on the target server.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-186"></a><tt>instance</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-184"></a><tt>instance</tt></p></td>
 <td align="left" valign="top" scope="row"><p>name of default instance</p></td>
 <td align="left" valign="top" scope="row"><p>(optional)
 Target application server instance.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-187"></a><tt>instanceport</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-185"></a><tt>instanceport</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(applies to <a href="#beaet">The <tt>sun-appserv-instance</tt> Task</a> only) Deprecated.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-188"></a><tt>debug</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-186"></a><tt>debug</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(applies to <a href="#beaet">The <tt>sun-appserv-instance</tt> Task</a> only, optional)
 Deprecated. If <tt>action</tt> is set to <tt>start</tt>, specifies whether the server starts in debug
 mode. This attribute is ignored for other values of <tt>action</tt>. If <tt>true</tt>,
 the instance generates additional debugging output throughout its lifetime.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-189"></a><tt>upload</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-187"></a><tt>upload</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only, optional)
 If <tt>true</tt>, the component is transferred to the server for deployment. If the
 component is being deployed on the local machine, set upload to <tt>false</tt> to reduce
 deployment time.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-190"></a><tt>virtualservers</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-188"></a><tt>virtualservers</tt></p></td>
 <td align="left" valign="top" scope="row"><p>default virtual server only</p></td>
 <td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only, optional) A comma-separated list
 of virtual servers to be deployment targets. This attribute applies only to application (<tt>.ear</tt>)
@@ -1176,7 +1176,7 @@ same password.</p><pre>&#60;sun-appserv-component action="enable" passwordfile="
 &#60;/sun-appserv-component></pre>
 
 <a name="beafa"></a><h4>The <tt>component</tt> Subelement</h4>
-<a name="indexterm-191"></a><p>Specifies a Java EE component. Allows a single task to act on multiple
+<a name="indexterm-189"></a><p>Specifies a Java EE component. Allows a single task to act on multiple
 components. The <tt>component</tt> attributes override corresponding attributes in the parent task; therefore, the
 parent task attributes function as default values.</p>
 
@@ -1185,7 +1185,7 @@ parent task attributes function as default values.</p>
 <th align="left" valign="top" scope="column"><p>Default</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-192"></a><tt>file</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-190"></a><tt>file</tt></p></td>
 <td align="left" valign="top" scope="row"><p>none</p></td>
 <td align="left" valign="top" scope="row"><p>(optional if the parent
 task is <a href="#beaes">The <tt>sun-appserv-undeploy</tt> Task</a> or <a href="#beaeu">The <tt>sun-appserv-component</tt> Task</a>) The target component. If this attribute refers to
@@ -1199,30 +1199,30 @@ path on the server machine.</p></td>
 <td align="left" valign="top" scope="row"><p>(optional) The display name for the
 component.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-193"></a><tt>force</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-191"></a><tt>force</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only, optional) If <tt>true</tt>, the component is overwritten if it
 already exists on the server. If <tt>false</tt>, the containing element&#8217;s operation fails if
 the component exists.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-194"></a><tt>precompilejsp</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-192"></a><tt>precompilejsp</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only, optional) If <tt>true</tt>, all JSP files found
 in an enterprise application (<tt>.ear</tt>) or web application (<tt>.war</tt>) are precompiled. This attribute is
 ignored for other component types.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-195"></a><tt>retrievestubs</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-193"></a><tt>retrievestubs</tt></p></td>
 <td align="left" valign="top" scope="row"><p>client stubs not saved</p></td>
 <td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only, optional)
-The directory where client <a name="indexterm-196"></a>stubs are saved.</p></td>
+The directory where client <a name="indexterm-194"></a>stubs are saved.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-197"></a><tt>contextroot</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-195"></a><tt>contextroot</tt></p></td>
 <td align="left" valign="top" scope="row"><p>file name without extension</p></td>
 <td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only,
 optional) The context root for a web module (WAR file). This attribute is
 ignored if the component is not a WAR file.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-198"></a><tt>verify</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-196"></a><tt>verify</tt></p></td>
 <td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
 <td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only,
 optional) If <tt>true</tt>, syntax and semantics for all deployment descriptors is automatically verified for
@@ -1277,7 +1277,7 @@ the same password.</p><pre>&#60;sun-appserv-component action="enable" passwordfi
 &#60;/sun-appserv-component></pre>
 
 <a name="beafb"></a><h4>The <tt>fileset</tt> Subelement</h4>
-<a name="indexterm-199"></a><p>Selects component files that match specified parameters. When <tt>fileset</tt> is included as
+<a name="indexterm-197"></a><p>Selects component files that match specified parameters. When <tt>fileset</tt> is included as
 a subelement, the <tt>name</tt> and <tt>contextroot</tt> attributes of the containing element must
 use their default values for each file in the <tt>fileset</tt>. For more information, see
 <a href="http://ant.apache.org/manual/CoreTypes/fileset.html">http://ant.apache.org/manual/CoreTypes/fileset.html</a>.</p>

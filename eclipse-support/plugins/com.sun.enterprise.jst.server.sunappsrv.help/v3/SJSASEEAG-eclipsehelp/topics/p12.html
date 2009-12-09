@@ -6,7 +6,7 @@
 <title>Administering the Monitoring Service - Sun GlassFish Enterprise Server v3 Administration Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,36 +25,34 @@
 </table>
 
 
-<a name="ablur"></a>Chapter&#160;8<h3>Administering the Monitoring Service</h3><a name="indexterm-260"></a><p>This chapter explains how to monitor the Sun GlassFish<sup>TM</sup> Enterprise Server v3 components and
-services by using the <tt>asadmin</tt> command-line utility. Instructions for configuring to monitor with
-alternate tools such as JConsole or REST are also provided.</p><p>The following topics are addressed here:</p>
+<a name="ablur"></a>Chapter&#160;8<h3>Administering the Monitoring Service</h3><a name="indexterm-295"></a><p>This chapter explains how to monitor the Sun GlassFish<sup>TM</sup> Enterprise Server v3 components and
+services by using the <tt>asadmin</tt> command-line utility. Instructions for configuring JConsole to monitor
+Enterprise Server resources are also provided.</p><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#ablus">About Monitoring</a></p></li>
 <li><p><a href="#ablvp">Configuring Monitoring</a></p></li>
 <li><p><a href="#ablvs">Viewing Common Monitoring Data</a></p></li>
-<li><p><a href="#ghmct">Viewing Comprehensive Monitoring Data </a></p></li></ul>
+<li><p><a href="#ghmct">Viewing Comprehensive Monitoring Data </a></p></li>
+<li><p><a href="#giwqm">Configuring JConsole to View Enterprise Server Monitoring Data</a></p></li></ul>
 <p>Instructions for monitoring by using the Administration Console are contained in the Administration
-Console online help.</p>
+Console online help.</p><p> For information on using REST interfaces for monitoring, see <a href="p6.html#gjipx">Using REST Interfaces to Administer Enterprise Server</a>.</p>
 
 <a name="ablus"></a><h3>About Monitoring</h3>
-<a name="indexterm-261"></a><a name="indexterm-262"></a><p><b>Monitoring</b> is the process of reviewing the statistics of a system to improve
+<a name="indexterm-296"></a><a name="indexterm-297"></a><p><b>Monitoring</b> is the process of reviewing the statistics of a system to improve
 performance or solve problems. The monitoring service can track and display operational statistics,
 such as the number of requests per second, the average response time, and
 the throughput. By monitoring the state of various components and services deployed in
 Enterprise Server, you can identify performance bottlenecks, predict failures, perform root cause analysis, and
 ensure that everything is functioning as expected. Data gathered by monitoring can also
-be useful in performance tuning and capacity planning.</p><p>Application Server can track and graphically display operational statistics, such as the number
-of requests per second, the average response time, and the throughput. You can
-enable monitoring for each of the Web services within an application and set
-the monitoring level to one of the following:</p><p>For this release of Enterprise Server, monitoring is exposed in a modular way
+be useful in performance tuning and capacity planning.</p><p>For this release of Enterprise Server, monitoring is exposed in a modular way
 so that many client modules can access and display the monitoring statistics. These
-clients include the Administration Console, the <tt>asadmin</tt> utility, AMX, and RESTful administration.</p><p>The following topics are addressed here:</p>
+clients include the Administration Console, the <tt>asadmin</tt> utility, AMX, and REST intrfaces.</p><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#ghbaz">How the Monitoring Tree Structure Works</a></p></li>
 <li><p><a href="#gitkq">About Monitoring for Add-on Components</a></p></li>
 <li><p><a href="#ghbfq">Tools for Monitoring Enterprise Server</a></p></li></ul>
 
 
 <a name="ghbaz"></a><h4>How the Monitoring Tree Structure Works</h4>
-<p><a name="indexterm-263"></a>A <b>monitorable object</b> is a component, subcomponent, or service that can be monitored. Enterprise
+<p><a name="indexterm-298"></a>A <b>monitorable object</b> is a component, subcomponent, or service that can be monitored. Enterprise
 Server uses a tree structure to track monitorable objects. Because the tree is
 dynamic, the tree changes as Enterprise Server components are added or removed. </p><p>In the tree, a monitorable object can have child objects (nodes) that represent
 exactly what can be monitored for that object. All child objects are addressed
@@ -62,31 +60,31 @@ using the dot (.) character as a separator. These constructed names are referred
 to as <b>dotted names</b>. Detailed information on dotted names is available in the <a href="http://docs.sun.com/doc/820-7701/dotted-names-5asc?a=view"><tt>dotted-names</tt>(5ASC)</a>
 help page.</p><p>The following command lists the monitorable child objects of the instance <tt>server</tt>:</p><pre>asadmin> <tt><b>list --monitor "server.*"</b></tt></pre><pre>server.applications
 server.connector-service
-server.ejb
 server.http-service
 server.jms-service
+server.containers.jruby
 server.jvm
 server.network
 server.orb
 server.resources 
 server.security
-server.thread-pools
+server.thread-pool
 server.transaction-service
 server.web</pre><p>Each object is represented by a dotted name. Dotted names can also
-address specific attributes in monitorable objects. For example, the <tt>jvm</tt> type has a <tt>memory</tt>
+address specific attributes in monitorable objects. For example, the <tt>jvm</tt> object has a <tt>memory</tt>
 attribute with a statistic called <tt>maxheapsize</tt>. The following dotted name addresses the
 attribute:</p><pre>server.jvm.memory.maxheapsize</pre><p>Although an object is monitorable, it is not necessarily being actively monitored. For
 instructions on activating monitoring, see <a href="#ablvp">Configuring Monitoring</a>. </p>
 
 <a name="abluv"></a><h5>Tree Structure of Monitorable Objects</h5>
-<a name="indexterm-264"></a><p>Each monitorable object has a hierarchical tree structure. In the tree, a replaceable
+<a name="indexterm-299"></a><p>Each monitorable object has a hierarchical tree structure. In the tree, a replaceable
 such as *<i>statistics</i> represents the name of the attribute that you can show
 statistics for. </p><p>The following node tree hierarchies are addressed here:</p>
 <ul><li><p><a href="#abluw">Applications Tree Hierarchy</a></p></li>
 <li><p><a href="#abluz">Connector Service Tree Hierarchy</a></p></li>
-<li><p><a href="#gitcn">EJB Tree Hierarchy</a></p></li>
 <li><p><a href="#ghlin">HTTP Service Tree Hierarchy</a></p></li>
-<li><p><a href="#ablva">JMS Service Tree Hierarchy</a></p></li>
+<li><p><a href="#ablva">JMS/Container Service Tree Hierarchy</a></p></li>
+<li><p><a href="#gjjxq">JRuby Tree Hierarchy</a></p></li>
 <li><p><a href="#ghlic">JVM Tree Hierarchy</a></p></li>
 <li><p><a href="#giznj">Network Tree Hierarchy</a></p></li>
 <li><p><a href="#ablvb">ORB Tree Hierarchy</a></p></li>
@@ -99,10 +97,41 @@ statistics for. </p><p>The following node tree hierarchies are addressed here:</
 
 <a name="abluw"></a><h5>Applications Tree Hierarchy</h5>
 <p>The <tt>applications</tt> tree contains the following nodes:</p><pre>server.applications
-       <i>application-name</i>
-           <i>virtual-server</i>
-                request
-                   *<i>statistic</i></pre><p>An example dotted name might be <tt>server.applications.hello.server.request.maxtime</tt>. For available statistics, see <a href="#ghptu">Applications Statistics</a>.</p>
+   |--- application1
+   |    |--- ejb-module-1
+   |    |        |--- ejb1 *
+   |    |                  |--- bean-cache (for entity/sfsb) *
+   |    |                  |--- bean-pool (for slsb/mdb/entity) *
+   |    |                  |--- bean-methods
+   |    |                       |---method1 *
+   |    |                       |---method2 *
+   |    |                  |--- timers (for s1sb/entity/mdb) *
+   |    |--- web-module-1
+   |    |        |--- virtual-server-1 *
+   |    |                       |---servlet1  *
+   |    |                       |---servlet2  *
+   |--- standalone-web-module-1
+   |    |        |----- virtual-server-2 *
+   |    |                       |---servlet3 *
+   |    |                       |---servlet4 *
+   |    |        |----- virtual-server-3 *
+   |    |                       |---servlet3 *(same servlet on different vs)
+   |    |                       |---servlet5 *
+   |--- standalone-ejb-module-1
+   |    |        |--- ejb2 *
+   |    |                  |--- bean-cache (for entity/sfsb) *
+   |    |                  |--- bean-pool (for slsb/mdb/entity) *
+   |    |                  |--- bean-methods
+   |    |                       |--- method1 *
+   |    |                       |--- method2 *
+   |    |                  |--- timers (for s1sb/entity/mdb) *
+   |--- jersey-application-1
+   |    |--- jersey
+   |    |        |--- resources
+                           <i>resource-0</i>
+                               hitcount
+                                    *<i>statistic</i>   
+   |--- application2</pre><p>An example dotted name might be <tt>server.applications.hello.server.request.maxtime</tt>. </p><p>An example dotted name under the EJB <tt>method</tt> node might be <tt>server.applications.ejbsfapp1.ejbsfapp1ejbmod1\.jar.SFApp1EJB1</tt>. </p><p>An example Jersey dotted name might be <tt>server.applications.helloworld-webapp.jersey.resources.resource-0.hitcount.resourcehitcount-count</tt>.</p><p>For available statistics, see <a href="#gjkbi">EJB Statistics</a>, <a href="#gjjyb">Jersey Statistics</a>, and <a href="#ablvf">Web Statistics</a>.</p>
 
 <a name="abluz"></a><h5>Connector Service Tree Hierarchy</h5>
 <p>The <tt>connector-service</tt> tree holds monitorable attributes for pools such as the connector connection
@@ -110,14 +139,7 @@ pool. The <tt>connector-service</tt> tree contains the following nodes:</p><pre>
         resource-adapter-1
              connection-pools
                   pool-1
-             work-management</pre><p>An example dotted name might be <tt>server.connector-service.resource-adapter-1.connection-pools.pool-1</tt>. For available statistics, see <a href="#gipzv">Resource Statistics (Connection Pool)</a>.</p>
-
-<a name="gitcn"></a><h5>EJB Tree Hierarchy</h5>
-<p>The <tt>ejb</tt> tree contains the following nodes:</p><pre>server.ejb
-     <i>appname</i>
-         <i>ejbmodulename</i>
-              <i>ejbname</i></pre><p>An example dotted name under the <tt>method</tt> node might be <tt>server.applications.ejbsfapp1.ejbsfapp1ejbmod1\.jar.SFApp1EJB1</tt>. For available statistics,
-see <a href="#ablve">EJB Statistics</a>.</p>
+             work-management</pre><p>An example dotted name might be <tt>server.connector-service.resource-adapter-1.connection-pools.pool-1</tt>. For available statistics, see <a href="#ablvi">JMS/Connector Service Statistics</a>.</p>
 
 <a name="ghlin"></a><h5>HTTP Service Tree Hierarchy</h5>
 <p>The <tt>http-service</tt> tree contains the following nodes:</p><pre>server.http-service
@@ -129,14 +151,23 @@ see <a href="#ablve">EJB Statistics</a>.</p>
                *<i>statistic</i></pre><p>An example dotted name under the <i>virutal-server</i> node might be <tt>server.http-service.virtual-server1.request.requestcount</tt>. For available statistics,
 see <a href="#ablvg">HTTP Service Statistics</a>.</p>
 
-<a name="ablva"></a><h5>JMS Service Tree Hierarchy</h5>
+<a name="ablva"></a><h5>JMS/Container Service Tree Hierarchy</h5>
 <p>The <tt>jms-service</tt> tree holds monitorable attributes for connection factories (connection pools for resource
 adapters) and work management (for Message Queue resource adapters). The <tt>jms-service</tt> tree contains the
 following nodes:</p><pre>server.jms-service
         connection-factories
              connection-factory-1
         work-management</pre><p>An example dotted name under the <tt>connection-factories</tt> node might be <tt>server.jms-service.connection-factories.connection-factory-1</tt> which shows all
-the statistics for this connection factory. For available statistics, see <a href="#ablvi">JMS Service Statistics (Connection)</a>.</p>
+the statistics for this connection factory. For available statistics, see <a href="#ablvi">JMS/Connector Service Statistics</a>.</p>
+
+<a name="gjjxq"></a><h5>JRuby Tree Hierarchy</h5>
+<p>The <tt>jruby</tt> tree contains the following nodes:</p><pre>server.containers.jruby.applications
+         <i>jruby-application</i>
+               *<i>statistic</i>
+               http
+                   *<i>statistic</i>
+               runtime-pool
+                   *<i>statistic</i></pre><p>For available statistics, see <a href="#gjjyp">JRuby Statistics</a>.</p>
 
 <a name="ghlic"></a><h5>JVM Tree Hierarchy</h5>
 <p>The <tt>jvm</tt> tree contains the following nodes:</p><pre>server.jvm
@@ -150,17 +181,27 @@ statistics, see <a href="#ablvm">JVM Statistics</a>.</p>
 
 <a name="giznj"></a><h5>Network Tree Hierarchy</h5>
 <p>The network statistics apply to the network listener, such as <tt>admin-listener</tt>, <tt>http-listener-1</tt>,
-<tt>ttp-listener-2</tt>. The <tt>network</tt> tree contains the following nodes:</p><pre>server-network
-         <i>type-of-listener</i>
-              <i>statistic</i></pre><p>An example dotted name under the <tt>network</tt> node might be <tt>server.admin-listener.keep-alive.maxrequests-unit</tt>. For available statistics,
+<tt>ttp-listener-2</tt>. The <tt>network</tt> tree contains the following nodes:</p><pre>server.network
+          <i>type-of-listener</i>
+              keep-alive
+                    *<i>statistic</i>
+              file-cache
+                    *<i>statistic</i>
+              thread-pool
+                    *<i>statistic</i>
+              connection-queue
+                     *<i>statistic</i></pre><p>An example dotted name under the <tt>network</tt> node might be <tt>server.network.admin-listener.keep-alive.maxrequests-count</tt>. For available statistics,
 see <a href="#gjipy">Network Statistics</a>.</p>
 
 <a name="ablvb"></a><h5>ORB Tree Hierarchy</h5>
 <p>The <tt>orb</tt> tree holds monitorable attributes for connection managers. The <tt>orb</tt> tree contains
 the following nodes:</p><pre>server.orb
-        connection-managers
-             connection-manager-1 *
-             connection-manager-2 *</pre><p>An example dotted name might be <tt>server.orb.connection-managers.connection-manager-1</tt>. For available statistics, see <a href="#ablvj">ORB Statistics (Connection Manager)</a>.</p>
+    transport
+        connectioncache
+            inbound
+                *<i>statistic</i>
+            outbound
+                *<i>statistic</i></pre><p>An example dotted name might be <tt>server.orb.transport.connectioncache.inbound.connectionsidle-count</tt>. For available statistics, see <a href="#ablvj">ORB Statistics (Connection Manager)</a>.</p>
 
 <a name="giqdo"></a><h5>Resources Tree Hierarchy</h5>
 <p>The <tt>resources</tt> tree holds monitorable attributes for pools such as the JDBC connection
@@ -170,7 +211,7 @@ pool and connector connection pool. The <tt>resources</tt> tree contains the fol
                *<i>statistic</i></pre><p>An example dotted name might be <tt>server.resources.jdbc-connection-pool1.numconnfree.count</tt>. For available statistics, see <a href="#gipzv">Resource Statistics (Connection Pool)</a>.</p>
 
 <a name="gjios"></a><h5>Security Tree Hierarchy</h5>
-<p>The security tree contains the following nodes:</p><pre>server-security
+<p>The security tree contains the following nodes:</p><pre>server.security
        ejb
           *<i>statistic</i>
        web
@@ -179,10 +220,12 @@ pool and connector connection pool. The <tt>resources</tt> tree contains the fol
           *<i>statistic</i></pre><p>An example dotted name might be <tt>server.security.realm.realmcount-starttime</tt>. For available statistics, see <a href="#gjiov">Security Statistics</a>.</p>
 
 <a name="ablvc"></a><h5>Thread Pool Tree Hierarchy</h5>
-<p>The <tt>thread-pools</tt> tree holds monitorable attributes for connection managers, and contains the following
-nodes:</p><pre>server.thread-pools
-         thread-pool-1 *
-         thread-pool-2 *</pre><p>An example dotted name might be <tt>server.thread-pools.thread-pool-1</tt>. For available statistics, see <a href="#ablvk">Thread Pool Statistics</a>.</p>
+<p>The <tt>thread-pool</tt> tree holds monitorable attributes for connection managers, and contains the following
+nodes:</p><pre>server.thread-pool
+                orb
+                    threadpool
+                            thread-pool-1
+                                *<i>statistic</i></pre><p>An example dotted name might be <tt>server.thread-pool.orb.threadpool.thread-pool-1.averagetimeinqueue-current</tt>. For available statistics, see <a href="#ablvk">Thread Pool Statistics</a>.</p>
 
 <a name="gitci"></a><h5>Transactions Service Tree Hierarchy</h5>
 <p>The <tt>transaction-service</tt> tree holds monitorable attributes for the transaction subsystem for the purpose
@@ -207,10 +250,10 @@ Adding monitoring capabilities enables an add-on component to provide statistics
 in the same way as components that are supplied in the Enterprise Server
 distributions. As a result, you can use the same administrative interfaces to monitor
 statistics from any installed Enterprise Server component, regardless of the origin of the
-component.<a name="indexterm-265"></a><a name="indexterm-266"></a></p><p> For instructions on adding monitoring to add-on components, see <a href="http://docs.sun.com/doc/820-7727/ghmos?a=view">Chapter 5, Adding Monitoring Capabilities, in <i>Sun GlassFish Enterprise Server v3 Add-On Component Development Guide</i></a>.</p>
+component.<a name="indexterm-300"></a><a name="indexterm-301"></a></p>
 
 <a name="ghbfq"></a><h4>Tools for Monitoring Enterprise Server</h4>
-<p><a name="indexterm-267"></a><a name="indexterm-268"></a>The following <tt>asadmin</tt> subcommands are provided for monitoring the services and components of
+<p><a name="indexterm-302"></a><a name="indexterm-303"></a>The following <tt>asadmin</tt> subcommands are provided for monitoring the services and components of
 Enterprise Server:</p>
 <ul><li><p>The <tt>enable-monitoring</tt>, <tt>disable-monitoring</tt>, or the <tt>get</tt> and <tt>set</tt> subcommands are used to turn monitoring on or off. For instructions, see <a href="#ablvp">Configuring Monitoring</a>.</p></li>
 <li><p> The <tt>monitor <tt>--type</tt></tt> subcommand is used to display basic data for a particular type of monitorable object. For instructions, see <a href="#ablvs">Viewing Common Monitoring Data</a>.</p></li>
@@ -219,23 +262,23 @@ Enterprise Server:</p>
 
 
 <a name="ablvp"></a><h3>Configuring Monitoring</h3>
-<a name="indexterm-269"></a><a name="indexterm-270"></a><a name="indexterm-271"></a><p>By default, the monitoring service is enabled for Enterprise Server, but monitoring for
+<a name="indexterm-304"></a><a name="indexterm-305"></a><a name="indexterm-306"></a><p>By default, the monitoring service is enabled for Enterprise Server, but monitoring for
 the individual modules is not. To enable monitoring for a module, you change
 the monitoring level for that module to LOW or HIGH, You can
 choose to leave monitoring OFF for objects that do not need to be
 monitored. </p>
-<ul><li><p><b>LOW</b> Simple statistics, such as <tt>createCount</tt>, <tt>totalBytes</tt>, and so on</p></li>
-<li><p><b>HIGH</b> Simple statistics and method statistics, such as method count, duration, and so on</p></li>
+<ul><li><p><b>LOW</b> Simple statistics, such as create count, byte count, and so on</p></li>
+<li><p><b>HIGH</b> Simple statistics plus method statistics, such as method count, duration, and so on</p></li>
 <li><p><b>OFF</b> No monitoring, no impact on performance</p></li></ul>
 <p>The following tasks are addressed here:</p>
 <ul><li><p><a href="#ablvr">To Enable Monitoring </a></p></li>
 <li><p><a href="#gglcu">To Disable Monitoring</a></p></li></ul>
 
 
-<a name="ablvr"></a><h4>To Enable Monitoring </h4><a name="indexterm-272"></a><a name="indexterm-273"></a><a name="indexterm-274"></a><a name="indexterm-275"></a><p>Use the <tt>enable-monitoring</tt> subcommand to enable the monitoring service itself, or to enable
+<a name="ablvr"></a><h4>To Enable Monitoring </h4><a name="indexterm-307"></a><a name="indexterm-308"></a><a name="indexterm-309"></a><a name="indexterm-310"></a><p>Use the <tt>enable-monitoring</tt> subcommand to enable the monitoring service itself, or to enable
 monitoring for individual modules. Monitoring is immediately activated, without restarting Enterprise Server. </p><p>You can also use the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand to enable monitoring for a module.
-This is not a dynamic procedure, so you need to restart Enterprise Server
-for your changes to take effect.</p><ol>
+Using the <tt>set</tt> command is not a dynamic procedure, so you need to
+restart Enterprise Server for your changes to take effect.</p><ol>
 <li><b>Determine which services and components are currently enabled for monitoring. </b><pre>asadmin> <tt><b>get server.monitoring-service.module-monitoring-levels.*</b></tt></pre><p>This example output shows that the HTTP service is not enabled (OFF for
 monitoring), but other objects are enabled:</p><pre>configs.config.server-config.monitoring-service.module-monitoring-levels.web-container=HIGH
        configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=OFF
@@ -243,14 +286,14 @@ monitoring), but other objects are enabled:</p><pre>configs.config.server-config
 <li><b>Enable monitoring by using the <a href="http://docs.sun.com/doc/820-7701/enable-monitoring-1?a=view"><tt>enable-monitoring</tt>(1)</a> subcommand.</b><p>Server restart is not required.</p></li></ol><a name="gixri"></a><h6>Example&#160;8-1 Enabling the Monitoring Service Dynamically</h6><p>This example enables the monitoring service without affecting monitoring for individual modules.</p><pre>asadmin> <tt><b>enable-monitoring</b></tt>
 Command enable-monitoring executed successfully</pre><a name="gixre"></a><h6>Example&#160;8-2 Enabling Monitoring for Modules Dynamically</h6><p>This example enables monitoring for the <tt>ejb-container</tt> module.</p><pre>asadmin> <tt><b>enable-monitoring --level ejb-container=HIGH</b></tt>
 Command enable-monitoring executed successfully</pre><a name="gjcmm"></a><h6>Example&#160;8-3 Enabling Monitoring for Modules by Using the <tt>set</tt> Subcommand</h6><p>This example enables monitoring for the HTTP service by setting the monitoring level
-to HIGH (you must restart the server for changes to take effect):</p><pre>asadmin> <tt><b>set server.monitoring-service.module-monitoring-levels.http-service=HIGH</b></tt>
+to HIGH (you must restart the server for changes to take effect).</p><pre>asadmin> <tt><b>set server.monitoring-service.module-monitoring-levels.http-service=HIGH</b></tt>
 Command set executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help enable-monitoring</tt> at the command line.</p>
 
-<a name="gglcu"></a><h4>To Disable Monitoring</h4><a name="indexterm-276"></a><a name="indexterm-277"></a><a name="indexterm-278"></a><a name="indexterm-279"></a><a name="indexterm-280"></a><p>Use the <tt>disable-monitoring</tt> subcommand to disable the monitoring service itself, or to disable
+<a name="gglcu"></a><h4>To Disable Monitoring</h4><a name="indexterm-311"></a><a name="indexterm-312"></a><a name="indexterm-313"></a><a name="indexterm-314"></a><a name="indexterm-315"></a><p>Use the <tt>disable-monitoring</tt> subcommand to disable the monitoring service itself, or to disable
 monitoring for individual modules. Monitoring is immediately stopped, without restarting Enterprise Server. </p><p>You can also use the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand to disable monitoring for a module.
-This is not a dynamic procedure, so you need to restart Enterprise Server
-for your changes to take effect.</p><ol>
+Using the <tt>set</tt> command is not a dynamic procedure, so you need to
+restart Enterprise Server for your changes to take effect.</p><ol>
 <li><b>Determine which services and components currently are enabled for monitoring. </b><pre><tt><b>asadmin get server.monitoring-service.module-monitoring-levels.*</b></tt></pre><p>This example output shows that monitoring is enabled for <tt>web-container</tt>, <tt>http-service</tt>, and
 <tt>jvm</tt>:</p><pre>configs.config.server-config.monitoring-service.module-monitoring-levels.web-container=HIGH
        configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH
@@ -260,7 +303,7 @@ modules.</p><pre>asadmin> <tt><b>disable-monitoring</b></tt>
 Command disable-monitoring executed successfully</pre><a name="gjcnw"></a><h6>Example&#160;8-5 Disabling Monitoring for Modules Dynamically</h6><p>This example disables monitoring for specific modules. Their monitoring levels are set to
 OFF.</p><pre>asadmin> <tt><b>disable-monitoring --modules web-container,ejb-container</b></tt>
 Command disable-monitoring executed successfully</pre><a name="gixpg"></a><h6>Example&#160;8-6 Disabling Monitoring by Using the <tt>set</tt> Subcommand</h6><p>This example disables monitoring for the HTTP service (you must restart the server
-for changes to take affect):</p><pre>asadmin> <tt><b>set server.monitoring-service.module-monitoring-levels.http-service=OFF</b></tt>
+for changes to take affect).</p><pre>asadmin> <tt><b>set server.monitoring-service.module-monitoring-levels.http-service=OFF</b></tt>
 Command set executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help disable-monitoring</tt> at the command line.</p>
 
@@ -270,19 +313,15 @@ by typing <tt>asadmin help disable-monitoring</tt> at the command line.</p>
 <li><p><a href="#ghmdc">Common Monitoring Statistics</a></p></li></ul>
 
 
-<a name="gelol"></a><h4>To View Common Monitoring Data</h4><a name="indexterm-281"></a><a name="indexterm-282"></a><a name="indexterm-283"></a><p>Use the <tt>--type</tt> option of the <tt>monitor</tt> subcommand to specify the object
+<a name="gelol"></a><h4>To View Common Monitoring Data</h4><a name="indexterm-316"></a><a name="indexterm-317"></a><a name="indexterm-318"></a><p>Use the <tt>--type</tt> option of the <tt>monitor</tt> subcommand to specify the object
 for which you want to display data, such as <tt>httplistener</tt>, <tt>jvm</tt>, <tt>webmodule</tt>. If
 you use the <tt>monitor</tt> subcommand without specifying a type, an error message is
 displayed. </p><p>Output from the subcommand is displayed continuously in a tabular format. The <tt>--interval</tt>
 option can be used to display output at a particular interval (the default
-is 30 seconds).</p><p>The <tt>monitor</tt> subcommand also provides options for filtering out statistics and for capturing
-the output in a Comma Separated Values (CSV) file by specifying the <tt>--filename</tt>
-option. </p><h6>Before You Begin</h6><p>A monitorable object must be configured for monitoring before you can display data
+is 30 seconds).</p><h6>Before You Begin</h6><p>A monitorable object must be configured for monitoring before you can display data
 on the object. See <a href="#ablvr">To Enable Monitoring </a>.</p><ol>
 <li><b>Determine which type of monitorable object you want to monitor.</b><p>Your choices for v3 are <tt>jvm</tt>, <tt>httplistener</tt>, and <tt>webmodule</tt>.</p></li>
-<li><b>Request the monitoring data by using the <a href="http://docs.sun.com/doc/820-7701/monitor-1?a=view"><tt>monitor</tt>(1)</a> subcommand. </b></li>
-<li>(Optional) <b>Send the output to a CSV file.</b><p>For example, the following command sends the type <tt>jvm</tt> common monitoring data to a
-file called <tt>myoutputfile</tt> on instance <tt>server</tt>:</p><pre>asadmin><tt><b>monitor --type jvm --filename myoutputfile server</b></tt></pre></li></ol><a name="ghljw"></a><h6>Example&#160;8-7 Viewing Common Monitoring Data</h6><p>This example requests common data for type <tt>jvm</tt> on instance <tt>server</tt>:</p><pre>asadmin> <tt><b>monitor --type jvm server</b></tt>
+<li><b>Request the monitoring data by using the <a href="http://docs.sun.com/doc/820-7701/monitor-1?a=view"><tt>monitor</tt>(1)</a> subcommand. </b></li></ol><a name="ghljw"></a><h6>Example&#160;8-7 Viewing Common Monitoring Data</h6><p>This example requests common data for type <tt>jvm</tt> on instance <tt>server</tt>.</p><pre>asadmin> <tt><b>monitor --type jvm server</b></tt>
 
 UpTime(ms)                          Heap and NonHeap Memory(bytes)
 current                   min        max        low        high       count
@@ -292,14 +331,14 @@ current                   min        max        low        high       count
 by typing <tt>asadmin help monitor</tt> at the command line.</p>
 
 <a name="ghmdc"></a><h4>Common Monitoring Statistics</h4>
-<a name="indexterm-284"></a><a name="indexterm-285"></a><p>Common monitoring statistics are described in the following sections:</p>
+<a name="indexterm-319"></a><a name="indexterm-320"></a><p>Common monitoring statistics are described in the following sections:</p>
 <ul><li><p><a href="#ghltk">HTTP Listener Common Statistics</a></p></li>
 <li><p><a href="#ghlvm">JVM Common Statistics</a></p></li>
 <li><p><a href="#ghljx">Web Module Common Statistics</a></p></li></ul>
 
 
 <a name="ghltk"></a><h5>HTTP Listener Common Statistics</h5>
-<a name="indexterm-286"></a><p>The statistics available for the <tt>httplistener</tt> type are shown in the following table.</p><a name="ghlta"></a><h6>Table&#160;8-1 HTTP Listener Common Monitoring Statistics</h6><table><col width="16%"><col width="83%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<a name="indexterm-321"></a><p>The statistics available for the <tt>httplistener</tt> type are shown in the following table.</p><a name="ghlta"></a><h6>Table&#160;8-1 HTTP Listener Common Monitoring Statistics</h6><table><col width="16%"><col width="83%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>ec</tt></p></td>
@@ -322,7 +361,7 @@ count. Cumulative number of requests processed so far</p></td>
 </table>
 
 <a name="ghlvm"></a><h5>JVM Common Statistics</h5>
-<a name="indexterm-287"></a><a name="indexterm-288"></a><p>The statistics available for the <tt>jvm</tt> type are shown in the following table.</p><a name="ghlsl"></a><h6>Table&#160;8-2 JVM Common Monitoring Statistics</h6><table><col width="18%"><col width="81%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<a name="indexterm-322"></a><a name="indexterm-323"></a><p>The statistics available for the <tt>jvm</tt> type are shown in the following table.</p><a name="ghlsl"></a><h6>Table&#160;8-2 JVM Common Monitoring Statistics</h6><table><col width="18%"><col width="81%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>count</tt></p></td>
@@ -352,7 +391,7 @@ has been running since it was last started</p></td>
 </table>
 
 <a name="ghljx"></a><h5>Web Module Common Statistics</h5>
-<a name="indexterm-289"></a><a name="indexterm-290"></a><p>The statistics available for the <tt>webmodule</tt> type are shown in the following table.</p><a name="ghqly"></a><h6>Table&#160;8-3 Web Module Common Monitoring Statistics</h6><table><col width="18%"><col width="81%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<a name="indexterm-324"></a><a name="indexterm-325"></a><p>The statistics available for the <tt>webmodule</tt> type are shown in the following table.</p><a name="ghqly"></a><h6>Table&#160;8-3 Web Module Common Monitoring Statistics</h6><table><col width="18%"><col width="81%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>ajlc</tt></p></td>
@@ -401,7 +440,7 @@ each of the statistics and its unit of measurement.</p><p>The following topics a
 
 
 <a name="ablwh"></a><h4>Guidelines for Using the <tt>list</tt> and <tt>get</tt> Subcommands for Monitoring</h4>
-<a name="indexterm-291"></a><a name="indexterm-292"></a><a name="indexterm-293"></a><p>The underlying assumptions for using the <tt>list</tt> and <tt>get</tt> subcommands with dotted
+<a name="indexterm-326"></a><a name="indexterm-327"></a><a name="indexterm-328"></a><p>The underlying assumptions for using the <tt>list</tt> and <tt>get</tt> subcommands with dotted
 names are:</p>
 <ul><li><p>A <tt>list</tt> subcommand that specifies a dotted name that is <b>not</b> followed by a wildcard (<tt>*</tt>) lists the current node&#8217;s immediate children. For example, the following subcommand lists all immediate children belonging to the <tt>server</tt> node: </p><pre>list --monitor server</pre></li>
 <li><p>A <tt>list</tt> subcommand that specifies a dotted name followed by a wildcard of the form <tt>.*</tt> lists a hierarchical tree of child nodes from the specified node. For example, the following subcommand lists all children of the <tt>applications</tt> node, their subsequent child nodes, and so on: </p><pre>list --monitor server.applications.*</pre></li>
@@ -429,15 +468,14 @@ corresponding to connection pool attributes.</p></td>
 </tr>
 </table><p>For detailed information on dotted names, see the <a href="http://docs.sun.com/doc/820-7701/dotted-names-5asc?a=view"><tt>dotted-names</tt>(5ASC)</a> help page.</p>
 
-<a name="ablvv"></a><h4>To View Comprehensive Monitoring Data</h4><a name="indexterm-294"></a><a name="indexterm-295"></a><a name="indexterm-296"></a><a name="indexterm-297"></a><a name="indexterm-298"></a><p>The <tt>monitor</tt> subcommand is useful in many situations, however, it does not offer
+<a name="ablvv"></a><h4>To View Comprehensive Monitoring Data</h4><a name="indexterm-329"></a><a name="indexterm-330"></a><a name="indexterm-331"></a><a name="indexterm-332"></a><a name="indexterm-333"></a><p>Although the <tt>monitor</tt> subcommand is useful in many situations, it does not offer
 the complete list of all monitorable objects. To work with comprehensive data for
 an object type, use the <tt>list <tt>--monitor</tt></tt> and the <tt>get <tt>--monitor</tt></tt> subcommands followed by
-the dotted name of a monitorable object.</p><p>Commonly-monitored object types include <tt>httplistener</tt>, <tt>keepalive</tt>, <tt>filecache</tt>, <tt>connectionqueue</tt>, <tt>jdbcpool</tt>, <tt>jvm</tt>, <tt>threadpool</tt>, <tt>servlet</tt>,
-<tt>connection</tt>, <tt>connectorpool</tt>, <tt>endpoint</tt>, <tt>entitybean</tt>, <tt>messagedriven</tt>, <tt>statefulsession</tt>, <tt>statelesssession</tt>, <tt>httpservice</tt>, or <tt>webmodule</tt>. </p><h6>Before You Begin</h6><p>A monitorable object must be configured for monitoring before you can display information
+the dotted name of a monitorable object.</p><h6>Before You Begin</h6><p>A monitorable object must be configured for monitoring before you can display information
 about the object. See <a href="#ablvr">To Enable Monitoring </a> if needed.</p><ol>
 <li><b>List the objects that are enabled for monitoring by using the <a href="http://docs.sun.com/doc/820-7701/list-1?a=view"><tt>list</tt>(1)</a>
 subcommand.</b><p> For example, the following subcommand lists all components and services that have monitoring
-enabled for instance <tt>server</tt>:</p><pre>asadmin> <tt><b>list --monitor "*"</b></tt>
+enabled for instance <tt>server</tt>.</p><pre>asadmin> <tt><b>list --monitor "*"</b></tt>
 server.web
 server.connector-service 
 server.orb 
@@ -447,7 +485,7 @@ server.http-service
 server.thread-pools</pre></li>
 <li><b>Get data for a monitored component or service by using the <a href="http://docs.sun.com/doc/820-7701/get-1?a=view"><tt>get</tt>(1)</a>
 subcommand.</b></li></ol><a name="ghlre"></a><h6>Example&#160;8-8 Viewing Attributes for a Specific Type</h6><p>This example gets information about all the attributes for object type <tt>jvm</tt>
-on instance <tt>server</tt>:</p><pre>asadmin> <tt><b>get --monitor server.jvm.*</b></tt>
+on instance <tt>server</tt>.</p><pre>asadmin> <tt><b>get --monitor server.jvm.*</b></tt>
 server.jvm.class-loading-system.loadedclasscount = 3715
 server.jvm.class-loading-system.totalloadedclasscount = 3731
 server.jvm.class-loading-system.unloadedclasscount = 16
@@ -480,11 +518,11 @@ server.jvm.runtime.specversion-current = 1.0
 server.jvm.runtime.uptime = 84813
 server.jvm.runtime.vmname-current = Java HotSpot(TM) Client VM
 server.jvm.runtime.vmvendor-current = Sun Microsystems Inc.
-server.jvm.runtime.vmversion-current = 1.5.0_11-b03</pre><a name="ghbgv"></a><h6>Example&#160;8-9 Viewing Monitorable Applications</h6><p>This example lists all the monitorable applications for instance <tt>server</tt>:</p><pre>asadmin> <tt><b>list --monitor server.applications.*</b></tt>
+server.jvm.runtime.vmversion-current = 1.5.0_11-b03</pre><a name="ghbgv"></a><h6>Example&#160;8-9 Viewing Monitorable Applications</h6><p>This example lists all the monitorable applications for instance <tt>server</tt>.</p><pre>asadmin> <tt><b>list --monitor server.applications.*</b></tt>
 server.applications.app1
 server.applications.app2
 server.applications.app1.virtual-server1
-server.applications.app2.virtual-server1 </pre><a name="ghbfj"></a><h6>Example&#160;8-10 Viewing Attributes for an Application</h6><p>This example gets information about all the attributes for application <tt>hello</tt>:</p><pre>asadmin> <tt><b>get --monitor server.applications.hello.*</b></tt>
+server.applications.app2.virtual-server1 </pre><a name="ghbfj"></a><h6>Example&#160;8-10 Viewing Attributes for an Application</h6><p>This example gets information about all the attributes for application <tt>hello</tt>.</p><pre>asadmin> <tt><b>get --monitor server.applications.hello.*</b></tt>
 server.applications.hello.server.activatedsessionstotal = 0
 server.applications.hello.server.activejspsloadedcount = 1
 server.applications.hello.server.activeservletsloadedcount = 1
@@ -502,18 +540,19 @@ server.applications.hello.server.rejectedsessionstotal = 0
 server.applications.hello.server.requestcount = 0
 server.applications.hello.server.sessionstotal = 
 server.applications.hello.server.totaljspsloadedcount = 0
-server.applications.hello.server.totalservletsloadedcount = 0</pre><a name="ghbge"></a><h6>Example&#160;8-11 Viewing a Specific Attribute</h6><p>This example gets information about the <tt>jvm</tt> attribute <tt>runtime.vmversion-current</tt> on instance <tt>server</tt>:</p><pre>asadmin> <tt><b>get --monitor server.jvm.runtime.vmversion-current</b></tt>
+server.applications.hello.server.totalservletsloadedcount = 0</pre><a name="ghbge"></a><h6>Example&#160;8-11 Viewing a Specific Attribute</h6><p>This example gets information about the <tt>jvm</tt> attribute <tt>runtime.vmversion-current</tt> on instance <tt>server</tt>.</p><pre>asadmin> <tt><b>get --monitor server.jvm.runtime.vmversion-current</b></tt>
 server.jvm.runtime.vmversion-current = 10.0-b23</pre>
 
 <a name="ghmcn"></a><h4>Comprehensive Monitoring Statistics</h4>
-<a name="indexterm-299"></a><p>You can get comprehensive monitoring statistics by forming a dotted name that specifies
+<a name="indexterm-334"></a><p>You can get comprehensive monitoring statistics by forming a dotted name that specifies
 the statistic you are looking for. For example, the following dotted name will
 display the cumulative number of requests for the HTTP service on <tt>virtual-server1</tt>: </p><p><tt>server.http-service.virtual-server1.request.requestcount</tt></p><p>The tables in the following sections list the statistics that are available for
 each monitorable object:</p>
-<ul><li><p><a href="#ghptu">Applications Statistics</a></p></li>
-<li><p><a href="#ablve">EJB Statistics</a></p></li>
+<ul><li><p><a href="#gjkbi">EJB Statistics</a></p></li>
 <li><p><a href="#ablvg">HTTP Service Statistics</a></p></li>
-<li><p><a href="#ablvi">JMS Service Statistics (Connection)</a></p></li>
+<li><p><a href="#gjjyb">Jersey Statistics</a></p></li>
+<li><p><a href="#ablvi">JMS/Connector Service Statistics</a></p></li>
+<li><p><a href="#gjjyp">JRuby Statistics</a></p></li>
 <li><p><a href="#ablvm">JVM Statistics</a></p></li>
 <li><p><a href="#gjipy">Network Statistics</a></p></li>
 <li><p><a href="#ablvj">ORB Statistics (Connection Manager)</a></p></li>
@@ -524,232 +563,34 @@ each monitorable object:</p>
 <li><p><a href="#ablvf">Web Statistics</a></p></li></ul>
 
 
-<a name="ghptu"></a><h5>Applications Statistics</h5>
-<p>Applications fit into the tree of objects as shown in <a href="#abluw">Applications Tree Hierarchy</a>. Use
-the following dotted name pattern to get applications statistics:</p><pre>server.applications.<i>application-name</i>.<i>virtual-server</i>.request.<i>statistic</i></pre><p><a name="indexterm-300"></a><a name="indexterm-301"></a><a name="indexterm-302"></a>Statistics available for applications are shown in the following table.</p><a name="ghlld"></a><h6>Table&#160;8-5 Applications Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
-<th align="left" valign="top" scope="column"><p>Data Type</p></th>
-<th align="left" valign="top" scope="column"><p>Description</p></th>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>activatedsessionstotal</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of
-activated sessions</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>activejspsloadedcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of currently loaded JSPs</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>activeservletsloadedcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of currently loaded servlets</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>activesessionscurrent</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of currently
-active sessions</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>activesessionshigh</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Maximum number of concurrently active sessions</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>errorcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Cumulative value of the error count,
-with error count representing the number of cases where the response code was
-greater than or equal to 400</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>expiredsessionstotal</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of expired sessions</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>maxjspsloadedcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Maximum number of
-JSPs loaded which were active</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>maxservletsloadedcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Maximum number of servlets loaded which were active</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>maxtime</tt></p></td>
-<td align="left" valign="top" scope="row"><p>TimeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Longest
-response time for a request; not a cumulative value, but the largest response
-time from among the response times</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>passivatedsessionstotal</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of passivated sessions</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>persistedsessionstotal</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of
-persisted sessions</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>processingtime</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Cumulative value of the times taken to process each request, with
-processing time representing the average of request processing times over the request count</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>rejectedsessionstotal</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number
-of rejected sessions</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>requestcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Cumulative number of the requests processed so far</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>sessionstotal</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of
-sessions created</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>totaljspsloadedcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Cumulative number of JSP pages that have been loaded into the
-web module</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>totalservletsloadedcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Cumulative number of servlets that have been loaded into the web
-module</p></td>
-</tr>
-</table>
-
-<a name="ablve"></a><h5>EJB Statistics</h5>
-<a name="indexterm-303"></a><p>EJBs fit into the tree of objects as shown in <a href="#gitcn">EJB Tree Hierarchy</a>.</p><p>EJB statistics are described in the following sections:</p>
-<ul><li><p><a href="#giszu">EJB Container Statistics</a></p></li>
+<a name="gjkbi"></a><h5>EJB Statistics</h5>
+<p>EJBs fit into the tree of objects as shown in <a href="#abluw">Applications Tree Hierarchy</a>. Use
+the following dotted name pattern to get applications statistics:</p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.<i>ejbname</i>.bean-cache.<i>statistic</i></pre><p><a name="indexterm-335"></a><a name="indexterm-336"></a><a name="indexterm-337"></a>Statistics available for applications are shown in the following sections:</p>
+<ul><li><p><a href="#gisyw">EJB Cache Statistics</a></p></li>
+<li><p><a href="#giszu">EJB Container Statistics</a></p></li>
 <li><p><a href="#gisyx">EJB Method Statistics</a></p></li>
 <li><p><a href="#gisza">EJB Pool Statistics</a></p></li>
-<li><p><a href="#gisyw">EJB Cache Statistics</a></p></li>
 <li><p><a href="#gisyr">Timer Statistics</a></p></li></ul>
 
 
-<a name="giszu"></a><h5>EJB Container Statistics</h5>
-<p>Use the following dotted name pattern for EJB container statistics:</p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.<i>ejbname</i></pre><p>EJB statistics are described in the following table.<a name="indexterm-304"></a><a name="indexterm-305"></a></p><a name="gelns"></a><h6>Table&#160;8-6 EJB Container Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
-<th align="left" valign="top" scope="column"><p>Data Type</p></th>
-<th align="left" valign="top" scope="column"><p>Description</p></th>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>createcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of times an
-EJB&#8217;s <tt>create</tt> method is called.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>removecount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of times an EJB&#8217;s <tt>remove</tt> method is
-called.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>pooledcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of entity beans in pooled state.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>readycount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of entity beans in ready
-state.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>messagecount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of messages received for a message-driven bean.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>methodreadycount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of stateful or stateless
-session beans that are in the <tt>MethodReady</tt> state.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>passivecount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of stateful session beans
-that are in <tt>Passive</tt> state.</p></td>
-</tr>
-</table>
-
-<a name="gisyx"></a><h5>EJB Method Statistics</h5>
-<a name="indexterm-306"></a><p>Use the following dotted name pattern for EJB method statistics:</p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.<i>ejbname</i>.bean-methods</pre><p>The statistics available for EJB method invocations are listed in the following table.<a name="indexterm-307"></a><a name="indexterm-308"></a></p><a name="gelnu"></a><h6>Table&#160;8-7 EJB Method Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
-<th align="left" valign="top" scope="column"><p>Data
-Type</p></th>
-<th align="left" valign="top" scope="column"><p>Description</p></th>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>methodstatistic</tt></p></td>
-<td align="left" valign="top" scope="row"><p>TimeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of times an operation is called; the total time that is
-spent during the invocation, and so on.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>totalnumerrors</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of times the method execution resulted
-in an exception. This is collected for stateless and stateful session beans and
-entity beans if monitoring is enabled for the EJB container.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>totalnumsuccess</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of times the
-method successfully executed. This is collected for stateless and stateful session beans and
-entity beans if monitoring enabled is true for EJB container.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>executiontime</tt></p></td>
-<td align="left" valign="top" scope="row"><p>TimeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Time, in milliseconds, spent
-executing the method for the last successful/unsuccessful attempt to run the operation. This
-is collected for stateless and stateful session beans and entity beans if monitoring
-is enabled on the EJB container.</p></td>
-</tr>
-</table>
-
-<a name="gisza"></a><h5>EJB Pool Statistics</h5>
-<p>Use the following dotted name pattern for EJB pool statistics:</p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.<i>ejbname</i>.bean-pool</pre><p>The statistics available for EJB pools are listed in the following table.<a name="indexterm-309"></a><a name="indexterm-310"></a></p><a name="gelpe"></a><h6>Table&#160;8-8 EJB Pool Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
-<th align="left" valign="top" scope="column"><p>Data
-Type</p></th>
-<th align="left" valign="top" scope="column"><p>Description</p></th>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>numbeansinpool</tt></p></td>
-<td align="left" valign="top" scope="row"><p>BoundedRangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of EJBs in the associated pool, providing information about how the pool
-is changing.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>numthreadswaiting</tt></p></td>
-<td align="left" valign="top" scope="row"><p>BoundedRangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of threads waiting for free beans, giving an indication of
-possible congestion of requests.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>totalbeanscreated</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of beans created in associated pool since the gathering
-of data started. </p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>totalbeansdestroyed</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of beans destroyed from associated pool since the gathering
-of data started.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>jmsmaxmessagesload</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>The maximum number of messages to load into a JMS session
-at one time for a message-driven bean to serve. Default is 1. Applies
-only to pools for message driven beans.</p></td>
-</tr>
-</table>
-
 <a name="gisyw"></a><h5>EJB Cache Statistics</h5>
-<p>Use the following dotted name pattern for EJB cache statistics:</p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.<i>ejbname</i>.bean-cache</pre><p>The statistics available for EJB pools are listed in the following table.<a name="indexterm-311"></a><a name="indexterm-312"></a></p><p>The statistics available for EJB caches are listed in the following table.<a name="indexterm-313"></a><a name="indexterm-314"></a><a name="indexterm-315"></a><a name="indexterm-316"></a></p><a name="gelod"></a><h6>Table&#160;8-9 EJB Cache Monitoring Statistics</h6><table><col width="33%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic </p></th>
+<p>Use the following dotted name pattern for EJB cache statistics:</p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.bean-cache.<i>ejbname</i>.<i>statistic</i></pre><p>The statistics available for EJB caches are listed in the following table.<a name="indexterm-338"></a><a name="indexterm-339"></a><a name="indexterm-340"></a><a name="indexterm-341"></a></p><a name="gelod"></a><h6>Table&#160;8-5 EJB Cache Monitoring Statistics</h6><table><col width="33%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic </p></th>
 <th align="left" valign="top" scope="column"><p>Data
 Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>cachemisses</tt></p></td>
-<td align="left" valign="top" scope="row"><p>BoundedRangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
 <td align="left" valign="top" scope="row"><p>The number of times a user request does not find a bean
 in the cache.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>cachehits</tt></p></td>
-<td align="left" valign="top" scope="row"><p>BoundedRangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
 <td align="left" valign="top" scope="row"><p>The number of times a user request found an entry
 in the cache.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numbeansincache</tt></p></td>
-<td align="left" valign="top" scope="row"><p>BoundedRangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
 <td align="left" valign="top" scope="row"><p>The number of beans in the cache. This is the
 current size of the cache.</p></td>
 </tr>
@@ -774,15 +615,121 @@ of times passivation completed successfully. Applies only to stateful session be
 </tr>
 </table>
 
+<a name="giszu"></a><h5>EJB Container Statistics</h5>
+<p>Use the following dotted name pattern for EJB container statistics:</p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.container.<i>ejbname</i></pre><p>The statistics available for EJB containers are listed in the following table.<a name="indexterm-342"></a><a name="indexterm-343"></a></p><a name="gelns"></a><h6>Table&#160;8-6 EJB Container Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>createcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number
+of times an EJB&#8217;s <tt>create</tt> method is called.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>messagecount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of messages received for
+a message-driven bean.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>methodreadycount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of stateful or stateless session beans that are in
+the <tt>MethodReady</tt> state.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>passivecount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of stateful session beans that are in <tt>Passive</tt> state.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>pooledcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number
+of entity beans in pooled state.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>readycount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of entity beans in ready state.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>removecount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number
+of times an EJB&#8217;s <tt>remove</tt> method is called.</p></td>
+</tr>
+</table>
+
+<a name="gisyx"></a><h5>EJB Method Statistics</h5>
+<a name="indexterm-344"></a><p>Use the following dotted name pattern for EJB method statistics:</p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.bean-methods.<i>ejbname</i>.<i>statistic</i></pre><p>The statistics available for EJB method invocations are listed in the following table.<a name="indexterm-345"></a><a name="indexterm-346"></a></p><a name="gelnu"></a><h6>Table&#160;8-7 EJB Method Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data
+Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>executiontime</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Time, in milliseconds, spent executing the method for the last successful/unsuccessful attempt to
+run the operation. This is collected for stateless and stateful session beans and
+entity beans if monitoring is enabled on the EJB container.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>methodstatistic</tt></p></td>
+<td align="left" valign="top" scope="row"><p>TimeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of times
+an operation is called; the total time that is spent during the invocation,
+and so on.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>totalnumerrors</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of times the method execution resulted in an exception.
+This is collected for stateless and stateful session beans and entity beans if monitoring
+is enabled for the EJB container.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>totalnumsuccess</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of times the method successfully executed.
+This is collected for stateless and stateful session beans and entity beans if
+monitoring enabled is true for EJB container.</p></td>
+</tr>
+</table>
+
+<a name="gisza"></a><h5>EJB Pool Statistics</h5>
+<p>Use the following dotted name pattern for EJB pool statistics:</p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.bean-pool.<i>ejbname</i>.<i>statistic</i></pre><p>The statistics available for EJB pools are listed in the following table.<a name="indexterm-347"></a><a name="indexterm-348"></a></p><a name="gelpe"></a><h6>Table&#160;8-8 EJB Pool Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data
+Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>jmsmaxmessagesload</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>The maximum number of messages to load into a JMS session at
+one time for a message-driven bean to serve. Default is 1. Applies only
+to pools for message driven beans.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>numbeansinpool</tt></p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of EJBs in the associated pool, providing
+information about how the pool is changing.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>numthreadswaiting</tt></p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of threads waiting for free beans,
+giving an indication of possible congestion of requests.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>totalbeanscreated</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of beans created in associated
+pool since the gathering of data started. </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>totalbeansdestroyed</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of beans destroyed from associated
+pool since the gathering of data started.</p></td>
+</tr>
+</table>
+
 <a name="gisyr"></a><h5>Timer Statistics</h5>
-<p>Use the following dotted name pattern for timer statistics:<a name="indexterm-317"></a><a name="indexterm-318"></a><a name="indexterm-319"></a></p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.<i>ejbname</i>.timers</pre><p>The statistics available for EJB pools are listed in the following table.<a name="indexterm-320"></a><a name="indexterm-321"></a></p><p>The statistics available for timers are listed in the following table.</p><a name="gelob"></a><h6>Table&#160;8-10 Timer Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for timer statistics:<a name="indexterm-349"></a><a name="indexterm-350"></a><a name="indexterm-351"></a></p><pre>server.applications.<i>appname</i>.<i>ejbmodulename</i>.timers.<i>ejbname</i>.<i>statistic</i></pre><p><a name="indexterm-352"></a><a name="indexterm-353"></a>The statistics available for timers are listed in the following table.</p><a name="gelob"></a><h6>Table&#160;8-9 Timer Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numtimerscreated</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number
-of timers created in the system.</p></td>
+<td align="left" valign="top" scope="row"><p>Number of
+timers created in the system.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numtimersdelivered</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
@@ -790,112 +737,19 @@ of timers created in the system.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numtimersremoved</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number
-of timers removed from the system.</p></td>
+<td align="left" valign="top" scope="row"><p>Number of
+timers removed from the system.</p></td>
 </tr>
 </table>
 
 <a name="ablvg"></a><h5>HTTP Service Statistics</h5>
-<a name="indexterm-322"></a><p>The HTTP service fits into the tree of objects as shown in
-<a href="#ghlin">HTTP Service Tree Hierarchy</a>.<a name="indexterm-323"></a><a name="indexterm-324"></a> </p><p>The HTTP service statistics are described in the following sections:</p>
-<ul><li><p><a href="#ghqat">HTTP Service asadmin Statistics</a></p></li>
-<li><p><a href="#ghqdi">HTTP Service Virtual Server Statistics</a></p></li></ul>
+<a name="indexterm-354"></a><p>The HTTP service fits into the tree of objects as shown in
+<a href="#ghlin">HTTP Service Tree Hierarchy</a>.<a name="indexterm-355"></a><a name="indexterm-356"></a> </p><p>The HTTP service statistics are described in the following sections:</p>
+<ul><li><p><a href="#ghqdi">HTTP Service Virtual Server Statistics</a></p></li></ul>
 
-
-<a name="ghqat"></a><h5>HTTP Service asadmin Statistics</h5>
-<p>Use the following dotted name pattern for the HTTP service <tt>asadmin</tt> statistics:</p><pre>server.http-service._asadmin.request.<i>statistic</i></pre><p><a name="indexterm-325"></a><a name="indexterm-326"></a>The <tt>asadmin</tt> statistics available for HTTP service are shown in the following table.</p><a name="ghrcl"></a><h6>Table&#160;8-11 HTTP Service <tt>asadmin</tt> Monitoring Statistics</h6><table><col width="31%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
-<th align="left" valign="top" scope="column"><p>Data
-Type</p></th>
-<th align="left" valign="top" scope="column"><p>Description</p></th>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count200</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses with a status code equal to 200</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count2xx</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses
-with a status code in the 2xx range</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count302</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses with a
-status code equal to 302</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count304</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses with a status code equal
-to 304</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count3xx</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses with a status code equal in the 3xx
-range</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count400</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses with a status code equal to 400</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count401</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses
-with a status code equal to 401</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count403</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses with a status
-code equal to 403</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count404</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses with status code equal to 404</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count4xx</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number
-of responses with a status code equal in the 4xx range</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count503</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of
-responses with a status code equal to 503</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>count5xx</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses with a
-status code equal in the 5xx range</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>countother</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of responses with a status
-code outside the 2xx, 3xx, 4xx, and 5xx range</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>errorcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Cumulative value of the error
-count, with error count representing the number of cases where the response code
-was greater than or equal to 400</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>maxtime</tt></p></td>
-<td align="left" valign="top" scope="row"><p>TimeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Longest response time for a request;
-not a cumulative value, but the largest response time from among the response
-times</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>processingtime</tt></p></td>
-<td align="left" valign="top" scope="row"><p>TimeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Cumulative value of the times taken to process each request, with processing time
-being the average of request processing times over the request count</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>requestcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Cumulative number
-of requests processed so far</p></td>
-</tr>
-</table>
 
 <a name="ghqdi"></a><h5>HTTP Service Virtual Server Statistics</h5>
-<p>Use the following dotted name pattern for HTTP service virtual server statistics:</p><pre>server.http-service.<i>virtual-server</i>.request.<i>statistic</i></pre><p><a name="indexterm-327"></a><a name="indexterm-328"></a><a name="indexterm-329"></a>The HTTP service statistics for virtual servers are shown in the following table.</p><a name="gelnm"></a><h6>Table&#160;8-12 HTTP Service Virtual Server Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for HTTP service virtual server statistics:</p><pre>server.http-service.<i>virtual-server</i>.request.<i>statistic</i></pre><p><a name="indexterm-357"></a><a name="indexterm-358"></a><a name="indexterm-359"></a>The HTTP service statistics for virtual servers are shown in the following table.</p><a name="gelnm"></a><h6>Table&#160;8-10 HTTP Service Virtual Server Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data
 Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
@@ -968,104 +822,144 @@ status code outside the 2xx, 3xx, 4xx, and 5xx range</p></td>
 error count, with error count representing the number of cases where the response
 code was greater than or equal to 400</p></td>
 </tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>hosts</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>The host (alias) names of
+the virtual server</p></td>
+</tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>maxtime</tt></p></td>
-<td align="left" valign="top" scope="row"><p>TimeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Longest response time for a
-request; not a cumulative value, but the largest response time from among the
-response times</p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Longest response time for a request; not a cumulative value,
+but the largest response time from among the response times</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>processingtime</tt></p></td>
-<td align="left" valign="top" scope="row"><p>TimeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Cumulative value of the times taken to process each request, with
-processing time being the average of request processing times over the request count</p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Cumulative value of the
+times taken to process each request, with processing time being the average of
+request processing times over the request count</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>requestcount</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Cumulative
-number of requests processed so far</p></td>
+<td align="left" valign="top" scope="row"><p>Cumulative number of requests processed so
+far</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>state</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>The state of the virtual server</p></td>
 </tr>
 </table>
 
-<a name="ablvi"></a><h5>JMS Service Statistics (Connection)</h5>
-<a name="indexterm-330"></a><a name="indexterm-331"></a><p>The JMS service fits into the tree of objects as show in
-<a href="#ablva">JMS Service Tree Hierarchy</a>.</p><p>JMS statistics are shown in the following sections:</p>
+<a name="gjjyb"></a><h5>Jersey Statistics</h5>
+<a name="indexterm-360"></a><a name="indexterm-361"></a><p>Jersey fits into the tree of objects as shown in XXX</p><p>Use the following dotted name pattern for Jersey statistics:</p><pre><tt>server.applications.jersey-application.jersey.resources.<i>resource-0</i>.hitcount.</tt><i>statistic</i></pre><p>The statistics available for Jersey are shown in the following table.<a name="indexterm-362"></a><a name="indexterm-363"></a><a name="indexterm-364"></a></p><a name="gjjys"></a><h6>Table&#160;8-11 Jersey Statistics</h6><table><col width="33%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>resourcehitcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number
+of hits on this resource class</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>rootresourcehitcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of hits on this root resource
+class</p></td>
+</tr>
+</table>
+
+<a name="ablvi"></a><h5>JMS/Connector Service Statistics</h5>
+<a name="indexterm-365"></a><a name="indexterm-366"></a><p>The JMS/Connector Service fits into the tree of objects as shown in
+<a href="#ablva">JMS/Container Service Tree Hierarchy</a>.</p><p>JMS/Connector Service statistics are shown in the following sections:</p>
 <ul><li><p><a href="#giszy">Connector Connection Pool Statistics (JMS)</a></p></li>
 <li><p><a href="#giszh">Connector Work Management Statistics (JMS) </a></p></li></ul>
 
 
 <a name="giszy"></a><h5>Connector Connection Pool Statistics (JMS)</h5>
-<p>Use the following dotted name pattern for JMS connection pool statistics:</p><pre>server.jms-service.connector-connection-pool.<i>statistic</i></pre><p>The statistics available for the connector connection pools are shown in the following
-table.<a name="indexterm-332"></a><a name="indexterm-333"></a><a name="indexterm-334"></a><a name="indexterm-335"></a></p><a name="gelot"></a><h6>Table&#160;8-13 Connector Connection Pool Monitoring Statistics (JMS)</h6><table><col width="32%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for JMS/Connector Service connection pool statistics:</p><pre>server.connector-service.<i>resource-adapter-1</i>.connection-pool.<i>statistic</i></pre><p>JMS/Connector Service statistics available for the connector connection pools are shown in the
+following table.<a name="indexterm-367"></a><a name="indexterm-368"></a><a name="indexterm-369"></a><a name="indexterm-370"></a></p><a name="gelot"></a><h6>Table&#160;8-12 Connector Connection Pool Monitoring Statistics (JMS)</h6><table><col width="32%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>numconnfailedvalidation</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of connections in the connection pool that failed validation from
-the start time until the last sample time.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>numconnused</tt></p></td>
-<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of connections that
-are currently being used, as well as information about the maximum number of
-connections that were used (the high water mark).</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>numconnfree</tt></p></td>
-<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of free connections in
-the pool as of the last sampling.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>numconntimedout</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of connections in the
-pool that timed out between the start time and the last sample time.</p></td>
-</tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>averageconnwaittime</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Average
-wait time of connections before they are serviced by the connection pool.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>waitqueuelenght</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of
-connection requests in the queue waiting to be serviced.</p></td>
+<td align="left" valign="top" scope="row"><p>Average wait time of connections before they are serviced by
+the connection pool.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>connectionrequestwaittime</tt></p></td>
 <td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>The longest and shortest
-wait times of connection requests. The current value indicates the wait time of
-the last request that was serviced by the pool.</p></td>
+<td align="left" valign="top" scope="row"><p>The longest and shortest wait times of connection requests. The current value
+indicates the wait time of the last request that was serviced by
+the pool.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>numconnfailedvalidation</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Total number of connections in the connection pool that failed validation from the
+start time until the last sample time.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>numconnused</tt></p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Total number of connections that are
+currently being used, as well as information about the maximum number of connections
+that were used (the high water mark).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>numconnfree</tt></p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Total number of free connections in the
+pool as of the last sampling.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>numconntimedout</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Total number of connections in the pool
+that timed out between the start time and the last sample time.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconncreated</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of physical connections, in
-milliseconds, that were created since the last reset.</p></td>
+<td align="left" valign="top" scope="row"><p>Number of
+physical connections, in milliseconds, that were created since the last reset.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconndestroyed</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of physical connections that were
-destroyed since the last reset.</p></td>
+<td align="left" valign="top" scope="row"><p>Number of physical
+connections that were destroyed since the last reset.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconnacquired</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of logical connections acquired from the pool.</p></td>
+<td align="left" valign="top" scope="row"><p>Number of logical connections acquired
+from the pool.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconnreleased</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number
-of logical connections released to the pool.</p></td>
+<td align="left" valign="top" scope="row"><p>Number of logical connections released to the pool.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>waitqueuelenght</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of connection
+requests in the queue waiting to be serviced.</p></td>
 </tr>
 </table>
 
 <a name="giszh"></a><h5>Connector Work Management Statistics (JMS) </h5>
-<p>Use the following dotted name pattern for JMS work management statistics:</p><pre>server.jms-service.work-management.<i>statistic</i></pre><p>Statistics available for connector work management are listed in the following table.<a name="indexterm-336"></a><a name="indexterm-337"></a></p><a name="gelnz"></a><h6>Table&#160;8-14 Connector Work Management Monitoring Statistics (JMS)</h6><table><col width="33%"><col width="19%"><col width="47%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for JMS/Connector Service work management statistics:</p><pre>server.connector-service.<i>resource-adapter-1</i>.work-management.<i>statistic</i></pre><p>JMS/Connector Service statistics available for connector work management are listed in the following
+table.<a name="indexterm-371"></a><a name="indexterm-372"></a></p><a name="gelnz"></a><h6>Table&#160;8-13 Connector Work Management Monitoring Statistics (JMS)</h6><table><col width="33%"><col width="19%"><col width="47%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>activeworkcount</tt></p></td>
 <td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number
-of work objects executed by the connector.</p></td>
+<td align="left" valign="top" scope="row"><p>Number of work objects executed by the connector.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>completedworkcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of work objects
+that were completed.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>rejectedworkcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of work objects rejected by the Enterprise Server.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>submittedworkcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of
+work objects submitted by a connector module.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>waitqueuelength</tt></p></td>
 <td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
@@ -1077,25 +971,167 @@ the queue before executing.</p></td>
 <td align="left" valign="top" scope="row"><p>Longest and shortest wait of a work object before
 it gets executed.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>submittedworkcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of work objects submitted by a connector module.</p></td>
+</table>
+
+<a name="gjjyp"></a><h5>JRuby Statistics</h5>
+<p>JRuby fits into the tree of objects as show in <a href="#gjjxq">JRuby Tree Hierarchy</a>.<a name="indexterm-373"></a><a name="indexterm-374"></a></p><p>The statistics that are available for JRuby are shown in the following sections:</p>
+<ul><li><p><a href="#gjjyu">JRuby Container Statistics</a></p></li>
+<li><p><a href="#gjjzg">JRuby Runtime Statistics</a></p></li>
+<li><p><a href="#gjjzn">JRuby HTTP Service Statistics</a></p></li></ul>
+
+
+<a name="gjjyu"></a><h5>JRuby Container Statistics</h5>
+<p>Use the following dotted name pattern for JRuby container statistics:</p><pre>server.containers.jruby.applications.<i>jruby-application</i>.<i>statistic</i></pre><p><a name="indexterm-375"></a><a name="indexterm-376"></a><a name="indexterm-377"></a>The statistics that are available for the JRuby container are shown in the
+following table.</p><a name="gjjzr"></a><h6>Table&#160;8-14 JRuby Container Statistics</h6><table><col width="32%"><col width="20%"><col width="46%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>rejectedworkcount</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><tt>environment</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>JRuby application environment</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>appname</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Ruby application name</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>contextpath</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Context path of Ruby application</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>jrubyversion</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>JRuby version</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>rubyframework</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Ruby application
+framework</p></td>
+</tr>
+</table>
+
+<a name="gjjzg"></a><h5>JRuby Runtime Statistics</h5>
+<p>Use the following dotted name pattern for JRuby runtime statistics:</p><pre>server.containers.jruby.applications.<i>jruby-application</i>.runtime.<i>statistic</i></pre><p><a name="indexterm-378"></a><a name="indexterm-379"></a><a name="indexterm-380"></a>The statistics that are available for the JRuby runtime are shown in the
+following table.</p><a name="gjjzq"></a><h6>Table&#160;8-15 JRuby Runtime Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>activeruntimes</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Currently active runtimes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>appname</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Ruby application name</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>hardmaximum</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Maximum active runtimes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>hardminimum</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Minimum active runtimes</p></td>
+</tr>
+</table>
+
+<a name="gjjzn"></a><h5>JRuby HTTP Service Statistics</h5>
+<p>Use the following dotted name pattern for JRuby HTTP service statistics:</p><pre>server.containers.jruby.applications.<i>jruby-application</i>.http.<i>statistic</i></pre><p><a name="indexterm-381"></a><a name="indexterm-382"></a><a name="indexterm-383"></a>The statistics that are available for the JRuby HTTP service are shown in
+the following table.</p><a name="gjjzi"></a><h6>Table&#160;8-16 JRuby HTTP Service Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>address</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Server address</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>appname</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Ruby application name</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>averageprocessingtime</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Average request processing time in milliseconds</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>contextpath</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Context
+path of Ruby application</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>count2xx</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with a status code in the
+2xx range</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>count200</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with a status code equal to 200</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>count3xx</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
 <td align="left" valign="top" scope="row"><p>Number of
-work objects rejected by the Enterprise Server.</p></td>
+responses with a status code in the 3xx range</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>completedworkcount</tt></p></td>
+<tr><td align="left" valign="top" scope="row"><p><tt>count302</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of work objects that were
-completed.</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with
+a status code equal to 302</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>Count304</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with a status code
+equal to 304</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>count4xx</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with a status code in the 4xx
+range</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>count400</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with a status code equal to 400</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>count401</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses
+with a status code equal to 401</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>count403</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with a status
+code equal to 403</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>count404</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with a status code equal to
+404</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>count5xx</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with a status code in the 5xx range</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>count503</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of
+responses with a status code equal to 503</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>countother</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with other
+status codes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>errorcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of responses with a status code greater than 400</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>requests/seconds</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Requests per
+second</p></td>
 </tr>
 </table>
 
 <a name="ablvm"></a><h5>JVM Statistics</h5>
 <p>The JVM fits into the tree of objects as show in <a href="#ghlic">JVM Tree Hierarchy</a>.</p><p>The statistics that are available for the Virtual Machine for Java platform (Java<sup>TM</sup>
-Virtual Machine) or JVM machine are shown in the following sections:<a name="indexterm-338"></a><a name="indexterm-339"></a></p>
+Virtual Machine) or JVM machine are shown in the following sections:<a name="indexterm-384"></a><a name="indexterm-385"></a></p>
 <ul><li><p><a href="#ablvn">JVM Class Loading System Statistics</a></p></li>
 <li><p><a href="#ghqfh">JVM Compilation System Statistics</a></p></li>
 <li><p><a href="#ghqea">JVM Garbage Collectors Statistics</a></p></li>
@@ -1105,12 +1141,12 @@ Virtual Machine) or JVM machine are shown in the following sections:<a name="ind
 
 
 <a name="ablvn"></a><h5>JVM Class Loading System Statistics</h5>
-<p>Use the following dotted name pattern for JVM class loading system statistics:<a name="indexterm-340"></a><a name="indexterm-341"></a><a name="indexterm-342"></a></p><pre>server.jvm.class-loading-system.<i>statistic</i></pre><p>With Java SE, additional monitoring information can be obtained from the JVM. Set
+<p>Use the following dotted name pattern for JVM class loading system statistics:<a name="indexterm-386"></a><a name="indexterm-387"></a><a name="indexterm-388"></a></p><pre>server.jvm.class-loading-system.<i>statistic</i></pre><p>With Java SE, additional monitoring information can be obtained from the JVM. Set
 the monitoring level to LOW to enable the display of this additional information.
 Set the monitoring level to HIGH to also view information pertaining to each
 live thread in the system. More information about the additional monitoring features for
 Java SE is available in <i>Monitoring and Management for the Java Platform</i>, which is available from <a href="http://java.sun.com/javase/6/docs/technotes/guides/management/">http://java.sun.com/javase/6/docs/technotes/guides/management/</a>. </p><p>The Java SE monitoring tools are discussed at <a href="http://java.sun.com/javase/6/docs/technotes/tools/#manage">http://java.sun.com/javase/6/docs/technotes/tools/#manage</a>. </p><p>The statistics that are available for class loading in the JVM for
-Java SE are shown in the following table.</p><a name="gelow"></a><h6>Table&#160;8-15 JVM Monitoring Statistics for Java SE Class Loading</h6><table><col width="33%"><col width="20%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+Java SE are shown in the following table.</p><a name="gelow"></a><h6>Table&#160;8-17 JVM Monitoring Statistics for Java SE Class Loading</h6><table><col width="33%"><col width="20%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1130,28 +1166,9 @@ since the JVM began execution</p></td>
 the JVM since the JVM began execution</p></td>
 </tr>
 </table><p>The statistics available for threads in the JVM in Java SE are
-shown in the following table.</p><a name="geloa"></a><h6>Table&#160;8-16 JVM Monitoring Statistics for Java SE - Threads</h6><table><col width="34%"><col width="20%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+shown in the following table.</p><a name="geloa"></a><h6>Table&#160;8-18 JVM Monitoring Statistics for Java SE - Threads</h6><table><col width="34%"><col width="20%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>threadcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Current number of live daemon and non-daemon threads.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>peakthreadcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Peak
-live thread count since the JVM started or the peak was reset.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>totalstartedthreadcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total
-number of threads created and/or started since the JVM started.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>daemonthreadcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Current number of
-live daemon threads.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>allthreadids</tt></p></td>
 <td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
@@ -1159,19 +1176,38 @@ live daemon threads.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>currentthreadcputime</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>CPU time for the current
-thread (in nanoseconds) if CPU time measurement is enabled. If CPU time measurement
-is disabled, returns -1.</p></td>
+<td align="left" valign="top" scope="row"><p>CPU time for
+the current thread (in nanoseconds) if CPU time measurement is enabled. If CPU
+time measurement is disabled, returns -1.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>daemonthreadcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Current number of live daemon threads.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>monitordeadlockedthreads</tt></p></td>
 <td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>List of thread ids that are monitor deadlocked.</p></td>
+<td align="left" valign="top" scope="row"><p>List of
+thread ids that are monitor deadlocked.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>peakthreadcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Peak live thread count since the JVM
+started or the peak was reset.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>threadcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Current number of live daemon and non-daemon
+threads.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>totalstartedthreadcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Total number of threads created and/or started since the JVM started.</p></td>
 </tr>
 </table>
 
 <a name="ghqfh"></a><h5>JVM Compilation System Statistics</h5>
-<p>Use the following dotted name pattern for JVM compilation system statistics:</p><pre>server.jvm.compilation-system.<i>statistic</i></pre><p><a name="indexterm-343"></a><a name="indexterm-344"></a><a name="indexterm-345"></a>The statistics that are available for compilation in the JVM for Java SE
-are shown in the following table.</p><a name="gelnt"></a><h6>Table&#160;8-17 JVM Monitoring Statistics for Java SE Compilation</h6><table><col width="33%"><col width="20%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for JVM compilation system statistics:</p><pre>server.jvm.compilation-system.<i>statistic</i></pre><p><a name="indexterm-389"></a><a name="indexterm-390"></a><a name="indexterm-391"></a>The statistics that are available for compilation in the JVM for Java SE
+are shown in the following table.</p><a name="gelnt"></a><h6>Table&#160;8-19 JVM Monitoring Statistics for Java SE Compilation</h6><table><col width="33%"><col width="20%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1188,7 +1224,7 @@ are shown in the following table.</p><a name="gelnt"></a><h6>Table&#160;8-17 JVM
 
 <a name="ghqea"></a><h5>JVM Garbage Collectors Statistics</h5>
 <p>Use the following dotted name pattern for JVM garbage collectors statistics:</p><pre>server.jvm.garbage-collectors.<i>statistic</i></pre><p>The statistics that are available for garbage collection in the JVM for Java
-SE are shown in the following table.<a name="indexterm-346"></a><a name="indexterm-347"></a><a name="indexterm-348"></a></p><a name="gelox"></a><h6>Table&#160;8-18 JVM Monitoring Statistics for Java SE Garbage Collectors</h6><table><col width="33%"><col width="20%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+SE are shown in the following table.<a name="indexterm-392"></a><a name="indexterm-393"></a><a name="indexterm-394"></a></p><a name="gelox"></a><h6>Table&#160;8-20 JVM Monitoring Statistics for Java SE Garbage Collectors</h6><table><col width="33%"><col width="20%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1204,8 +1240,8 @@ have occurred</p></td>
 </table>
 
 <a name="ghqdn"></a><h5>JVM Memory Statistics</h5>
-<p>Use the following dotted name pattern for JVM memory statistics:</p><pre>server.jvm.memory.<i>statistic</i></pre><p><a name="indexterm-349"></a><a name="indexterm-350"></a><a name="indexterm-351"></a>The statistics that are available for memory in the JVM for Java SE
-are shown in the following table.</p><a name="gelnx"></a><h6>Table&#160;8-19 JVM Monitoring Statistics for Java SE Memory</h6><table><col width="33%"><col width="20%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for JVM memory statistics:</p><pre>server.jvm.memory.<i>statistic</i></pre><p><a name="indexterm-395"></a><a name="indexterm-396"></a><a name="indexterm-397"></a>The statistics that are available for memory in the JVM for Java SE
+are shown in the following table.</p><a name="gelnx"></a><h6>Table&#160;8-21 JVM Monitoring Statistics for Java SE Memory</h6><table><col width="33%"><col width="20%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1255,8 +1291,8 @@ use</p></td>
 </table>
 
 <a name="ghqec"></a><h5>JVM Operating System Statistics</h5>
-<p>Use the following dotted name pattern for JVM operating system statistics:</p><pre>server.jvm.operating-system.<i>statistic</i></pre><p><a name="indexterm-352"></a><a name="indexterm-353"></a><a name="indexterm-354"></a>The statistics that are available for the operating system for the JVM machine in
-Java SE are shown in the following table.</p><a name="gelog"></a><h6>Table&#160;8-20 JVM Statistics for Java SE Operating System</h6><table><col width="33%"><col width="20%"><col width="46%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for JVM operating system statistics:</p><pre>server.jvm.operating-system.<i>statistic</i></pre><p><a name="indexterm-398"></a><a name="indexterm-399"></a><a name="indexterm-400"></a>The statistics that are available for the operating system for the JVM machine in
+Java SE are shown in the following table.</p><a name="gelog"></a><h6>Table&#160;8-22 JVM Statistics for Java SE Operating System</h6><table><col width="33%"><col width="20%"><col width="46%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1280,8 +1316,8 @@ processors available to the JVM</p></td>
 </table>
 
 <a name="ghqby"></a><h5>JVM Runtime Statistics</h5>
-<p>Use the following dotted name pattern for JVM runtime statistics:</p><pre>server.jvm.runtime.<i>statistic</i></pre><p><a name="indexterm-355"></a><a name="indexterm-356"></a><a name="indexterm-357"></a>The statistics that are available for the runtime in the JVM runtime for
-Java SE are shown in the following table.</p><a name="gelop"></a><h6>Table&#160;8-21 JVM Monitoring Statistics for Java SE Runtime</h6><table><col width="33%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for JVM runtime statistics:</p><pre>server.jvm.runtime.<i>statistic</i></pre><p><a name="indexterm-401"></a><a name="indexterm-402"></a><a name="indexterm-403"></a>The statistics that are available for the runtime in the JVM runtime for
+Java SE are shown in the following table.</p><a name="gelop"></a><h6>Table&#160;8-23 JVM Monitoring Statistics for Java SE Runtime</h6><table><col width="33%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1336,10 +1372,15 @@ of the JVM (in milliseconds)</p></td>
 </table>
 
 <a name="gjipy"></a><h5>Network Statistics</h5>
-<p>Network fits into the tree of objects as shown in <a href="#giznj">Network Tree Hierarchy</a>.<a name="indexterm-358"></a><a name="indexterm-359"></a><a name="indexterm-360"></a> </p>
+<p>Network fits into the tree of objects as shown in <a href="#giznj">Network Tree Hierarchy</a>.<a name="indexterm-404"></a><a name="indexterm-405"></a><a name="indexterm-406"></a> </p><p>Network statistics are described in the following sections:</p>
+<ul><li><p><a href="#gjiqu">Network Keep Alive Statistics</a></p></li>
+<li><p><a href="#gjjom">Network Connection Queue Statistics </a></p></li>
+<li><p><a href="#gjjpi">Network File Cache Statistics</a></p></li>
+<li><p><a href="#gjjpp">Network Thread Pool Statistics</a></p></li></ul>
+
 
 <a name="gjiqu"></a><h5>Network Keep Alive Statistics</h5>
-<p>Use the following dotted name pattern for network statistics:</p><pre>server.network.<i>type-of-listener</i>.keep-alive.<i>statistic</i></pre><p>Statistics available for network keep alive are shown in the following table: </p><a name="gjirp"></a><h6>Table&#160;8-22 Network Keep Alive Statistics</h6><table><col width="33%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for network keep alive statistics:</p><pre>server.network.<i>type-of-listener</i>.keep-alive.<i>statistic</i></pre><p>Statistics available for network keep alive are shown in the following table: </p><a name="gjirp"></a><h6>Table&#160;8-24 Network Keep Alive Statistics</h6><table><col width="33%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data
 Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
@@ -1377,9 +1418,158 @@ connections in keep-alive mode.</p></td>
 </tr>
 </table>
 
+<a name="gjjom"></a><h5>Network Connection Queue Statistics </h5>
+<p>Use the following dotted name pattern for network connection queue statistics:</p><pre>server.network.<i>type-of-listener</i>.connection-queue.<i>statistic</i></pre><p>Statistics available for network connection queue are shown in the following table: </p><a name="gjjxc"></a><h6>Table&#160;8-25 Network Connection Queue Statistics </h6><table><col width="32%"><col width="20%"><col width="46%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data
+Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>countopenconnections</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>The number of open/active connections</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>countoverflows</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of times the queue has been too
+full to accommodate a connection</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>countqueued</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of connections currently in the queue</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>countqueued15minutesaverage</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Average number
+of connections queued in the last 15 minutes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>countqueued1minuteaverage</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Average number of connections queued
+in the last 1 minute</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>countqueued5minutesaverage</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Average number of connections queued in the last
+5 minutes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>counttotalconnections</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Total number of connections that have been accepted</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>counttotalqueued</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Total number of connections
+that have been queued</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>maxqueued</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Maximum size of the connection queue</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>peakqueued</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Largest number of connections
+that were in the queue simultaneously</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>tickstotalqueued</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>(Unsupported) Total number of ticks that connections
+have spent in the queue</p></td>
+</tr>
+</table>
+
+<a name="gjjpi"></a><h5>Network File Cache Statistics</h5>
+<p>Use the following dotted name pattern for network file cache statistics:</p><pre>server.network.<i>type-of-listener</i>.file-cache.<i>statistic</i></pre><p>Statistics available for network file cache are shown in the following table: </p><a name="gjjpd"></a><h6>Table&#160;8-26 Network File Cache Statistics</h6><table><col width="32%"><col width="20%"><col width="46%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data
+Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>contenthits</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of hits on cached file content</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>contentmisses</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of misses on cached file
+content</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>heapsize</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Current cache size in bytes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>hits</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of cache lookup hits</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>infohits</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of hits on
+cached file info</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>infomisses</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of misses on cached file info</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>mappedmemorysize</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Size of mapped memory
+used for caching  in bytes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>maxheapsize</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Maximum heap space used for cache in
+bytes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>maxmappedmemorysize</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Maximum memory map size used for caching in bytes</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>misses</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of cache lookup
+misses data type</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>opencacheentries</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of current open cache entries</p></td>
+</tr>
+</table>
+
+<a name="gjjpp"></a><h5>Network Thread Pool Statistics</h5>
+<p>Use the following dotted name pattern for network thread pool statistics:</p><pre>server.network.<i>type-of-listener</i>.thread-pool.<i>statistic</i></pre><p>Statistics available for network thread pool are shown in the following table: </p><a name="gjjov"></a><h6>Table&#160;8-27 Network Thread Pool Statistics</h6><table><col width="32%"><col width="20%"><col width="46%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data
+Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>corethreads</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Core number of threads in the thread pool</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>currentthreadcount</tt> </p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Provides the number of
+request processing threads currently in the listener thread pool</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>currentthreadsbusy</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Provides the number of request
+processing threads currently in use in the listener thread pool serving requests</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>maxthreads</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Maximum number
+of threads allowed in the thread pool</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>totalexecutedtasks</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Provides the total number of tasks,
+which were executed by the thread pool</p></td>
+</tr>
+</table>
+
 <a name="ablvj"></a><h5>ORB Statistics (Connection Manager)</h5>
-<a name="indexterm-361"></a><p>The ORB fits into the tree of objects as shown in <a href="#ablvb">ORB Tree Hierarchy</a>.</p><p>Use the following dotted name pattern for ORB statistics:</p><pre>server.orb.<i>statistic</i></pre><p>The statistics available for the connection manager in an ORB are listed in
-the following table.<a name="indexterm-362"></a><a name="indexterm-363"></a><a name="indexterm-364"></a></p><a name="gelqw"></a><h6>Table&#160;8-23 ORB Monitoring Statistics (Connection Manager)</h6><table><col width="32%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<a name="indexterm-407"></a><p>The ORB fits into the tree of objects as shown in <a href="#ablvb">ORB Tree Hierarchy</a>.</p><p>Use the following dotted name patterns for ORB statistics:</p><pre>server.orb.transport.connectioncache.inbound.<i>statistic</i>
+server.orb.transport.connectioncache.outbound.<i>statistic</i></pre><p>The statistics available for the connection manager in an ORB are listed in
+the following table.<a name="indexterm-408"></a><a name="indexterm-409"></a><a name="indexterm-410"></a></p><a name="gelqw"></a><h6>Table&#160;8-28 ORB Monitoring Statistics (Connection Manager)</h6><table><col width="32%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1404,94 +1594,108 @@ to the ORB</p></td>
 at runtime. Connections are expensive and frequently cause performance bottlenecks in applications. It
 is important to monitor how a connection pool is releasing and creating new
 connections and how many threads are waiting to retrieve a connection from a
-particular pool.<a name="indexterm-365"></a><a name="indexterm-366"></a><a name="indexterm-367"></a></p><p>The connection pool resources fit into the tree of objects as shown in
-<a href="#giqdo">Resources Tree Hierarchy</a>.</p><p>Use the following dotted name pattern for connection pool statistics:</p><pre>server.resources.<i>connection-pool</i>.<i>statistic</i></pre><p>The connection pool statistics are shown in the following table.</p><a name="gelqa"></a><h6>Table&#160;8-24 Resource Monitoring Statistics (Connection Pool)</h6><table><col width="31%"><col width="23%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+particular pool.<a name="indexterm-411"></a><a name="indexterm-412"></a><a name="indexterm-413"></a></p><p>The connection pool resources fit into the tree of objects as shown in
+<a href="#giqdo">Resources Tree Hierarchy</a>.</p><p>Use the following dotted name pattern for connection pool statistics:</p><pre>server.resources.<i>connection-pool</i>.<i>statistic</i></pre><p>The connection pool statistics are shown in the following table.</p><a name="gelqa"></a><h6>Table&#160;8-29 Resource Monitoring Statistics (Connection Pool)</h6><table><col width="35%"><col width="20%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>averageconnwaittime</tt> </p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Average
+wait-time-duration per successful connection request</p></td>
+</tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>connrequestwaittime</tt></p></td>
 <td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Longest and
-shortest wait times, in milliseconds, of connection requests since the last sampling</p></td>
+<td align="left" valign="top" scope="row"><p>Longest and shortest wait times, in milliseconds, of
+connection requests since the last sampling. current value indicates the wait time of
+the last request that was serviced by the pool</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconnfailedvalidation</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of
-connections in the connection pool that failed validation from the start time until
-the last sampling time</p></td>
+<td align="left" valign="top" scope="row"><p>Number of connections in the
+connection pool that failed validation from the start time until the last sampling
+time</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconnused</tt></p></td>
 <td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of connections that are currently being used, as
-well as information about the maximum number of connections that were used (high
-water mark)</p></td>
+<td align="left" valign="top" scope="row"><p>Number of connections that are currently being used, as well as information about
+the maximum number of connections that were used (high water mark)</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconnfree</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of free connections in the pool as of the last
-sampling</p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of
+free connections in the pool as of the last sampling</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconntimedout</tt></p></td>
-<td align="left" valign="top" scope="row"><p>BoundedRangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of connections in the pool that timed out between the start
-time and the last sampling time</p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of connections
+in the pool that timed out between the start time and the last
+sampling time</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconncreated</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of connections that were created by the
-pool since the last sampling</p></td>
+<td align="left" valign="top" scope="row"><p>Number of physical connections that were created by the pool since
+the last reset</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconndestroyed</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of physical connections that were destroyed since
-the last reset</p></td>
+<td align="left" valign="top" scope="row"><p>Number of physical connections that were destroyed since the last reset</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconnacquired</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of logical connections acquired from the pool since the
-last sampling</p></td>
+<td align="left" valign="top" scope="row"><p>Number
+of logical connections acquired from the pool since the last sampling</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numconnreleased</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of connections released back to the pool since the last sampling</p></td>
+<td align="left" valign="top" scope="row"><p>Number of connections
+released back to the pool since the last sampling</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>numconnnotsuccessfullymatched</tt> </p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of connections
+rejected during matching</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>numconnsuccessfullymatched</tt> </p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of connections successfully matched </p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numpotentialconnleak</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number
-of potential connection leaks</p></td>
+<td align="left" valign="top" scope="row"><p>Number of potential connection
+leaks</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>waitqueuelength</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of connection requests in the queue waiting to
-be serviced</p></td>
+<td align="left" valign="top" scope="row"><p>Number of connection requests in the queue waiting to be serviced</p></td>
 </tr>
 </table>
 
 <a name="gjiov"></a><h5>Security Statistics</h5>
-<p>Security fits into the tree of objects as shown in <a href="#gjios">Security Tree Hierarchy</a>.<a name="indexterm-368"></a><a name="indexterm-369"></a><a name="indexterm-370"></a> </p><p>Statistics available for security are shown in the following sections: </p>
+<p>Security fits into the tree of objects as shown in <a href="#gjios">Security Tree Hierarchy</a>.<a name="indexterm-414"></a><a name="indexterm-415"></a><a name="indexterm-416"></a> </p><p>Statistics available for security are shown in the following sections: </p>
 <ul><li><p><a href="#gjira">EJB Security Statistics</a></p></li>
 <li><p><a href="#gjirn">Web Security Statistics</a></p></li>
 <li><p><a href="#gjirj">Realm Security Statistics</a></p></li></ul>
 
 
 <a name="gjira"></a><h5>EJB Security Statistics</h5>
-<p>Use the following dotted name pattern for EJB security statistics:</p><pre>server.security.ejb.<i>statistic</i></pre><p>The statistics available for EJB security are listed in the following table:</p><a name="gjirc"></a><h6>Table&#160;8-25 EJB Security Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="46%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for EJB security statistics:</p><pre>server.security.ejb.<i>statistic</i></pre><p>The statistics available for EJB security are listed in the following table:</p><a name="gjirc"></a><h6>Table&#160;8-30 EJB Security Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="46%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>securitymanagercount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number
-of EJB security managers</p></td>
-</tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>policyconfigurationcount</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of policy configuration</p></td>
+<td align="left" valign="top" scope="row"><p>Number
+of policy configuration</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>securitymanagercount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number of EJB security managers</p></td>
 </tr>
 </table>
 
 <a name="gjirn"></a><h5>Web Security Statistics</h5>
-<p>Use the following dotted name pattern for web security statistics:</p><pre>server.security.web.<i>statistic</i></pre><p>The statistics available for web security are listed in the following table:</p><a name="gjiqv"></a><h6>Table&#160;8-26 Web Security Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for web security statistics:</p><pre>server.security.web.<i>statistic</i></pre><p>The statistics available for web security are listed in the following table:</p><a name="gjiqv"></a><h6>Table&#160;8-31 Web Security Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1507,7 +1711,7 @@ of security managers</p></td>
 </table>
 
 <a name="gjirj"></a><h5>Realm Security Statistics</h5>
-<p>Use the following dotted name pattern for realm security statistics:</p><pre>server.security.realm.<i>statistic</i></pre><p>The statistics available for realm security are listed in the following table:</p><a name="gjirq"></a><h6>Table&#160;8-27 Realm Security Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for realm security statistics:</p><pre>server.security.realm.<i>statistic</i></pre><p>The statistics available for realm security are listed in the following table:</p><a name="gjirq"></a><h6>Table&#160;8-32 Realm Security Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1526,46 +1730,81 @@ of realms</p></td>
 
 
 <a name="gitct"></a><h5>Thread Pool Monitoring Statistics</h5>
-<p>Use the following dotted name pattern for thread pool statistics:<a name="indexterm-371"></a><a name="indexterm-372"></a><a name="indexterm-373"></a></p><pre>server.thread-pool.<i>thread-pool</i>.<i>statistic</i></pre><p>The statistics available for the thread pool are shown in the following table.</p><a name="gelqt"></a><h6>Table&#160;8-28 Thread Pool Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for thread pool statistics:<a name="indexterm-417"></a><a name="indexterm-418"></a><a name="indexterm-419"></a></p><pre>server.thread-pool.<i>thread-pool</i>.<i>statistic</i></pre><p>The statistics available for the thread pool are shown in the following table.</p><a name="gelqt"></a><h6>Table&#160;8-33 Thread Pool Monitoring Statistics</h6><table><col width="32%"><col width="23%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data
 Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>averagetimeinqueue</tt></p></td>
-<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>BoundedRangeStatistic</p></td>
 <td align="left" valign="top" scope="row"><p>Average amount of time (in milliseconds) a request waited in the queue before
 being processed</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>averageworkcompletion-time</tt></p></td>
-<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
+<tr><td align="left" valign="top" scope="row"><p><tt>averageworkcompletiontime</tt></p></td>
+<td align="left" valign="top" scope="row"><p>BoundedRangeStatistic</p></td>
 <td align="left" valign="top" scope="row"><p>Average amount of time (in milliseconds) taken to complete an assignment</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>currentbusythreads</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Number
+of busy threads </p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>currentnumberofthreads</tt></p></td>
 <td align="left" valign="top" scope="row"><p>BoundedRangeStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Current
-number of request processing threads</p></td>
+<td align="left" valign="top" scope="row"><p>Current number of request processing threads</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>numberofavailablethreads</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
 <td align="left" valign="top" scope="row"><p>Number of available threads</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>numberofbusythreads</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Number of busy threads </p></td>
+<tr><td align="left" valign="top" scope="row"><p><tt>numberofworkitemsinqueue</tt></p></td>
+<td align="left" valign="top" scope="row"><p>BoundedRangeStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Current
+number of work items waiting in queue</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>totalworkitemsadded</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total
-number of work items added to the work queue as of last
-sampling</p></td>
+<td align="left" valign="top" scope="row"><p>Total number of work items added
+to the work queue as of last sampling</p></td>
 </tr>
 </table>
 
 <a name="gitce"></a><h5>JVM Statistics for Java SE-Thread Information</h5>
 <p>The statistics available for <tt>ThreadInfo</tt> in the JVM in Java SE are shown
-in the following table.</p><a name="geloy"></a><h6>Table&#160;8-29 JVM Monitoring Statistics for Java SE - Thread Info</h6><table><col width="32%"><col width="22%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+in the following table.</p><a name="geloy"></a><h6>Table&#160;8-34 JVM Monitoring Statistics for Java SE - Thread Info</h6><table><col width="32%"><col width="22%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>blockedcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Total number of times that the thread entered
+the <tt>BLOCKED</tt> state.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>blockedtime</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Time elapsed (in milliseconds) since the thread entered the <tt>BLOCKED</tt>
+state. Returns -1 if thread contention monitoring is disabled.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>lockname</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>String representation of the
+monitor lock that the thread is blocked to enter or waiting to be
+notified through the <tt>Object.wait</tt> method.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>lockownerid</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>ID of the thread that holds the monitor
+lock of an object on which this thread is blocking.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>lockownername</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Name of the thread
+that holds the monitor lock of the object this thread is blocking on.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>stacktrace</tt></p></td>
+<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Stack
+trace associated with this thread.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>threadid</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
@@ -1580,46 +1819,15 @@ in the following table.</p><a name="geloy"></a><h6>Table&#160;8-29 JVM Monitorin
 <td align="left" valign="top" scope="row"><p>State of
 the thread.</p></td>
 </tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>blockedtime</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Time elapsed (in milliseconds) since the thread entered the <tt>BLOCKED</tt> state.
-Returns -1 if thread contention monitoring is disabled.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>blockedcount</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of times that
-the thread entered the <tt>BLOCKED</tt> state.</p></td>
-</tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>waitedtime</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Elapsed time (in milliseconds) that the thread
-has been in a <tt>WAITING</tt> state. Returns -1 if thread contention monitoring
-is disabled.</p></td>
+<td align="left" valign="top" scope="row"><p>Elapsed time (in milliseconds) that the thread has been in a
+<tt>WAITING</tt> state. Returns -1 if thread contention monitoring is disabled.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>waitedcount</tt></p></td>
 <td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Total number of times the thread was in <tt>WAITING</tt> or <tt>TIMED_WAITING</tt>
-states.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>lockname</tt></p></td>
-<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>String representation of the monitor lock that the thread is blocked to enter
-or waiting to be notified through the <tt>Object.wait</tt> method.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>lockownerid</tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>ID of the thread
-that holds the monitor lock of an object on which this thread is
-blocking.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>lockownername</tt></p></td>
-<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Name of the thread that holds the monitor lock of the object
-this thread is blocking on.</p></td>
-</tr>
-<tr><td align="left" valign="top" scope="row"><p><tt>stacktrace</tt></p></td>
-<td align="left" valign="top" scope="row"><p>StringStatistic</p></td>
-<td align="left" valign="top" scope="row"><p>Stack trace associated with this thread.</p></td>
+<td align="left" valign="top" scope="row"><p>Total number of
+times the thread was in <tt>WAITING</tt> or <tt>TIMED_WAITING</tt> states.</p></td>
 </tr>
 </table>
 
@@ -1627,7 +1835,7 @@ this thread is blocking on.</p></td>
 <p>The transaction service allows the client to freeze the transaction subsystem in order
 to roll back transactions and determine which transactions are in process at the
 time of the freeze. The transaction service fits into the tree of objects
-as shown in <a href="#gitci">Transactions Service Tree Hierarchy</a>.</p><p>Use the following dotted name pattern for transaction service statistics:</p><pre>server.transaction-service.<i>statistic</i></pre><p>The statistics available for the transaction service are shown in the following table.<a name="indexterm-374"></a><a name="indexterm-375"></a><a name="indexterm-376"></a></p><a name="gelpl"></a><h6>Table&#160;8-30 Transaction Service Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+as shown in <a href="#gitci">Transactions Service Tree Hierarchy</a>.</p><p>Use the following dotted name pattern for transaction service statistics:</p><pre>server.transaction-service.<i>statistic</i></pre><p>The statistics available for the transaction service are shown in the following table.<a name="indexterm-420"></a><a name="indexterm-421"></a><a name="indexterm-422"></a></p><a name="gelpl"></a><h6>Table&#160;8-35 Transaction Service Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data
 Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
@@ -1659,21 +1867,56 @@ back.</p></td>
 
 <a name="ablvf"></a><h5>Web Statistics</h5>
 <p>The web module fits into the tree of objects as shown in
-<a href="#ghlff">Web Tree Hierarchy</a>. </p><p><a name="indexterm-377"></a><a name="indexterm-378"></a><a name="indexterm-379"></a>The available web statistics shown in the following sections:</p>
-<ul><li><p><a href="#ghqge">Web JSP Statistics</a></p></li>
+<a href="#ghlff">Web Tree Hierarchy</a>. </p><p><a name="indexterm-423"></a><a name="indexterm-424"></a><a name="indexterm-425"></a>The available web statistics shown in the following sections:</p>
+<ul><li><p><a href="#gjkaz">Web Module Servlet Statistics</a></p></li>
+<li><p><a href="#ghqge">Web JSP Statistics</a></p></li>
 <li><p><a href="#ghqga">Web Request Statistics</a></p></li>
 <li><p><a href="#ghqfu">Web Servlet Statistics</a></p></li>
 <li><p><a href="#ghqfr">Web Session Statistics</a></p></li></ul>
 
 
+<a name="gjkaz"></a><h5>Web Module Servlet Statistics</h5>
+<p>Use the following dotted name pattern for web module servlet statistics:<a name="indexterm-426"></a><a name="indexterm-427"></a></p><pre>server.applications.<i>web-module</i>.<i>virtual-server</i>.servlet.<i>statistic</i>
+server.applications.<i>application</i>.<i>web-module</i>.<i>virtual-server</i>.servlet.<i>statistic</i></pre><p>The available web module servlet statistics are shown in the following table.</p><a name="gjkba"></a><h6>Table&#160;8-36 Web Module Servlet Statistics</h6><table><col width="32%"><col width="22%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<th align="left" valign="top" scope="column"><p>Data Type</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>errorcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Cumulative
+number of cases where the response code is greater than or equal to
+400.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>maxtime</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Maximum amount of time the web container waits for requests.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>processingtime</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Cumulative value of
+the amount of time required to process each request. The processing time is
+the average of request processing times divided by the request count. </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>requestcount</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>The total
+number of requests processed so far. </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>servicetime</tt></p></td>
+<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>Aggregate response time in milliseconds.</p></td>
+</tr>
+</table>
+
 <a name="ghqge"></a><h5>Web JSP Statistics</h5>
-<p>Use the following dotted name pattern for web JSP statistics:<a name="indexterm-380"></a><a name="indexterm-381"></a></p><pre>server.web.jsp.<i>statistic</i></pre><p>The available web JSP statistics are shown in the following table. </p><a name="givgh"></a><h6>Table&#160;8-31 Web JSP Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for web JSP statistics:<a name="indexterm-428"></a><a name="indexterm-429"></a></p><pre>server.applications.<i>web-module</i>.<i>virtual-server</i>.<i>statistic</i>
+server.applications.<i>application</i>.<i>web-module</i>.<i>virtual-server</i>.<i>statistic</i></pre><p>The available web JSP statistics are shown in the following table. </p><a name="givgh"></a><h6>Table&#160;8-37 Web JSP Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data
 Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>jspcount-current </tt></p></td>
-<td align="left" valign="top" scope="row"><p>CountStatistic</p></td>
+<td align="left" valign="top" scope="row"><p>RangeStatistic</p></td>
 <td align="left" valign="top" scope="row"><p>Number of active JSP pages</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><tt>jsperrorcount</tt></p></td>
@@ -1693,7 +1936,8 @@ JSP pages ever loaded</p></td>
 </table>
 
 <a name="ghqga"></a><h5>Web Request Statistics</h5>
-<p>Use the following dotted name pattern for web request statistics:<a name="indexterm-382"></a><a name="indexterm-383"></a></p><pre>server.web.request.<i>statistic</i></pre><p>The available web request statistics are shown in the following table.</p><a name="gjisw"></a><h6>Table&#160;8-32 Web Request Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for web request statistics:<a name="indexterm-430"></a><a name="indexterm-431"></a></p><pre>server.applications.<i>web-module</i>.<i>virtual-server</i>.<i>statistic</i>
+server.applications.<i>application</i>.<i>web-module</i>.<i>virtual-server</i>.<i>statistic</i></pre><p>The available web request statistics are shown in the following table.</p><a name="gjisw"></a><h6>Table&#160;8-38 Web Request Monitoring Statistics</h6><table><col width="32%"><col width="21%"><col width="45%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1721,7 +1965,8 @@ the requests processed so far</p></td>
 </table>
 
 <a name="ghqfu"></a><h5>Web Servlet Statistics</h5>
-<p>Use the following dotted name pattern for web servlet statistics:<a name="indexterm-384"></a><a name="indexterm-385"></a></p><pre>server.web.servlet.<i>statistic</i></pre><p>The available web servlet statistics are shown in the following table.</p><a name="ghqiu"></a><h6>Table&#160;8-33 Web Servlet Monitoring Statistics</h6><table><col width="33%"><col width="22%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<p>Use the following dotted name pattern for web servlet statistics:<a name="indexterm-432"></a><a name="indexterm-433"></a></p><pre>server.applications.<i>web-module</i>.<i>virtual-server</i>.<i>statistic</i>
+server.applications.<i>application</i>.<i>web-module</i>.<i>virtual-server</i>.<i>statistic</i></pre><p>The available web servlet statistics are shown in the following table.</p><a name="ghqiu"></a><h6>Table&#160;8-39 Web Servlet Monitoring Statistics</h6><table><col width="33%"><col width="22%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1742,7 +1987,8 @@ servlets that have been loaded into the web module</p></td>
 </table>
 
 <a name="ghqfr"></a><h5>Web Session Statistics</h5>
-<a name="indexterm-386"></a><a name="indexterm-387"></a><p>Use the following dotted name pattern for web session statistics:</p><pre>server.web.session.<i>statistic</i></pre><p>The available web session statistics are shown in the following table.</p><a name="gellc"></a><h6>Table&#160;8-34 Web Session Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
+<a name="indexterm-434"></a><a name="indexterm-435"></a><p>Use the following dotted name pattern for web session statistics:</p><pre>server.applications.<i>web-module</i>.<i>virtual-server</i>.<i>statistic</i>
+server.applications.<i>application</i>.<i>web-module</i>.<i>virtual-server</i>.<i>statistic</i></pre><p>The available web session statistics are shown in the following table.</p><a name="gellc"></a><h6>Table&#160;8-40 Web Session Monitoring Statistics</h6><table><col width="32%"><col width="22%"><col width="44%"><tr><th align="left" valign="top" scope="column"><p>Statistic</p></th>
 <th align="left" valign="top" scope="column"><p>Data Type</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
@@ -1782,6 +2028,40 @@ sessions</p></td>
 <td align="left" valign="top" scope="row"><p>Total number of sessions created</p></td>
 </tr>
 </table>
+
+<a name="giwqm"></a><h3>Configuring JConsole to View Enterprise Server Monitoring Data</h3>
+<p>Java SE provides tools to connect to an MBean Server and view
+the MBeans registered with the server. JConsole is one such popular JMX Connector
+Client and is available as part of the standard Java SE distribution. When
+you configure JConsole for use with Enterprise Server, Enterprise Server becomes the JMX
+Connector's server end and JConsole becomes the JMX connector's client end. </p>
+
+<a name="ggpfh"></a><h4>To Connect JConsole to Enterprise Server</h4><a name="indexterm-436"></a><a name="indexterm-437"></a><p>Java SE 6 enhances management and monitoring of the virtual machine by including
+a Platform MBean Server and by including managed beans (MBeans) to configure the
+virtual machine. </p><p>To view all MBeans, Enterprise Server provides a configuration of the standard JMX
+connector server called System JMX Connector Server. As part of Enterprise Server
+startup, an instance of this JMX Connector Server is started. Any compliant JMX
+connector client can connect to the server using the JMX Connector Server. </p><p>By default, Enterprise Server is configured with a non-secure System JMX Connector Server.
+If this is an issue, the JMX connector can be removed. However, access
+can be restricted to a specific IP address (for example, the loopback address)
+by setting <tt>address</tt> to <tt>locahost</tt>.</p><ol>
+<li><b>Start the domain.</b><p>For instructions, see <a href="p7.html#ggoda">To Start a Domain</a>.</p></li>
+<li><b>Start JConsole using this format: <i>JDK_HOME</i><tt>/bin/jconsole</tt></b><p>For example:</p><pre><tt><b>/usr/java/bin/jconsole</b></tt></pre><p>The JConsole Connect to Agent window is displayed.</p></li>
+<li><b>Click the Remote tab and type the host name and port.</b><p>Always connect remotely with JConsole, otherwise MBeans will not load automatically.</p></li>
+<li><b>Click Connect.</b></li>
+<li><b>In the Remote Process text box, specify the JMX Service URL. </b><p>For example:</p><pre><tt><b>service:jmx:rmi:///jndi/rmi://localhost:8686/jmxrmi </b></tt></pre><p>The JMX Service URL is emitted by the server at startup, looking
+something like this:</p><pre>[#|2009-12-03T10:25:17.737-0800|INFO|glassfishv3.0|
+javax.enterprise.system.tools.admin.org.glassfish.server|_ThreadID=20;
+_ThreadName=Thread-26;|JMXStartupService: Started JMXConnector, JMXService 
+URL = service:jmx:rmi://localhost:8686/jndi/rmi://localhost:8686/jmxrmi|#]</pre><p>Hoewever, in most cases, simply entering <tt>host:port</tt> is fine, such as, 192.168.1.150:8686. 
+The long Service URL is not needed.</p>
+<hr><p><b>Note - </b>Another host name can be substituted for <tt>localhost</tt>. The default port number (8686)
+could change if the <tt>jmx-connector</tt> configuration has been modified.</p>
+<hr>
+</li>
+<li><b>Click Connect.</b><p>In the JConsole window you will see all your MBeans, JVM information, and
+so on, in various tabs. Most of the useful MBeans are to be
+found in the <tt>amx</tt> and <tt>java.lang</tt> domains.</p></li></ol><h6>See Also</h6><p>For more information about JConsole, see <a href="http://java.sun.com/javase/6/docs/technotes/guides/management/jconsole.html">http://java.sun.com/javase/6/docs/technotes/guides/management/jconsole.html</a>.</p>
 
 
 <table border="0" cellpadding="5" cellspacing="0" width="100%">

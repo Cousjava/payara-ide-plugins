@@ -6,7 +6,7 @@
 <title>Using the Java Naming and Directory Interface - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,10 +25,10 @@
 </table>
 
 
-<a name="beanr"></a>Chapter&#160;16<h3>Using the Java Naming and Directory Interface</h3><a name="indexterm-886"></a><a name="indexterm-887"></a><a name="indexterm-888"></a><p>A <b>naming service</b> maintains a set of bindings, which relate names to objects. The
+<a name="beanr"></a>Chapter&#160;16<h3>Using the Java Naming and Directory Interface</h3><a name="indexterm-938"></a><a name="indexterm-939"></a><a name="indexterm-940"></a><p>A <b>naming service</b> maintains a set of bindings, which relate names to objects. The
 Java EE naming service is based on the Java Naming and Directory Interface<sup>TM</sup> (JNDI) API. The JNDI API
 allows application components and clients to look up distributed resources, services, and EJB
-components. For general information about the JNDI API, see <a href="http://java.sun.com/products/jndi/">http://java.sun.com/products/jndi/</a>.</p><p><a name="indexterm-889"></a>You can also see the JNDI tutorial at <a href="http://java.sun.com/products/jndi/tutorial/">http://java.sun.com/products/jndi/tutorial/</a>.</p><p>This chapter contains the following sections:</p>
+components. For general information about the JNDI API, see <a href="http://java.sun.com/products/jndi/">http://java.sun.com/products/jndi/</a>.</p><p><a name="indexterm-941"></a>You can also see the JNDI tutorial at <a href="http://java.sun.com/products/jndi/tutorial/">http://java.sun.com/products/jndi/tutorial/</a>.</p><p>This chapter contains the following sections:</p>
 <ul><li><p><a href="#beans">Accessing the Naming Context</a></p></li>
 <li><p><a href="#beanx">Configuring Resources</a></p></li>
 <li><p><a href="#gcpge">Using a Custom <tt>jndi.properties</tt> File</a></p></li>
@@ -41,11 +41,11 @@ Server supports the entire EJB 3.1 specification. For details, see <a href="http
 
 
 <a name="beans"></a><h3>Accessing the Naming Context</h3>
-<a name="indexterm-890"></a><a name="indexterm-891"></a><p>The Enterprise Server provides a naming environment, or <b>context</b>, which is compliant
-with standard Java EE requirements. A <tt>Context</tt> object provides the methods for binding names
-to objects, unbinding names from objects, renaming objects, and listing the bindings. The
-<tt>InitialContext</tt> is the handle to the Java EE naming service that application components and
-clients use for lookups.</p><p>The JNDI API also provides subcontext functionality. Much like a directory in a
+<a name="indexterm-942"></a><a name="indexterm-943"></a><p>The Sun GlassFish<sup>TM</sup> Enterprise Server provides a naming environment, or <b>context</b>, which
+is compliant with standard Java EE requirements. A <tt>Context</tt> object provides the methods
+for binding names to objects, unbinding names from objects, renaming objects, and listing the
+bindings. The <tt>InitialContext</tt> is the handle to the Java EE naming service that
+application components and clients use for lookups.</p><p>The JNDI API also provides subcontext functionality. Much like a directory in a
 file system, a subcontext is a context within a context. This hierarchical structure
 permits better organization of information. For naming services that support subcontexts, the <tt>Context</tt>
 class also provides methods for creating and destroying subcontexts.</p><p>The rest of this section covers these topics:</p>
@@ -59,10 +59,10 @@ class also provides methods for creating and destroying subcontexts.</p><p>The r
 
 
 <a name="gcjkd"></a><h4>Global JNDI Names</h4>
-<a name="indexterm-892"></a><p>Global JNDI names are assigned according to the following precedence rules:</p>
+<a name="indexterm-944"></a><p>Global JNDI names are assigned according to the following precedence rules:</p>
 <ol><li><p>A global JNDI name assigned in the <tt>sun-ejb-jar.xml</tt>, <tt>sun-web.xml</tt>, or <tt>sun-application-client.xml</tt> deployment descriptor file has the highest precedence. See <a href="#beaoa">Mapping References</a>.</p></li>
 <li><p>A global JNDI name assigned in a <tt>mapped-name</tt> element in the <tt>ejb-jar.xml</tt>, <tt>web.xml</tt>, or <tt>application-client.xml</tt> deployment descriptor file has the second highest precedence. The following elements have <tt>mapped-name</tt> subelements: <tt>resource-ref</tt>, <tt>resource-env-ref</tt>, <tt>ejb-ref</tt>, <tt>message-destination</tt>, <tt>message-destination-ref</tt>, <tt>session</tt>, <tt>message-driven</tt>, and <tt>entity</tt>.</p></li>
-<li><p><a name="indexterm-893"></a>A global JNDI name assigned in a <tt>mappedName</tt> attribute of an annotation has the third highest precedence. The following annotations have <tt>mappedName</tt> attributes: <tt>@javax.annotation.Resource</tt>, <tt>@javax.ejb.EJB</tt>, <tt>@javax.ejb.Stateless</tt>, <tt>@javax.ejb.Stateful</tt>, and <tt>@javax.ejb.MessageDriven</tt>.</p></li>
+<li><p><a name="indexterm-945"></a>A global JNDI name assigned in a <tt>mappedName</tt> attribute of an annotation has the third highest precedence. The following annotations have <tt>mappedName</tt> attributes: <tt>@javax.annotation.Resource</tt>, <tt>@javax.ejb.EJB</tt>, <tt>@javax.ejb.Stateless</tt>, <tt>@javax.ejb.Stateful</tt>, and <tt>@javax.ejb.MessageDriven</tt>.</p></li>
 <li><p>A default global JNDI name is assigned in some cases if no name is assigned in deployment descriptors or annotations.</p>
 <ul><li><p>For an EJB 2.x dependency or a session or entity bean with a remote interface, the default is the fully qualified name of the home interface.</p></li>
 <li><p>For an EJB 3.0 dependency or a session bean with a remote interface, the default is the fully qualified name of the remote business interface.</p></li>
@@ -72,7 +72,7 @@ class also provides methods for creating and destroying subcontexts.</p><p>The r
 
 
 <a name="beanu"></a><h4>Accessing EJB Components Using the <tt>CosNaming</tt> Naming Context</h4>
-<a name="indexterm-894"></a><p>The preferred way of accessing the naming service, even in code that runs
+<a name="indexterm-946"></a><p>The preferred way of accessing the naming service, even in code that runs
 outside of a Java EE container, is to use the no-argument <tt>InitialContext</tt>
 constructor. However, if EJB client code explicitly instantiates an <tt>InitialContext</tt> that points to the
 CosNaming naming service, it is necessary to set the <tt>java.naming.factory.initial</tt> property to <tt>com.sun.jndi.cosnaming.CNCtxFactory</tt>
@@ -85,7 +85,7 @@ property as a command-line argument, as follows:</p><pre>-Djava.naming.factory.i
       ...</pre>
 
 <a name="beanv"></a><h4>Accessing EJB Components in a Remote Enterprise Server</h4>
-<a name="indexterm-895"></a><p>The recommended approach for looking up an EJB component in a remote Enterprise
+<a name="indexterm-947"></a><p>The recommended approach for looking up an EJB component in a remote Enterprise
 Server from a client that is a servlet or EJB component is to
 use the Interoperable Naming Service syntax. Host and port information is prepended to
 any global JNDI names and is automatically resolved during the lookup. The syntax
@@ -108,11 +108,11 @@ transient. On each server startup or application reloading, all relevant objects
 the namespace.</p>
 
 <a name="beanw"></a><h4>Naming Environment for Lifecycle Modules</h4>
-<p><a name="indexterm-896"></a>Lifecycle listener modules provide a means of running short or long duration tasks
+<p><a name="indexterm-948"></a>Lifecycle listener modules provide a means of running short or long duration tasks
 based on Java technology within the application server environment, such as instantiation of singletons
 or RMI servers. These modules are automatically initiated at server startup and are
 notified at various phases of the server life cycle. For details about lifecycle
-modules, see <a href="p18.html">Chapter&#160;13, Developing Lifecycle Listeners</a>.</p><p><a name="indexterm-897"></a><a name="indexterm-898"></a>The configured properties for a lifecycle module are passed as properties during server
+modules, see <a href="p18.html">Chapter&#160;13, Developing Lifecycle Listeners</a>.</p><p><a name="indexterm-949"></a><a name="indexterm-950"></a>The configured properties for a lifecycle module are passed as properties during server
 initialization (the <tt>INIT_EVENT</tt>). The initial JNDI naming context is not available until server
 initialization is complete. A lifecycle module can get the <tt>InitialContext</tt> for lookups using the
 method <tt>LifecycleEventContext.getInitialContext()</tt> during, and only during, the <tt>STARTUP_EVENT</tt>, <tt>READY_EVENT</tt>, or <tt>SHUTDOWN_EVENT</tt> server life
@@ -127,31 +127,32 @@ administration details are provided in the following sections:</p>
 
 
 <a name="beany"></a><h4>External JNDI Resources</h4>
-<a name="indexterm-899"></a><a name="indexterm-900"></a><p>An external JNDI resource defines custom JNDI contexts and implements the <tt>javax.naming.spi.InitialContextFactory</tt> interface. There
+<a name="indexterm-951"></a><a name="indexterm-952"></a><p>An external JNDI resource defines custom JNDI contexts and implements the <tt>javax.naming.spi.InitialContextFactory</tt> interface. There
 is no specific JNDI parent context for external JNDI resources, except for the
 standard <tt>java:comp/env/</tt>.</p><p>Create an external JNDI resource in one of these ways:</p>
-<ul><li><p><a name="indexterm-901"></a>To create an external JNDI resource using the Administration Console, open the Resources component, open the JNDI component, and select External Resources. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-902"></a><a name="indexterm-903"></a>To create an external JNDI resource, use the <tt>asadmin create-jndi-resource</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-953"></a>To create an external JNDI resource using the Administration Console, open the Resources component, open the JNDI component, and select External Resources. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-954"></a><a name="indexterm-955"></a>To create an external JNDI resource, use the <tt>asadmin create-jndi-resource</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="beanz"></a><h4>Custom Resources</h4>
-<a name="indexterm-904"></a><a name="indexterm-905"></a><p>A custom resource specifies a custom server-wide resource object factory that implements the
+<a name="indexterm-956"></a><a name="indexterm-957"></a><p>A custom resource specifies a custom server-wide resource object factory that implements the
 <tt>javax.naming.spi.ObjectFactory</tt> interface. There is no specific JNDI parent context for external JNDI resources, except
 for the standard <tt>java:comp/env/</tt>.</p><p>Create a custom resource in one of these ways:</p>
-<ul><li><p><a name="indexterm-906"></a>To create a custom resource using the Administration Console, open the Resources component, open the JNDI component, and select Custom Resources. For details, click the Help button in the Administration Console.</p></li>
-<li><p><a name="indexterm-907"></a><a name="indexterm-908"></a>To create a custom resource, use the <tt>asadmin create-custom-resource</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+<ul><li><p><a name="indexterm-958"></a>To create a custom resource using the Administration Console, open the Resources component, open the JNDI component, and select Custom Resources. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-959"></a><a name="indexterm-960"></a>To create a custom resource, use the <tt>asadmin create-custom-resource</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
 
 
 <a name="giyvw"></a><h4>Built- in Factories for Custom Resources</h4>
-<a name="indexterm-909"></a><a name="indexterm-910"></a><p>The Enterprise Server provides built-in factories for the following types of custom resources:</p>
+<a name="indexterm-961"></a><a name="indexterm-962"></a><p>The Enterprise Server provides built-in factories for the following types of custom resources:</p>
 <ul><li><p><a href="#giywi">JavaBeanFactory</a></p></li>
 <li><p><a href="#giysn">PropertiesFactory</a></p></li>
 <li><p><a href="#giytz">PrimitiviesAndStringFactory</a></p></li>
 <li><p><a href="#giywh">URLFactory</a></p></li></ul>
-
+<p>Template <tt>sun-resources.xml</tt> files for these built-in factories and a <tt>README</tt> file are available at
+<i>as-install</i><tt>/lib/install/templates/resources/custom/</tt>. For more information about the <tt>sun-resources.xml</tt> file, see the <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
 
 <a name="giywi"></a><h5>JavaBeanFactory</h5>
-<p>To create a custom resource that provides instances of a JavaBean class, follow
+<a name="indexterm-963"></a><p>To create a custom resource that provides instances of a JavaBean class, follow
 these steps:</p>
 <ol><li><p>Set the custom resource's factory class to <tt>org.glassfish.resources.custom.factory.JavaBeanFactory</tt>.</p></li>
 <li><p>Create a property in the custom resource for each setter method in the JavaBean class.</p><p>For example, if the JavaBean class has a method named <tt>setAccount</tt>, specify a property named <tt>account</tt> and give it a value.</p></li>
@@ -159,7 +160,7 @@ these steps:</p>
 
 
 <a name="giysn"></a><h5>PropertiesFactory</h5>
-<p>To create a custom resource that provides properties to applications, set the custom
+<a name="indexterm-964"></a><p>To create a custom resource that provides properties to applications, set the custom
 resource's factory class to <tt>org.glassfish.resources.custom.factory.PropertiesFactory</tt>, then specify one or both of the
 following:</p>
 <ul><li><p>Create a property in the custom resource named <tt>file-location</tt> and specify as its value the path to a properties file or an XML file.</p><p>The path can be absolute or relative to <i>as-install</i>. The file must be accessible to the Enterprise Server.</p><p>If an XML file is specified, it must match the document type definition (DTD) specified in the API definition of <a href="http://java.sun.com/javase/6/docs/api/java/util/Properties.html">java.util.Properties</a>.</p></li>
@@ -167,7 +168,7 @@ following:</p>
 
 
 <a name="giytz"></a><h5>PrimitiviesAndStringFactory</h5>
-<p>To create a custom resource that provides Java primitives to applications, follow these
+<a name="indexterm-965"></a><p>To create a custom resource that provides Java primitives to applications, follow these
 steps:</p>
 <ol><li><p>Set the custom resource's factory class to <tt>org.glassfish.resources.custom.factory.PrimitivesAndStringFactory</tt>.</p></li>
 <li><p>Set the custom resource's resource type to one of the following or its fully qualified wrapper class name equivalent:</p>
@@ -187,7 +188,7 @@ steps:</p>
 
 
 <a name="giywh"></a><h5>URLFactory</h5>
-<p>To create a custom resource that provides URL instances to applications, follow these
+<a name="indexterm-966"></a><p>To create a custom resource that provides URL instances to applications, follow these
 steps:</p>
 <ol><li><p>Set the custom resource's factory class to <tt>org.glassfish.resources.custom.factory.URLFactory</tt>.</p></li>
 <li><p>Choose which of the following constructors to use:</p>
@@ -207,13 +208,13 @@ naming service either uses the first value found or concatenates all of the
 values, whichever makes sense.</p>
 
 <a name="beaoa"></a><h3>Mapping References</h3>
-<a name="indexterm-911"></a><a name="indexterm-912"></a><a name="indexterm-913"></a><p>The following XML elements in the Enterprise Server deployment descriptors map resource references
+<a name="indexterm-967"></a><a name="indexterm-968"></a><a name="indexterm-969"></a><p>The following XML elements in the Enterprise Server deployment descriptors map resource references
 in application client, EJB, and web application components to JNDI names configured in
 the Enterprise Server:</p>
-<ul><li><p><a name="indexterm-914"></a><tt>resource-env-ref</tt> - Maps the <tt>@Resource</tt> or <tt>@Resources</tt> annotation (or the <tt>resource-env-ref</tt> element in the corresponding Java EE XML file) to the absolute JNDI name configured in the Enterprise Server.</p></li>
-<li><p><a name="indexterm-915"></a><tt>resource-ref</tt> - Maps the <tt>@Resource</tt> or <tt>@Resources</tt> annotation (or the <tt>resource-ref</tt> element in the corresponding Java EE XML file) to the absolute JNDI name configured in the Enterprise Server.</p></li>
-<li><p><a name="indexterm-916"></a><tt>ejb-ref</tt> - Maps the <tt>@EJB</tt> annotation (or the <tt>ejb-ref</tt> element in the corresponding Java EE XML file) to the absolute JNDI name configured in the Enterprise Server.</p><p><a name="indexterm-917"></a>JNDI names for EJB components must be unique. For example, appending the application name and the module name to the EJB name is one way to guarantee unique names. In this case, <tt>mycompany.pkging.pkgingEJB.MyEJB</tt> would be the JNDI name for an EJB in the module <tt>pkgingEJB.jar</tt>, which is packaged in the <tt>pkging.ear</tt> application.</p></li></ul>
-<p><a name="indexterm-918"></a>These elements are part of the <tt>sun-web.xml</tt>, <tt>sun-application-client.xml</tt>, and <tt>sun-ejb-ref.xml</tt> deployment descriptor files.
+<ul><li><p><a name="indexterm-970"></a><tt>resource-env-ref</tt> - Maps the <tt>@Resource</tt> or <tt>@Resources</tt> annotation (or the <tt>resource-env-ref</tt> element in the corresponding Java EE XML file) to the absolute JNDI name configured in the Enterprise Server.</p></li>
+<li><p><a name="indexterm-971"></a><tt>resource-ref</tt> - Maps the <tt>@Resource</tt> or <tt>@Resources</tt> annotation (or the <tt>resource-ref</tt> element in the corresponding Java EE XML file) to the absolute JNDI name configured in the Enterprise Server.</p></li>
+<li><p><a name="indexterm-972"></a><tt>ejb-ref</tt> - Maps the <tt>@EJB</tt> annotation (or the <tt>ejb-ref</tt> element in the corresponding Java EE XML file) to the absolute JNDI name configured in the Enterprise Server.</p><p><a name="indexterm-973"></a>JNDI names for EJB components must be unique. For example, appending the application name and the module name to the EJB name is one way to guarantee unique names. In this case, <tt>mycompany.pkging.pkgingEJB.MyEJB</tt> would be the JNDI name for an EJB in the module <tt>pkgingEJB.jar</tt>, which is packaged in the <tt>pkging.ear</tt> application.</p></li></ul>
+<p><a name="indexterm-974"></a>These elements are part of the <tt>sun-web.xml</tt>, <tt>sun-application-client.xml</tt>, and <tt>sun-ejb-ref.xml</tt> deployment descriptor files.
 For more information about how these elements behave in each of the deployment
 descriptor files, see <a href="http://docs.sun.com/doc/820-7693/beaqi?a=view">Appendix C, <i>Elements of the Enterprise Server Deployment Descriptors,</i> in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p><p>The rest of this section uses an example of a JDBC resource lookup
 to describe how to reference resource factories. The same principle is applicable to

@@ -6,7 +6,7 @@
 <title>Administering Web Applications - Sun GlassFish Enterprise Server v3 Administration Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -38,18 +38,18 @@ are contained in the Administration Console online help.</p>
 <a name="beagk"></a><h3>Invoking a Servlet by Alternate Means</h3>
 <p>You can call a servlet deployed to Enterprise Server by using a
 URL in a browser or embedded as a link in an HTML or
-JSP file. The format of a servlet invocation URL is as follows:</p><pre>http://<i>server</i>:<i>port</i>/<i>context-root</i>/<i>servlet-mapping</i>?<i>name</i>=<i>value</i></pre><p>The following table describes each URL section.<a name="indexterm-194"></a><a name="indexterm-195"></a></p><a name="fvyhk"></a><h6>Table&#160;6-1 URL Fields for Servlets Within an Application</h6><table><col width="20%"><col width="79%"><tr><th align="left" valign="top" scope="column"><p>URL element</p></th>
+JSP file. The format of a servlet invocation URL is as follows:</p><pre>http://<i>server</i>:<i>port</i>/<i>context-root</i>/<i>servlet-mapping</i>?<i>name</i>=<i>value</i></pre><p>The following table describes each URL section.<a name="indexterm-236"></a><a name="indexterm-237"></a></p><a name="fvyhk"></a><h6>Table&#160;6-1 URL Fields for Servlets Within an Application</h6><table><col width="20%"><col width="79%"><tr><th align="left" valign="top" scope="column"><p>URL element</p></th>
 <th align="left" valign="top" scope="column"><p>Description</p></th>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><i>server</i><tt>:</tt><i>port</i></p></td>
 <td align="left" valign="top" scope="row"><p>The IP address (or host
-name) and optional port number.</p><p>To access the <a name="indexterm-196"></a><a name="indexterm-197"></a>default web module for a virtual
+name) and optional port number.</p><p>To access the <a name="indexterm-238"></a><a name="indexterm-239"></a>default web module for a virtual
 server, specify only this URL section. You do not need to specify the
 <i>context-root</i> or <b>servlet-name</b> unless you also wish to specify name-value parameters.</p></td>
 </tr>
 <tr><td align="left" valign="top" scope="row"><p><i>context-root</i></p></td>
 <td align="left" valign="top" scope="row"><p>For an application,
-the <a name="indexterm-198"></a>context root is defined in the <tt>context-root</tt> element of the <tt>application.xml</tt>, <tt>sun-application.xml</tt>, or
+the <a name="indexterm-240"></a>context root is defined in the <tt>context-root</tt> element of the <tt>application.xml</tt>, <tt>sun-application.xml</tt>, or
 <tt>sun-web.xml</tt> file. For an individually deployed web module, the context root is
 specified during deployment.</p><p>For both applications and individually deployed web modules, the default
 context root is the name of the WAR file minus the <tt>.war</tt> suffix.</p></td>
@@ -61,35 +61,33 @@ context root is the name of the WAR file minus the <tt>.war</tt> suffix.</p></td
 <tr><td align="left" valign="top" scope="row"><p><tt>?</tt><i>name</i><tt>=</tt><i>value</i><tt>...</tt></p></td>
 <td align="left" valign="top" scope="row"><p>Optional request parameters.</p></td>
 </tr>
-</table><a name="giyhf"></a><h6>Example&#160;6-1 Invoking a Servlet With a URL</h6><p>In This example, <tt>localhost</tt> is the host name, <tt>MortPages</tt> is the context
-root, and <tt>calcMortgage</tt> is the servlet mapping:</p><pre>http://localhost:8080/MortPages/calcMortgage?rate=8.0&#38;per=360&#38;bal=180000</pre><a name="giyib"></a><h6>Example&#160;6-2 Invoking a Servlet From Within a JSP File</h6><p>To invoke a servlet from within a JSP file, you can use
+</table><a name="giyhf"></a><h6>Example&#160;6-1 Invoking a Servlet With a URL</h6><p>In this example, <tt>localhost</tt> is the host name, <tt>MortPages</tt> is the context
+root, and <tt>calcMortgage</tt> is the servlet mapping.</p><pre>http://localhost:8080/MortPages/calcMortgage?rate=8.0&#38;per=360&#38;bal=180000</pre><a name="giyib"></a><h6>Example&#160;6-2 Invoking a Servlet From Within a JSP File</h6><p>To invoke a servlet from within a JSP file, you can use
 a relative path. For example:</p><pre>&#60;jsp:forward page="TestServlet"/>&#60;jsp:include page="TestServlet"/></pre>
 
 <a name="gixud"></a><h3>Changing Log Output for a Servlet</h3>
 <p><tt>ServletContext.log</tt> messages are sent to the server log. By default, the <tt>System.out</tt> and
 <tt>System.err</tt> output of servlets are sent to the server log. During startup, server
 log messages are echoed to the <tt>System.err</tt> output. Also by default, there is no
-Windows-only console for the <tt>System.err</tt> output.<a name="indexterm-199"></a><a name="indexterm-200"></a><a name="indexterm-201"></a></p><p>You can change these defaults using the Administration Console to check or
-uncheck the Write to System Log box. If this box is checked, <tt>System.out</tt>
-output is sent to the server log. If it is unchecked, <tt>System.out</tt> output is
-sent to the system default location only.</p>
+Windows-only console for the <tt>System.err</tt> output.<a name="indexterm-241"></a><a name="indexterm-242"></a><a name="indexterm-243"></a></p><p>You can change these defaults using the Administration Console Write to System Log
+box. If this box is checked, <tt>System.out</tt> output is sent to the server
+log. If it is unchecked, <tt>System.out</tt> output is sent to the system default
+location only.</p>
 
 <a name="beagc"></a><h3>Defining Global Features for Web Applications </h3>
-<a name="indexterm-202"></a><a name="indexterm-203"></a><p>You can use the <tt>default-web.xml</tt> file to define features such as filters and
-security constraints that apply to all web applications.</p><p><a name="indexterm-204"></a><a name="indexterm-205"></a>For example, directory listings are disabled by default for added security. To enable
+<a name="indexterm-244"></a><a name="indexterm-245"></a><p>You can use the <tt>default-web.xml</tt> file to define features such as filters and
+security constraints that apply to all web applications.</p><p><a name="indexterm-246"></a><a name="indexterm-247"></a>For example, directory listings are disabled by default for added security. To enable
 directory listings in your domain's <tt>default-web.xml</tt> file, search for the definition of the servlet
 whose <tt>servlet-name</tt> is equal to <tt>default</tt>, and set the value of the
-<tt>init-param</tt> named <tt>listings</tt> to <tt>true</tt>. Then redeploy your web application if it has
-already been deployed, or restart the server.</p><pre>&#60;init-param>
+<tt>init-param</tt> named <tt>listings</tt> to <tt>true</tt>. Then restart the server.</p><pre>&#60;init-param>
    &#60;param-name>listings&#60;/param-name>
    &#60;param-value>true&#60;/param-value>
 &#60;/init-param></pre><p>If <tt>listings</tt> is set to <tt>true</tt>, you can also determine how directory listings
 are sorted. Set the value of the <tt>init-param</tt> named <tt>sortedBy</tt> to <tt>NAME</tt>,
-<tt>SIZE</tt>, or <tt>LAST_MODIFIED</tt>. Then either redeploy your web application if it has already
-been deployed, or restart the server.</p><pre>&#60;init-param>
+<tt>SIZE</tt>, or <tt>LAST_MODIFIED</tt>. Then restart the server.</p><pre>&#60;init-param>
    &#60;param-name>sortedBy&#60;/param-name>
    &#60;param-value>LAST_MODIFIED&#60;/param-value>
-&#60;/init-param></pre><p><a name="indexterm-206"></a><a name="indexterm-207"></a>The <tt>mime-mapping</tt> elements in <tt>default-web.xml</tt> are global and inherited by all web
+&#60;/init-param></pre><p><a name="indexterm-248"></a><a name="indexterm-249"></a>The <tt>mime-mapping</tt> elements in <tt>default-web.xml</tt> are global and inherited by all web
 applications. You can override these mappings or define your own using <tt>mime-mapping</tt> elements in
 your web application's <tt>web.xml</tt> file. For more information about <tt>mime-mapping</tt> elements, see the
 Servlet specification.</p><p>You can use the Administration Console to edit the <tt>default-web.xml</tt> file, or edit
@@ -102,18 +100,18 @@ the <i>domain-dir</i><tt>/lib</tt> directory.</b></li>
 <li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol>
 
 <a name="gixrb"></a><h3>Redirecting a URL</h3>
-<a name="indexterm-208"></a><a name="indexterm-209"></a><a name="indexterm-210"></a><p>You can specify that a request for an old URL be treated
+<a name="indexterm-250"></a><a name="indexterm-251"></a><a name="indexterm-252"></a><p>You can specify that a request for an old URL be treated
 as a request for a new URL. This is called <b>redirecting</b> a URL.</p><p>To specify a redirected URL for a virtual server, use the <tt>redirect_</tt><i>n</i>
 property, where <i>n</i> is a positive integer that allows specification of more than
 one. Each of these <tt>redirect_</tt><i>n</i> properties is inherited by all web applications deployed
 on the virtual server. </p><p>The value of each <tt>redirect_</tt><i>n</i> property has two components which can be specified
-in any order: The first component, <tt>from</tt>, specifies the prefix of the
-requested URI to match. The second component, <tt>url-prefix</tt>, specifies the new URL prefix
-to return to the client. The from prefix is replaced by this URL
-prefix.</p><a name="giyis"></a><h6>Example&#160;6-3 Redirecting a URL</h6><p>This example redirects <tt>from</tt> the <tt>dummy</tt> to <tt>etude</tt>:</p><pre>&#60;property name="redirect_1" value="from=/dummy url-prefix=http://etude"/></pre>
+in any order: </p>
+<ul><li><p>The first component, <tt>from</tt>, specifies the prefix of the requested URI to match.</p></li>
+<li><p>The second component, <tt>url-prefix</tt>, specifies the new URL prefix to return to the client. The from prefix is replaced by this URL prefix.</p></li></ul>
+<a name="giyis"></a><h6>Example&#160;6-3 Redirecting a URL</h6><p>This example redirects <tt>from</tt> <tt>dummy</tt> to <tt>etude</tt>:</p><pre>&#60;property name="redirect_1" value="from=/dummy url-prefix=http://etude"/></pre>
 
 <a name="gfaad"></a><h3>Administering <tt>mod_jk</tt></h3>
-<a name="indexterm-211"></a><a name="indexterm-212"></a><a name="indexterm-213"></a><p>The <tt>mod_jk</tt> connector can be used to connect the web container with web
+<a name="indexterm-253"></a><a name="indexterm-254"></a><a name="indexterm-255"></a><p>The <tt>mod_jk</tt> connector can be used to connect the web container with web
 servers such as Apache HTTP Server. By using <tt>mod_jk</tt>, which comes with Enterprise
 Server, you can front Enterprise Server with Apache HTTP Server. A common reason
 for doing this is to have Apache HTTP Server handle requests for static
@@ -121,15 +119,14 @@ resources, while having requests for dynamic resources, such as servlets and Jav
 (JSPs), forwarded to, and handled by the Enterprise Server back-end instance.</p><p>You can also use <tt>mod_jk</tt> directly at the JSP/servlet engine for load balancing.
 </p><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#gixqw">To Enable mod_jk</a></p></li>
-<li><p><a href="#gixop">To Set Up mod_jk as a Proxy</a></p></li>
-<li><p><a href="#gixpx">To Set Up mod_jk as a Load Balancer</a></p></li></ul>
+<li><p><a href="#gixpx">To Load Balance Using mod_jk and Enterprise Server</a></p></li></ul>
 
 
 <a name="gixqw"></a><h4>To Enable mod_jk</h4><p>You can front Enterprise Server with Apache HTTP Server by enabling the
 <tt>mod_jk</tt> connector as described here. When you use the <tt>jk-enabled</tt> attribute of
 the network listener, you do not need to copy any additional JAR files
-into the <tt>/lib</tt> directory. You can also create <tt>jk-connectors</tt> under different virtual servers
-by using the network listener attribute <tt>jk-enabled</tt>.<a name="indexterm-214"></a><a name="indexterm-215"></a></p><ol>
+into the <tt>/lib</tt> directory. You can also create JK connectors under different virtual
+servers by using the network listener attribute <tt>jk-enabled</tt>.<a name="indexterm-256"></a><a name="indexterm-257"></a></p><ol>
 <li><b>Install Apache HTTP Server and <tt>mod_jk</tt>.</b>
 <ul><li><p>For information on installing Apache HTTP Server, see <a href="http://httpd.apache.org/docs/2.0/install.html">http://httpd.apache.org/docs/2.0/install.html</a>.</p></li>
 <li><p>For information on installing <tt>mod_jk</tt>, see <a href="http://tomcat.apache.org/connectors-doc/webserver_howto/apache.html">http://tomcat.apache.org/connectors-doc/webserver_howto/apache.html</a>.</p></li></ul>
@@ -137,21 +134,17 @@ by using the network listener attribute <tt>jk-enabled</tt>.<a name="indexterm-2
 <li><b>Configure the following files:</b>
 <ul><li><p><tt>apache2/conf/httpd.conf</tt>, the main Apache configuration file</p></li>
 <li><p><tt>apache2/config/workers.properties</tt> or <i>domain-dir</i><tt>/config/glassfish-jk.properties</tt> (to use non-default values of attributes described at <a href="http://tomcat.apache.org/tomcat-5.5-doc/config/ajp.html">http://tomcat.apache.org/tomcat-5.5-doc/config/ajp.html</a>)</p></li></ul>
-<p><a name="indexterm-216"></a><a name="indexterm-217"></a><a name="indexterm-218"></a>If you use both the <tt>worker.properties</tt> file and <tt>glassfish-jk.properties</tt> file, the file referenced
+<p><a name="indexterm-258"></a><a name="indexterm-259"></a><a name="indexterm-260"></a>If you use both the <tt>worker.properties</tt> file and <tt>glassfish-jk.properties</tt> file, the file referenced
 by <tt>httpd.conf</tt>, (or referenced by <tt>httpd.conf</tt> first) takes precedence. </p></li>
 <li><b>Start Apache HTTP Server (<tt>httpd</tt>).</b></li>
-<li><b>Start Enterprise Server with at least one web application deployed.</b><p>The <tt>mod_jk</tt> connector cannot start unless web container is started with at least
-one deployed web application.</p></li>
-<li><b>Create an HTTP listener by running the following command:</b><pre>asadmin create-http-listener --listenerport 8009 
---listeneraddress 0.0.0.0 --defaultvs server my-connector</pre></li>
-<li><b>Enable <tt>mod_jk</tt> by running the following command:<a name="indexterm-219"></a></b><pre>asadmin set server-config.network-config.network-listeners.
-network-listener.<i>listener-name</i>.jk-enabled=true</pre><p>where <i>listener-name</i> is the ID of the network-listener for which <tt>mod_jk</tt> is being
-enabled.</p></li>
+<li><b>Start Enterprise Server with at least one web application deployed.</b><p>The <tt>mod_jk</tt> connector cannot start unless the web container is started with at
+least one deployed web application.</p></li>
+<li><b>Create an HTTP listener by running the following command:</b><pre>asadmin> <tt><b>create-http-listener --listenerport 8009 --listeneraddress 0.0.0.0 --defaultvs server </tt><i>listener-name</i><tt></b></tt></pre></li>
+<li><b>Enable <tt>mod_jk</tt> by running the following command:<a name="indexterm-261"></a></b><pre>asadmin> <tt><b>set server-config.network-config.network-listeners. network-listener.</tt><i>listener-name</i><tt>.jk-enabled=true</b></tt></pre><p>where <i>listener-name</i> is the ID of the network listener for which <tt>mod_jk</tt> is
+being enabled.</p></li>
 <li><b>If you are using the <tt>glassfish-jk.properties</tt> file and not referencing it in <tt>httpd.conf</tt>,
-point to it using the following <tt>set</tt> command:</b><pre>asadmin create-jvm-options 
--Dcom.sun.enterprise.web.connector.enableJK.propertyFile=
-<i>domain-dir</i>/config/glassfish-jk.properties</pre></li>
-<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="gixrq"></a><h6>Example&#160;6-4 <tt>httpd.conf</tt> File for <tt>mod_jk</tt></h6><p>This example shows an <tt>httpd.conf</tt> file:</p><pre>LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so
+point to it using the following command:</b><pre>asadmin> <tt><b>create-jvm-options -Dcom.sun.enterprise.web.connector.enableJK.propertyFile= </tt><i>domain-dir</i><tt>/config/glassfish-jk.properties</b></tt></pre></li>
+<li><b>To apply your changes, restart Enterprise Server. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="gixrq"></a><h6>Example&#160;6-4 An <tt>httpd.conf</tt> File That Is Set for <tt>mod_jk</tt></h6><p>This example shows an <tt>httpd.conf</tt> file.</p><pre>LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so
 JkWorkersFile /etc/httpd/conf/worker.properties
 # Where to put jk logs
 JkLogFile /var/log/httpd/mod_jk.log
@@ -166,27 +159,56 @@ JkRequestLogFormat "%w %V %T"
 # Send all jsp requests to GlassFish
 JkMount /*.jsp worker1
 # Send all glassfish-test requests to GlassFish
-JkMount /glassfish-test/* worker1</pre><a name="gixqt"></a><h6>Example&#160;6-5 <tt>worker.properties</tt> File for <tt>mod_jk</tt></h6><p>This example shows a <tt>worker.properties</tt> or <tt>glassfish-jk.properties</tt> file:</p><pre># Define 1 real worker using ajp13
+JkMount /glassfish-test/* worker1</pre><a name="gixqt"></a><h6>Example&#160;6-5 A <tt>worker.properties</tt> File that Is Set for <tt>mod_jk</tt></h6><p>This example shows a <tt>worker.properties</tt> or <tt>glassfish-jk.properties</tt> file.</p><pre># Define 1 real worker using ajp13
 worker.list=worker1
 # Set properties for worker1 (ajp13)
 worker.worker1.type=ajp13
 worker.worker1.host=localhost
 worker.worker1.port=8009</pre><h6>See Also</h6><p>For more information on Apache, see <a href="http://httpd.apache.org/">http://httpd.apache.org/</a>).</p>
 
-<a name="gixop"></a><h4>To Set Up mod_jk as a Proxy</h4><p>A proxy is an intermediate server that sits between the client and
-the origin server. It accepts requests from clients, transmits those requests on to the
-origin server, and then returns the response from the origin server to the
-client. If several clients request the same content, the proxy can deliver that
-content from its cache, rather than requesting it from the origin server each
-time, thereby reducing response time.</p><ol>
-<li><b>tbd</b></li>
-<li><b>ybd</b></li></ol>
-
-<a name="gixpx"></a><h4>To Set Up mod_jk as a Load Balancer</h4><p>Load balancing is the process of dividing the amount of work that
+<a name="gixpx"></a><h4>To Load Balance Using mod_jk and Enterprise Server</h4><a name="indexterm-262"></a><a name="indexterm-263"></a><p>Load balancing is the process of dividing the amount of work that
 a computer has to do between two or more computers so that more
 work gets done in the same amount of time.</p><ol>
-<li><b>tbd</b></li>
-<li><b>tbd</b></li></ol>
+<li><b>Perform the steps in <a href="#gixqw">To Enable mod_jk</a>.</b></li>
+<li><b>Start another Enterprise Server with at least one web application deployed. </b><p>The mod_jk connector cannot start unless the web container is started with at
+least one  deployed web application. </p></li>
+<li><b> Create an HTTP listener by running a command similar to the
+following.</b><pre>asadmin> <tt><b>create-http-listener --listenerport 8010 --listeneraddress 0.0.0.0 --defaultvs server my-connector</b></tt></pre><p>If your instances run on the same machine, you must choose different JK
+ports.  The ports must match <tt>worker.worker*.port</tt> in your <tt>worker.properties</tt> file. See properties
+file example below.</p></li>
+<li><b>Enable mod_jk by running the following command:  </b><pre>asadmin> <tt><b>set server-config.network-config.network-listeners. network-listener.</tt><i>listener-name</i><tt>.jk-enabled=true</b></tt></pre><p>where <i>listener-name</i> is the ID of the network listener for which mod_jk is
+being enabled. </p></li>
+<li><b>To apply your changes, restart Apache and Enterprise Server.</b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="gjjzu"></a><h6>Example&#160;6-6 An <tt>httpd.conf</tt> File That Is Set for Load Balancing</h6><p>This example shows an <tt>httpd.conf</tt> file. </p><pre>LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so 
+JkWorkersFile /etc/httpd/conf/worker.properties 
+# Where to put jk logs 
+JkLogFile /var/log/httpd/mod_jk.log 
+# Set the jk log level [debug/error/info] 
+JkLogLevel debug 
+# Select the log format 
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] " 
+# JkOptions indicate to send SSL KEY SIZE, 
+JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories 
+# JkRequestLogFormat set the request format 
+JkRequestLogFormat "%w %V %T" 
+# Send all jsp requests to GlassFish 
+JkMount /*.jsp worker1 
+# Send all glassfish-test requests to GlassFish 
+JkMount /glassfish-test/* loadbalancer</pre><a name="gjjzf"></a><h6>Example&#160;6-7 A <tt>worker.properties</tt> File that Is Set for Load Balancing</h6><p>This example shows a <tt>worker.properties</tt> or <tt>glassfish-jk.properties</tt> file. The <tt>worker.worker*.port</tt> should match with
+JK ports you created.</p><pre>worker.list=loadbalancer
+worker.worker1.type=ajp13
+worker.worker1.host=localhost
+worker.worker1.port=8009
+worker.worker1.lbfactor=1
+worker.worker1.socket_keepalive=1
+worker.worker1.socket_timeout=300
+worker.worker2.type=ajp13
+worker.worker2.host=localhost
+worker.worker2.port=8010
+worker.worker2.lbfactor=1
+worker.worker2.socket_keepalive=1
+worker.worker2.socket_timeout=300
+worker.loadbalancer.type=lb
+worker.loadbalancer.balance_workers=worker1,worker2</pre>
 
 
 <table border="0" cellpadding="5" cellspacing="0" width="100%">

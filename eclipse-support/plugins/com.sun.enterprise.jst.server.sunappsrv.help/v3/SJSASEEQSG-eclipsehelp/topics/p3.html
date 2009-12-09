@@ -163,7 +163,7 @@ Enterprise Server domain. If your applications require a database back end, you 
 start and stop the database server manually.</p><p>The following procedures describe how to start and stop the Java DB
 server that is bundled with Enterprise Server. For information about starting and stopping
 other database servers, see the documentation for your specific product. </p><p>For the list of database products supported in this release, see the
-<a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Release Notes</i></a>.</p><p>For more information about database connectivity, see <a href="http://docs.sun.com/doc/820-7692/ablih?a=view">Chapter 15, Administering Database Connectivity , in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p>
+<a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Release Notes</i></a>.</p><p>For more information about database connectivity, see <a href="http://docs.sun.com/doc/820-7692/ablih?a=view">Chapter 14, Administering Database Connectivity , in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p>
 
 <a name="ggncr"></a><h4>To Start the Java DB Server</h4><h6>Before You Begin</h6><p>At least one Enterprise Server domain must be started before you start
 the database server.</p><ul>
@@ -290,24 +290,21 @@ Administration Console.</p><ol>
 <li><b>Click the Update Tool node in the tree on the left.</b></li></ol><h6>See Also</h6><p>Refer to the Administration Console online help for additional information.</p>
 
 <a name="ghgqg"></a><h3>Removing Enterprise Server v3 Software</h3>
-<p>The following procedure describes how to remove the software by using the command
-line. For additional information about uninstalling the software, see the <a href="http://docs.sun.com/doc/820-7690"><i>Sun GlassFish Enterprise Server v3 Installation Guide</i></a>.</p>
+<p>The following procedure describes how to remove the software using the command line.</p>
 
-<a name="ggrkk"></a><h4>To Remove Enterprise Server Software</h4><h6>Before You Begin</h6><p>Stop all domains and all processes related to the installation, including prompts that
-use the installation directory or its subdirectories and any applications that use the
-Java EE platform files bundled with the product. Stop all Update Tool processes,
-including the Notifier process. </p><ol>
+<a name="ggrkk"></a><h4>To Remove Enterprise Server Software</h4><h6>Before You Begin</h6><p>Stop all domains and other related processes, including command prompts using the installation
+directory or its subdirectories, the Update Tool notifier process if present, and any
+applications using Java SE files. </p><p>For more information about performing these tasks, see <a href="http://docs.sun.com/doc/820-7690/ghmlt?a=view">Chapter 2, Uninstalling Sun GlassFish Enterprise Server v3, in <i>Sun GlassFish Enterprise Server v3 Installation Guide</i></a>.</p><ol>
 <li><b>Change to the <i>as-install-parent</i> directory, which contains the uninstallation program.</b></li>
 <li><b>Run the uninstallation program and remove the software.</b><ul>
 <li><b>UNIX, Linux, or Mac OS X systems: Type <tt><b>./uninstall.sh</b></tt></b><p>If necessary, grant execute permissions to the uninstall file before executing it: <tt>chmod +x ./uninstall.sh</tt></p></li>
 <li><b>Windows systems: Type <tt><b>uninstall.exe</b></tt></b></li></ul></li>
-<li><b>Not all files and directories are removed automatically. Examine the remaining contents and
-remove any files and directories that you do not want, including hidden directories
-prefixed with a dot.</b></li></ol>
+<li><b>Examine the contents of the remaining installation directories and remove any files or
+directories that you do not want, including hidden directories prefixed with a dot.</b></li></ol>
 
 <a name="ggkzh"></a><h3>For More Information</h3>
-<p>Additional resources are available to help you learn more about and use Enterprise
-Server v3 and related technologies.</p><p>The following resources are addressed here:</p>
+<p>Additional resources are available to help you learn more about Enterprise Server
+v3 and related technologies.</p><p>The following resources are addressed here:</p>
 <ul><li><p><a href="#ghhir">Product Documentation</a></p></li>
 <li><p><a href="#ghhis">GlassFish Communities</a></p></li>
 <li><p><a href="#giyjo">Tutorials</a></p></li>
@@ -336,15 +333,15 @@ Enterprise Server, and get help if needed.</p>
 <a name="giyjo"></a><h4>Tutorials</h4>
 <p>The following tutorials provide working examples and detailed instructions for creating enterprise applications
 for the Java EE 6 platform.</p>
-<ul><li><p><a href="http://docs.sun.com/doc/820-7759"><i>Your First Cup: An Introduction to the Java EE Platform</i></a>: Short tutorial for beginning Java EE programmers that shows how to develop a simple enterprise application from scratch. The sample application consists of four main components: a JAX-RS RESTful web service, an enterprise bean, a Java Persistence API entity, and a web application created with JavaServer<sup>TM</sup> Faces Facelets technology.</p></li>
-<li><p><a href="http://docs.sun.com/doc/820-7627"><i>The Java EE 6 Tutorial, Volume I</i></a>: Beginner's guide to developing enterprise applications for the Enterprise Server. The tutorial includes working examples and instructions for creating applications with Java EE 6 technologies, including Java Servlets, JavaServer Faces, Facelets, RESTful Web Services, Enterprise JavaBeans<sup>TM</sup>, Java Persistence API, Contexts and Dependency Injection for the Java EE platform, and more. The document is also available through Update Tool. </p></li>
-<li><p><i>The Java EE 6 Tutorial, Volume II</i>: Advanced guide that builds on <i>The Java EE 6 Tutorial, Volume I</i> and contains advanced topics, additional technologies, and case studies. The document is available to registered users of Enterprise Server.</p></li></ul>
+<ul><li><p><a href="http://docs.sun.com/doc/820-7759"><i>Your First Cup: An Introduction to the Java EE Platform</i></a>: Provides a short tutorial for beginning Java EE programmers that shows how to develop a simple enterprise application from scratch. The sample application consists of four main components: a JAX-RS RESTful web service, an enterprise bean, a Java Persistence API entity, and a web application created with JavaServer<sup>TM</sup> Faces Facelets technology.</p></li>
+<li><p><a href="http://docs.sun.com/doc/820-7627"><i>The Java EE 6 Tutorial, Volume I</i></a>: Provides a beginner's guide to developing enterprise applications for Enterprise Server. The tutorial includes working examples and instructions for creating applications with Java EE 6 technologies, including Java Servlets, JavaServer Faces, Facelets, RESTful Web Services, Enterprise JavaBeans<sup>TM</sup>, Java Persistence API, Contexts and Dependency Injection for the Java EE platform, and more. The document is also available through Update Tool. </p></li>
+<li><p><i>The Java EE 6 Tutorial, Volume II</i>: Includes everything in <i>The Java EE 6 Tutorial, Volume I</i> and adds advanced topics, additional technologies, and case studies. The document is available to registered users of Enterprise Server and also at <a href="http://www.sun.com/offers/details/java_ee6_tutorial.xml">http://www.sun.com/offers/details/java_ee6_tutorial.xml</a>.</p></li></ul>
 
 
 <a name="gintm"></a><h4>Java EE 6 Samples</h4>
-<p>The sample applications demonstrate Java EE 6 technologies and how to use them.
-The samples are available through Update Tool and also as part of the
-Java EE 6 SDK distributions. The SDK distributions are available from the <a href="http://java.sun.com/javaee/downloads/index.jsp">Java EE downloads page</a>.</p>
+<p>The sample applications demonstrate Java EE 6 technologies. The samples are available through
+Update Tool and also as part of the Java EE 6 SDK
+distributions. The SDK distributions are available from the <a href="http://java.sun.com/javaee/downloads/index.jsp">Java EE downloads page</a>.</p>
 
 
 <table border="0" cellpadding="5" cellspacing="0" width="100%">

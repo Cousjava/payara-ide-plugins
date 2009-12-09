@@ -6,7 +6,7 @@
 <title>Overview of Sun GlassFish Enterprise Server v3 Application Deployment - Sun GlassFish Enterprise Server v3 Application Deployment Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -62,9 +62,10 @@ application client module, can be deployed in the following ways:</p>
 <li><p><b>Dynamic Reloading.</b> Redeploys the application by creating or modifying a special <tt>.reload</tt> file in the applications repository. For instructions, see <a href="p5.html#fwakh">To Reload Changes to Applications or Modules Dynamically</a>.</p></li>
 <li><p><b>Automatic Deployment.</b> Deploys the application archive that is placed in the autodeployment directory. For instructions, see <a href="p5.html#fvxze">To Deploy an Application or Module Automatically</a>.</p></li>
 <li><p><b>Directory Deployment.</b> Deploys the application in a directory format. For instructions, see <a href="p5.html#gilcn">To Deploy an Application or Module in a Directory Format</a>.</p></li>
-<li><p><b>Deployment Plan Deployment.</b> Deploys a portable archive along with a deployment plan containing Enterprise Server&#8211; specific deployment descriptors. For instructions, see <a href="p5.html#gijyb">To Deploy an Application or Module by Using a Deployment Plan</a>.</p></li>
 <li><p><b>JSR 88 Deployment.</b> A deployment mechanism implemented based on the JSR 88 standard from <tt>jcp.org</tt>. It delivers vendor neutral deployment options. See <a href="#beaee">JSR 88 Client</a> and <a href="#giiel">JSR 88 Naming</a>.</p></li></ul>
-<p>There are two work situations that require different safeguards and processes:</p>
+<p>A deployment plan, which deploys a portable archive along with a deployment plan
+containing Enterprise Server&#8211; specific deployment descriptors, can apply to any of these deployment
+techniques. For instructions, see <a href="p5.html#gijyb">To Deploy an Application or Module by Using a Deployment Plan</a>.</p><p>There are two work situations that require different safeguards and processes:</p>
 <ul><li><p>A <b>development environment</b> provides a loose set of tools and work spaces for a relatively small number of developers who are creating and testing applications and modules.</p></li>
 <li><p>A <b>production environment</b> provides a stable, protected environment where applications are tuned to maximum efficiency for business use rather than for development. </p></li></ul>
 <p><a name="indexterm-3"></a><a name="indexterm-4"></a><a name="indexterm-5"></a>Some deployment methods that are used effectively in a development environment should not
@@ -78,10 +79,10 @@ a production environment. </p>
 <a name="gihzc"></a><h4>Deployment Descriptors and Annotations</h4>
 <p>A <b>deployment descriptor</b> is an XML file that describes how a Java EE application
 or module should be deployed. Each deployment descriptor XML file has a corresponding
-Document Type Definition (DTD) file, which defines the elements, data, and attributes that
-the deployment descriptor file can contain. The deployment descriptor directs a deployment tool
-to deploy a module or application with specific container options, and also describes
-specific configuration requirements that you must resolve. </p><p>Because the information in a deployment descriptor is declarative, it can be changed
+Document Type Definition (DTD) file or schema (XSD) file, which defines the elements,
+data, and attributes that the deployment descriptor file can contain. The deployment descriptor
+directs a deployment tool to deploy a module or application with specific container
+options, and also describes specific configuration requirements that you must resolve. </p><p>Because the information in a deployment descriptor is declarative, it can be changed
 without requiring modifications to source code. At run time, Enterprise Server reads the
 information in the deployment descriptor and deploys the application or module as directed.
 <a name="indexterm-6"></a><a name="indexterm-7"></a></p><p>The following types of deployment descriptors are associated with Enterprise Server: </p>
@@ -151,19 +152,7 @@ utility JAR within an application using the JAR Extension Mechanism Architecture
 
 <a name="gihzk"></a><h4>Naming Standards</h4>
 <p>Names of applications and individually-deployed modules must be unique within an Enterprise Server
-domain. Modules of the same type within an application must have unique names.<a name="indexterm-31"></a><a name="indexterm-32"></a></p><p>The following topics are addressed here:</p>
-<ul><li><p><a href="#giidg">JNDI Naming</a></p></li>
-<li><p><a href="#beada">Directory Structure</a></p></li>
-<li><p><a href="#giiel">JSR 88 Naming</a></p></li></ul>
-<p>The Java EE 6 specification implements the portable <tt>application-name</tt>, which allows you
-to specify an application name in the <tt>application.xml</tt> file. For example:</p><pre>&#60;application-name>xyz&#60;/application-name></pre><p>This name is used before the archive name to derive the default
-application registration name. The application will be deployed under <tt>xyz</tt> if the <tt>application.xml</tt> file
-defines <tt>application-name</tt> as <tt>xyz</tt>. However, a name specified by using the <tt>--name</tt>
-option of the <tt>deploy</tt> subcommand takes precedence over the portable application name. If
-<tt>application-name</tt> is not specified in the <tt>application.xml</tt> file, the application is deployed using the
-archive name (minus suffix) as the application registration name.</p><p>Modules of different types can have the same name within an application, because
-the directories holding the individual modules are named with different suffixes, such as
-<tt>_jar</tt> or <tt>_war</tt>. </p>
+domain. Modules within an application must have unique names.<a name="indexterm-31"></a><a name="indexterm-32"></a></p>
 <hr><p><b>Note - </b>Ensure that your package and file names do not contain spaces or characters
 that are illegal for your operating system.</p>
 <hr>
@@ -172,23 +161,38 @@ module names as found in the <tt>module-name</tt> portion of the <tt>ejb-jar.xml
 EJB names as found in the <tt>ejb-name</tt> portion of the <tt>ejb-jar.xml</tt> files.
 This package-like naming scheme ensures that name collisions do not occur. The benefits of
 this naming practice apply not only to Enterprise Server, but to other Java
-EE application servers as well.</p>
+EE application servers as well.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#gjjfg">Portable Naming</a></p></li>
+<li><p><a href="#giidg">JNDI Naming</a></p></li>
+<li><p><a href="#beada">Directory Structure</a></p></li>
+<li><p><a href="#giiel">JSR 88 Naming</a></p></li></ul>
+
+
+<a name="gjjfg"></a><h5>Portable Naming</h5>
+<p><a name="indexterm-33"></a><a name="indexterm-34"></a>The Java EE 6 specification defines the portable <tt>application-name</tt>, which allows you to specify
+an application name in the <tt>application.xml</tt> file. For example:</p><pre>&#60;application-name>xyz&#60;/application-name></pre><p>This name is used before the archive name to derive the default
+application registration name. The application will be deployed under <tt>xyz</tt> if the <tt>application.xml</tt> file
+defines <tt>application-name</tt> as <tt>xyz</tt>. However, a user-specified name takes precedence over the
+portable application name. If <tt>application-name</tt> is not specified in the <tt>application.xml</tt> file, the application
+is deployed using the archive name (minus suffix) as the application registration name.</p><p>The Java EE 6 specification also defines the portable <tt>module-name</tt> element in the
+module standard deployment descriptors. For standalone modules, the defined <tt>module-name</tt> will be used
+as the application name when a name is not explicitly specified.</p>
 
 <a name="giidg"></a><h5>JNDI Naming</h5>
-<p><a name="indexterm-33"></a>Java Naming and Directory Interface<sup>TM</sup> (JNDI) lookup names for EJB components must also be unique. Establishing a
+<p><a name="indexterm-35"></a>Java Naming and Directory Interface<sup>TM</sup> (JNDI) lookup names for EJB components must also be unique. Establishing a
 consistent naming convention can help. For example, appending the application name and the module
 name to the EJB name is a way to guarantee unique names,
 such as, <tt>jms/qConnPool</tt>.</p>
 
 <a name="beada"></a><h5>Directory Structure</h5>
-<p><a name="indexterm-34"></a>Application and module directory structures must follow the structure outlined in the Java EE
+<p><a name="indexterm-36"></a>Application and module directory structures must follow the structure outlined in the Java EE
 specification. During deployment, the application or module is expanded from the archive file
 to an open directory structure. The directories are named with <tt>_jar</tt> and
 <tt>_war</tt> suffixes. </p><p>If you deploy a directory, your directory structure must follow this same convention.
 For instructions on performing directory deployment, see <a href="p5.html#gilcn">To Deploy an Application or Module in a Directory Format</a>. </p>
 
 <a name="giiel"></a><h5>JSR 88 Naming</h5>
-<p><a name="indexterm-35"></a>There are two JSR 88 APIs that can be used to deploy applications
+<p><a name="indexterm-37"></a>There are two JSR 88 APIs that can be used to deploy applications
 in Enterprise Server.</p><p>If you are using the following JSR 88 API, there is no
 file name:</p><pre>javax.enterprise.deploy.spi.DeploymentManager.distribute(Target[], InputStream, InputStream)</pre><p>Because there is no file name, the name of the application is
 taken from the <tt>display-name</tt> entry in the Java EE standard deployment descriptor. If the
@@ -203,7 +207,7 @@ or <tt>.jar</tt> extension):</p><pre>javax.enterprise.deploy.spi.DeploymentManag
 anyone to deploy applications and modules into any Enterprise Server environment. However, effective
 application deployment requires planning and care. Only the developer knows exactly what is
 required by an application, so the developer is responsible for initial assembly and
-deployment. <a name="indexterm-36"></a></p>
+deployment. <a name="indexterm-38"></a></p>
 <ol><li><p><b>Deployment Descriptor Creation.</b> The developer creates the deployment descriptors using Java standards and tools. </p><p>Details of the Enterprise Server-specific deployment descriptors are contained in <a href="p7.html">Appendix&#160;B, Enterprise Server Deployment Descriptor Files</a> and <a href="p8.html">Appendix&#160;C, Elements of the Enterprise Server Deployment Descriptors</a>. The Enterprise Server&#8211;specific sample applications contain deployment descriptors that can be used as templates for developing deployment descriptors.</p></li>
 <li><p><b>Assembly.</b> The developer assembles the archive file(s) using Java standards and tools, such as the <tt>jar</tt> command. The application or module is packaged into a JAR, WAR, RAR, or EAR file. For guidelines on naming, see <a href="#gihzk">Naming Standards</a>. </p><p>There are no Enterprise Server&#8211;specific issues to consider.</p></li>
 <li><p><b>Test Deployment.</b> The developer performs a test deployment of the archive. For instructions, see <a href="p5.html#gijmq">To Deploy an Application or Module</a>.</p></li>
@@ -215,7 +219,7 @@ deployment. <a name="indexterm-36"></a></p>
 
 <a name="giifh"></a><h3>About Deployment Tools</h3>
 <p>The following tools can be used for assembling and deploying a module or
-application:<a name="indexterm-37"></a><a name="indexterm-38"></a><a name="indexterm-39"></a></p>
+application:<a name="indexterm-39"></a><a name="indexterm-40"></a><a name="indexterm-41"></a></p>
 <ul><li><p><a href="#giijz">Administration Console</a></p></li>
 <li><p><a href="#giijf">The <tt>asadmin</tt> Utility</a></p></li>
 <li><p><a href="#giigr"> Ant Utility</a></p></li>
@@ -225,16 +229,16 @@ application:<a name="indexterm-37"></a><a name="indexterm-38"></a><a name="index
 
 
 <a name="giijz"></a><h4>Administration Console</h4>
-<a name="indexterm-40"></a><a name="indexterm-41"></a><p>The Enterprise Server Administration Console is a browser-based utility that features a graphical
+<a name="indexterm-42"></a><a name="indexterm-43"></a><p>The Enterprise Server Administration Console is a browser-based utility that features a graphical
 interface that includes extensive online help for the administrative tasks.  The format
-for starting the Administration Console in a web browser is <tt>http://<i>hostname</i>:<i>port</i></tt>. For example:</p><pre>http://localhost:4848</pre><p>Step-by-step instructions for using the Administration Console are provided in the Administration Console
-online help. You can display the help material for a page by clicking
-the Help button. The initial help page describes the functions and fields of
-the page itself. To find instructions for performing associated tasks, click a link
-in the See Also list. </p>
+for starting the Administration Console in a web browser is <tt>http://<i>hostname</i>:<i>port</i></tt>. For example:</p><pre>http://localhost:4848</pre><p>Step-by-step instructions for using the Administration Console for deployment are provided in the
+Administration Console online help. You can display the help material for a page
+by clicking the Help button. The initial help page describes the functions and
+fields of the page itself. To find instructions for performing associated tasks, click
+a link in the See Also list. </p>
 
 <a name="giijf"></a><h4>The <tt>asadmin</tt> Utility</h4>
-<a name="indexterm-42"></a><a name="indexterm-43"></a><p>The Enterprise Server <tt>asadmin</tt> utility is a command-line tool that invokes subcommands for
+<a name="indexterm-44"></a><a name="indexterm-45"></a><p>The Enterprise Server <tt>asadmin</tt> utility is a command-line tool that invokes subcommands for
 identifying the operation or task that you want to perform. You can run
 <tt>asadmin</tt> commands either from a command prompt or from a script. The format
 for starting the <tt>asadmin</tt> utility on the command line is <i>as-install</i><tt>/bin/asadmin <i>subcommand</i> <i>--option</i></tt>. For example:</p><pre>asadmin list-applications <tt>--type</tt> web</pre><p>Application deployment commands are listed in <a href="p6.html">Appendix&#160;A, The <tt>asadmin</tt> Deployment Subcommands</a>. All Enterprise Server <tt>asadmin</tt> commands are
@@ -248,26 +252,26 @@ page.</p>
 
 <a name="giigr"></a><h4> Ant Utility</h4>
 <p>The Enterprise Server Ant tasks can help you assemble and deploy modules and
-applications. For instructions, see <a href="http://docs.sun.com/doc/820-7695/beaep?a=view">Chapter 3, Using Ant with Enterprise Server, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>.<a name="indexterm-44"></a><a name="indexterm-45"></a></p>
+applications. For instructions, see <a href="http://docs.sun.com/doc/820-7695/beaep?a=view">Chapter 3, Using Ant with Enterprise Server, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>.<a name="indexterm-46"></a><a name="indexterm-47"></a></p>
 <hr><p><b>Note - </b>Enterprise Server is compatible with Apache Ant versions 1.6.5 or greater. If you
 have not installed Ant, you can download it from the Update Tool. The
 Apache Ant Build Tool add-on component supplies Ant version 1.7.1. For information about
-Update Tool, see <a href="http://docs.sun.com/doc/820-7690/ghnsv?a=view">Chapter 2, Updating an Existing Enterprise Server v3 Preview Installation, in <i>Sun GlassFish Enterprise Server v3 Preview Installation Guide</i></a>.</p>
+Update Tool, see <a href="http://docs.sun.com/doc/820-7692/ghgai?a=view">Update Tool in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p>
 <hr>
 
 
 <a name="giijq"></a><h4>NetBeans IDE</h4>
-<p><a name="indexterm-46"></a><a name="indexterm-47"></a>You can use the NetBeans<sup>TM</sup> Integrated Development Environment (IDE), or another IDE, to
+<p><a name="indexterm-48"></a><a name="indexterm-49"></a>You can use the NetBeans<sup>TM</sup> Integrated Development Environment (IDE), or another IDE, to
 assemble Java EE applications and modules. The NetBeans IDE is included in the
 tools bundle of the Java EE Software Development Kit (SDK). To download, see
 <a href="http://java.sun.com/javaee/downloads/index.jsp">http://java.sun.com/javaee/downloads/index.jsp</a>. For additional information, see <a href="http://www.netbeans.org">http://www.netbeans.org</a>.</p>
 
 <a name="gikwq"></a><h4>Eclipse IDE</h4>
 <p>In addition to the bundled NetBeans IDE, a plug-in for the Eclipse
-IDE extends GlassFish to the Eclipse community. To download, see <a href="http://glassfishplugins.dev.java.net/">http://glassfishplugins.dev.java.net/</a>.<a name="indexterm-48"></a><a name="indexterm-49"></a></p>
+IDE extends GlassFish to the Eclipse community. To download, see <a href="http://glassfishplugins.dev.java.net/">http://glassfishplugins.dev.java.net/</a>.<a name="indexterm-50"></a><a name="indexterm-51"></a></p>
 
 <a name="beaee"></a><h4>JSR 88 Client</h4>
-<p><a name="indexterm-50"></a><a name="indexterm-51"></a>The syntax of the URI entry for the <tt>getDeploymentManager</tt> method is as follows:</p><pre>deployer:Sun:AppServer::<i>admin-host</i>:<i>admin-port</i></pre>
+<p><a name="indexterm-52"></a><a name="indexterm-53"></a>The syntax of the URI entry for the <tt>getDeploymentManager</tt> method is as follows:</p><pre>deployer:Sun:AppServer::<i>admin-host</i>:<i>admin-port</i></pre>
 
 <a name="gipud"></a><h3>Additional Information on Application Deployment</h3>
 <p>As specified from Java EE 6 specifications, the relevant specifications are the following:</p>

@@ -6,7 +6,7 @@
 <title>Administering Life Cycle Modules - Sun GlassFish Enterprise Server v3 Administration Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -34,10 +34,10 @@ are contained in the Administration Console online help.</p>
 
 <a name="giuxo"></a><h3>About Life Cycle Modules</h3>
 <p><b>Life cycle modules</b>, also known as initialization services, provide a means of running short or
-long duration Java-based tasks within the application server environment. These modules are automatically initiated
-at server startup and are notified at various phases of the server life
-cycle. Configured properties for a life cycle module are passed as properties during
-server initialization.</p><p>All life cycle module classes and interfaces are in the <i>as-install</i><tt>/lib/appserv-ext.jar</tt> file.</p><p>A life cycle module listens for and performs its tasks in response
+long duration Java-based tasks within the Enterprise Server environment. These modules are automatically
+initiated at server startup and are notified at various phases of the server
+life cycle. Configured properties for a life cycle module are passed as properties
+during server initialization.</p><p>All life cycle module classes and interfaces are in the <i>as-install</i><tt>/glassfish/modules/glassfish-api.jar</tt> file.</p><p>A life cycle module listens for and performs its tasks in response
 to the following Enterprise Server events:</p>
 <ol><li><p><b>Initialization.</b> The server reads the configuration, initializes built-in subsystems (such as security and logging services), and creates the containers. </p></li>
 <li><p><b>Startup.</b> The server loads and initializes deployed applications.</p></li>
@@ -45,48 +45,62 @@ to the following Enterprise Server events:</p>
 <li><p><b>Shutdown.</b> The server shuts down the applications and stops.</p></li>
 <li><p><b>Termination.</b> The server closes the containers, the built-in subsystems, and the server runtime environment. </p></li></ol>
 <p>These events are defined in the <tt>LifecycleEvent</tt> class. For information on creating life
-cycle modules, see DG</p>
+cycle modules, see <a href="http://docs.sun.com/doc/820-7695/beamc?a=view">Chapter 13, Developing Lifecycle Listeners, in <i>Sun GlassFish Enterprise Server v3 Application Development Guide</i></a>.</p>
 <hr><p><b>Note - </b>If the <tt>is-failure-fatal</tt> setting is set to true (the default is false), life
 cycle module failure prevents server initialization or startup, but not shutdown or termination.</p>
 <hr>
 
 
 <a name="giuue"></a><h3>Configuring Life Cycle Modules</h3>
-<a name="indexterm-388"></a><a name="indexterm-389"></a><p>The following topics are addressed here:</p>
+<a name="indexterm-438"></a><a name="indexterm-439"></a><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#giuus">To Create a Life Cycle Module</a></p></li>
 <li><p><a href="#giuvh">To List Life Cycle Modules</a></p></li>
 <li><p><a href="#giuyh">To Update a Life Cycle Module</a></p></li>
 <li><p><a href="#giuux">To Delete a Life Cycle Module</a></p></li></ul>
 
 
-<a name="giuus"></a><h4>To Create a Life Cycle Module</h4><a name="indexterm-390"></a><a name="indexterm-391"></a><a name="indexterm-392"></a><p>Use the <tt>create-lifecycle-module</tt> subcommand in remote mode to create a life cycle module.
+<a name="giuus"></a><h4>To Create a Life Cycle Module</h4><a name="indexterm-440"></a><a name="indexterm-441"></a><a name="indexterm-442"></a><p>Use the <tt>create-lifecycle-module</tt> subcommand in remote mode to create a life cycle module.
 </p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>Create a new life cycle modules by using the <a href="http://docs.sun.com/doc/820-7701/create-lifecycle-module-1?a=view"><tt>create-lifecycle-module</tt>(1)</a> subcommand.</b><p>Information about options and properties for this subcommand are included in this help
+<li><b>Create a new life cycle modules by using the <a href="http://docs.sun.com/doc/820-7701/create-lifecycle-module-1?a=view"><tt>create-lifecycle-module</tt>(1)</a> subcommand.</b><p>Information about options and properties for the subcommand are included in this help
 page.</p></li>
-<li><b>Restart the server for your changes to take effect. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giuyo"></a><h6>Example&#160;9-1 Creating a Life Cycle Module</h6><p>This example creates the <tt>customSetup</tt> life cycle module :</p><pre>asadmin> <tt><b>create-lifecycle-module --host fuyako --port 7070 --classname "com.acme.CustomSetup" --classpath "/export/customSetup" --loadorder 1 --failurefatal=true --description "this is a sample customSetup" --property rmi="Server\=acme1\:7070":timeout=30 customSetup</b></tt>
+<li><b>Restart the server for your changes to take effect. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giuyo"></a><h6>Example&#160;9-1 Creating a Life Cycle Module</h6><p>This example creates the <tt>customSetup</tt> life cycle module :</p><pre>asadmin> <tt><b>create-lifecycle-module --classname "com.acme.CustomSetup" </b></tt>
+<tt><b>--classpath "/export/customSetup" --loadorder 1 --failurefatal=true </b></tt>
+<tt><b>--description "this is a sample customSetup" --property rmi="Server\=acme1\:7070":timeout=30 customSetup</b></tt>
 Command create-lifecycle-module executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help create-lifecycle-module</tt> at the command line.</p>
 
-<a name="giuvh"></a><h4>To List Life Cycle Modules</h4><a name="indexterm-393"></a><a name="indexterm-394"></a><a name="indexterm-395"></a><p>Use the <tt>list-lifecycle-modules</tt> subcommand in remote mode to list the existing life cycle
+<a name="giuvh"></a><h4>To List Life Cycle Modules</h4><a name="indexterm-443"></a><a name="indexterm-444"></a><a name="indexterm-445"></a><p>Use the <tt>list-lifecycle-modules</tt> subcommand in remote mode to list the existing life cycle
 modules. </p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
-<li><b>List life cycle modules by using the <a href="http://docs.sun.com/doc/820-7701/list-lifecycle-modules-1?a=view"><tt>list-lifecycle-modules</tt>(1)</a> subcommand.</b></li></ol><a name="giuyr"></a><h6>Example&#160;9-2 Listing Life Cycle Modules</h6><p>This example lists the existing life cycle modules:</p><pre>asadmin> <tt><b>list-lifecycle-modules --host fuyako --port 7070</b></tt>
-JBIFramework
+<li><b>List life cycle modules by using the <a href="http://docs.sun.com/doc/820-7701/list-lifecycle-modules-1?a=view"><tt>list-lifecycle-modules</tt>(1)</a> subcommand.</b></li></ol><a name="giuyr"></a><h6>Example&#160;9-2 Listing Life Cycle Modules</h6><p>This example lists the existing life cycle modules.</p><pre>asadmin> <tt><b>list-lifecycle-modules</b></tt>
 WSTCPConnectorLCModule
 Command list-lifecycle-modules executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help list-lifecycle-modules</tt> at the command line.</p>
 
-<a name="giuyh"></a><h4>To Update a Life Cycle Module</h4><a name="indexterm-396"></a><a name="indexterm-397"></a><ol>
+<a name="giuyh"></a><h4>To Update a Life Cycle Module</h4><a name="indexterm-446"></a><a name="indexterm-447"></a><p>Use the <tt>set</tt> subcommand to update an existing life cycle module. </p><ol>
+<li><b>List the properties that can be updated for a life cycle module by
+using the <a href="http://docs.sun.com/doc/820-7701/get-1?a=view"><tt>get</tt>(1)</a> subcommand.</b><p>For example (single mode):</p><pre>asadmin get "*" | grep sampleLCM
+applications.application.sampleLCMmodule.availability-enabled=false
+applications.application.sampleLCMmodule.directory-deployed=false
+applications.application.sampleLCMmodule.enabled=true
+applications.application.sampleLCMmodule.name=sampleLCMmodule
+applications.application.sampleLCMmodule.object-type=user
+applications.application.sampleLCMmodule.property.class-name=example.lc.SampleModule
+applications.application.sampleLCMmodule.property.classpath=/build/lcm.jar
+applications.application.sampleLCMmodule.property.is-failure-fatal=false
+applications.application.sampleLCMmodule.property.isLifecycle=true</pre></li>
 <li><b>Update a life cycle module by using the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand.</b></li>
-<li><b>Restart the server for your changes to take effect. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giuyq"></a><h6>Example&#160;9-3 Updating a Life Cycle Module</h6><p>tbd</p><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+<li><b>Restart the server for your changes to take effect. </b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giuyq"></a><h6>Example&#160;9-3 Updating a Life Cycle Module</h6><p>This example updates the <tt>classpath</tt> property.</p><pre>sadmin> <tt><b>set applications.application.sampleLCMmodule.</b></tt>
+<tt><b>property.classpath=/build/lcm_new.jarapplications.application.</b></tt>
+<tt><b>sampleLCMmodule.property.classpath=/build/lcm_new.jar</b></tt>Command set executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help set</tt> at the command line.</p>
 
-<a name="giuux"></a><h4>To Delete a Life Cycle Module</h4><a name="indexterm-398"></a><a name="indexterm-399"></a><a name="indexterm-400"></a><p>Use the <tt>delete-lifecycle-module</tt> subcommand in remote mode to delete a life cycle module.
+<a name="giuux"></a><h4>To Delete a Life Cycle Module</h4><a name="indexterm-448"></a><a name="indexterm-449"></a><a name="indexterm-450"></a><p>Use the <tt>delete-lifecycle-module</tt> subcommand in remote mode to delete a life cycle module.
 </p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>List the current life cycle modules by using the <a href="http://docs.sun.com/doc/820-7701/list-lifecycle-modules-1?a=view"><tt>list-lifecycle-modules</tt>(1)</a> subcommand.</b></li>
-<li><b>Delete a life cycle module by using the <a href="http://docs.sun.com/doc/820-7701/delete-lifecycle-module-1?a=view"><tt>delete-lifecycle-module</tt>(1)</a> subcommand.</b></li></ol><a name="giuyi"></a><h6>Example&#160;9-4 Deleting a Life Cycle Module</h6><p>This example deletes the <tt>customSetup</tt> life cycle module :</p><pre>asadmin> <tt><b>delete-lifecycle-module --host fuyako --port 7070 customSetup</b></tt>
+<li><b>Delete a life cycle module by using the <a href="http://docs.sun.com/doc/820-7701/delete-lifecycle-module-1?a=view"><tt>delete-lifecycle-module</tt>(1)</a> subcommand.</b></li></ol><a name="giuyi"></a><h6>Example&#160;9-4 Deleting a Life Cycle Module</h6><p>This example deletes the <tt>customSetup</tt> life cycle module.</p><pre>asadmin> <tt><b>delete-lifecycle-module customSetup</b></tt>
 Command delete-lifecycle-module executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help delete-lifecycle-module</tt> at the command line.</p>
 
