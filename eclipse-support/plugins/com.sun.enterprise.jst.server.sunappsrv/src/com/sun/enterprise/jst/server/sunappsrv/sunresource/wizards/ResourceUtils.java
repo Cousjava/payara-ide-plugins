@@ -46,7 +46,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IContainer;
@@ -63,7 +70,12 @@ import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
+import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.GetPropertyCommand;
+import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
+import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
 
 public class ResourceUtils {
@@ -281,7 +293,188 @@ public class ResourceUtils {
 		}
 	}
 
-	public static String getUniqueResourceName(String name, List<String> resources){
+	public static void checkUpdateServerResources(File sunResourcesXml, SunAppServer sunAppsrv) {
+		Map<String, String> changedData = new HashMap<String, String>();
+		List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
+		ResourceFinder cpFinder = new ResourceFinder("name"); //$NON-NLS-1$
+		pathList.add(new TreeParser.Path("/resources/jdbc-connection-pool", cpFinder)); //$NON-NLS-1$
+		ResourceFinder jdbcFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
+		pathList.add(new TreeParser.Path("/resources/jdbc-resource", jdbcFinder)); //$NON-NLS-1$
+		ResourceFinder connectorPoolFinder = new ResourceFinder("name"); //$NON-NLS-1$
+		pathList.add(new TreeParser.Path("/resources/connector-connection-pool", connectorPoolFinder)); //$NON-NLS-1$
+		ResourceFinder connectorFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
+		pathList.add(new TreeParser.Path("/resources/connector-resource", connectorFinder)); //$NON-NLS-1$
+		ResourceFinder aoFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
+		pathList.add(new TreeParser.Path("/resources/admin-object-resource", aoFinder)); //$NON-NLS-1$
+		ResourceFinder mailFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
+		pathList.add(new TreeParser.Path("/resources/mail-resource", mailFinder)); //$NON-NLS-1$
+
+		try {
+			TreeParser.readXml(sunResourcesXml, pathList);
+		} catch (IllegalStateException ex) {
+			SunAppSrvPlugin.logMessage("Exception while reading resource file : " + sunResourcesXml, ex);	//$NON-NLS-1$
+		}
+		Map<String, String> allRemoteData = getResourceData("resources.*", sunAppsrv); //$NON-NLS-1$
+		changedData = checkResources(cpFinder, "resources.jdbc-connection-pool.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(jdbcFinder, "resources.jdbc-resource.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(connectorPoolFinder, "resources.connector-connection-pool.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(connectorFinder, "resources.connector-resource.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(aoFinder, "resources.admin-object-resource.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(mailFinder, "resources.mail-resource.", allRemoteData, changedData); //$NON-NLS-1$
+
+		if (changedData.size() > 0) {
+			putResourceData(changedData, sunAppsrv);
+		}
+	}
+
+	private static Map<String, String> getResourceData(String query, SunAppServer sunAppsrv) {
+        try {
+            GetPropertyCommand cmd = new ServerCommand.GetPropertyCommand(query); 
+            Future<OperationState> task = sunAppsrv.execute(cmd);
+            OperationState state = task.get();
+            if (state == OperationState.COMPLETED) {
+                Map<String,String> retVal = cmd.getData();
+                if (retVal.isEmpty()) {
+                	SunAppSrvPlugin.logMessage(query + " has no data");	//$NON-NLS-1$
+                } 	
+                return retVal;
+            }
+
+        } catch (InterruptedException ex) {
+        	SunAppSrvPlugin.logMessage("error getting resource data with query " + query, ex);	//$NON-NLS-1$
+        } catch (ExecutionException ex) {
+            SunAppSrvPlugin.logMessage("error getting resource data with query " + query, ex);	//$NON-NLS-1$
+        }
+        return new HashMap<String,String>();
+    }
+	
+	private static Map<String, String> checkResources(ResourceFinder resourceFinder, String prefix, Map<String, String> allRemoteData, Map<String, String> changedData) {
+        List<String> resources = resourceFinder.getResourceNames();
+        for (int i = 0; i < resources.size(); i++) {
+            String jndiName = resources.get(i);
+            Map<String, String> localData = resourceFinder.getResourceData().get(jndiName);
+            String remoteKey = prefix + jndiName + "."; //$NON-NLS-1$
+
+            Map<String, String> remoteData = new HashMap<String, String>();
+            Iterator<String> itr = allRemoteData.keySet().iterator();
+            while (itr.hasNext()) {
+            	String key = (String) itr.next();
+            	if(key.startsWith(remoteKey)){
+            		remoteData.put(key, allRemoteData.get(key));
+            	}
+            }
+            if (remoteData.size() > 0) {
+            	changedData = getChangedData(remoteData, localData, changedData, remoteKey);
+            }
+        }
+        return changedData;
+    }
+	
+	private static Map<String, String> getChangedData(Map<String, String> remoteData, Map<String, String> localData, Map<String, String> changedData, String resourceKey) {
+        List<String> props = new ArrayList<String>();
+        Iterator<String> keys = remoteData.keySet().iterator();
+        Set<String> localKeySet = localData.keySet();
+        while (keys.hasNext()) {
+            String remoteDataKey = keys.next();
+            String remoteValue = remoteData.get(remoteDataKey);
+            String[] split = remoteDataKey.split(resourceKey);
+            String key = split[1];
+            if (key.indexOf("property.") != -1) { //$NON-NLS-1$
+                props.add(key);
+            }
+            String localValue = (String) localData.get(key);
+            if (localValue != null) {
+                if ((remoteValue == null) || ((remoteValue != null) && (!localValue.equals(remoteValue)))) {
+                	changedData.put(remoteDataKey, localValue);
+                }
+            } else {
+                if (localKeySet.contains(key)) {
+                    if (remoteValue != null) {
+                        changedData.put(remoteDataKey, localValue);
+                    }
+                }
+            }
+        }
+        keys = localData.keySet().iterator();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            if (key.indexOf("property.") != -1) { //$NON-NLS-1$
+                if (!props.contains(key)) {
+                    String remoteKey = resourceKey + key;
+                    changedData.put(remoteKey, localData.get(key));
+                }
+            }
+        }
+        return changedData;
+    }
+	
+	private static void putResourceData(Map<String, String> data, SunAppServer sunAppsrv) {
+        Set<String> keys = data.keySet();
+        for (String k : keys) {
+            String name = k;
+            String value = data.get(k);
+            try {
+                SetPropertyCommand spc = sunAppsrv.getCommandFactory().getSetPropertyCommand(name, value);
+                Future<OperationState> task = sunAppsrv.execute(spc);
+                OperationState state = task.get();
+            } catch (InterruptedException ex) {
+            	SunAppSrvPlugin.logMessage("error setting resource data ", ex);	//$NON-NLS-1$
+            } catch (ExecutionException ex) {
+            	SunAppSrvPlugin.logMessage("error setting resource data ", ex);	//$NON-NLS-1$
+            }
+        }
+    }
+	
+	public static class ResourceFinder extends TreeParser.NodeReader {
+
+		private Map<String, String> properties = null;
+		private Map<String, Map<String, String>> resourceData = new HashMap<String, Map<String, String>>();
+
+		private final String nameKey;
+
+		public ResourceFinder(String in_nameKey) {
+			nameKey = in_nameKey;
+		}
+
+		@Override
+		public void readAttributes(String qname, Attributes attributes) throws SAXException {
+			properties = new HashMap<String, String>();
+
+			String resourceName = attributes.getValue(nameKey);
+			properties.put(nameKey, resourceName);  
+
+			int attrLen = attributes.getLength();
+			for (int i = 0; i < attrLen; i++) {
+				String name = attributes.getQName(i);
+				String value = attributes.getValue(i);
+				if (name != null && name.length() > 0 && value != null && value.length() > 0) {
+					properties.put(name, value);
+				}
+			}
+		}
+
+		@Override
+		public void readChildren(String qname, Attributes attributes) throws SAXException {
+			String propName = qname + "." + attributes.getValue("name"); //$NON-NLS-1$ //$NON-NLS-2$
+			properties.put(propName, attributes.getValue("value"));  //$NON-NLS-1$
+		}
+
+		@Override
+		public void endNode(String qname) throws SAXException {
+			String poolName = properties.get(nameKey);  
+			resourceData.put(poolName, properties);
+		}
+
+		public List<String> getResourceNames() {
+			return new ArrayList<String>(resourceData.keySet());
+		}
+
+		public Map<String, Map<String, String>> getResourceData() {
+			return Collections.unmodifiableMap(resourceData);
+		}
+	}
+
+    public static String getUniqueResourceName(String name, List<String> resources){
 		for (int i = 1;; i++) {
 			String resourceName = name + "_" + i; //$NON-NLS-1$
 			if (! resources.contains(resourceName)) {

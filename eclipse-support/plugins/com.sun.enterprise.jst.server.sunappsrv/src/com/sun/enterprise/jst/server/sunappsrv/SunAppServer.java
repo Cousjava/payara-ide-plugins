@@ -79,6 +79,7 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
+import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
 
 
@@ -831,6 +832,22 @@ public void setServerInstanceProperties(Map map) {
         
     }
 
+    public CommandFactory getCommandFactory() {
+    	if(isV3Prelude()){
+    		return new CommandFactory() {
+    			public SetPropertyCommand getSetPropertyCommand(String name, String value) {
+    				return new ServerCommand.SetPropertyCommand(name, value, "target={0}&value={1}"); 
+    			}
+    		};
+    	}else{
+    		return new CommandFactory() {
+    			public SetPropertyCommand getSetPropertyCommand(String name, String value) {
+    				return new ServerCommand.SetPropertyCommand(name, value, "DEFAULT={0}={1}"); 
+    			}
+    		};
+    	}
+    }
+    
 }       
     
 

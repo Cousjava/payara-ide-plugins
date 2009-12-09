@@ -782,6 +782,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			}
 			File sunResource = new File(spath,location);
 			if (sunResource.exists()){
+				ResourceUtils.checkUpdateServerResources(sunResource, getSunAppServer());
 				Commands.AddResourcesCommand register = new Commands.AddResourcesCommand(sunResource.getAbsolutePath());
 				try {
 					Future<OperationState> result = getSunAppServer().execute(register);
