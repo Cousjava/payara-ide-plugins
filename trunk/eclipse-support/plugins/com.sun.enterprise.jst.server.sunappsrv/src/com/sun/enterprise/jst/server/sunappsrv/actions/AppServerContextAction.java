@@ -267,12 +267,16 @@ IWorkbenchWindowActionDelegate {
 	}
 
 	protected void showMessageDialog(){
+		showMessageDialog("GlassFish Server has to be up and running...\nPlease start the server.");
+	}
+
+	protected void showMessageDialog(String msg){
 		MessageDialog message;
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		String labels[] = new String[1];
 		labels[0] = "OK";
 		message = new MessageDialog(shell, "Cannot Execute this action", null,
-				"GlassFish Server has to be up and running...\nPlease start the server.", 2, labels, 1);
+				msg, 2, labels, 1);
 		message.open();
 	}
 	public void init(IViewPart arg0) {
