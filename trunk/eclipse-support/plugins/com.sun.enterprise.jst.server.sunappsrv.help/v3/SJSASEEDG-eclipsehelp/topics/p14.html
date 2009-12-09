@@ -6,7 +6,7 @@
 <title>Using Enterprise JavaBeans Technology - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -26,7 +26,7 @@
 
 
 <a name="beahl"></a>Chapter&#160;9<h3>Using Enterprise JavaBeans Technology</h3><p>This chapter describes how Enterprise JavaBeans<sup>TM</sup> (EJB<sup>TM</sup>) technology is supported in the
-Sun GlassFish Enterprise Server. This chapter addresses the following topics:</p>
+Sun GlassFish<sup>TM</sup> Enterprise Server. This chapter addresses the following topics:</p>
 <ul><li><p><a href="#beahn">Value Added Features</a></p></li>
 <li><p><a href="#beahw">EJB Timer Service</a></p></li>
 <li><p><a href="#beahx">Using Session Beans</a></p></li>
@@ -43,7 +43,7 @@ beans as 3.1 enterprise beans.</p>
 
 
 <a name="beahn"></a><h3>Value Added Features</h3>
-<a name="indexterm-494"></a><p>The Enterprise Server provides a number of value additions that relate to EJB
+<a name="indexterm-506"></a><p>The Enterprise Server provides a number of value additions that relate to EJB
 development. These capabilities are discussed in the following sections. References to more in-depth
 material are included.</p>
 <ul><li><p><a href="#beaho">Read-Only Beans</a></p></li>
@@ -55,7 +55,7 @@ material are included.</p>
 
 
 <a name="beaho"></a><h4>Read-Only Beans</h4>
-<a name="indexterm-495"></a><p>Another feature that the Enterprise Server provides is the <b>read-only bean</b>, an EJB
+<a name="indexterm-507"></a><p>Another feature that the Enterprise Server provides is the <b>read-only bean</b>, an EJB
 2.1 entity bean that is never modified by an EJB client. Read-only beans
 avoid database updates completely. </p>
 <hr><p><b>Note - </b>Read-only beans are specific to the Enterprise Server and are not part of
@@ -63,7 +63,7 @@ the Enterprise JavaBeans Specification, v2.1. Use of this feature for an EJB 2.1
 bean results in a non-portable application.</p><p>To make an EJB 3.0 entity read-only, use <tt>@Column</tt> annotations to mark its
 columns <tt>insertable=false</tt> and <tt>updatable=false</tt>.</p>
 <hr>
-<p><a name="indexterm-496"></a>A read-only bean can be used to cache a database entry that is
+<p><a name="indexterm-508"></a>A read-only bean can be used to cache a database entry that is
 frequently accessed but rarely updated (externally by other beans). When the data that
 is cached by a read-only bean is updated by another bean, the read-only
 bean can be notified to refresh its cached data.</p><p>The Enterprise Server provides a number of ways by which a read-only bean&#8217;s
@@ -78,12 +78,12 @@ easy to configure a read-only bean that is one of the following:</p>
 or changes infrequently. For further information and usage guidelines, see <a href="#beail">Using Read-Only Beans</a>.</p>
 
 <a name="beahp"></a><h4>The <tt>pass-by-reference</tt> Element</h4>
-<a name="indexterm-497"></a><p>The <tt>pass-by-reference</tt> element in the <tt>sun-ejb-jar.xml</tt> file allows you to specify the
+<a name="indexterm-509"></a><p>The <tt>pass-by-reference</tt> element in the <tt>sun-ejb-jar.xml</tt> file allows you to specify the
 parameter passing semantics for colocated remote EJB invocations. This is an opportunity to
 improve performance. However, use of this feature results in non-portable applications. See <a href="http://docs.sun.com/doc/820-7693/beavo?a=view">pass-by-reference in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
 
 <a name="beahq"></a><h4>Pooling and Caching</h4>
-<a name="indexterm-498"></a><a name="indexterm-499"></a><p>The EJB container of the Enterprise Server pools anonymous instances (message-driven beans, stateless
+<a name="indexterm-510"></a><a name="indexterm-511"></a><p>The EJB container of the Enterprise Server pools anonymous instances (message-driven beans, stateless
 session beans, and entity beans) to reduce the overhead of creating and destroying
 objects. The EJB container maintains the free pool for each bean that is
 deployed. Bean instances in the free pool have no identity (that is, no
@@ -91,7 +91,7 @@ primary key associated) and are used to serve method calls. The free beans are
 also used to serve all methods for stateless session beans.</p><p>Bean instances in the free pool transition from a Pooled state to a
 Cached state after <tt>ejbCreate</tt> and the business methods run. The size and behavior
 of each pool is controlled using pool-related properties in the EJB container or
-the <tt>sun-ejb-jar.xml</tt> file.</p><p><a name="indexterm-500"></a>In addition, the Enterprise Server supports a number of tunable parameters that can
+the <tt>sun-ejb-jar.xml</tt> file.</p><p><a name="indexterm-512"></a>In addition, the Enterprise Server supports a number of tunable parameters that can
 control the number of &#8220;stateful&#8221; instances (stateful session beans and entity beans) cached
 as well as the duration they are cached. Multiple bean instances that refer
 to the same database row in a table can be cached. The EJB
@@ -129,7 +129,7 @@ FIFO) of picking victim beans when cache overflow occurs. Caches can also passiv
 beans that are idle (not accessed for a specified duration).</p>
 
 <a name="beaht"></a><h4>Bean-Level Container-Managed Transaction Timeouts</h4>
-<p>The default <a name="indexterm-501"></a>transaction timeout for the domain is specified using the Transaction Timeout
+<p>The default <a name="indexterm-513"></a>transaction timeout for the domain is specified using the Transaction Timeout
 setting of the Transaction Service. A transaction started by the container must commit
 (or rollback) within this time, regardless of whether the transaction is suspended (and resumed),
 or the transaction is marked for rollback.</p><p>To override this timeout for an individual bean, use the optional <tt>cmt-timeout-in-seconds</tt>
@@ -139,7 +139,7 @@ the bean that start a new container-managed transaction. This value is <b>not</b
 if the bean joins a client transaction.</p>
 
 <a name="beahu"></a><h4>Priority Based Scheduling of Remote Bean Invocations</h4>
-<a name="indexterm-502"></a><a name="indexterm-503"></a><a name="indexterm-504"></a><a name="indexterm-505"></a><p>You can create multiple thread pools, each having its own work queues. An
+<a name="indexterm-514"></a><a name="indexterm-515"></a><a name="indexterm-516"></a><a name="indexterm-517"></a><p>You can create multiple thread pools, each having its own work queues. An
 optional element in the <tt>sun-ejb-jar.xml</tt> file, <tt>use-thread-pool-id</tt>, specifies the thread pool that
 processes the requests for the bean. The bean must have a remote interface, or
 <tt>use-thread-pool-id</tt> is ignored. You can create different thread pools and specify the appropriate
@@ -148,7 +148,7 @@ there is no such thread pool configured or if the element is absent,
 the default thread pool is used.</p>
 
 <a name="beahv"></a><h4>Immediate Flushing</h4>
-<a name="indexterm-506"></a><a name="indexterm-507"></a><p>Normally, all entity bean updates within a transaction are batched and executed at
+<a name="indexterm-518"></a><a name="indexterm-519"></a><p>Normally, all entity bean updates within a transaction are batched and executed at
 the end of the transaction. The only exception is the database flush that
 precedes execution of a finder or select query.</p><p>Since a transaction often spans many method calls, you might want to find
 out if the updates made by a method succeeded or failed immediately after
@@ -164,7 +164,7 @@ thrown by the underlying data store is wrapped as follows:</p>
 been flushed during the transaction.</p>
 
 <a name="beahw"></a><h3>EJB Timer Service</h3>
-<a name="indexterm-508"></a><p>The EJB Timer Service uses a database to store persistent information about EJB
+<a name="indexterm-520"></a><p>The EJB Timer Service uses a database to store persistent information about EJB
 timers. </p><p>The EJB Timer Service in Enterprise Server is preconfigured to use an embedded
 version of the Java DB database.</p><p>The timer service is automatically enabled when you deploy an application or module that
 uses it.</p><p>You can verify that the timer service is running by accessing the
@@ -172,8 +172,9 @@ following URL:</p><pre><tt>http://localhost:8080/ejb-timer-service-app/timer</tt
 supported by the Enterprise Server for persistence. For a list of the JDBC
 drivers currently supported by the Enterprise Server, see the <i><a href="http://docs.sun.com/doc/820-7688"><i>Sun GlassFish Enterprise Server v3 Preview Release Notes</i></a></i>. For configurations of supported
 and other drivers, see <a href="http://docs.sun.com/doc/820-7692/beamw?a=view">Configuration Specifics for JDBC Drivers in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p><p>To change the database used by the EJB Timer Service, set the EJB
-Timer Service&#8217;s Timer DataSource setting to a valid JDBC resource. You must also
-create the timer database table. DDL files are located in <i>as-install</i><tt>/lib/install/databases</tt>. </p><p>Using the EJB Timer Service is equivalent to interacting with a single JDBC
+Timer Service&#8217;s Timer DataSource setting to a valid JDBC resource. If the EJB Timer
+Service has already been started, you must also create the timer database table.
+DDL files are located in <i>as-install</i><tt>/lib/install/databases</tt>. </p><p>Using the EJB Timer Service is equivalent to interacting with a single JDBC
 resource manager. If an EJB component or application accesses a database either directly
 through JDBC or indirectly (for example, through an entity bean&#8217;s persistence mechanism), and also
 interacts with the EJB Timer Service, its data source must be configured with
@@ -183,18 +184,17 @@ server for the changes to take effect.</p>
 <li><p>Maximum Redeliveries - Specifies the maximum number of times the EJB timer service attempts to redeliver a timer expiration due for exception or rollback. The default is <tt>1</tt>.</p></li>
 <li><p>Redelivery Interval - Specifies how long in milliseconds the EJB timer service waits after a failed <tt>ejbTimeout</tt> delivery before attempting a redelivery. The default is <tt>5000</tt>.</p></li>
 <li><p>Timer DataSource - Specifies the database used by the EJB Timer Service. The default is <tt>jdbc/__TimerPool</tt>.</p></li></ul>
-<p><a name="indexterm-509"></a><a name="indexterm-510"></a><a name="indexterm-511"></a><a name="indexterm-512"></a>For information about configuring EJB Timer Service settings, see <a href="http://docs.sun.com/doc/820-7692/ablms?a=view">Chapter 14, Administering Containers, in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>. For information about the
-<tt>asadmin list-timers</tt> command, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
+<p><a name="indexterm-521"></a><a name="indexterm-522"></a><a name="indexterm-523"></a><a name="indexterm-524"></a>For information about the <tt>asadmin list-timers</tt> command, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p>
 
 <a name="beahx"></a><h3>Using Session Beans</h3>
-<p>This section provides guidelines for creating <a name="indexterm-513"></a>session beans in the Enterprise Server
+<p>This section provides guidelines for creating <a name="indexterm-525"></a>session beans in the Enterprise Server
 environment. This section addresses the following topics:</p>
 <ul><li><p><a href="#beahy">About the Session Bean Containers</a></p></li>
 <li><p><a href="#beaii">Session Bean Restrictions and Optimizations</a></p></li></ul>
 <p>Information on session beans is contained in the Enterprise JavaBeans Specification, v3.1.</p>
 
 <a name="beahy"></a><h4>About the Session Bean Containers</h4>
-<a name="indexterm-514"></a><p>Like an entity bean, a session bean can access a database through Java
+<a name="indexterm-526"></a><p>Like an entity bean, a session bean can access a database through Java
 Database Connectivity (JDBC) calls. A session bean can also provide transaction settings. These
 transaction settings and JDBC calls are referenced by the session bean&#8217;s container, allowing
 it to participate in transactions managed by the container.</p><p>A container managing stateless session beans has a different charter from a container
@@ -204,8 +204,8 @@ managing stateful session beans.  This section addresses the following topics:</
 
 
 <a name="beahz"></a><h5>Stateless Container</h5>
-<a name="indexterm-515"></a><p>The <b>stateless container</b> manages stateless session beans, which, by definition, do not carry client-specific states.
-All session beans (of a particular type) are considered equal.</p><p><a name="indexterm-516"></a>A stateless session bean container uses a bean pool to service requests. The
+<a name="indexterm-527"></a><p>The <b>stateless container</b> manages stateless session beans, which, by definition, do not carry client-specific states.
+All session beans (of a particular type) are considered equal.</p><p><a name="indexterm-528"></a>A stateless session bean container uses a bean pool to service requests. The
 Enterprise Server specific deployment descriptor file, <tt>sun-ejb-jar.xml</tt>, contains the properties that define the pool:</p>
 <ul><li><p><tt>steady-pool-size</tt></p></li>
 <li><p><tt>resize-quantity</tt></p></li>
@@ -217,10 +217,10 @@ about these tools, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun Gla
 
 <a name="beaia"></a><h5>Stateful Container</h5>
 <p>The <b>stateful container</b> manages the stateful session beans, which, by definition, carry the client-specific
-state. There is a one-to-one relationship between the client and the <a name="indexterm-517"></a>stateful session beans.
+state. There is a one-to-one relationship between the client and the <a name="indexterm-529"></a>stateful session beans.
 At creation, each stateful session bean (SFSB) is given a unique session ID
 that is used to access the session bean so that an instance of
-a stateful session bean is accessed by a single client only.</p><p><a name="indexterm-518"></a>Stateful session beans are managed using cache. The size and behavior of stateful
+a stateful session bean is accessed by a single client only.</p><p><a name="indexterm-530"></a>Stateful session beans are managed using cache. The size and behavior of stateful
 session beans cache are controlled by specifying the following <tt>sun-ejb-jar.xml</tt> parameters:</p>
 <ul><li><p><tt>max-cache-size</tt></p></li>
 <li><p><tt>resize-quantity</tt></p></li>
@@ -248,12 +248,12 @@ file-based sessions might not be deleted properly. For more information about <t
 
 
 <a name="beaij"></a><h5>Optimizing Session Bean Performance</h5>
-<a name="indexterm-519"></a><p>For stateful session beans, colocating the stateful beans with their clients so that
+<a name="indexterm-531"></a><p>For stateful session beans, colocating the stateful beans with their clients so that
 the client and bean are executing in the same process address space improves
 performance.</p>
 
 <a name="beaik"></a><h5>Restricting Transactions</h5>
-<a name="indexterm-520"></a><p>The following restrictions on transactions are enforced by the container and must be
+<a name="indexterm-532"></a><p>The following restrictions on transactions are enforced by the container and must be
 observed as session beans are developed:</p>
 <ul><li><p>A session bean can participate in, at most, a single transaction at a time.</p></li>
 <li><p>If a session bean is participating in a transaction, a client cannot invoke a method on the bean such that the <tt>trans-attribute</tt> element (or <tt>@TransactionAttribute</tt> annotation) in the <tt>ejb-jar.xml</tt> file would cause the container to execute the method in a different or unspecified transaction context or an exception is thrown.</p></li>
@@ -261,7 +261,7 @@ observed as session beans are developed:</p>
 
 
 <a name="beail"></a><h3>Using Read-Only Beans</h3>
-<a name="indexterm-521"></a><p>A <b>read-only bean</b> is an EJB 2.1 entity bean that is never modified by
+<a name="indexterm-533"></a><p>A <b>read-only bean</b> is an EJB 2.1 entity bean that is never modified by
 an EJB client. The data that a read-only bean represents can be updated
 externally by other enterprise beans, or by other means, such as direct database
 updates.</p>
@@ -291,8 +291,8 @@ a case, using a regular entity bean might incur the burden of calling
 <li><p><tt>ejbStore</tt> is never called by the container.</p></li>
 <li><p><tt>ejbLoad</tt> is called only when a transactional method is called or when the bean is initially created (in the cache), or at regular intervals controlled by the bean&#8217;s <tt>refresh-period-in-seconds</tt> element in the <tt>sun-ejb-jar.xml</tt> file.</p></li>
 <li><p>The home interface can have any number of find methods. The return type of the find methods must be the primary key for the same bean type (or a collection of primary keys).</p></li>
-<li><p><a name="indexterm-522"></a>If the data that the bean represents can change, then <tt>refresh-period-in-seconds</tt> must be set to refresh the beans at regular intervals. <tt>ejbLoad</tt> is called at this regular interval.</p></li></ul>
-<p>A read-only bean comes into existence using the appropriate find methods.</p><p><a name="indexterm-523"></a><a name="indexterm-524"></a><a name="indexterm-525"></a>Read-only beans are cached and have the same cache properties as entity beans.
+<li><p><a name="indexterm-534"></a>If the data that the bean represents can change, then <tt>refresh-period-in-seconds</tt> must be set to refresh the beans at regular intervals. <tt>ejbLoad</tt> is called at this regular interval.</p></li></ul>
+<p>A read-only bean comes into existence using the appropriate find methods.</p><p><a name="indexterm-535"></a><a name="indexterm-536"></a><a name="indexterm-537"></a>Read-only beans are cached and have the same cache properties as entity beans.
 When a read-only bean is selected as a victim to make room in
 the cache, <tt>ejbPassivate</tt> is called and the bean is returned to the
 free pool. When in the free pool, the bean has no identity and
@@ -307,7 +307,7 @@ are looked up.</p>
 
 
 <a name="beaio"></a><h4>Refreshing Read-Only Beans</h4>
-<a name="indexterm-526"></a><p>There are several ways of refreshing read-only beans as addressed in the following
+<a name="indexterm-538"></a><p>There are several ways of refreshing read-only beans as addressed in the following
 sections:</p>
 <ul><li><p><a href="#beaip">Invoking a Transactional Method</a></p></li>
 <li><p><a href="#beaiq">Refreshing Periodically</a></p></li>
@@ -327,14 +327,14 @@ can be modified external to the Enterprise Server.</p>
 <hr>
 <p>By default, a single timer is used for all instances of a
 read-only bean. When that timer fires, all bean instances are marked as expired and
-are refreshed from the database the next time they are used.</p><p><a name="indexterm-527"></a>Use the <tt>-Dcom.sun.ejb.containers.readonly.relative.refresh.mode=true</tt> flag to refresh each bean instance independently upon access if
+are refreshed from the database the next time they are used.</p><p><a name="indexterm-539"></a>Use the <tt>-Dcom.sun.ejb.containers.readonly.relative.refresh.mode=true</tt> flag to refresh each bean instance independently upon access if
 its refresh period has expired. The default is <tt>false</tt>. Note that each instance
 still has the same refresh period. This additional level of granularity can improve
 the performance of read-only beans that do not need to be refreshed at
-the same time.</p><p><a name="indexterm-528"></a><a name="indexterm-529"></a>To set this flag, use the <tt>asadmin create-jvm-options</tt> command. For example:</p><pre>asadmin create-jvm-options -Dcom.sun.ejb.containers.readonly.relative.refresh.mode=true</pre>
+the same time.</p><p><a name="indexterm-540"></a><a name="indexterm-541"></a>To set this flag, use the <tt>asadmin create-jvm-options</tt> command. For example:</p><pre>asadmin create-jvm-options -Dcom.sun.ejb.containers.readonly.relative.refresh.mode=true</pre>
 
 <a name="beair"></a><h5>Refreshing Programmatically</h5>
-<a name="indexterm-530"></a><p><a name="indexterm-531"></a>Typically, beans that update any data that is cached by read-only beans need
+<a name="indexterm-542"></a><p><a name="indexterm-543"></a>Typically, beans that update any data that is cached by read-only beans need
 to notify the read-only beans to refresh their state. Use <tt>ReadOnlyBeanNotifier</tt> to force the
 refresh of read-only beans.</p><p>To do this, invoke the following methods on the <tt>ReadOnlyBeanNotifier</tt> bean:</p><pre>public interface ReadOnlyBeanNotifier extends java.rmi.Remote {
    refresh(Object PrimaryKey) throws RemoteException;
@@ -346,21 +346,21 @@ com.sun.appserv.ejb.ReadOnlyBeanNotifier notifier =
   helper.getReadOnlyBeanNotifier("java:comp/env/ejb/ReadOnlyCustomer");
 notifier.refresh(PrimaryKey);</pre><p>For a local read-only bean notifier, the lookup has this modification:</p><pre>helper.getReadOnlyBeanLocalNotifier("java:comp/env/ejb/LocalReadOnlyCustomer");</pre><p>Beans that update any data that is cached by read-only beans need to
 call the <tt>refresh</tt> methods. The next (non-transactional) call to the read-only bean invokes
-<tt>ejbLoad</tt>.</p><p>For Javadoc tool pages relevant to read-only beans, go to <a href="http://java.sun.com/javaee/6/docs/api/">http://java.sun.com/javaee/6/docs/api/</a> and click
+<tt>ejbLoad</tt>.</p><p>For Javadoc tool pages relevant to read-only beans, go to <a href="http://javadoc.glassfish.org/v3/apidoc/">http://javadoc.glassfish.org/v3/apidoc/</a> and click
 on the <tt>com.sun.appserv.ejb</tt> package.</p>
 
 <a name="beais"></a><h4>Deploying Read-Only Beans</h4>
-<p><a name="indexterm-532"></a>Read-only beans are deployed in the same manner as other entity beans. However,
+<p><a name="indexterm-544"></a>Read-only beans are deployed in the same manner as other entity beans. However,
 in the entry for the bean in the <tt>sun-ejb-jar.xml</tt> file, the <tt>is-read-only-bean</tt>
-element must be set to true. That is:</p><p><a name="indexterm-533"></a><tt>&#60;is-read-only-bean>true&#60;/is-read-only-bean></tt></p><p>Also, the <tt>refresh-period-in-seconds</tt> element in the <tt>sun-ejb-jar.xml</tt> file can be set to some value
+element must be set to true. That is:</p><p><a name="indexterm-545"></a><tt>&#60;is-read-only-bean>true&#60;/is-read-only-bean></tt></p><p>Also, the <tt>refresh-period-in-seconds</tt> element in the <tt>sun-ejb-jar.xml</tt> file can be set to some value
 that specifies the rate at which the bean is refreshed. If this element
-is missing, no refresh occurs.</p><p>All requests in the same transaction context are routed <a name="indexterm-534"></a>to the same
-read-only bean instance. Set the <a name="indexterm-535"></a><tt>allow-concurrent-access</tt> element to either <tt>true</tt> (to allow
+is missing, no refresh occurs.</p><p>All requests in the same transaction context are routed <a name="indexterm-546"></a>to the same
+read-only bean instance. Set the <a name="indexterm-547"></a><tt>allow-concurrent-access</tt> element to either <tt>true</tt> (to allow
 concurrent accesses) or <tt>false</tt> (to serialize concurrent access to the same read-only bean). The
 default is <tt>false</tt>.</p><p>For further information on these elements, refer to <a href="http://docs.sun.com/doc/820-7693/beaqm?a=view">The sun-ejb-jar.xml File in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
 
 <a name="beait"></a><h3>Using Message-Driven Beans</h3>
-<p>This section describes message-driven beans <a name="indexterm-536"></a>and explains the requirements for creating them in
+<p>This section describes message-driven beans <a name="indexterm-548"></a>and explains the requirements for creating them in
 the Enterprise Server environment. This section contains the following topics:</p>
 <ul><li><p><a href="#beaiu">Message-Driven Bean Configuration</a></p></li>
 <li><p><a href="#beaiy">Message-Driven Bean Restrictions and Optimizations</a></p></li></ul>
@@ -374,17 +374,17 @@ the Enterprise Server environment. This section contains the following topics:</
 
 
 <a name="beaiv"></a><h5>Connection Factory and Destination</h5>
-<p>A <a name="indexterm-537"></a><a name="indexterm-538"></a><a name="indexterm-539"></a>message-driven bean is a client to a Connector inbound resource adapter. The
+<p>A <a name="indexterm-549"></a><a name="indexterm-550"></a><a name="indexterm-551"></a>message-driven bean is a client to a Connector inbound resource adapter. The
 message-driven bean container uses the JMS service integrated into the Enterprise Server for message-driven
 beans that are JMS clients. JMS clients use JMS Connection Factory- and Destination-administered
 objects. A JMS Connection Factory administered object is a resource manager Connection Factory
-object that is used to create connections to the JMS provider.</p><p>The <a name="indexterm-540"></a><tt>mdb-connection-factory</tt> element in the <tt>sun-ejb-jar.xml</tt> file for a message-driven bean specifies the
+object that is used to create connections to the JMS provider.</p><p>The <a name="indexterm-552"></a><tt>mdb-connection-factory</tt> element in the <tt>sun-ejb-jar.xml</tt> file for a message-driven bean specifies the
 connection factory that creates the container connection to the JMS provider.</p><p>The <tt>jndi-name</tt> element of the <tt>ejb</tt> element in the <tt>sun-ejb-jar.xml</tt> file specifies the
-<a name="indexterm-541"></a>JNDI name of the administered object for the JMS <tt>Queue</tt> or <tt>Topic</tt>
+<a name="indexterm-553"></a>JNDI name of the administered object for the JMS <tt>Queue</tt> or <tt>Topic</tt>
 destination that is associated with the message-driven bean.</p>
 
 <a name="beaiw"></a><h5>Message-Driven Bean Pool</h5>
-<p><a name="indexterm-542"></a>The container manages a pool of message-driven beans for the concurrent processing of
+<p><a name="indexterm-554"></a>The container manages a pool of message-driven beans for the concurrent processing of
 a stream of messages. The <tt>sun-ejb-jar.xml</tt> file contains the elements that define
 the pool (that is, the <tt>bean-pool</tt> element):</p>
 <ul><li><p><tt>steady-pool-size</tt></p></li>
@@ -394,13 +394,13 @@ the pool (that is, the <tt>bean-pool</tt> element):</p>
 <p>For more information about <tt>sun-ejb-jar.xml</tt>, see <a href="http://docs.sun.com/doc/820-7693/beaqm?a=view">The sun-ejb-jar.xml File in <i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
 
 <a name="beaix"></a><h5>Domain-Level Settings</h5>
-<p>You can control the following domain-level message-driven bean <a name="indexterm-543"></a>settings in the EJB
+<p>You can control the following domain-level message-driven bean <a name="indexterm-555"></a>settings in the EJB
 container:</p>
 <ul><li><p>Initial and Minimum Pool Size - Specifies the initial and minimum number of beans maintained in the pool. The default is <tt>0</tt>.</p></li>
 <li><p>Maximum Pool Size - Specifies the maximum number of beans that can be created to satisfy client requests. The default is 3<tt>2</tt>.</p></li>
 <li><p>Pool Resize Quantity - Specifies the number of beans to be created if a request arrives when the pool is empty (subject to the Initial and Minimum Pool Size), or the number of beans to remove if idle for more than the Idle Timeout. The default is <tt>8</tt>.</p></li>
 <li><p>Idle Timeout - Specifies the maximum time in seconds that a bean can remain idle in the pool. After this amount of time, the bean is destroyed. The default is <tt>600</tt> (10 minutes). A value of <tt>0</tt> means a bean can remain idle indefinitely.</p></li></ul>
-<p><a name="indexterm-544"></a>For information on monitoring message-driven beans, click the Help button in the Administration
+<p><a name="indexterm-556"></a>For information on monitoring message-driven beans, click the Help button in the Administration
 Console. The Monitor tab is accessible from the Application Server page.</p>
 <hr><p><b>Note - </b>Running monitoring when it is not needed might impact performance, so you might
 choose to turn monitoring off when it is not in use. For details,
@@ -409,34 +409,34 @@ see <a href="http://docs.sun.com/doc/820-7692/ablur?a=view">Chapter 8, Administe
 
 
 <a name="beaiy"></a><h4>Message-Driven Bean Restrictions and Optimizations</h4>
-<a name="indexterm-545"></a><p>This section discusses the following restrictions and performance optimizations that pertain to developing
+<a name="indexterm-557"></a><p>This section discusses the following restrictions and performance optimizations that pertain to developing
 message-driven beans:</p>
 <ul><li><p><a href="#beaiz">Pool Tuning and Monitoring</a></p></li>
 <li><p><a href="#beaja">The <tt>onMessage</tt> Runtime Exception</a></p></li></ul>
 
 
 <a name="beaiz"></a><h5>Pool Tuning and Monitoring</h5>
-<p>The <a name="indexterm-546"></a><a name="indexterm-547"></a>message-driven bean pool is also a pool of threads, with each message-driven
+<p><a name="indexterm-558"></a><a name="indexterm-559"></a>The message-driven bean pool is also a pool of threads, with each message-driven
 bean instance in the pool associating with a server session, and each server
 session associating with a thread. Therefore, a large pool size also means a
-high number of threads, which impacts performance and server resources.</p><p><a name="indexterm-548"></a>When configuring message-driven bean pool properties, make sure to consider factors such as message
+high number of threads, which impacts performance and server resources.</p><p><a name="indexterm-560"></a>When configuring message-driven bean pool properties, make sure to consider factors such as message
 arrival rate and pattern, <tt>onMessage</tt> method processing time, overall server resources (threads, memory,
 and so on), and any concurrency requirements and limitations from other resources that the
 message-driven bean accesses.</p><p>When tuning performance and resource usage, make sure to consider potential JMS provider
-properties for the connection factory used by the container (the <a name="indexterm-549"></a><tt>mdb-connection-factory</tt> element in
+properties for the connection factory used by the container (the <a name="indexterm-561"></a><tt>mdb-connection-factory</tt> element in
 the <tt>sun-ejb-jar.xml</tt> file). For example, you can tune the Sun GlassFish Message
 Queue flow control related properties for connection factory in situations where the message incoming
 rate is much higher than <tt>max-pool-size</tt> can handle.</p><p>Refer to <a href="http://docs.sun.com/doc/820-7692/ablur?a=view">Chapter 8, Administering the Monitoring Service, in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a> for information on how to get message-driven bean pool statistics.</p>
 
 <a name="beaja"></a><h5>The <tt>onMessage</tt> Runtime Exception</h5>
-<a name="indexterm-550"></a><a name="indexterm-551"></a><p>Message-driven beans, like other well-behaved MessageListeners, should not, in general, throw runtime exceptions.
+<a name="indexterm-562"></a><a name="indexterm-563"></a><p>Message-driven beans, like other well-behaved MessageListeners, should not, in general, throw runtime exceptions.
 If a message-driven bean&#8217;s <tt>onMessage</tt> method encounters a system-level exception or error that does
 not allow the method to successfully complete, the Enterprise JavaBeans Specification, v3.0 provides
 the following guidelines:</p>
 <ul><li><p>If the bean method encounters a runtime exception or error, it should simply propagate the error from the bean method to the container.</p></li>
 <li><p>If the bean method performs an operation that results in a checked exception that the bean method cannot recover, the bean method should throw the <tt>javax.ejb.EJBException</tt> that wraps the original exception.</p></li>
 <li><p>Any other unexpected error conditions should be reported using <tt>javax.ejb.EJBException</tt> (<tt>javax.ejb.EJBException</tt> is a subclass of <tt>java.lang.RuntimeException</tt>).</p></li></ul>
-<p><a name="indexterm-552"></a>Under container-managed transaction demarcation, upon receiving a runtime exception from a message-driven bean&#8217;s
+<p><a name="indexterm-564"></a>Under container-managed transaction demarcation, upon receiving a runtime exception from a message-driven bean&#8217;s
 <tt>onMessage</tt> method, the container rolls back the container-started transaction and the message is
 redelivered. This is because the message delivery itself is part of the container-started
 transaction. By default, the Enterprise Server container closes the container&#8217;s connection to the JMS
@@ -454,7 +454,7 @@ whether a received message is a redelivered message.</p>
 
 
 <a name="beaje"></a><h3>Handling Transactions With Enterprise Beans</h3>
-<a name="indexterm-553"></a><p>This section describes the transaction support built into the Enterprise JavaBeans programming model
+<a name="indexterm-565"></a><p>This section describes the transaction support built into the Enterprise JavaBeans programming model
 for the Enterprise Server.</p><p>As a developer, you can write an application that updates data in multiple
 databases distributed across multiple sites. The site might use EJB servers from different
 vendors. This section provides overview information on the following topics:</p>
@@ -465,7 +465,7 @@ vendors. This section provides overview information on the following topics:</p>
 
 
 <a name="beajf"></a><h4>Flat Transactions</h4>
-<a name="indexterm-554"></a><a name="indexterm-555"></a><a name="indexterm-556"></a><a name="indexterm-557"></a><p>The Enterprise JavaBeans Specification, v3.0 requires support for flat (as opposed to nested)
+<a name="indexterm-566"></a><a name="indexterm-567"></a><a name="indexterm-568"></a><a name="indexterm-569"></a><p>The Enterprise JavaBeans Specification, v3.0 requires support for flat (as opposed to nested)
 transactions. In a flat transaction, each transaction is decoupled from and independent of
 other transactions in the system. Another transaction cannot start in the same thread until
 the current transaction ends.</p><p>Flat transactions are the most prevalent model and are supported by most commercial
@@ -473,16 +473,16 @@ database systems. Although nested transactions offer a finer granularity of cont
 they are supported by far fewer commercial database systems.</p>
 
 <a name="beajg"></a><h4>Global and Local Transactions</h4>
-<a name="indexterm-558"></a><a name="indexterm-559"></a><p>Understanding the distinction between global and local transactions is crucial in understanding the
+<a name="indexterm-570"></a><a name="indexterm-571"></a><p>Understanding the distinction between global and local transactions is crucial in understanding the
 Enterprise Server support for transactions. See <a href="p21.html#beano">Transaction Scope</a>.</p><p>Both local and global transactions are demarcated using the <tt>javax.transaction.UserTransaction</tt> interface, which
 the client must use. Local transactions bypass the transaction manager and are faster. For
 more information, see <a href="p21.html#gaxit">The Transaction Manager, the Transaction Synchronization Registry, and <tt>UserTransaction</tt></a>.</p>
 
 <a name="beajh"></a><h4>Commit Options</h4>
-<p><a name="indexterm-560"></a>The EJB protocol is designed to give the container the flexibility to select
+<p><a name="indexterm-572"></a>The EJB protocol is designed to give the container the flexibility to select
 the disposition of the instance state at the time a transaction is committed.
 This allows the container to best manage caching an entity object&#8217;s state and
-associating an entity object identity with the EJB instances.</p><p><a name="indexterm-561"></a><a name="indexterm-562"></a>There are three commit-time options:</p>
+associating an entity object identity with the EJB instances.</p><p><a name="indexterm-573"></a><a name="indexterm-574"></a>There are three commit-time options:</p>
 <ul><li><p><b>Option A</b> &#8211; The container caches a ready instance between transactions. The container ensures that the instance has exclusive access to the state of the object in persistent storage.</p><p>In this case, the container does <b>not</b> have to synchronize the instance&#8217;s state from the persistent storage at the beginning of the next transaction.</p>
 <hr><p><b>Note - </b>Commit option A is not supported for this Enterprise Server release.</p>
 <hr>
@@ -494,7 +494,7 @@ commit option to be used. Based on the specified commit option, the appropriate
 handler is instantiated.</p>
 
 <a name="beaji"></a><h4>Administration and Monitoring</h4>
-<a name="indexterm-563"></a><p>An administrator can control a number of domain-level Transaction Service settings. For details,
+<a name="indexterm-575"></a><p>An administrator can control a number of domain-level Transaction Service settings. For details,
 see <a href="p21.html#beanp">Configuring the Transaction Service</a>.</p><p>The Transaction Timeout setting can be overridden by a bean. See <a href="#beaht">Bean-Level Container-Managed Transaction Timeouts</a>.</p><p>In addition, the administrator can monitor transactions using statistics from the transaction manager
 that provide information on such activities as the number of transactions completed, rolled
 back, or recovered since server startup, and transactions presently being processed.</p><p>For information on administering and monitoring transactions, select the Transaction Service component under

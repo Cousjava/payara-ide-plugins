@@ -6,7 +6,7 @@
 <title>Administering System Security - Sun GlassFish Enterprise Server v3 Administration Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 </table>
 
 
-<a name="ablnk"></a>Chapter&#160;11<h3>Administering System Security</h3><a name="indexterm-426"></a><p>The following topics are addressed here:</p>
+<a name="ablnk"></a>Chapter&#160;11<h3>Administering System Security</h3><a name="indexterm-476"></a><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#ggktf">About System Security in Enterprise Server</a></p></li>
 <li><p><a href="#ghgrp">Administering Passwords</a></p></li>
 <li><p><a href="#ghgol">Administering Audit Modules</a></p></li>
@@ -34,7 +34,7 @@
 are contained in the Administration Console online help.</p><p>Additional instructions on configuring security is contained in <a href="p17.html">Chapter&#160;12, Administering User Security</a> and <a href="p18.html">Chapter&#160;13, Administering Message Security</a>.</p><p>Information on application security is contained in <a href="http://docs.sun.com/doc/820-7695/beabg?a=view">Chapter 5, Securing Applications, in <i>Sun GlassFish Enterprise Server v3 Application Development Guide</i></a>.</p>
 
 <a name="ggktf"></a><h3>About System Security in Enterprise Server</h3>
-<a name="indexterm-427"></a><a name="indexterm-428"></a><p>Security is about protecting data, that is, how to prevent unauthorized access or
+<a name="indexterm-477"></a><a name="indexterm-478"></a><p>Security is about protecting data, that is, how to prevent unauthorized access or
 damage to data that is in storage or in transit. The Enterprise
 Server is built on the Java security model, which uses a sandbox where
 applications can run safely, without potential risk to systems or users. <b>System security</b> affects
@@ -48,7 +48,7 @@ all the applications in the Enterprise Server environment. </p><p>System securit
 
 
 <a name="ablnx"></a><h4>Authentication</h4>
-<a name="indexterm-429"></a><a name="indexterm-430"></a><p><b>Authentication</b> is the way in which an entity (a user, an application, or
+<a name="indexterm-479"></a><a name="indexterm-480"></a><p><b>Authentication</b> is the way in which an entity (a user, an application, or
 a component) determines that another entity is who it claims to be. An
 entity uses security <b>credentials</b> to authenticate itself. The credentials might be a user
 name and password, a digital certificate, or something else. Usually, servers or applications
@@ -61,7 +61,7 @@ user is associated with this authenticated security identity for the remainder o
 session.</p>
 
 <a name="ghsqc"></a><h5>Authentication Types</h5>
-<p><a name="indexterm-431"></a>Within its deployment descriptors, an application specifies the type of authentication that it
+<p><a name="indexterm-481"></a>Within its deployment descriptors, an application specifies the type of authentication that it
 uses. Enterprise Server supports the following types of authentication:</p><dl><dt>BASIC</dt>
 <dd><p>Uses the server's built-in login dialog box. The communication protocol is HTTP (SSL optional). There is no user-credentialed encryption unless using SSL.</p></dd>
 <dt>FORM</dt>
@@ -74,12 +74,12 @@ uses. Enterprise Server supports the following types of authentication:</p><dl><
 
 
 <a name="ghltx"></a><h5>Passwords</h5>
-<a name="indexterm-432"></a><a name="indexterm-433"></a><p>Passwords are your first line of defense against unauthorized access to the components
+<a name="indexterm-482"></a><a name="indexterm-483"></a><p>Passwords are your first line of defense against unauthorized access to the components
 and data of Enterprise Server. For Information about how to use passwords for
 Enterprise Server, see <a href="#ghgrp">Administering Passwords</a>.</p>
 
 <a name="gczen"></a><h5>Master Password and Keystores</h5>
-<a name="indexterm-434"></a><a name="indexterm-435"></a><p>The <b>master password</b> is an overall shared password and is the most sensitive piece
+<a name="indexterm-484"></a><a name="indexterm-485"></a><p>The <b>master password</b> is an overall shared password and is the most sensitive piece
 of data in the system. It is never used for authentication and is
 never transmitted over the network. You can choose to enter the master password
 manually when required, or obscure it in a file. </p><p>The master password is the password for the secure keystore. When a new
@@ -90,24 +90,24 @@ changed it), you are prompted for the master password. After the correct master
 password is entered, the domain starts. </p>
 
 <a name="ghgof"></a><h5>Administration Password</h5>
-<a name="indexterm-436"></a><a name="indexterm-437"></a><p>The administration password, also known as the admin password, is used to invoke
+<a name="indexterm-486"></a><a name="indexterm-487"></a><p>The administration password, also known as the admin password, is used to invoke
 the Administration Console and the <tt>asadmin</tt> utility. This password is usually set during
 installation, but it can be changed. For instructions, see <a href="#ghgpu">To Change the Administration Password</a>.</p>
 
 <a name="ablnq"></a><h5>Encoded Passwords</h5>
-<a name="indexterm-438"></a><p>Files that contain encoded passwords need to be protected using file system permissions.
+<a name="indexterm-488"></a><p>Files that contain encoded passwords need to be protected using file system permissions.
 These files include the following:</p>
 <ul><li><p><i>domain-dir</i><tt>/master-password</tt></p><p>This file contains the encoded master password and should be protected with file system permissions 600.</p></li>
 <li><p>Any password file created to pass as an argument by using the <tt>--passwordfile</tt> argument to the <tt>asadmin</tt> utility should be protected with file system permissions 600.</p></li></ul>
 <p>For instructions, see <a href="#ghytn">To Set a Password From a File</a>.</p>
 
 <a name="ghgoj"></a><h5>Passsword Aliases</h5>
-<a name="indexterm-439"></a><a name="indexterm-440"></a><p>To avoid storing passwords in the domain configuration file in clear text, you
+<a name="indexterm-489"></a><a name="indexterm-490"></a><p>To avoid storing passwords in the domain configuration file in clear text, you
 can create an alias for a password. This process is also known
 as <b>encrypting</b> a password. For more information, see <a href="#ghgqc">Administering Password Aliases</a>.</p>
 
 <a name="ghlus"></a><h5>Single Sign-on</h5>
-<a name="indexterm-441"></a><a name="indexterm-442"></a><p>With <b>single sign-on</b>, a user who logs in to one application becomes implicitly logged
+<a name="indexterm-491"></a><a name="indexterm-492"></a><p>With <b>single sign-on</b>, a user who logs in to one application becomes implicitly logged
 in to other applications that require the same authentication information. Single sign-on is
 based on groups. All web applications whose deployment descriptor defines the same group
 and uses the same authentication method (BASIC, FORM, or CLIENT-CERT) share single sign-on.</p><p>On Enterprise Server, single sign-on is enabled by default for virtual servers, allowing
@@ -115,13 +115,13 @@ multiple applications in one virtual server  to share the user authentication st
 </p>
 
 <a name="ghlvu"></a><h4>Authorization</h4>
-<a name="indexterm-443"></a><p><b>Authorization</b>, also known as access control, is the means by which users are
+<a name="indexterm-493"></a><p><b>Authorization</b>, also known as access control, is the means by which users are
 granted permission to access data or perform operations. After a user is authenticated,
 the user's level of authorization determines what operations the owner can perform. A
 user's authorization is based on the user's role. </p>
 
 <a name="abloh"></a><h5>Roles</h5>
-<a name="indexterm-444"></a><a name="indexterm-445"></a><p>A <b>role</b> defines which applications and what parts of each application users can
+<a name="indexterm-494"></a><a name="indexterm-495"></a><p>A <b>role</b> defines which applications and what parts of each application users can
 access and what those users or groups can do with the applications. For
 example, in a personnel application, all employees might be able to see phone
 numbers and email addresses, but only managers have access to salary information. This
@@ -137,7 +137,7 @@ for each application. When the application is being packaged and deployed, the a
 specifies mappings between users, groups, and roles, as illustrated in the following figure.</p><a name="fxjfw"></a><h6>Figure&#160;11-1 Role Mapping</h6><img src="figures/security-roleMapping.gif" alt="Figure shows how users are assigned to groups, how users and groups are assigned to roles, and how applications use groups and roles." width="440" height="228"></img>
 
 <a name="ghsqd"></a><h5>Java Authorization Contract for Containers</h5>
-<a name="indexterm-446"></a><a name="indexterm-447"></a><p>Java Authorization Contract for Containers (JACC) is the part of the Java EE
+<a name="indexterm-496"></a><a name="indexterm-497"></a><p>Java Authorization Contract for Containers (JACC) is the part of the Java EE
 specification that defines an interface for pluggable authorization providers. This enables you to
 set up third-party plug-in modules to perform authorization. By default, the Enterprise Server
 provides a simple, file-based authorization engine that complies with the JACC specification. You
@@ -149,13 +149,13 @@ and <tt>AuthConfigFactory</tt>. You can also define new authentication mechanism
 <tt>ClientAuthModule</tt>.</p>
 
 <a name="ghlql"></a><h4>Auditing</h4>
-<a name="indexterm-448"></a><p><b>Auditing</b> is the means used to capture security-related events for the purpose of
+<a name="indexterm-498"></a><p><b>Auditing</b> is the means used to capture security-related events for the purpose of
 evaluating the effectiveness of security measures. Enterprise Server uses audit modules to capture
 audit trails of all authentication and authorization decisions. Enterprise Server provides a default
 audit module, as well as the ability to customize the audit modules. </p><p>For administration instructions, see <a href="#ghgol">Administering Audit Modules</a>.</p>
 
 <a name="ghlti"></a><h4>Firewalls</h4>
-<a name="indexterm-449"></a><p>A <b>firewall</b> controls the flow of data between two or more networks, and
+<a name="indexterm-499"></a><p>A <b>firewall</b> controls the flow of data between two or more networks, and
 manages the links between the networks. A firewall can consist of both hardware
 and software elements. The following guidelines pertain primarily to Enterprise Server:</p>
 <ul><li><p>In general, firewalls should be configured so that clients can access the necessary TCP/IP ports. </p><p>For example, if the HTTP listener is operating on port 8080, configure the firewall to allow HTTP requests on port 8080 only. Likewise, if HTTPS requests are set up for port 8081, you must configure the firewalls to allow HTTPS requests on port 8081.</p></li>
@@ -167,7 +167,7 @@ and software elements. The following guidelines pertain primarily to Enterprise 
 
 
 <a name="abloj"></a><h4>Certificates and SSL</h4>
-<a name="indexterm-450"></a><p>The following topics are addressed here:</p>
+<a name="indexterm-500"></a><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#ablok">Certificates</a></p></li>
 <li><p><a href="#ablol">Certificate Chains</a></p></li>
 <li><p><a href="#ablqx">Certificate Files</a></p></li>
@@ -175,7 +175,7 @@ and software elements. The following guidelines pertain primarily to Enterprise 
 <p>For administration instructions, see <a href="#ablqz">Administering JSSE Certificates </a>.</p>
 
 <a name="ablok"></a><h5>Certificates</h5>
-<a name="indexterm-451"></a><p><b>Certificates</b>, also called digital certificates, are electronic files that uniquely identify people and
+<a name="indexterm-501"></a><p><b>Certificates</b>, also called digital certificates, are electronic files that uniquely identify people and
 resources on the Internet. Certificates also enable secure, confidential communication between two entities. There
 are different kinds of certificates:</p>
 <ul><li><p><b>Personal certificates</b> are used by individuals.</p></li>
@@ -198,7 +198,7 @@ the following:</p>
 <li><p>The name of the CA that issued the certificate</p></li>
 <li><p>An expiration date</p></li></ul>
 <p>Certificates are governed by the technical specifications of the X.509 format. To verify
-the identity of a user in the <a name="indexterm-452"></a><tt>certificate</tt> realm, the authentication service verifies
+the identity of a user in the <a name="indexterm-502"></a><tt>certificate</tt> realm, the authentication service verifies
 an X.509 certificate, using the common name field of the X.509 certificate as
 the principal name.</p>
 
@@ -226,7 +226,7 @@ Each certificate in the chain (after the first) thus authenticates the public ke
 the signer of the previous certificate in the chain.</p>
 
 <a name="ablqx"></a><h5>Certificate Files</h5>
-<a name="indexterm-453"></a><a name="indexterm-454"></a><a name="indexterm-455"></a><a name="indexterm-456"></a><a name="indexterm-457"></a><p>During Enterprise Server installation, a certificate is generated in Java Secure Socket Extension
+<a name="indexterm-503"></a><a name="indexterm-504"></a><a name="indexterm-505"></a><a name="indexterm-506"></a><a name="indexterm-507"></a><p>During Enterprise Server installation, a certificate is generated in Java Secure Socket Extension
 (JSSE)  format suitable for internal testing. By default, Enterprise Server stores its
 certificate information in certificate databases in the <i>domain-dir</i><tt>/config</tt> directory:</p><dl><dt>Keystore file</dt>
 <dd><p>The <tt>key3.db</tt> file contains Enterprise Server certificate, including its private key. The keystore file is protected with a password.</p><p>Each keystore entry has a unique alias. After installation, the Enterprise Server keystore has a single entry with an alias of <tt>s1as</tt>.</p></dd>
@@ -237,7 +237,7 @@ certificate information in certificate databases in the <i>domain-dir</i><tt>/co
 work with the example applications and for development purposes. </p>
 
 <a name="ablom"></a><h5>Secure Sockets Layer</h5>
-<a name="indexterm-458"></a><p><b>Secure Sockets Layer</b> (SSL) is the most popular standard for securing Internet communications and transactions.
+<a name="indexterm-508"></a><p><b>Secure Sockets Layer</b> (SSL) is the most popular standard for securing Internet communications and transactions.
 Secure web applications use HTTPS (HTTP over SSL). The HTTPS protocol uses certificates to
 ensure confidential and secure communications between server and clients. In an SSL connection,
 both the client and the server encrypt data before sending it. Data is
@@ -282,7 +282,7 @@ do not match, these browsers display a warning. In general, only address-based v
 hosts are commonly used with SSL in a production environment.</p>
 
 <a name="ablno"></a><h4>Tools for Managing System Security</h4>
-<a name="indexterm-459"></a><a name="indexterm-460"></a><p>Enterprise Server provides the following tools for managing system security:</p><dl><dt>Administration Console</dt>
+<a name="indexterm-509"></a><a name="indexterm-510"></a><p>Enterprise Server provides the following tools for managing system security:</p><dl><dt>Administration Console</dt>
 <dd><p> The Administration Console is a browser-based utility used to configure security for the entire server. Tasks include managing certificates, users, groups, and realms, and performing other system-wide security tasks. For a general introduction to the Administration Console, see <a href="p4.html#ablav">Administration Console</a>.</p></dd>
 <dt>The <tt>asadmin</tt> utility</dt>
 <dd><p>The <tt>asadmin</tt> command-line utility performs many of the same tasks as the Administration Console. You might be able to do some things with the <tt>asadmin</tt> utility that you cannot do with the Administration Console. For a general introduction to <tt>asadmin</tt>, see <a href="p4.html#gcocs"><tt>asadmin</tt> Utility</a>.</p></dd>
@@ -316,7 +316,7 @@ obscure the password in a password file. If there is no password file,
 you are prompted for the master password. If there is a password file,
 but you want to change access to require prompting, remove the file. The
 default master password is <tt>changeit</tt>.</p><p>Use the <tt>change-master-password</tt> subcommand in local mode to modify the master password.</p><p>When the master password is changed, it is re-saved in the master-password keystore,
-which is a Java JCEKS type keystore.<a name="indexterm-461"></a><a name="indexterm-462"></a><a name="indexterm-463"></a><a name="indexterm-464"></a></p><h6>Before You Begin</h6><p>This subcommand will not work unless the domain is stopped. </p><ol>
+which is a Java JCEKS type keystore.<a name="indexterm-511"></a><a name="indexterm-512"></a><a name="indexterm-513"></a><a name="indexterm-514"></a></p><h6>Before You Begin</h6><p>This subcommand will not work unless the domain is stopped. </p><ol>
 <li><b>Stop the domain whose password you are changing.</b><p>See <a href="p7.html#ggoch">To Stop a Domain</a>.</p></li>
 <li><b>Change the master password for the domain by using the <a href="http://docs.sun.com/doc/820-7701/change-master-password-1?a=view"><tt>change-master-password</tt>(1)</a> subcommand.</b><p>You are  prompted for the old and new passwords. All dependent items
 are re-encrypted. </p></li>
@@ -330,7 +330,7 @@ Please enter the new master password>
 Please enter the new master password again></pre><p>Information similar to the following is displayed:</p>Master password changed for domain44ps<h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help change-master-password</tt> at the command line.</p>
 
-<a name="ghgpu"></a><h4>To Change the Administration Password</h4><a name="indexterm-465"></a><a name="indexterm-466"></a><a name="indexterm-467"></a><a name="indexterm-468"></a><p>Use the <tt>change-admin-password</tt> subcommand in remote mode to change the administration password. The
+<a name="ghgpu"></a><h4>To Change the Administration Password</h4><a name="indexterm-515"></a><a name="indexterm-516"></a><a name="indexterm-517"></a><a name="indexterm-518"></a><p>Use the <tt>change-admin-password</tt> subcommand in remote mode to change the administration password. The
 default administration password is <tt>admin</tt>. You are prompted for the old and new
 admin passwords, with confirmation.</p>
 <hr><p><b>Note - </b>If you accepted the default <tt>admin</tt> user with no password during zip installation,
@@ -349,7 +349,7 @@ Enter new admin password><tt><b>newadmin</b></tt>
 Enter new admin password again><tt><b>newadmin</b></tt></pre><p>Information similar to the following is displayed:</p><pre>Command change-admin-password executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help change-admin-password</tt> at the command line.</p>
 
-<a name="ghytn"></a><h4>To Set a Password From a File</h4><a name="indexterm-469"></a><a name="indexterm-470"></a><a name="indexterm-471"></a><p>Instead of typing the password at the command line, you can access
+<a name="ghytn"></a><h4>To Set a Password From a File</h4><a name="indexterm-519"></a><a name="indexterm-520"></a><a name="indexterm-521"></a><p>Instead of typing the password at the command line, you can access
 the password for a command from a file such as <tt>passwords.txt</tt>. The <tt>--passwordfile</tt> option
 of the <tt>asadmin</tt> utility takes the name of the file that contains
 the passwords. The entry for a password in the file must have the
@@ -365,7 +365,7 @@ produce a warning about using the <tt>--passwordfile</tt> option. To prevent thi
 from happening, unset <tt>AS_ADMIN_PASSWORD</tt>. </p>
 
 <a name="ghgqc"></a><h4>Administering Password Aliases</h4>
-<a name="indexterm-472"></a><a name="indexterm-473"></a><p>A password alias is used to indirectly access a password so that
+<a name="indexterm-522"></a><a name="indexterm-523"></a><p>A password alias is used to indirectly access a password so that
 the password itself does not appear in the configuration file. </p><p>The following topics are addressed here:</p>
 <ul><li><p><a href="#ghgrf">To Create a Password Alias</a></p></li>
 <li><p><a href="#ghgsr">To List Password Aliases</a></p></li>
@@ -374,12 +374,12 @@ the password itself does not appear in the configuration file. </p><p>The follow
 
 
 <a name="ghgrf"></a><h5>To Create a Password Alias</h5>
-<a name="indexterm-474"></a><a name="indexterm-475"></a><a name="indexterm-476"></a><p>Use the <tt>create-password-alias</tt> subcommand in remote mode to create an alias for a
+<a name="indexterm-524"></a><a name="indexterm-525"></a><a name="indexterm-526"></a><p>Use the <tt>create-password-alias</tt> subcommand in remote mode to create an alias for a
 password in the domain's keystore. The password corresponding to the alias name is
 stored in an encrypted form in the domain configuration file. The <tt>create-password-alias</tt> subcommand takes
 both a secure interactive form, in which users are prompted for all information,
 and a more script-friendly form, in which the password is propagated on the
-command line.<a name="indexterm-477"></a><a name="indexterm-478"></a></p><p>You can also use the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand to remove and replace the password
+command line.<a name="indexterm-527"></a><a name="indexterm-528"></a></p><p>You can also use the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand to remove and replace the password
 in the configuration file. For example:</p><pre>asadmin set --user admin server.jms-service.jms-host.default_JMS_host.
 admin-password='${ALIAS=jms-password}'</pre><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
@@ -395,7 +395,7 @@ Command create-password-alias executed successfully.</pre><h6>See Also</h6><p>Yo
 by typing <tt>asadmin help create-password-alias</tt> at the command line.</p>
 
 <a name="ghgsr"></a><h5>To List Password Aliases</h5>
-<a name="indexterm-479"></a><a name="indexterm-480"></a><a name="indexterm-481"></a><p>Use the <tt>list-password-aliases</tt> subcommand in remote mode to list existing the password aliases.</p><ol>
+<a name="indexterm-529"></a><a name="indexterm-530"></a><a name="indexterm-531"></a><p>Use the <tt>list-password-aliases</tt> subcommand in remote mode to list existing the password aliases.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>List password aliases by using the <a href="http://docs.sun.com/doc/820-7701/list-password-aliases-1?a=view"><tt>list-password-aliases</tt>(1)</a> subcommand.</b></li></ol><a name="ginsk"></a><h6>Example&#160;11-4 Listing Password Aliases</h6><p>This example lists the existing password aliases:</p><pre>asadmin> <tt><b>list-password aliases</b></tt>
 jmspassword-alias
@@ -403,7 +403,7 @@ Command list-password-aliases executed successfully</pre><h6>See Also</h6><p>You
 by typing <tt>asadmin help list-password-aliases</tt> at the command line.</p>
 
 <a name="ghgnv"></a><h5>To Delete a Password Alias</h5>
-<a name="indexterm-482"></a><a name="indexterm-483"></a><a name="indexterm-484"></a><p>Use the <tt>delete-password-alias</tt> subcommand in remote mode to delete an existing password alias.</p><ol>
+<a name="indexterm-532"></a><a name="indexterm-533"></a><a name="indexterm-534"></a><p>Use the <tt>delete-password-alias</tt> subcommand in remote mode to delete an existing password alias.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>List all aliases by using the <a href="http://docs.sun.com/doc/820-7701/list-password-aliases-1?a=view"><tt>list-password-aliases</tt>(1)</a> subcommand.</b></li>
 <li><b>Delete a password alias by using the <a href="http://docs.sun.com/doc/820-7701/list-password-aliases-1?a=view"><tt>list-password-aliases</tt>(1)</a> subcommand.</b></li></ol><a name="ginul"></a><h6>Example&#160;11-5 Deleting a Password Alias</h6><p>This example deletes the password alias <tt>jmspassword-alias</tt>:</p><pre>asadmin> <tt><b>delete-password-alias jmspassword-alias</b></tt>
@@ -411,7 +411,7 @@ Command list-password-aliases executed successfully</pre><h6>See Also</h6><p>You
 by typing <tt>asadmin help delete-password-alias</tt> at the command line.</p>
 
 <a name="giobz"></a><h5>To Update a Password Alias</h5>
-<a name="indexterm-485"></a><a name="indexterm-486"></a><p>Use the <tt>update-password-alias</tt> subcommand in remote mode to change the password for an
+<a name="indexterm-535"></a><a name="indexterm-536"></a><p>Use the <tt>update-password-alias</tt> subcommand in remote mode to change the password for an
 existing password alias. The <tt>update-password-alias</tt> subcommand takes both a secure interactive form,
 in which the user is prompted for all information, and a more script-friendly
 form, in which the password is propagated on the command line.</p><ol>
@@ -429,14 +429,14 @@ by typing <tt>asadmin help update-password-alias</tt> at the command line.</p>
 <li><p><a href="#ghgpo">To Delete an Audit Module</a></p></li></ul>
 
 
-<a name="ghgra"></a><h4>To Create an Audit Module</h4><a name="indexterm-487"></a><a name="indexterm-488"></a><a name="indexterm-489"></a><p>Use the <tt>create-audit-module</tt> subcommand in remote mode to create an audit module for
+<a name="ghgra"></a><h4>To Create an Audit Module</h4><a name="indexterm-537"></a><a name="indexterm-538"></a><a name="indexterm-539"></a><p>Use the <tt>create-audit-module</tt> subcommand in remote mode to create an audit module for
 the add-on component that implements the audit capabilities. </p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>Create an audit module by using the <a href="http://docs.sun.com/doc/820-7701/create-audit-module-1?a=view"><tt>create-audit-module</tt>(1)</a> subcommand.</b><p>Information about properties for this subcommand is included in this help page.</p></li></ol><a name="ghjlw"></a><h6>Example&#160;11-7 Creating an Audit Module</h6><p>This example creates an audit module named <tt>sampleAuditModule</tt>:</p><pre>asadmin> <tt><b>create-audit-module --classname com.sun.appserv.auditmodule --property defaultuser= admin:Password=admin sampleAuditModule</b></tt>
 Command create-audit-module executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help create-audit-module</tt> at the command line.</p>
 
-<a name="ghgsm"></a><h4>To List Audit Modules</h4><a name="indexterm-490"></a><a name="indexterm-491"></a><a name="indexterm-492"></a><a name="indexterm-493"></a><p>Use the <tt>list-audit-modules</tt> subcommand in remote mode to list the audit modules on
+<a name="ghgsm"></a><h4>To List Audit Modules</h4><a name="indexterm-540"></a><a name="indexterm-541"></a><a name="indexterm-542"></a><a name="indexterm-543"></a><p>Use the <tt>list-audit-modules</tt> subcommand in remote mode to list the audit modules on
 one of the following targets:</p>
 <ul><li><p>Server instance, <tt>server</tt> (the default)</p></li>
 <li><p>Specified server instance</p></li>
@@ -449,14 +449,14 @@ audit-module : sampleAuditModule
 Command list-audit-modules executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
 by typing <tt>asadmin help list-audit-modules</tt> at the command line.</p>
 
-<a name="ghgpo"></a><h4>To Delete an Audit Module</h4><a name="indexterm-494"></a><a name="indexterm-495"></a><a name="indexterm-496"></a><p>Use the <tt>delete-audit-module</tt> subcommand in remote mode to delete an existing audit module.</p><ol>
+<a name="ghgpo"></a><h4>To Delete an Audit Module</h4><a name="indexterm-544"></a><a name="indexterm-545"></a><a name="indexterm-546"></a><p>Use the <tt>delete-audit-module</tt> subcommand in remote mode to delete an existing audit module.</p><ol>
 <li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
 <li><b>List the audit modules by using the <a href="http://docs.sun.com/doc/820-7701/list-audit-modules-1?a=view"><tt>list-audit-modules</tt>(1)</a> subcommand.</b></li>
 <li><b>Delete an audit module by using the <a href="http://docs.sun.com/doc/820-7701/delete-audit-module-1?a=view"><tt>delete-audit-module</tt>(1)</a> subcommand.</b></li></ol><a name="ghjhm"></a><h6>Example&#160;11-9 Deleting an Audit Module</h6><p>This example deletes <tt>sampleAuditModule</tt>:</p><pre>asadmin> <tt><b>delete-audit-module sampleAuditModule</b></tt>
 Command delete-audit-module executed successfully.</pre>
 
 <a name="ablqz"></a><h3>Administering JSSE Certificates </h3>
-<a name="indexterm-497"></a><a name="indexterm-498"></a><a name="indexterm-499"></a><p> In the developer profile, the Enterprise Server v3 uses the JSSE format
+<a name="indexterm-547"></a><a name="indexterm-548"></a><a name="indexterm-549"></a><p> In the developer profile, the Enterprise Server v3 uses the JSSE format
 on the server side to manage certificates and key stores. In all
 profiles, the client side (appclient or stand-alone) uses the JSSE format. </p><p>The J2SE SDK ships with the <tt>keytool</tt> utility, which enables you to set
 up and work with Java Secure Socket Extension (JSSE) digital certificates. You can
@@ -467,7 +467,7 @@ the form of certificates) of their communicating peers.</p><p>The following topi
 <li><p><a href="#ghleq">To Delete a Certificate by Using <tt>keytool</tt></a></p></li></ul>
 
 
-<a name="ghlgv"></a><h4>To Generate a Certificate by Using <tt>keytool</tt></h4><a name="indexterm-500"></a><a name="indexterm-501"></a><a name="indexterm-502"></a><a name="indexterm-503"></a><p>By default, the <tt>keytool</tt> utility creates a keystore file in the directory where
+<a name="ghlgv"></a><h4>To Generate a Certificate by Using <tt>keytool</tt></h4><a name="indexterm-550"></a><a name="indexterm-551"></a><a name="indexterm-552"></a><a name="indexterm-553"></a><p>By default, the <tt>keytool</tt> utility creates a keystore file in the directory where
 the utility is run.</p><h6>Before You Begin</h6><p>To run the <tt>keytool</tt> utility, your shell environment must be configured so that
 the J2SE <tt>/bin</tt> directory is in the path, otherwise the full path to
 the utility must be present on the command line. </p><ol>
@@ -496,7 +496,7 @@ want to trust the certificate.</p></li>
 [Saving cacerts.jks]</pre></li>
 <li><b>To apply your changes, restart Enterprise Server. See <a href="p7.html#ginqj">To Restart a Domain</a>.</b></li></ol><a name="ghlii"></a><h6>Example&#160;11-10 Creating a Self-Signed Certificate in a JKS Keystore by Using an RSA Key Algorithm</h6><p>RSA is public-key encryption technology developed by RSA Data Security, Inc.</p><pre><tt><b>keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias} -dname ${dn.name} -keypass ${key.pass} -keystore ${keystore.file} -storepass ${keystore.pass}</b></tt></pre><a name="ghlew"></a><h6>Example&#160;11-11 Creating a Self-Signed Certificate in a JKS Keystore by Using a Default Key Algorithm</h6><pre><tt><b>keytool -genkey -noprompt -trustcacerts -alias ${cert.alias} -dname ${dn.name} -keypass ${key.pass} -keystore ${keystore.file} -storepass ${keystore.pass}</b></tt></pre><a name="ghldw"></a><h6>Example&#160;11-12 Displaying Available Certificates From a JKS Keystore</h6><pre><tt><b>keytool -list -v -keystore ${keystore.file} -storepass ${keystore.pass}</b></tt></pre><a name="ghlfd"></a><h6>Example&#160;11-13 Displaying Certificate information From a JKS Keystore</h6><pre><tt><b>keytool -list -v -alias ${cert.alias} -keystore ${keystore.file} -storepass ${keystore.pass}</b></tt></pre><h6>See Also</h6><p>For more information about <tt>keytool</tt>, see the <tt>keytool</tt> documentation at <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/solaris/keytool.html">http://java.sun.com/j2se/1.5.0/docs/tooldocs/solaris/keytool.html</a>.</p>
 
-<a name="ghlgj"></a><h4>To Sign a Certificate by Using <tt>keytool</tt></h4><a name="indexterm-504"></a><a name="indexterm-505"></a><a name="indexterm-506"></a><p>After creating a certificate, the owner must sign the certificate to prevent forgery.
+<a name="ghlgj"></a><h4>To Sign a Certificate by Using <tt>keytool</tt></h4><a name="indexterm-554"></a><a name="indexterm-555"></a><a name="indexterm-556"></a><p>After creating a certificate, the owner must sign the certificate to prevent forgery.
 E-commerce sites, or those for which authentication of identity is important, can purchase
 a certificate from a well-known Certificate Authority (CA). </p>
 <hr><p><b>Note - </b>If authentication is not a concern, for example if private secure communications are
@@ -522,7 +522,7 @@ format, also known as Base 64 encoding, facilitates exporting certificates to ot
 by email or through some other mechanism.</p><pre><tt><b>keytool -import -noprompt -trustcacerts -alias ${cert.alias} -file ${cert.file} -keystore ${keystore.file} -storepass ${keystore.pass}</b></tt></pre><a name="ghlim"></a><h6>Example&#160;11-15 Exporting a Certificate From a JKS Keystore in PKCS7 Format</h6><p>The reply format defined by the Public Key Cryptography Standards #7, Cryptographic Message
 Syntax Standard, includes the supporting certificate chain in addition to the issued certificate.</p><pre><tt><b>keytool -export -noprompt -alias ${cert.alias} -file ${cert.file} -keystore ${keystore.file} -storepass ${keystore.pass}</b></tt></pre><a name="ghleb"></a><h6>Example&#160;11-16 Exporting a Certificate From a JKS Keystore in RFC/Text Format</h6><pre><tt><b>keytool -export -noprompt -rfc -alias ${cert.alias} -file ${cert.file} -keystore ${keystore.file} -storepass ${keystore.pass}</b></tt></pre><h6>See Also</h6><p>For more information about <tt>keytool</tt>, see the <tt>keytool</tt> documentation at <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/solaris/keytool.html">http://java.sun.com/j2se/1.5.0/docs/tooldocs/solaris/keytool.html</a></p>
 
-<a name="ghleq"></a><h4>To Delete a Certificate by Using <tt>keytool</tt></h4><a name="indexterm-507"></a><a name="indexterm-508"></a><a name="indexterm-509"></a><p>Use the <tt>keytool <tt>-delete</tt></tt> command to delete an existing certificate.</p><ul>
+<a name="ghleq"></a><h4>To Delete a Certificate by Using <tt>keytool</tt></h4><a name="indexterm-557"></a><a name="indexterm-558"></a><a name="indexterm-559"></a><p>Use the <tt>keytool <tt>-delete</tt></tt> command to delete an existing certificate.</p><ul>
 <li><b>Delete a certificate using the following command format:</b><pre>keytool -delete
  -alias <i>keyAlias</i>
  -keystore <i>keystore-name</i>

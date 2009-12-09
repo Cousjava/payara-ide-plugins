@@ -6,7 +6,7 @@
 <title>Developing Lifecycle Listeners - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,14 +25,14 @@
 </table>
 
 
-<a name="beamc"></a>Chapter&#160;13<h3>Developing Lifecycle Listeners</h3><p><a name="indexterm-736"></a><a name="indexterm-737"></a>Lifecycle listener modules provide a means of running short or long duration Java-based tasks
-within the application server environment, such as instantiation of singletons or RMI servers.
-These modules are automatically initiated at server startup and are notified at various
-phases of the server life cycle.</p>
+<a name="beamc"></a>Chapter&#160;13<h3>Developing Lifecycle Listeners</h3><p><a name="indexterm-758"></a><a name="indexterm-759"></a>Lifecycle listener modules provide a means of running short or long duration Java-based tasks
+within the Sun GlassFish<sup>TM</sup> Enterprise Server environment, such as instantiation of singletons
+or RMI servers. These modules are automatically initiated at server startup and are notified
+at various phases of the server life cycle.</p>
 <hr><p><b>Note - </b>Lifecycle listener modules are deprecated. Support for them is included for backward compatibility. Implementing
 the <tt>org.glassfish.api.Startup</tt> interface instead is recommended.</p>
 <hr>
-<p><a name="indexterm-738"></a>All lifecycle module classes and interfaces are in the <i>as-install</i><tt>/lib/modules/</tt><tt>glassfish-api.jar</tt> file.</p><p>For Javadoc tool pages relevant to lifecycle modules, go to <a href="http://java.sun.com/javaee/6/docs/api/">http://java.sun.com/javaee/6/docs/api/</a> and click
+<p><a name="indexterm-760"></a>All lifecycle module classes and interfaces are in the <i>as-install</i><tt>/modules/</tt><tt>glassfish-api.jar</tt> file.</p><p>For Javadoc tool pages relevant to lifecycle modules, go to <a href="http://javadoc.glassfish.org/v3/apidoc/">http://javadoc.glassfish.org/v3/apidoc/</a> and click
 on the <tt>com.sun.appserv.server</tt> package.</p><p>The following sections describe how to create and use a lifecycle listener module:</p>
 <ul><li><p><a href="#beamd">Server Life Cycle Events</a></p></li>
 <li><p><a href="#beame">The <tt>LifecycleListener</tt> Interface</a></p></li>
@@ -43,59 +43,59 @@ on the <tt>com.sun.appserv.server</tt> package.</p><p>The following sections des
 
 
 <a name="beamd"></a><h3>Server Life Cycle Events</h3>
-<p><a name="indexterm-739"></a><a name="indexterm-740"></a>A lifecycle module listens for and performs its tasks in response to the
+<p><a name="indexterm-761"></a><a name="indexterm-762"></a>A lifecycle module listens for and performs its tasks in response to the
 following events in the server life cycle:</p>
-<ul><li><p><a name="indexterm-741"></a>After the <tt>INIT_EVENT</tt>, the server reads the configuration, initializes built-in subsystems (such as security and logging services), and creates the containers.</p></li>
-<li><p><a name="indexterm-742"></a>After the <tt>STARTUP_EVENT</tt>, the server loads and initializes deployed applications.</p></li>
-<li><p><a name="indexterm-743"></a>After the <tt>READY_EVENT</tt>, the server is ready to service requests.</p></li>
-<li><p><a name="indexterm-744"></a>After the <tt>SHUTDOWN_EVENT</tt>, the server destroys loaded applications and stops.</p></li>
-<li><p><a name="indexterm-745"></a>After the <tt>TERMINATION_EVENT</tt>, the server closes the containers, the built-in subsystems, and the server runtime environment.</p></li></ul>
+<ul><li><p><a name="indexterm-763"></a>After the <tt>INIT_EVENT</tt>, the server reads the configuration, initializes built-in subsystems (such as security and logging services), and creates the containers.</p></li>
+<li><p><a name="indexterm-764"></a>After the <tt>STARTUP_EVENT</tt>, the server loads and initializes deployed applications.</p></li>
+<li><p><a name="indexterm-765"></a>After the <tt>READY_EVENT</tt>, the server is ready to service requests.</p></li>
+<li><p><a name="indexterm-766"></a>After the <tt>SHUTDOWN_EVENT</tt>, the server destroys loaded applications and stops.</p></li>
+<li><p><a name="indexterm-767"></a>After the <tt>TERMINATION_EVENT</tt>, the server closes the containers, the built-in subsystems, and the server runtime environment.</p></li></ul>
 <p>These events are defined in the <tt>LifecycleEvent</tt> class.</p><p>The lifecycle modules that listen for these events implement the <tt>LifecycleListener</tt> interface.</p>
 
 <a name="beame"></a><h3>The <tt>LifecycleListener</tt> Interface</h3>
-<a name="indexterm-746"></a><p>To create a lifecycle module is to configure a customized class that implements
+<a name="indexterm-768"></a><p>To create a lifecycle module is to configure a customized class that implements
 the <tt>com.sun.appserv.server.LifecycleListener</tt> interface. You can create and simultaneously execute multiple lifecycle modules.</p><p>The <tt>LifecycleListener</tt> interface defines this method:</p><pre>public void handleEvent(com.sun.appserv.server.LifecycleEvent event) 
-throws ServerLifecycleException</pre><p><a name="indexterm-747"></a>This method responds to a lifecycle event and throws a <tt>com.sun.appserv.server.ServerLifecycleException</tt> if an
-error occurs.</p><p><a name="indexterm-748"></a>A sample implementation of the <tt>LifecycleListener</tt> interface is the <tt>LifecycleListenerImpl.java</tt> file, which you can
+throws ServerLifecycleException</pre><p><a name="indexterm-769"></a>This method responds to a lifecycle event and throws a <tt>com.sun.appserv.server.ServerLifecycleException</tt> if an
+error occurs.</p><p><a name="indexterm-770"></a>A sample implementation of the <tt>LifecycleListener</tt> interface is the <tt>LifecycleListenerImpl.java</tt> file, which you can
 use for testing lifecycle events.</p>
 
 <a name="beamf"></a><h3>The <tt>LifecycleEvent</tt> Class</h3>
-<p><a name="indexterm-749"></a>The <tt>com.sun.appserv.server.LifecycleEvent</tt> class defines a server life cycle event. The following methods are
+<p><a name="indexterm-771"></a>The <tt>com.sun.appserv.server.LifecycleEvent</tt> class defines a server life cycle event. The following methods are
 associated with the event:</p>
-<ul><li><p><a name="indexterm-750"></a><tt>public java.lang.Object.getData()</tt></p><p>This method returns an instance of <tt>java.util.Properties</tt> that contains the properties defined for the lifecycle module.</p></li>
-<li><p><a name="indexterm-751"></a><tt>public int getEventType()</tt></p><p>This method returns the type of the last event, which is <tt>INIT_EVENT</tt>, <tt>STARTUP_EVENT</tt>, <tt>READY_EVENT</tt>, <tt>SHUTDOWN_EVENT</tt>, or <tt>TERMINATION_EVENT</tt>.</p></li>
-<li><p><a name="indexterm-752"></a><tt>public com.sun.appserv.server.LifecycleEventContext.getLifecycleEventContext()</tt></p><p>This method returns the lifecycle event context, described next.</p></li></ul>
+<ul><li><p><a name="indexterm-772"></a><tt>public java.lang.Object.getData()</tt></p><p>This method returns an instance of <tt>java.util.Properties</tt> that contains the properties defined for the lifecycle module.</p></li>
+<li><p><a name="indexterm-773"></a><tt>public int getEventType()</tt></p><p>This method returns the type of the last event, which is <tt>INIT_EVENT</tt>, <tt>STARTUP_EVENT</tt>, <tt>READY_EVENT</tt>, <tt>SHUTDOWN_EVENT</tt>, or <tt>TERMINATION_EVENT</tt>.</p></li>
+<li><p><a name="indexterm-774"></a><tt>public com.sun.appserv.server.LifecycleEventContext.getLifecycleEventContext()</tt></p><p>This method returns the lifecycle event context, described next.</p></li></ul>
 <p>A <tt>LifecycleEvent</tt> instance is passed to the <tt>LifecycleListener.handleEvent</tt> method.</p>
 
 <a name="beamg"></a><h3>The Server Lifecycle Event Context</h3>
-<p><a name="indexterm-753"></a>The <tt>com.sun.appserv.server.LifecycleEventContext</tt> interface exposes runtime information about the server. The lifecycle event context is
+<p><a name="indexterm-775"></a>The <tt>com.sun.appserv.server.LifecycleEventContext</tt> interface exposes runtime information about the server. The lifecycle event context is
 created when the <tt>LifecycleEvent</tt> class is instantiated at server initialization. The <tt>LifecycleEventContext</tt> interface
 defines these methods:</p>
-<ul><li><p><a name="indexterm-754"></a><tt>public java.lang.String[].getCmdLineArgs()</tt></p><p>This method returns the server startup command-line arguments.</p></li>
-<li><p><a name="indexterm-755"></a><tt>public java.lang.String.getInstallRoot()</tt></p><p>This method returns the server installation root directory.</p></li>
-<li><p><a name="indexterm-756"></a><tt>public java.lang.String.getInstanceName()</tt></p><p>This method returns the server instance name.</p></li>
-<li><p><a name="indexterm-757"></a><tt>public javax.naming.InitialContext.getInitialContext()</tt></p><p><a name="indexterm-758"></a><a name="indexterm-759"></a>This method returns the initial JNDI naming context. The naming environment for lifecycle modules is installed after the <tt>STARTUP_EVENT</tt>. A lifecycle module can look up any resource by its <tt>jndi-name</tt> attribute after the <tt>READY_EVENT</tt>.</p></li></ul>
+<ul><li><p><a name="indexterm-776"></a><tt>public java.lang.String[].getCmdLineArgs()</tt></p><p>This method returns the server startup command-line arguments.</p></li>
+<li><p><a name="indexterm-777"></a><tt>public java.lang.String.getInstallRoot()</tt></p><p>This method returns the server installation root directory.</p></li>
+<li><p><a name="indexterm-778"></a><tt>public java.lang.String.getInstanceName()</tt></p><p>This method returns the server instance name.</p></li>
+<li><p><a name="indexterm-779"></a><tt>public javax.naming.InitialContext.getInitialContext()</tt></p><p><a name="indexterm-780"></a><a name="indexterm-781"></a>This method returns the initial JNDI naming context. The naming environment for lifecycle modules is installed after the <tt>STARTUP_EVENT</tt>. A lifecycle module can look up any resource by its <tt>jndi-name</tt> attribute after the <tt>READY_EVENT</tt>.</p></li></ul>
 <p>If a lifecycle module needs to look up resources, it can do so
 after the <tt>READY_EVENT</tt>. It can use the <tt>getInitialContext()</tt> method to get the
 initial context to which all the resources are bound.</p>
 
 <a name="beamh"></a><h3>Deploying a Lifecycle Module</h3>
-<a name="indexterm-760"></a><p>For instructions on how to deploy a lifecycle module, see the <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>,
-or see the <tt>asadmin create-lifecycle-module</tt> command in the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p><p>You do not need to specify a classpath for the lifecycle module if
+<a name="indexterm-782"></a><p>For instructions on how to deploy a lifecycle module, see the <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>, or
+see the <tt>asadmin create-lifecycle-module</tt> command in the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p><p>You do not need to specify a classpath for the lifecycle module if
 you place it in the <i>domain-dir</i><tt>/lib</tt> or <i>domain-dir</i><tt>/lib/classes</tt> directory for the Domain
 Administration Server.</p>
 
 <a name="beami"></a><h3>Considerations for Lifecycle Modules</h3>
-<a name="indexterm-761"></a><p>The resources allocated at initialization or startup should be freed at shutdown or
+<a name="indexterm-783"></a><p>The resources allocated at initialization or startup should be freed at shutdown or
 termination. The lifecycle module classes are called synchronously from the main server thread,
 therefore it is important to ensure that these classes don&#8217;t block the server. Lifecycle
 modules can create threads if appropriate, but these threads must be stopped in
-the shutdown and termination phases.</p><p><a name="indexterm-762"></a><a name="indexterm-763"></a><a name="indexterm-764"></a>The LifeCycleModule class loader is the parent class loader for lifecycle modules. Each
+the shutdown and termination phases.</p><p><a name="indexterm-784"></a><a name="indexterm-785"></a><a name="indexterm-786"></a>The LifeCycleModule class loader is the parent class loader for lifecycle modules. Each
 lifecycle module&#8217;s classpath is used to construct its class loader. All the support
 classes needed by a lifecycle module must be available to the LifeCycleModule class loader
-or its parent, the Connector class loader.</p><p><a name="indexterm-765"></a><a name="indexterm-766"></a>You must ensure that the <tt>server.policy</tt> file is appropriately set up, or a
+or its parent, the Connector class loader.</p><p><a name="indexterm-787"></a><a name="indexterm-788"></a>You must ensure that the <tt>server.policy</tt> file is appropriately set up, or a
 lifecycle module trying to perform a <tt>System.exec()</tt> might cause a security access
-violation. For details, see <a href="p10.html#beabx">The <tt>server.policy</tt> File</a>.</p><p><a name="indexterm-767"></a>The configured properties for a lifecycle module are passed as properties after the
+violation. For details, see <a href="p10.html#beabx">The <tt>server.policy</tt> File</a>.</p><p><a name="indexterm-789"></a>The configured properties for a lifecycle module are passed as properties after the
 <tt>INIT_EVENT</tt>. The JNDI naming context is not available before the <tt>STARTUP_EVENT</tt>. If a lifecycle
 module requires the naming context, it can get this after the <tt>STARTUP_EVENT</tt>, <tt>READY_EVENT</tt>, or
 <tt>SHUTDOWN_EVENT</tt>.</p>

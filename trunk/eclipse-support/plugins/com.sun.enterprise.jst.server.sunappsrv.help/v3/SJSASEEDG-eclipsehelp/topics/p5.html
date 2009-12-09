@@ -6,7 +6,7 @@
 <title>Setting Up a Development Environment - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-11-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -86,31 +86,31 @@ the name of the machine on which the Enterprise Server is running. By
 default, the <i>host</i> is <tt>localhost</tt>. For example:</p><pre>http://localhost:4848</pre>
 
 <a name="beaax"></a><h4>Enterprise Server Ant Tasks</h4>
-<a name="indexterm-13"></a><a name="indexterm-14"></a><a name="indexterm-15"></a><a name="indexterm-16"></a><p>The Enterprise Server provides server-specific tasks for administration and deployment; see <a href="p7.html">Chapter&#160;3, Using Ant with Enterprise Server</a>. The sample
+<a name="indexterm-13"></a><a name="indexterm-14"></a><a name="indexterm-15"></a><p>The Enterprise Server provides server-specific tasks for administration and deployment; see <a href="p7.html">Chapter&#160;3, Using Ant with Enterprise Server</a>. The sample
 applications that can be used with the Enterprise Server use Ant <tt>build.xml</tt> files;
 see <a href="#beabf">Sample Applications</a>.</p><p>For more information about Ant, see the Apache Software Foundation web site at
 <a href="http://ant.apache.org/">http://ant.apache.org/</a>.</p>
 
 <a name="giqib"></a><h4>Scripting Language Support</h4>
-<a name="indexterm-17"></a><a name="indexterm-18"></a><a name="indexterm-19"></a><p>The Enterprise Server supports a number of scripting languages, including Ruby on Rails
+<a name="indexterm-16"></a><a name="indexterm-17"></a><a name="indexterm-18"></a><p>The Enterprise Server supports a number of scripting languages, including Ruby on Rails
 and Groovy on Grails. For more information, see the <a href="http://docs.sun.com/doc/820-7697"><i>Sun GlassFish Enterprise Server v3 Preview Scripting Framework Guide</i></a>.</p>
 
 <a name="beaba"></a><h4>The Migration Tool</h4>
-<a name="indexterm-20"></a><p>The Migration Tool converts and reassembles Java EE applications and modules developed on
+<a name="indexterm-19"></a><p>The Migration Tool converts and reassembles Java EE applications and modules developed on
 other application servers. This tool also generates a report listing how many files
 are successfully and unsuccessfully migrated, with reasons for migration failure. For more information and
 to download the Migration Tool, see <a href="http://java.sun.com/j2ee/tools/migration/index.html">http://java.sun.com/j2ee/tools/migration/index.html</a>.</p>
 
 <a name="beaaw"></a><h4>The NetBeans IDE</h4>
-<p><a name="indexterm-21"></a>The NetBeans IDE allows you to create, assemble, and debug code from a
+<p><a name="indexterm-20"></a>The NetBeans IDE allows you to create, assemble, and debug code from a
 single, easy-to-use interface. The GlassFish edition of the Enterprise Server is bundled with
 the NetBeans 6.1 IDE. To download the NetBeans IDE, see <a href="http://www.netbeans.org">http://www.netbeans.org</a>. This site
 also provides documentation on how to use the NetBeans IDE with the bundled
-GlassFish edition of the Enterprise Server.</p><p><a name="indexterm-22"></a>You can also use the Enterprise Server with the Sun Java Studio 8
+GlassFish edition of the Enterprise Server.</p><p><a name="indexterm-21"></a>You can also use the Enterprise Server with the Sun Java Studio 8
 software, which is built on the NetBeans IDE. For more information, see <a href="http://developers.sun.com/prodtech/javatools/jsenterprise/">http://developers.sun.com/prodtech/javatools/jsenterprise/</a>.</p>
 
 <a name="gbvrq"></a><h4>The Eclipse IDE</h4>
-<a name="indexterm-23"></a><p>A plug-in for the Eclipse IDE is available at <a href="http://glassfishplugins.dev.java.net/">http://glassfishplugins.dev.java.net/</a>. This site also
+<a name="indexterm-22"></a><p>A plug-in for the Eclipse IDE is available at <a href="http://glassfishplugins.dev.java.net/">http://glassfishplugins.dev.java.net/</a>. This site also
 provides documentation on how to register the Enterprise Server and use Sun-specific deployment
 descriptors.</p>
 
@@ -123,17 +123,17 @@ see <a href="p8.html">Chapter&#160;4, Debugging Applications</a>.</p>
 <a href="p8.html#beafn">Profiling Tools</a>.</p>
 
 <a name="beabf"></a><h3>Sample Applications</h3>
-<a name="indexterm-24"></a><a name="indexterm-25"></a><a name="indexterm-26"></a><p>Sample applications that you can examine and deploy to the Enterprise Server
+<a name="indexterm-23"></a><a name="indexterm-24"></a><a name="indexterm-25"></a><p>Sample applications that you can examine and deploy to the Enterprise Server
 are available. If you installed the Enterprise Server as part of installing the Java
 EE 6 SDK bundle from <a href="http://java.sun.com/javaee/downloads/index.jsp">Java EE 6 Downloads</a>, the samples may already be installed. You
-can download these samples separately from the <a href="http://java.sun.com/javaee/reference/code/index.jsp">Code Samples</a> page if you installed
-the Enterprise Server without them initially.</p><p>Most Enterprise Server samples have the following directory structure:</p>
+can download these samples separately from the <a href="http://java.sun.com/javaee/reference/code/index.jsp">Code Samples</a> page if you installed the
+Enterprise Server without them initially.</p><p>Most Enterprise Server samples have the following directory structure:</p>
 <ul><li><p>The <tt>docs</tt> directory contains instructions for how to use the sample.</p></li>
-<li><p><a name="indexterm-27"></a>The <tt>build.xml</tt> file defines Ant targets for the sample. See <a href="p7.html">Chapter&#160;3, Using Ant with Enterprise Server</a>.</p></li>
+<li><p><a name="indexterm-26"></a>The <tt>build.xml</tt> file defines Ant targets for the sample. See <a href="p7.html">Chapter&#160;3, Using Ant with Enterprise Server</a>.</p></li>
 <li><p>The <tt>src/java</tt> directory under each component contains source code for the sample.</p></li>
 <li><p>The <tt>src/conf</tt> directory under each component contains the deployment descriptors.</p></li></ul>
 <p>With a few exceptions, sample applications follow the standard directory structure described here:
-<a href="http://java.sun.com/blueprints/code/projectconventions.html">http://java.sun.com/blueprints/code/projectconventions.html</a>.</p><p><a name="indexterm-28"></a>The <i>samples-install-dir</i><tt>/bp-project/main.xml</tt> file defines properties common to all sample applications and implements targets needed
+<a href="http://java.sun.com/blueprints/code/projectconventions.html">http://java.sun.com/blueprints/code/projectconventions.html</a>.</p><p><a name="indexterm-27"></a>The <i>samples-install-dir</i><tt>/bp-project/main.xml</tt> file defines properties common to all sample applications and implements targets needed
 to compile, assemble, deploy, and undeploy sample applications. In most sample applications, the
 <tt>build.xml</tt> file imports <tt>main.xml</tt>.</p><p>In addition to the Java EE 6 sample applications, samples are also available
 at <a href="https://glassfish-samples.dev.java.net/">GlassFish Samples</a> and at <i>as-install</i><tt>/glassfish/samples/</tt>.</p>
