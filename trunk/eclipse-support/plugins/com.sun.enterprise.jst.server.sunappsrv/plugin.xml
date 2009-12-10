@@ -1774,7 +1774,7 @@
            id="com.sun.enterprise.jst.server.runtime.glassfishv3prelude">
     	</runtime>
      	<runtime
-           archiveUrl="http://download.java.net/glassfish/v3/promoted/latest-glassfish.zip" 		   
+           archiveUrl="http://download.java.net/glassfish/v3/release/glassfish-v3.zip" 		   
            licenseUrl="https://glassfishplugins.dev.java.net/license/CDDL+GPL+3rdPartyEPL.txt"
            id="com.sun.enterprise.jst.server.runtime.sunappsrv92">
     	</runtime>   	
