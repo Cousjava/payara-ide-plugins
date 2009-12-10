@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<meta name="Description" value="GlassFish Tools Bundle for Eclipse is an integrated Eclipse IDE bundled with the Sun GlassFish Enterprise Server v3 with integration plugins to make Java and Dynamic Language Development and Deployment rich and easy for developers"/>
+<meta name="Description" value="GlassFish Tools Bundle for Eclipse is an integrated Eclipse IDE bundled with the Sun GlassFish Enterprise Server versions v2 and v3 with integration plugins to make Java and Dynamic Language Development and Deployment rich and easy for developers"/>
 
 <meta name="Keywords" value ="eclipse, glassfish, studio, tools bundle, java editor, application server, IDE, plugins, javaee, java-ee, java_ee, j2ee, java, ide, swt, refactoring, free java ide, tools, platform, open source, development environment, development, ide"/>
 
@@ -55,7 +55,7 @@ return comp;
 
 <h2> Welcome to the GlassFish Tools Bundle For Eclipse Download
 Page </h2>
-<h4> New With GlassFish v3 Java EE 6 bits! </h4>
+
 <br>
 
 <table id="BundleMainTable" boder="0" cellpadding="0" cellspacing="0" width="100%">
@@ -88,17 +88,13 @@ Page </h2>
 
             <script>
 var platforms = new Array();
-platforms["win32"] = "Windows (XP, 7)";
+platforms["win32"] = "Windows";
 platforms["win32nojdk"] = "Windows, no JDK 1.6 bundled";
-platforms["linuxnojdk"] = "Linux Installer, no JDK1.6 bundled";
-platforms["linuxnojdktarball"] = "Linux tarball, no JDK1.6 bundled";
-platforms["linux"] = "Linux Installer";
-platforms["linuxtarball"] = "Linux tarball";
+platforms["linuxnojdk"] = "Linux, no JDK1.6 bundled";
+platforms["linux"] = "Linux";
 platforms["macx86"] = "Mac OSX Intel";
-platforms["solx86"] = "Open Solaris Installer";
-platforms["solx86tarball"] = "Open Solaris tarball";
-platforms["solx86nojdk"] = "Open Solaris Installer, no JDK1.6 bundled";
-platforms["solx86nojdktarball"] = "Open Solaris tarball, no JDK1.6 bundled";
+platforms["solx86"] = "Open Solaris";
+platforms["solx86nojdk"] = "Open Solaris, no JDK1.6 bundled";
 //platforms["macppc"] = "Mac OSX PPC";
 function getPlatform() {
 if (navigator.platform != null) {
@@ -150,7 +146,7 @@ document.write('</select>\r\n');
                   <td width="126"> <img src="background.jpg" height="80"></td>
 
                   <td class="buildtitle"> <span class="buildtitle">GlassFish
-Tools Bundle for Eclipse v1.2 Release Candidate 1.1.9 (December 10, 2009)</span> </td>
+Tools Bundle for Eclipse v1.1 (August 17, 2009)</span> </td>
 
                 </tr>
 
@@ -159,14 +155,12 @@ Tools Bundle for Eclipse v1.2 Release Candidate 1.1.9 (December 10, 2009)</span>
                   <td> <span class="buildsub">Description:</span>
                   </td>
 
-                  <td> <span class="builddescription">
-This is the most recent distribution
-of the GlassFish Tools Bundle for Eclipse, containing
-Eclipse 3.5.1 Java EE IDE, GlassFish v3 with Java EE 6
-support pre-configured, and optionally, JDK 1.6.
-The GlassFish Eclipse Plugin
-is available <a href="https://glassfishplugins.dev.java.net/eclipse34/">independently)</a> for developers that already have the Eclipse IDE installed.
-</span> </td>
+                  <td> <span class="builddescription">This
+is the most
+stable recent distribution of the GlassFish Tools Bundle for Eclipse.
+It contains the Eclipse 3.4.2 Java EE IDE, GlassFish v2.1 and GlassFish
+v3 Prelude pre-configured, and optionally, a JDK 1.6. (It is still possible to get the GlassFish 
+Eclipse Plugin <a href="https://glassfishplugins.dev.java.net/eclipse34/">independently)</a>.</span> </td>
 
                 </tr>
 
@@ -208,7 +202,8 @@ license</a>.</td>
                   <div id="gfnbldoc" style="border: 1px none ; display: none;">
                   <p><b>Prerequisities: </b> If you
 are selecting an installer without the JDK, you will need a Sun JDK to
-be pre-installed: version 1.6.0_16 or later for JDK 6.
+be pre-installed: version
+1.5.0_14 or later for JDK 5, or version 1.6.0_03 or later for JDK 6.
 The Mac installer does not bundle a JDK 1.6.</p>
 
                   <p><b>Installation instructions: </b><br>
@@ -258,7 +253,7 @@ past and future webinars, and more. <br>
 
                   </a><a href="javascript:none" onclick="return toggledisplay('gfemscontents','expand2');"> </a></span>
                   <div id="gfemscontents" style="border: 1px none ; display: none;">
-                  <table cellpadding="3" cellspacing="0">
+                  <table cellpadding="0" cellspacing="0">
 
                     <tbody>
 
@@ -272,8 +267,8 @@ past and future webinars, and more. <br>
 
                         </td>
 
-                        <td class="buildcontentsodd"><a href="http://eclipse.org/downloads/">Eclipse
-3.5.1 IDE with Java EE support</a><br>
+                        <td class="buildcontentsodd"><a href="http://www.eclipse.org/downloads/packages/release/ganymede/sr1">Eclipse
+3.4.2 IDE with Java EE support</a><br>
 
                         </td>
 
@@ -289,9 +284,9 @@ past and future webinars, and more. <br>
 
                         </td>
 
-                        <td class="buildcontentseven">
- <a href="http://download.java.net/glassfish/v3/release">
-GlassFish v3 Java EE 6</a><br>
+                        <td class="buildcontentseven"><a href="http://download.java.net/javaee5/v2.1/promoted">Glassfish
+v2.1</a> <a href="http://download.java.net/glassfish/v3-prelude/release">
+and GlassFish v3 Prelude</a><br>
 
                         </td>
 
@@ -299,7 +294,7 @@ GlassFish v3 Java EE 6</a><br>
 
                       <tr>
 
-                        <td class="buildcontentsodd">&nbsp;&bull;&nbsp; GlassFish
+                        <td class="buildcontentsodd">&nbsp;&bull;&nbsp;GlassFish
 Eclipse Plugins<br>
 
                         </td>
@@ -308,7 +303,7 @@ Eclipse Plugins<br>
 
                         </td>
 
-                        <td class="buildcontentsodd"><a href="https://glassfishplugins.dev.java.net/download/index.html"> Latest
+                        <td class="buildcontentsodd"><a href="https://glassfishplugins.dev.java.net/download/index.html">Latest
 Plugin</a><br>
 
                         </td>
@@ -317,8 +312,8 @@ Plugin</a><br>
 
                       <tr>
 
-                        <td class="buildcontentseven">&nbsp;&bull;&nbsp; JDK
-1.6 Update 16<br>
+                        <td class="buildcontentseven">&nbsp;&bull;&nbsp;JDK
+1.6 Update 12<br>
 
                         </td>
 
@@ -326,7 +321,7 @@ Plugin</a><br>
 
                         </td>
 
-                        <td class="buildcontentseven"><a href="http://java.sun.com/javase/downloads/index.jsp"> JDK</a><br>
+                        <td class="buildcontentseven"><a href="http://java.sun.com/javase/downloads/index.jsp">JDK</a><br>
 
                         </td>
 
@@ -348,23 +343,16 @@ Plugin</a><br>
 
                   <td>
                   <form action="StartDownload.html" id="assetchoice">
-                    <div> With or Without JDK 1.6 U16:
+                    <div> With or Without JDK 1.6 U12:
                     <script>listbox(
 [
-{ platform: "macx86", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-1.1.9.dmg"},
-{ platform: "win32", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-1.1.9.exe"},
-{ platform: "win32nojdk", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-nojdk-1.1.9.exe"},
-{ platform: "solx86", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-1.1.9-opensolaris-pack200-install.jar"},
-{ platform: "solx86nojdk", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-nojdk-1.1.9-opensolaris-pack200-install.jar"},
-{ platform: "solx86tarball", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-1.1.8-opensolaris.tar.gz"},
-{ platform: "solx86nojdktarball", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-nojdk-1.1.9-opensolaris-pack200-install.jar"},
-{
-  platform: "linux", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-1.1.9-linux-pack200-install.jar"},
-{ platform: "linuxnojdk", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-nojdk-1.1.9-linux-pack200-install.jar"} ,
-
-
-{ platform: "linuxtarball", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-1.1.9.tar.gz"},
-{ platform: "linuxnojdktarball", asset: "glassfish/eclipse/1.1.9/glassfish-tools-bundle-for-eclipse-nojdk-1.1.9.tar.gz"}
+{ platform: "macx86", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-1.1.dmg"},
+{ platform: "win32", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-1.1.exe"},
+{ platform: "win32nojdk", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-nojdk-1.1.exe"},
+{ platform: "solx86", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-1.1-opensolaris-pack200-install.jar"},
+{ platform: "solx86nojdk", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-nojdk-1.1-opensolaris-pack200-install.jar"},
+{ platform: "linux", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-1.1-linux-pack200-install.jar"},
+{ platform: "linuxnojdk", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-nojdk-1.1-linux-pack200-install.jar"}
 ] );</script><input value="Download" type="submit"></div>
 
                   </form>
@@ -384,11 +372,13 @@ Plugin</a><br>
 Tools Bundle for Eclipse</a>: Community support is available
 through the mailing list. Commercial support is also available at the <a href="http://developers.sun.com/services/buying_guide.jsp">Sun Developer Services Buying Guide.</a><br>
 
-
+                  <a href="http://www.sun.com/appserver">Sun
+GlassFish Enterprise Server v2.1</a> provides commercial support
+for GlassFish v2.1. <br>
 
                   <a href="http://www.sun.com/glassfishv3">Sun
-GlassFish Enterprise Server v3 </a> provides commercial
-support for GlassFish v3 <br>
+GlassFish Enterprise Server v3 Prelude</a> provides commercial
+support for GlassFish v3 Prelude <br>
 
                   <a href="http://www.sun.com/glassfish">Sun
 GlassFish Portfolio</a> includes support for Sun GlassFish
@@ -433,7 +423,6 @@ var oenodownloadsbox = true;
 <br>
 <br>
 
-<font size="-2"><a href="index11.html">Link to the previous release 1.1</a> </font><br>
 <font size="-2"><a href="index10.html">Link to the previous release 1.0</a> </font><br>
 </body>
 </html>
