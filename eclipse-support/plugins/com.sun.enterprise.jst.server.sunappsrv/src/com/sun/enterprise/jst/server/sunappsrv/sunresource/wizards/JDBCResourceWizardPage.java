@@ -186,12 +186,12 @@ public class JDBCResourceWizardPage extends WizardPage {
 				connectionProfile = showCPWizard();
 				if (connectionProfile != null) {
 					String newName = connectionProfile.getName();
-
+					
 					combo.add(newName);
 					combo.select(combo.indexOf(newName));
-					dialogChanged();
 					combo.pack();
 				}
+				dialogChanged();
 			}
 		});
 		GridDataFactory.defaultsFor(button).align(SWT.END, SWT.CENTER).applyTo(button);
@@ -232,7 +232,12 @@ public class JDBCResourceWizardPage extends WizardPage {
 		if (!hasConnection) {
 			setErrorMessage(Messages.errorConnectionMissing);
 			return;
-		} 
+		}
+		if(connectionProfile == null){
+			setErrorMessage(Messages.errorConnectionInvalid);
+			return;
+		}
+		
 		setErrorMessage(null);
 		setPageComplete(true);
 	}
