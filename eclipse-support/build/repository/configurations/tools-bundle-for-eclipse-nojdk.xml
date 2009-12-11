@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<!-- first release 2008-11-27 -->
 <configuration name="Tools Bundle For Eclipse"
-	releaseDate="2009-05-09" version="1.1.9">
+	releaseDate="2009-05-09" version="1.1.91">
 
 	<shortdescription>GlassFish Tools Bundle for Eclipse.
 	</shortdescription>
@@ -45,6 +45,8 @@ chmod -R a+xrw "$ECLIPSE_TARGET_DIR/dropins"
 
 # Eclipse 3.5 want's to write quite a lot to the install directory
 chmod -R a+w "$ECLIPSE_TARGET_DIR"
+
+sed -i old  's_/p2_/../p2_g' "$ECLIPSE_TARGET_DIR/configuration/config.ini"
 # but not this file:
 chmod  a-w "$ECLIPSE_TARGET_DIR/configuration/config.ini"
 
