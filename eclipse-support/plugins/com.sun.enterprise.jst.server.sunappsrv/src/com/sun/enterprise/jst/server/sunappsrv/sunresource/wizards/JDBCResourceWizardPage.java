@@ -183,8 +183,9 @@ public class JDBCResourceWizardPage extends WizardPage {
 			}
 		
 			public void widgetSelected(SelectionEvent e) {
-				connectionProfile = showCPWizard();
-				if (connectionProfile != null) {
+				IConnectionProfile newProfile = showCPWizard();
+				if (newProfile != null) {
+					connectionProfile = newProfile;
 					String newName = connectionProfile.getName();
 					
 					combo.add(newName);
