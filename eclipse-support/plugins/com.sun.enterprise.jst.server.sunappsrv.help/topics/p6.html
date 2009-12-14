@@ -1,12 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en-US">
 <head>
-<!-- GenHTML revision 22645-->
+<!-- GenHTML revision 23224-->
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-<title>Developing Applications for GlassFish Server from Eclipse IDE - GlassFish Tools Bundle for Eclipse User Guide</title>
+<title>Developing Applications for GlassFish Server - GlassFish Tools Bundle for Eclipse User Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-05-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,13 +25,13 @@
 </table>
 
 
-<a name="chapter3"></a>Chapter&#160;4<h3>Developing Applications for GlassFish Server from Eclipse IDE</h3><p>This section of the document helps you to get familiar with developing applications
+<a name="chapter3"></a>Chapter&#160;4<h3>Developing Applications for GlassFish Server</h3><p>This section of the document helps you to get familiar with developing applications
 for GlassFish Server with Eclipse IDE, using the advanced features available in GlassFish
-Server v3 Prelude.</p><p>The following topics assume GlassFish Server v3 Prelude as Server runtime. You can
+Server v3.</p><p>The following topics assume GlassFish Server v3 as Server runtime. You can also
 use GlassFish Server v2.1 for developing applications but without support for the features
-that are specific to v3 Prelude. You may also need to perform further
-configuration, for the following tasks to work with GlassFish Server v2.1.</p><p>For example: Use of <tt>EclipseLink</tt> described in <a href="#task-9">To create a new Data Source and register it with GlassFish Server</a>, is preconfigured to work with
-GlassFish Server v3 Prelude but not with GlassFish Server v2.1.</p>
+that are specific to v3. You may also need to perform further configuration,
+for the following tasks to work with GlassFish Server v2.1.</p><p>For example: Use of <tt>EclipseLink</tt> described in <a href="#task-9">To create a new Data Source and register it with GlassFish Server</a>, is preconfigured to work with
+GlassFish Server v3 but not with GlassFish Server v2.1.</p>
 
 <a name="to-develop"></a><h3></h3>
 
@@ -48,17 +48,17 @@ The following procedure describes the process of creating a Web Application for 
 to GlassFish Server.</p><ol>
 <li><b>Select File<tt>-></tt>New<tt>-></tt>Dynamic Web project.</b><p>Project creation page is displayed.</p></li>
 <li><b>Enter a Project Name in the first field.</b><p>For example: <tt>MyFirstWebApp</tt>.</p></li>
-<li><b>Select GlassFish Server version to use as Target Runtime.</b><p>For example: GlassFish v3 Prelude.</p></li>
+<li><b>Select GlassFish Server version to use as Target Runtime.</b><p>For example: GlassFish v3 Server.</p></li>
 <li><b>Click Finish.</b><p>A new dynamic Web Project is created and is visible in Project Explorer
 panel.</p><p>A default JSP file <tt>index.jsp</tt> page is created and opened in JSP Editor
 View.</p></li>
 <li><b>Add or modify <tt>index.jsp</tt> code as required.</b></li>
 <li><b>From Eclipse main menu, select Run menu or Run icon from toolbar.</b></li>
-<li><b>Select Run On<tt>-&gt;</tt>GlassFish Server v3 Prelude, as the server to run this application.</b>
+<li><b>Select Run On<tt>-&gt;</tt>GlassFish Server v3, as the server to run this application.</b>
 <hr><p><b>Note - </b>You can select <b>Always use this server when running this project</b> checkbox to streamline further run invocations.</p>
 <hr>
 </li>
-<li><b>Build the Web Application and publish to GlassFish Server v3 Prelude.</b><p>The Console view displays server log. The <tt>index.jsp</tt> page appears in Eclipse IDE
+<li><b>Build the Web Application and publish to GlassFish Server v3.</b><p>The Console view displays server log. The <tt>index.jsp</tt> page appears in Eclipse IDE
 default Web Browser.</p>
 <hr><p><b>Note - </b>You can always switch back and forth between Editor view and Web Browser
 view. Both views are available from Eclipse Editor. Each time the application is
@@ -67,14 +67,14 @@ browser to see the changes immediately.</p>
 <hr>
 </li></ol>
 
-<a name="task-6"></a><h4>To add a Servlet and use Session Preservation feature</h4><p> Session Preservation is a new and convenient feature of GlassFish Server v3
-Prelude, critical when you are developing/debugging complex Web Applications with complex Session management
+<a name="task-6"></a><h4>To add a Servlet and use Session Preservation feature</h4><p> Session Preservation is  convenient feature available from GlassFish Server v3,
+which is critical when  developing/debugging complex Web Applications with complex Session management
 such as Shopping Cart applications, and when you want to retain information about
 your Sessions across redeployments.</p><p>This section of document explains how to use Session Preservation feature. For testing
 this feature, you can use the Project created in the previous example or
 create a new Project. If you are using the previously created project, skip
-Step 1.</p><h6>Before You Begin</h6><p>This section of the document is applicable for GlassFish Server v3 Prelude only.
-It is not applicable to GlassFish Server v2.1.</p><ol>
+Step 1.</p><h6>Before You Begin</h6><p>This section of the document is applicable for GlassFish Server v3 only. It
+is not applicable to GlassFish Server v2.1.</p><ol>
 <li><b>Create a new Dynamic Web Project, in the manner described in the previous
 section.</b></li>
 <li><b>From Project Explorer window, right click the Project node.</b></li>
@@ -126,7 +126,7 @@ right click menu.</p><p>For more information on using the Eclipse IDE, use the H
 
 <a name="task-8"></a><h4>To edit the preconfigured MySQL Database Connector</h4><p>The GlassFish Tools Bundle for Eclipse includes a preconfigured MySQL database connector. You
 can use it to connect with your MySQL database with minimal configuration effort.</p><p>To edit the preconfigured MySQL database connector, use the following process:</p><ol>
-<li><b>From Eclipse IDE, select Windows->Preferences</b></li>
+<li><b>From Eclipse IDE, select Windows<tt>-></tt>Preferences</b></li>
 <li><b>Select Data Management from left-hand side panel.</b></li>
 <li><b>Click Connectivity</b></li>
 <li><b>Click Driver Definitions.</b></li>
@@ -135,23 +135,24 @@ can use it to connect with your MySQL database with minimal configuration effort
 <li><b>Click OK to close dialog box.</b></li>
 <li><b>Click OK to close Preferences screen.</b></li></ol>
 
-<a name="task-9"></a><h4>To create a new Data Source and register it with GlassFish Server</h4><p>As described in <a href="p5.html">Chapter&#160;3, Configuring and Using GlassFish Server from Eclipse IDE</a>, by default GlassFish Tools Bundle for Eclipse installs and
+<a name="task-9"></a><h4>To create a new Data Source and register it with GlassFish Server</h4><p>As described in <a href="p5.html">Chapter&#160;3, Configuring and Using GlassFish Server from IDE</a>, by default GlassFish Tools Bundle for Eclipse installs and
 configures a Derby database instance for you.</p><p>You can also create a new Data Source and register it with
 GlassFish Server from Eclipse IDE. The process of creating and registering a new
 MySQL Data Source is described as follows:</p><h6>Before You Begin</h6><p>Install a MySQL database instance if you do not have a pre-installed MySQL
 database. For more information on installing MySQL, See <a href="http://dev.mysql.com/doc/refman/5.4/en/installing.html">MySQL installation documentation</a>.</p><ol>
 <li><b>Select Database Connections from Data Source Explorer view. Right click the Databases node
 and select New.</b></li>
-<li><b>Select MySQL from New Connection Profile options.</b><p>Accept default name New MySQL or choose another name.</p></li>
+<li><b>Select MySQL from New Connection Profile options.</b><p>Accept default name, New MySQL or choose another name.</p></li>
 <li><b>Click Next.</b><p>MySQL Connection Profile screen is displayed.</p></li>
 <li><b>Click New Driver Definition button (located next to Drivers text box).</b><p>New Driver Definition screen is displayed.</p>
-<hr><p><b>Note - </b>Step 5 through 8 are optional and may be used if you
+<hr><p><b>Note - </b>Steps 5 through 9 are optional and are required only if you
 need to use a MySQL driver that is not bundled.</p>
 <hr>
 </li>
+<li><b>Download and save the new MySQL driver file into the bundle. For example:</b><p>In <tt>&#60;glassfish-tools-bundle-for-eclipse-xxxx>/mysql-driver</tt> directory.</p></li>
 <li><b>Select a Driver template from list.</b></li>
-<li><b>Select Jar List tab, and select location of MySQL JDBC Driver file from
-<tt>&#60;glassfish-tools-bundle-for-eclipse-xxxx></tt> directory.</b></li>
+<li><b>Select Jar List tab, and select location of new MySQL JDBC Driver file:
+For example:</b><p><tt>&#60;glassfish-tools-bundle-for-eclipse-xxxx>/mysql-driver/mysql-connector-java-xxxx.jar</tt> directory. </p></li>
 <li><b>Select Properties tab and view properties of Driver Definition.</b><p>Change any properties as required.</p></li>
 <li><b>Click OK to exit New Driver Definition screen.</b></li>
 <li><b>From Connection Profile screen, modify any other details as required.</b><p>For example: User name and Password.</p></li>
@@ -166,8 +167,8 @@ Documentation.</p>
 </li></ol>
 
 <a name="task-10"></a><h4>To create a JPA Project for GlassFish Server</h4><p>The following steps explain how to create a Java Persistence API (JPA) based
-project and generate DDL for it.</p><h6>Before You Begin</h6><p>This section of the document is applicable for GlassFish Server v3 Prelude only.
-It is not applicable to GlassFish Server v2.1.</p><ol>
+project and generate DDL for it.</p><h6>Before You Begin</h6><p>This section of the document is applicable for GlassFish Server v3 only. It
+is not applicable to GlassFish Server v2.1.</p><ol>
 <li><b>Select Window<tt>-></tt>Preferences.</b><p>Preferences page will be displayed.</p></li>
 <li><b>Select GlassFish Server Preferences.</b></li>
 <li><b>Select the checkbox next to Start JavaDB database process when Starting GlassFish Server
@@ -177,7 +178,7 @@ option.</b></li>
 <li><b>Select File<tt>-></tt>New<tt>-></tt>Other.</b><p>New project wizard will be displayed.</p></li>
 <li><b>Select JPA<tt>-></tt>JPA Project.</b></li>
 <li><b>Click Next to continue.</b><p>New JPA Project wizard will be displayed.</p></li>
-<li><b>Create a name and select to run on GlassFish Server v3 Prelude.</b><p>For example:<tt>MyJPAProject</tt>.</p></li>
+<li><b>Create a name and select to run on GlassFish Server v3.</b><p>For example:<tt>MyJPAProject</tt>.</p></li>
 <li><b>Click Next to continue.</b></li>
 <li><b>Select <tt>EclipseLink</tt> as Platform and <tt>Sample JavaDB Database</tt> as connection.</b></li>
 <li><b>Select Annotated classes must be listed in <tt>persistence.xml</tt> option, for Persistent class management.</b><p>Other default options need not be changed.</p></li>
@@ -195,13 +196,6 @@ selected as key field.</b><p>For example: <tt>Type=Int:Fieldname=id, Type=String
 <li><b>Select Data Source Explorer.</b></li>
 <li><b>Select the Sample JavaDB database.</b><p>You can view the newly created tables by expanding the Sample JavaDB Database
 node.</p></li></ol>
-
-<a name="add-res"></a><h4>Additional Resources</h4>
-<p>The following resources provide additional information on Eclipse IDE and GlassFish Server.</p>
-<ul><li><p><a href="http://docs.sun.com/app/docs/coll/1343.7">Sun GlassFish Enterprise Server v3 Prelude Documentation</a></p></li>
-<li><p><a href="http://docs.sun.com/app/docs/coll/1343.6">Sun GlassFish Enterprise Server 2.1 Documentation</a></p></li>
-<li><p><a href="http://help.eclipse.org/ganymede/index.jsp">Eclipse Documentation</a></p></li></ul>
-
 
 
 <table border="0" cellpadding="5" cellspacing="0" width="100%">
