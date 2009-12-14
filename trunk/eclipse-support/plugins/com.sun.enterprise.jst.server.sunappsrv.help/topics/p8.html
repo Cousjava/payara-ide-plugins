@@ -1,12 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en-US">
 <head>
-<!-- GenHTML revision 22645-->
+<!-- GenHTML revision 23224-->
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-<title>Using Popup Menu - GlassFish Tools Bundle for Eclipse User Guide</title>
+<title>Getting Started with Metro - GlassFish Tools Bundle for Eclipse User Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-05-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -20,65 +20,138 @@
 <td><a href="p7.html">Previous</a></td>
 <td></td>
 <td></td>
-<td></td>
+<td><a href="p9.html">Next</a></td>
 </tr>
 </table>
 
 
-<a name="appendix"></a>Appendix&#160;A<h3>Using Popup Menu</h3><p>The popup menu available from Servers view provides a number of usage options,
-including customized options for GlassFish Server. It is referred to as the Server
-popup menu in this document. To access popup menu from Eclipse IDE, 
-select Servers view, and right click mouse.</p><p>The following options are available from Server popup Menu:</p><dl><dt><b>New</b></dt>
-<dd><p>Allows user to add a new GlassFish Server instance to Eclipse. The new server should be pre-installed. In some cases, this option also downloads and installs a new Server. For example: GlassFish v3 Promoted Build</p></dd>
-<dt><b>Open (F3)</b></dt>
-<dd><p>Allows user to access Server Overview page. The Server Overview page allows user to view and modify some GlassFish Server properties: </p>
-<ul><li><p>Specify hostname and other common settings</p></li>
-<li><p>Edit Server configuration properties (Open launch configuration)</p></li>
-<li><p>Modify settings for Publishing</p></li>
-<li><p>Specify time limit to complete Server operations</p></li>
-<li><p>Edit some Server runtime properties</p></li></ul>
+<a name="chapter5"></a>Chapter&#160;6<h3>Getting Started with Metro</h3><p>Metro is a high-performance, extensible, easy-to-use Web Service stack that is a part
+of GlassFish Server community. It offers core support for JAX-WS and optionally support
+for additional features.</p><p>The GlassFish Tools Bundle for Eclipse 1.1 version includes Metro plug-in for Eclipse.</p>
 
-<hr><p><b>Note - </b>Alternately, select and double-click the Server from Servers view, to launch Server Overview page.</p>
+<a name="gentextid-1431"></a><h3>Developing Web Applications using Metro</h3>
+<p>This section of the document will help you get familiar with developing web
+services applications with Metro using the Tools Bundle.</p>
+
+<a name="givkk"></a><h4>Install Metro on GlassFish Server</h4>
+<p>Before you can start developing web application with Metro for GlassFish Server, you
+need to ensure Metro is installed on GlassFish Server. </p><p>While GlassFish v2.1 includes Metro, GlassFish v3 does not include the Metro stack
+by default. You can install it as an Add-On package.</p><p>You can also update Metro version included with GlassFish Server v2 as described
+in the following document:</p><p><a href="https://metro.dev.java.net/1.4/docs/install.html">https://metro.dev.java.net/1.4/docs/install.html</a></p>
+
+<a name="giwgg"></a><h5>To install Metro for GlassFish Server v3</h5>
+<p>Metro is available as an Add-On package from Update Center for GlassFish v3.
+The following task describes the process of adding Metro stack to GlassFish v3.</p><ol>
+<li><b>Stop GlassFish v3 Server.</b></li>
+<li><b>Start the Update Tool from <i>&#60;install-location>/glassfishv3/bin</i> directory.</b></li>
+<li><b>Click available Add-Ons.</b></li>
+<li><b>Select Metro Web Services for GlassFish.</b><p>Optionally you can also select Jersey Web Services.</p></li>
+<li><b>Click Install.</b></li>
+<li><b>Accept License Agreement.</b><p>Selected packages will be installed.</p></li>
+<li><b>Start the GlassFish v3 Server.</b>
+<hr><p><b>Note - </b>You can also use the Update Tool from GlassFish Server Administration Console for
+installing Metro packages. If you are using the Update Tool from GlassFish Administration
+Console, make sure the GlassFish Server is running and the Administration Console is
+installed.</p>
 <hr>
-</dd>
-<dt><b>Show In (Shift+Alt+W)</b></dt>
-<dd><p>Allows user to direct GlassFish Server log messages to Console or Debug windows. This option is also accessible through (Shift+Alt+W) key action.</p></dd>
-<dt><b>Copy (Ctrl+C)</b></dt>
-<dd><p>Allows user to copy GlassFish Server Instance. This option is also accessible through (Ctrl+C) key action.</p></dd>
-<dt><b>Paste (Ctrl+V)</b></dt>
-<dd><p>Allows user to paste the copied GlassFish Server Instance. This option is also accessible through (Ctrl+V) key action.</p></dd>
-<dt><b>Delete (Delete)</b></dt>
-<dd><p>Allows user to delete selected GlassFish Server Instance from configuration. This option is also accessible through Delete button from keyboard.</p></dd>
-<dt><b>Rename (F2)</b></dt>
-<dd><p>Allows user to rename GlassFish Server Instance. This option is also accessible through the F2 function key.</p></dd>
-<dt><b>Debug (Ctrl+Alt+D)</b></dt>
-<dd><p>Allows user to start GlassFish Server Instance in Debug mode. This option is also accessible through (Ctrl+Alt+D) key action.</p></dd>
-<dt><b>Start (Ctrl+Alt+R)</b></dt>
-<dd><p>Allows user to start GlassFish Server Instance. This option is also accessible through (Ctrl+Alt+R) key action.</p></dd>
-<dt><b>Profile</b></dt>
-<dd><p>This option is not implemented in GlassFish Tools Bundle for Eclipse. </p></dd>
-<dt><b>Stop (Ctrl+Alt+S)</b></dt>
-<dd><p>Allows user to stop GlassFish Server Instance. This option is also accessible through (Ctrl+Alt+S) key action.</p></dd>
-<dt><b>Publish (Ctrl+Alt+P)</b></dt>
-<dd><p>Allows user to deploy the built applications to GlassFish Server. This option is also accessible through (Ctrl+Alt+P) key action.</p></dd>
-<dt><b>Clean...</b></dt>
-<dd><p>Allows user to discard all published state from GlassFish Server and republish from scratch.</p></dd>
-<dt><b>Add and Remove Projects...</b></dt>
-<dd><p>Allows user to add or remove Projects that are configured to run on GlassFish Server.</p></dd>
-<dt><b>Monitoring</b></dt>
-<dd><p>Allows user to monitor GlassFish Server ports for access. This is a new feature available in GlassFish Server v3 Prelude.</p></dd>
-<dt><b>GlassFish Enterprise Server</b></dt>
-<dd><p>Allows user to access to the following additional sub menu options:</p>
-<ul><li><p><b>GlassFish Update Center</b></p></li>
-<li><p> <b>Register the GlassFish Enterprise Server</b></p></li>
-<li><p><b>Get Support for GlassFish Enterprise Server</b></p></li>
-<li><p><b>Aquarium: GlassFish Community News</b></p></li>
-<li><p><b>View Admin Console</b></p></li>
-<li><p><b>View Log File</b></p></li></ul>
-</dd>
-<dt><b>Properties (Alt+Enter)</b></dt>
-<dd><p>Allows user to view GlassFish Server properties and modify some of them. This option is also accessible through (Alt+Enter) key action.</p></dd>
-</dl>
+</li></ol>
+
+<a name="giufe"></a><h4>To create a new Metro based Web Service</h4><p>The following task describes the steps to create a web application and add
+a web service to it. </p><ol>
+<li><b>Create a new web application as described in <a href="p6.html#task-5">To create a new Web Application project for GlassFish Server</a>.</b></li>
+<li><b>From Project Explorer, right-click the web application project node and select New<tt>-></tt>Class</b></li>
+<li><b>In the New Java Class wizard, select <tt>mypkg</tt> as package name, and <tt>MyHelloService</tt>
+as class name.</b></li>
+<li><b>Click Finish.</b></li>
+<li><b>In the Eclipse IDE, edit the java class file and enter the
+following code snippet to create a method:</b><pre>package mypkg;
+
+public class MyHelloService {
+public String sayhello(String name) {
+        return "Hello " + name;
+     }
+}
+ </pre></li>
+<li><b>From the Project Explorer, select <tt>MyHelloService</tt> java class.</b></li>
+<li><b>Right-click the java class and select WebServices<tt>-></tt>Create Web Service.</b></li>
+<li><b>In the Service section, move the Service slider one level up to the
+top, to enable <tt>Test Service</tt> stage.</b></li>
+<li><b>Click Web Service runtime entry.</b></li>
+<li><b>Select METRO Runtime in the dialog box.</b></li>
+<li><b>Click OK to close the dialog box.</b><p>Your configuration will look like this:</p><br><img src="figures/WebServiceCreate.gif" alt="" width="650" height="615"></img></li>
+<li><b>Click Next.</b><p>Options screen is displayed. You can customize your options for:</p>
+<ul><li><p>Generation of JSR 109 portable /JAX-WS RI specific Web Service.</p></li>
+<li><p>Packaging of Metro libraries in war file.</p></li></ul>
+<p>The default options are set based on your target runtime platform.</p></li>
+<li><b>Click Next.</b></li>
+<li><b>Start the Server if necessary, depending on the state of Server.</b></li>
+<li><b>Enter your GlassFish Server admin login name and password if requested.</b></li>
+<li><b>Click Launch, when presented with option to launch Web Service testing facility.</b><p>Browser opens page where you can test the web service.</p></li>
+<li><b>Click Finish to complete the wizard.</b><p>At this stage a web service has been created and deployed on the
+server.</p></li>
+<li><b>Click <tt>sayHello</tt> link in the web page, and then click Add to add
+the parameter value.</b></li>
+<li><b>Enter your name in the text field and click Go.</b></li>
+<li><b>The service will respond with <tt>Hello $YOUR_NAME</tt> message.</b></li>
+<li><b>Click Source link to see the SOAP communication.</b><p>The result shall look like this:</p><br><img src="figures/WSExplorer-Tester.gif" alt="" width="560" height="556"></img></li></ol>
+
+<a name="giupt"></a><h4>To create a new Metro based Web Service from <tt>WSDL</tt></h4><ol>
+<li><b>Download this <a href="https://metroplugineclipse.dev.java.net/source/browse/*checkout*/metroplugineclipse/trunk/docs/SearchWS.wsdl">WSDL</a> file and save it in a suitable location.</b></li>
+<li><b>Right-click the Web Project created in the previous task, in Project Explorer and
+select NewOther.</b></li>
+<li><b>Browse the Web Services category and select Web Service from Menu.</b></li>
+<li><b>Click Next.</b></li>
+<li><b>Select <tt>Top down Java bean Web Service</tt> and click Browse to choose the WSDL file.</b></li>
+<li><b>Click OK to close the dialog box.</b></li>
+<li><b>Enter the direct file link to your WSDL file from the web
+browser as follows:</b><p><tt>file:///Users/admin/work/sources/eclipse/metro/docs/SearchWS.wsdl</tt>.</p></li>
+<li><b>Click Web Service runtime option and select METRO Runtime from the dialog box.</b></li>
+<li><b>Click OK.</b><p>Your configuration will look like this:</p><br><img src="figures/WebService-WSDL.gif" alt="" width="627" height="712"></img></li>
+<li><b>Click Next.</b></li>
+<li><b>Accept the default options and click Next.</b></li>
+<li><b>Start the Server if necessary, depending on the state of Server.</b></li>
+<li><b>Enter your GlassFish Server admin login and password if requested.</b></li>
+<li><b>Click Finish to close the wizard. </b><p>The Web Service is created, but deployment to server fails, because implementation of
+the service is missing.</p></li>
+<li><b>Click the error message (light-bulb icon) next to the compilation error, and choose
+Add Unimplemented Methods.</b></li>
+<li><b>Implement the service method. An example Service method source is as follows:</b><pre>package org.tempuri;
+
+import javax.jws.*;
+
+@WebService(wsdlLocation = "WEB-INF/wsdl/SearchWS.wsdl",
+            serviceName = "WebSearchWS",
+            portName = "WebSearchWSSoap",
+            endpointInterface = "org.tempuri.WebSearchWSSoap")
+public class WebSearchWSSoapImpl implements org.tempuri.WebSearchWSSoap {
+
+    public String search(String keyWord) {
+        return "Search Result for: " + keyWord;
+    }    
+
+}</pre></li>
+<li><b>Right-click the web project node, and select Run As<tt>-></tt>Run On Server to deploy
+the application.</b></li>
+<li><b>Visit the web service URL from browser.</b><p>For example:</p><p>http://localhost:8080/MyFirstWebApp/WebSearchWS?Tester</p></li>
+<li><b>Input a search string and click Search.</b><p>The result shall look like this:</p><br><img src="figures/TesterInvocation.gif" alt="" width="558" height="748"></img></li></ol>
+
+<a name="giuod"></a><h4>Configure the Web Service Policies</h4><ol>
+<li><b>Browse the WSDL of the web service, in the project you created in
+the previous task.</b></li>
+<li><b>Right-click it and select Web Services<tt>-></tt>WS-Policy Configuration.</b><p>WS-Policy configuration dialog box is opened.</p></li>
+<li><b>Select the Reliable Message Delivery checkbox and click OK to save the value
+and close the dialog box.</b></li>
+<li><b>Deploy the project again (Run As<tt>-></tt>Run On Server)</b></li>
+<li><b>Visit the service URL from web browser.</b><p>For example:</p><pre>http://localhost:8080/MyFirstWebApp/WebSearchWS?Tester</pre></li>
+<li><b>Click the WSDL link to see the WSDL of the service.</b><p>Scroll down to see the policy definition:</p><br><img src="figures/RMPolicyin-WSDL.gif" alt="" width="381" height="193"></img></li>
+<li><b>Go back to the Tester page in browser, input a search string
+in the search box and click Search.</b><p>Notice the change in the soap communication:</p><br><img src="figures/PolicyTesterInvocation.gif" alt="" width="1095" height="937"></img></li></ol>
+
+<a name="add-res"></a><h3>Additional Resources</h3>
+<p>The following resources provide additional information on Eclipse IDE and GlassFish Server.</p>
+<ul><li><p><a href="http://docs.sun.com/app/docs/coll/1343.7">Sun GlassFish Enterprise Server v3 Prelude Documentation</a></p></li>
+<li><p><a href="http://docs.sun.com/app/docs/coll/1343.6">Sun GlassFish Enterprise Server 2.1 Documentation</a></p></li>
+<li><p><a href="http://help.eclipse.org/ganymede/index.jsp">Eclipse Documentation</a></p></li></ul>
 
 
 
@@ -89,7 +162,7 @@ select Servers view, and right click mouse.</p><p>The following options are avai
 <td><a href="p7.html">Previous</a></td>
 <td></td>
 <td></td>
-<td></td>
+<td><a href="p9.html">Next</a></td>
 </tr>
 </table>
 

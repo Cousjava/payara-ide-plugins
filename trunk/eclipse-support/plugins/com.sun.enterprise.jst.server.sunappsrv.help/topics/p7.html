@@ -1,12 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en-US">
 <head>
-<!-- GenHTML revision 22645-->
+<!-- GenHTML revision 23224-->
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-<title>Getting started with Metro - GlassFish Tools Bundle for Eclipse User Guide</title>
+<title>Using Java EE 6 Wizards - GlassFish Tools Bundle for Eclipse User Guide</title>
 <meta name="robots" content="index,follow">
 <meta name="robots" content="index,follow">
-<meta name="date" content="2009-05-01">
+<meta name="date" content="2009-12-01">
 </head>
 
 <body>
@@ -25,128 +25,138 @@
 </table>
 
 
-<a name="chapter4"></a>Chapter&#160;5<h3>Getting started with Metro</h3><p>Metro is a high-performance, extensible, easy-to-use Web Service stack that is a part
-of GlassFish Server community. It offers core support for JAX-WS and optionally support
-for additional features.</p><p>The GlassFish Tools Bundle for Eclipse 1.1 version includes Metro plug-in for Eclipse.</p>
+<a name="chapter4"></a>Chapter&#160;5<h3>Using Java EE 6 Wizards</h3><p>While Java EE 6 support in Eclipse is not yet available, you
+can develop applications for Java EE 6 platform, using the GlassFish Tools Bundle
+for Eclipse.</p><p>GlassFish Tools Bundle for Eclipse supports several Java EE 6 wizards, to create
+applications that can be deployed on the GlassFish v3 server. Some of these
+new Java EE 6 wizards are similar to the Java EE 5
+wizards used by Eclipse IDE users such as Servlet and Session Bean. Some
+of the wizards offer new functionality for Java EE 6 platform such as
+EJB Timer and XHTML Page. This chapter contains information on how to use
+these wizards.</p>
+<ul><li><p><a href="#gjklg">To create a Web Project</a></p></li>
+<li><p><a href="#gjkka">To create a Web Servlet Class</a></p></li>
+<li><p><a href="#gjkll">To create a Web Filter Class</a></p></li>
+<li><p><a href="#gjknd">To create Web Listener Class</a></p></li>
+<li><p><a href="#gjkki">To create a Session Bean Class</a></p></li>
+<li><p><a href="#gjkng">To create an EJB Timer Class</a></p></li>
+<li><p><a href="#gjklk">To create an XHTML Page</a></p></li>
+<li><p><a href="#gjkni">To create a RESTful Web Service Class</a></p></li></ul>
 
-<a name="gentextid-1101"></a><h3>Developing Web Applications using Metro</h3>
-<p>This section of the document will help you get familiar with developing web
-services applications with Metro using the Tools Bundle.</p>
 
-<a name="givkk"></a><h4>Install Metro on GlassFish Server</h4>
-<p>Before you can start developing web application with Metro for GlassFish Server, you
-need to ensure Metro is installed on GlassFish Server. </p><p>While GlassFish v2.1 includes Metro, GlassFish v3 Prelude does not include the Metro
-stack by default. You can install it as an Add-On package.</p><p>You can also update Metro version included with GlassFish Server v2 as described
-in the following document:</p><p><a href="https://metro.dev.java.net/1.4/docs/install.html">https://metro.dev.java.net/1.4/docs/install.html</a></p>
+<a name="gjkkl"></a><h3></h3>
 
-<a name="giwgg"></a><h5>To install Metro for GlassFish Server v3 Prelude</h5>
-<p>Metro is available as an Add-On package from Update Center for GlassFish v3
-Prelude. The following task describes the process of adding Metro stack to GlassFish
-v3 Prelude.</p><ol>
-<li><b>Stop GlassFish v3 Prelude Server.</b></li>
-<li><b>Start the Update Tool from <i>&#60;install-location>/glassfishv3prelude/bin</i> directory.</b></li>
-<li><b>Click available Add-Ons.</b></li>
-<li><b>Select Metro Web Services for GlassFish.</b><p>Optionally you can also select Jersey Web Services.</p></li>
-<li><b>Click Install.</b></li>
-<li><b>Accept License Agreement.</b><p>Selected packages will be installed.</p></li>
-<li><b>Start the GlassFish v3 Prelude Server.</b>
-<hr><p><b>Note - </b>You can also use the Update Tool from GlassFish Server Administration Console for
-installing Metro packages. If you are using the Update Tool from GlassFish Administration
-Console, make sure the GlassFish Server is running and the Administration Console is
-installed.</p>
+
+<a name="gjklg"></a><h4>To create a Web Project</h4><ol>
+<li><b>Select File<tt>-></tt>New<tt>-></tt>Dynamic Web Project.</b><p>The New Dynamic Web Project wizard opens.</p></li>
+<li><b>Enter the name of the project in the Project name field.</b><p>For example: <tt>MyWeb</tt>.</p></li>
+<li><b>Click Next.</b><p>Configure project screen is displayed.</p></li>
+<li><b>Click Next.</b><p>Configure web module settings screen is displayed.</p></li>
+<li><b>Click Finish.</b><p>A new web project is created and opened in the Project Explorer panel.</p></li></ol>
+
+<a name="gjkka"></a><h4>To create a Web Servlet Class</h4><ol>
+<li><b>Select the web project created in the previous task, <tt>MyWeb</tt>.</b></li>
+<li><b>Right click and select New<tt>-></tt>Web Servlet (Java EE 6).</b><p>The Create Servlet wizard opens.</p></li>
+<li><b>Enter the following information into the fields:</b><ol style="list-style-type: lower-alpha">
+<li><b>Enter Java package name. For example: <tt>mypkg</tt>.</b></li>
+<li><b>Enter Class name. For example: <tt>MyServlet</tt>.</b></li></ol>
+<hr><p><b>Note - </b>If you are not customizing your default configuration options, you can skip Steps
+4 and 5 and proceed to Step 6.</p>
 <hr>
-</li></ol>
+</li>
+<li><b>Click Next.</b><p>Servlet deployment descriptor modification screen is displayed.</p></li>
+<li><b>Click Next.</b><p>Create modifiers, interfaces, and method stubs generation screen is displayed.</p></li>
+<li><b>Click Finish.</b><p>A new servlet class, <tt>MyServlet.java</tt> is created and opened in the editor.</p></li></ol>
 
-<a name="giufe"></a><h4>To create a new Metro based Web Service</h4><p>The following task describes the steps to create a web application and add
-a web service to it. </p><ol>
-<li><b>Create a new web application as described in <a href="p6.html#task-5">To create a new Web Application project for GlassFish Server</a>.</b></li>
-<li><b>From Project Explorer, right-click the web application project node and select New->Class</b></li>
-<li><b>In the New Java Class wizard, select <tt>mypkg</tt> as package name, and <tt>MyHelloService</tt>
-as class name.</b></li>
-<li><b>Click Finish.</b></li>
-<li><b>In the Eclipse IDE, edit the java class file and enter the
-following code snippet to create a method:</b><pre>package mypkg;
+<a name="gjkll"></a><h4>To create a Web Filter Class</h4><ol>
+<li><b>Select the web project created in the earlier task, <tt>MyWeb</tt>.</b></li>
+<li><b>Right click and select New<tt>-></tt>Web Filter (Java EE 6).</b><p>The Create Filter wizard opens.</p></li>
+<li><b>Enter the following information into the fields:</b><ol style="list-style-type: lower-alpha">
+<li><b>Enter Java package name. For example: <tt>mypkg</tt>.</b></li>
+<li><b>Enter Class name. For example: <tt>MyFilter</tt>.</b></li></ol>
+<hr><p><b>Note - </b>If you are not customizing your default configuration options, you can skip Step
+4 and 5 and proceed to Step 6.</p>
+<hr>
+</li>
+<li><b>Click Next.</b><p>Servlet deployment descriptor modification screen is displayed.</p></li>
+<li><b>Click Next.</b><p>Create modifiers, interfaces, and method stubs generation screen is displayed.</p></li>
+<li><b>Click Finish.</b><p>A new filter class, <tt>MyFilter.java </tt> is created and opened in the editor.</p></li></ol>
 
-public class MyHelloService {
-public String sayhello(String name) {
-        return "Hello " + name;
-     }
-}
- </pre></li>
-<li><b>From the Project Explorer, select MyHelloService java class.</b></li>
-<li><b>Right-click the java class and select WebServices->Create Web Service.</b></li>
-<li><b>In the Service section, move the Service slider one level up to the
-top, to enable <tt>Test Service</tt> stage.</b></li>
-<li><b>Click Web Service runtime entry.</b></li>
-<li><b>Select METRO Runtime in the dialog box.</b></li>
-<li><b>Click OK to close the dialog box.</b><p>Your configuration will look like this:</p><br><img src="WebServiceCreate.gif" alt="" width="650" height="615"></img></li>
-<li><b>Click Next.</b><p>Options screen is displayed. You can customize your options for:</p>
-<ul><li><p>Generation of JSR 109 portable /JAX-WS RI specific Web Service.</p></li>
-<li><p>Packaging of Metro libraries in war file.</p></li></ul>
-<p>The default options are set based on your target runtime platform.</p></li>
+<a name="gjknd"></a><h4>To create Web Listener Class</h4><ol>
+<li><b>Select the web project created in the earlier task, <tt>MyWeb</tt>.</b></li>
+<li><b>Right click and select New<tt>-></tt>Web Listener (Java EE 6).</b><p>The Create Listener wizard opens.</p></li>
+<li><b>Enter the following information into the fields:</b><ol style="list-style-type: lower-alpha">
+<li><b>Enter Java package name. For example: <tt>mypkg</tt>.</b></li>
+<li><b>Enter Class name. For example: <tt>MyListener</tt>.</b></li></ol></li>
 <li><b>Click Next.</b></li>
-<li><b>Start the Server if necessary, depending on the state of Server.</b></li>
-<li><b>Enter your GlassFish Server admin login and password if requested.</b></li>
-<li><b>Click Launch, when presented with option to launch Web Service testing facility.</b><p>Browser opens page where you can test the web service.</p></li>
-<li><b>Click Finish to complete the wizard.</b><p>At this stage a web service has been created and deployed on the
-server.</p></li>
-<li><b>Click <tt>sayHello</tt> link in the web page, and then click Add to add
-the parameter value.</b></li>
-<li><b>Enter your name in the text field and click Go.</b></li>
-<li><b>The service will respond with <tt>Hello $YOUR_NAME</tt> message.</b></li>
-<li><b>Click Source link to see the SOAP communication.</b><p>The result shall look like this:</p><br><img src="WSExplorer-Tester.gif" alt="" width="560" height="556"></img></li></ol>
+<li><b>Select application lifecycle events to listen from the check boxes. You must select
+at least one event.</b><p>For example: Select Changes to Attributes from HTTP Session Events panel and Changes
+to Attributes from Servlet Request Events panel.</p>
+<hr><p><b>Note - </b>If you are not customizing your default configuration options, you can skip Step
+6 and proceed to Step 7.</p>
+<hr>
+</li>
+<li><b>Click Next.</b><p>Create modifiers, interfaces, and method stubs generation screen is displayed.</p></li>
+<li><b>Click Finish.</b><p>A new listener class, <tt>MyListener.java</tt> is created and opened in the editor.</p></li></ol>
 
-<a name="giupt"></a><h4>To create a new Metro based Web Service from <tt>WSDL</tt></h4><ol>
-<li><b>Download this <a href="https://metroplugineclipse.dev.java.net/source/browse/*checkout*/metroplugineclipse/trunk/docs/SearchWS.wsdl">WSDL</a> file and save it in a suitable location.</b></li>
-<li><b>Right-click the Web Project created in the previous task, in Project Explorer and
-select New->Other.</b></li>
-<li><b>Browse the Web Services category and select Web Service from Menu.</b></li>
+<a name="gjkki"></a><h4>To create a Session Bean Class</h4><p>You can create any type of session bean with this wizard. You
+may note that  some new options: Singleton (Step 3c &#8212; drop-down list))
+and No Interface (Step 3d &#8212; Check Box), are available in this Java
+EE 6 wizard.</p><ol>
+<li><b>Select the web project created in the earlier task, <tt>MyWeb</tt>.</b></li>
+<li><b>Right click and select New<tt>-></tt>Session Bean (Java EE 6).</b><p>Create EJB 3.1 Session Bean wizard opens.</p></li>
+<li><b>Enter the following information into fields:</b><ol style="list-style-type: lower-alpha">
+<li><b>Enter Java package name.</b><p>For example: <tt>mypkg</tt>.</p></li>
+<li><b>Enter Class name.</b><p>For example: <tt>NoInterfaceStateLess</tt>.</p></li>
+<li><b>Choose State Type from drop-down list.</b><p>For example: Stateless</p></li>
+<li><b>Choose Create business interface:</b><p>For example: select the check box for No-interface option.</p></li></ol>
+<hr><p><b>Note - </b>If you are not customizing your default configuration options, you can skip Steps
+4 and 5 and proceed to Step 6.</p>
+<hr>
+</li>
 <li><b>Click Next.</b></li>
-<li><b>Select <tt>Top down Java bean Web Service</tt> and click Browse to choose the WSDL file.</b></li>
-<li><b>Click OK to close the dialog box.</b></li>
-<li><b>Enter the direct file link to your WSDL file from the web
-browser as follows:</b><p><tt>file:///Users/admin/work/sources/eclipse/metro/docs/SearchWS.wsdl</tt>.</p></li>
-<li><b>Click Web Service runtime option and select METRO Runtime from the dialog box.</b></li>
-<li><b>Click OK.</b><p>Your configuration will look like this:</p><br><img src="WebService-WSDL.gif" alt="" width="627" height="712"></img></li>
+<li><b>Select Transaction Type.</b><p>For example: Container.</p></li>
+<li><b>Click Finish.</b><p>A new Java Session bean class, <tt>MySessionbean.java</tt> is created and opened in
+the editor.</p>
+<hr><p><b>Tip - </b>Depending on your options, you may create more than one file when using
+the Create Session bean wizard.</p>
+<hr>
+</li></ol><h6>Next Steps</h6><p>Create other types of Session Beans in a similar way but with
+different options such as stateful or singleton state types and with remote or
+local interfaces.</p>
+
+<a name="gjkng"></a><h4>To create an EJB Timer Class</h4><ol>
+<li><b>Select the web project created in the earlier task, <tt>MyWeb</tt>.</b></li>
+<li><b>Right click and select New<tt>-></tt>EJB Timer (Java EE 6).</b><p>Create EJB Timer Callback wizard opens.</p></li>
+<li><b>Enter the following information into fields:</b><ol style="list-style-type: lower-alpha">
+<li><b>In Source folder field,  select default or enter a new folder name.</b><p>For example: <tt>MyWeb\src</tt>.</p></li>
+<li><b>In the Java package and the Class name fields, enter information.</b><p>For example:  <tt>mypkg</tt> and <tt>MyTimer</tt> respectively.</p></li></ol></li>
+<li><b>Click Finish.</b><p>A new EJB class <tt>MyTimer.java</tt> is created and opened in the editor.</p></li></ol>
+
+<a name="gjklk"></a><h4>To create an XHTML Page</h4><ol>
+<li><b>Select the web project created in the earlier task, <tt>MyWeb</tt>.</b></li>
+<li><b>Right click and select New<tt>-></tt>XHTML.</b><p>Create XHTML page wizard opens.</p></li>
+<li><b>Enter the following information into fields:</b><ol style="list-style-type: lower-alpha">
+<li><b>Enter or select the parent folder.</b><p>For example: <tt>MyWeb/WebContent</tt></p></li>
+<li><b>Enter the File name.</b><p>For example: <tt>MyTemplate</tt></p></li></ol></li>
 <li><b>Click Next.</b></li>
-<li><b>Accept the default options and click Next.</b></li>
-<li><b>Start the Server if necessary, depending on the state of Server.</b></li>
-<li><b>Enter your GlassFish Server admin login and password if requested.</b></li>
-<li><b>Click Finish to close the wizard. </b><p>The Web Service is created, but deployment to server fails, because implementation of
-the service is missing.</p></li>
-<li><b>Click the error message (light-bulb icon) next to the compilation error, and choose
-Add Unimplemented Methods.</b></li>
-<li><b>Implement the service method. An example Service method source is as follows:</b><pre>package org.tempuri;
+<li><b>Select a HTML Template type.</b><p>For example: New Facelet Template</p></li>
+<li><b>Click Finish.</b><p>A new XHTML page, <tt>MyTemplate.xhtml</tt> is created and saved under <tt>MyWeb/WebContent</tt> folder.</p></li></ol>
 
-import javax.jws.*;
-
-@WebService(wsdlLocation = "WEB-INF/wsdl/SearchWS.wsdl",
-            serviceName = "WebSearchWS",
-            portName = "WebSearchWSSoap",
-            endpointInterface = "org.tempuri.WebSearchWSSoap")
-public class WebSearchWSSoapImpl implements org.tempuri.WebSearchWSSoap {
-
-    public String search(String keyWord) {
-        return "Search Result for: " + keyWord;
-    }    
-
-}</pre></li>
-<li><b>Right-click the web project node, and select Run As ->Run On Server to
-deploy the application.</b></li>
-<li><b>Visit the web service URL from browser.</b><p>For example:</p><p>http://localhost:8080/MyFirstWebApp/WebSearchWS?Tester</p></li>
-<li><b>Input a search string and click Search.</b><p>The result shall look like this:</p><br><img src="TesterInvocation.gif" alt="" width="558" height="748"></img></li></ol>
-
-<a name="giuod"></a><h4>Configure the Web Service Policies</h4><ol>
-<li><b>Browse the WSDL of the web service, in the project you created in
-the previous task.</b></li>
-<li><b>Right-click it and select Web Services->WS-Policy Configuration.</b><p>WS-Policy configuration dialog box is opened.</p></li>
-<li><b>Select the Reliable Message Delivery checkbox and click OK to save the value
-and close the dialog box.</b></li>
-<li><b>Deploy the project again (Run As->Run On Server)</b></li>
-<li><b>Visit the service URL from web browser.</b><p>For example:</p><p>http://localhost:8080/MyFirstWebApp/WebSearchWS?Tester</p></li>
-<li><b>Click the WSDL link to see the WSDL of the service.</b><p>Scroll down to see the policy definition:</p><br><img src="RMPolicyin-WSDL.gif" alt="" width="381" height="193"></img></li>
-<li><b>Go back to the Tester page in browser, input a search string in
-the search box and click Search.</b><p>Notice the change in the soap communication:</p><br><img src="PolicyTesterInvocation.gif" alt="" width="1095" height="937"></img></li></ol>
+<a name="gjkni"></a><h4>To create a RESTful Web Service Class</h4><ol>
+<li><b>Select the web project created in the earlier task, <tt>MyWeb</tt>.</b></li>
+<li><b>Right click and select New<tt>-></tt>RESTful Web Service (Java EE 6).</b><p>Create RESTful Web Service wizard opens.</p></li>
+<li><b>Enter the following information into fields:</b><ol style="list-style-type: lower-alpha">
+<li><b>Enter or select the package name:</b><p>For example: <tt>mypkg</tt></p></li>
+<li><b>Enter the File name:</b><p>For example: <tt>MyRESTfulWS</tt></p></li></ol></li>
+<li><b>Select the Pattern type from drop-down list:</b><p>For example: Single Root Resource</p>
+<hr><p><b>Note - </b>The other available pattern types are <tt>Container-Item</tt> and <tt>Client-Controlled Container-Item</tt>. If you select
+one of these two options, an additional Java class will be created instead
+of one class as described in the next step.</p>
+<hr>
+</li>
+<li><b>Click Finish.</b><p>A new Web Service class, <tt>MyRESTfulWS.java</tt> is created and opened in the
+editor.</p></li></ol>
 
 
 <table border="0" cellpadding="5" cellspacing="0" width="100%">
