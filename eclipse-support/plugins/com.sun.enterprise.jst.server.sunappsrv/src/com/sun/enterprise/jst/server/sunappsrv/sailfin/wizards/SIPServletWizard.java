@@ -47,7 +47,7 @@ public class SIPServletWizard extends AbstractSIPWizard {
 	/**
 	 * location of the sip servlet creation template file
 	 */
-	private static final String RESOURCE_FILE_TEMPLATE = "../templates/SipServlet-java-template.resource"; //$NON-NLS-1$
+	private static final String RESOURCE_FILE_TEMPLATE = "sailfin/templates/SipServlet-java-template.resource"; //$NON-NLS-1$
 
 	@Override
 	protected AbstractSIPWizardPage createWizardPage() {
