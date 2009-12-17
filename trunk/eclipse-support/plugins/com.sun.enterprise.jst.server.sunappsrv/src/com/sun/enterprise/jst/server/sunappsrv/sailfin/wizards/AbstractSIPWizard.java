@@ -68,6 +68,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+
 /**
  * This is a wizard that creates a new AbstractSIPWizard.
  */
@@ -125,7 +127,12 @@ public abstract class AbstractSIPWizard extends Wizard implements INewWizard {
 			return false;
 		} catch (InvocationTargetException e) {
 			Throwable realException = e.getTargetException();
-			MessageDialog.openError(getShell(), Messages.ErrorTitle, realException.getMessage());
+			String realMessage = realException.getMessage();
+			if (realMessage == null) {
+				realMessage = Messages.errorUnknownProblem;
+			}
+			SunAppSrvPlugin.logMessage(realMessage, e);
+			MessageDialog.openError(getShell(), Messages.ErrorTitle, realMessage);
 			return false;
 		}
 		return true;
@@ -187,7 +194,7 @@ public abstract class AbstractSIPWizard extends Wizard implements INewWizard {
 		StringBuffer sb = new StringBuffer();
 
 		try {
-			InputStream input = AbstractSIPWizard.class.getResourceAsStream(getTemplateName());
+			InputStream input = SunAppSrvPlugin.class.getResourceAsStream(getTemplateName());
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					input));
 			String interfacesString = ((interfaces == null) ? null : getCommaSeparatedInterfaces(interfaces));

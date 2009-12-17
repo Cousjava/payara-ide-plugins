@@ -53,5 +53,6 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String ListenerWizardDescription;
     public static String implementsLabel;
     public static String ErrorTitle;
+    public static String errorUnknownProblem;
     public static String errorInterfacesMissing;
 }

@@ -47,7 +47,7 @@ public class SIPListenerWizard extends AbstractSIPWizard {
 	/**
 	 * location of the sip listener creation template file
 	 */
-	private static final String RESOURCE_FILE_TEMPLATE = "../templates/SipListener-java-template.resource"; //$NON-NLS-1$
+	private static final String RESOURCE_FILE_TEMPLATE = "sailfin/templates/SipListener-java-template.resource"; //$NON-NLS-1$
 
 	@Override
 	protected AbstractSIPWizardPage createWizardPage() {
