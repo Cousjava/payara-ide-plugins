@@ -198,8 +198,8 @@
 		<include name="modules/woodstox-osgi*.jar" />
 		
 	</fileset>
-	<fileset dir="${sunappserver.rootdirectory}/../mq/lib">
-		<include name="jaxm-api*.jar" />
+	<fileset dir="${sunappserver.rootdirectory}/../">
+		<include name="mq/lib/jaxm-api*.jar" />
 
 		
 	</fileset>
