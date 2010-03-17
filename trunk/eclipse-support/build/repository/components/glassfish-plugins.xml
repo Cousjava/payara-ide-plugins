@@ -22,13 +22,15 @@
 				<target name="fetch-gfplugins" unless="gfplugins-already-fetched">
 
 					<property name="gfplugins.download.folder"
-						value="${components.download.folder}/glassfish-cvs" />
+						value="${components.download.folder}/glassfish-svn" />
 
 					<mkdir dir="${gfplugins.download.folder}" />
 
-					<cvs cvsRoot=":pserver:${cvs.user}@cvs.dev.java.net:/cvs"
-						package="glassfishplugins/eclipse-support" dest="${gfplugins.download.folder}" />
-
+					<!--cvs cvsRoot=":pserver:${cvs.user}@cvs.dev.java.net:/cvs"
+						package="glassfishplugins/eclipse-support" dest="${gfplugins.download.folder}" /-->
+               <exec dir="${gfplugins.download.folder}" executable="svn">
+            <arg line="co https://glassfishplugins.dev.java.net/svn/glassfishplugins/trunk/eclipse-support" />
+          </exec>
 					<!--
 						only fetch once per build, to ensure that all the build is done on
 						the same code...
@@ -37,7 +39,7 @@
 				</target>
 				<target depends="fetch-gfplugins" name="process-gfplugins">
 					<property name="gfplugins.download.folder"
-						value="${components.download.folder}/glassfish-cvs" />
+						value="${components.download.folder}/glassfish-svn" />
 					<!--
 						we can't use
 						${components.work.folder}/${component.id}-${component.version}
@@ -57,7 +59,7 @@
 					
 					<copy todir="${gfplugins.work.folder}/plugins">
 						<fileset
-							dir="${gfplugins.download.folder}/glassfishplugins/eclipse-support/plugins/">
+							dir="${gfplugins.download.folder}/eclipse-support/plugins/">
 							<include name="*configurator*/**" />
 							<include name="*register*/**" />
 							<include name="*help*/**" />
@@ -66,7 +68,7 @@
 					</copy>
 					<copy todir="${gfplugins.work.folder}/features">
 						<fileset
-							dir="${gfplugins.download.folder}/glassfishplugins/eclipse-support/features">
+							dir="${gfplugins.download.folder}/eclipse-support/features">
 							<include name="*configurator*/**" />
 							<include name="*register*/**" />
 							<include name="*help*/**" />
