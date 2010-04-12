@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <category
+            name="Glassfish"
+            id="com.sun.importWizards.sampleCategory">
+      </category>
+      <wizard
+            name="Import Glassfish Project from Netbeans"
+            icon="icons/images.jpeg"
+            category="com.sun.importWizards.sampleCategory"
+            class="com.sun.importWizards.ImportProjectWizard"
+            id="com.sun.importWizards.ImportProjectWizard">
+         <description>
+            Import a file from the local file system into the workspace.
+         </description>
+      </wizard>
+   </extension>
+
+</plugin>
