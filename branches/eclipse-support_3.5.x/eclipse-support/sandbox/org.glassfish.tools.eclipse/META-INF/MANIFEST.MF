@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: V3Eclipse Plug-in
+Bundle-SymbolicName: EclipseGFV3Wrapper;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.glassfish.tools.eclipse.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Eclipse-LazyStart: true
+Export-Package: org.glassfish.tools.eclipse;
+ uses:="org.osgi.framework,org.eclipse.ui.plugin,org.eclipse.jface.resource",
+ org.glassfish.tools.eclipse.actions;
+ uses:="org.eclipse.jface.viewers,org.eclipse.jface.action,org.eclipse.ui"

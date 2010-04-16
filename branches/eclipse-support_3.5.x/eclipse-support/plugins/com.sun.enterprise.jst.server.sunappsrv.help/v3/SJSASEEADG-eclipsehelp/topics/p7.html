@@ -1,0 +1,815 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Enterprise Server Deployment Descriptor Files - Sun GlassFish Enterprise Server v3 Application Deployment Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p6.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p8.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="giida"></a>Appendix&#160;B<h3>Enterprise Server Deployment Descriptor Files</h3><a name="indexterm-147"></a><a name="indexterm-148"></a><p>This appendix describes the element hierarchies in the Enterprise Server-specific deployment descriptors that
+are included in this release of the Sun GlassFish<sup>TM</sup> Enterprise Server software.
+</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giiie">About the Enterprise Server Deployment Descriptors</a></p></li>
+<li><p><a href="#beaqk">The sun-application.xml File</a></p></li>
+<li><p><a href="#beaql">The sun-web.xml File</a></p></li>
+<li><p><a href="#beaqm">The sun-ejb-jar.xml File</a></p></li>
+<li><p><a href="#beaqn">The sun-cmp-mappings.xml File</a></p></li>
+<li><p><a href="#beaqo">The sun-application-client.xml file</a></p></li>
+<li><p><a href="#beaqp">The sun-acc.xml File</a></p></li>
+<li><p><a href="#giyhh">The sun-resources.xml File</a></p></li></ul>
+
+
+<a name="giiie"></a><h3>About the Enterprise Server Deployment Descriptors</h3>
+<p>Each deployment descriptor XML file has a corresponding Document Type Definition (DTD) file,
+which defines the elements, data, and attributes that the deployment descriptor file can
+contain. The DTD files for the Enterprise Server deployment descriptors are located in
+the <i>as-install</i><tt>/lib/dtds</tt> directory. </p><p>The Enterprise Server deployment descriptor files must be readable and writable by the
+file owners. In each deployment descriptor file, subelements must be defined in the
+order in which they are listed under each Subelements heading, unless otherwise noted.
+For general information about DTD files and XML, see the XML specification at
+<a href="http://www.w3.org/TR/REC-xml">http://www.w3.org/TR/REC-xml</a>.<a name="indexterm-149"></a></p>
+<hr><p><b>Note - </b>Do not edit the DTD files; their contents change only with new versions
+of Enterprise Server.</p>
+<hr>
+<p>The following table lists the Enterprise Server deployment descriptors and their DTD files.<a name="indexterm-150"></a><a name="indexterm-151"></a></p><a name="giiht"></a><h6>Table&#160;B-1  Enterprise Server Deployment Descriptors and DTDs</h6><table><col width="27%"><col width="41%"><col width="31%"><tr><th align="left" valign="top" scope="column"><p>Deployment
+Descriptor</p></th>
+<th align="left" valign="top" scope="column"><p>DTD File</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>sun-application.xml</tt><a name="indexterm-152"></a></p></td>
+<td align="left" valign="top" scope="row"><p><tt>sun-application_6_0-0.dtd</tt><a name="indexterm-153"></a></p></td>
+<td align="left" valign="top" scope="row"><p>Configures an entire Java EE application (EAR file). </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-154"></a><tt>sun-web.xml</tt></p></td>
+<td align="left" valign="top" scope="row"><p><a name="indexterm-155"></a><tt>sun-web-app_3_0-0.dtd</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Configures a web
+application (WAR file).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-156"></a><tt>sun-ejb-jar.xml</tt></p></td>
+<td align="left" valign="top" scope="row"><p><a name="indexterm-157"></a><tt>sun-ejb-jar_3_1-0.dtd</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Configures an enterprise bean (EJB JAR file).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>sun-cmp-mappings.xml</tt><a name="indexterm-158"></a></p></td>
+<td align="left" valign="top" scope="row"><p><tt>sun-cmp-mapping_1_2.dtd</tt><a name="indexterm-159"></a></p></td>
+<td align="left" valign="top" scope="row"><p>Configures container-managed persistence for
+an EJB 2.0 or 2.1 entity bean. </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>sun-application-client.xml</tt><a name="indexterm-160"></a></p></td>
+<td align="left" valign="top" scope="row"><p><tt>sun-application-client_6_0-0.dtd</tt> <a name="indexterm-161"></a></p></td>
+<td align="left" valign="top" scope="row"><p>Configures an Application Client Container
+(ACC) client (JAR file). </p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>sun-acc.xml</tt><a name="indexterm-162"></a></p></td>
+<td align="left" valign="top" scope="row"><p><tt>sun-application-client-container_1_2.dtd</tt><a name="indexterm-163"></a></p></td>
+<td align="left" valign="top" scope="row"><p>Configures the Application Client Container. This is more
+of a configuration file than a deployment descriptor. Enterprise Server provides a default
+file in the <i>domain-dir</i><tt>/config</tt> directory. Specifying a different file is optional.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>sun-resources.xml</tt><a name="indexterm-164"></a></p></td>
+<td align="left" valign="top" scope="row"><p><tt>sun-resources_1_4.dtd</tt><a name="indexterm-165"></a></p></td>
+<td align="left" valign="top" scope="row"><p>Configures application-scoped resources.</p></td>
+</tr>
+</table>
+
+<a name="beaqk"></a><h3>The sun-application.xml File</h3>
+<a name="indexterm-166"></a><p>The <tt>sun-application.xml</tt> file configures an entire Java EE application (EAR file). The element
+hierarchy is as follows:</p><pre>sun-application
+.  web
+.  .  web-uri
+.  .  context-root
+.  pass-by-reference
+.  unique-id
+.  security-role-mapping
+.  .  role-name
+.  .  principal-name
+.  .  group-name
+.  realm
+.  ejb-ref
+.  resource-ref
+.  resource-env-ref
+.  service-ref
+.  message-destination-ref
+.  message-destination
+.  archive-name
+.  compatibility</pre><p><a name="indexterm-167"></a>Here is a sample <tt>sun-application.xml</tt> file:</p><pre>&#60;!DOCTYPE sun-application PUBLIC "-//Sun Microsystems, Inc.//DTD 
+GlassFish Application Server 3.0 Java EE Application 6.0//EN" 
+"http://www.sun.com/software/appserver/dtds/sun-application_6_0-0.dtd">
+&#60;sun-application>
+   &#60;unique-id>67488732739338240&#60;/unique-id>
+&#60;/sun-application></pre>
+
+<a name="beaql"></a><h3>The sun-web.xml File</h3>
+<a name="indexterm-168"></a><p>The <tt>sun-web.xml</tt> file configures a web application (WAR file). The element hierarchy is
+as follows:</p><pre>sun-web-app
+.  context-root
+.  security-role-mapping
+.  .  role-name
+.  .  principal-name
+.  .  group-name
+.  servlet
+.  .  servlet-name
+.  .  principal-name
+.  .  webservice-endpoint
+.  .  .  port-component-name
+.  .  .  endpoint-address-uri
+.  .  .  login-config
+.  .  .  .  auth-method
+.  .  .  message-security-binding
+.  .  .  .  message-security
+.  .  .  .  .  message
+.  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  operation-name
+.  .  .  .  .  request-protection
+.  .  .  .  .  response-protection
+.  .  .  transport-guarantee
+.  .  .  service-qname
+.  .  .  tie-class
+.  .  .  servlet-impl-class
+.  .  .  debugging-enabled
+.  .  .  property (with attributes)
+.  .  .  .  description
+.  idempotent-url-pattern
+.  session-config
+.  .  session-manager
+.  .  .  manager-properties
+.  .  .  .  property (with attributes)
+.  .  .  .  .  description
+.  .  .  store-properties
+.  .  .  .  property (with attributes)
+.  .  .  .  .  description
+.  .  session-properties
+.  .  .  property (with attributes)
+.  .  .  .  description
+.  .  cookie-properties
+.  .  .  property (with attributes)
+.  .  .  .  description
+.  ejb-ref
+.  .  ejb-ref-name
+.  .  jndi-name
+.  resource-ref
+.  .  res-ref-name
+.  .  jndi-name
+.  .  default-resource-principal
+.  .  .  name
+.  .  .  password
+.  resource-env-ref
+.  .  resource-env-ref-name
+.  .  jndi-name
+.  service-ref
+.  .  service-ref-name
+.  .  port-info
+.  .  .  service-endpoint-interface
+.  .  .  wsdl-port
+.  .  .  .  namespaceURI
+.  .  .  .  localpart
+.  .  .  stub-property
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  call-property
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  message-security-binding
+.  .  .  .  message-security
+.  .  .  .  .  message
+.  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  operation-name
+.  .  .  .  .  request-protection
+.  .  .  .  .  response-protection
+.  .  call-property
+.  .  .  name
+.  .  .  value
+.  .  wsdl-override
+.  .  service-impl-class
+.  .  service-qname
+.  .  .  namespaceURI
+.  .  .  localpart
+.  message-destination-ref
+.  .  message-destination-ref-name
+.  .  jndi-name
+.  cache
+.  .  cache-helper
+.  .  .  property (with attributes)
+.  .  .  .  description
+.  .  default-helper
+.  .  .  property (with attributes)
+.  .  .  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  .  cache-mapping
+.  .  .  servlet-name
+.  .  .  url-pattern
+.  .  .  cache-helper-ref
+.  .  .  dispatcher
+.  .  .  timeout
+.  .  .  refresh-field
+.  .  .  http-method
+.  .  .  key-field
+.  .  .  constraint-field
+.  .  .  .  constraint-field-value
+.  class-loader
+.  .  property (with attributes)
+.  .  .  description
+.  jsp-config
+.  locale-charset-info
+.  .  locale-charset-map
+.  .  parameter-encoding
+.  parameter-encoding
+.  property (with attributes)
+.  .  description
+.  message-destination
+.  .  message-destination-name
+.  .  jndi-name
+.  webservice-description
+.  .  webservice-description-name
+.  .  wsdl-publish-location</pre><p><a name="indexterm-169"></a>Here is a sample <tt>sun-web.xml</tt> file:</p><pre>&#60;!DOCTYPE sun-web-app PUBLIC "-//Sun Microsystems, Inc.//DTD 
+GlassFish Application Server 3.0 Servlet 3.0//EN" 
+"http://www.sun.com/software/appserver/dtds/sun-web-app_3_0-0.dtd">
+&#60;sun-web-app>
+   &#60;session-config>
+      &#60;session-manager/>
+   &#60;/session-config>
+   &#60;resource-ref>
+      &#60;res-ref-name>mail/Session&#60;/res-ref-name>
+      &#60;jndi-name>mail/Session&#60;/jndi-name>
+   &#60;/resource-ref>
+   &#60;jsp-config/>
+&#60;/sun-web-app></pre>
+
+<a name="beaqm"></a><h3>The sun-ejb-jar.xml File</h3>
+<a name="indexterm-170"></a><p>The <tt>sun-ejb-jar.xml</tt> file configures an enterprise bean (EJB JAR file). The element hierarchy
+is as follows:</p><pre>sun-ejb-jar
+.  security-role-mapping
+.  .  role-name
+.  .  principal-name
+.  .  group-name
+.  enterprise-beans
+.  .  name
+.  .  unique-id
+.  .  ejb
+.  .  .  ejb-name
+.  .  .  jndi-name
+.  .  .  ejb-ref
+.  .  .  .  ejb-ref-name
+.  .  .  .  jndi-name
+.  .  .  resource-ref
+.  .  .  .  res-ref-name
+.  .  .  .  jndi-name
+.  .  .  .  default-resource-principal
+.  .  .  .  .  name
+.  .  .  .  .  password
+.  .  .  resource-env-ref
+.  .  .  .  resource-env-ref-name
+.  .  .  .  jndi-name
+.  .  .  service-ref
+.  .  .  .  service-ref-name
+.  .  .  .  port-info
+.  .  .  .  .  service-endpoint-interface
+.  .  .  .  .  wsdl-port
+.  .  .  .  .  .  namespaceURI
+.  .  .  .  .  .  localpart
+.  .  .  .  .  stub-property
+.  .  .  .  .  .  name
+.  .  .  .  .  .  value
+.  .  .  .  .  call-property
+.  .  .  .  .  .  name
+.  .  .  .  .  .  value
+.  .  .  .  .  message-security-binding
+.  .  .  .  .  .  message-security
+.  .  .  .  .  .  .  message
+.  .  .  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  .  .  operation-name
+.  .  .  .  .  .  .  request-protection
+.  .  .  .  .  .  .  response-protection
+.  .  .  .  call-property
+.  .  .  .  .  name
+.  .  .  .  .  value
+.  .  .  .  wsdl-override
+.  .  .  .  service-impl-class
+.  .  .  .  service-qname
+.  .  .  .  .  namespaceURI
+.  .  .  .  .  localpart
+.  .  .  message-destination-ref
+.  .  .  .  message-destination-ref-name
+.  .  .  .  jndi-name
+.  .  .  pass-by-reference
+.  .  .  cmp
+.  .  .  .  mapping-properties
+.  .  .  .  is-one-one-cmp
+.  .  .  .  one-one-finders
+.  .  .  .  .  finder
+.  .  .  .  .  .  method-name
+.  .  .  .  .  .  query-params
+.  .  .  .  .  .  query-filter
+.  .  .  .  .  .  query-variables
+.  .  .  .  .  .  query-ordering
+.  .  .  .  prefetch-disabled
+.  .  .  .  .  query-method
+.  .  .  .  .  .  method-name
+.  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  method-param
+.  .  .  principal
+.  .  .  .  name
+.  .  .  mdb-connection-factory
+.  .  .  .  jndi-name
+.  .  .  .  default-resource-principal
+.  .  .  .  .  name
+.  .  .  .  .  password
+.  .  .  jms-durable-subscription-name
+.  .  .  jms-max-messages-load
+.  .  .  ior-security-config
+.  .  .  .  transport-config
+.  .  .  .  .  integrity
+.  .  .  .  .  confidentiality
+.  .  .  .  .  establish-trust-in-target
+.  .  .  .  .  establish-trust-in-client
+.  .  .  .  as-context
+.  .  .  .  .  auth-method
+.  .  .  .  .  realm
+.  .  .  .  .  required
+.  .  .  .  sas-context
+.  .  .  .  .  caller-propagation
+.  .  .  is-read-only-bean
+.  .  .  refresh-period-in-seconds
+.  .  .  commit-option
+.  .  .  cmt-timeout-in-seconds
+.  .  .  use-thread-pool-id
+.  .  .  gen-classes
+.  .  .  .  remote-impl
+.  .  .  .  local-impl
+.  .  .  .  remote-home-impl
+.  .  .  .  local-home-impl
+.  .  .  bean-pool
+.  .  .  .  steady-pool-size
+.  .  .  .  resize-quantity
+.  .  .  .  max-pool-size
+.  .  .  .  pool-idle-timeout-in-seconds
+.  .  .  .  max-wait-time-in-millis
+.  .  .  bean-cache
+.  .  .  .  max-cache-size
+.  .  .  .  resize-quantity
+.  .  .  .  is-cache-overflow-allowed
+.  .  .  .  cache-idle-timeout-in-seconds
+.  .  .  .  removal-timeout-in-seconds
+.  .  .  .  victim-selection-policy
+.  .  .  mdb-resource-adapter
+.  .  .  .  resource-adapter-mid
+.  .  .  .  activation-config
+.  .  .  .  .  description
+.  .  .  .  .  activation-config-property
+.  .  .  .  .  .  activation-config-property-name
+.  .  .  .  .  .  activation-config-property-value
+.  .  .  webservice-endpoint
+.  .  .  .  port-component-name
+.  .  .  .  endpoint-address-uri
+.  .  .  .  login-config
+.  .  .  .  .  auth-method
+.  .  .  .  .  realm
+.  .  .  .  message-security-binding
+.  .  .  .  .  message-security
+.  .  .  .  .  .  message
+.  .  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  .  operation-name
+.  .  .  .  .  .  request-protection
+.  .  .  .  .  .  response-protection
+.  .  .  .  transport-guarantee
+.  .  .  .  service-qname
+.  .  .  .  tie-class
+.  .  .  .  servlet-impl-class
+.  .  .  .  debugging-enabled
+.  .  .  .  property (with subelements)
+.  .  .  .  .  name
+.  .  .  .  .  value
+.  .  .  flush-at-end-of-method
+.  .  .  .  method
+.  .  .  .  .  description
+.  .  .  .  .  ejb-name
+.  .  .  .  .  method-name
+.  .  .  .  .  method-intf
+.  .  .  .  .  method-params
+.  .  .  .  .  .  method-param
+.  .  .  checkpointed-methods
+.  .  .  checkpoint-at-end-of-method
+.  .  .  .  method
+.  .  .  .  .  description
+.  .  .  .  .  ejb-name
+.  .  .  .  .  method-name
+.  .  .  .  .  method-intf
+.  .  .  .  .  method-params
+.  .  .  .  .  .  method-param
+.  .  pm-descriptors
+.  .  cmp-resource
+.  .  .  jndi-name
+.  .  .  default-resource-principal
+.  .  .  .  name
+.  .  .  .  password
+.  .  .  property (with subelements)
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  create-tables-at-deploy
+.  .  .  drop-tables-at-undeploy
+.  .  .  database-vendor-name
+.  .  .  schema-generator-properties
+.  .  .  .  property (with subelements)
+.  .  .  .  .  name
+.  .  .  .  .  value
+.  .  message-destination
+.  .  .  message-destination-name
+.  .  .  jndi-name
+.  .  webservice-description
+.  .  .  webservice-description-name
+.  .  .  wsdl-publish-location</pre>
+<hr><p><b>Note - </b>If any configuration information for an enterprise bean is not specified in the
+<tt>sun-ejb-jar.xml</tt> file, it defaults to a corresponding setting in the EJB container if
+an equivalency exists.</p>
+<hr>
+<p><a name="indexterm-171"></a>Here is a sample <tt>sun-ejb-jar.xml</tt> file:</p><pre>&#60;!DOCTYPE sun-ejb-jar PUBLIC "-//Sun Microsystems, Inc.//
+DTD GlassFish Application Server 3.0 EJB 3.1//EN" 
+"http://www.sun.com/software/appserver/dtds/sun-ejb-jar_3_1-0.dtd">
+&#60;sun-ejb-jar>
+&#60;display-name>First Module&#60;/display-name>
+&#60;enterprise-beans>
+    &#60;ejb>
+        &#60;ejb-name>CustomerEJB&#60;/ejb-name>
+        &#60;jndi-name>customer&#60;/jndi-name>
+        &#60;bean-pool>
+            &#60;steady-pool-size>10&#60;/steady-pool-size>
+            &#60;resize-quantity>10&#60;/resize-quantity>
+            &#60;max-pool-size>100&#60;/max-pool-size>
+            &#60;pool-idle-timeout-in-seconds>600&#60;/pool-idle-timeout-in-seconds>
+        &#60;/bean-pool>
+        &#60;bean-cache>
+            &#60;max-cache-size>100&#60;/max-cache-size>
+            &#60;resize-quantity>10&#60;/resize-quantity>
+            &#60;removal-timeout-in-seconds>3600&#60;/removal-timeout-in-seconds>
+            &#60;victim-selection-policy>LRU&#60;/victim-selection-policy>
+        &#60;/bean-cache>
+    &#60;/ejb>
+    &#60;cmp-resource>
+        &#60;jndi-name>jdbc/__default&#60;/jndi-name>
+        &#60;create-tables-at-deploy>true&#60;/create-tables-at-deploy>
+        &#60;drop-tables-at-undeploy>true&#60;/drop-tables-at-undeploy>
+    &#60;/cmp-resource>
+&#60;/enterprise-beans>
+&#60;/sun-ejb-jar></pre>
+
+<a name="beaqn"></a><h3>The sun-cmp-mappings.xml File</h3>
+<a name="indexterm-172"></a><p>The <tt>sun-cmp-mappings.xml</tt> file configures container-managed persistence for an EJB 2.0 or 2.1 entity
+bean. The element hierarchy is as follows:</p><pre>sun-cmp-mappings
+.  sun-cmp-mapping
+.  .  schema
+.  .  entity-mapping
+.  .  .  ejb-name
+.  .  .  table-name
+.  .  .  cmp-field-mapping
+.  .  .  .  field-name
+.  .  .  .  column-name
+.  .  .  .  read-only
+.  .  .  .  fetched-with
+.  .  .  .  .  default
+.  .  .  .  .  level
+.  .  .  .  .  named-group
+.  .  .  .  .  none
+.  .  .  cmr-field-mapping
+.  .  .  .  cmr-field-name
+.  .  .  .  column-pair
+.  .  .  .  .  column-name
+.  .  .  .  fetched-with
+.  .  .  .  .  default
+.  .  .  .  .  level
+.  .  .  .  .  named-group
+.  .  .  .  .  none
+.  .  .  secondary-table
+.  .  .  .  table-name
+.  .  .  .  column-pair
+.  .  .  .  .  column-name
+.  .  .  consistency
+.  .  .  .  none
+.  .  .  .  check-modified-at-commit
+.  .  .  .  lock-when-loaded
+.  .  .  .  check-all-at-commit
+.  .  .  .  lock-when-modified
+.  .  .  .  check-version-of-accessed-instances
+.  .  .  .  .  column-name</pre><p><a name="indexterm-173"></a>Here is a sample database schema definition:</p><pre>create table TEAMEJB (
+   TEAMID varchar2(256) not null,
+   NAME varchar2(120) null,
+   CITY char(30) not null,
+   LEAGUEEJB_LEAGUEID varchar2(256) null,
+   constraint PK_TEAMEJB primary key (TEAMID)
+)
+create table PLAYEREJB (
+   POSITION varchar2(15) null,
+   PLAYERID varchar2(256) not null,
+   NAME char(64) null,
+   SALARY number(10, 2) not null,
+   constraint PK_PLAYEREJB primary key (PLAYERID)
+)
+create table LEAGUEEJB (
+   LEAGUEID varchar2(256) not null,
+   NAME varchar2(256) null,
+   SPORT varchar2(256) null,
+   constraint PK_LEAGUEEJB primary key (LEAGUEID)
+)
+create table PLAYEREJBTEAMEJB (
+   PLAYEREJB_PLAYERID varchar2(256) null,
+   TEAMEJB_TEAMID varchar2(256) null
+)
+alter table TEAMEJB
+   add constraint FK_LEAGUE foreign key (LEAGUEEJB_LEAGUEID)
+   references LEAGUEEJB (LEAGUEID)
+
+alter table PLAYEREJBTEAMEJB
+   add constraint FK_TEAMS foreign key (PLAYEREJB_PLAYERID)
+   references PLAYEREJB (PLAYERID)
+
+alter table PLAYEREJBTEAMEJB
+   add constraint FK_PLAYERS foreign key (TEAMEJB_TEAMID)
+   references TEAMEJB (TEAMID)</pre><p><a name="indexterm-174"></a>Here is a corresponding sample <tt>sun-cmp-mappings.xml</tt> file:</p><pre>&#60;?xml version="1.0" encoding="UTF-8"?>
+&#60;sun-cmp-mappings>
+&#60;sun-cmp-mapping>
+    &#60;schema>Roster&#60;/schema>
+    &#60;entity-mapping>
+        &#60;ejb-name>TeamEJB&#60;/ejb-name>
+        &#60;table-name>TEAMEJB&#60;/table-name>
+        &#60;cmp-field-mapping>
+            &#60;field-name>teamId&#60;/field-name>
+            &#60;column-name>TEAMEJB.TEAMID&#60;/column-name>
+        &#60;/cmp-field-mapping>
+        &#60;cmp-field-mapping>
+            &#60;field-name>name&#60;/field-name>
+            &#60;column-name>TEAMEJB.NAME&#60;/column-name>
+        &#60;/cmp-field-mapping>
+        &#60;cmp-field-mapping>
+            &#60;field-name>city&#60;/field-name>
+            &#60;column-name>TEAMEJB.CITY&#60;/column-name>
+        &#60;/cmp-field-mapping>
+        &#60;cmr-field-mapping>
+            &#60;cmr-field-name>league&#60;/cmr-field-name>
+            &#60;column-pair>
+                &#60;column-name>TEAMEJB.LEAGUEEJB_LEAGUEID&#60;/column-name>
+                &#60;column-name>LEAGUEEJB.LEAGUEID&#60;/column-name>
+            &#60;/column-pair>
+            &#60;fetched-with>
+                &#60;none/>
+            &#60;/fetched-with>
+        &#60;/cmr-field-mapping>
+        &#60;cmr-field-mapping>
+            &#60;cmr-field-name>players&#60;/cmr-field-name>
+            &#60;column-pair>
+                &#60;column-name>TEAMEJB.TEAMID&#60;/column-name>
+                &#60;column-name>PLAYEREJBTEAMEJB.TEAMEJB_TEAMID&#60;/column-name>
+            &#60;/column-pair>
+            &#60;column-pair>
+                &#60;column-name>PLAYEREJBTEAMEJB.PLAYEREJB_PLAYERID&#60;/column-name>
+                &#60;column-name>PLAYEREJB.PLAYERID&#60;/column-name>
+            &#60;/column-pair>
+            &#60;fetched-with>
+                &#60;none/>
+            &#60;/fetched-with>
+        &#60;/cmr-field-mapping>
+    &#60;/entity-mapping>
+    &#60;entity-mapping>
+        &#60;ejb-name>PlayerEJB&#60;/ejb-name>
+        &#60;table-name>PLAYEREJB&#60;/table-name>
+        &#60;cmp-field-mapping>
+            &#60;field-name>position&#60;/field-name>
+            &#60;column-name>PLAYEREJB.POSITION&#60;/column-name>
+        &#60;/cmp-field-mapping>
+        &#60;cmp-field-mapping>
+            &#60;field-name>playerId&#60;/field-name>
+            &#60;column-name>PLAYEREJB.PLAYERID&#60;/column-name>
+        &#60;/cmp-field-mapping>
+        &#60;cmp-field-mapping>
+            &#60;field-name>name&#60;/field-name>
+            &#60;column-name>PLAYEREJB.NAME&#60;/column-name>
+        &#60;/cmp-field-mapping>
+        &#60;cmp-field-mapping>
+            &#60;field-name>salary&#60;/field-name>
+            &#60;column-name>PLAYEREJB.SALARY&#60;/column-name>
+        &#60;/cmp-field-mapping>
+        &#60;cmr-field-mapping>
+            &#60;cmr-field-name>teams&#60;/cmr-field-name>
+            &#60;column-pair>
+                &#60;column-name>PLAYEREJB.PLAYERID&#60;/column-name>
+                &#60;column-name>PLAYEREJBTEAMEJB.PLAYEREJB_PLAYERID&#60;/column-name>
+            &#60;/column-pair>
+            &#60;column-pair>
+                &#60;column-name>PLAYEREJBTEAMEJB.TEAMEJB_TEAMID&#60;/column-name>
+                &#60;column-name>TEAMEJB.TEAMID&#60;/column-name>
+            &#60;/column-pair>
+            &#60;fetched-with>
+                &#60;none/>
+            &#60;/fetched-with>
+        &#60;/cmr-field-mapping>
+    &#60;/entity-mapping>
+    &#60;entity-mapping>
+        &#60;ejb-name>LeagueEJB&#60;/ejb-name>
+        &#60;table-name>LEAGUEEJB&#60;/table-name>
+        &#60;cmp-field-mapping>
+            &#60;field-name>leagueId&#60;/field-name>
+            &#60;column-name>LEAGUEEJB.LEAGUEID&#60;/column-name>
+        &#60;/cmp-field-mapping>
+        &#60;cmp-field-mapping>
+            &#60;field-name>name&#60;/field-name>
+            &#60;column-name>LEAGUEEJB.NAME&#60;/column-name>
+        &#60;/cmp-field-mapping>
+        &#60;cmp-field-mapping>
+            &#60;field-name>sport&#60;/field-name>
+            &#60;column-name>LEAGUEEJB.SPORT&#60;/column-name>
+        &#60;/cmp-field-mapping>
+        &#60;cmr-field-mapping>
+            &#60;cmr-field-name>teams&#60;/cmr-field-name>
+            &#60;column-pair>
+                &#60;column-name>LEAGUEEJB.LEAGUEID&#60;/column-name>
+                &#60;column-name>TEAMEJB.LEAGUEEJB_LEAGUEID&#60;/column-name>
+            &#60;/column-pair>
+            &#60;fetched-with>
+                &#60;none/>
+            &#60;/fetched-with>
+        &#60;/cmr-field-mapping>
+    &#60;/entity-mapping>
+&#60;/sun-cmp-mapping>
+&#60;/sun-cmp-mappings></pre>
+
+<a name="beaqo"></a><h3>The sun-application-client.xml file</h3>
+<a name="indexterm-175"></a><p>The <tt>sun-application-client.xml</tt> file configures an Application Client Container (ACC) client (JAR file). The
+element hierarchy is as follows:</p><pre>sun-application-client
+.  ejb-ref
+.  .  ejb-ref-name
+.  .  jndi-name
+.  resource-ref
+.  .  res-ref-name
+.  .  jndi-name
+.  .  default-resource-principal
+.  .  .  name
+.  .  .  password
+.  resource-env-ref
+.  .  resource-env-ref-name
+.  .  jndi-name
+.  service-ref
+.  .  service-ref-name
+.  .  port-info
+.  .  .  service-endpoint-interface
+.  .  .  wsdl-port
+.  .  .  .  namespaceURI
+.  .  .  .  localpart
+.  .  .  stub-property
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  call-property
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  message-security-binding
+.  .  .  .  message-security
+.  .  .  .  .  message
+.  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  operation-name
+.  .  .  .  .  request-protection
+.  .  .  .  .  response-protection
+.  .  call-property
+.  .  .  name
+.  .  .  value
+.  .  wsdl-override
+.  .  service-impl-class
+.  .  service-qname
+.  .  .  namespaceURI
+.  .  .  localpart
+.  message-destination
+.  .  message-destination-name
+.  .  jndi-name
+.  message-destination-ref
+.  .  message-destination-ref-name
+.  .  jndi-name
+.  java-web-start-access
+.  .  context-root
+.  .  eligible
+.  .  vendor</pre><p><a name="indexterm-176"></a>Here is a sample <tt>sun-application-client.xml</tt> file:</p><pre>&#60;?xml version="1.0" encoding="UTF-8"?>
+&#60;!DOCTYPE sun-application-client PUBLIC ""-//Sun Microsystems, Inc.//DTD 
+GlassFish Application Server 3.0 Application Client 6.0//EN"" 
+"http://www.sun.com/software/appserver/dtds/sun-application-client_6_0-0.dtd">
+&#60;sun-application-client>
+  &#60;message-destination-ref>
+    &#60;message-destination-ref-name>ClientQueue&#60;/message-destination-ref-name>
+    &#60;jndi-name>jms/security_mdb_OutQueue&#60;/jndi-name>
+  &#60;/message-destination-ref>
+&#60;/sun-application-client></pre>
+
+<a name="beaqp"></a><h3>The sun-acc.xml File</h3>
+<a name="indexterm-177"></a><a name="indexterm-178"></a><p>The <tt>sun-acc.xml</tt> file configures the Application Client Container. This is more of a
+configuration file than a deployment descriptor. Enterprise Server provides a default file in
+the <i>domain-dir</i><tt>/config</tt> directory. Specifying a different file is optional. The element hierarchy is
+as follows:</p><pre>client-container
+.  target-server
+.  .  description
+.  .  security
+.  .  .  ssl
+.  .  .  cert-db
+.  auth-realm
+.  .  property (with attributes)
+.  client-credential
+.  .  property (with attributes)
+.  log-service
+.  .  property (with attributes)
+.  message-security-config
+.  .  provider-config
+.  .  .  request-policy
+.  .  .  response-policy
+.  .  .  property (with attributes)
+.  property (with attributes) </pre>
+
+<a name="giyhh"></a><h3>The sun-resources.xml File</h3>
+<a name="indexterm-179"></a><a name="indexterm-180"></a><p>The <tt>sun-resources.xml</tt> file configures application-scoped resources. The element hierarchy is as follows:</p><pre>resources
+.  custom-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  external-jndi-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  jdbc-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  mail-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  admin-object-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  connector-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  resource-adapter-config
+.  .  property (with attributes)
+.  .  .  description
+.  jdbc-connection-pool
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  connector-connection-pool
+.  .  description
+.  .  security-map
+.  .  .  principal
+.  .  .  user-group
+.  .  .  backend-principal
+.  .  property (with attributes)
+.  .  .  description
+.  work-security-map
+.  .  description
+.  .  principal-map
+.  .  group-map</pre>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p6.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p8.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

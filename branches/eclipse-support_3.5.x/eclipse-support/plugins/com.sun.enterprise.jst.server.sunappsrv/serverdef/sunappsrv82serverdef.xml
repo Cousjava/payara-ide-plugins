@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ 
+ Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.
+ 
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common Development
+ and Distribution License("CDDL") (collectively, the "License").  You
+ may not use this file except in compliance with the License. You can obtain
+ a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
+ or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
+ language governing permissions and limitations under the License.
+ 
+ When distributing the software, include this License Header Notice in each
+ file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
+ Sun designates this particular file as subject to the "Classpath" exception
+ as provided by Sun in the GPL Version 2 section of the License file that
+ accompanied this code.  If applicable, add the following below the License
+ Header, with the fields enclosed by brackets [] replaced by your own
+ identifying information: "Portions Copyrighted [year]
+ [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ If you wish your version of this file to be governed by only the CDDL or
+ only the GPL Version 2, indicate your decision by adding "[Contributor]
+ elects to include this software in this distribution under the [CDDL or GPL
+ Version 2] license."  If you don't indicate a single choice of license, a
+ recipient has the option to distribute your version of this file under
+ either the CDDL, the GPL Version 2 or to extend the choice of license to
+ its licensees as provided above.  However, if you add GPL Version 2 code
+ and therefore, elected the GPL Version 2 license, then the option applies
+ only if the new code is made subject to such option by the copyright
+ holder.
+-->
+
+<tns:ServerRuntime
+    xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
+    name="Sun Application Server 8.2" version="8.2">
+    
+    
+    <property id="sunappserver.rootdirectory"  label="%sunappserver.rootdirectory"
+    type="directory"
+    context="runtime"
+    default="" />
+    
+    <property id="sunappserver.domaindir"  label="%sunappserver.domaindir"
+    type="directory"
+    context="server"
+    default="${sunappserver.rootdirectory}/domains" />
+    
+    <property id="sunappserver.domainname"  label="%sunappserver.domainname"
+    type="string"
+    context="server"
+    default="domain1" />
+
+    <property id="sunappserver.adminname"  label="%sunappserver.adminname"
+    type="string"
+    context="server"
+    default="admin" />
+    
+    <property id="sunappserver.adminpassword" label="%sunappserver.adminpassword"
+    type="string"
+    context="server"
+    default="adminadmin" />
+
+
+
+    <module>
+        <type>jst.web</type>
+        <publishDir>${sunappserver.rootdirectory}/domains/${sunappserver.domainname}/autodeploy</publishDir>
+        <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+    </module>
+
+    <module>
+        <type>jst.ejb</type>
+        <publishDir>${sunappserver.rootdirectory}/domains/${sunappserver.domainname}/autodeploy</publishDir>
+        <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+    </module>
+
+    <module>
+        <type>jst.ear</type>
+        <publishDir>${sunappserver.rootdirectory}/domains/${sunappserver.domainname}/autodeploy</publishDir>
+        <publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+    </module>
+
+
+    <project>
+        <classpathReference>sunappsrv.project</classpathReference>
+    </project>
+	
+    <start>
+        <external  >${sunappserver.rootdirectory}/bin/asadmin start-domain ${sunappserver.domainname}</external>
+        <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat start-domain ${sunappserver.domainname}</external>
+        <programArguments></programArguments>
+        <workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
+        <debugPort>567</debugPort>
+
+    </start>
+
+    <stop>
+        <external>${sunappserver.rootdirectory}/bin/asadmin stop-domain ${sunappserver.domainname} </external>
+        <external os="Windows">${sunappserver.rootdirectory}/bin/asadmin.bat stop-domain ${sunappserver.domainname}</external>
+        <programArguments></programArguments>
+        <workingDirectory>${sunappserver.rootdirectory}</workingDirectory>
+    </stop>
+        
+    <publisher id="org.eclipse.jst.server.generic.antpublisher">
+        <publisherdata>
+            <dataname>build.file</dataname>
+            <datavalue>/serverdef/sunappsrv-ant.xml</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.publish.jst.web</dataname>
+            <datavalue>deploy.j2ee.web</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.publish.jst.ejb</dataname>
+            <datavalue>deploy.j2ee.ejb</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.publish.jst.ear</dataname>
+            <datavalue>deploy.j2ee.ear</datavalue>
+        </publisherdata>
+        
+        <publisherdata>
+            <dataname>target.unpublish.jst.web</dataname>
+            <datavalue>undeploy.j2ee.web</datavalue>
+        </publisherdata>
+        <publisherdata>
+            <dataname>target.unpublish.jst.ejb</dataname>
+            <datavalue>undeploy.j2ee.ejb</datavalue>
+        </publisherdata>			
+        <publisherdata>
+            <dataname>target.unpublish.jst.ear</dataname>
+            <datavalue>undeploy.j2ee.ear</datavalue>
+        </publisherdata>
+    </publisher>
+
+
+    <classpath id="sunappsrv.project" >
+        <archive path="${sunappserver.rootdirectory}/lib/j2ee.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/mail.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/jsf-api.jar" />
+        <!--  impl jar needed for tld files (html_basic and jsf_core) -->
+        <archive path="${sunappserver.rootdirectory}/lib/jsf-impl.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/appserv-jstl.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/appserv-tags.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/activation.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/jaxr-api.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/jaxrpc-api.jar" />
+        <archive path="${sunappserver.rootdirectory}/lib/saaj-api.jar" />
+
+    </classpath>
+	
+    <!-- Note: This is not currently used, but it uses the property sunappserver.serveraddress -->
+    <!-- which does not come from the props above, but is set by synchronizing it with the value -->
+    <!-- from the generic server framework in SunAppServer.java -->
+    <jndiConnection>
+        <providerUrl>jnp://${sunappserver.serveraddress}:1099</providerUrl>
+        <initialContextFactory>org.jnp.interfaces.NamingContextFactory</initialContextFactory>
+        <jndiProperty>
+            <name></name>
+            <value></value>
+        </jndiProperty>
+    </jndiConnection>
+</tns:ServerRuntime>

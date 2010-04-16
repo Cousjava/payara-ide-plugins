@@ -1,0 +1,308 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Overview of Sun GlassFish Enterprise Server v3 Application Deployment - Sun GlassFish Enterprise Server v3 Application Deployment Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p3.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p5.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="gihxo"></a>Chapter&#160;1<h3>Overview of Sun GlassFish Enterprise Server v3 Application Deployment</h3><p>Sun GlassFish<sup>TM</sup> Enterprise Server v3 provides an environment for developing and deploying Java<sup>TM</sup>
+applications and web services. Enterprise Server applications include Java Platform, Enterprise Edition (Java EE
+platform) standard features as well as Enterprise Server&#8211;specific features. This guide explains the tools
+and processes used for deploying applications and modules in the Enterprise Server
+environment. Only Enterprise Server&#8211;specific features are described in detail in this document.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#gihzx">About Application Deployment</a></p></li>
+<li><p><a href="#giphm">About Assembly and Deployment Events</a></p></li>
+<li><p><a href="#giifh">About Deployment Tools</a></p></li>
+<li><p><a href="#gipud">Additional Information on Application Deployment</a></p></li></ul>
+<p>Information and instructions on deploying from the command line are provided in this
+document. Information and instructions for accomplishing the deployment tasks by using the Administration
+Console are contained in the Administration Console online help.</p>
+
+<a name="gihzx"></a><h3>About Application Deployment</h3>
+<a name="indexterm-1"></a><a name="indexterm-2"></a><p><b>Assembly</b>, also known as packaging, is the process of combining discrete components into a
+single unit that can be installed on an application server. The Enterprise
+Server assembly process conforms to the customary Java EE specifications. The only difference is
+that when you assemble applications or modules in Enterprise Server, you can include
+optional Enterprise Server&#8211;specific deployment descriptors that enhance functionality. </p><p><b>Deployment</b> is the process of using a deployment tool to specify location-specific information,
+such as a list of local users that can access the application, or
+the name of the local database. The deployment tool expands the archive file
+into an open directory structure that is ready for users. Enterprise Server deployment
+tools are described in <a href="#giifh">About Deployment Tools</a>.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giptw">General Deployment Functionality</a></p></li>
+<li><p><a href="#gihzc">Deployment Descriptors and Annotations</a></p></li>
+<li><p><a href="#gikhs">Modules and Applications</a></p></li>
+<li><p><a href="#gijla">Access to Shared Framework Classes</a></p></li>
+<li><p><a href="#gihzk">Naming Standards</a></p></li></ul>
+
+
+<a name="giptw"></a><h4>General Deployment Functionality</h4>
+<p>Various Java EE module types, such as connector module, web module, EJB module,
+application client module, can be deployed in the following ways:</p>
+<ul><li><p><b>Archive Deployment.</b> Deploys the application as an archive file. For instructions, see <a href="p5.html#gijmq">To Deploy an Application or Module</a>.</p></li>
+<li><p><b>Dynamic Reloading.</b> Redeploys the application by creating or modifying a special <tt>.reload</tt> file in the applications repository. For instructions, see <a href="p5.html#fwakh">To Reload Changes to Applications or Modules Dynamically</a>.</p></li>
+<li><p><b>Automatic Deployment.</b> Deploys the application archive that is placed in the autodeployment directory. For instructions, see <a href="p5.html#fvxze">To Deploy an Application or Module Automatically</a>.</p></li>
+<li><p><b>Directory Deployment.</b> Deploys the application in a directory format. For instructions, see <a href="p5.html#gilcn">To Deploy an Application or Module in a Directory Format</a>.</p></li>
+<li><p><b>JSR 88 Deployment.</b> A deployment mechanism implemented based on the JSR 88 standard from <tt>jcp.org</tt>. It delivers vendor neutral deployment options. See <a href="#beaee">JSR 88 Client</a> and <a href="#giiel">JSR 88 Naming</a>.</p></li></ul>
+<p>A deployment plan, which deploys a portable archive along with a deployment plan
+containing Enterprise Server&#8211; specific deployment descriptors, can apply to any of these deployment
+techniques. For instructions, see <a href="p5.html#gijyb">To Deploy an Application or Module by Using a Deployment Plan</a>.</p><p>There are two work situations that require different safeguards and processes:</p>
+<ul><li><p>A <b>development environment</b> provides a loose set of tools and work spaces for a relatively small number of developers who are creating and testing applications and modules.</p></li>
+<li><p>A <b>production environment</b> provides a stable, protected environment where applications are tuned to maximum efficiency for business use rather than for development. </p></li></ul>
+<p><a name="indexterm-3"></a><a name="indexterm-4"></a><a name="indexterm-5"></a>Some deployment methods that are used effectively in a development environment should not
+be used in production. For example, dynamic reloading is a quick way for
+developers to reload an application, but might degrade performance in a production environment.
+In addition, whenever a reload is done, the sessions that are in transit
+become invalid, which might not be a concern for development, but can be
+a serious matter in production. The client must restart the session, another negative in
+a production environment. </p>
+
+<a name="gihzc"></a><h4>Deployment Descriptors and Annotations</h4>
+<p>A <b>deployment descriptor</b> is an XML file that describes how a Java EE application
+or module should be deployed. Each deployment descriptor XML file has a corresponding
+Document Type Definition (DTD) file or schema (XSD) file, which defines the elements,
+data, and attributes that the deployment descriptor file can contain. The deployment descriptor
+directs a deployment tool to deploy a module or application with specific container
+options, and also describes specific configuration requirements that you must resolve. </p><p>Because the information in a deployment descriptor is declarative, it can be changed
+without requiring modifications to source code. At run time, Enterprise Server reads the
+information in the deployment descriptor and deploys the application or module as directed.
+<a name="indexterm-6"></a><a name="indexterm-7"></a></p><p>The following types of deployment descriptors are associated with Enterprise Server: </p>
+<ul><li><p><b>Java EE Standard Descriptors.</b> Java EE standard deployment descriptors are described in the Java EE 6 specification. You can find the specification at <a href="http://java.sun.com/products/">http://java.sun.com/products/</a>. Information about the XML schemas that define Java EE standard deployment descriptors is available at <a href="http://java.sun.com/xml/ns/javaee/">http://java.sun.com/xml/ns/javaee/</a>.</p></li>
+<li><p><b>Enterprise Server Descriptors.</b> Enterprise Server provides optional deployment descriptors for configuring features that are specific to Enterprise Server. For example, when you assemble an EJB module, you annotate or create two Enterprise Server&#8211;specific deployment descriptor files with these names: <tt>ejb-jar.xml</tt> and <tt>sun-ejb-jar.xml</tt>. For complete descriptions of these files and their elements, see <a href="p7.html">Appendix&#160;B, Enterprise Server Deployment Descriptor Files</a> and <a href="p8.html">Appendix&#160;C, Elements of the Enterprise Server Deployment Descriptors</a>.</p><p>Unless otherwise stated, settings in the Enterprise Server deployment descriptors override corresponding settings in the Java EE standard descriptors and in the Enterprise Server configuration. For more information about the domain configuration file, see <a href="http://docs.sun.com/doc/820-7694"><i>Sun GlassFish Enterprise Server v3 Domain File Format Reference</i></a>.</p></li></ul>
+<p>An <b>annotation</b>, also called metadata, enables a declarative style of programming. You can
+specify information within a class file by using annotations. When the application or
+module is deployed, the information can either be used or overridden by the
+deployment descriptor. Enterprise Server supports annotation according to the following specifications:</p>
+<ul><li><p>JSR 250 Common Annotation Specification (<a href="http://www.jcp.org/en/jsr/detail?id=250">http://www.jcp.org/en/jsr/detail?id=250</a>)</p></li>
+<li><p>JSR 181 Annotation for Web Services Specification (<a href="http://www.jcp.org/en/jsr/detail?id=181">http://www.jcp.org/en/jsr/detail?id=181</a>)</p></li>
+<li><p>EJB 3.1 Specification (<a href="http://www.jcp.org/en/jsr/detail?id=318">http://www.jcp.org/en/jsr/detail?id=318</a>)</p></li></ul>
+<p>The following annotation and deployment descriptor combinations are supported:<a name="indexterm-8"></a><a name="indexterm-9"></a></p>
+<ul><li><p>Java EE applications or modules can be packaged with full Java EE 6 compliant standard and runtime deployment descriptors. If the standard deployment descriptors have specified the <tt>metadata-complete</tt> attribute, annotations in the module are ignored.</p></li>
+<li><p>Java EE applications or modules can be fully annotated with metadata defined by the listed specifications. Annotation eliminates the need for Java EE standard deployment descriptors. In most cases, the Enterprise Server deployment descriptors are also not needed.</p></li>
+<li><p>Java EE applications or modules can be partially annotated with some deployment information in standard deployment descriptors. In case of conflicts, deployment descriptor values supersede the annotated metadata, and a warning message is logged.</p></li></ul>
+
+
+<a name="gikhs"></a><h4>Modules and Applications</h4>
+<a name="indexterm-10"></a><a name="indexterm-11"></a><p>A <b>module</b> is a collection of one or more Java EE components that
+run in the same container type, such as a web container or EJB
+container. The module uses annotations or deployment descriptors of that container type. You
+can deploy a module alone or as part of an application. </p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#beacv">Types of Modules</a></p></li>
+<li><p><a href="#beacu">Module-Based Deployment</a></p></li>
+<li><p><a href="#beacw">Application-Based Deployment</a></p></li></ul>
+
+
+<a name="beacv"></a><h5>Types of Modules</h5>
+<p>Enterprise Server supports the following types of modules:</p>
+<ul><li><p><b>Web Module.</b> A web module, also known as a web application, is a collection of servlets, EJBs, HTML pages, classes, and other resources that you can bundle and deploy to several Java EE application servers. A web application archive (WAR) file is the standard format for assembling web applications. A WAR file can consist of the following items: servlets, JavaServer Pages<sup>TM</sup> (JSP<sup>TM</sup>) files, JSP tag libraries, utility classes, static pages, client-side applets, beans, bean classes, enterprise bean classes, plus annotations or web deployment descriptors (<tt>web.xml</tt> and <tt>sun-web.xml</tt>).<a name="indexterm-12"></a><a name="indexterm-13"></a></p></li>
+<li><p><b>EJB Module.</b> An EJB module is a deployable software unit that consists of one or more enterprise beans, plus an EJB deployment descriptor. A Java archive (JAR) file is the standard format for assembling enterprise beans. An EJB JAR file contains the bean classes (home, remote, local, and implementation), all of the utility classes, and annotations or deployment descriptors (<tt>ejb-jar.xml</tt> and <tt>sun-ejb-jar.xml</tt>). If the EJB component is a version 2.1 or earlier entity bean with container managed persistence (CMP), you can also include a <tt>.dbschema</tt> file and a CMP mapping descriptor (<tt>sun-cmp-mapping.xml</tt>).<a name="indexterm-14"></a><a name="indexterm-15"></a></p></li>
+<li><p><b>Connector Module.</b> A connector module, also known as a resource adapter module, is a deployable software unit that provides a portable way for EJB components to access foreign enterprise information system (EIS) data. A connector module consists of all Java interfaces, classes, and native libraries for implementing a resource module, plus a resource deployment descriptor. A resource adapter archive (RAR) is the standard format for assembling connector modules. Each Enterprise Server connector has annotations or a deployment descriptor file (<tt>ra.xml</tt>). <a name="indexterm-16"></a><a name="indexterm-17"></a><a name="indexterm-18"></a></p><p>After deploying a J2EE connector module, you must configure it as described in <a href="http://docs.sun.com/doc/820-7695/bealk?a=view">Chapter 12, Developing Connectors, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>.</p></li>
+<li><p><b>Application Client Module.</b> An application client module is a deployable software unit that consists of one or more classes, and application client deployment descriptors (<tt>application-client.xml</tt> and <tt>sun-application-client.xml</tt>). An application client JAR file applies to an Enterprise Server&#8211;specific type of Java EE client. An application client supports the standard Java EE Application Client specifications, and, in addition, supports direct access to Enterprise Server. <a name="indexterm-19"></a><a name="indexterm-20"></a><a name="indexterm-21"></a></p></li>
+<li><p><b>Lifecycle Module.</b> Enterprise Server A lifecycle module provides a means of running short&#8211;duration or long&#8211;duration Java-based tasks within the Enterprise Server environment. See <a href="http://docs.sun.com/doc/820-7695/beamc?a=view">Chapter 13, Developing Lifecycle Listeners, in <i>Sun Java System Application Server 9.1 Developer&#8217;s Guide</i></a> for more information.<a name="indexterm-22"></a><a name="indexterm-23"></a></p></li></ul>
+
+
+<a name="beacu"></a><h5>Module&#8211;Based Deployment</h5>
+<p>You can deploy web, EJB, and application client modules separately, outside of any
+application. Module&#8211;based deployment is appropriate when components need to be accessed by other
+modules, applications, or application clients. Module-based deployment allows shared access to a bean
+from a web, EJB, or application client component. By using package definitions in
+the source code of all modules, you eanble the class loader to properly
+locate the classes after the modules have been deployed.</p><p>The following figure shows separately-deployed EJB, web, and application client modules.<a name="indexterm-24"></a><a name="indexterm-25"></a></p><a name="fwfdj"></a><h6>Figure&#160;1-1 Module&#8211;Based Assembly and Deployment</h6><img src="figures/dgdeploy3.gif" alt="Figure shows EJB, web, and `application client module assembly and deployment."></img>
+
+<a name="beacw"></a><h5>Application-Based Deployment</h5>
+<p>An <b>application</b> is a logical collection of one or more modules joined by
+application annotations or deployment descriptors. You assemble components into JAR, WAR, or RAR
+files, then combine these files into an Enterprise archive (EAR) file which is
+deployed.<a name="indexterm-26"></a><a name="indexterm-27"></a></p><p> The following figure shows EJB, web, application client, and connector modules assembled
+into a Java EE application.</p><a name="fvyip"></a><h6>Figure&#160;1-2 Application&#8211;Based Assembly and Deployment</h6><img src="figures/dgdeploya.gif" alt="Figure shows Java EE application assembly and deployment."></img>
+
+<a name="gijla"></a><h4>Access to Shared Framework Classes</h4>
+<p>If you assemble a large, shared library into every module that uses it,
+the result is a huge file that takes too long to register
+with the server. In addition, several versions of the same class could exist
+in different class loaders, which is a waste of resources. When Java EE
+applications and modules use shared framework classes (such as utility classes and libraries),
+the classes can be put in the path for the common class loader
+or an application-specific class loader rather than in an application or module. For
+more information, see <a href="http://docs.sun.com/doc/820-7695/beade?a=view">Chapter 2, Class Loaders, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>.<a name="indexterm-28"></a><a name="indexterm-29"></a></p>
+<hr><p><b>Note - </b><a name="indexterm-30"></a>According to the Java EE specification, section 8.1.1.2, &#8220;Dependencies,&#8221; you cannot package utility classes
+within an individually-deployed EJB module. Instead, you must package the EJB module and
+utility JAR within an application using the JAR Extension Mechanism Architecture.</p>
+<hr>
+
+
+<a name="gihzk"></a><h4>Naming Standards</h4>
+<p>Names of applications and individually-deployed modules must be unique within an Enterprise Server
+domain. Modules within an application must have unique names.<a name="indexterm-31"></a><a name="indexterm-32"></a></p>
+<hr><p><b>Note - </b>Ensure that your package and file names do not contain spaces or characters
+that are illegal for your operating system.</p>
+<hr>
+<p>You should use a Java package-like naming scheme for module file names,
+module names as found in the <tt>module-name</tt> portion of the <tt>ejb-jar.xml</tt> files, and
+EJB names as found in the <tt>ejb-name</tt> portion of the <tt>ejb-jar.xml</tt> files.
+This package-like naming scheme ensures that name collisions do not occur. The benefits of
+this naming practice apply not only to Enterprise Server, but to other Java
+EE application servers as well.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#gjjfg">Portable Naming</a></p></li>
+<li><p><a href="#giidg">JNDI Naming</a></p></li>
+<li><p><a href="#beada">Directory Structure</a></p></li>
+<li><p><a href="#giiel">JSR 88 Naming</a></p></li></ul>
+
+
+<a name="gjjfg"></a><h5>Portable Naming</h5>
+<p><a name="indexterm-33"></a><a name="indexterm-34"></a>The Java EE 6 specification defines the portable <tt>application-name</tt>, which allows you to specify
+an application name in the <tt>application.xml</tt> file. For example:</p><pre>&#60;application-name>xyz&#60;/application-name></pre><p>This name is used before the archive name to derive the default
+application registration name. The application will be deployed under <tt>xyz</tt> if the <tt>application.xml</tt> file
+defines <tt>application-name</tt> as <tt>xyz</tt>. However, a user-specified name takes precedence over the
+portable application name. If <tt>application-name</tt> is not specified in the <tt>application.xml</tt> file, the application
+is deployed using the archive name (minus suffix) as the application registration name.</p><p>The Java EE 6 specification also defines the portable <tt>module-name</tt> element in the
+module standard deployment descriptors. For standalone modules, the defined <tt>module-name</tt> will be used
+as the application name when a name is not explicitly specified.</p>
+
+<a name="giidg"></a><h5>JNDI Naming</h5>
+<p><a name="indexterm-35"></a>Java Naming and Directory Interface<sup>TM</sup> (JNDI) lookup names for EJB components must also be unique. Establishing a
+consistent naming convention can help. For example, appending the application name and the module
+name to the EJB name is a way to guarantee unique names,
+such as, <tt>jms/qConnPool</tt>.</p>
+
+<a name="beada"></a><h5>Directory Structure</h5>
+<p><a name="indexterm-36"></a>Application and module directory structures must follow the structure outlined in the Java EE
+specification. During deployment, the application or module is expanded from the archive file
+to an open directory structure. The directories are named with <tt>_jar</tt> and
+<tt>_war</tt> suffixes. </p><p>If you deploy a directory, your directory structure must follow this same convention.
+For instructions on performing directory deployment, see <a href="p5.html#gilcn">To Deploy an Application or Module in a Directory Format</a>. </p>
+
+<a name="giiel"></a><h5>JSR 88 Naming</h5>
+<p><a name="indexterm-37"></a>There are two JSR 88 APIs that can be used to deploy applications
+in Enterprise Server.</p><p>If you are using the following JSR 88 API, there is no
+file name:</p><pre>javax.enterprise.deploy.spi.DeploymentManager.distribute(Target[], InputStream, InputStream)</pre><p>Because there is no file name, the name of the application is
+taken from the <tt>display-name</tt> entry in the Java EE standard deployment descriptor. If the
+<tt>display-name</tt> entry is not present, Enterprise Server creates a temporary file name and
+uses that name to deploy the application. Neither the Administration Console nor the
+<tt>asadmin</tt> utility uses this API.</p><p>If you are using the following preferred JSR 88 API, the name
+is derived from the first portion of the file name (without the <tt>.war</tt>
+or <tt>.jar</tt> extension):</p><pre>javax.enterprise.deploy.spi.DeploymentManager.distribute(Target[], File, File)</pre><p>For more information about JSR 88, see <a href="http://jcp.org/en/jsr/detail?id=88">http://jcp.org/en/jsr/detail?id=88</a>.</p>
+
+<a name="giphm"></a><h3>About Assembly and Deployment Events</h3>
+<p>The deployment tools that are provided by Enterprise Server can be used by
+anyone to deploy applications and modules into any Enterprise Server environment. However, effective
+application deployment requires planning and care. Only the developer knows exactly what is
+required by an application, so the developer is responsible for initial assembly and
+deployment. <a name="indexterm-38"></a></p>
+<ol><li><p><b>Deployment Descriptor Creation.</b> The developer creates the deployment descriptors using Java standards and tools. </p><p>Details of the Enterprise Server-specific deployment descriptors are contained in <a href="p7.html">Appendix&#160;B, Enterprise Server Deployment Descriptor Files</a> and <a href="p8.html">Appendix&#160;C, Elements of the Enterprise Server Deployment Descriptors</a>. The Enterprise Server&#8211;specific sample applications contain deployment descriptors that can be used as templates for developing deployment descriptors.</p></li>
+<li><p><b>Assembly.</b> The developer assembles the archive file(s) using Java standards and tools, such as the <tt>jar</tt> command. The application or module is packaged into a JAR, WAR, RAR, or EAR file. For guidelines on naming, see <a href="#gihzk">Naming Standards</a>. </p><p>There are no Enterprise Server&#8211;specific issues to consider.</p></li>
+<li><p><b>Test Deployment.</b> The developer performs a test deployment of the archive. For instructions, see <a href="p5.html#gijmq">To Deploy an Application or Module</a>.</p></li>
+<li><p><b>Archive Submission.</b> The developer submits the verified archive to the administrator for deployment into a production environment. The developer includes instructions for any additional deployment tasks that the administrator must perform. For an example of such additional instructions, see <a href="#gijla">Access to Shared Framework Classes</a>.</p></li>
+<li><p><b>Configuration.</b> The administrator applies additional deployment specifics. Sometimes the developer has indicated additional deployment needs, such as specifying the production database. In this case, the administrator edits and reassembles the archive.</p></li>
+<li><p><b>Production Deployment.</b> The administrator deploys the archive to production. See <a href="p5.html#gijmq">To Deploy an Application or Module</a>. </p></li>
+<li><p><b>Troubleshooting.</b> If deployment fails, the administrator returns the archive to the developer. The developer fixes the problem and resubmits the archive to the administrator. Sometimes the administrator resolves the problem, depending on what the problem is.</p></li></ol>
+
+
+<a name="giifh"></a><h3>About Deployment Tools</h3>
+<p>The following tools can be used for assembling and deploying a module or
+application:<a name="indexterm-39"></a><a name="indexterm-40"></a><a name="indexterm-41"></a></p>
+<ul><li><p><a href="#giijz">Administration Console</a></p></li>
+<li><p><a href="#giijf">The <tt>asadmin</tt> Utility</a></p></li>
+<li><p><a href="#giigr"> Ant Utility</a></p></li>
+<li><p><a href="#giijq">NetBeans IDE</a></p></li>
+<li><p><a href="#gikwq">Eclipse IDE</a></p></li>
+<li><p><a href="#beaee">JSR 88 Client</a></p></li></ul>
+
+
+<a name="giijz"></a><h4>Administration Console</h4>
+<a name="indexterm-42"></a><a name="indexterm-43"></a><p>The Enterprise Server Administration Console is a browser-based utility that features a graphical
+interface that includes extensive online help for the administrative tasks.  The format
+for starting the Administration Console in a web browser is <tt>http://<i>hostname</i>:<i>port</i></tt>. For example:</p><pre>http://localhost:4848</pre><p>Step-by-step instructions for using the Administration Console for deployment are provided in the
+Administration Console online help. You can display the help material for a page
+by clicking the Help button. The initial help page describes the functions and
+fields of the page itself. To find instructions for performing associated tasks, click
+a link in the See Also list. </p>
+
+<a name="giijf"></a><h4>The <tt>asadmin</tt> Utility</h4>
+<a name="indexterm-44"></a><a name="indexterm-45"></a><p>The Enterprise Server <tt>asadmin</tt> utility is a command-line tool that invokes subcommands for
+identifying the operation or task that you want to perform. You can run
+<tt>asadmin</tt> commands either from a command prompt or from a script. The format
+for starting the <tt>asadmin</tt> utility on the command line is <i>as-install</i><tt>/bin/asadmin <i>subcommand</i> <i>--option</i></tt>. For example:</p><pre>asadmin list-applications <tt>--type</tt> web</pre><p>Application deployment commands are listed in <a href="p6.html">Appendix&#160;A, The <tt>asadmin</tt> Deployment Subcommands</a>. All Enterprise Server <tt>asadmin</tt> commands are
+documented in <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Preview Reference Manual</i></a>.</p><p>For the most part, you can perform the same administrative tasks by using
+either the graphical Administration Console or the <tt>asadmin</tt> command-line utility, however, there are
+exceptions. Procedures for using the command-line utilities are provided in this guide and
+in the command-line help pages, which are similar to man pages. You can
+display the help material for a command by typing help followed by the
+subcommand. For example:</p><pre>asadmin help list-applications</pre><p>For additional information on the <tt>asadmin</tt> utility, see <a href="http://docs.sun.com/doc/820-7692/giobi?a=view">Using the asadmin Utility in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a> and the <a href="http://docs.sun.com/doc/820-7701/asadmin-1m?a=view"><tt>asadmin</tt>(1M)</a> help
+page.</p>
+
+<a name="giigr"></a><h4> Ant Utility</h4>
+<p>The Enterprise Server Ant tasks can help you assemble and deploy modules and
+applications. For instructions, see <a href="http://docs.sun.com/doc/820-7695/beaep?a=view">Chapter 3, Using Ant with Enterprise Server, in <i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a>.<a name="indexterm-46"></a><a name="indexterm-47"></a></p>
+<hr><p><b>Note - </b>Enterprise Server is compatible with Apache Ant versions 1.6.5 or greater. If you
+have not installed Ant, you can download it from the Update Tool. The
+Apache Ant Build Tool add-on component supplies Ant version 1.7.1. For information about
+Update Tool, see <a href="http://docs.sun.com/doc/820-7692/ghgai?a=view">Update Tool in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p>
+<hr>
+
+
+<a name="giijq"></a><h4>NetBeans IDE</h4>
+<p><a name="indexterm-48"></a><a name="indexterm-49"></a>You can use the NetBeans<sup>TM</sup> Integrated Development Environment (IDE), or another IDE, to
+assemble Java EE applications and modules. The NetBeans IDE is included in the
+tools bundle of the Java EE Software Development Kit (SDK). To download, see
+<a href="http://java.sun.com/javaee/downloads/index.jsp">http://java.sun.com/javaee/downloads/index.jsp</a>. For additional information, see <a href="http://www.netbeans.org">http://www.netbeans.org</a>.</p>
+
+<a name="gikwq"></a><h4>Eclipse IDE</h4>
+<p>In addition to the bundled NetBeans IDE, a plug-in for the Eclipse
+IDE extends GlassFish to the Eclipse community. To download, see <a href="http://glassfishplugins.dev.java.net/">http://glassfishplugins.dev.java.net/</a>.<a name="indexterm-50"></a><a name="indexterm-51"></a></p>
+
+<a name="beaee"></a><h4>JSR 88 Client</h4>
+<p><a name="indexterm-52"></a><a name="indexterm-53"></a>The syntax of the URI entry for the <tt>getDeploymentManager</tt> method is as follows:</p><pre>deployer:Sun:AppServer::<i>admin-host</i>:<i>admin-port</i></pre>
+
+<a name="gipud"></a><h3>Additional Information on Application Deployment</h3>
+<p>As specified from Java EE 6 specifications, the relevant specifications are the following:</p>
+<ul><li><p>Java Platform, Enterprise Edition 6 Specification</p><p><a href="http://jcp.org/en/jsr/detail?id=313">http://jcp.org/en/jsr/detail?id=313</a></p></li>
+<li><p>Java EE Application Deployment JSR 88 Specification </p><p><a href="http://jcp.org/en/jsr/detail?id=88">http://jcp.org/en/jsr/detail?id=88</a></p></li>
+<li><p>Common Annotations for the Java Platform 1.6 Specification </p><p><a href="http://jcp.org/en/jsr/detail?id=250">http://jcp.org/en/jsr/detail?id=250</a></p></li>
+<li><p>Java Servlet 3.0 Specification</p><p><a href="http://jcp.org/en/jsr/detail?id=315">http://jcp.org/en/jsr/detail?id=315</a></p></li>
+<li><p>Enterprise JavaBeans 3.1 Specification</p><p><a href="http://jcp.org/en/jsr/detail?id=318">http://jcp.org/en/jsr/detail?id=318</a></p></li>
+<li><p>Java EE Connector Architecture 1.6 Specification </p><p><a href="http://jcp.org/en/jsr/detail?id=322">http://jcp.org/en/jsr/detail?id=322</a></p></li></ul>
+<p>The following product documentation might be relevant to some aspects of application deployment:</p>
+<ul><li><p><a href="http://docs.sun.com/doc/820-7695"><i>Sun GlassFish Enterprise Server v3 Preview Application Development Guide</i></a></p></li>
+<li><p><a href="http://docs.sun.com/doc/820-7692"><i>Sun GlassFish Enterprise Server v3 Preview Administration Guide</i></a></p></li>
+<li><p><a href="http://docs.sun.com/doc/820-7727"><i>Sun GlassFish Enterprise Server v3 Preview Add-On Component Development Guide</i></a></p></li>
+<li><p><a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Preview Reference Manual</i></a></p></li>
+<li><p>Enterprise Server Administration Console online help</p></li></ul>
+
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p3.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p5.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,1301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Using Ant with Enterprise Server - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p6.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p8.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="beaep"></a>Chapter&#160;3<h3>Using Ant with Enterprise Server</h3><a name="indexterm-68"></a><a name="indexterm-69"></a><p>The Sun GlassFish<sup>TM</sup> Enterprise Server provides server-specific Ant tasks, which are described in
+the following sections:</p>
+<ul><li><p><a href="#gilww">Setting Up Your Ant Environment</a></p></li>
+<li><p><a href="#beaeq">Enterprise Server Ant Tasks</a></p></li>
+<li><p><a href="#beaey">Reusable Subelements</a></p></li></ul>
+<p>Enterprise Server is compatible with Apache Ant versions 1.6.5 or greater. If you
+don't have Ant installed, you can download it from the Update Tool. The Apache
+Ant Build Tool add-on component supplies Ant version 1.7.1. For more information about
+the Update Tool, see <a href="http://docs.sun.com/doc/820-7692/ghgai?a=view">Update Tool, in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a>.</p><p>For more information about Ant, see the Apache Software Foundation web site at
+<a href="http://ant.apache.org/">http://ant.apache.org/</a>.</p><p>For information about standard Ant tasks, see the Ant documentation at <a href="http://ant.apache.org/manual/">http://ant.apache.org/manual/</a>.</p>
+<hr><p><b>Note - </b>Variables in the examples in this chapter, such as <tt>${asinstalldir}</tt>, reference values
+defined in <tt>build.xml</tt> or properties files.</p>
+<hr>
+
+
+<a name="gilww"></a><h3>Setting Up Your Ant Environment</h3>
+<p>To set up your Ant environment for using Enterprise Server Ant tasks, you
+can either define the <tt>ANT_OPTS</tt> environment variable or define a target. In both
+these cases, you must also set the classpath to point to the <tt>sun-appserv-ant.jar</tt>
+file.</p>
+
+<a name="gilwt"></a><h4>Defining the <tt>ANT_OPTS</tt> Variable</h4>
+<p>To define the <tt>ANT_OPTS</tt> environment variable on UNIX systems, use the following commands,
+where <tt>${ASINSTALLDIR}</tt> is an environment variable defined to point to the Enterprise
+Server installation directory.</p><pre>export ANT_OPTS="-Djava.library.path${ASINSTALLDIR}/modules"
+export CLASSPATH=${CLASSPATH};${ASINSTALLDIR}/modules/sun-appserv-ant.jar</pre><p>To define the <tt>ANT_OPTS</tt> environment variable on Windows systems, use the following commands,
+where <tt>%ASINSTALLDIR%</tt> is an environment variable defined to point to the Enterprise
+Server installation directory.</p><pre>set ANT_OPTS="-Djava.library.path=%ASINSTALLDIR%\modules"
+set CLASSPATH=%CLASSPATH%;%ASINSTALLDIR%\modules\sun-appserv-ant.jar</pre>
+
+<a name="gilxx"></a><h4>Defining a Target</h4>
+<p>The following <tt>target</tt> element defines the Enterprise Server Ant tasks and references the
+<tt>sun-appserv-ant.jar</tt> file. You can include this target in your <tt>build.xml</tt> file. The <tt>${asinstalldir}</tt> in
+the <tt>classpath</tt> element refers to the Enterprise Server installation directory.</p><pre>&#60;target name="as-ant-init">
+   &#60;taskdef name="sun-appserv-deploy"
+      classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.DeployTask" />
+   &#60;taskdef name="sun-appserv-undeploy"
+      classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.UndeployTask" />
+   &#60;taskdef name="sun-appserv-component"
+      classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.ComponentTask" />
+   &#60;taskdef name="sun-appserv-admin"
+      classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.AdminTask" />
+   &#60;taskdef name="sun-appserv-jspc"
+      classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.SunJspc" />
+   &#60;taskdef name="sun-appserv-update"
+      classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.UpdateTask" />
+   &#60;taskdef name="sun-appserv-instance"
+      classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.InstanceTask" />
+    &#60;taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen" />
+    &#60;taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport" />
+   &#60;classpath path="${asinstalldir}/lib/sun-appserv-ant.jar" />
+&#60;/target></pre><p>Targets that use the Enterprise Server Ant tasks then can use the
+<tt>as-ant-init</tt> target as a dependency. For example:</p><pre>&#60;target name="create-some-jdbc-resource" depends="as-ant-init">
+   ...
+&#60;/target></pre><p>Ant resolves properties from top to bottom in Ant build files. If you
+define the Enterprise Server Ant tasks at the project level, make sure that
+any properties used within the task definitions have been resolved before the task
+definitions. For example, the following snippet defines the <tt>sun-appserv-admin</tt> task at the project level:</p><pre>&#60;?xml version="1.0" encoding="UTF-8"?>
+&#60;project name="glassfish-admin-ant-tasks" default="default">
+    &#60;property name="asinstalldir" value="c:/glassfishv3/glassfish" />
+    &#60;taskdef name="sun-appserv-admin"
+        classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.AdminTask"
+        classpath="${asintalldir}/modules/sun-appserv-ant.jar" />
+    ...
+&#60;/project></pre>
+
+<a name="beaeq"></a><h3>Enterprise Server Ant Tasks</h3>
+<a name="indexterm-70"></a><a name="indexterm-71"></a><p>Use the Ant tasks provided by the Enterprise Server for assembling, deploying, and
+undeploying modules and applications, and for configuring the server. The tasks are as
+follows:</p>
+<ul><li><p><a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a></p></li>
+<li><p><a href="#beaes">The <tt>sun-appserv-undeploy</tt> Task</a></p></li>
+<li><p><a href="#beaet">The <tt>sun-appserv-instance</tt> Task</a></p></li>
+<li><p><a href="#beaeu">The <tt>sun-appserv-component</tt> Task</a></p></li>
+<li><p><a href="#beaev">The <tt>sun-appserv-admin</tt> Task</a></p></li>
+<li><p><a href="#beaew">The <tt>sun-appserv-jspc</tt> Task</a></p></li>
+<li><p><a href="#beaex">The <tt>sun-appserv-update</tt> Task</a></p></li>
+<li><p><a href="#gfjtt">The <tt>wsgen</tt> Task</a></p></li>
+<li><p><a href="#gfjtg">The <tt>wsimport</tt> Task</a></p></li></ul>
+
+
+<a name="beaer"></a><h4>The <tt>sun-appserv-deploy</tt> Task</h4>
+<a name="indexterm-72"></a><a name="indexterm-73"></a><a name="indexterm-74"></a><p>Deploys any of the following to a local or remote Enterprise Server
+instance.</p>
+<ul><li><p>Enterprise application (EAR file)</p></li>
+<li><p>Web application (WAR file)</p></li>
+<li><p>Enterprise Java Bean (EJB-JAR file)</p></li>
+<li><p>Enterprise connector (RAR file)</p></li>
+<li><p>Application client</p></li></ul>
+
+
+<a name="fvyic"></a><h5>Subelements of <tt>sun-appserv-deploy</tt></h5>
+<p>The following table describes subelements for the <tt>sun-appserv-deploy</tt> task. These are objects
+upon which this task acts.</p><a name="fvydc"></a><h6>Table&#160;3-1 The <tt>sun-appserv-deploy</tt> Subelements</h6><table><col width="45%"><col width="54%"><tr><th align="left" valign="top" scope="column"><p>Element</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beaez">The <tt>server</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>An Enterprise Server instance</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beafa">The <tt>component</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>A component to be deployed</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beafb">The <tt>fileset</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>A
+set of component files that match specified parameters</p></td>
+</tr>
+</table>
+
+<a name="fvyby"></a><h5>Attributes of <tt>sun-appserv-deploy</tt></h5>
+<p>The following table describes attributes for the <tt>sun-appserv-deploy</tt> task.</p><a name="fvydb"></a><h6>Table&#160;3-2 The <tt>sun-appserv-deploy</tt> Attributes</h6><table><col width="19%"><col width="15%"><col width="65%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-75"></a><tt>file</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional if a <tt>component</tt>
+or <tt>fileset</tt> subelement is present, otherwise required) The component to deploy. If this
+attribute refers to a file, it must be a valid archive. If this
+attribute refers to a directory, it must contain a valid archive in which
+all components have been exploded. If <tt>upload</tt> is set to <tt>false</tt>, this must
+be an absolute path on the server machine.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>name</tt></p></td>
+<td align="left" valign="top" scope="row"><p>file name without extension</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The
+display name for the component being deployed.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-76"></a><tt>force</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, the component is
+overwritten if it already exists on the server. If <tt>false</tt>, <tt>sun-appserv-deploy</tt> fails if
+the component exists.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-77"></a><tt>retrievestubs</tt></p></td>
+<td align="left" valign="top" scope="row"><p>client stubs not saved</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The directory where client <a name="indexterm-78"></a>stubs are
+saved. This attribute is inherited by nested <tt>component</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-79"></a><a name="indexterm-80"></a><tt>precompilejsp</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, all JSP
+files found in an enterprise application (<tt>.ear</tt>) or web application (<tt>.war</tt>) are precompiled. This
+attribute is ignored for other component types. This attribute is inherited by nested
+<tt>component</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-81"></a><tt>verify</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, syntax and semantics for all deployment descriptors are automatically
+verified for correctness. This attribute is inherited by nested <tt>component</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-82"></a><tt>contextroot</tt></p></td>
+<td align="left" valign="top" scope="row"><p>file name without
+extension</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The context root for a web module (WAR file). This attribute
+is ignored if the component is not a WAR file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-83"></a><tt>dbvendorname</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>sun-ejb-jar.xml</tt> entry</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The name
+of the database vendor for which tables can be created. Allowed values are
+<tt>javadb</tt>, <tt>db2</tt>, <tt>mssql</tt>, <tt>oracle</tt>, <tt>postgresql</tt>, <tt>pointbase</tt>, <tt>derby</tt> (also for CloudScape), and <tt>sybase</tt>, case-insensitive.</p><p>If
+not specified, the value of the <tt>database-vendor-name</tt> attribute in <tt>sun-ejb-jar.xml</tt> is used.</p><p>If no
+value is specified, a connection is made to the resource specified by the
+<tt>jndi-name</tt> subelement of the <tt>cmp-resource</tt> element in the <tt>sun-ejb-jar.xml</tt> file, and the database
+vendor name is read. If the connection cannot be established, or if the
+value is not recognized, SQL-92 compliance is presumed.</p><p>For details, see <a href="p15.html#beajx">Generation Options for CMP</a>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-84"></a><tt>createtables</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>sun-ejb-jar.xml</tt> entry</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If
+<tt>true</tt>, causes database tables to be created for beans that need them. If
+<tt>false</tt>, does not create tables. If not specified, the value of the <tt>create-tables-at-deploy</tt>
+attribute in <tt>sun-ejb-jar.xml</tt> is used.</p><p>For details, see <a href="p12.html#gbwmk">Generation Options</a> and <a href="p15.html#beajx">Generation Options for CMP</a>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-85"></a><tt>dropandcreatetables</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>sun-ejb-jar.xml</tt> entry</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If
+<tt>true</tt>, and if tables were automatically created when this application was last deployed,
+tables from the earlier deployment are dropped and fresh ones are created.</p><p>If <tt>true</tt>,
+and if tables were <b>not</b> automatically created when this application was last deployed,
+no attempt is made to drop any tables. If tables with the same
+names as those that would have been automatically created are found, the deployment
+proceeds, but a warning indicates that tables could not be created.</p><p>If <tt>false</tt>, settings
+of <tt>create-tables-at-deploy</tt> or <tt>drop-tables-at-undeploy</tt> in the <tt>sun-ejb-jar.xml</tt> file are overridden.</p><p>For details, see
+<a href="p12.html#gbwmk">Generation Options</a> and <a href="p15.html#beajx">Generation Options for CMP</a>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-86"></a><tt>uniquetablenames</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>sun-ejb-jar.xml</tt> entry</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, specifies that table names are unique within
+each application server domain. If not specified, the value of the <tt>use-unique-table-names</tt> property in
+<tt>sun-ejb-jar.xml</tt> is used.</p><p>For details, see <a href="p15.html#beajx">Generation Options for CMP</a>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-87"></a><tt>enabled</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, enables the component.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-88"></a><tt>deploymentplan</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) A
+deployment plan is a JAR file containing Sun-specific descriptors. Use this attribute when
+deploying an EAR file that lacks Sun-specific descriptors.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-89"></a><tt>availabilityenabled</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, enables high availability features,
+including persistence of HTTP sessions and checkpointing of the stateful session bean state.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-90"></a><tt>generatermistubs</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional)
+If <tt>true</tt>, generates the static RMI-IIOP stubs and puts them in the client
+JAR file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-91"></a><tt>upload</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, the component is transferred to the server for deployment.
+If the component is being deployed on the local machine, set upload to
+<tt>false</tt> to reduce deployment time. If a directory is specified for deployment, upload must
+be <tt>false</tt>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-92"></a><tt>virtualservers</tt></p></td>
+<td align="left" valign="top" scope="row"><p>default virtual server only</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) A comma-separated list of virtual servers to
+be deployment targets. This attribute applies only to application (<tt>.ear</tt>) or web (<tt>.war</tt>) components
+and is ignored for other component types. This attribute is inherited by nested
+<tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-93"></a><tt>user</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The user name used when logging into the application server administration
+instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>passwordfile</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) File containing passwords.
+The password from this file is retrieved for communication with the application server
+administration instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-94"></a><tt>host</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Target server. When
+deploying to a remote server, use the fully qualified host name. This attribute
+is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-95"></a><tt>port</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The administration port on the target server.
+This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-96"></a><tt>target</tt></p></td>
+<td align="left" valign="top" scope="row"><p>name of default instance</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Target application
+server instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-97"></a><tt>asinstalldir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>see description</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The installation
+directory for the local Enterprise Server installation, which is used to find the
+administrative classes. If not specified, the command checks if the <tt>asinstalldir</tt> parameter has been
+set. Otherwise, administrative classes must be in the system classpath.</p></td>
+</tr>
+</table>
+
+<a name="fvykh"></a><h5>Examples of <tt>sun-appserv-deploy</tt></h5>
+<p>Here is a simple web application deployment script with many implied attributes:</p><pre>&#60;sun-appserv-deploy
+file="${assemble}/simpleapp.war"
+passwordfile="${passwordfile}" /></pre><p>Here is an equivalent script showing all the implied attributes:</p><pre>&#60;sun-appserv-deploy
+ file="${assemble}/simpleapp.war"
+ name="simpleapp"
+ force="true"
+ precompilejsp="false"
+ verify="false"
+ upload="true"
+ user="admin"
+ passwordfile="${passwordfile}"
+ host="localhost"
+ port="4848"
+ target="${default-instance-name}"
+ asinstalldir="${asinstalldir}" /></pre><p>This example deploys multiple components to the same Enterprise Server instance running on
+a remote server:</p><pre>&#60;sun-appserv-deploy passwordfile="${passwordfile}" host="greg.sun.com"
+         asinstalldir="/opt/sun" >
+ &#60;component file="${assemble}/simpleapp.ear"/>
+ &#60;component file="${assemble}/simpleservlet.war"
+     contextroot="test"/>
+ &#60;component file="${assemble}/simplebean.jar"/>
+&#60;/sun-appserv-deploy></pre><p>This example deploys multiple components to two Enterprise Server instances running on remote
+servers. In this example, both servers are using the same admin password. If
+this were not the case, each password could be specified in the server
+element.</p><pre>&#60;sun-appserv-deploy passwordfile="${passwordfile}" asinstalldir="/opt/sun" >
+ &#60;server host="greg.sun.com"/>
+ &#60;server host="joe.sun.com"/>
+ &#60;component file="${assemble}/simpleapp.ear"/>
+ &#60;component file="${assemble}/simpleservlet.war"
+     contextroot="test"/>
+ &#60;component file="${assemble}/simplebean.jar"/>
+&#60;/sun-appserv-deploy></pre><p>This example deploys the same components as the previous example because the three
+components match the <tt>fileset</tt> criteria, but note that it is not possible to
+set some component-specific attributes. All component-specific attributes (<tt>name</tt> and <tt>contextroot</tt>) use their default
+values.</p><pre>&#60;sun-appserv-deploy passwordfile="${passwordfile}" host="greg.sun.com"
+         asinstalldir="/opt/sun" >
+ &#60;fileset dir="${assemble}" includes="**/*.?ar" />
+&#60;/sun-appserv-deploy></pre>
+
+<a name="beaes"></a><h4>The <tt>sun-appserv-undeploy</tt> Task</h4>
+<a name="indexterm-98"></a><a name="indexterm-99"></a><a name="indexterm-100"></a><p><a name="indexterm-101"></a>Undeploys any of the following from a local or remote Enterprise Server instance.</p>
+<ul><li><p>Enterprise application (EAR file)</p></li>
+<li><p>Web application (WAR file)</p></li>
+<li><p>Enterprise Java Bean (EJB-JAR file)</p></li>
+<li><p>Enterprise connector (RAR file)</p></li>
+<li><p>Application client</p></li></ul>
+
+
+<a name="fvydf"></a><h5>Subelements of <tt>sun-appserv-undeploy</tt></h5>
+<p>The following table describes subelements for the <tt>sun-appserv-undeploy</tt> task. These are objects
+upon which this task acts.</p><a name="fvyfm"></a><h6>Table&#160;3-3 The <tt>sun-appserv-undeploy</tt> Subelements</h6><table><col width="45%"><col width="54%"><tr><th align="left" valign="top" scope="column"><p>Element</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beaez">The <tt>server</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>An Enterprise Server instance</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beafa">The <tt>component</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>A component to be deployed</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beafb">The <tt>fileset</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>A
+set of component files that match specified parameters</p></td>
+</tr>
+</table>
+
+<a name="fvxzu"></a><h5>Attributes of <tt>sun-appserv-undeploy</tt></h5>
+<p>The following table describes attributes for the <tt>sun-appserv-undeploy</tt> task.</p><a name="fvymi"></a><h6>Table&#160;3-4 The <tt>sun-appserv-undeploy</tt> Attributes</h6><table><col width="13%"><col width="16%"><col width="69%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>name</tt></p></td>
+<td align="left" valign="top" scope="row"><p>file name without extension</p></td>
+<td align="left" valign="top" scope="row"><p>(optional
+if a <tt>component</tt> or <tt>fileset</tt> subelement is present or the <tt>file</tt> attribute is
+specified, otherwise required) The display name for the component being undeployed.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-102"></a><tt>file</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The component
+to undeploy. If this attribute refers to a file, it must be a
+valid archive. If this attribute refers to a directory, it must contain a
+valid archive in which all components have been exploded.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-103"></a><tt>droptables</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>sun-ejb-jar.xml</tt> entry</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, causes
+database tables that were automatically created when the bean(s) were last deployed to be
+dropped when the bean(s) are undeployed. If <tt>false</tt>, does not drop tables.</p><p>If not
+specified, the value of the <tt>drop-tables-at-undeploy</tt> attribute in <tt>sun-ejb-jar.xml</tt> is used.</p><p>For details,
+see <a href="p12.html#gbwmk">Generation Options</a> and <a href="p15.html#beajx">Generation Options for CMP</a>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-104"></a><tt>cascade</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, deletes all connection pools and connector resources
+associated with the resource adapter being undeployed.</p><p>If <tt>false</tt>, undeployment fails if any pools or
+resources are still associated with the resource adapter.</p><p>This attribute is applicable to
+connectors (resource adapters) and applications with connector modules.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-105"></a><tt>user</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The user name used when
+logging into the application server administration instance. This attribute is inherited by nested
+<tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>passwordfile</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) File containing passwords. The password from this file is retrieved for
+communication with the application server administration instance. This attribute is inherited by nested
+<tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-106"></a><tt>host</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Target server. When deploying to a remote server, use the fully
+qualified host name. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-107"></a><tt>port</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The administration
+port on the target server. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-108"></a><tt>target</tt></p></td>
+<td align="left" valign="top" scope="row"><p>name
+of default instance</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Target application server instance. This attribute is inherited by nested
+<tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-109"></a><tt>asinstalldir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>see description</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The installation directory for the local Enterprise Server installation, which
+is used to find the administrative classes. If not specified, the command checks
+to see if the <tt>asinstalldir</tt> parameter has been set. Otherwise, administrative classes must
+be in the system classpath.</p></td>
+</tr>
+</table>
+
+<a name="fvydq"></a><h5>Examples of <tt>sun-appserv-undeploy</tt></h5>
+<p>Here is a simple application undeployment script with many implied attributes:</p><pre>&#60;sun-appserv-undeploy name="simpleapp" passwordfile="${passwordfile}" /></pre><p>Here is an equivalent script showing all the implied attributes:</p><pre>&#60;sun-appserv-undeploy
+ name="simpleapp"
+ user="admin"
+ passwordfile="${passwordfile}"
+ host="localhost"
+ port="4848"
+ target="${default-instance-name}"
+ asinstalldir="${asinstalldir}" /></pre><p>This example demonstrates using the archive files (EAR and WAR, in this case)
+for the undeployment, using the component name (for undeploying the EJB component in
+this example), and undeploying multiple components.</p><pre>&#60;sun-appserv-undeploy passwordfile="${passwordfile}">
+ &#60;component file="${assemble}/simpleapp.ear"/>
+ &#60;component file="${assemble}/simpleservlet.war"/>
+ &#60;component name="simplebean" />
+&#60;/sun-appserv-undeploy></pre><p>As with the deployment process, components can be undeployed from multiple servers in
+a single command. This example shows the same three components being removed from
+two different instances of the Enterprise Server. In this example, the passwords for
+both instances are the same.</p><pre>&#60;sun-appserv-undeploy passwordfile="${passwordfile}">
+ &#60;server host="greg.sun.com"/>
+ &#60;server host="joe.sun.com"/>
+ &#60;component file="${assemble}/simpleapp.ear"/>
+ &#60;component file="${assemble}/simpleservlet.war"/>
+ &#60;component name="simplebean" />
+&#60;/sun-appserv-undeploy></pre>
+
+<a name="beaet"></a><h4>The <tt>sun-appserv-instance</tt> Task</h4>
+<a name="indexterm-110"></a><a name="indexterm-111"></a><a name="indexterm-112"></a><p>Starts, stops, restarts, creates, or removes application server instances.</p>
+
+<a name="fvybd"></a><h5>Subelements of <tt>sun-appserv-instance</tt></h5>
+<p>The following table describes subelements for the <tt>sun-appserv-instance</tt> task. These are objects
+upon which this task acts.</p><a name="fvydd"></a><h6>Table&#160;3-5 The <tt>sun-appserv-instance</tt> Subelements</h6><table><col width="45%"><col width="54%"><tr><th align="left" valign="top" scope="column"><p>Element</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beaez">The <tt>server</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>An Enterprise Server instance</p></td>
+</tr>
+</table>
+
+<a name="fvycq"></a><h5>Attributes of <tt>sun-appserv-instance</tt></h5>
+<p>The following table describes attributes for the <tt>sun-appserv-instance</tt> task.</p><a name="fvyft"></a><h6>Table&#160;3-6 The <tt>sun-appserv-instance</tt> Attributes</h6><table><col width="12%"><col width="10%"><col width="76%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-113"></a><tt>action</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>The control command for
+the target application server. Valid values are <tt>start</tt>, <tt>stop</tt>, <tt>create</tt>, and <tt>delete</tt>. A
+<tt>restart</tt> sends the <tt>stop</tt> command followed by the <tt>start</tt> command. The <tt>restart</tt> command is
+not supported on Windows.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-114"></a><tt>debug</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Deprecated. If <tt>action</tt> is set to <tt>start</tt>, specifies
+whether the server starts in debug mode. This attribute is ignored for other
+values of <tt>action</tt>. If <tt>true</tt>, the instance generates additional debugging output throughout its lifetime.
+This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-115"></a><tt>config</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional, applicable only if <tt>action</tt>
+is <tt>create</tt>) The configuration for the new stand-alone instance.</p><p>The configuration must exist
+and must not be <tt>default-config</tt> or an already referenced stand-alone configuration (including the
+administration server configuration <tt>server-config</tt>).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-116"></a><tt>property</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional, applicable only if <tt>action</tt> is <tt>create</tt>) Defines system properties
+for the server instance. These properties override port settings in the server instance&#8217;s configuration.
+The following properties are defined: <tt>http-listener-1-port</tt>, <tt>http-listener-2-port</tt>, <tt>orb-listener-1-port</tt>, <tt>SSL-port</tt>, <tt>SSL_MUTUALAUTH-port</tt>, <tt>JMX_SYSTEM_CONNECTOR_port</tt>.</p><p>System properties
+can be changed after instance creation using the system property commands. For details,
+see the <i><a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a></i>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-117"></a><tt>user</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The user name used when logging into the application server
+administration instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>passwordfile</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) File containing
+passwords. The password from this file is retrieved for communication with the application
+server administration instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-118"></a><tt>host</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Target server.
+If it is a remote server, use the fully qualified host name. This
+attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-119"></a><tt>port</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The administration port on the
+target server. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-120"></a><tt>instance</tt></p></td>
+<td align="left" valign="top" scope="row"><p>name of default instance</p></td>
+<td align="left" valign="top" scope="row"><p>(optional)
+Target application server instance. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-121"></a><tt>asinstalldir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>see description</p></td>
+<td align="left" valign="top" scope="row"><p>(optional)
+The installation directory for the local Enterprise Server installation, which is used to
+find the administrative classes. If not specified, the command checks to see if
+the <tt>asinstalldir</tt> parameter has been set. Otherwise, administrative classes must be in the
+system classpath.</p></td>
+</tr>
+</table>
+
+<a name="fvygb"></a><h5>Examples of <tt>sun-appserv-instance</tt></h5>
+<p>This example starts the local Enterprise Server instance:</p><pre>&#60;sun-appserv-instance action="start" passwordfile="${passwordfile}"
+ instance="${default-instance-name}"/></pre><p>Here is an equivalent script showing all the implied attributes:</p><pre>&#60;sun-appserv-instance
+ action="start"
+ user="admin"
+ passwordfile="${passwordfile}"
+ host="localhost"
+ port="4848"
+ instance="${default-instance-name}"
+ asinstalldir="${asinstalldir}" /></pre><p>Multiple servers can be controlled using a single command. In this example, two
+servers are restarted, and in this case each server uses a different password:</p><pre>&#60;sun-appserv-instance action="restart"
+     instance="${default-instance-name}"/>
+&#60;server host="greg.sun.com" passwordfile="${password.greg}"/>
+ &#60;server host="joe.sun.com" passwordfile="${password.joe}"/>
+&#60;/sun-appserv-instance></pre><p>This example creates a new Enterprise Server instance:</p><pre>&#60;sun-appserv-instance
+ action="create" instanceport="8080"
+ passwordfile="${passwordfile}"
+ instance="development" /></pre><p>Here is an equivalent script showing all the implied attributes:</p><pre>&#60;sun-appserv-instance
+ action="create"
+ instanceport="8080"
+ user="admin"
+ passwordfile="${passwordfile}"
+ host="localhost"
+ port="4848"
+ instance="development"
+ asinstalldir="${asinstalldir}" /></pre><p>Instances can be created on multiple servers using a single command. This example
+creates a new instance named <tt>qa</tt> on two different servers. In this case,
+both servers use the same password.</p><pre>&#60;sun-appserv-instance
+     action="create"
+     instanceport="8080"
+     instance="qa"
+     passwordfile="${passwordfile}>
+ &#60;server host="greg.sun.com"/>
+ &#60;server host="joe.sun.com"/>
+&#60;/sun-appserv-instance></pre><p>These instances can also be removed from their respective servers:</p><pre>&#60;sun-appserv-instance
+     action="delete"
+     instance="qa"
+     passwordfile="${passwordfile}>
+ &#60;server host="greg.sun.com"/>
+ &#60;server host="joe.sun.com"/>
+&#60;/sun-appserv-instance></pre><p>Different instance names and instance ports can also be specified using attributes of
+the server subelement:</p><pre>&#60;sun-appserv-instance action="create" passwordfile="${passwordfile}>
+ &#60;server host="greg.sun.com" instanceport="8080" instance="qa"/>
+ &#60;server host="joe.sun.com" instanceport="9090"
+     instance="integration-test"/>
+&#60;/sun-appserv-instance></pre>
+
+<a name="beaeu"></a><h4>The <tt>sun-appserv-component</tt> Task</h4>
+<a name="indexterm-122"></a><a name="indexterm-123"></a><a name="indexterm-124"></a><a name="indexterm-125"></a><a name="indexterm-126"></a><p>Enables or disables the following Java EE component types that have been deployed
+to the Enterprise Server.</p>
+<ul><li><p>Enterprise application (EAR file)</p></li>
+<li><p>Web application (WAR file)</p></li>
+<li><p>Enterprise Java Bean (EJB-JAR file)</p></li>
+<li><p>Enterprise connector (RAR file)</p></li>
+<li><p>Application client</p></li></ul>
+<p>You do not need to specify the archive to enable or disable a
+component: only the component name is required. You can use the component archive,
+however, because it implies the component name.</p>
+
+<a name="fvyhm"></a><h5>Subelements of <tt>sun-appserv-component</tt></h5>
+<p>The following table describes subelements for the <tt>sun-appserv-component</tt> task. These are objects
+upon which this task acts.</p><a name="fvygt"></a><h6>Table&#160;3-7 The <tt>sun-appserv-component</tt> Subelements</h6><table><col width="44%"><col width="55%"><tr><th align="left" valign="top" scope="column"><p>Element</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beaez">The <tt>server</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>An Enterprise Server instance</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beafa">The <tt>component</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>A component to be deployed</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beafb">The <tt>fileset</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>A
+set of component files that match specified parameters</p></td>
+</tr>
+</table>
+
+<a name="fvyak"></a><h5>Attributes of <tt>sun-appserv-component</tt></h5>
+<p>The following table describes attributes for the <tt>sun-appserv-component</tt> task.</p><a name="fvyet"></a><h6>Table&#160;3-8 The <tt>sun-appserv-component</tt> Attributes</h6><table><col width="13%"><col width="11%"><col width="74%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-127"></a><tt>action</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>The control command for
+the target application server. Valid values are <tt>enable</tt> and <tt>disable</tt>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>name</tt></p></td>
+<td align="left" valign="top" scope="row"><p>file name without extension</p></td>
+<td align="left" valign="top" scope="row"><p>(optional
+if a <tt>component</tt> or <tt>fileset</tt> subelement is present or the <tt>file</tt> attribute is
+specified, otherwise required) The display name for the component being enabled or disabled.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-128"></a><tt>file</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The
+component to enable or disable. If this attribute refers to a file, it
+must be a valid archive. If this attribute refers to a directory, it
+must contain a valid archive in which all components have been exploded.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-129"></a><tt>user</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The
+user name used when logging into the application server administration instance. This attribute
+is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>passwordfile</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) File containing passwords. The password from
+this file is retrieved for communication with the application server administration instance. This attribute
+is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-130"></a><tt>host</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Target server. When enabling or disabling
+a remote server, use the fully qualified host name. This attribute is inherited by
+nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-131"></a><tt>port</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The administration port on the target server. This attribute is
+inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-132"></a><tt>target</tt></p></td>
+<td align="left" valign="top" scope="row"><p>name of default instance</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Target application server instance.
+This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-133"></a><tt>asinstalldir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>see description</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The installation directory for
+the local Enterprise Server installation, which is used to find the administrative classes.
+If not specified, the command checks to see if the <tt>asinstalldir</tt> parameter has been
+set. Otherwise, administrative classes must be in the system classpath.</p></td>
+</tr>
+</table>
+
+<a name="fvyhy"></a><h5>Examples of <tt>sun-appserv-component</tt></h5>
+<p>Here is a simple example of disabling a component:</p><pre>&#60;sun-appserv-component
+ action="disable"
+ name="simpleapp"
+ passwordfile="${passwordfile}" /></pre><p>Here is a simple example of enabling a component:</p><pre>&#60;sun-appserv-component
+ action="enable"
+ name="simpleapp"
+ passwordfile="${passwordfile}" /></pre><p>Here is an equivalent script showing all the implied attributes:</p><pre>&#60;sun-appserv-component
+ action="enable"
+ name="simpleapp"
+ user="admin"
+ passwordfile="${passwordfile}"
+ host="localhost"
+ port="4848"
+ target="${default-instance-name}"
+ asinstalldir="${asinstalldir}" /></pre><p>This example demonstrates disabling multiple components using the archive files (EAR and WAR,
+in this case) and using the component name (for an EJB component in
+this example).</p><pre>&#60;sun-appserv-component action="disable" passwordfile="${passwordfile}">
+ &#60;component file="${assemble}/simpleapp.ear"/>
+ &#60;component file="${assemble}/simpleservlet.war"/>
+ &#60;component name="simplebean" />
+&#60;/sun-appserv-component></pre><p>Components can be enabled or disabled on multiple servers in a single task.
+This example shows the same three components being enabled on two different instances
+of the Enterprise Server. In this example, the passwords for both instances are
+the same.</p><pre>&#60;sun-appserv-component action="enable" passwordfile="${passwordfile}">
+ &#60;server host="greg.sun.com"/>
+ &#60;server host="joe.sun.com"/>
+ &#60;component file="${assemble}/simpleapp.ear"/>
+ &#60;component file="${assemble}/simpleservlet.war"/>
+ &#60;component name="simplebean" />
+&#60;/sun-appserv-component></pre>
+
+<a name="beaev"></a><h4>The <tt>sun-appserv-admin</tt> Task</h4>
+<a name="indexterm-134"></a><a name="indexterm-135"></a><a name="indexterm-136"></a><p>Enables arbitrary administrative commands and scripts to be executed on the Enterprise Server.
+This is useful for cases where a specific Ant task has not been
+developed or a set of related commands are in a single script.</p>
+
+<a name="fvyct"></a><h5>Subelements of <tt>sun-appserv-admin</tt></h5>
+<p>The following table describes subelements for the <tt>sun-appserv-admin</tt> task. These are objects
+upon which this task acts.</p><a name="fvyfq"></a><h6>Table&#160;3-9 The <tt>sun-appserv-admin</tt> Subelements</h6><table><col width="44%"><col width="55%"><tr><th align="left" valign="top" scope="column"><p>Element</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a href="#beaez">The <tt>server</tt> Subelement</a></p></td>
+<td align="left" valign="top" scope="row"><p>An Enterprise Server instance</p></td>
+</tr>
+</table>
+
+<a name="fvydi"></a><h5>Attributes of <tt>sun-appserv-admin</tt></h5>
+<p>The following table describes attributes for the <tt>sun-appserv-admin</tt> task.</p><a name="fvyfg"></a><h6>Table&#160;3-10 The <tt>sun-appserv-admin</tt> Attributes</h6><table><col width="16%"><col width="10%"><col width="72%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-137"></a><tt>command</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(exactly one of these
+is required: <tt>command</tt> or <tt>explicitcommand</tt>) The command to execute. If the <tt>user</tt>,
+<tt>passwordfile</tt>, <tt>host</tt>, <tt>port</tt>, or <tt>target</tt> attributes are also specified, they are automatically inserted into
+the command before execution. If any of these options are specified in the
+command string, the corresponding attribute values are ignored.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-138"></a><tt>explicitcommand</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(exactly one of these is required:
+<tt>command</tt> or <tt>explicitcommand</tt>) The exact command to execute. No command processing is done,
+and all other attributes are ignored.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>user</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The user name used when logging
+into the application server administration instance. This attribute is inherited by nested <tt>server</tt>
+elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>passwordfile</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) File containing passwords. The password from this file is retrieved for communication
+with the application server administration instance. This attribute is inherited by nested <tt>server</tt>
+elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>host</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Target server. If it is a remote server, use the fully qualified
+host name. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>port</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The administration
+port on the target server. This attribute is inherited by nested <tt>server</tt> elements.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-139"></a><tt>asinstalldir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>see
+description</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The installation directory for the local Enterprise Server installation, which is used
+to find the administrative classes. If not specified, the command checks if the
+<tt>asinstalldir</tt> parameter has been set. Otherwise, administrative classes must be in the system classpath.</p></td>
+</tr>
+</table>
+
+<a name="fvyck"></a><h5>Examples of <tt>sun-appserv-admin</tt></h5>
+<p>Here is an example of executing the <tt>create-jms-dest</tt> command:</p><pre>&#60;sun-appserv-admin command="create-jms-dest --desttype topic"></pre><p>Here is an example of using <tt>explicitcommand</tt> to execute the <tt>create-jms-dest</tt> command:</p><pre>&#60;sun-appserv-admin explicitcommand="create-jms-dest --desttype topic --target server1 simpleJmsDest"></pre>
+
+<a name="beaew"></a><h4>The <tt>sun-appserv-jspc</tt> Task</h4>
+<a name="indexterm-140"></a><a name="indexterm-141"></a><a name="indexterm-142"></a><p>Precompiles JSP source code into Enterprise Server compatible Java code for initial invocation
+by Enterprise Server. Use this task to speed up access to JSP files
+or to check the syntax of JSP source code. You can feed the
+resulting Java code to the <tt>javac</tt> task to generate class files for the
+JSP files.</p>
+
+<a name="fvyhl"></a><h5>Attributes of <tt>sun-appserv-jspc</tt></h5>
+<p>The following table describes attributes for the <tt>sun-appserv-jspc</tt> task.</p><a name="fvyds"></a><h6>Table&#160;3-11 The <tt>sun-appserv-jspc</tt> Attributes</h6><table><col width="13%"><col width="10%"><col width="75%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-143"></a><tt>destdir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>The destination directory for
+the generated Java source files.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-144"></a><tt>srcdir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(exactly one of these is required: <tt>srcdir</tt> or
+<tt>webapp</tt>) The source directory where the JSP files are located.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-145"></a><tt>webapp</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(exactly one of
+these is required: <tt>srcdir</tt> or <tt>webapp</tt>) The directory containing the web application.
+All JSP files within the directory are recursively parsed. The base directory must have
+a <tt>WEB-INF</tt> subdirectory beneath it. When <tt>webapp</tt> is used, <tt>sun-appserv-jspc</tt> hands off all
+dependency checking to the compiler.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-146"></a><tt>verbose</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>2</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The verbosity integer to be passed to
+the compiler.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-147"></a><tt>classpath</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The classpath for running the JSP compiler.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-148"></a><tt>classpathref</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) A reference to
+the JSP compiler classpath.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-149"></a><tt>uribase</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>/</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The URI context of relative URI references in
+the JSP files. If this context does not exist, it is derived from
+the location of the JSP file relative to the declared or derived value of
+<tt>uriroot</tt>. Only pages translated from an explicitly declared JSP file are affected.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-150"></a><tt>uriroot</tt></p></td>
+<td align="left" valign="top" scope="row"><p>see description</p></td>
+<td align="left" valign="top" scope="row"><p>(optional)
+The root directory of the web application, against which URI files are resolved.
+If this directory is not specified, the first JSP file is used to
+derive it: each parent directory of the first JSP file is searched for
+a <tt>WEB-INF</tt> directory, and the directory closest to the JSP file that has
+one is used. If no <tt>WEB-INF</tt> directory is found, the directory from which <tt>sun-appserv-jspc</tt>
+was called is used. Only pages translated from an explicitly declared JSP file
+(including tag libraries) are affected.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-151"></a><tt>package</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The destination package for the generated Java classes.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-152"></a><tt>asinstalldir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>see
+description</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The installation directory for the local Enterprise Server installation, which is used
+to find the administrative classes. If not specified, the command checks if the
+<tt>asinstalldir</tt> parameter has been set. Otherwise, administrative classes must be in the system classpath.</p></td>
+</tr>
+</table>
+
+<a name="fvyma"></a><h5>Example of <tt>sun-appserv-jspc</tt></h5>
+<p>The following example uses the <tt>webapp</tt> attribute to generate Java source files from
+JSP files. The <tt>sun-appserv-jspc</tt> task is immediately followed by a <tt>javac</tt> task, which
+compiles the generated Java files into class files. The <tt>classpath</tt> value in
+the <tt>javac</tt> task must be all on one line with no spaces.</p><pre>&#60;sun-appserv-jspc
+ destdir="${assemble.war}/generated"
+ webapp="${assemble.war}"
+ classpath="${assemble.war}/WEB-INF/classes"
+ asinstalldir="${asinstalldir}" />
+&#60;javac
+ srcdir="${assemble.war}/WEB-INF/generated"
+ destdir="${assemble.war}/WEB-INF/generated"
+ debug="on"
+ classpath="${assemble.war}/WEB-INF/classes:${asinstalldir}/lib/
+   appserv-rt.jar:${asinstalldir}/lib/appserv-ext.jar">
+ &#60;include name="**/*.java"/>
+&#60;/javac></pre>
+
+<a name="beaex"></a><h4>The <tt>sun-appserv-update</tt> Task</h4>
+<a name="indexterm-153"></a><a name="indexterm-154"></a><p>Enables deployed web applications (EAR files) and modules (EJB JAR, RAR, and WAR
+files) to be updated and reloaded for fast iterative development. This task copies
+modified class files, XML files, and other contents of the archive files to
+the appropriate subdirectory of the <i>domain-dir</i><tt>/applications</tt> directory, then touches the <tt>.reload</tt> file to cause
+dynamic reloading to occur.</p><p>This is a local task and must be executed on the same
+machine as the Enterprise Server.</p><p>For more information about dynamic reloading, see the <a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Preview Application Deployment Guide</i></a>.</p>
+
+<a name="fvymd"></a><h5>Attributes of <tt>sun-appserv-update</tt></h5>
+<p>The following table describes attributes for the <tt>sun-appserv-update</tt> task.</p><a name="fvyeq"></a><h6>Table&#160;3-12 The <tt>sun-appserv-update</tt> Attributes</h6><table><col width="12%"><col width="11%"><col width="76%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-155"></a><tt>file</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>The component to update,
+which must be a valid archive.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-156"></a><tt>domain</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>domain1</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The domain in which the application
+has been previously deployed.</p></td>
+</tr>
+</table>
+
+<a name="fvycx"></a><h5>Example of <tt>sun-appserv-update</tt></h5>
+<p>The following example updates the Java EE application <tt>foo.ear</tt>, which is deployed
+to the default domain, <tt>domain1</tt>.</p><pre>&#60;sun-appserv-update file="foo.ear"/></pre>
+
+<a name="gfjtt"></a><h4>The <tt>wsgen</tt> Task</h4>
+<p>Generates JAX-WS portable artifacts used in JAX-WS web services. Reads a web service
+endpoint class and generates all the required artifacts for web service deployment and
+invocation.</p>
+
+<a name="gfjtj"></a><h5>Attributes of <tt>wsgen</tt></h5>
+<p>The following table describes attributes for the <tt>wsgen</tt> task.</p><a name="gfjsx"></a><h6>Table&#160;3-13 The <tt>wsgen</tt> Attributes</h6><table><col width="17%"><col width="15%"><col width="67%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-157"></a><tt>sei</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>Specifies the name of
+the service endpoint interface (SEI) class.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-158"></a><tt>destdir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>current directory</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies where to place the
+output generated classes.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-159"></a><tt>classpath</tt></p></td>
+<td align="left" valign="top" scope="row"><p>system classpath</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies where to find the input class files.
+Same as <tt>cp</tt> attribute.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-160"></a><tt>cp</tt></p></td>
+<td align="left" valign="top" scope="row"><p>system classpath</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies where to find the input class files.
+Same as <tt>classpath</tt> attribute.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-161"></a><tt>resourcedestdir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>current directory</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies where to place generated resource files such as
+WSDL files. Used only if the <tt>genwsdl</tt> attribute is set to <tt>true</tt>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-162"></a><tt>sourcedestdir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>current directory</p></td>
+<td align="left" valign="top" scope="row"><p>(optional)
+Specifies where to place generated source files.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-163"></a><tt>keep</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, keeps generated files.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-164"></a><tt>verbose</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional)
+If <tt>true</tt>, outputs compiler messages.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-165"></a><tt>genwsdl</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, generates a WSDL file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-166"></a><tt>protocol</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>soap1.1</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies
+the protocol to use in the <tt>wsdl:binding</tt>. Used only if the <tt>genwsdl</tt>
+attribute is set to <tt>true</tt>.</p><p>Allowed values are <tt>soap1.1</tt> or <tt>Xsoap1.2</tt>. <tt>Xsoap1.2</tt> is not
+standard and is only used if the extension attribute is set to <tt>true</tt>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-167"></a><tt>servicename</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional)
+Specifies a particular <tt>wsdl:service</tt> name for the generated WSDL file. Used only if
+the <tt>genwsdl</tt> attribute is set to <tt>true</tt>. For example:</p><pre>servicename="{http://mynamespace/}MyService"</pre></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-168"></a><tt>portname</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies a particular <tt>wsdl:port</tt>
+name for the generated WSDL. Used only if the <tt>genwsdl</tt> attribute is set to
+<tt>true</tt>. For example:</p><pre>portname="{http://mynamespace/}MyPort"</pre></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-169"></a><tt>extension</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, allows vendor extensions not in the specification. Use
+of extensions may result in applications that are not portable and may not
+interoperate with other implementations.</p></td>
+</tr>
+</table>
+
+<a name="gfjzs"></a><h5>Example of <tt>wsgen</tt></h5>
+<p>The following example generates portable artifacts for <tt>fromjava.server.AddNumbersImpl</tt>, uses <tt>compile.classpath</tt> as the
+classpath, and writes the WSDL file to <tt>${wsdl.dir}</tt>.</p><pre>&#60;wsgen
+   resourcedestdir="${wsdl.dir}"
+   sei="fromjava.server.AddNumbersImpl">
+   &#60;classpath refid="compile.classpath"/>
+&#60;/wsgen></pre>
+
+<a name="gfjtg"></a><h4>The <tt>wsimport</tt> Task</h4>
+<p>Generates JAX-WS portable artifacts for a given WSDL file. Portable artifacts include service
+endpoint interfaces (SEIs), services, exception classes mapped from the <tt>wsdl:fault</tt> and <tt>soap:headerfault</tt> tags,
+asynchronous response beans derived from the <tt>wsdl:message</tt> tag, and JAXB generated value
+types. After generation, these artifacts can be packaged in a WAR file with
+the WSDL and schema documents along with the endpoint implementation and then deployed.</p>
+
+<a name="gfjub"></a><h5>Attributes of <tt>wsimport</tt></h5>
+<p>The following table describes attributes for the <tt>wsimport</tt> task.</p><a name="gfjtu"></a><h6>Table&#160;3-14 The <tt>wsimport</tt> Attributes</h6><table><col width="15%"><col width="14%"><col width="70%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-170"></a><tt>wsdl</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>Specifies the name of
+the WSDL file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-171"></a><tt>destdir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>current directory</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies where to place the output generated classes.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-172"></a><tt>sourcedestdir</tt></p></td>
+<td align="left" valign="top" scope="row"><p>current
+directory</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies where to place generated source files. Used only if the <tt>keep</tt>
+attribute is set to <tt>true</tt>.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-173"></a><tt>keep</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, keeps generated files.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-174"></a><tt>verbose</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>,
+outputs compiler messages.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-175"></a><tt>binding</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies external JAX-WS or JAXB binding files. JAX-WS and JAXB
+binding files can customize things like package names and bean names. More information
+on JAX-WS and JAXB binding files can be found in the customization documentation
+included with this release.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-176"></a><tt>extension</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) If <tt>true</tt>, allows vendor extensions not in the specification. Use
+of extensions may result in applications that are not portable and may not
+interoperate with other implementations.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-177"></a><tt>wsdllocation</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies the value of <tt>@WebService.wsdlLocation</tt> and <tt>@WebServiceClient.wsdlLocation</tt> annotation elements
+for the generated SEI and Service interface. This should be set to the
+URI of the web service WSDL file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-178"></a><tt>catalog</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies the catalog file to
+resolve external entity references. Supported formats are TR9401, XCatalog, and OASIS XML Catalog. Additionally,
+the Ant <tt>xmlcatalog</tt> type can be used to resolve entities.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-179"></a><tt>package</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Specifies the target
+package, overriding any WSDL and schema binding customization for package name, and the
+default package name algorithm defined in the JAX-WS specification.</p></td>
+</tr>
+</table>
+
+<a name="gfjzo"></a><h5>Example of <tt>wsimport</tt></h5>
+<p>The following example generates client-side artifacts for <tt>AddNumbers.wsdl</tt> and stores <tt>.class</tt> files in
+the <tt>${build.classes.home}</tt> directory using the <tt>custom.xml</tt> customization file.</p><pre>&#60;wsimport
+   destdir="${build.classes.home}"
+   wsdl="AddNumbers.wsdl"
+   binding="custom.xml">
+&#60;/wsimport></pre>
+
+<a name="beaey"></a><h3>Reusable Subelements</h3>
+<p>Reusable subelements of the Ant tasks for the Enterprise Server are as follows.
+These are objects upon which the Ant tasks act.</p>
+<ul><li><p><a href="#beaez">The <tt>server</tt> Subelement</a></p></li>
+<li><p><a href="#beafa">The <tt>component</tt> Subelement</a></p></li>
+<li><p><a href="#beafb">The <tt>fileset</tt> Subelement</a></p></li></ul>
+
+
+<a name="beaez"></a><h4>The <tt>server</tt> Subelement</h4>
+<a name="indexterm-180"></a><p>Specifies an Enterprise Server instance. Allows a single task to act on multiple
+server instances. The <tt>server</tt> attributes override corresponding attributes in the parent task; therefore,
+the parent task attributes function as default values.</p>
+
+<a name="fvybg"></a><h5>Attributes of <tt>server</tt></h5>
+<p>The following table describes attributes for the <tt>server</tt> element.</p><a name="fvyid"></a><h6>Table&#160;3-15 The <tt>server</tt> Attributes</h6><table><col width="15%"><col width="10%"><col width="73%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-181"></a><tt>user</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The user name
+used when logging into the Enterprise Server domain administration server (DAS).</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>passwordfile</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) File containing
+passwords. The password from this file is retrieved for communication with the Enterprise
+Server DAS.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-182"></a><tt>host</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>localhost</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) Target server. When targeting a remote server, use the fully qualified
+host name.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-183"></a><tt>port</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The administration port on the target server.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-184"></a><tt>instance</tt></p></td>
+<td align="left" valign="top" scope="row"><p>name of default instance</p></td>
+<td align="left" valign="top" scope="row"><p>(optional)
+Target application server instance.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-185"></a><tt>instanceport</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(applies to <a href="#beaet">The <tt>sun-appserv-instance</tt> Task</a> only) Deprecated.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-186"></a><tt>debug</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(applies to <a href="#beaet">The <tt>sun-appserv-instance</tt> Task</a> only, optional)
+Deprecated. If <tt>action</tt> is set to <tt>start</tt>, specifies whether the server starts in debug
+mode. This attribute is ignored for other values of <tt>action</tt>. If <tt>true</tt>,
+the instance generates additional debugging output throughout its lifetime.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-187"></a><tt>upload</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only, optional)
+If <tt>true</tt>, the component is transferred to the server for deployment. If the
+component is being deployed on the local machine, set upload to <tt>false</tt> to reduce
+deployment time.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-188"></a><tt>virtualservers</tt></p></td>
+<td align="left" valign="top" scope="row"><p>default virtual server only</p></td>
+<td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only, optional) A comma-separated list
+of virtual servers to be deployment targets. This attribute applies only to application (<tt>.ear</tt>)
+or web (<tt>.war</tt>) components and is ignored for other component types.</p></td>
+</tr>
+</table>
+
+<a name="fvybr"></a><h5>Examples of <tt>server</tt></h5>
+<p>You can control multiple servers using a single task. In this example, two
+servers are started, each using a different password. Only the second server is
+started in debug mode.</p><pre>&#60;sun-appserv-instance action="start">
+&#60;server host="greg.sun.com" passwordfile="${password.greg}"/>
+&#60;server host="joe.sun.com" passwordfile="${password.joe}"
+     debug="true"/>
+&#60;/sun-appserv-instance></pre><p>You can create instances on multiple servers using a single task. This example
+creates a new instance named <tt>qa</tt> on two different servers. Both servers use
+the same password.</p><pre>&#60;sun-appserv-instance action="create" instanceport="8080"
+     instance="qa" passwordfile="${passwordfile}>
+&#60;server host="greg.sun.com"/>
+&#60;server host="joe.sun.com"/>
+&#60;/sun-appserv-instance></pre><p>These instances can also be removed from their respective servers:</p><pre>&#60;sun-appserv-instance action="delete" instance="qa"
+     passwordfile="${passwordfile}>
+&#60;server host="greg.sun.com"/>
+&#60;server host="joe.sun.com"/>
+&#60;/sun-appserv-instance></pre><p>You can specify different instance names and instance ports using attributes of the
+nested <tt>server</tt> element:</p><pre>&#60;sun-appserv-instance action="create" passwordfile="${passwordfile}>
+&#60;server host="greg.sun.com" instanceport="8080" instance="qa"/>
+&#60;server host="joe.sun.com" instanceport="9090"
+    instance="integration-test"/>
+&#60;/sun-appserv-instance></pre><p>You can deploy multiple components to multiple servers (see the <a href="#beafa">The <tt>component</tt> Subelement</a>) . This example
+deploys each component to two Enterprise Server instances running on remote servers. Both
+servers use the same password.</p><pre>&#60;sun-appserv-deploy passwordfile="${passwordfile}" 
+  asinstalldir="/opt/s1as8" >
+&#60;server host="greg.sun.com"/>
+&#60;server host="joe.sun.com"/>
+&#60;component file="${assemble}/simpleapp.ear"/>
+&#60;component file="${assemble}/simpleservlet.war"
+     contextroot="test"/>
+&#60;component file="${assemble}/simplebean.jar"/>
+&#60;/sun-appserv-deploy></pre><p>You can also undeploy multiple components from multiple servers. This example shows the
+same three components being removed from two different instances. Both servers use the
+same password.</p><pre>&#60;sun-appserv-undeploy passwordfile="${passwordfile}">
+&#60;server host="greg.sun.com"/>
+&#60;server host="joe.sun.com"/>
+&#60;component file="${assemble}/simpleapp.ear"/>
+&#60;component file="${assemble}/simpleservlet.war"/>
+&#60;component name="simplebean" />
+&#60;/sun-appserv-undeploy></pre><p>You can enable or disable components on multiple servers. This example shows the
+same three components being enabled on two different instances. Both servers use the
+same password.</p><pre>&#60;sun-appserv-component action="enable" passwordfile="${passwordfile}">
+&#60;server host="greg.sun.com"/>
+&#60;server host="joe.sun.com"/>
+&#60;component file="${assemble}/simpleapp.ear"/>
+&#60;component file="${assemble}/simpleservlet.war"/>
+&#60;component name="simplebean" />
+&#60;/sun-appserv-component></pre>
+
+<a name="beafa"></a><h4>The <tt>component</tt> Subelement</h4>
+<a name="indexterm-189"></a><p>Specifies a Java EE component. Allows a single task to act on multiple
+components. The <tt>component</tt> attributes override corresponding attributes in the parent task; therefore, the
+parent task attributes function as default values.</p>
+
+<a name="fvydo"></a><h5>Attributes of <tt>component</tt></h5>
+<p>The following table describes attributes for the <tt>component</tt> element.</p><a name="fvyjw"></a><h6>Table&#160;3-16 The <tt>component</tt> Attributes</h6><table><col width="14%"><col width="11%"><col width="74%"><tr><th align="left" valign="top" scope="column"><p>Attribute</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+<th align="left" valign="top" scope="column"><p>Description</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-190"></a><tt>file</tt></p></td>
+<td align="left" valign="top" scope="row"><p>none</p></td>
+<td align="left" valign="top" scope="row"><p>(optional if the parent
+task is <a href="#beaes">The <tt>sun-appserv-undeploy</tt> Task</a> or <a href="#beaeu">The <tt>sun-appserv-component</tt> Task</a>) The target component. If this attribute refers to
+a file, it must be a valid archive. If this attribute refers to
+a directory, it must contain a valid archive in which all components have
+been exploded. If <tt>upload</tt> is set to <tt>false</tt>, this must be an absolute
+path on the server machine.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>name</tt></p></td>
+<td align="left" valign="top" scope="row"><p>file name without extension</p></td>
+<td align="left" valign="top" scope="row"><p>(optional) The display name for the
+component.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-191"></a><tt>force</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>true</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only, optional) If <tt>true</tt>, the component is overwritten if it
+already exists on the server. If <tt>false</tt>, the containing element&#8217;s operation fails if
+the component exists.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-192"></a><tt>precompilejsp</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only, optional) If <tt>true</tt>, all JSP files found
+in an enterprise application (<tt>.ear</tt>) or web application (<tt>.war</tt>) are precompiled. This attribute is
+ignored for other component types.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-193"></a><tt>retrievestubs</tt></p></td>
+<td align="left" valign="top" scope="row"><p>client stubs not saved</p></td>
+<td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only, optional)
+The directory where client <a name="indexterm-194"></a>stubs are saved.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-195"></a><tt>contextroot</tt></p></td>
+<td align="left" valign="top" scope="row"><p>file name without extension</p></td>
+<td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only,
+optional) The context root for a web module (WAR file). This attribute is
+ignored if the component is not a WAR file.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><a name="indexterm-196"></a><tt>verify</tt></p></td>
+<td align="left" valign="top" scope="row"><p><tt>false</tt></p></td>
+<td align="left" valign="top" scope="row"><p>(applies to <a href="#beaer">The <tt>sun-appserv-deploy</tt> Task</a> only,
+optional) If <tt>true</tt>, syntax and semantics for all deployment descriptors is automatically verified for
+correctness.</p></td>
+</tr>
+</table>
+
+<a name="fvych"></a><h5>Examples of <tt>component</tt></h5>
+<p>You can deploy multiple components using a single task. This example deploys each
+component to the same Enterprise Server instance running on a remote server.</p><pre>&#60;sun-appserv-deploy passwordfile="${passwordfile}" host="greg.sun.com"
+     asinstalldir="/opt/s1as8" >
+&#60;component file="${assemble}/simpleapp.ear"/>
+&#60;component file="${assemble}/simpleservlet.war"
+     contextroot="test"/>
+&#60;component file="${assemble}/simplebean.jar"/>
+&#60;/sun-appserv-deploy></pre><p>You can also undeploy multiple components using a single task. This example demonstrates
+using the archive files (EAR and WAR, in this case) and the component
+name (for the EJB component).</p><pre>&#60;sun-appserv-undeploy passwordfile="${passwordfile}">
+&#60;component file="${assemble}/simpleapp.ear"/
+&#60;component file="${assemble}/simpleservlet.war"/>
+&#60;component name="simplebean" />
+&#60;/sun-appserv-undeploy></pre><p>You can deploy multiple components to multiple servers. This example deploys each component
+to two instances running on remote servers. Both servers use the same password.</p><pre>&#60;sun-appserv-deploy passwordfile="${passwordfile}" asinstalldir="/opt/s1as8" >
+&#60;server host="greg.sun.com"/>
+&#60;server host="joe.sun.com"/>
+&#60;component file="${assemble}/simpleapp.ear"/>
+&#60;component file="${assemble}/simpleservlet.war"
+    contextroot="test"/>
+&#60;component file="${assemble}/simplebean.jar"/>
+&#60;/sun-appserv-deploy></pre><p>You can also undeploy multiple components to multiple servers. This example shows the
+same three components being removed from two different instances. Both servers use the
+same password.</p><pre>&#60;sun-appserv-undeploy passwordfile="${passwordfile}">
+&#60;server host="greg.sun.com"/>
+&#60;server host="joe.sun.com"/>
+&#60;component file="${assemble}/simpleapp.ear"/>
+&#60;component file="${assemble}/simpleservlet.war"/>
+&#60;component name="simplebean" />
+&#60;/sun-appserv-undeploy></pre><p>You can enable or disable multiple components. This example demonstrates disabling multiple components
+using the archive files (EAR and WAR, in this case) and the component
+name (for the EJB component).</p><pre>&#60;sun-appserv-component action="disable" passwordfile="${passwordfile}">
+&#60;component file="${assemble}/simpleapp.ear"/>
+&#60;component file="${assemble}/simpleservlet.war"/>
+&#60;component name="simplebean" />
+&#60;/sun-appserv-component></pre><p>You can enable or disable multiple components on multiple servers. This example shows
+the same three components being enabled on two different instances. Both servers use
+the same password.</p><pre>&#60;sun-appserv-component action="enable" passwordfile="${passwordfile}">
+&#60;server host="greg.sun.com"/>
+&#60;server host="joe.sun.com"/>
+&#60;component file="${assemble}/simpleapp.ear"/>
+&#60;component file="${assemble}/simpleservlet.war"/>
+&#60;component name="simplebean" />
+&#60;/sun-appserv-component></pre>
+
+<a name="beafb"></a><h4>The <tt>fileset</tt> Subelement</h4>
+<a name="indexterm-197"></a><p>Selects component files that match specified parameters. When <tt>fileset</tt> is included as
+a subelement, the <tt>name</tt> and <tt>contextroot</tt> attributes of the containing element must
+use their default values for each file in the <tt>fileset</tt>. For more information, see
+<a href="http://ant.apache.org/manual/CoreTypes/fileset.html">http://ant.apache.org/manual/CoreTypes/fileset.html</a>.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p6.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p8.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

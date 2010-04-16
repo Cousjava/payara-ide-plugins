@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Administering the Java Naming and Directory Interface (JNDI) Service - Sun GlassFish Enterprise Server v3 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p25.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p27.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="ablky"></a>Chapter&#160;20<h3>Administering the Java Naming and Directory Interface (JNDI) Service</h3><p>The Java Naming and Directory Interface (JNDI) API is used for accessing different
+kinds of naming and directory services. Java EE components locate objects by invoking
+the JNDI lookup method.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#ggjue">About JNDI</a></p></li>
+<li><p><a href="#gglpq">Administering JNDI Resources</a></p></li></ul>
+
+
+<a name="ggjue"></a><h3>About JNDI</h3>
+<a name="indexterm-1006"></a><a name="indexterm-1007"></a><p>By making calls to the JNDI API, applications locate resources and other program
+objects. A <b>resource</b> is a program object that provides connections to systems, such
+as database servers and messaging systems. A JDBC resource is sometimes referred to
+as a data source. Each resource object is identified by a unique, people-friendly
+name, called the <b>JNDI name</b>. A resource object and its JNDI name are
+bound together by the naming and directory service, which is included with the
+Enterprise Server. </p><p>When a new name-object binding is entered into the JNDI, a new
+resource is created.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#abllb">J2EE Naming Environment</a></p></li>
+<li><p><a href="#gglpg">How the Naming Environment and the Container Work Together</a></p></li>
+<li><p><a href="#abllc">Naming References and Binding Information</a></p></li></ul>
+
+
+<a name="abllb"></a><h4>J2EE Naming Environment</h4>
+<p>JNDI names are bound to their objects by the naming and directory
+service that is provided by a J2EE server. Because J2EE components access this
+service through the JNDI API, the object usually uses its JNDI name. For
+example, the JNDI name of the PointBase database is <tt>jdbc/Pointbase</tt>. At startup, the Enterprise
+Server reads information from the configuration file and automatically adds JNDI <a name="indexterm-1008"></a>database names
+to the name space, one of which is <tt>jdbc/Pointbase</tt>.</p><p>Java EE application clients, enterprise beans, and web components must have access to
+a JNDI naming environment.</p><p>The application component's naming environment is the mechanism that allows customization of the
+application component's business logic during deployment or assembly. This environment allows you to
+customize the application component without needing to access or change the source code
+off the component. A Java EE container implements the provides the environment to
+the application component instance as a <b>JNDI naming context</b>. </p>
+
+<a name="gglpg"></a><h4>How the Naming Environment and the Container Work Together</h4>
+<p>The application component's environment is used as follows:</p>
+<ul><li><p>The application component's business methods access the environment using the JNDI interfaces. In the deployment descriptor, the application component provider declares all the environment entries that the application component expects to be provided in its environment at runtime.</p></li>
+<li><p>The container provides an implementation of the JNDI naming context that stores the application component environment. The container also provides the tools that allow the deployer to create and manage the environment of each application component.</p></li>
+<li><p>A deployer uses the tools provided by the container to initialize the environment entries that are declared in the application component's deployment descriptor. The deployer sets and modifies the values of the environment entries.</p></li>
+<li><p>The container makes the JNDI context available to the application component instances at runtime. These instances use the JNDI interfaces to obtain the values of the environment entries.</p></li></ul>
+<p>Each application component defines its own set of environment entries. All instances of
+an application component within the same container share the same environment entries. Application
+component instances are not allowed to modify the environment at runtime.</p>
+
+<a name="abllc"></a><h4>Naming References and Binding Information</h4>
+<p>A <b>resource reference</b> is an element in a deployment descriptor that identifies the component&#8217;s
+coded name for the resource. For example, <tt>jdbc/SavingsAccountDB</tt>. More specifically, the coded name references
+a connection factory for the resource. <a name="indexterm-1009"></a><a name="indexterm-1010"></a></p><p><a name="indexterm-1011"></a>The JNDI name of a resource and the resource reference name are not
+the same. This approach to naming requires that you map the two
+names before deployment, but it also decouples components from resources. Because of this decoupling,
+if at a later time the component needs to access a different resource,
+the name does not need to change. This flexibility makes it easier for
+you to assemble J2EE applications from preexisting components.</p><p>The following table lists JNDI lookups and their associated resource references<a name="indexterm-1012"></a> for the
+J2EE resources used by the Enterprise Server.</p><a name="fxizy"></a><h6>Table&#160;20-1 JNDI Lookup Names and Their Associated References</h6><table><col width="50%"><col width="50%"><tr><th align="left" valign="top" scope="column"><p>JNDI Lookup Name</p></th>
+<th align="left" valign="top" scope="column"><p>Associated Resource Reference</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java:comp/env</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Application environment
+entries</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java:comp/env/jdbc</tt></p></td>
+<td align="left" valign="top" scope="row"><p>JDBC DataSource resource manager connection factories</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java:comp/env/ejb</tt></p></td>
+<td align="left" valign="top" scope="row"><p>EJB References</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java:comp/UserTransaction</tt></p></td>
+<td align="left" valign="top" scope="row"><p>UserTransaction references</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java:comp/env/mail</tt></p></td>
+<td align="left" valign="top" scope="row"><p>JavaMail Session Connection Factories</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java:comp/env/url</tt></p></td>
+<td align="left" valign="top" scope="row"><p>URL Connection
+Factories</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java:comp/env/jms</tt></p></td>
+<td align="left" valign="top" scope="row"><p>JMS Connection Factories and Destinations</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>java:comp/ORB</tt></p></td>
+<td align="left" valign="top" scope="row"><p>ORB instance shared across application components</p></td>
+</tr>
+</table>
+
+<a name="gglpq"></a><h3>Administering JNDI Resources</h3>
+<p>Within Enterprise Server, you can configure your environment for custom and external JNDI
+resources. A custom resource accesses a local JNDI repository; an external resource accesses
+an external JNDI repository. Both types of resources need user-specified factory class elements,
+JNDI name attributes, and so on. </p>
+<ul><li><p><a href="#ablle">Administering Custom JNDI Resources</a></p></li>
+<li><p><a href="#gitxz">Administering External JNDI Resources</a></p></li></ul>
+
+
+<a name="ablle"></a><h4>Administering Custom JNDI Resources</h4>
+<p>A custom resource specifies a custom server-wide resource object factory that implements the
+<tt>javax.naming.spi.ObjectFactory</tt> interface. The following topics are addressed here:</p>
+<ul><li><p><a href="#giowe">To Create a Custom JNDI Resource</a></p></li>
+<li><p><a href="#gioxb">To List Custom JNDI Resources</a></p></li>
+<li><p><a href="#giwlk">To Update a Custom JNDI Resource</a></p></li>
+<li><p><a href="#gioxl">To Delete a Custom JNDI Resource</a></p></li></ul>
+
+
+<a name="giowe"></a><h5>To Create a Custom JNDI Resource</h5>
+<p>Use the <tt>create-custom-resource</tt> subcommand in remote mode to create a custom resource.<a name="indexterm-1013"></a><a name="indexterm-1014"></a><a name="indexterm-1015"></a><a name="indexterm-1016"></a><a name="indexterm-1017"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Create a custom resource by using the <a href="http://docs.sun.com/doc/820-7701/create-custom-resource-1?a=view"><tt>create-custom-resource</tt>(1)</a> subcommand.</b><p>Information on properties for the subcommand is contained in this help page.</p></li>
+<li><b>Restart Enterprise Server.</b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="gioyi"></a><h6>Example&#160;20-1 Creating a Custom Resource</h6><p>This example creates a custom resource named <tt>sample-custom-resource</tt>.</p><pre>asadmin> <tt><b>create-custom-resource --restype topic --factoryclass com.imq.topic </b></tt>
+<tt><b>sample_custom_resource</b></tt>
+Command create-custom-resource executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-custom-resource</tt> at the command line.</p>
+
+<a name="gioxb"></a><h5>To List Custom JNDI Resources</h5>
+<a name="indexterm-1018"></a><a name="indexterm-1019"></a><a name="indexterm-1020"></a><a name="indexterm-1021"></a><p>Use the <tt>list-custom-resources</tt> subcommand in remote mode to list the existing custom resources.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the custom resources by using the <a href="http://docs.sun.com/doc/820-7701/list-custom-resources-1?a=view"><tt>list-custom-resources</tt>(1)</a> subcommand.</b></li></ol><a name="gioyr"></a><h6>Example&#160;20-2 Listing Custom Resources</h6><p>This example lists the existing custom resources.</p><pre>asadmin> <tt><b>list-custom-resources</b></tt>
+sample_custom_resource01 
+sample_custom_resource02 
+Command list-custom-resources executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-custom-resources</tt> at the command line.</p>
+
+<a name="giwlk"></a><h5>To Update a Custom JNDI Resource</h5>
+<a name="indexterm-1022"></a><a name="indexterm-1023"></a><a name="indexterm-1024"></a><a name="indexterm-1025"></a><ol>
+<li><b>List the custom resources by using the <a href="http://docs.sun.com/doc/820-7701/list-custom-resources-1?a=view"><tt>list-custom-resources</tt>(1)</a> subcommand.</b></li>
+<li><b>Use the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand to modify a custom JNDI resource.</b></li></ol><a name="giwkg"></a><h6>Example&#160;20-3 Updating a Custom JNDI Resource</h6><p>This example modifies a custom resource.</p><pre>asadmin> <tt><b>set server.resources.custom-resource.custom</b></tt>
+<tt><b>/my-custom-resource.property.value=2010server.resources.custom-resource.custom</b></tt>
+<tt><b>/my-custom-resource.property.value=2010</b></tt></pre>
+
+<a name="gioxl"></a><h5>To Delete a Custom JNDI Resource</h5>
+<a name="indexterm-1026"></a><a name="indexterm-1027"></a><a name="indexterm-1028"></a><a name="indexterm-1029"></a><p>Use the <tt>delete-custom-resource</tt> subcommand in remote mode to delete a custom resource.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the custom resources by using the <a href="http://docs.sun.com/doc/820-7701/list-custom-resources-1?a=view"><tt>list-custom-resources</tt>(1)</a> subcommand.</b></li>
+<li><b>Delete a custom resource by using the <a href="http://docs.sun.com/doc/820-7701/delete-custom-resource-1?a=view"><tt>delete-custom-resource</tt>(1)</a> subcommand.</b></li></ol><a name="gioxh"></a><h6>Example&#160;20-4 Deleting a Custom Resource</h6><p>This example deletes a custom resource named <tt>sample-custom-resource</tt>.</p><pre>asadmin> <tt><b>delete-custom-resource sample_custom_resource</b></tt>
+Command delete-custom-resource executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-custom-resource</tt> at the command line.</p>
+
+<a name="gitxz"></a><h4>Administering External JNDI Resources</h4>
+<p><a name="indexterm-1030"></a><a name="indexterm-1031"></a>Applications running on Enterprise Server often require access to resources stored in an
+external JNDI repository. For example, generic Java objects might be stored in an
+LDAP server according to the Java schema. External JNDI resource elements let you
+configure such external resource repositories. </p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#gitxn">To Register an External JNDI Resource</a></p></li>
+<li><p><a href="#gitvj">To List External JNDI Resources</a></p></li>
+<li><p><a href="#gitwc">To List External JNDI Entries</a></p></li>
+<li><p><a href="#giwnr">To Update an External JNDI Resource</a></p></li>
+<li><p><a href="#gitvt">To Delete an External JNDI Resource</a></p></li>
+<li><p><a href="#abllk">Example of Using an External JNDI Resource</a></p></li></ul>
+
+
+<a name="gitxn"></a><h5>To Register an External JNDI Resource</h5>
+<p>Use the <tt>create-jndi-resource</tt> subcommand in remote mode to register an external JNDI resource.<a name="indexterm-1032"></a><a name="indexterm-1033"></a><a name="indexterm-1034"></a><a name="indexterm-1035"></a><a name="indexterm-1036"></a><a name="indexterm-1037"></a></p><h6>Before You Begin</h6><p>The external JNDI factory must implement the <tt>javax.naming.spi.InitialContextFactory</tt> interface.</p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Register an external JNDI resource by using the <a href="http://docs.sun.com/doc/820-7701/create-jndi-resource-1?a=view"><tt>create-jndi-resource</tt>(1)</a> subcommand.</b><p>Information on properties for the subcommand is contained in this help page.</p></li>
+<li><b>Restart Enterprise Server.</b><p>See <a href="p7.html#ginqj">To Restart a Domain</a>.</p></li></ol><a name="giwcx"></a><h6>Example&#160;20-5 Registering an External JNDI Resource</h6><p>In This example <tt>sample_jndi_resource</tt> is registered.</p><pre>asadmin> <tt><b>create-jndi-resource --jndilookupname sample_jndi </b></tt>
+<tt><b>--restype queue --factoryclass sampleClass --description "this is a sample jndi resource" sample_jndi_resource</b></tt>
+Command create-jndi-resource executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help create-jndi-resource</tt> at the command line.</p>
+
+<a name="gitvj"></a><h5>To List External JNDI Resources</h5>
+<p>Use the <tt>list-jndi-resources</tt> subcommand in remote mode to list all existing JNDI resources.<a name="indexterm-1038"></a><a name="indexterm-1039"></a><a name="indexterm-1040"></a><a name="indexterm-1041"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the existing JNDI resources by using the<a href="http://docs.sun.com/doc/820-7701/list-jndi-resources-1?a=view"><tt>list-jndi-resources</tt>(1)</a> subcommand.</b></li></ol><a name="giwbe"></a><h6>Example&#160;20-6 Listing JNDI Resources</h6><p>This example lists the JNDI resources.</p><pre>asadmin> <tt><b>list-jndi-resources</b></tt>
+jndi_resource1
+jndi_resource2
+jndi_resource3
+Command list-jndi-resources executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-jndi-resources</tt> at the command line.</p>
+
+<a name="gitwc"></a><h5>To List External JNDI Entries</h5>
+<p>Use the <tt>list-jndi-entries</tt> subcommand in remote mode to browse and list the entries
+in the JNDI tree. You can either list all entries, or you can
+specify the JNDI context or subcontext to list specific entries.<a name="indexterm-1042"></a><a name="indexterm-1043"></a><a name="indexterm-1044"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>List the JNDI entries for a configuration by using the <a href="http://docs.sun.com/doc/820-7701/list-jndi-entries-1?a=view"><tt>list-jndi-entries</tt>(1)</a> subcommand.</b></li></ol><a name="giwal"></a><h6>Example&#160;20-7 Listing JNDI Entries</h6><p>This example lists all the JNDI entries for the naming service.</p><pre>asadmin> <tt><b>list-jndi-entries</b></tt>
+jndi_entry03
+jndi_entry72
+jndi_entry76
+Command list-jndi-resources executed successfully</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help list-jndi-entries</tt> at the command line.</p>
+
+<a name="giwnr"></a><h5>To Update an External JNDI Resource</h5>
+<a name="indexterm-1045"></a><a name="indexterm-1046"></a><a name="indexterm-1047"></a><a name="indexterm-1048"></a><ol>
+<li><b>List the existing JNDI resources by using the<a href="http://docs.sun.com/doc/820-7701/list-jndi-resources-1?a=view"><tt>list-jndi-resources</tt>(1)</a> subcommand.</b></li>
+<li><b>Use the <a href="http://docs.sun.com/doc/820-7701/set-1?a=view"><tt>set</tt>(1)</a> subcommand to modify an external JNDI resource.</b></li></ol><a name="giwoa"></a><h6>Example&#160;20-8 Updating an External JNDI Resource</h6><p>This example modifies an external resource.</p><pre>asadmin> <tt><b>set server.resources.external-jndi-resource.my-jndi-resource.</b></tt>
+<tt><b>jndi-lookup-name=bar server.resources.external-jndi-resource.my-jndi-resource.jndi-lookup-name=bar </b></tt></pre>
+
+<a name="gitvt"></a><h5>To Delete an External JNDI Resource</h5>
+<p>Use the <tt>delete-jndi-resource</tt> subcommand in remote mode to remove a JNDI resource. <a name="indexterm-1049"></a><a name="indexterm-1050"></a><a name="indexterm-1051"></a><a name="indexterm-1052"></a></p><ol>
+<li><b>Ensure that the server is running.</b><p>Remote subcommands require a running server.</p></li>
+<li><b>Remove an external JNDI entry by using the <a href="http://docs.sun.com/doc/820-7701/delete-jndi-resource-1?a=view"><tt>delete-jndi-resource</tt>(1)</a> subcommand.</b></li></ol><a name="giwby"></a><h6>Example&#160;20-9 Deleting an External JNDI Resource</h6><p>This example deletes an external JNDI resource:</p><pre>asadmin> <tt><b>delete-jndi-resource jndi_resource2</b></tt>
+Command delete-jndi-resource executed successfully.</pre><h6>See Also</h6><p>You can also view the full syntax and options of the subcommand
+by typing <tt>asadmin help delete-jndi-resource</tt> at the command line.</p>
+
+<a name="abllk"></a><h5>Example of Using an External JNDI Resource</h5>
+<pre>&#60;resources>
+ &#60;!-- external-jndi-resource element specifies how to access J2EE resources
+ -- stored in an external JNDI repository. This example
+ -- illustrates how to access a java object stored in LDAP.
+ -- factory-class element specifies the JNDI InitialContext factory that
+ -- needs to be used to access the resource factory. property element
+ -- corresponds to the environment applicable to the external JNDI context
+ -- and jndi-lookup-name refers to the JNDI name to lookup to fetch the
+ -- designated (in this case the java) object.
+ -->
+  &#60;external-jndi-resource jndi-name="test/myBean"
+      jndi-lookup-name="cn=myBean"
+      res-type="test.myBean"
+      factory-class="com.sun.jndi.ldap.LdapCtxFactory">
+    &#60;property name="PROVIDER-URL" value="ldap://ldapserver:389/o=myObjects" />
+    &#60;property name="SECURITY_AUTHENTICATION" value="simple" />
+    &#60;property name="SECURITY_PRINCIPAL", value="cn=joeSmith, o=Engineering" />
+    &#60;property name="SECURITY_CREDENTIALS" value="changeit" />
+  &#60;/external-jndi-resource>
+&#60;/resources></pre>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p25.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p27.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

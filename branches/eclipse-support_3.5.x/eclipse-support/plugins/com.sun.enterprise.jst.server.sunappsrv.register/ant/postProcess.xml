@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project default="all">
+
+	<target name="all">
+		<antcall target="process" />
+		<antcall target="chmod-exec" />
+	</target>
+
+	<target name="process" description="Postprocess script for glassfish v2">
+		<echo>${glassfish_dir}</echo>
+		<exec executable="hostname" osfamily="unix" failifexecutionfails="false" outputproperty="env.COMPUTERNAME" />
+		<property name="env.HOSTNAME" value="${env.COMPUTERNAME}" />
+		<echo message="host = ${env.HOSTNAME}" />
+		<replace dir="${glassfish_dir}">
+			<exclude name="lib/install/templates/**" />
+			<include name="**/bin/*" />
+			<include name="**/*.bat" />
+			<include name="**/*.conf" />
+			<include name="**/*.html" />
+			<include name="**/*.properties" />
+			<include name="**/*.sh" />
+			<include name="**/*.txt" />
+			<include name="**/*.xml" />
+			<replacefilter token="#INSTALL_HOME#" value="${install_home}" />
+			<replacefilter token="#INSTALL_HOME_F#" value="${install_home_f}" />
+			<replacefilter token="#JAVA_HOME#" value="${java_home}" />
+			<replacefilter token="#JAVA_HOME_F#" value="${java_home_f}" />
+			<replacefilter token="#ADMIN_USERNAME#" value="${admin_username}" />
+			<replacefilter token="#ADMIN_PASSWORD#" value="${admin_password}" />
+		</replace>
+		<replaceregexp file="${glassfish_dir}/samples/common.properties" match="admin.host=(.*)" replace="admin.host=${env.HOSTNAME}" byline="true" />
+	</target>
+	<!--
+		Chmod executables under *nix, taken from Glassfish v2 installer
+		setup.xml
+	-->
+	<target name="chmod-exec">
+		<chmod perm="ugo+x">
+			<fileset dir="${glassfish_dir}/bin" />
+		</chmod>
+		<!-- all the GlassFish/lib libraries and helper executables -->
+		<chmod perm="ugo+x">
+			<fileset dir="${glassfish_dir}/lib">
+				<include name="*.so" />
+				<include name="appserv" />
+				<include name="appservLauncher" />
+			</fileset>
+		</chmod>
+		<!-- the IMQ executables -->
+		<chmod perm="ugo+x">
+			<fileset dir="${glassfish_dir}/imq/bin" />
+		</chmod>
+		<!-- Apache ANT -->
+		<chmod perm="ugo+x">
+			<fileset dir="${glassfish_dir}/lib/ant/bin">
+				<!--
+					We don't plan to run GlassFish under Cygwin. Cygwin requires
+					executable bits for all the .exe, .dll, .bat and .cmd. If you want
+					to run GlassFish under Cygwin, comment the following <exclude/>.
+				-->
+				<exclude name="*.bat" />
+				<exclude name="*.cmd" />
+			</fileset>
+		</chmod>
+		<!-- Netscape security executables -->
+		<chmod perm="ugo+x">
+			<fileset dir="${glassfish_dir}/lib/upgrade" />
+		</chmod>
+		<!-- javadb -->
+
+		<!-- updatecenter -->
+		<chmod perm="ugo+x">
+			<fileset dir="${glassfish_dir}/updatecenter/bin" />
+		</chmod>
+	</target>
+
+</project>

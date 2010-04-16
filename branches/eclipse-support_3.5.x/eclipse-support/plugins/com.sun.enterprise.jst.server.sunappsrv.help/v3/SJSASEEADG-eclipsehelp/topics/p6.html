@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>The asadmin Deployment Subcommands - Sun GlassFish Enterprise Server v3 Application Deployment Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p5.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p7.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="gihzw"></a>Appendix&#160;A<h3>The <tt>asadmin</tt> Deployment Subcommands</h3><a name="indexterm-144"></a><a name="indexterm-145"></a><a name="indexterm-146"></a><p>This appendix lists the <tt>asadmin</tt> deployment subcommands that are included with this release
+of the Sun GlassFish<sup>TM</sup> Enterprise Server software. For information on additional <tt>asadmin</tt> subcommands,
+see <a href="http://docs.sun.com/doc/820-7692/gcode?a=view">Appendix A, <i>The asadmin Utility Commands,</i> in <i>Sun GlassFish Enterprise Server v3 Preview Administration Guide</i></a> or <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Preview Reference Manual</i></a>.</p><dl><dt><a href="http://docs.sun.com/doc/820-7701/deploy-1?a=view"><tt>deploy</tt>(1)</a></dt>
+<dd><p>Deploys an enterprise application, web application, EJB module, connector module, or application client module. If the component is already deployed or already exists, you can forcefully redeploy if you set the <tt>--force</tt> option to <tt>true</tt>. A directory can also be deployed. Supported in remote mode only. For usage instructions, see <a href="p5.html#gijmq">To Deploy an Application or Module</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/deploydir-1?a=view"><tt>deploydir</tt>(1)</a></dt>
+<dd><p>This subcommand is deprecated. Use the <tt>deploy</tt> subcommand instead.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/disable-1?a=view"><tt>disable</tt>(1)</a></dt>
+<dd><p>Immediately deactivates the named application or module. If the component has not been deployed, an error message is returned. Supported in remote mode only. For usage instructions, see<a href="p5.html#fvyje">To Disable an Application or Module </a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/enable-1?a=view"><tt>enable</tt>(1)</a></dt>
+<dd><p>Enables the specified application or module. If the component has not been deployed, an error message is returned. If the component is already enabled, then it is re-enabled. Supported in remote mode only. For usage instructions, see <a href="p5.html#gijjy">To Enable an Application or Module</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/get-client-stubs-1?a=view"><tt>get-client-stubs</tt>(1)</a></dt>
+<dd><p>Gets the client stubs JAR file for an application client module or an application containing the application client module, from the server machine to the local directory. For usage instructions, see <a href="p5.html#beaek">EJB Module Deployment Guidelines</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/list-applications-1?a=view"><tt>list-applications</tt>(1)</a></dt>
+<dd><p>Lists deployed Java<sup>TM</sup> EE applications and modules. If the <tt>--type</tt> option is not specified, all applications and modules are listed. Supported in remote mode only. For usage instructions, see <a href="p5.html#giulr">To List Deployed Applications or Modules</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/list-components-1?a=view"><tt>list-components</tt>(1)</a></dt>
+<dd><p>Lists deployed Java EE components. If the <tt>--type</tt> option is not specified, all components are listed. Supported in remote mode only. For usage instructions, see <a href="p5.html#giulr">To List Deployed Applications or Modules</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/list-sub-components-1?a=view"><tt>list-sub-components</tt>(1)</a></dt>
+<dd><p>Lists EJBs or servlets in a deployed module or in a module of the deployed application. If a module is not identified, all modules are listed. To display a specific module in an application, you must specify the module name and the <tt>--appname</tt> option. Supported in remote mode only. For usage instructions, see <a href="p5.html#giulr">To List Deployed Applications or Modules</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/list-web-context-param-1?a=view"><tt>list-web-context-param</tt>(1)</a></dt>
+<dd><p>Lists servlet context-initialization parameters of a deployed web application or module. Supported in remote mode only. For usage instructions, see <a href="p5.html#giybo">To List Web Context Parameters</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/list-web-env-entry-1?a=view"><tt>list-web-env-entry</tt>(1)</a></dt>
+<dd><p>Lists environment entries for a deployed web application or module. Supported in remote mode only. For usage instructions, see <a href="p5.html#giyip">To List Web Environment Entries</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/redeploy-1?a=view"><tt>redeploy</tt>(1)</a></dt>
+<dd><p>Overwrites an application or module that is already deployed. Supported in remote mode only. For usage instructions, see <a href="p5.html#gijmb">To Redeploy an Application or Module</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/set-web-context-param-1?a=view"><tt>set-web-context-param</tt>(1)</a></dt>
+<dd><p>Sets a servlet context-initialization parameter of a deployed web application or module. Supported in remote mode only. For usage instructions, see <a href="p5.html#giyce">To Set a Web Context Parameter</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/set-web-env-entry-1?a=view"><tt>set-web-env-entry</tt>(1)</a></dt>
+<dd><p>Sets an environment entry for a deployed web application or module. Supported in remote mode only. For usage instructions, see <a href="p5.html#giyhc">To Set a Web Environment Entry</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/show-component-status-1?a=view"><tt>show-component-status</tt>(1)</a></dt>
+<dd><p>Shows the status of a deployed component. The possible statuses include <tt>enabled</tt> or <tt>disabled</tt>. Supported in remote mode only. For usage instructions, see <a href="p5.html#giulr">To List Deployed Applications or Modules</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/undeploy-1?a=view"><tt>undeploy</tt>(1)</a></dt>
+<dd><p>Uninstalls the specified deployed application or module. Supported in remote mode only. For usage instructions, see <a href="p5.html#gijkl">To Undeploy an Application or Module</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/unset-web-context-param-1?a=view"><tt>unset-web-context-param</tt>(1)</a></dt>
+<dd><p>Unsets a servlet context-initialization parameter of a deployed web application or module. Supported in remote mode only. For usage instructions, see <a href="p5.html#giycy">To Unset a Web Context Parameter</a>.</p></dd>
+<dt><a href="http://docs.sun.com/doc/820-7701/unset-web-env-entry-1?a=view"><tt>unset-web-env-entry</tt>(1)</a></dt>
+<dd><p>Unsets an environment entry for a deployed web application or module. Supported in remote mode only. For usage instructions, see <a href="p5.html#giyjr">To Unset a Web Environment Entry</a>.</p></dd>
+</dl>
+
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p5.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p7.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

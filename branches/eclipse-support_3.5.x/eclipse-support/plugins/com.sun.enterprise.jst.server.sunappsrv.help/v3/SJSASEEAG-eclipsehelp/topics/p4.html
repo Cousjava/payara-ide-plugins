@@ -1,0 +1,445 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Overview of Enterprise Server Administration - Sun GlassFish Enterprise Server v3 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p3.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p5.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="ablaq"></a>Chapter&#160;1<h3>Overview of Enterprise Server Administration</h3><p>Sun GlassFish<sup>TM</sup> Enterprise Server v3 provides an environment for developing and deploying Java<sup>TM</sup> applications and
+web services. </p><p>As an Enterprise Server administrator, your main responsibilities are to establish a secure
+Enterprise Server environment and to oversee the services, resources, and users that participate
+in that environment. Your key tasks include configuring resources and services, managing Enterprise
+Server at runtime, and fixing problems that are associated with the server. You
+might also be involved in installing software, integrating add-on components, and deploying applications.</p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#giubb">Default Settings and Locations</a></p></li>
+<li><p><a href="#ghrcy">Configuration Tasks</a></p></li>
+<li><p><a href="#ggjxp">Administration Tools</a></p></li>
+<li><p><a href="#giudo">Instructions for Administering Enterprise Server</a></p></li></ul>
+
+
+<a name="giubb"></a><h3>Default Settings and Locations</h3>
+<p>After installation, you might need to perform some immediate configuration tasks to make
+your installation function as intended. If configuration defaults have been accepted, some features
+are enabled and some not. For an overview of initial configuration tasks for
+Enterprise Server services and resources, see <a href="#gitwr">Initial Configuration Tasks</a>. </p><p>In addition, you might want to reset default passwords, change names or locations
+of files, and so on. The following tables list the default administration values.
+</p>
+<hr><p><b>Note - </b>For the zip bundle of Enterprise Server v3, the default administrator login is
+<tt>admin</tt>, with no password, which means that no login is required.<a name="indexterm-1"></a><a name="indexterm-2"></a><a name="indexterm-3"></a></p>
+<hr>
+<a name="giuad"></a><h6>Table&#160;1-1 Default Administration Values</h6><table><col width="42%"><col width="57%"><tr><th align="left" valign="top" scope="column"><p>Item</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Domain Name</p></td>
+<td align="left" valign="top" scope="row"><p><tt>domain1</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Master Password</p></td>
+<td align="left" valign="top" scope="row"><p><tt>changeit</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Administration
+Password</p></td>
+<td align="left" valign="top" scope="row"><p><tt>admin</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Administration Server Port</p></td>
+<td align="left" valign="top" scope="row"><p><tt>4848</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>HTTP Port</p></td>
+<td align="left" valign="top" scope="row"><p><tt>8080</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>HTTPS Port</p></td>
+<td align="left" valign="top" scope="row"><p><tt>8181</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Pure JMX Clients Port</p></td>
+<td align="left" valign="top" scope="row"><p><tt>8686</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Message Queue Port</p></td>
+<td align="left" valign="top" scope="row"><p><tt>7676</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>IIOP Port</p></td>
+<td align="left" valign="top" scope="row"><p><tt>3700</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>IIOP/SSL Port</p></td>
+<td align="left" valign="top" scope="row"><p><tt>3820</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>IIOP/SSL
+Port With Mutual Authentication </p></td>
+<td align="left" valign="top" scope="row"><p><tt>3920</tt></p></td>
+</tr>
+</table><a name="gjhfv"></a><h6>Table&#160;1-2 Default Locations</h6><table><col width="42%"><col width="57%"><tr><th align="left" valign="top" scope="column"><p>Item</p></th>
+<th align="left" valign="top" scope="column"><p>Default</p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Command-line Utility (<tt>asadmin</tt>)</p></td>
+<td align="left" valign="top" scope="row"><p><i>as-install</i><tt>/bin</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Configuration Files</p></td>
+<td align="left" valign="top" scope="row"><p><i>domain-dir</i><tt>/config</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Log Files</p></td>
+<td align="left" valign="top" scope="row"><p><i>domain-dir</i><tt>/logs</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Upgrade Tool (<tt>asupgrade</tt> Command)</p></td>
+<td align="left" valign="top" scope="row"><p><i>as-install</i><tt>/bin</tt></p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p>Update
+Tool and <tt>pkg</tt> Command</p></td>
+<td align="left" valign="top" scope="row"><p><i>as-install-parent</i><tt>/bin</tt></p></td>
+</tr>
+</table><p>For information on replaceables and default paths and files, see <a href="p3.html#ghpfg">Default Paths and File Names</a>.</p>
+
+<a name="ghrcy"></a><h3>Configuration Tasks</h3>
+<a name="indexterm-4"></a><a name="indexterm-5"></a><p>Some configuration tasks must be performed directly after installation for your Enterprise Server
+environment to work as intended. For example, if you are using a database
+with Enterprise Server, you need to set up database connectivity right away. </p><p>Some configuration situations are ongoing and will require you to make changes many
+times during the life of your installation. You can use either the Administration
+Console or the <tt>asadmin</tt> utility to modify the configuration. Changes are automatically applied
+to the appropriate configuration file. </p><p>The following topics are addressed here:</p>
+<ul><li><p><a href="#gitwr">Initial Configuration Tasks</a></p></li>
+<li><p><a href="#giusb">How Dotted Names Work for Configuration</a></p></li>
+<li><p><a href="#gjjrl">Configuration Files</a></p></li>
+<li><p><a href="#gitzw">Impact of Configuration Changes</a></p></li></ul>
+
+
+<a name="gitwr"></a><h4>Initial Configuration Tasks</h4>
+<p>This section maps the common configuration tasks to the command&#8211;line procedures in this
+guide. In some situations, the resource or service is automatically enabled and your
+configuration tasks involve adjusting or changing the default settings to suit your specific
+needs.</p><p>The following resources and services frequently require configuration immediately after installation:</p><dl><dt><b>System Properties</b></dt>
+<dd><p>See <a href="p6.html#ghcjc">Administering System Properties</a>.</p></dd>
+<dt><b>Domains</b></dt>
+<dd><p>The initial <tt>domain1</tt> is created during installation. Additional configuration tasks might include such tasks as configuring additional domains or setting up automatic restart. See <a href="p7.html">Chapter&#160;3, Administering Domains</a>.</p></dd>
+<dt><b>JVM</b></dt>
+<dd><p>The initial tasks for configuring the JVM include creating JVM options and profilers. See <a href="p8.html">Chapter&#160;4, Administering the Virtual Machine for the Java Platform</a>.</p></dd>
+<dt><b>Logging</b></dt>
+<dd><p>By default, logging is enabled, so basic logging works without additional configuration. However, you might want to change log levels, property values, or the location of log files. See <a href="p11.html">Chapter&#160;7, Administering the Logging Service</a>.</p></dd>
+<dt><b>Monitoring</b></dt>
+<dd><p>By default, the monitoring service is enabled. However, monitoring for the individual modules is not enabled, so your first monitoring task is to enable monitoring for the modules that you want to monitor. See <a href="p12.html">Chapter&#160;8, Administering the Monitoring Service</a>.</p></dd>
+<dt><b>Life Cycle Modules</b></dt>
+<dd><p>See <a href="p13.html">Chapter&#160;9, Administering Life Cycle Modules</a>.</p></dd>
+<dt><b>Security</b></dt>
+<dd>
+<ul><li><p><b>System Security.</b> Initial configuration tasks might include setting up passwords, audit modules, and certificates. See <a href="p16.html">Chapter&#160;11, Administering System Security</a>.</p></li>
+<li><p><b>User Security.</b> Initial configuration tasks might include creating authentication realms and file users. See <a href="p17.html">Chapter&#160;12, Administering User Security</a>.</p></li>
+<li><p><b>Message Security.</b> Initial configuration tasks might include configuring a Java Cryptography Extension (JCE) provider, enabling default and non-default security providers, and configuring message protection policies. See <a href="p18.html">Chapter&#160;13, Administering Message Security</a>.</p></li></ul>
+</dd>
+<dt><b>Database Connectivity</b></dt>
+<dd><p>The initial tasks involved in configuring Enterprise Server to connect to the Java DB database include creating a Java Database Connectivity (JDBC) connection pool, creating a JDBC resource, and integrating a JDBC driver. See <a href="p20.html">Chapter&#160;14, Administering Database Connectivity </a>.</p></dd>
+<dt><b>EIS Connectivity</b></dt>
+<dd><p>The initial tasks involved in configuring Enterprise Server to connect to an enterprise information system (EIS) include creating a connector connection pool, creating a connector resource, editing a resource adapter configuration, creating a connector security map, creating a connector work security map, and creating an administered object (if needed). See <a href="p21.html">Chapter&#160;15, Administering EIS Connectivity</a>.</p></dd>
+<dt><b>Internet Connectivity</b></dt>
+<dd><p>The initial tasks involved in making deployed web applications accessible by internet clients include creating HTTP network listeners and virtual servers, and configuring the HTTP listeners for SSL (if needed). See <a href="p22.html">Chapter&#160;16, Administering Internet Connectivity</a>.</p></dd>
+<dt><b>Object Request Broker (ORB)</b></dt>
+<dd><p>An initial configuration task might involve creating an IIOP listener. See <a href="p23.html">Chapter&#160;17, Administering the Object Request Broker (ORB)</a>.</p></dd>
+<dt><b>JavaMail Service</b></dt>
+<dd><p>An initial configuration task might involve creating a JavaMail resource. See <a href="p24.html">Chapter&#160;18, Administering the JavaMail Service</a>.</p></dd>
+<dt><b>Java Message Service (JMS)</b></dt>
+<dd><p>Initial configuration tasks might include creating a physical destination, creating connection factories or destination resources, creating a JMS host (if the default JMS host is not adequate), adjusting connection pool settings (if needed), and configuring resource adapters for JMS. See <a href="p25.html">Chapter&#160;19, Administering the Java Message Service (JMS) </a>.</p></dd>
+<dt><b>JNDI Service</b></dt>
+<dd><p>An initial configuration task might involve creating a JNDI resource. See <a href="p26.html">Chapter&#160;20, Administering the Java Naming and Directory Interface (JNDI) Service</a>.</p></dd>
+</dl>
+<p>Information and instructions for accomplishing the tasks by using the Administration Console
+are contained in the Administration Console online help.</p>
+
+<a name="giusb"></a><h4>How Dotted Names Work for Configuration</h4>
+<a name="indexterm-6"></a><a name="indexterm-7"></a><p>After the initial configuration is working, you will continue to manage ongoing configuration
+for the life of your Enterprise Server installation. You might need to adjust
+resources to improve productivity, or problems might arise that require settings to be
+modified or defaults to be reset, and so on. In some situations, an
+<tt>asadmin</tt> subcommand is provided for updating, such as the <tt>update-connector-work-security-map</tt> subcommand. However, most updating
+is done by using the <tt>list</tt>, <tt>get</tt>, and <tt>set</tt> subcommands with dotted
+names. For detailed information on dotted names, see the <a href="http://docs.sun.com/doc/820-7701/dotted-names-5asc?a=view"><tt>dotted-names</tt>(5ASC)</a> help page.</p>
+<hr><p><b>Note - </b>Dotted names are also used in monitoring, but the method is different. For
+information on using dotted names for monitoring, see <a href="p12.html#ghbaz">How the Monitoring Tree Structure Works</a>.</p>
+<hr>
+<p>The general process for working with configuration changes on the command line are
+as follows:</p>
+<ol><li><p>List the modules for the component of interest.</p><p>The following single mode example uses the | (pipe) character and the <tt>grep</tt> command to narrow the search:</p><pre><tt><b>asadmin list "*" | grep http | grep listener</b></tt></pre><p>Information similar to the following is returned:</p><pre>configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1
+configs.config.server-config.network-config.network-listeners.network-listener.http-listener-2
+configs.config.server-config.network-config.protocols.protocol.admin-listener.http
+configs.config.server-config.network-config.protocols.protocol.admin-listener.http.file-cache
+configs.config.server-config.network-config.protocols.protocol.http-listener-1
+configs.config.server-config.network-config.protocols.protocol.http-listener-1.http
+configs.config.server-config.network-config.protocols.protocol.http-listener-1.http.file-cache
+configs.config.server-config.network-config.protocols.protocol.http-listener-2
+configs.config.server-config.network-config.protocols.protocol.http-listener-2.http
+configs.config.server-config.network-config.protocols.protocol.http-listener-2.http.file-cache
+configs.config.server-config.network-config.protocols.protocol.http-listener-2.ssl</pre></li>
+<li><p>Get the attributes that apply to the module you are interested in. </p><p>The following multimode example gets the attributes and values for <tt>http-listener-1</tt>:</p><pre>asadmin> <tt><b>get server-config.network-config.network-listeners.network-listener.http-listener-1.* </b></tt></pre><p>Information similar to the following is returned:</p><pre>server.http-service.http-listener.http-listener-1.acceptor-threads = 1
+server.http-service.http-listener.http-listener-1.address = 0.0.0.0
+server.http-service.http-listener.http-listener-1.blocking-enabled = false
+server.http-service.http-listener.http-listener-1.default-virtual-server = server
+server.http-service.http-listener.http-listener-1.enabled = true
+server.http-service.http-listener.http-listener-1.external-port =
+server.http-service.http-listener.http-listener-1.family = inet
+server.http-service.http-listener.http-listener-1.id = http-listener-1
+server.http-service.http-listener.http-listener-1.port = 8080
+server.http-service.http-listener.http-listener-1.redirect-port =
+server.http-service.http-listener.http-listener-1.security-enabled = false
+server.http-service.http-listener.http-listener-1.server-name =
+server.http-service.http-listener.http-listener-1.xpowered-by = true</pre></li>
+<li><p>Modify an attribute by using the <tt>set</tt> subcommand.</p><p>This example sets the <tt>security-enabled</tt> attribute of <tt>http-listener-1</tt> to true:</p><pre>asadmin> <tt><b>set server.http-service.http-listener.http-listener-1.security-enabled = true</b></tt></pre></li></ol>
+
+
+<a name="gjjrl"></a><h4>Configuration Files</h4>
+<p>The bulk of the configuration information about Enterprise Server resources, applications, and server
+instances is stored in the <tt>domain.xml</tt> configuration file. This file is the central
+repository for a given administrative domain and contains an XML representation of the
+Enterprise Server domain model. Default location for the domain.xml file is <i>as-install</i><tt>/glassfish3/glassfish/domains/<i>domain-name</i>/config</tt>. For details
+on the <tt>domain.xml</tt> file, see <a href="http://docs.sun.com/doc/820-7694"><i>Sun GlassFish Enterprise Server v3 Domain File Format Reference</i></a>.</p><p>The <tt>logging.properties</tt> file is used to configure logging levels for individual modules. The
+file is located in the same directory as the <tt>domain.xml</tt> file. For further
+information on the <tt>logging.properties</tt> file, see <a href="p11.html#ghgwi">Setting Log Levels</a>.</p><p>The <tt>asenv.conf</tt> file is located in the <i>as-install</i><tt>/glassfishv3/glassfish/config</tt>. It's purpose is to store
+the GlassFish-specific environment variables, such as the installation location of the database, Message
+Queue, and so on.</p>
+<hr><p><b>Note - </b> Changes are automatically applied to the appropriate configuration file. Do not edit
+the configuration files directly. Manual editing is prone to error and can have
+unexpected results. </p>
+<hr>
+
+
+<a name="gitzw"></a><h4>Impact of Configuration Changes</h4>
+<p>Configuration changes often require that you restart Enterprise Server for the changes to
+take effect. In other cases, changes are applied dynamically without requiring that Enterprise
+Server be restarted. The procedures in this guide indicate when you need to
+restart the server.</p>
+<ul><li><p><a href="#ghciy">Configuration Changes That Require Server Restart</a></p></li>
+<li><p><a href="#ghclm">Dynamic Configuration Changes</a></p></li></ul>
+
+
+<a name="ghciy"></a><h5>Configuration Changes That Require Server Restart</h5>
+<p>When making any of the following configuration changes, you must restart the server
+for the changes to take effect:</p>
+<ul><li><p>Changing JVM options</p></li>
+<li><p>Changing port numbers</p></li>
+<li><p>Changing log handler elements</p></li>
+<li><p>Configuring certificates</p></li>
+<li><p>Managing HTTP, JMS, IIOP, JNDI services</p></li>
+<li><p>Creating or deleting resources (Exception: Some JDBC, JMS, or connector resources do not require restart.)</p></li>
+<li><p>Modifying the following JDBC connection pool properties:</p>
+<ul><li><p><tt>datasource-classname</tt></p></li>
+<li><p><tt>associate-with-thread</tt></p></li>
+<li><p><tt>lazy-connection-association</tt></p></li>
+<li><p><tt>lazy-connection-enlistment</tt></p></li>
+<li><p>JDBC driver vendor-specific properties</p></li></ul>
+</li>
+<li><p>Modifying the following connector connection pool properties:</p>
+<ul><li><p><tt>resource-adapter-name</tt></p></li>
+<li><p><tt>connection-definition-name</tt></p></li>
+<li><p><tt>transaction-support</tt></p></li>
+<li><p><tt>associate-with-thread</tt></p></li>
+<li><p><tt>lazy-connection-association</tt></p></li>
+<li><p><tt>lazy-connection-enlistment</tt></p></li>
+<li><p>Vendor-specific properties</p></li></ul>
+</li></ul>
+
+
+<a name="ghclm"></a><h5>Dynamic Configuration Changes</h5>
+<a name="indexterm-8"></a><p>With <b>dynamic configuration</b>, changes take effect while the server is running. To make the
+following configuration changes, you do not need to restart the server:</p>
+<ul><li><p>Adding or deleting add-on components</p></li>
+<li><p>Adding or removing JDBC, JMS, and connector resources and pools (Exception: Some connection pool properties require restart.)</p></li>
+<li><p>Adding file realm users</p></li>
+<li><p>Changing logging levels</p></li>
+<li><p>Enabling and disabling monitoring</p></li>
+<li><p>Changing monitoring levels for modules</p></li>
+<li><p>Enabling and disabling resources and applications</p></li>
+<li><p>Deploying, undeploying, and redeploying applications</p></li></ul>
+
+
+<a name="ggjxp"></a><h3>Administration Tools</h3>
+<a name="indexterm-9"></a><a name="indexterm-10"></a><a name="indexterm-11"></a><p>For the most part, you can perform the same tasks by using
+either the graphical Administration Console or the <tt>asadmin</tt> command-line utility, however, there are exceptions.
+</p><p>The following Enterprise Server administration tools are described here:</p>
+<ul><li><p><a href="#ablav">Administration Console</a></p></li>
+<li><p><a href="#gcocs"><tt>asadmin</tt> Utility</a></p></li>
+<li><p><a href="#gjjok">REST Interfaces</a></p></li>
+<li><p><a href="#ghgai">Update Tool</a></p></li>
+<li><p><a href="#gjjxt">OSGi Module Management Subsystem</a></p></li>
+<li><p><a href="#ghcjl"><tt>keytool</tt> Utility</a></p></li>
+<li><p><a href="#ghrfm">Java Monitoring and Management Console (JConsole)</a></p></li>
+<li><p><a href="#gitxc">Application Server Management Extension (AMX)</a></p></li></ul>
+
+
+<a name="ablav"></a><h4>Administration Console</h4>
+<p>The Administration Console is a browser-based utility that features an easy-to-navigate graphical interface
+that includes extensive online help for the administrative tasks. </p><p><a name="indexterm-12"></a><a name="indexterm-13"></a><a name="indexterm-14"></a><a name="indexterm-15"></a><a name="indexterm-16"></a>To use the Administration Console, the domain administration server (DAS) must be running.
+Each domain has its own DAS, which has a unique port number. When
+Enterprise Server was installed, you chose a port number for the DAS, or
+used the default port of 4848. You also specified a user name and
+password if you did not accept the default login (<tt>admin</tt> with no password).</p><p>When specifying the URL for the Administration Console, use the port number for
+the domain to be administered. The format for starting the Administration Console
+in a web browser is <tt>http://</tt><i>hostname</i>:<i>port</i>. For example:</p><pre><tt><b>http://kindness.sun.com:4848</b></tt></pre><p>If the Administration Console is running on the host where Enterprise Server
+was installed, specify <tt>localhost</tt> for the host name. For example:</p><pre><tt><b>http://localhost:4848</b></tt></pre><p>For Microsoft Windows, an alternate way to start the Enterprise Server Administration
+Console is by using the Start menu.</p><p><a name="indexterm-17"></a>You can display the help material for a page in the Administration
+Console by clicking the Help button on the page. The initial help page
+describes the functions and fields of the page itself. Associated task instructions can be
+accessed on additional pages by clicking a link in the See Also
+list.</p>
+
+<a name="gcocs"></a><h4><tt>asadmin</tt> Utility</h4>
+<a name="indexterm-18"></a><a name="indexterm-19"></a><a name="indexterm-20"></a><p>The <tt>asadmin</tt> utility is a command-line tool that runs subcommands for identifying the
+operation or task that you want to perform.  You can run <tt>asadmin</tt>
+subcommands either from a command prompt or from a script. Running <tt>asadmin</tt> subcommands
+from a script is helpful for automating repetitive tasks. Basic information about how the
+<tt>asadmin</tt> utility works can be found in the <a href="http://docs.sun.com/doc/820-7701/asadmin-1m?a=view"><tt>asadmin</tt>(1M)</a> help page. For instructions
+on using the <tt>asadmin</tt> utility, see <a href="p6.html#giobi">Using the <tt>asadmin</tt> Utility</a>. </p><p>To issue an <tt>asadmin</tt> subcommand in the standard command shell (single mode), go
+to the <i>as-install</i><tt>/bin</tt> directory and type the <tt>asadmin</tt> command followed by a subcommand. For
+example:</p><pre><tt><b>asadmin list-jdbc-resources</b></tt></pre><p>You can invoke multiple command mode (multimode) by typing <tt>asadmin</tt><tt><b></b></tt> at the
+command prompt, after which the <tt>asadmin></tt> prompt is presented. The <tt>asadmin</tt> utility continues
+to accept subcommands until you exit multimode and return to the standard command
+shell. For example:</p><pre>asadmin> <tt><b>list-jdbc-resources</b></tt></pre><p>You can display a help page for any <tt>asadmin</tt> subcommand by typing <tt>help</tt>
+before the subcommand name. For example:</p><pre>asadmin> <tt><b>help restart-domain</b></tt></pre><p>or</p><pre><tt><b>asadmin help restart-domain</b></tt></pre><p>A collection of the <tt>asadmin</tt> help pages is available in HTML and PDF
+format in the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.<a name="indexterm-21"></a></p>
+
+<a name="gjjok"></a><h4>REST Interfaces</h4>
+<a name="indexterm-22"></a><p>Enterprise Server provides representational state transfer (REST) interfaces to enable you to access
+monitoring and configuration data for Enterprise Server, including data that is provided by
+newly installed add-on components. For more information, see <a href="p6.html#gjipx">Using REST Interfaces to Administer Enterprise Server</a>.</p>
+
+<a name="ghgai"></a><h4>Update Tool</h4>
+<a name="indexterm-23"></a><a name="indexterm-24"></a><a name="indexterm-25"></a><a name="indexterm-26"></a><a name="indexterm-27"></a><p>Enterprise Server provides a set of image packaging system (IPS) tools for updating
+software on a deployed Enterprise Server. Typical updates include new releases of Enterprise
+Server, and new or revised releases of Enterprise Server add-on components or modules.
+</p>
+<ul><li><p>The Update Tool graphical utility can either be run in the Administration Console, or invoked from the command line by using the <tt>updatetool</tt> command. You can use either tool to add components. However, to update or remove existing components, you must use the standalone version. Instructions for using the graphical versions of the Update Tool are contained in the Administration Console online help and the standalone Update Tool online help. </p></li>
+<li><p>The <tt>pkg</tt> command is the command-line version of Update Tool. Instructions for using the <tt>pkg</tt> command with add-on components are contained in <a href="p14.html">Chapter&#160;10, Extending Enterprise Server</a>. </p></li></ul>
+<p>Two distributions are supported for GlassFish Enterprise Server v3: the Web Profile and
+the Full Platform Profile. After installation, you can view the modules on your
+system by using the graphical Update Tool or the <tt>pkg</tt> command.</p>
+<hr><p><b>Note - </b> If you chose the Web Profile, you can change to the
+Full Platform Profile by selecting the comparable Full Platform Profile package in Update Tool.
+All dependent modules are automatically added. </p>
+<hr>
+<p>You can add and delete individual modules from a distribution, but such configurations
+are not supported. </p><p>If you need information on upgrading your domain configuration data to work with
+a new version of Enterprise Server, see <a href="http://docs.sun.com/doc/820-7698"><i>Sun GlassFish Enterprise Server v3 Upgrade Guide</i></a>.</p>
+
+<a name="gjjxt"></a><h4>OSGi Module Management Subsystem</h4>
+<a name="indexterm-28"></a><a name="indexterm-29"></a><a name="indexterm-30"></a><a name="indexterm-31"></a><a name="indexterm-32"></a><a name="indexterm-33"></a><a name="indexterm-34"></a><a name="indexterm-35"></a><p>The OSGi module management subsystem that is provided with Enterprise Server is the
+<a href="http://felix.apache.org">Apache Felix OSGi framework</a>. To enable you to administer this framework, the <a href="http://felix.apache.org/site/apache-felix-remote-shell.html">Apache Felix Remote Shell</a> is enabled by
+default in Enterprise Server. This shell uses the Felix shell service to interact
+with the OSGi  module management subsystem, and enables you to perform administrative
+tasks such as:</p>
+<ul><li><p>Browsing installed OSGi bundles</p></li>
+<li><p>Viewing the headers of installed OSGi bundles</p></li>
+<li><p>Installing OSGi bundles</p></li>
+<li><p>Controlling the life cycle of installed bundles</p></li></ul>
+<p>The Apache Felix Remote Shell is accessible to telnet clients from anywhere in
+the network. To connect to the Apache Felix Remote Shell through the
+telnet service, use the <a href="http://docs.sun.com/doc/816-5165"><tt>telnet</tt>(1)</a> command as follows:</p><pre><tt><b>telnet </tt><i>host</i><tt> </tt><i>felix-remote-shell-port</i><tt></b></tt></pre><dl><dt><i>host</i></dt>
+<dd><p>The host where the DAS is running.</p></dd>
+<dt><i>felix-remote-shell-port</i></dt>
+<dd><p>The port for connecting to the Apache Felix Remote Shell through the telnet service. Enterprise Server is preconfigured to use port 6666 for this purpose.</p></dd>
+</dl>
+<p>To see a list of the commands that are available in the
+Apache Felix Remote Shell, type <tt>help</tt> at the Apache Felix Remote Shell prompt.</p><p>To exit the Apache Felix Remote Shell, type <tt>exit</tt> at the Apache Felix
+Remote Shell prompt.</p><a name="gjkao"></a><h6>Example&#160;1-1 Connecting to the Apache Felix Remote Shell</h6><p>This example connects to the Apache Felix Remote Shell for a domain that
+is running on the local host and that uses the preconfigured port
+for connecting to this shell through the telnet service.</p><pre><tt><b>telnet localhost 6666</b></tt></pre><p>After the connection is established, the following information is displayed:</p><pre>Connected to localhost.
+Escape character is '^]'.
+
+Felix Remote Shell Console:
+============================
+
+-> </pre><a name="gjkot"></a><h6>Example&#160;1-2 Listing All Installed OSGi Bundles</h6><p>This example runs the Felix Remote Shell Command <tt>ps</tt> without any arguments to
+list all installed OSGi bundles. For  better  readability,  some 
+bundles  that would be listed by this example are not shown.</p><pre>-> <tt><b>ps</b></tt>
+START LEVEL 1
+   ID   State         Level  Name
+[   0] [Active     ] [    0] System Bundle (2.0.2)
+[   1] [Active     ] [    1] HK2 OSGi Main Bundle (1.0.0)
+[   2] [Installed  ] [    1] AMX V3 Core (3.0.0.SNAPSHOT)
+[   3] [Active     ] [    1] GlassFish Rest Interface (3.0.0.SNAPSHOT)
+...
+[ 217] [Installed  ] [    1] Admin Console JDBC Plugin (3.0.0.SNAPSHOT)
+[ 218] [Resolved   ] [    1] stats77 (3.0.0.SNAPSHOT)
+[ 219] [Active     ] [    1] Apache Felix Declarative Services (1.0.8)
+[ 220] [Active     ] [    1] GlassFish Web Container (rfc #66) for OSGi Enabled 
+Web Applications (3.0.0.SNAPSHOT)
+-></pre><a name="gjkqu"></a><h6>Example&#160;1-3 Finding an OSGi Bundle With a Specified Name</h6><p>This example runs the Felix Remote Shell Command <tt>find</tt> to find all OSGi
+bundles whose names contain the text <tt>rfc</tt>.</p><pre>-> <tt><b>find rfc</b></tt>
+START LEVEL 1
+   ID   State         Level  Name
+[ 220] [Active     ] [    1] GlassFish Web Container (rfc #66) for OSGi Enabled 
+Web Applications (3.0.0.SNAPSHOT)
+-></pre><a name="gjkrh"></a><h6>Example&#160;1-4 To Determine the Services That an OSGi Bundle Provides</h6><p>This example runs the Felix Remote Shell Command <tt>inspect</tt> with the <tt>service</tt> option
+and the <tt>capability</tt> option to determine the services that OSGi bundle 220
+provides.</p><pre>-> <tt><b>inspect service capability 220</b></tt> 
+GlassFish Web Container (rfc #66) for OSGi Enabled Web Applications (220) provides services:
+--------------------------------------------------------------------------------------------
+objectClass = org.glassfish.osgiweb.Extender
+service.id = 30
+----
+objectClass = org.osgi.service.url.URLStreamHandlerService
+service.id = 31
+url.handler.protocol = webbundle
+-> </pre>
+
+<a name="ghcjl"></a><h4><tt>keytool</tt> Utility</h4>
+<p><a name="indexterm-36"></a>The <tt>keytool</tt> utility is used to set up and work with Java Security
+Socket Extension (JSSE) digital certificates. See <a href="p16.html#ablqz">Administering JSSE Certificates </a> for instructions on using <tt>keytool</tt>.</p>
+
+<a name="ghrfm"></a><h4>Java Monitoring and Management Console (JConsole)</h4>
+<p><a name="indexterm-37"></a>Java SE provides tools to connect to an MBean server and view the
+MBeans that are registered with the server. JConsole is one such popular JMX
+Connector Client and is available as part of the standard Java SE
+distribution. For instructions on implementing JConsole in the Enterprise Server environment, see <a href="p12.html#giwqm">Configuring JConsole to View Enterprise Server Monitoring Data</a>.</p>
+
+<a name="gitxc"></a><h4>Application Server Management Extension (AMX)</h4>
+<a name="indexterm-38"></a><p>The application server management eXtension (AMX) API exposes all of the Enterprise Server
+configuration and monitoring JMX managed beans as easy-to-use client-side dynamic proxies implementing the
+AMX interfaces.</p>
+
+<a name="giudo"></a><h3>Instructions for Administering Enterprise Server</h3>
+<p>Information and instructions on performing most of the administration tasks from the command
+line are provided in this document and in the <tt>asadmin</tt> utility help
+pages. For instructions on accessing <tt>asadmin</tt> online help, see <a href="p6.html#givlw">To Display Help Information for the <tt>asadmin</tt> Utility or a Subcommand</a>). </p><p>Information and instructions for accomplishing the tasks by using the Administration Console
+are contained in the Administration Console online help.</p>
+<hr><p><b>Note - </b>Instructions written for the Enterprise Server tools use standard UNIX&#174; forward slashes (/)
+for directory path separators in commands and file names. If you are running
+Enterprise Server on a Microsoft Windows system, use backslashes (\) instead. For example:</p>
+<ul><li><p>UNIX: <i>as-install</i><tt>/bin/asadmin</tt></p></li>
+<li><p>Windows: <i>as-install</i><tt>\bin\asadmin</tt></p></li></ul>
+
+<hr>
+<p>The following additional documents address specific administration areas:</p>
+<ul><li><p>Installing Enterprise Server software; updating add-on components using the Update Tool</p><p><a href="http://docs.sun.com/doc/820-7690"><i>Sun GlassFish Enterprise Server v3 Installation Guide</i></a></p></li>
+<li><p>Verifying and deploying applications</p><p><a href="http://docs.sun.com/doc/820-7693"><i>Sun GlassFish Enterprise Server v3 Application Deployment Guide</i></a></p></li>
+<li><p>Diagnosing and resolving problems</p><p><a href="http://docs.sun.com/doc/820-7699"><i>Sun GlassFish Enterprise Server v3 Troubleshooting Guide</i></a></p></li></ul>
+
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p3.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p5.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

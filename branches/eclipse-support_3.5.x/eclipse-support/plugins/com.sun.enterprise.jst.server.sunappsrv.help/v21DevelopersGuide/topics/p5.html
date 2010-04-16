@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Setting Up a Development Environment - Sun GlassFish Enterprise Server 2.1 Developer's Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-01-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p4.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p6.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="beaaq"></a>Chapter&#160;1<h3>Setting Up a Development Environment</h3><a name="indexterm-1"></a><p>This chapter gives guidelines for setting up an application development environment in the
+Sun Java<sup>TM</sup> System Enterprise Server. Setting up an environment for creating, assembling, deploying,
+and debugging your code involves installing the mainstream version of the Enterprise Server and
+making use of development tools. In addition, sample applications are available. These topics
+are covered in the following sections:</p>
+<ul><li><p><a href="#beaar">Installing and Preparing the Server for Development</a></p></li>
+<li><p><a href="#gawon">The GlassFish Project</a></p></li>
+<li><p><a href="#gehzk">Usage Profiles</a></p></li>
+<li><p><a href="#beaas">High Availability Features</a></p></li>
+<li><p><a href="#beaat">Development Tools</a></p></li>
+<li><p><a href="#beabf">Sample Applications</a></p></li></ul>
+
+
+<a name="beaar"></a><h3>Installing and Preparing the Server for Development</h3>
+<a name="indexterm-2"></a><a name="indexterm-3"></a><p>For the Sun Java Enterprise System, Enterprise Server installation is part of the
+system installation process. For more information, see <a href="http://www.sun.com/software/javaenterprisesystem/index.html">http://www.sun.com/software/javaenterprisesystem/index.html</a>.</p><p>For more information about stand-alone Enterprise Server installation, see the <i><a href="http://docs.sun.com/doc/820-4330"><i>Sun GlassFish Enterprise Server 2.1 Installation Guide</i></a></i>.</p><p>The following components are included in the full installation.</p>
+<ul><li><p>JDK</p></li>
+<li><p>Enterprise Server core</p>
+<ul><li><p>Java 2 Platform, Standard Edition (Java SE) 6</p></li>
+<li><p>Java EE 6 compliant application server</p></li>
+<li><p>Admin Console</p></li>
+<li><p><tt>asadmin</tt> utility</p></li>
+<li><p>Other development and deployment tools</p></li>
+<li><p>Sun Java System Message Queue software</p></li>
+<li><p>The Java Business Integration runtime (JBI runtime)</p></li>
+<li><p>Java DB database, based on the <a href="http://db.apache.org/derby/manuals">Derby database from Apache</a></p></li>
+<li><p>Load balancer plug-ins for web servers</p></li>
+<li><p>The High-Availability Database (HADB)</p></li></ul>
+</li></ul>
+<p>The NetBeans<sup>TM</sup> Integrated Development Environment (IDE) bundles the GlassFish edition of the Enterprise
+Server, so information about this IDE is provided as well.</p><p><a name="indexterm-4"></a>After you have installed Enterprise Server, you can further optimize the server for
+development in these ways:</p>
+<ul><li><p>Locate utility classes and libraries so they can be accessed by the proper class loaders. For more information, see <a href="p6.html#beadi">Using the System Class Loader</a> or <a href="p6.html#beadj">Using the Common Class Loader</a>.</p></li>
+<li><p>Set up debugging. For more information, see <a href="p8.html">Chapter&#160;4, Debugging Applications</a>.</p></li>
+<li><p>Configure the Java Virtual Machine (JVM<sup>TM</sup>) software. For more information, see <a href="http://docs.sun.com/doc/820-4335/ablwj?a=view">Chapter 20, Java Virtual Machine and Advanced Settings, in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p></li></ul>
+
+
+<a name="gawon"></a><h3>The GlassFish Project</h3>
+<a name="indexterm-5"></a><p>Enterprise Server  is developed through the GlassFish<sup>SM</sup> project open-source community at
+<a href="https://glassfish.dev.java.net/">https://glassfish.dev.java.net/</a>.  The GlassFish project provides a structured process for developing the Enterprise Server
+platform that makes the new features of Java EE 5 available faster, while
+maintaining the most important feature of Java EE: compatibility. It enables Java developers to
+access the Enterprise Server source code and to contribute to the development of
+the Enterprise Server. The GlassFish project is designed to encourage communication between Sun
+engineers and the community.</p><p><a name="indexterm-6"></a>The Java&#160;ES edition of the Enterprise Server is based on the GlassFish
+source code, but provides additional value-added features such as access to a
+high-availability database (HADB) for session persistence and failover.</p>
+
+<a name="gehzk"></a><h3>Usage Profiles</h3>
+<p>When you install a domain, the usage profile you select determines the features
+that are available by default. Here is a summary of the usage profiles:</p>
+<ul><li><p>developer profile - Provides a lightweight feature set optimized for developers, with one server instance and no clustering features.</p></li>
+<li><p>cluster profile - Provides the complete GlassFish feature set, including clustering features.</p></li>
+<li><p>enterprise profile - Provides access to features available by default only in the Java&#160;ES edition. In the GlassFish edition, this profile is only functional if you download the Java&#160;ES features separately and make global configuration changes. The Java&#160;ES features are HADB, Network Security Services (NSS), and optionally the Sun GlassFish database drivers.</p></li></ul>
+<p>For more information about usage profiles, see <a href="http://docs.sun.com/doc/820-4335/gelvk?a=view">Usage Profiles in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p>
+
+<a name="beaas"></a><h3>High Availability Features</h3>
+<a name="indexterm-7"></a><a name="indexterm-8"></a><p>High availability features such as load balancing and session failover are discussed in
+detail in the <i><a href="http://docs.sun.com/doc/820-4341"><i>Sun GlassFish Enterprise Server 2.1 High Availability Administration Guide</i></a></i>. This book describes the following features in the following
+sections:</p>
+<ul><li><p>For information about HTTP session persistence, see <a href="p13.html#beahe">Distributed Sessions and Persistence</a>.</p></li>
+<li><p>For information about checkpointing of the stateful session bean state, see <a href="p14.html#beaib">Stateful Session Bean Failover</a>.</p></li>
+<li><p>For information about failover and load balancing for Java clients, see <a href="p16.html">Chapter&#160;11, Developing Java Clients</a>.</p></li>
+<li><p>For information about load balancing for message-driven beans, see <a href="p24.html#beaop">Load-Balanced Message Inflow</a>.</p></li>
+<li><p>For information about JMS availability, see <a href="p24.html#gavqn">JMS Service High Availability</a>.</p></li></ul>
+
+
+<a name="beaat"></a><h3>Development Tools</h3>
+<a name="indexterm-9"></a><a name="indexterm-10"></a><p>The following general tools are provided with the Enterprise Server:</p>
+<ul><li><p><a href="#beaau">The <tt>asadmin</tt> Command</a></p></li>
+<li><p><a href="#beaav">The Admin Console</a></p></li>
+<li><p><a href="#beaax">The <tt>asant</tt> Utility</a></p></li>
+<li><p><a href="#beaaz">The <tt>verifier</tt> Tool</a></p></li></ul>
+<p>The following development tools are provided with the Enterprise Server or downloadable from
+Sun:</p>
+<ul><li><p><a href="#beaaw">The NetBeans IDE</a></p></li>
+<li><p><a href="#beaba">The Migration Tool</a></p></li></ul>
+<p>The following third-party tools might also be useful:</p>
+<ul><li><p><a href="#beabb">Debugging Tools</a></p></li>
+<li><p><a href="#beabc">Profiling Tools</a></p></li>
+<li><p><a href="#gbvrq">The Eclipse IDE</a></p></li></ul>
+
+
+<a name="beaau"></a><h4>The <tt>asadmin</tt> Command</h4>
+<a name="indexterm-11"></a><a name="indexterm-12"></a><p>The <tt>asadmin</tt> command allows you to configure a local or remote server and
+perform both administrative and development tasks at the command line. For general information
+about <tt>asadmin</tt>, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p><p>The <tt>asadmin</tt> command is located in the <i>as-install</i><tt>/bin</tt> directory. Type <tt>asadmin help</tt> for a
+list of subcommands.</p>
+
+<a name="beaav"></a><h4>The Admin Console</h4>
+<p><a name="indexterm-13"></a><a name="indexterm-14"></a><a name="indexterm-15"></a><a name="indexterm-16"></a>The Admin Console lets you configure the server and perform both administrative and
+development tasks using a web browser. For general information about the Admin Console, click
+the Help button in the Admin Console. This displays the Enterprise Server
+online help.</p><p>To access the Admin Console, type <tt>http://</tt><i>host</i><tt>:4848</tt> (developer profile) or <tt>https://</tt><i>host</i><tt>:4848</tt> (cluster
+and enterprise profiles) in your browser. The <i>host</i> is the name of the machine
+on which the Enterprise Server is running. By default, the <i>host</i> is
+<tt>localhost</tt>. For example:</p><pre>http://localhost:4848</pre>
+
+<a name="beaax"></a><h4>The <tt>asant</tt> Utility</h4>
+<a name="indexterm-17"></a><a name="indexterm-18"></a><a name="indexterm-19"></a><a name="indexterm-20"></a><p>Apache Ant 1.6.5 is provided with the Enterprise Server and can be launched
+from the <tt>bin</tt> directory using the command <tt>asant</tt>. The Enterprise Server also
+provides server-specific tasks for administration and deployment; see <a href="p7.html">Chapter&#160;3, The <tt>asant</tt> Utility</a>. The sample applications that
+can be used with the Enterprise Server use Ant <tt>build.xml</tt> files; see <a href="#beabf">Sample Applications</a>.</p><p>For more information about Ant, see the Apache Software Foundation web site at
+<a href="http://ant.apache.org/">http://ant.apache.org/</a>.</p>
+
+<a name="beaaz"></a><h4>The <tt>verifier</tt> Tool</h4>
+<p>The <tt>verifier</tt> tool checks a Java EE application file, including Java classes and
+deployment descriptors, for compliance with Java EE specifications. Java EE application files are
+Java archive (JAR), web archive (WAR), resource adapter archive (RAR), or enterprise archive (EAR)
+files. Use the <tt>verifier</tt> tool to check whether an application complies with the
+Java EE specification and to make applications portable across application servers. The <tt>verifier</tt>
+tool can be launched from the command line. For more information, see <a href="http://docs.sun.com/doc/820-4337/beadq?a=view">The verifier Utility in <i>Sun GlassFish Enterprise Server 2.1 Application Deployment Guide</i></a>.</p>
+
+<a name="beaaw"></a><h4>The NetBeans IDE</h4>
+<p><a name="indexterm-21"></a>The NetBeans IDE allows you to create, assemble, and debug code from a
+single, easy-to-use interface. The GlassFish edition of the Enterprise Server is bundled with
+the NetBeans 5.5 IDE. To download the NetBeans IDE, see <a href="http://www.netbeans.org">http://www.netbeans.org</a>. This site
+also provides documentation on how to use the NetBeans IDE with the bundled
+Enterprise Server.</p><p><a name="indexterm-22"></a>You can also use the Enterprise Server with the Sun Java Studio 8
+software, which is built on the NetBeans IDE. For more information, see <a href="http://developers.sun.com/prodtech/javatools/jsenterprise/">http://developers.sun.com/prodtech/javatools/jsenterprise/</a>.</p>
+
+<a name="beaba"></a><h4>The Migration Tool</h4>
+<a name="indexterm-23"></a><p>The Migration Tool converts and reassembles Java EE applications and modules developed on
+other application servers. This tool also generates a report listing how many files
+are successfully and unsuccessfully migrated, with reasons for migration failure. For more information and
+to download the Migration Tool, see <a href="http://java.sun.com/j2ee/tools/migration/index.html">http://java.sun.com/j2ee/tools/migration/index.html</a>.</p>
+
+<a name="beabb"></a><h4>Debugging Tools</h4>
+<p>You can use several debugging tools with the Enterprise Server. For more information,
+see <a href="p8.html">Chapter&#160;4, Debugging Applications</a>.</p>
+
+<a name="beabc"></a><h4>Profiling Tools</h4>
+<p>You can use several profilers with the Enterprise Server. For more information, see
+<a href="p8.html#beafn">Profiling Tools</a>.</p>
+
+<a name="gbvrq"></a><h4>The Eclipse IDE</h4>
+<p>A plug-in for the Eclipse IDE is available at <a href="http://glassfishplugins.dev.java.net/">http://glassfishplugins.dev.java.net/</a>. This site also
+provides documentation on how to register the Enterprise Server and use Sun-specific deployment
+descriptors.</p>
+
+<a name="beabf"></a><h3>Sample Applications</h3>
+<a name="indexterm-24"></a><a name="indexterm-25"></a><a name="indexterm-26"></a><p>Sample applications that you can examine and deploy to the Enterprise Server
+are available. If you installed the Enterprise Server as part of installing the Java
+EE 5 SDK bundle from <a href="http://java.sun.com/javaee/5/downloads/">Java EE 5 Downloads</a>, the samples may already be installed.
+You can download these samples separately from the <a href="http://java.sun.com/javaee/reference/code/index.jsp">Code Samples</a> page if you installed
+the Enterprise Server without them initially.</p><p>Most Enterprise Server samples have the following directory structure:</p>
+<ul><li><p>The <tt>docs</tt> directory contains instructions for how to use the sample.</p></li>
+<li><p><a name="indexterm-27"></a>The <tt>build.xml</tt> file defines <tt>asant</tt> targets for the sample. See <a href="p7.html">Chapter&#160;3, The <tt>asant</tt> Utility</a>.</p></li>
+<li><p>The <tt>src/java</tt> directory under each component contains source code for the sample.</p></li>
+<li><p>The <tt>src/conf</tt> directory under each component contains the deployment descriptors.</p></li></ul>
+<p>With a few exceptions, sample applications follow the standard directory structure described here:
+<a href="http://java.sun.com/blueprints/code/projectconventions.html">http://java.sun.com/blueprints/code/projectconventions.html</a>.</p><p><a name="indexterm-28"></a>The <i>samples-install-dir</i><tt>/bp-project/main.xml</tt> file defines properties common to all sample applications and implements targets needed
+to compile, assemble, deploy, and undeploy sample applications. In most sample applications, the
+<tt>build.xml</tt> file imports <tt>main.xml</tt>.</p><p>In addition to the Java EE 5 sample applications, samples are also available
+on the GlassFish web site at <a href="https://glassfish-samples.dev.java.net/">https://glassfish-samples.dev.java.net/</a>.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p4.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p6.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

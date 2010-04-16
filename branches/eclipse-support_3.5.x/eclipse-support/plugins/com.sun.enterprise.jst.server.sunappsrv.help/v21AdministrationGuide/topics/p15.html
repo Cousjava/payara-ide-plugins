@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Transactions - Sun GlassFish Enterprise Server 2.1 Administration Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2008-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p14.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p16.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="ablsn"></a>Chapter&#160;12<h3>Transactions</h3><p><a name="indexterm-94"></a>By enclosing one or more steps in an indivisible unit of work, a
+transaction ensures data integrity and consistency. This chapter contains the following sections:</p>
+<ul><li><p><a href="#ablso">About Transactions</a></p></li>
+<li><p><a href="#ablsr">Admin Console Tasks for Transactions</a></p></li></ul>
+
+
+<a name="ablso"></a><h3>About Transactions</h3>
+
+<ul><li><p><a href="#ablsp">What is a Transaction?</a></p></li>
+<li><p><a href="#ablsq">Transactions in Java EE Technology</a></p></li>
+<li><p><a href="#gatel">Workarounds for Specific Databases</a></p></li></ul>
+
+
+<a name="ablsp"></a><h4>What is a Transaction?</h4>
+<p>A transaction is a series of discreet actions in an application that must
+all complete successfully or else all the changes in each action are backed
+out. For example, to transfer funds from a checking account to a
+savings account is a transaction with the following steps:</p>
+<ol><li><p>Check to see if the checking account has enough money to cover the transfer.</p></li>
+<li><p>If there&#8217;s enough money in the checking account debit the amount from the checking account.</p></li>
+<li><p>Credit the money to the savings account.</p></li>
+<li><p>Record the transfer to the checking account log.</p></li>
+<li><p>Record the transfer to the savings account log.</p></li></ol>
+<p>If any of these steps fails, all changes from the preceding steps
+must be backed out, and the checking account and savings account must be
+in the same state as they were before the transaction started. This event
+is called a <a name="indexterm-95"></a><a name="indexterm-96"></a><b>rollback</b>. If all the steps complete successfully, the transaction is in
+a <a name="indexterm-97"></a><b>committed</b> state. Transactions end in either a commit or a rollback.</p><p>See Also:</p>
+<ul><li><p><a href="#ablsq">Transactions in Java EE Technology</a></p></li>
+<li><p><a href="#ablss">Configuring Transactions</a></p></li></ul>
+
+
+<a name="ablsq"></a><h4>Transactions in Java EE Technology</h4>
+<p>Transaction processing involves the following five participants:</p>
+<ul><li><p><a name="indexterm-98"></a><a name="indexterm-99"></a>Transaction Manager</p></li>
+<li><p>Enterprise Server</p></li>
+<li><p><a name="indexterm-100"></a>Resource Manager(s)</p></li>
+<li><p><a name="indexterm-101"></a>Resource Adapter(s)</p></li>
+<li><p>User Application.</p></li></ul>
+<p>Each of these entities contribute to reliable transaction processing by implementing the different
+APIs and functionalities, discussed below:</p>
+<ul><li><p>The Transaction Manager provides the services and management functions required to support transaction demarcation, transactional resource management, synchronization, and transaction context propagation.</p></li>
+<li><p>The Enterprise Server provides the infrastructure required to support the application runtime environment that includes transaction state management.</p></li>
+<li><p>The Resource Manager (through a resource adapter) provides the application access to resources. The resource manager participates in <a name="indexterm-102"></a>distributed transactions by implementing a transaction resource interface used by the transaction manager to communicate <a name="indexterm-103"></a>transaction association, <a name="indexterm-104"></a>transaction completion and <a name="indexterm-105"></a>recovery work. An example of such a resource manager is a relational database server.</p></li>
+<li><p>A Resource Adapter is a system level software library that is used by the application server or client to connect to a Resource Manager. A Resource Adapter is typically specific to a Resource Manager. It is available as a library and is used within the address space of the client using it. An example of such a resource adapter is a <a name="indexterm-106"></a>JDBC driver.</p></li>
+<li><p>A Transactional User Application developed to operate in an application server environment looks up transactional data sources and, optionally, the transaction manager, using JNDI. The application may use declarative <a name="indexterm-107"></a>transaction attribute settings for enterprise beans or explicit programmatic <a name="indexterm-108"></a>transaction demarcation.</p></li></ul>
+<p>See Also:</p>
+<ul><li><p><a href="#ablsp">What is a Transaction?</a></p></li>
+<li><p><a href="#ablss">Configuring Transactions</a></p></li></ul>
+
+
+<a name="gatel"></a><h4>Workarounds for Specific Databases</h4>
+<p>The Enterprise Server provides workarounds for some known issues with the recovery implementations
+of the following JDBC drivers. These workarounds are used unless explicitly disabled.</p>
+<ul><li><p><a name="indexterm-109"></a>Oracle thin driver - The <tt>XAResource.recover</tt> method repeatedly returns the same set of in-doubt Xids regardless of the input flag. According to the XA specifications, the Transaction Manager initially calls this method with TMSTARTSCAN and then with TMNOFLAGS repeatedly until no Xids are returned. The <tt>XAResource.commit</tt> method also has some issues.</p><p>To disable the Enterprise Server workaround, set the <a name="indexterm-110"></a><tt>oracle-xa-recovery-workaround</tt> property value to <tt>false</tt>. For details about how to set a property, see <a href="#ablst">To configure how the Enterprise Server recovers from transactions</a>.</p></li></ul>
+
+<hr><p><b>Note - </b>These workarounds do not imply support for any particular JDBC driver.</p>
+<hr>
+
+
+<a name="ablsr"></a><h3>Admin Console Tasks for Transactions</h3>
+<p>The Enterprise Server handles transactions based on the settings in the Admin
+Console.</p>
+
+<a name="ablss"></a><h4>Configuring Transactions</h4>
+<p>This section explains how to configure transaction settings:</p>
+<ul><li><p><a href="#ablst">To configure how the Enterprise Server recovers from transactions</a></p></li>
+<li><p><a href="#ablsu">To set a transaction timeout value</a></p></li>
+<li><p><a href="#ablsv">To set the location of the transaction logs</a></p></li>
+<li><p><a href="#fxcjf">To set the keypoint interval</a></p></li></ul>
+<p>For additional information about transactions, see these sections:</p>
+<ul><li><p><a href="#ablsp">What is a Transaction?</a></p></li>
+<li><p><a href="#ablsq">Transactions in Java EE Technology</a></p></li></ul>
+
+
+<a name="ablst"></a><h5>To configure how the Enterprise Server recovers from transactions</h5>
+<a name="indexterm-111"></a><p>Transactions might be incomplete either because the server crashed or a resource manager
+crashed. It is essential to complete these stranded transactions and recover from the
+failures. Enterprise Server is designed to recover from these failures and complete the
+transactions upon server startup.</p><p>While performing the recovery, if some of the resources are unreachable the server
+restart may be delayed as it tries to recover the transactions.</p><p>When the transaction spans across servers, the server that started the transaction can
+contact the other servers to get the outcome of the transactions. If the
+other servers are unreachable, the transaction uses the Heuristic Decision field to determine
+the outcome.</p><ol>
+<li><b>In the tree component select the Configurations node.     
+           
+    </b></li>
+<li><b>If you are running a domain with developer profile, skip to the next
+step. For cluster profile domains, select the instance to configure:</b><ul>
+<li><b>To configure a particular instance, select the instance&#8217;s config node. For example, the
+default instance, <tt>server</tt>, select the <tt>server-config</tt> node.</b></li>
+<li><b>To configure the default settings for all instances, select the <tt>default-config</tt> node.</b></li></ul></li>
+<li><b>Select the Transaction Service node.</b></li>
+<li><b>To enable the recovery of incomplete transactions, check the Recover in the On
+Restart field.</b></li>
+<li><b>Set the amount of time, in seconds, the Enterprise Server tries to connect
+to the unreachable server in the Retry Timeout field. The default value is
+10 minutes (600 seconds).</b></li>
+<li><b>Set the policy for unreachable servers in a transaction in the Heuristic Decision
+field.</b><p>Unless there is a good reason to set this field to Commit, leave
+Heuristic Decision set to Rollback. Committing indeterminate transactions can compromise the data integrity
+of your application.</p></li>
+<li><b>Set any needed properties.</b><p>Click the Add Properties button, type values in the Name and Value fields,
+and check the box to the left of the Name to activate the
+property.</p></li>
+<li><b>Click Save.</b></li>
+<li><b>Restart the Enterprise Server.</b></li></ol>
+
+<a name="ablsu"></a><h5>To set a transaction timeout value</h5>
+<a name="indexterm-112"></a><p>By default, the server does not timeout a transaction. That is, the server
+waits indefinitely for a transaction to complete. If you set a timeout value
+for transactions, if a transaction isn&#8217;t completed within the configured time, the Enterprise
+Server rolls back the transaction.</p><ol>
+<li><b>In the tree component, select the Configurations node.     
+           
+    </b></li>
+<li><b>If you are running a domain with developer profile, skip to the next
+step. For cluster profile domains, select the instance to configure:</b><ul>
+<li><b>To configure a particular instance, select the instance&#8217;s config node. For example, the
+default instance, <tt>server</tt>, select the <tt>server-config</tt> node.</b></li>
+<li><b>To configure the default settings for all instances, select the <tt>default-config</tt> node.</b></li></ul></li>
+<li><b>Select the Transaction Service node.</b></li>
+<li><b>Enter the number of seconds before the transaction times out, in the Transaction
+Timeout field.</b><p>The default value of Transaction Timeout is 0 seconds. This disables transaction timeouts.</p></li>
+<li><b>Click Save.</b></li>
+<li><b>Restart the Enterprise Server.</b></li></ol>
+
+<a name="ablsv"></a><h5>To set the location of the transaction logs</h5>
+<a name="indexterm-113"></a><a name="indexterm-114"></a><p>The transaction log records the information about each transaction in order to maintain
+the data integrity of the resources involved and to recover from failures. Transaction
+logs are kept in the <tt>tx</tt> subdirectory of the directory specified by the
+Transaction Log Location field. These logs are not human readable.</p><ol>
+<li><b>In the tree component, select the Configurations node.     
+           
+    </b></li>
+<li><b>If you are running a domain with developer profile, skip to the next
+step. For domains with cluster profile, select the instance to configure:</b><ul>
+<li><b>To configure a particular instance, select the instance&#8217;s config node. For example, the
+default instance, <tt>server</tt>, select the <tt>server-config</tt> node. </b></li>
+<li><b>To configure the default settings for all instances, select the <tt>default-config</tt> node.</b></li></ul></li>
+<li><b>Select the Transaction Service node. </b></li>
+<li><b>Enter the location of the transaction logs in the Transaction Log Location field.</b><p>A <tt>tx</tt> subdirectory is created and transaction logs are kept under that directory.</p><p>The default value is <tt>${com.sun.aas.instanceRoot}/logs</tt>. The <tt>${com.sun.aas.instanceRoot}</tt> variable is the name of the instance,
+and is set when you start an Enterprise Server instance. To see the
+value of <tt>${com.sun.aas.instanceRoot}</tt>, click Actual Values.</p></li>
+<li><b>Click Save. </b></li>
+<li><b>Restart the Enterprise Server.</b></li></ol>
+
+<a name="fxcjf"></a><h5>To set the keypoint interval</h5>
+<p><a name="indexterm-115"></a>Keypoint operations compress the transaction log file. The <a name="indexterm-116"></a>keypoint interval is the number
+of transactions between keypoint operations on the log. Keypoint operations can reduce the size
+of the transaction log files. A larger number of keypoint intervals (for example,
+2048) results in larger transaction log files, but fewer keypoint operations, and potentially
+better performance. A smaller keypoint interval (for example, 256) results in smaller log
+files but slightly reduced performance due to the greater frequency of keypoint operations.</p><ol>
+<li><b>In the tree component select the Configurations node.     
+           
+    </b></li>
+<li><b>If you are running a domain with developer profile, skip to the next
+step. For cluster profile domains, select the instance to configure:</b><ul>
+<li><b>To configure a particular instance, select the instance&#8217;s config node. For example, the
+default instance, <tt>server</tt>, select the <tt>server-config</tt> node.</b></li>
+<li><b>To configure the default settings for all instances, select the <tt>default-config</tt> node.</b></li></ul></li>
+<li><b>Select the Transaction Service node.</b></li>
+<li><b>Enter the number of transactions between keypoint operations in the Keypoint Interval field.</b><p>The default value is 65536.</p></li>
+<li><b>Click Save.</b></li>
+<li><b>Restart the Enterprise Server.</b></li></ol>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p14.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p16.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- first release 2008-11-27 -->
+<configuration name="Tools Bundle For Eclipse"
+	releaseDate="2009-05-09" version="1.2.1">
+
+	<shortdescription>GlassFish Tools Bundle for Eclipse.</shortdescription>
+	<description />
+	<include>
+		<component id="sun-jdk-6-win32-x86" />
+		<component id="sun-jdk-6-linux-x86" />
+		<component id="sun-jdk-6-opensolaris-x86" />
+		<component id="eclipse-platform" />
+		<assembly id="eclipse-tools" />
+		<component id="eclipse-jdt" />
+		<assembly id="eclipse-wtp-no-servers" />
+		<component id="eclipse-emf-sdo-xsd" />
+		<component id="eclipse-gef" />
+		<component id="eclipse-dtp" />
+		<component id="subclipse" />
+		<component id="m2n" /> <!-- Maven eclipse plugin -->
+		<component id="eclipse-cvs" />
+		<component id="feature" />
+		<component id="glassfish-v3" />
+		<component id="glassfish-plugins" />
+		<component id="jsf-facelets" />
+		<!--component id="glassfish-v2-mac" />
+		<component id="glassfish-v2-linux-x86" />
+		<component id="glassfish-v2-opensolaris-x86" />
+		<component id="glassfish-v2-win32-x86" /-->
+		<component id="metro-plugins" />
+		<component id="mysql" />
+
+	</include>
+	<package>
+		<size os="win32">166M</size>
+		<size os="macosx">146M</size>
+		<size os="linux">172M</size>
+	</package>
+        <mac-postflight-script>
+
+# Don't forget the quotes, there could be a space... * is for v2.1 or v3-prelude or v3 directories
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/glassfishv"*
+chmod -R a+xrw "$ECLIPSE_TARGET_DIR/dropins"
+
+# Eclipse 3.5 want's to write quite a lot to the install directory
+chmod -R a+w "$ECLIPSE_TARGET_DIR"
+
+sed -i old  's_/p2_/../p2_g' "$ECLIPSE_TARGET_DIR/configuration/config.ini"
+# but not this file:
+chmod  a-w "$ECLIPSE_TARGET_DIR/configuration/config.ini"
+
+# fix for https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=257
+chown -R ${USER}:admin "$ECLIPSE_TARGET_DIR/glassfishv"*
+
+    </mac-postflight-script>
+</configuration>

@@ -1,0 +1,429 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+<meta name="Description" value="GlassFish Tools Bundle for Eclipse is an integrated Eclipse IDE bundled with the Sun GlassFish Enterprise Server versions v2 and v3 with integration plugins to make Java and Dynamic Language Development and Deployment rich and easy for developers"/>
+
+<meta name="Keywords" value ="eclipse, glassfish, studio, tools bundle, java editor, application server, IDE, plugins, javaee, java-ee, java_ee, j2ee, java, ide, swt, refactoring, free java ide, tools, platform, open source, development environment, development, ide"/>
+
+<meta name="Robots" value="index, follow"/>
+
+  <title>GlassFish Tools Bundle For Eclipse - Downloads</title>
+
+
+  <style type="text/css">
+@import url("bundle.css");
+@import url("downloads.css");
+#cnlogo {display: none}
+#collabnet {display: none}
+.topline {display: inherit}
+#toptabs {display: inherit}
+#breadcrumbs {display: inherit}
+#navcol {display: none}
+#bodycol .infomark {display: none}
+#footer {display: inherit}
+  </style>
+  <script type="text/javascript" src="misc_functions.js"></script>
+  <script>
+function toggledisplay(id, textId) {
+var totoggle = document.getElementById(id);
+var text= document.getElementById(textId);
+if (!totoggle.style.display || totoggle.style.display == 'none') {
+totoggle.style.display = 'block';
+text.innerHTML = '(click to collapse)';
+} else {
+totoggle.style.display = 'none'
+text.innerHTML = '(click to expand)';
+}
+}
+function releaseclass(c) {
+var s = c.state.toLowerCase();
+var comp = "1";
+if (s.indexOf('incubator') >= 0) {
+} else if (s.indexOf('beta') >= 0) {
+comp = "2";
+} else if (s.indexOf('released') >= 0) {
+comp = "3";
+}
+return comp;
+}
+  </script>
+</head>
+
+
+<body>
+
+<h2> Welcome to the GlassFish Tools Bundle For Eclipse Download
+Page </h2>
+
+<br>
+
+<table id="BundleMainTable" boder="0" cellpadding="0" cellspacing="0" width="100%">
+
+  <tbody>
+
+    <tr id="BundleMainTr" align="center" height="300" valign="top">
+
+      <td id="BundleCentercol">
+      <table id="BundleMainTable" border="0" cellpadding="0" cellspacing="0" width="100%">
+
+        <tbody>
+
+          <tr>
+
+            <td style="text-align: left; vertical-align: middle;">
+            <div style="margin: 0px;">
+            <div style="margin: 0px;">
+            <div class="yellowbox">
+            <div class="cornerTL">
+            <div class="cornerTR"></div>
+
+            </div>
+
+            </div>
+
+            </div>
+
+            <br>
+
+            <script>
+var platforms = new Array();
+platforms["win32"] = "Windows";
+platforms["win32nojdk"] = "Windows, no JDK 1.6 bundled";
+platforms["linuxnojdk"] = "Linux, no JDK1.6 bundled";
+platforms["linux"] = "Linux";
+platforms["macx86"] = "Mac OSX Intel";
+platforms["solx86"] = "Open Solaris";
+platforms["solx86nojdk"] = "Open Solaris, no JDK1.6 bundled";
+//platforms["macppc"] = "Mac OSX PPC";
+function getPlatform() {
+if (navigator.platform != null) {
+if ( navigator.platform.indexOf( "Win32" ) != -1 ) {
+return "win32";
+} else if ( navigator.platform.indexOf( "Win64" ) != -1 ) {
+return "win32";
+} else if ( navigator.platform.indexOf( "Win" ) != -1 ) {
+return "win32";
+} else if ( navigator.platform.indexOf( "Linux" ) != -1 ) {
+return "linux";
+} else if ( navigator.platform.indexOf( "SunOS i86pc" ) != -1 ) {
+return "solx86";
+} else if ( navigator.platform.indexOf( "SunOS sun4u" ) != -1 ) {
+return "sparc";
+} else if ( navigator.platform.indexOf( "SunOS" ) != -1 ) {
+return "sparc";
+} else if ( navigator.platform.indexOf( "Mac" ) != -1 && navigator.platform.indexOf( "Intel" ) != -1 ) {
+return "macx86";
+} else if ( navigator.platform.indexOf( "Mac" ) != -1 && navigator.platform.indexOf( "PPC" ) != -1 ) {
+return "macppc";
+} else if ( navigator.platform.indexOf( "Mac" ) != -1 ) {
+return "macx86" ;
+} else {
+return "win32";
+}
+}
+return "win32";
+}
+function listbox(assets) {
+var platform = getPlatform();
+document.write('<select name="asset">\r\n');
+for (var i = 0; i < assets.length; i++) {
+var selected = "";
+if (platform == assets[i].platform) {
+selected = ' selected="true"';
+}
+document.write('<option value="' + assets[i].asset + '"' + selected + '>' + platforms[assets[i].platform] + '</option>');
+}
+document.write('</select>\r\n');
+}
+            </script>
+            <table class="buildbuild" border="0" width="100%">
+
+              <tbody>
+
+                <tr>
+
+                  <td width="126"> <img src="background.jpg" height="80"></td>
+
+                  <td class="buildtitle"> <span class="buildtitle">GlassFish
+Tools Bundle for Eclipse v1.1 (August 17, 2009)</span> </td>
+
+                </tr>
+
+                <tr>
+
+                  <td> <span class="buildsub">Description:</span>
+                  </td>
+
+                  <td> <span class="builddescription">This
+is the most
+stable recent distribution of the GlassFish Tools Bundle for Eclipse.
+It contains the Eclipse 3.4.2 Java EE IDE, GlassFish v2.1 and GlassFish
+v3 Prelude pre-configured, and optionally, a JDK 1.6. (It is still possible to get the GlassFish 
+Eclipse Plugin <a href="https://glassfishplugins.dev.java.net/eclipse34/">independently)</a>.</span> </td>
+
+                </tr>
+
+                <tr>
+
+                  <td> <span class="buildsub">User Guide:</span>
+                  </td>
+
+                  <td> <span class="builddescription">
+GlassFish Tools Bundle for Eclipse <a href="GF-Tools-for-Eclipse-Guide11.pdf">documentation</a>.</span> </td>
+
+                </tr>
+
+
+                <tr>
+
+                  <td align="undefined" valign="undefined"><span class="buildsub">License:</span></td>
+
+                  <td align="undefined" valign="undefined">The
+GlassFish Tools
+Bundle for Eclipse code is available under the <a href="https://glassfishplugins.dev.java.net/license/CDDL+GPL+3rdPartyEPL.html">Dual
+License Common Development and
+Distribution License (CDDL) v1.0. and GPL v2 with ClassPath Exception.</a>
+For the Eclipse IDE itself, refer to the <a href="http://www.eclipse.org/legal/epl-v10.html">Eclipse EPL
+license</a>.</td>
+
+                </tr>
+
+                <tr>
+
+                  <td> <span class="buildsub">Notes:</span>
+                  </td>
+
+                  <td> <span class="buildclicktoexpand">
+                  <a href="javascript:none" onclick="return toggledisplay('gfnbldoc', 'expand1');">
+                  <div id="expand1">(click to expand)</div>
+
+                  </a></span>
+                  <div id="gfnbldoc" style="border: 1px none ; display: none;">
+                  <p><b>Prerequisities: </b> If you
+are selecting an installer without the JDK, you will need a Sun JDK to
+be pre-installed: version
+1.5.0_14 or later for JDK 5, or version 1.6.0_03 or later for JDK 6.
+The Mac installer does not bundle a JDK 1.6.</p>
+
+                  <p><b>Installation instructions: </b><br>
+
+                  </p>
+
+                  <ul>
+
+                    <li>Download the installer for your platform,
+and
+run the installer. Follow the instructions on screen.<br>
+
+                    </li>
+
+                    <li>Note: pay attention to the port numbers
+required for GlassFish: make sure that the port numbers are not used by
+other applications.<br>
+
+                    </li>
+
+                    <li>When the Registration Screen appears,
+please register. Registration benefits include improved support
+information in the GlassFish administration console, access to
+whitepapers such as high availability and performance tuning, access to
+past and future webinars, and more. <br>
+
+                    </li>
+
+                  </ul>
+
+                  <p><b>Release notes: </b><a href="releasenotes11.html">Release notes</a></p>
+
+                  </div>
+
+                  </td>
+
+                </tr>
+
+                <tr>
+
+                  <td> <span class="buildsub">Contents:</span>
+                  </td>
+
+                  <td> <span class="buildclicktoexpand">
+                  <a href="javascript:none" onclick="return toggledisplay('gfemscontents','expand2');">
+                  <div id="expand2">(click to expand)</div>
+
+                  </a><a href="javascript:none" onclick="return toggledisplay('gfemscontents','expand2');"> </a></span>
+                  <div id="gfemscontents" style="border: 1px none ; display: none;">
+                  <table cellpadding="0" cellspacing="0">
+
+                    <tbody>
+
+                      <tr>
+
+                        <td class="buildcontentsodd">&nbsp;&bull;&nbsp;Eclipse<br>
+
+                        </td>
+
+                        <td class="buildcontentsodd">:<br>
+
+                        </td>
+
+                        <td class="buildcontentsodd"><a href="http://www.eclipse.org/downloads/packages/release/ganymede/sr1">Eclipse
+3.4.2 IDE with Java EE support</a><br>
+
+                        </td>
+
+                      </tr>
+
+                      <tr>
+
+                        <td class="buildcontentseven">&nbsp;&bull;&nbsp;GlassFish&nbsp;<br>
+
+                        </td>
+
+                        <td class="buildcontentseven">:<br>
+
+                        </td>
+
+                        <td class="buildcontentseven"><a href="http://download.java.net/javaee5/v2.1/promoted">Glassfish
+v2.1</a> <a href="http://download.java.net/glassfish/v3-prelude/release">
+and GlassFish v3 Prelude</a><br>
+
+                        </td>
+
+                      </tr>
+
+                      <tr>
+
+                        <td class="buildcontentsodd">&nbsp;&bull;&nbsp;GlassFish
+Eclipse Plugins<br>
+
+                        </td>
+
+                        <td class="buildcontentsodd">:<br>
+
+                        </td>
+
+                        <td class="buildcontentsodd"><a href="https://glassfishplugins.dev.java.net/download/index.html">Latest
+Plugin</a><br>
+
+                        </td>
+
+                      </tr>
+
+                      <tr>
+
+                        <td class="buildcontentseven">&nbsp;&bull;&nbsp;JDK
+1.6 Update 12<br>
+
+                        </td>
+
+                        <td class="buildcontentseven">:<br>
+
+                        </td>
+
+                        <td class="buildcontentseven"><a href="http://java.sun.com/javase/downloads/index.jsp">JDK</a><br>
+
+                        </td>
+
+                      </tr>
+
+                    </tbody>
+                  </table>
+
+                  </div>
+
+                  </td>
+
+                </tr>
+
+                <tr valign="middle">
+
+                  <td> <span class="buildsub">Installers:</span>
+                  </td>
+
+                  <td>
+                  <form action="StartDownload.html" id="assetchoice">
+                    <div> With or Without JDK 1.6 U12:
+                    <script>listbox(
+[
+{ platform: "macx86", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-1.1.dmg"},
+{ platform: "win32", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-1.1.exe"},
+{ platform: "win32nojdk", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-nojdk-1.1.exe"},
+{ platform: "solx86", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-1.1-opensolaris-pack200-install.jar"},
+{ platform: "solx86nojdk", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-nojdk-1.1-opensolaris-pack200-install.jar"},
+{ platform: "linux", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-1.1-linux-pack200-install.jar"},
+{ platform: "linuxnojdk", asset: "glassfish/eclipse/1.1/glassfish-tools-bundle-for-eclipse-nojdk-1.1-linux-pack200-install.jar"}
+] );</script><input value="Download" type="submit"></div>
+
+                  </form>
+
+                  </td>
+
+                </tr>
+
+                <tr valign="middle">
+
+                  <td> <span class="buildsub">Support:</span>
+                  </td>
+
+                  <td> <br>
+
+                  <a href="https://glassfishplugins.dev.java.net/servlets/ProjectMailingListList">GlassFish
+Tools Bundle for Eclipse</a>: Community support is available
+through the mailing list. Commercial support is also available at the <a href="http://developers.sun.com/services/buying_guide.jsp">Sun Developer Services Buying Guide.</a><br>
+
+                  <a href="http://www.sun.com/appserver">Sun
+GlassFish Enterprise Server v2.1</a> provides commercial support
+for GlassFish v2.1. <br>
+
+                  <a href="http://www.sun.com/glassfishv3">Sun
+GlassFish Enterprise Server v3 Prelude</a> provides commercial
+support for GlassFish v3 Prelude <br>
+
+                  <a href="http://www.sun.com/glassfish">Sun
+GlassFish Portfolio</a> includes support for Sun GlassFish
+Enterprise Server, Sun GlassFish WebStack, Sun GlassFish Web Space
+Server, Sun GlassFish ESB, and more. </td>
+
+                </tr>
+
+              </tbody>
+            </table>
+            
+
+<!-- ===============
+*** END GFE MS
+=================--> <br>
+
+            </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+
+      </td>
+
+      <td id="BundleRightSpacercol" width="2"> <br>
+
+      </td>
+
+      <td id="BundleRightNavcol" width="170">
+      <script>
+var oenodownloadsbox = true;
+      </script>
+      <script type="text/javascript" src="RightColumnNavGroups0.js"></script> <img src="a.gif" height="1" width="170"> </td>
+
+    </tr>
+
+  </tbody>
+</table>
+<br>
+<br>
+
+<font size="-2"><a href="index10.html">Link to the previous release 1.0</a> </font><br>
+</body>
+</html>
+

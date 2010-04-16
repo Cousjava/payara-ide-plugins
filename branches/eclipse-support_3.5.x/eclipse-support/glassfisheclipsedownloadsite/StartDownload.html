@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>GlassFish Tools Bundle For Eclipse - Downloads</title>
+
+
+  <style type="text/css">
+@import url("bundle.css");
+@import url("downloads.css");
+#cnlogo {display: none}
+#collabnet {display: none}
+.topline {display: inherit}
+#toptabs {display: inherit}
+#breadcrumbs {display: inherit}
+#navcol {display: none}
+#bodycol .infomark {display: none}
+#footer {display: inherit}
+  </style>
+  <script type="text/javascript" src="misc_functions.js"></script>
+  <script>
+function toggledisplay(id) {
+var totoggle = document.getElementById(id);
+if (!totoggle.style.display || totoggle.style.display == 'none') {
+totoggle.style.display = 'block'
+} else {
+totoggle.style.display = 'none'
+}
+}
+  </script>
+</head>
+
+
+<body>
+
+<table id="BundleMainTable" boder="0" cellpadding="0" cellspacing="0" width="100%">
+
+  <tbody>
+
+    <tr id="BundleMainTr" align="center" height="300" valign="top">
+
+      <td id="BundleCentercol">
+      <table id="BundleMainTable" border="0" cellpadding="0" cellspacing="0" width="100%">
+
+        <tbody>
+
+          <tr>
+
+            <td style="text-align: left; vertical-align: middle;">
+            <div style="margin: 10px 0px 0px;">
+            <script>
+/**
+* Extracts the query string to obtain the asset
+*/
+function getAsset() {
+var uri = null;
+var s = window.location.search;
+i = s.indexOf( "asset=" );
+if (i > -1) {
+uri = unescape(s.split("asset=")[1]);
+uri = 'http://download.java.net/' + uri;
+}
+return uri;
+}
+/**
+* Extracts the query string and starts the download
+*/
+function startDownload() {
+var uri = getAsset();
+if (uri == null) {
+alert('Error: the query string is not properly formatted. "' + window.location.href + '"');
+} else {
+window.location.href = uri;
+}
+}
+/**
+* Trigger download automatically
+*/
+//loadOnComplete = startDownload;
+window.setTimeout(startDownload,200);
+            </script>
+            <div class="buildbuild">
+            <div style="margin-left: 20px; margin-top: 10px; margin-right: 20px;">
+            <h2>You are about to download GlassFish Tools Bundle
+For
+Eclipse...</h2>
+
+            <p>Your download should start automatically. If not,
+            <script>
+// <![CDATA[
+document.write("<a href=" + getAsset() + ">download it here</a>.");
+// ]]>
+            </script></p>
+
+            <p><b>Installation instructions: </b><br>
+
+            </p>
+
+            <ul>
+
+              <li>Download the installer for your platform, and
+run the
+installer. Follow the instructions on screen.</li>
+
+              <li>Refer to the release notes for any last minute
+errata: <a href="releasenotes12.html">Release
+notes</a></li>
+
+            </ul>
+
+            </div>
+
+            </div>
+
+            <div style="margin: 10px 0px 0px;">
+            <div class="fpbigbluebox">
+            <div style="margin-left: 20px; margin-top: 10px; margin-right: 20px;">
+            <h2>Please register when you install!</h2>
+
+Registration benefits include improved support information in the
+GlassFish administration console, access to whitepapers such as
+high availability and performance tuning, access to past and
+future webinars, and more. For example, some of the available
+registered content includes:
+            <ul>
+
+              <li>
+                <p style="margin-right: 0.21in; margin-top: 0.1in;" align="left"><a href="http://www.sun.com/offers/details/OptimizeGlassFishPerformance.html">Optimizing
+GlassFish Performance in a Production Environment</a></p>
+
+              </li>
+
+              <li>
+                <p style="margin-right: 0.21in; margin-top: 0.1in;" align="left"><a href="http://www.sun.com/offers/details/GlassFish_Tomcat.html">Learning
+GlassFish for Tomcat Users</a></p>
+
+              </li>
+
+              <li>
+                <p style="margin-right: 0.21in; margin-top: 0.1in;" align="left"><a href="http://www.sun.com/offers/details/glassfish_HAref_config.html">Guide
+to GlassFish High Availability</a></p>
+
+              </li>
+
+
+
+            </ul>
+
+            <p style="margin-left: 0.21in; margin-right: 0.21in; margin-top: 0.1in;" align="left">
+Registration will also provide information about what platforms
+and operating systems people prefer, so we can better focus on the
+the right platforms. Your registration has a direct impact on the
+GlassFish Tools Bundle for Eclipse project!</p>
+
+            </div>
+
+            <div style="margin-top: 10px; margin-right: 20px;">
+            <h2 style="margin-left: 0.21in; margin-right: 0.21in; margin-top: 0.1in; text-align: left;">Additional
+Information</h2>
+
+            </div>
+
+            <div style="margin-top: 10px; margin-right: 20px;">
+            <p style="margin-left: 0.21in; margin-right: 0.21in; margin-top: 0.1in;" align="left">To learn more about the GlassFish Tools Bundle
+for Eclipse and its
+component products, </p>
+
+
+            </div>
+
+            <div style="margin-left: 20px; margin-top: 10px; margin-right: 20px;">
+            <p style="border: medium none ; padding: 0in; margin-bottom: 0in;"><a href="https://glassfishplugins.dev.java.net/servlets/ProjectMailingListList">GlassFish
+Tools Bundle for Eclipse</a>: Community support is available
+through the mailing list.</p>
+
+            <p style="border: medium none ; padding: 0in; margin-bottom: 0in;"><a href="http://www.sun.com/appserver">Sun
+GlassFish Enterprise Server v2.1</a> provides commercial support
+for GlassFish v2.</p>
+
+            <p style="border: medium none ; padding: 0in; margin-bottom: 0in;"><a href="http://www.sun.com/glassfishv3">Sun
+GlassFish Enterprise Server v3</a> provides commercial
+support for GlassFish v3</p>
+
+            <p style="border: medium none ; padding: 0in; margin-bottom: 0in;"><a href="http://www.sun.com/glassfish">Sun
+GlassFish Portfolio</a> includes support for Sun GlassFish
+Enterprise Server, Sun GlassFish WebStack, Sun GlassFish Web
+Space Server, Sun GlassFish ESB, and more.</p>
+
+            </div>
+
+            </div>
+
+            </div>
+
+            </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+
+      </td>
+
+      <td id="BundleRightSpacercol" width="2"> <br>
+
+      </td>
+
+<!-- ========================================= --><!-- Right Side Navigation Column --><!-- ========================================= -->
+      <td id="BundleRightNavcol" width="170">
+      <script>
+var oenodownloadsbox = true;
+      </script>
+      <script type="text/javascript" src="RightColumnNavGroupsp.js"></script> <img src="images/a.gif" height="1" width="170"> </td>
+
+    </tr>
+
+  </tbody>
+</table>
+
+<!-- ======================================== --><!-- End of Downloads Page body section --><!-- ======================================== -->
+</body>
+</html>
+

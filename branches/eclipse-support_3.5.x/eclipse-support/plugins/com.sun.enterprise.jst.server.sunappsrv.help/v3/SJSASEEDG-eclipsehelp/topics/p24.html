@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<!-- GenHTML revision 23224-->
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Using the JavaMail API - Sun GlassFish Enterprise Server v3 Application Development Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-12-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p23.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="idx-1.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="beaow"></a>Chapter&#160;18<h3>Using the JavaMail API</h3><a name="indexterm-1040"></a><p>This chapter describes how to use the JavaMail<sup>TM</sup> API, which provides a set
+of abstract classes defining objects that comprise a mail system.</p><p>This chapter contains the following sections:</p>
+<ul><li><p><a href="#beaox">Introducing JavaMail</a></p></li>
+<li><p><a href="#beaoy">Creating a JavaMail Session</a></p></li>
+<li><p><a href="#beaoz">JavaMail Session Properties</a></p></li>
+<li><p><a href="#beapa">Looking Up a JavaMail Session</a></p></li>
+<li><p><a href="#fwfiy">Sending and Reading Messages Using JavaMail</a></p></li></ul>
+
+<hr><p><b>Note - </b>JavaMail resources are supported only in the full Sun GlassFish<sup>TM</sup>Enterprise Server, not in
+the Web Profile.</p>
+<hr>
+
+
+<a name="beaox"></a><h3>Introducing JavaMail</h3>
+<a name="indexterm-1041"></a><a name="indexterm-1042"></a><a name="indexterm-1043"></a><p>The JavaMail API defines classes such as <tt>Message</tt>, <tt>Store</tt>, and <tt>Transport</tt>. The
+API can be extended and can be subclassed to provide new protocols and
+to add functionality when necessary. In addition, the API provides concrete subclasses of the
+abstract classes. These subclasses, including <tt>MimeMessage</tt> and <tt>MimeBodyPart</tt>, implement widely used Internet mail
+protocols and conform to the RFC822 and RFC2045 specifications. The JavaMail API includes
+support for the IMAP4, POP3, and SMTP protocols.</p><p><a name="indexterm-1044"></a>The JavaMail architectural components are as follows:</p>
+<ul><li><p>The <b>abstract layer</b> declares classes, interfaces, and abstract methods intended to support mail handling functions that all mail systems support.</p></li>
+<li><p>The <b>internet implementation layer</b> implements part of the abstract layer using the RFC822 and MIME internet standards.</p></li>
+<li><p>JavaMail uses the <b>JavaBeans Activation Framework</b> (JAF) to encapsulate message data and to handle commands intended to interact with that data.</p></li></ul>
+<p><a name="indexterm-1045"></a>For more information, see <a href="http://docs.sun.com/doc/820-7692/ablkr?a=view">Chapter 19, Administering the JavaMail Service, in <i>Sun GlassFish Enterprise Server v3 Administration Guide</i></a> and the JavaMail specification at <a href="http://java.sun.com/products/javamail/">http://java.sun.com/products/javamail/</a>. A useful JavaMail
+tutorial is located at <a href="http://java.sun.com/developer/onlineTraining/JavaMail/">http://java.sun.com/developer/onlineTraining/JavaMail/</a>.</p>
+
+<a name="beaoy"></a><h3>Creating a JavaMail Session</h3>
+<p><a name="indexterm-1046"></a>You can create a JavaMail session in the following ways:</p>
+<ul><li><p><a name="indexterm-1047"></a>In the Administration Console, open the Resources component and select JavaMail Sessions. For details, click the Help button in the Administration Console.</p></li>
+<li><p><a name="indexterm-1048"></a><a name="indexterm-1049"></a>Use the <tt>asadmin create-javamail-resource</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-7701"><i>Sun GlassFish Enterprise Server v3 Reference Manual</i></a>.</p></li></ul>
+
+
+<a name="beaoz"></a><h3>JavaMail Session Properties</h3>
+<a name="indexterm-1050"></a><p>You can set properties for a JavaMail <tt>Session</tt> object. Every property name must
+start with a <tt>mail-</tt> prefix. The Enterprise Server changes the dash (<tt>-</tt>) character to
+a period (<tt>.</tt>) in the name of the property and saves the property
+to the <tt>MailConfiguration</tt> and JavaMail <tt>Session</tt> objects. If the name of the property doesn&#8217;t
+start with <tt>mail-</tt>, the property is ignored.</p><p>For example, if you want to define the property <tt>mail.from</tt> in a JavaMail
+<tt>Session</tt> object, first define the property as follows:</p>
+<ul><li><p>Name &#8211; <tt>mail-from</tt></p></li>
+<li><p>Value &#8211; <tt>john.doe@sun.com</tt></p></li></ul>
+
+
+<a name="beapa"></a><h3>Looking Up a JavaMail Session</h3>
+<a name="indexterm-1051"></a><a name="indexterm-1052"></a><p>The standard Java Naming and Directory Interface (JNDI) subcontext for JavaMail sessions is
+<tt>java:comp/env/mail</tt>.</p><p>Registering JavaMail sessions in the <tt>mail</tt> naming subcontext of a JNDI namespace, or
+in one of its child subcontexts, is standard. The JNDI namespace is hierarchical,
+like a file system&#8217;s directory structure, so it is easy to find and
+nest references. A JavaMail session is bound to a logical JNDI name. The
+name identifies a subcontext, <tt>mail</tt>, of the root context, and a logical name. To
+change the JavaMail session, you can change its entry in the JNDI namespace
+without having to modify the application.</p><p>The resource lookup in the application code looks like this:</p><pre>InitialContext ic = new InitialContext();
+String snName = "java:comp/env/mail/MyMailSession";
+Session session = (Session)ic.lookup(snName);</pre><p>For more information about the JNDI API, see <a href="p22.html">Chapter&#160;16, Using the Java Naming and Directory Interface</a>.</p>
+
+<a name="fwfiy"></a><h3>Sending and Reading Messages Using JavaMail</h3>
+<p>The following sections describe how to send and read messages using the JavaMail
+API:</p>
+<ul><li><p><a href="#beapb">To Send a Message Using JavaMail</a></p></li>
+<li><p><a href="#beapc">To Read a Message Using JavaMail</a></p></li></ul>
+
+
+<a name="beapb"></a><h4>To Send a Message Using JavaMail</h4><a name="indexterm-1053"></a><ol>
+<li><b>Import the packages that you need.</b><pre>import java.util.*;
+import javax.activation.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.naming.*;</pre></li>
+<li><b>Look up the JavaMail session.</b><pre>InitialContext ic = new InitialContext();
+String snName = "java:comp/env/mail/MyMailSession";
+Session session = (Session)ic.lookup(snName);</pre><p>For more information, see <a href="#beapa">Looking Up a JavaMail Session</a>.</p></li>
+<li><b>Override the JavaMail session properties if necessary. </b><p>For example:</p><pre>Properties props = session.getProperties();
+props.put("mail.from", "user2@mailserver.com");</pre></li>
+<li><b>Create a <tt>MimeMessage</tt>. </b><p>The <tt>msgRecipient</tt>, <tt>msgSubject</tt>, and <tt>msgTxt</tt> variables in the following example contain input
+from the user:</p><pre>Message msg = new MimeMessage(session);
+msg.setSubject(msgSubject);
+msg.setSentDate(new Date());
+msg.setFrom();
+msg.setRecipients(Message.RecipientType.TO, 
+   InternetAddress.parse(msgRecipient, false));
+msg.setText(msgTxt);</pre></li>
+<li><b>Send the message.</b><pre>Transport.send(msg);</pre></li></ol>
+
+<a name="beapc"></a><h4>To Read a Message Using JavaMail</h4><a name="indexterm-1054"></a><ol>
+<li><b>Import the packages that you need.</b><pre>import java.util.*;
+import javax.activation.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.naming.*;</pre></li>
+<li><b>Look up the JavaMail session.</b><pre>InitialContext ic = new InitialContext();
+String snName = "java:comp/env/mail/MyMailSession";
+Session session = (javax.mail.Session)ic.lookup(snName);</pre><p>For more information, see <a href="#beapa">Looking Up a JavaMail Session</a>.</p></li>
+<li><b>Override the JavaMail session properties if necessary. </b><p>For example:</p><pre>Properties props = session.getProperties();
+props.put("mail.from", "user2@mailserver.com");</pre></li>
+<li><b>Get a <tt>Store</tt> object from the <tt>Session</tt>, then connect to the mail
+server using the Store object&#8217;s <tt>connect()</tt> method. </b><p>You must supply a mail server name, a mail user name, and a
+password.</p><pre>Store store = session.getStore();
+store.connect("MailServer", "MailUser", "secret");</pre></li>
+<li><b>Get the INBOX folder.</b><pre>Folder folder = store.getFolder("INBOX");</pre></li>
+<li><b>It is efficient to read the <tt>Message</tt> objects (which represent messages on the
+server) into an array.</b><pre>Message[] messages = folder.getMessages();</pre></li></ol>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p23.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="idx-1.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

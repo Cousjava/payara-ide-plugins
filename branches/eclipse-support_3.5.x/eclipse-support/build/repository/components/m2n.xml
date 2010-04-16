@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="Maven 2 plugin for Eclipse" releaseDate="2007-02-18" type="eclipse-plugin" version="0.10.0">
+    <!--
+        Copyright (c) 2003-2008 by nexB, Inc. http://www.nexb.com/ - All rights reserved. This software is licensed
+        under the terms of the Open Software License version 2.1. A copy of the license is available at
+        http://opensource.org/licenses/osl-2.1.php
+    -->
+    <shortdescription>Integrate Maven 2 in Eclipse</shortdescription>
+    <status>easyonetwo</status>
+    <description>Maven 2 is a build and project management tool. The Maven 2 plugin for Eclipse provides Maven 2.0
+        integration, including transient dependencies support, running Maven goals, and adding dependencies from
+        repository.</description>
+    <link type="homepage" url="http://m2eclipse.sonatype.org/" />
+    <build patched="no" type="binary">
+        <updatesite url="http://m2eclipse.sonatype.org/sites/m2e/">
+            <!-- Maven Integration -->
+            <feature id="org.maven.ide.eclipse.feature" version="0.10.0.20100209-0800" />
+        </updatesite>
+        <updatesite url="http://m2eclipse.sonatype.org/sites/m2e-extras/">
+            <!-- Maven Integration -->
+            <feature id="org.maven.ide.eclipse.cvs.feature" version="0.10.0.20100209-0800" />
+            <feature id="org.maven.ide.eclipse.mylyn3.feature" version="0.10.0.20100209-0800" />
+            <feature id="org.maven.ide.eclipse.scm.feature" version="0.10.0.20100209-0800" />
+            <feature id="org.maven.ide.eclipse.sdk.feature" version="0.10.0.20100209-0800" />
+            <feature id="org.maven.ide.eclipse.subclipse.feature" version="0.10.0.20100209-0800" />
+            <feature id="org.maven.ide.eclipse.temporary.mojos.feature" version="0.10.0.20100209-0800" />
+            <feature id="org.maven.ide.eclipse.wtp.feature" version="0.10.0.20100209-0800" />
+        </updatesite>
+    </build>
+    <copyright>Copyright (c) 2005 Mergere, Inc.</copyright>
+    <license type="apache-2.0">
+        <terms>Copyright 2005 Mergere, Inc.
+            Licensed under the Apache License, Version 2.0 (the "License"); you may not
+            use this file except in compliance with the License. You may obtain a copy of the License at
+            http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing,
+            software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+            OF ANY KIND, either express or implied. See the License for the specific language governing permissions and
+            limitations under the License.</terms>
+    </license>
+    <changelog release="1.2.1">
+        <entry date="2006-04-10" type="creation" version="0.0.5" />
+        <entry date="2006-08-10" type="upgrade" version="0.0.9" />
+    </changelog>
+    <status>packaged</status>
+    <link description="Maven" type="supported-application" url="http://maven.apache.org/" />
+    <status>documented</status>
+    <status>tested</status>
+    <eclipse-help>no</eclipse-help>
+    <getting-started>To adding needed libraries to a project requiring them, you should:
+        &lt;ul&gt;
+        &lt;li&gt;Enable Maven
+        2 on the project, by right-clicking on a project and selecting &lt;b&gt;Maven &gt; Enable&lt;/b&gt;; the group
+        ID can have any value.&lt;/li&gt;
+        &lt;li&gt;Add the needed dependencies, by right-clicking on the project and
+        selecting &lt;b&gt;Maven &gt; Add Dependencies&lt;/b&gt;. You can then search the repository by providing a part
+        of the name of the libraries. For example, typing &lt;code&gt;junit&lt;/code&gt; will show all JUnit
+        libraries.&lt;/li&gt;
+        &lt;li&gt;The libraries are then downloaded automatically when the project is
+        built.&lt;/li&gt;
+        &lt;/ul&gt;
+        It is then possible to create and run Maven goal by selecting &lt;b&gt;Run &gt;
+        External Tools &gt; External Tools&lt;/b&gt;, create a new Maven 2 configuration, add goals to it, and run it.
+        This step requires some understanding of Maven.
+        
+        </getting-started>
+    <link type="tutorial" url="http://m2eclipse.codehaus.org/Maven_2.0_Plugin_for_Eclipse.html" />
+    <test pass="1">- new java project
+        - new file, call it "SimpleTest.java"
+        - paste this:
+        import junit.framework.TestCase;
+
+        public class SimpleTest extends TestCase {
+        public void testSimple() {
+        assertNotNull(new String());
+        }
+        }
+        - project
+        fails to compile
+        - right-click on project, select "Maven2 &gt; Enable"; enter a group id (same as project name
+        for example), click finish
+        - right-click on project, select "Maven2 &gt; Add Dependencies".
+        - type "junit", select
+        junit-3.8.1.jar, click OK
+        - project rebuilds, should build correctly</test>
+    <build patched="no" type="source">
+        <svn content="is-plugin" url="https://svn.codehaus.org/m2eclipse/tags/0.0.9/org.maven.ide.eclipse" />
+    </build>
+    <package no-download="no">
+        <size os="win32">10M</size>
+        <size os="macosx">11M</size>
+        <size os="linux">10M</size>
+    </package>
+    <dependencies>
+        <component id="eclipse-jdt" />
+    </dependencies>
+    <changelog release="1.2.2">
+        <entry date="2007-05-22" type="upgrade" version="0.0.10" />
+    </changelog>
+    <changelog release="1.4.0">
+        <entry date="2007-08-19" type="upgrade" version="0.9.5" />
+    </changelog>
+</component>

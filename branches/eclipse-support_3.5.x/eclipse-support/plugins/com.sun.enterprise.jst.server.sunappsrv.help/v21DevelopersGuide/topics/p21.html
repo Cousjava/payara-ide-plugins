@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Using the JDBC API for Database Access - Sun GlassFish Enterprise Server 2.1 Developer's Guide</title>
+<meta name="robots" content="index,follow">
+<meta name="robots" content="index,follow">
+<meta name="date" content="2009-01-01">
+</head>
+
+<body>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr><td colspan="5"></td></tr>
+<tr>
+<td></td>
+<td style="width: 60%">&#160;</td>
+<td><a href="p20.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p22.html">Next</a></td>
+</tr>
+</table>
+
+
+<a name="beamj"></a>Chapter&#160;15<h3>Using the JDBC API for Database Access</h3><a name="indexterm-920"></a><p>This chapter describes how to use the Java<sup>TM</sup> Database Connectivity (JDBC<sup>TM</sup>) API for
+database access with the Sun GlassFish Enterprise Server. This chapter also provides high level
+JDBC implementation instructions for servlets and EJB components using the Enterprise Server. If
+the JDK version 1.6 is used, the Enterprise Server supports the JDBC 4.0
+API, which encompasses the JDBC 3.0 API and the JDBC 2.0 Optional Package
+API.</p><p><a name="indexterm-921"></a><a name="indexterm-922"></a>The JDBC specifications are available at <a href="http://java.sun.com/products/jdbc/download.html">http://java.sun.com/products/jdbc/download.html</a>.</p><p><a name="indexterm-923"></a>A useful JDBC tutorial is located at <a href="http://java.sun.com/docs/books/tutorial/jdbc/index.html">http://java.sun.com/docs/books/tutorial/jdbc/index.html</a>.</p>
+<hr><p><b>Note - </b>The Enterprise Server does not support connection pooling or transactions for an application&#8217;s
+database access if it does not use standard Java EE <tt>DataSource</tt> objects.</p>
+<hr>
+<p>This chapter discusses the following topics:</p>
+<ul><li><p><a href="#beamk">General Steps for Creating a JDBC Resource</a></p></li>
+<li><p><a href="#beamr">Creating Applications That Use the JDBC API</a></p></li>
+<li><p><a href="#geqvg">Restrictions and Optimizations</a></p></li></ul>
+
+
+<a name="beamk"></a><h3>General Steps for Creating a JDBC Resource</h3>
+<p>To prepare a JDBC resource for use in Java EE applications deployed to
+the Enterprise Server, perform the following tasks:</p>
+<ul><li><p><a href="#beaml">Integrating the JDBC Driver</a></p></li>
+<li><p><a href="#beamo">Creating a Connection Pool</a></p></li>
+<li><p><a href="#beamp">Testing a JDBC Connection Pool</a></p></li>
+<li><p><a href="#beamq">Creating a JDBC Resource</a></p></li></ul>
+<p>For information about how to configure some specific JDBC drivers, see <a href="http://docs.sun.com/doc/820-4335/beamw?a=view">Configurations for Specific JDBC Drivers in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p>
+
+<a name="beaml"></a><h4>Integrating the JDBC Driver</h4>
+<p>To use JDBC features, you must choose a JDBC driver to work with
+the Enterprise Server, then you must set up the driver. This section covers
+these topics:</p>
+<ul><li><p><a href="#beamm">Supported Database Drivers</a></p></li>
+<li><p><a href="#beamn">Making the JDBC Driver JAR Files Accessible</a></p></li></ul>
+
+
+<a name="beamm"></a><h5>Supported Database Drivers</h5>
+<a name="indexterm-924"></a><a name="indexterm-925"></a><p>Supported JDBC drivers are those that have been fully tested by Sun. For
+a list of the JDBC drivers currently supported by the Enterprise Server, see
+the <i><a href="http://docs.sun.com/doc/820-4329"><i>Sun GlassFish Enterprise Server 2.1 Release Notes</i></a></i>. For configurations of supported and other drivers, see <a href="http://docs.sun.com/doc/820-4335/beamw?a=view">Configurations for Specific JDBC Drivers in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p>
+<hr><p><b>Note - </b>Because the drivers and databases supported by the Enterprise Server are constantly being
+updated, and because database vendors continue to upgrade their products, always check with
+Sun technical support for the latest database support information.</p>
+<hr>
+
+
+<a name="beamn"></a><h5>Making the JDBC Driver JAR Files Accessible</h5>
+<a name="indexterm-926"></a><p>To integrate the JDBC driver into a Enterprise Server domain, copy the JAR
+files into the <i>domain-dir</i><tt>/lib</tt> directory, then restart the server. This makes classes accessible
+to all applications or modules deployed on servers that share the same configuration. For
+more information about Enterprise Server class loaders, see <a href="p6.html">Chapter&#160;2, Class Loaders</a>.</p>
+
+<a name="beamo"></a><h4>Creating a Connection Pool</h4>
+<a name="indexterm-927"></a><p>When you create a connection pool that uses JDBC technology (a <b>JDBC connection pool</b>) in
+the Enterprise Server, you can define many of the characteristics of your database
+connections.</p><p>You can create a JDBC connection pool in one of these ways:</p>
+<ul><li><p><a name="indexterm-928"></a>In the Admin Console, open the Resources component, open the JDBC component, and select Connection Pools. For details, click the Help button in the Admin Console.</p></li>
+<li><p><a name="indexterm-929"></a><a name="indexterm-930"></a>Use the <tt>asadmin create-jdbc-connection-pool</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p></li></ul>
+<p>For a complete description of JDBC connection pool features, see the <a href="http://docs.sun.com/doc/820-4335"><i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a></p>
+
+<a name="beamp"></a><h4>Testing a JDBC Connection Pool</h4>
+<p>You can test a JDBC connection pool for usability in one of these
+ways:</p>
+<ul><li><p><a name="indexterm-931"></a>In the Admin Console, open the Resources component, open the JDBC component, select Connection Pools, and select the connection pool you want to test. Then select the Ping button in the top right corner of the page. For details, click the Help button in the Admin Console.</p></li>
+<li><p><a name="indexterm-932"></a><a name="indexterm-933"></a>Use the <tt>asadmin ping-connection-pool</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p></li></ul>
+<p>Both these commands fail and display an error message unless they successfully connect
+to the connection pool.</p><p>For information about how to tune a connection pool, see the <i><a href="http://docs.sun.com/doc/820-4343"><i>Sun GlassFish Enterprise Server 2.1 Performance Tuning Guide</i></a></i>.</p>
+
+<a name="beamq"></a><h4>Creating a JDBC Resource</h4>
+<a name="indexterm-934"></a><p>A JDBC resource, also called a data source, lets you make connections to
+a database using <tt>getConnection()</tt>. Create a JDBC resource in one of these ways:</p>
+<ul><li><p><a name="indexterm-935"></a>In the Admin Console, open the Resources component, open the JDBC component, and select JDBC Resources. For details, click the Help button in the Admin Console.</p></li>
+<li><p><a name="indexterm-936"></a><a name="indexterm-937"></a>Use the <tt>asadmin create-jdbc-resource</tt> command. For details, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p></li></ul>
+
+
+<a name="beamr"></a><h3>Creating Applications That Use the JDBC API</h3>
+<p>An application that uses the JDBC API is an application that looks up
+and connects to one or more databases. This section covers these topics:</p>
+<ul><li><p><a href="#beams">Sharing Connections</a></p></li>
+<li><p><a href="#beamt">Obtaining a Physical Connection From a Wrapped Connection</a></p></li>
+<li><p><a href="#gezfh">Marking Bad Connections</a></p></li>
+<li><p><a href="#beamu">Using Non-Transactional Connections</a></p></li>
+<li><p><a href="#beamv">Using JDBC Transaction Isolation Levels</a></p></li>
+<li><p><a href="#gavro">Allowing Non-Component Callers</a></p></li></ul>
+
+
+<a name="beams"></a><h4>Sharing Connections</h4>
+<a name="indexterm-938"></a><a name="indexterm-939"></a><p>When multiple connections acquired by an application use the same JDBC resource, the
+connection pool provides connection sharing within the same transaction scope. For example, suppose
+Bean A starts a transaction and obtains a connection, then calls a method
+in Bean B. If Bean B acquires a connection to the same JDBC
+resource with the same sign-on information, and if Bean A completes the transaction, the
+connection can be shared.</p><p>Connections obtained through a resource are shared only if the resource reference declared
+by the Java EE component allows it to be shareable. This is specified
+in a component&#8217;s deployment descriptor by setting the <tt>res-sharing-scope</tt> element to <tt>Shareable</tt> for the
+particular resource reference. To turn off connection sharing, set <tt>res-sharing-scope</tt> to <tt>Unshareable</tt>.</p><p>For general information about connections and JDBC URLs, see <a href="http://docs.sun.com/doc/820-4335/ablih?a=view">Chapter 3, JDBC Resources, in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>.</p>
+
+<a name="beamt"></a><h4>Obtaining a Physical Connection From a Wrapped Connection</h4>
+<a name="indexterm-940"></a><a name="indexterm-941"></a><p>The <tt>DataSource</tt> implementation in the Enterprise Server provides a <tt>getConnection</tt> method that retrieves
+the JDBC driver&#8217;s <tt>SQLConnection</tt> from the Enterprise Server&#8217;s <tt>Connection</tt> wrapper. The method signature is
+as follows:</p><pre>public java.sql.Connection getConnection(java.sql.Connection con) 
+throws java.sql.SQLException</pre><p>For example:</p><pre>InitialContext ctx = new InitialContext();
+com.sun.appserv.jdbc.DataSource ds = (com.sun.appserv.jdbc.DataSource) 
+   ctx.lookup("jdbc/MyBase");
+Connection con = ds.getConnection();
+Connection drivercon = ds.getConnection(con);
+// Do db operations.
+// Do not close driver connection.
+con.close(); // return wrapped connection to pool.</pre>
+
+<a name="gezfh"></a><h4>Marking Bad Connections</h4>
+<a name="indexterm-942"></a><p>The <tt>DataSource</tt> implementation in the Enterprise Server provides a <tt>markConnectionAsBad</tt> method. A marked
+bad connection is removed from its connection pool when it is closed. The
+method signature is as follows:</p><pre>public void markConnectionAsBad(java.sql.Connection con)</pre><p>For example:</p><pre>com.sun.appserv.jdbc.DataSource ds=
+   (com.sun.appserv.jdbc.DataSource)context.lookup("dataSource");
+Connection con = ds.getConnection();
+Statement stmt = null;
+try{
+   stmt = con.createStatement();
+   stmt.executeUpdate("Update");
+}
+catch (BadConnectionException e){
+   dataSource.markConnectionAsBad(con) //marking it as bad for removal
+}
+finally{
+   stmt.close();    
+   con.close(); //Connection will be destroyed during close.
+}</pre>
+
+<a name="beamu"></a><h4>Using Non-Transactional Connections</h4>
+<a name="indexterm-943"></a><p>You can specify a non-transactional database connection in any of these ways:</p>
+<ul><li><p><a name="indexterm-944"></a>Check the Non-Transactional Connections box on the JDBC Connection Pools page in the Admin Console. The default is unchecked. For more information, click the Help button in the Admin Console.</p></li>
+<li><p><a name="indexterm-945"></a><a name="indexterm-946"></a>Specify the <tt>--nontransactionalconnections</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p></li>
+<li><p>Use the <tt>DataSource</tt> implementation in the Enterprise Server, which provides a <tt>getNonTxConnection</tt> method. This method retrieves a JDBC connection that is not in the scope of any transaction. There are two variants.</p><pre>public java.sql.Connection getNonTxConnection() throws java.sql.SQLException</pre><pre>public java.sql.Connection getNonTxConnection(String user, String password) 
+   throws java.sql.SQLException</pre></li>
+<li><p>Create a resource with the JNDI name ending in <tt>__nontx</tt>. This forces all connections looked up using this resource to be non transactional.</p></li></ul>
+<p>Typically, a connection is enlisted in the context of the transaction in which
+a <tt>getConnection</tt> call is invoked. However, a non-transactional connection is not enlisted in
+a transaction context even if a transaction is in progress.</p><p>The main advantage of using non-transactional connections is that the overhead incurred in
+enlisting and delisting connections in transaction contexts is avoided. However, use such connections carefully.
+For example, if a non-transactional connection is used to query the database while
+a transaction is in progress that modifies the database, the query retrieves the
+unmodified data in the database. This is because the in-progress transaction hasn&#8217;t committed. For
+another example, if a non-transactional connection modifies the database and a transaction that
+is running simultaneously rolls back, the changes made by the non-transactional connection are
+not rolled back.</p><p><a name="indexterm-947"></a>Here is a typical use case for a non-transactional connection: a component that
+is updating a database in a transaction context spanning over several iterations of a
+loop can refresh cached data by using a non-transactional connection to read data
+before the transaction commits.</p>
+
+<a name="beamv"></a><h4>Using JDBC Transaction Isolation Levels</h4>
+<p>For general information about transactions, see <a href="p22.html">Chapter&#160;16, Using the Transaction Service</a> and <a href="http://docs.sun.com/doc/820-4335/ablsn?a=view">Chapter 12, Transactions, in <i>Sun GlassFish Enterprise Server 2.1 Administration Guide</i></a>. For information about last
+agent optimization, which can improve performance, see <a href="p22.html#beano">Transaction Scope</a>.</p><p><a name="indexterm-948"></a><a name="indexterm-949"></a>Not all database vendors support all transaction isolation levels available in the JDBC API.
+The Enterprise Server permits specifying any isolation level your database supports. The following
+table defines transaction isolation levels.</p><a name="fvyoi"></a><h6>Table&#160;15-1 Transaction Isolation Levels</h6><table><col width="36%"><col width="63%"><tr><th align="left" valign="top" scope="column"><p>Transaction Isolation Level      
+           
+      </p></th>
+<th align="left" valign="top" scope="column"><p>Description     
+           
+       </p></th>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>TRANSACTION_READ_UNCOMMITTED</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Dirty reads, non-repeatable reads, and
+phantom reads can occur.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>TRANSACTION_READ_COMMITTED</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Dirty reads are prevented; non-repeatable reads and phantom reads can
+occur.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>TRANSACTION_REPEATABLE_READ</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Dirty reads and non-repeatable reads are prevented; phantom reads can occur.</p></td>
+</tr>
+<tr><td align="left" valign="top" scope="row"><p><tt>TRANSACTION_SERIALIZABLE</tt></p></td>
+<td align="left" valign="top" scope="row"><p>Dirty reads, non-repeatable
+reads and phantom reads are prevented.</p></td>
+</tr>
+</table><p><a name="indexterm-950"></a>Note that you cannot call <tt>setTransactionIsolation()</tt> during a transaction.</p><p>You can set the default transaction isolation level for a JDBC connection pool.
+For details, see <a href="#beamo">Creating a Connection Pool</a>.</p><p><a name="indexterm-951"></a>To verify that a level is supported by your database management system, test
+your database programmatically using the <tt>supportsTransactionIsolationLevel()</tt> method in <tt>java.sql.DatabaseMetaData</tt>, as shown in the
+following example:</p><pre>InitialContext ctx = new InitialContext();
+DataSource ds = (DataSource)
+ctx.lookup("jdbc/MyBase");
+Connection con = ds.getConnection();
+DatabaseMetaData dbmd = con.getMetaData();
+if (dbmd.supportsTransactionIsolationLevel(TRANSACTION_SERIALIZABLE)
+{ Connection.setTransactionIsolation(TRANSACTION_SERIALIZABLE); }</pre><p>For more information about these isolation levels and what they mean, see the
+JDBC API specification.</p>
+<hr><p><b>Note - </b>Applications that change the isolation level on a pooled connection programmatically risk polluting
+the pool, which can lead to errors.</p>
+<hr>
+
+
+<a name="gavro"></a><h4>Allowing Non-Component Callers</h4>
+<a name="indexterm-952"></a><p>You can allow non-Java-EE components, such as servlet filters, lifecycle modules, and third
+party persistence managers, to use this JDBC connection pool. The returned connection is
+automatically enlisted with the transaction context obtained from the transaction manager. Standard Java EE
+components can also use such pools. Connections obtained by non-component callers are not
+automatically closed at the end of a transaction by the container. They must
+be explicitly closed by the caller.</p><p>You can enable non-component callers in the following ways:</p>
+<ul><li><p><a name="indexterm-953"></a>Check the Allow Non Component Callers box on the JDBC Connection Pools page in the Admin Console. The default is <tt>false</tt>. For more information, click the Help button in the Admin Console.</p></li>
+<li><p><a name="indexterm-954"></a><a name="indexterm-955"></a>Specify the <tt>--allownoncomponentcallers</tt> option in the <tt>asadmin create-jdbc-connection-pool</tt> command. For more information, see the <a href="http://docs.sun.com/doc/820-4332"><i>Sun GlassFish Enterprise Server 2.1 Reference Manual</i></a>.</p></li>
+<li><p>Create a JDBC resource with a <tt>__pm</tt> suffix.</p></li></ul>
+
+
+<a name="geqvg"></a><h3>Restrictions and Optimizations</h3>
+<a name="indexterm-956"></a><p>This section discusses restrictions and performance optimizations that affect using the JDBC API.</p>
+
+<a name="geqvy"></a><h4>Disabling Stored Procedure Creation on Sybase</h4>
+<p>By default, DataDirect and Sun GlassFish JDBC drivers for Sybase databases create a
+stored procedure for each parameterized <tt>PreparedStatement</tt>. On the Enterprise Server, exceptions are
+thrown when primary key identity generation is attempted. To disable the creation of
+these stored procedures, set the property <tt>PrepareMethod=direct</tt>.</p>
+
+
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr valign="bottom">
+<td></td>
+<td style="width: 60%"></td>
+<td><a href="p20.html">Previous</a></td>
+<td></td>
+<td><a href="idx-1.html">Index</a></td>
+<td><a href="p22.html">Next</a></td>
+</tr>
+</table>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="GlassFish v2.1 Application Deployment Guide">
+ <topic href="v21ApplicationDeploymentGuide/topics/p3.html" label="Preface" ></topic>
+ <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="1.Assembling and Deploying Applications" >
+    <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Overview of Assembly and Deployment" >
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="About Modules" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="About Applications" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Java EE Standard Annotation" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Java EE Standard Descriptors" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Enterprise Server Descriptors" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Naming Standards" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Directory Structure" ></topic></topic>
+    <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Assembling Modules and Applications" >
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="The asant Utility" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="The NetBeans IDE" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="The verifier Utility" >
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Command-Line Syntax" >
+                <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Ant Integration" ></topic>
+                <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Sample Results Files" ></topic></topic></topic></topic>
+    <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Deploying Modules and Applications" >
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Deployment Errors" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="The Deployment Life Cycle" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Deployment for Development" >
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Dynamic Deployment" ></topic>
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Disabling a Deployed Application or Module" ></topic>
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Dynamic Reloading" ></topic>
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Automatic Deployment" ></topic>
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Directory Deployment" ></topic>
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Using a Deployment Plan" ></topic></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Tools for Deployment" >
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="The asant Utility" ></topic>
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="JSR 88" ></topic>
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="The asadmin Deployment Commands" ></topic>
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="The Admin Console Deployment Pages" ></topic></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Deployment by Module or Application" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Deploying a Web Service" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Deploying a WAR Module" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Deploying an EJB JAR Module" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Deploying a Lifecycle Module" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Deploying an Application Client" >
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="To Deploy an Application Client" ></topic>
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="To Prepare Another Machine for Executing an Application Client" ></topic>
+            <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Undeployment of Application Clients" ></topic></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Deploying a J2EE CA Connector Module" ></topic>
+        <topic href="v21ApplicationDeploymentGuide/topics/p4.html" label="Access to Shared Frameworks" ></topic></topic></topic>
+ <topic href="v21ApplicationDeploymentGuide/topics/p5.html" label="A.Deployment Descriptor Files" >
+    <topic href="v21ApplicationDeploymentGuide/topics/p5.html" label="Sun Java System Application Server Descriptors" ></topic>
+    <topic href="v21ApplicationDeploymentGuide/topics/p5.html" label="The sun-application.xml File" ></topic>
+    <topic href="v21ApplicationDeploymentGuide/topics/p5.html" label="The sun-web.xml File" ></topic>
+    <topic href="v21ApplicationDeploymentGuide/topics/p5.html" label="The sun-ejb-jar.xml File" ></topic>
+    <topic href="v21ApplicationDeploymentGuide/topics/p5.html" label="The sun-cmp-mappings.xml File" ></topic>
+    <topic href="v21ApplicationDeploymentGuide/topics/p5.html" label="The sun-application-client.xml file" ></topic>
+    <topic href="v21ApplicationDeploymentGuide/topics/p5.html" label="The sun-acc.xml File" ></topic>
+ 
+</topic>
+
+</toc>
