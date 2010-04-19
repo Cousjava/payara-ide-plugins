@@ -697,6 +697,11 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		}
 		else {
 			IPath path = new Path (getDomainDirWithDomainName()+"/eclipseApps/"+module[0].getName());
+
+            //first deploy the sun resource file if there in path:
+			
+			registerSunResource(module , p, path);
+
 	//		IModuleResource[] moduleResource = getResources(module);
 	//		SunAppSrvPlugin.logMessage("IModuleResource len="+moduleResource.length);
 	//		for (int j=0;j<moduleResource.length ;j++
@@ -769,40 +774,45 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 				SunAppSrvPlugin.logMessage("optimal: NO NEED TO TO A REDEPLOYMENT, !!!");
 				
 			}
-			
-			//Get correct location for sun-resources.xml
-			IProject project = module[0].getProject();
-			String location = ResourceUtils.getRuntimeResourceLocation(project);
-			if(location != null){
-				if(location.trim().length() > 0){
-					location = location + File.separatorChar + ResourceUtils.RESOURCE_FILE_NAME;
-				}else {
-					location = ResourceUtils.RESOURCE_FILE_NAME;
-				}
-			}
-			File sunResource = new File(spath,location);
-			if (sunResource.exists()){
-				ResourceUtils.checkUpdateServerResources(sunResource, getSunAppServer());
-				Commands.AddResourcesCommand register = new Commands.AddResourcesCommand(sunResource.getAbsolutePath());
-				try {
-					Future<OperationState> result = getSunAppServer().execute(register);
-					if(result.get(120, TimeUnit.SECONDS) == OperationState.RUNNING) {
-						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-								"Timeout after 120s when trying to deploy the sun-resources.xml for "+module[0].getName()+". Please try again ", null));
-					}
-					if(result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
-						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-								"Error when trying to deploy the sun-resources.xml for "+module[0].getName()+": "+register.message, null));
-					}
-				} catch(Exception ex) {
-					SunAppSrvPlugin.logMessage("deploy of sun-resources is failing ",ex );
-					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-							"cannot register sun-resource.xml for "+module[0].getName(), ex));	            
-				}				
-			}			
-			p.put(module[0].getId(), path.toOSString());
-		}
-	}
+                }
+        }
+
+
+        
+    protected void registerSunResource(IModule module[]  , Properties p, IPath path) throws CoreException {
+        //Get correct location for sun-resources.xml
+        IProject project = module[0].getProject();
+        String location = ResourceUtils.getRuntimeResourceLocation(project);
+        if (location != null) {
+            if (location.trim().length() > 0) {
+                location = location + File.separatorChar + ResourceUtils.RESOURCE_FILE_NAME;
+            } else {
+                location = ResourceUtils.RESOURCE_FILE_NAME;
+            }
+        }
+        File sunResource = new File(""+path, location);
+        if (sunResource.exists()) {
+            ResourceUtils.checkUpdateServerResources(sunResource, getSunAppServer());
+            Commands.AddResourcesCommand register = new Commands.AddResourcesCommand(sunResource.getAbsolutePath());
+            try {
+                Future<OperationState> result = getSunAppServer().execute(register);
+                if (result.get(120, TimeUnit.SECONDS) == OperationState.RUNNING) {
+                    throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+                            "Timeout after 120s when trying to deploy the sun-resources.xml for " + module[0].getName() + ". Please try again ", null));
+                }
+                if (result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
+                    throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+                            "Error when trying to deploy the sun-resources.xml for " + module[0].getName() + ": " + register.message, null));
+                }
+            } catch (Exception ex) {
+                SunAppSrvPlugin.logMessage("deploy of sun-resources is failing ", ex);
+                throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+                        "cannot register sun-resource.xml for " + module[0].getName(), ex));
+            }
+        }
+        p.put(module[0].getId(), path.toOSString());
+
+    }
 
 
 
