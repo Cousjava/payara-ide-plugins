@@ -35,35 +35,124 @@
  holder.
 -->
 
-<project name="GlassFish Java EE 5" default="release">
-	<target name="init">
+<project name="GlassFish Java EE 5" default="build.update.jar2"  basedir=".">
+	<target name="init" depends="init2">
 		<property file="build.properties" />
 		<property name="plugin.id"
-			value="com.sun.enterprise.jst.server.sunappsrv" />
-		<property name="plugin.version" value="1.0.52" />
+			value="oracle.eclipse.tools.helios.glassfish" />
+		<property name="plugin.version" value="2.0.1" />
 	</target>
 
-	<target name="release" depends="init">
-		<mkdir dir="plugins/${plugin.id}_${plugin.version}" />
+
+	<target name="init2">
+		<property name="plugin" value="oracle.eclipse.tools.helios.glassfish" />
+		<property name="version.suffix" value="2.0.1" />
+		<property name="full.name" value="${plugin}_${version.suffix}" />
+		<property name="temp.folder" value="${basedir}/temp.folder" />
+		<property name="plugin.destination" value="${basedir}" />
+		<property name="build.result.folder" value="${basedir}" />
+		<condition property="p2.publish.parts" value="true">
+			<istrue value="${p2.gathering}" />
+		</condition>
+	</target>
+
+	<target name="build.update.jar2" depends="init">
+		<delete dir="${temp.folder}" />
+		<mkdir dir="${temp.folder}" />
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/" />
+		</antcall>
+		<zip zipfile="${plugin.destination}/${full.name}.jar" basedir="${temp.folder}/${full.name}" filesonly="false" />
+		<delete dir="${temp.folder}" />
+	</target>
+
+	<target name="publish.bin.parts" depends="init" if="p2.publish.parts">
+		<echo message="build.result.folder=${build.result.folder}" file="/Users/ludo/AAA.TXT" append="true"/>
+
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${build.result.folder}" />
+		</antcall>
+		<eclipse.gatherBundle metadataRepository="${p2.build.repo}" artifactRepository="${p2.build.repo}" buildResultFolder="${build.result.folder}" targetFolder="${build.result.folder}/${full.name}" />
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/${full.name}" />
+		<antcall target="apitools.generation">
+			<param name="target.folder" value="${destination.temp.folder}/${full.name}"/>
+			<param name="projectLocation" value="${basedir}"/>
+			<param name="binary.folders" value="${build.result.folder}"/>
+			<param name="projectName" value="${full.name}"/>
+		</antcall>
+		<copy todir="${destination.temp.folder}/${full.name}">
+			<fileset dir="${basedir}" includes="${bin.includes}" />
+		</copy>
+		<unzip dest="${destination.temp.folder}/${full.name}" src="javaee5-doc-api.zip"/>
+		<copy todir="${destination.temp.folder}/${full.name}">
+			<fileset dir="bin/" />
+		</copy>
+		<mkdir dir="${destination.temp.folder}/${full.name}/javaee6doc" />
+		<unzip dest="${destination.temp.folder}/${full.name}/javaee6doc" src="glassfish-all.jar"/>
+		<mkdir dir="${destination.temp.folder}/${full.name}/cometdoc" />
+		<unzip dest="${destination.temp.folder}/${full.name}/cometdoc" src="grizzly-comet-1.9.19-SNAPSHOT-javadoc.jar"/>
+		<eclipse.versionReplacer path="${destination.temp.folder}/${full.name}" version="${version.suffix}" />
+	</target>
+
+	<target name="build.jars" >
+		<echo message="-build.jars" file="/Users/ludo/AAA.TXT" append="true"/>
+		</target>
+
+	<!--target name="gather.sources" >
+		<echo message="\n   -gather.sourcess" file="/Users/ludo/AAA.TXT" append="true"/>
+		</target>
+	<target name="build.sources" >
+		<echo message="\n   -build.source" file="/Users/ludo/AAA.TXT" append="true"/>
+		</target-->
+	<target name="gather.logs" >
+		<echo message="-gather log" file="/Users/ludo/AAA.TXT" append="true"/>
+		</target>
+
+	<target name="copy.classpath" unless="haveclasspath">
+		<copy file=".classpath_${osgi.ws}" tofile=".classpath" />
+		<eclipse.refreshLocal resource="." depth="infinite" />
+	</target>
+
+	<target name="setup.classpath">
+		<echo message="--- setup.classpath " file="/Users/ludo/AAA.TXT" append="true"/>
+		<available file=".classpath" property="haveclasspath" />
+		<antcall target="copy.classpath" />
+		<copy file=".project_normal" tofile=".project" overwrite="yes" />
+	</target>
+
+	<target name="clean2" depends="init">
+	</target>
+
+	<target name="apitools.generation" if="generateAPIDescription">
+		<apitooling.apigeneration
+			projectName="${projectName}"
+			project="${projectLocation}"
+			binary="${binary.folders}"
+			target="${target.folder}"/>
+	</target>	
+	<target name="build.jars22" depends="init">
+		<!--mkdir dir="plugins/${plugin.id}_${plugin.version}" />
 		<copy todir="plugins/${plugin.id}_${plugin.version}">
 			<fileset dir="." includes="${bin.includes}" />
-		</copy>
-		<unzip dest="plugins/${plugin.id}_${plugin.version}" src="javaee5-doc-api.zip"/>
-		<copy todir="plugins/${plugin.id}_${plugin.version}">
-			<fileset dir="${output.library.jar}" />
-		</copy>
-		<mkdir dir="plugins/${plugin.id}_${plugin.version}/javaee6doc" />
-		<unzip dest="plugins/${plugin.id}_${plugin.version}/javaee6doc" src="glassfish-all.jar"/>
-		<mkdir dir="plugins/${plugin.id}_${plugin.version}/cometdoc" />
-		<unzip dest="plugins/${plugin.id}_${plugin.version}/cometdoc" src="grizzly-comet-1.9.19-SNAPSHOT-javadoc.jar"/>
+		</copy-->
+		<unzip dest="bin/" src="javaee5-doc-api.zip"/>
+		<!--copy todir="plugins/${plugin.id}_${plugin.version}">
+			<fileset dir="${output.build.area}" />
+		</copy-->
+		<mkdir dir="bin/javaee6doc" />
+		<unzip dest="bin/javaee6doc" src="glassfish-all.jar"/>
+		<mkdir dir="bin/cometdoc" />
+		<unzip dest="bin/cometdoc" src="grizzly-comet-1.9.19-SNAPSHOT-javadoc.jar"/>
 
 		<zip destfile="${plugin.id}_${plugin.version}.jar"
-			basedir="plugins/${plugin.id}_${plugin.version}" includes="**" />
-		<copy file="${plugin.id}_${plugin.version}.jar"
-			todir="/Users/hudson/eclipse/plugins">
-		</copy>
+			basedir="bin" includes="**" />
+
+
 	</target>
-	<target name="clean">
+	<target name="clean" depends="init">
 		<delete dir="plugins" />
 	</target>
 	<target name="archive" depends="init">

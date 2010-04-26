@@ -109,7 +109,6 @@ public class ContainerResourceTemplate {
   protected final String TEXT_54 = ") {" + NL + "        return ";
   protected final String TEXT_55 = ".getInstance(";
   protected final String TEXT_56 = ");" + NL + "    }" + NL + "}";
-  protected final String TEXT_57 = NL;
 
 	public String generate(Object argument)
   {
@@ -351,7 +350,6 @@ Copied from org.eclipse.jst.j2ee.ejb plugin. */
     stringBuffer.append(TEXT_55);
     stringBuffer.append( paramListNoTypes );
     stringBuffer.append(TEXT_56);
-    stringBuffer.append(TEXT_57);
     return stringBuffer.toString();
   }
 }
