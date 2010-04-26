@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.sun.enterprise.jst.server.sunappsrv.feature"
+      id="oracle.eclipse.tools.helios.glassfish"
       label="GlassFish Java EE 5, Java EE 6"
-      version="1.0.52"
+      version="2.0.1"
       provider-name="java.net"
       image="glassfish.gif">
 
    <description url="https://glassfishplugins.dev.java.net">
-      Provides development and publishing tools for GlassFish Java
-EE 5 Server (v1, v2, and v3 Prelude) and Java EE 6 (v3)
+      Provides development and publishing tools for GlassFish v2 Java
+EE 5 Server and GlassFish 3 Java EE 6
    </description>
 
    <copyright url="http://www.example.com/copyright">
-      Copyright 2008-2009 Sun Microsystems, Inc. All rights reserved.
+      Copyright 2008-2010 Sun Microsystems, Inc. All rights reserved.
    </copyright>
 
    <license url="https://glassfishplugins.dev.java.net/license/CDDL+GPL+3rdPartyEPL.html">
@@ -885,14 +885,18 @@ COPYRIGHT © 2008 THE ECLIPSE FOUNDATION. ALL RIGHTS RESERVED
    </license>
 
    <url>
-      <discovery label="jMaki and GlassFish Application Server Eclipse Update Center" url="https://ajax.dev.java.net/eclipse/"/>
+      <discovery label="GlassFish Application Server Eclipse Update Center" url="http://download.java.net/glassfish/eclipse/helios"/>
    </url>
 
+   <requires>
+      <import feature="org.eclipse.platform" version="3.6.0" match="equivalent"/>
+   </requires>
+
    <plugin
-         id="com.sun.enterprise.jst.server.sunappsrv"
-         download-size="2000"
-         install-size="2000"
-         version="1.0.52"
+         id="oracle.eclipse.tools.helios.glassfish"
+         download-size="15000"
+         install-size="15000"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
