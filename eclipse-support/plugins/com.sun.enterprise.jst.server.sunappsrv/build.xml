@@ -40,13 +40,13 @@
 		<property file="build.properties" />
 		<property name="plugin.id"
 			value="oracle.eclipse.tools.helios.glassfish" />
-		<property name="plugin.version" value="2.0.1" />
+		<property name="plugin.version" value="2.0.33" />
 	</target>
 
 
 	<target name="init2">
 		<property name="plugin" value="oracle.eclipse.tools.helios.glassfish" />
-		<property name="version.suffix" value="2.0.1" />
+		<property name="version.suffix" value="2.0.1.201004261500" />
 		<property name="full.name" value="${plugin}_${version.suffix}" />
 		<property name="temp.folder" value="${basedir}/temp.folder" />
 		<property name="plugin.destination" value="${basedir}" />
