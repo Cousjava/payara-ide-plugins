@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="oracle.eclipse.tools.helios.glassfish"
-      label="GlassFish Java EE 5, Java EE 6"
-      version="2.0.1"
+      label="Oracle GlassFish Tools"
+      version="2.0.1.qualifier"
       provider-name="java.net"
       image="glassfish.gif">
 
@@ -893,10 +893,10 @@ COPYRIGHT © 2008 THE ECLIPSE FOUNDATION. ALL RIGHTS RESERVED
    </requires>
 
    <plugin
-         id="oracle.eclipse.tools.helios.glassfish"
-         download-size="15000"
-         install-size="15000"
-         version="0.0.0"
+         id="oracle.eclipse.tools.glassfish"
+         download-size="17000"
+         install-size="17000"
+         version="2.0.1.qualifier"
          unpack="false"/>
 
 </feature>
