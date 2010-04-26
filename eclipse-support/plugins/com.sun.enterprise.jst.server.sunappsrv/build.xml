@@ -2,7 +2,7 @@
 <!--
  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  
- Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.
+ Copyright 1997-2010 Sun Microsystems, Inc. All rights reserved.
  
  The contents of this file are subject to the terms of either the GNU
  General Public License Version 2 only ("GPL") or the Common Development
@@ -67,7 +67,6 @@
 	</target>
 
 	<target name="publish.bin.parts" depends="init" if="p2.publish.parts">
-		<echo message="build.result.folder=${build.result.folder}" file="/Users/ludo/AAA.TXT" append="true"/>
 
 		<antcall target="gather.bin.parts">
 			<param name="destination.temp.folder" value="${build.result.folder}" />
@@ -98,7 +97,6 @@
 	</target>
 
 	<target name="build.jars" >
-		<echo message="-build.jars" file="/Users/ludo/AAA.TXT" append="true"/>
 		</target>
 
 	<!--target name="gather.sources" >
@@ -108,7 +106,6 @@
 		<echo message="\n   -build.source" file="/Users/ludo/AAA.TXT" append="true"/>
 		</target-->
 	<target name="gather.logs" >
-		<echo message="-gather log" file="/Users/ludo/AAA.TXT" append="true"/>
 		</target>
 
 	<target name="copy.classpath" unless="haveclasspath">
@@ -117,7 +114,6 @@
 	</target>
 
 	<target name="setup.classpath">
-		<echo message="--- setup.classpath " file="/Users/ludo/AAA.TXT" append="true"/>
 		<available file=".classpath" property="haveclasspath" />
 		<antcall target="copy.classpath" />
 		<copy file=".project_normal" tofile=".project" overwrite="yes" />
