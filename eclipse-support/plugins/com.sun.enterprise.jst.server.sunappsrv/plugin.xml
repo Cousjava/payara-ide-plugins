@@ -1419,17 +1419,6 @@
  	        
  	        </extension>
  	        
-	<!-- Facelets downloadable library provider -->
-    <extension point="org.eclipse.jst.common.project.facet.core.downloadableLibraries">
-        <import-definitions url="platform:/plugin/com.sun.enterprise.jst.server.sunappsrv/facelets/facelets-downloadable-libraries.xml">
-            <enablement>
-                <with variable="requestingProjectFacet">
-                    <test property="org.eclipse.wst.common.project.facet.core.projectFacet" value="jst.jsf:1.2" forcePluginActivation="true"/>
-                </with>
-            </enablement>
-        </import-definitions>
-    </extension>
-
    <extension
         point="org.eclipse.jst.j2ee.J2EEModelProvider">
          <provider>
