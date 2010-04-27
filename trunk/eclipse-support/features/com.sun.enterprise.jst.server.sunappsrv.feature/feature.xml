@@ -1,19 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<feature
-      id="oracle.eclipse.tools.helios.glassfish"
-      label="Oracle GlassFish Tools"
-      version="2.0.1.qualifier"
-      provider-name="java.net"
-      image="glassfish.gif">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<feature id="oracle.eclipse.tools.helios.glassfish" label="%featureName"
+plugin="oracle.eclipse.tools.glassfish" provider-name="%providerName"
+version="2.0.1.qualifier" image="glassfish.gif">
 
    <description url="https://glassfishplugins.dev.java.net">
-      Provides development and publishing tools for GlassFish v2 Java
-EE 5 Server and GlassFish 3 Java EE 6
+      %featureDescription
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      Copyright 2008-2010 Sun Microsystems, Inc. All rights reserved.
+   <copyright>
+      %copyright
    </copyright>
+
+   <!--license url="license.html">
+      %license
+   </license-->
+
+   <url>
+      <update label="%updateSiteName"
+url="http://download.oracle.com/otn_software/oepe/helios"/>
+   </url>
+
 
    <license url="https://glassfishplugins.dev.java.net/license/CDDL+GPL+3rdPartyEPL.html">
       COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
@@ -884,9 +890,9 @@ COPYRIGHT © 2008 THE ECLIPSE FOUNDATION. ALL RIGHTS RESERVED
 ***************************************************************************
    </license>
 
-   <url>
+   <!--url>
       <discovery label="GlassFish Application Server Eclipse Update Center" url="http://download.java.net/glassfish/eclipse/helios"/>
-   </url>
+   </url-->
 
    <requires>
       <import feature="org.eclipse.platform" version="3.6.0" match="equivalent"/>
