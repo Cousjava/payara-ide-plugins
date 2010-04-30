@@ -57,7 +57,7 @@ import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
  */
 public class SunAppSrvPlugin extends AbstractUIPlugin {
     
-    protected static final String SUNPLUGIN_ID = "com.sun.enterprise.jst.server.sunappsrv";
+    public static final String SUNPLUGIN_ID = "com.sun.enterprise.jst.server.sunappsrv";
     private static SunAppSrvPlugin singleton;
     private static HashSet<String[]> commandsToExecuteAtExit = new HashSet<String[]>();
     public SunAppSrvPlugin() {
