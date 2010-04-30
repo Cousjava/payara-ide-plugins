@@ -1,0 +1,2 @@
+the glassfish-all.jar file is the entire EE 6 javadoc and GlassFish v3 public APIs from http://javadoc.glassfish.org/v3/apidoc/glassfish-all.jar
+
