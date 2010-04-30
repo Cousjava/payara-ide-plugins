@@ -35,18 +35,12 @@
  holder.
 -->
 
-<project name="GlassFish Java EE 5" default="build.update.jar2"  basedir=".">
-	<target name="init" depends="init2">
+<project name="GlassFish Java EE 5" default="build.update.jar"  basedir=".">
+	
+	<target name="init" >
 		<property file="build.properties" />
-		<property name="plugin.id"
-			value="oracle.eclipse.tools.helios.glassfish" />
-		<property name="plugin.version" value="2.0.33" />
-	</target>
-
-
-	<target name="init2">
-		<property name="plugin" value="oracle.eclipse.tools.helios.glassfish" />
-		<property name="version.suffix" value="2.0.1.201004261500" />
+		<property name="plugin" value="oracle.eclipse.tools.glassfish" />
+		<property name="version.suffix" value="2.0.1.201004270735" />
 		<property name="full.name" value="${plugin}_${version.suffix}" />
 		<property name="temp.folder" value="${basedir}/temp.folder" />
 		<property name="plugin.destination" value="${basedir}" />
@@ -56,7 +50,7 @@
 		</condition>
 	</target>
 
-	<target name="build.update.jar2" depends="init">
+	<target name="build.update.jar" depends="init">
 		<delete dir="${temp.folder}" />
 		<mkdir dir="${temp.folder}" />
 		<antcall target="gather.bin.parts">
@@ -75,13 +69,10 @@
 	</target>
 
 	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+
 		<mkdir dir="${destination.temp.folder}/${full.name}" />
-		<antcall target="apitools.generation">
-			<param name="target.folder" value="${destination.temp.folder}/${full.name}"/>
-			<param name="projectLocation" value="${basedir}"/>
-			<param name="binary.folders" value="${build.result.folder}"/>
-			<param name="projectName" value="${full.name}"/>
-		</antcall>
+
+
 		<copy todir="${destination.temp.folder}/${full.name}">
 			<fileset dir="${basedir}" includes="${bin.includes}" />
 		</copy>
@@ -106,9 +97,11 @@
 		<echo message="\n   -build.source" file="/Users/ludo/AAA.TXT" append="true"/>
 		</target-->
 	<target name="gather.logs" >
+
+
 		</target>
 
-	<target name="copy.classpath" unless="haveclasspath">
+	<!--target name="copy.classpath" unless="haveclasspath">
 		<copy file=".classpath_${osgi.ws}" tofile=".classpath" />
 		<eclipse.refreshLocal resource="." depth="infinite" />
 	</target>
@@ -120,40 +113,12 @@
 	</target>
 
 	<target name="clean2" depends="init">
-	</target>
+	</target-->
 
-	<target name="apitools.generation" if="generateAPIDescription">
-		<apitooling.apigeneration
-			projectName="${projectName}"
-			project="${projectLocation}"
-			binary="${binary.folders}"
-			target="${target.folder}"/>
-	</target>	
-	<target name="build.jars22" depends="init">
-		<!--mkdir dir="plugins/${plugin.id}_${plugin.version}" />
-		<copy todir="plugins/${plugin.id}_${plugin.version}">
-			<fileset dir="." includes="${bin.includes}" />
-		</copy-->
-		<unzip dest="bin/" src="javaee5-doc-api.zip"/>
-		<!--copy todir="plugins/${plugin.id}_${plugin.version}">
-			<fileset dir="${output.build.area}" />
-		</copy-->
-		<mkdir dir="bin/javaee6doc" />
-		<unzip dest="bin/javaee6doc" src="glassfish-all.jar"/>
-		<mkdir dir="bin/cometdoc" />
-		<unzip dest="bin/cometdoc" src="grizzly-comet-1.9.19-SNAPSHOT-javadoc.jar"/>
+	
 
-		<zip destfile="${plugin.id}_${plugin.version}.jar"
-			basedir="bin" includes="**" />
-
-
-	</target>
 	<target name="clean" depends="init">
 		<delete dir="plugins" />
 	</target>
-	<target name="archive" depends="init">
-		<zip destfile="../glassfishplugin.zip" basedir="../"
-			includes="com.sun.enterprise.jst.server.sunappsrv/"
-			excludes="*/CVS/,*/bin/" />
-	</target>
+
 </project>

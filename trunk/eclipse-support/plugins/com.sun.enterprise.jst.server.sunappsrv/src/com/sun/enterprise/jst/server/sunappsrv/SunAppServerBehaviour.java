@@ -72,6 +72,7 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
+import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.ResourceUtils;
 
 
@@ -95,6 +96,12 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		super.initialize(monitor);
 		SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize" );
 		SunAppServer  sunserver = getSunAppServer();
+        try {
+			DerbyConfigurator.configure(null, new File(getSunApplicationServerInstallationDirectory()), getDomainDirWithDomainName()+"/config/domain.xml");
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		try {
 			if (sunserver.isRunning()){
 				SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize is running!!" );

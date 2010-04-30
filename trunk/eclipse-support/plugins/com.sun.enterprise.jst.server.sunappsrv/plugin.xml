@@ -1427,5 +1427,84 @@
                  priority="99"/>
            <facet id="jst.web" versions="2.5"/>
          </provider>
-   </extension> 	        
+   </extension>
+   
+   <!--extension
+         id="com.sun.enterprise.jst.server.sunappsrv.jaxrsLibraryproviderID"
+         point="org.eclipse.jst.ws.jaxrs.core.jaxrsLibraryProvider">
+      <jaxrsLibraryprovider
+            libraryProviderID="JAX-RS-no-op-library-provider"
+            sevletClassName="com.sun.jersey.spi.container.servlet.ServletContainer"
+            showUpdateDD="true"
+            updateDDSelected="false">
+      </jaxrsLibraryprovider>
+   </extension> 
+   	 
+ <extension point="org.eclipse.jst.common.project.facet.core.libraryProviders">
+  <provider id="JAX-RS-no-op-library-provider" extends="no-op-library-provider" >
+  <label>GlassFish JAX-RS Bundled</label>
+  <priority>8000</priority>
+    <param 
+      name="message" 
+      value="This facet requires GlassFish JAX-RS library to be present on project classpath."/>
+    <param 
+      name="warning" 
+      value="Library configuration is disabled. Manual classpath changes may be required."/>
+    <enablement>
+    <with variable="requestingProjectFacet">
+<test property="org.eclipse.wst.common.project.facet.core.projectFacet " value="jst.jaxrs:1.1" forcePluginActivation="true" />
+</with>
+
+    </enablement>
+  </provider>
+</extension-->  
+
+  <extension
+point="org.eclipse.jst.common.project.facet.core.libraryProviders">
+    <provider id="com.sun.enterprise.jst.server.sunappsrv.jaxrsLibraryproviderID">
+      <enablement>
+        <with variable="requestingProjectFacet">
+          <test
+                property="org.eclipse.wst.common.project.facet.core.projectFacet"
+                value="jst.jaxrs:1.1" forcePluginActivation="true"/>
+        </with>
+        <with variable="projectFacets">
+            <count value="+"/>
+            <iterate operator="or">
+                <test
+                     property="org.eclipse.wst.common.project.facet.core.projectFacet"
+                     value="jst.web:[3.0" forcePluginActivation="true"/>
+            </iterate>
+        </with>        
+      </enablement>
+      <action type="INSTALL">
+        <operation class="com.sun.enterprise.jst.server.sunappsrv.InstallJAXRS"/>
+      </action>
+      <action type="UNINSTALL">
+         <operation class="com.sun.enterprise.jst.server.sunappsrv.InstallJAXRS"/>
+      </action>
+      <label>JAX-RS GlassFish Library</label>
+      <priority>10000</priority>
+    </provider>
+  </extension>
+
+
+<extension id="MyJAXRSLibraryProvider"
+point="org.eclipse.jst.ws.jaxrs.core.jaxrsLibraryProvider" >
+      <jaxrsLibraryprovider
+        libraryProviderID="com.sun.enterprise.jst.server.sunappsrv.jaxrsLibraryproviderID" 
+        showUpdateDD="true"
+		updateDDSelected="true" 
+		sevletClassName="com.sun.jersey.spi.container.servlet.ServletContainer"/>
+
+</extension>
+
+   <!--extension
+point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
+    <panel 
+      provider="com.sun.enterprise.jst.server.sunappsrv.jaxrsLibraryproviderID"
+      class="com.LibraryProviderInstallPanel"/>
+   </extension-->
+
+
 </plugin>
