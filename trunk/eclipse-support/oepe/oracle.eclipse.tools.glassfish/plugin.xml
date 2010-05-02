@@ -1195,7 +1195,7 @@
              class="com.sun.enterprise.jst.server.sunappsrv.preferences.GlassFishPreferencePage"
              id="com.sun.enterprise.jst.server.sunappsrv.preferences.GlassFishPreferencePage"
              name="GlassFish Preferences"
-             icon="icons/obj16/glassfishserver.gif">
+             >
        </page>
     </extension>
     <extension
