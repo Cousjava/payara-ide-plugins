@@ -17,7 +17,7 @@
    </license>
 
    <plugin
-         id="oracle.eclipse.tools.javadoc.javaee5"
+         id="oracle.eclipse.tools.javadoc.javaee6"
          download-size="0"
          install-size="0"
          version="0.0.0"
