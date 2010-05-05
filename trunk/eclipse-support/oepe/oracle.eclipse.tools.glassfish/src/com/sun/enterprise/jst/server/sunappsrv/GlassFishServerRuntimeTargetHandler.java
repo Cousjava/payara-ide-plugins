@@ -2,6 +2,7 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.lang.reflect.Field;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -9,6 +10,10 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.ClasspathEntry;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.Bundle;
+
+import java.net.URL;
 
 @SuppressWarnings("restriction")
 public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTargetHandler {
@@ -33,7 +38,17 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
             if (runtime.getRuntimeType().getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){//GlassFish v3
             	relativeDocPath="!/javaee6doc";
             }
-            String javadocPath ="jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + relativeDocPath;
+
+           String javadocPath ="jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + relativeDocPath;
+
+           Bundle b= Platform.getBundle("oracle.eclipse.tools.javadoc.javaee6");
+             SunAppSrvPlugin.logMessage("LUDO BUNDLE=" +b,null);
+           if (b!=null){
+        	   URL u= FileLocator.resolve(b.getEntry("/"));
+               SunAppSrvPlugin.logMessage("LUDO URL=" +u,null);
+               javadocPath = "jar:"+u;
+          }
+           
           //  SunAppSrvPlugin.logMessage("entry-------::::" +javadocPath,null);
 
             for (int i = 0; i < entries.length; i++) {
