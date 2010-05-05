@@ -41,11 +41,15 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
 
            String javadocPath ="jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + relativeDocPath;
 
-           Bundle b= Platform.getBundle("oracle.eclipse.tools.javadoc.javaee6");
-             SunAppSrvPlugin.logMessage("LUDO BUNDLE=" +b,null);
+           Bundle b = null;
+           if (runtime.getRuntimeType().getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){//GlassFish v3
+        	   b = Platform.getBundle("oracle.eclipse.tools.javadoc.javaee6");
+           }
+           else {
+	           b = Platform.getBundle("oracle.eclipse.tools.javadoc.javaee5");
+            }
            if (b!=null){
         	   URL u= FileLocator.resolve(b.getEntry("/"));
-               SunAppSrvPlugin.logMessage("LUDO URL=" +u,null);
                javadocPath = ""+u;
           }
            
