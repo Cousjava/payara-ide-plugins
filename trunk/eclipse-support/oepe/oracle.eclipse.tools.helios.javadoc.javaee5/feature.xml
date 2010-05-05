@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="oracle.eclipse.tools.helios.javadoc.javaee5"
-      label="Java EE 5 Javadoc Documentation"
+      label="%featureName"
       version="1.0.0.qualifier"
+      provider-name="%providerName"
       plugin="oracle.eclipse.tools.javadoc.javaee5">
 
    <description url="http://www.example.com/description">
@@ -16,6 +17,10 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.oracle.com/otn_software/oepe/helios"/>
+   </url>
 
    <plugin
          id="oracle.eclipse.tools.javadoc.javaee5"
