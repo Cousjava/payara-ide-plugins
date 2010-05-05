@@ -46,7 +46,7 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
            if (b!=null){
         	   URL u= FileLocator.resolve(b.getEntry("/"));
                SunAppSrvPlugin.logMessage("LUDO URL=" +u,null);
-               javadocPath = "jar:"+u;
+               javadocPath = ""+u;
           }
            
           //  SunAppSrvPlugin.logMessage("entry-------::::" +javadocPath,null);
