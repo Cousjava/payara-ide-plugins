@@ -170,7 +170,7 @@ public class DerbyConfigurator {
 
 	private static String getDerbyClientJarLocation(File glassfishLocation) {
 
-        String derbyLocation = glassfishLocation.getAbsolutePath() + "/javadb/lib/derbyclient.jar"; //$NON-NLS-1$ 
+        String derbyLocation = new File(glassfishLocation.getAbsolutePath()).getParentFile().getAbsolutePath() + "/javadb/lib/derbyclient.jar"; //$NON-NLS-1$ 
 
      //   Activator.getDefault().getLog().log(new Status(IStatus.INFO, Activator.PLUGIN_ID, "derbyJar =" + glassfishLocation)); //$NON-NLS-1$
 		SunAppSrvPlugin.logMessage("derbyJar =" + glassfishLocation, null);
