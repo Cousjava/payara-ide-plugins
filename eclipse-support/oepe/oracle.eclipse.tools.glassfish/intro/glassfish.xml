@@ -2,7 +2,7 @@
 <introContent>
     <extensionContent id="comsunenterprisejstserversunappsrv-introExtension"
   	style="css/sample.css" 
-  	name="GlassFish Application Server Extension" 
+  	name="GlassFish Server Open Source Edition 3" 
   	path="overview/@">
         <group style-id="content-group"
 		id="comsunenterprisejstserversunappsrv-introLink-group">
@@ -10,7 +10,7 @@
        		url="https://glassfishplugins.dev.java.net" 
        		id="comsunenterprisejstserversunappsrv-introLink" style-id="content-link">
                 <text>
-GlassFish v3 is the next major community release of the GlassFish application server. GlassFish v3 Java EE 6 Application Server provides a light weight and extensible core based on OSGi, a web and scripting container, an easy-to-use Admin Console for configuration and management, and Update Center connectivity.
+GlassFish Server Open Source Edition 3 is a Java EE 6 Application Server that provides a light weight and extensible core based on OSGi, a web and scripting container, an easy-to-use Admin Console for configuration and management, and Update Center connectivity.
                 </text>
             </link>
         </group>
