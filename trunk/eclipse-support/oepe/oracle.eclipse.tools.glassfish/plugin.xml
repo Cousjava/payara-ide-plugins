@@ -242,38 +242,19 @@
         
     </extension>
     
-    <!--extension point="org.eclipse.wst.server.ui.serverImages">
+    <extension point="org.eclipse.wst.server.ui.serverImages">
 
         
-        <image id="org.eclipse.jst.server.generic.image"
+        <image id="org.eclipse.jst.server.glassfish.image"
                icon="icons/obj16/glassfishserver.gif"
-               typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv91"/>
-        
-        <image id="org.eclipse.jst.server.generic.image"
-               icon="icons/obj16/glassfishserver.gif"
-               typeIds="com.sun.enterprise.jst.server.sunappsrv91"/>
-        
-         <image id="org.eclipse.jst.server.generic.image"
-               icon="icons/obj16/glassfishserver.gif"
-               typeIds="com.sun.enterprise.jst.server.runtime.sailfin2"/>
-        
-        <image id="org.eclipse.jst.server.generic.image"
-               icon="icons/obj16/glassfishserver.gif"
-               typeIds="com.sun.enterprise.jst.server.sailfin2"/>
-        
-        <image id="org.eclipse.jst.server.generic.image"
-               icon="icons/obj16/glassfishserver.gif"
-               typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv92"/>
-        
-        <image id="org.eclipse.jst.server.generic.image"
-               icon="icons/obj16/glassfishserver.gif"
-               typeIds="com.sun.enterprise.jst.server.sunappsrv92"/>
+               typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv91,com.sun.enterprise.jst.server.sunappsrv91,com.sun.enterprise.jst.server.runtime.sailfin2,com.sun.enterprise.jst.server.sailfin2,com.sun.enterprise.jst.server.runtime.sunappsrv92,com.sun.enterprise.jst.server.sunappsrv92"
+               />
 
 
 
         
         
-    </extension-->
+    </extension>
     
     
     
