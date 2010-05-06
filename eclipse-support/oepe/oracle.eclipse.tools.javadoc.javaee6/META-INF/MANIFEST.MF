@@ -1,5 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Java EE 6 Javadoc Documentation
+Bundle-Name: %pluginName
 Bundle-SymbolicName: oracle.eclipse.tools.javadoc.javaee6
 Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-Vendor: %providerName
