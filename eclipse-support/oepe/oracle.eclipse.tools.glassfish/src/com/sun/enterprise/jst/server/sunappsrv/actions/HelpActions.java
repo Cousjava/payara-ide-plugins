@@ -44,44 +44,18 @@ package com.sun.enterprise.jst.server.sunappsrv.actions;
  * @author Ludovic.Champenois@Sun.COM
  */
 public class HelpActions {
-	//V3 help menu items:
+	//V3 help menu item:
 	
 	public static class TopV3 extends ShowURLAction {
 		public TopV3() { super("http://docs.sun.com/app/docs/coll/1343.9");}
 	}	
 
-	//V3 prelude help menu items:
+	//V2.1 help menu item:
 	
-	public static class QuickStartGuideV3 extends ShowURLAction {
-		public QuickStartGuideV3() { super("http://docs.sun.com/doc/820-4836");}
+	public static class TopV21 extends ShowURLAction {
+		public TopV21() { super("http://docs.sun.com/app/docs/coll/1343.4");}
 	}	
-	public static class AdminGuideV3 extends ShowURLAction {
-		public AdminGuideV3() { super("http://docs.sun.com/doc/820-4495");}
-	}
-	public static class DevGuideV3 extends ShowURLAction {
-		public DevGuideV3() { super("http://docs.sun.com/doc/820-4496");}
-	}
-	public static class AppDeployGuideV3 extends ShowURLAction {
-		public AppDeployGuideV3() { super("http://docs.sun.com/doc/820-4502");}
-	}
-	
-	//V2 help menu items:
-	
-	public static class QuickStartGuideV2 extends ShowURLAction {
-		public QuickStartGuideV2() { super("http://docs.sun.com/app/docs/doc/819-3193");}
-	}	
-	public static class AdminGuideV2 extends ShowURLAction {
-		public AdminGuideV2() { super("http://docs.sun.com/app/docs/doc/819-3671");}
-	}
-	public static class DevGuideV2 extends ShowURLAction {
-		public DevGuideV2() { super("http://docs.sun.com/app/docs/doc/819-3672");}
-	}
-	public static class AppDeployGuideV2 extends ShowURLAction {
-		public AppDeployGuideV2() { super("http://docs.sun.com/app/docs/doc/819-3673");}
-	}
-	public static class DeployPlanningGuideV2 extends ShowURLAction {
-		public DeployPlanningGuideV2() { super("http://docs.sun.com/app/docs/doc/819-3680");}
-	}	
+
 	public static class JavaEE5JavaDoc extends ShowURLAction {
 		public JavaEE5JavaDoc() { super("http://java.sun.com/javaee/5/docs/api/");}
 	}
