@@ -732,6 +732,10 @@ public void setServerInstanceProperties(Map map) {
                                 try {
                                     String id = attributes.getValue("name");
                                     if(id != null && id.length() > 0) {
+                                    	
+                                    	if (attributes.getValue("port").startsWith("$")){  //GlassFish v3.1 : ignore these template entries
+                                    		return;
+                                    	}
                                         int port = Integer.parseInt(attributes.getValue("port"));
                                         boolean secure = "true".equals(attributes.getValue("security-enabled"));
                                         boolean enabled = !"false".equals(attributes.getValue("enabled"));
