@@ -4,6 +4,7 @@
       label="GlassFish Java EE 5, Java EE 6"
       version="1.0.53"
       provider-name="java.net"
+      plugin="com.sun.enterprise.jst.server.sunappsrv"
       image="glassfish.gif">
 
    <description url="https://glassfishplugins.dev.java.net">
