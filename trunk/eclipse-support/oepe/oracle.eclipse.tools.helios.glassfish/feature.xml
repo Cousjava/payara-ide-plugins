@@ -890,6 +890,51 @@ COPYRIGHT © 2008 THE ECLIPSE FOUNDATION. ALL RIGHTS RESERVED
 
    <requires>
       <import feature="org.eclipse.platform" version="3.6.0" match="equivalent"/>
+      <import plugin="org.apache.xerces"/>
+      <import plugin="org.apache.ant"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jst.server.core"/>
+      <import plugin="org.eclipse.jst.j2ee"/>
+      <import plugin="org.eclipse.jst.server.generic.core"/>
+      <import plugin="org.eclipse.jst.server.generic.ui"/>
+      <import plugin="org.eclipse.jst.common.frameworks"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.jem.util"/>
+      <import plugin="org.eclipse.wst.common.frameworks"/>
+      <import plugin="org.eclipse.wst.server.core"/>
+      <import plugin="org.eclipse.wst.server.ui"/>
+      <import plugin="org.eclipse.wst.common.project.facet.core"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.eclipse.datatools.connectivity"/>
+      <import plugin="org.eclipse.datatools.connectivity.ui"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.jdt.debug.ui"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.jdt.debug"/>
+      <import plugin="org.eclipse.ui.console"/>
+      <import plugin="org.eclipse.jst.jee.web"/>
+      <import plugin="org.eclipse.wst.common.frameworks.ui"/>
+      <import plugin="org.eclipse.jst.servlet.ui"/>
+      <import plugin="org.eclipse.jst.j2ee.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.emf.codegen"/>
+      <import plugin="org.eclipse.text"/>
+      <import plugin="org.eclipse.jst.ejb.ui"/>
+      <import plugin="org.eclipse.jst.j2ee.ejb"/>
+      <import plugin="org.eclipse.wst.html.ui"/>
+      <import plugin="org.eclipse.jst.j2ee.core"/>
+      <import plugin="org.eclipse.jst.common.project.facet.core"/>
+      <import plugin="org.eclipse.jst.ws.jaxrs.core"/>
+      <import plugin="org.eclipse.ant.core"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.jst.j2ee.web"/>
+      <import plugin="org.eclipse.jst.jee"/>
+      <import plugin="org.eclipse.jst.jee.ui"/>
+      <import plugin="org.eclipse.jst.ws.jaxrs.ui"/>
    </requires>
 
    <plugin
