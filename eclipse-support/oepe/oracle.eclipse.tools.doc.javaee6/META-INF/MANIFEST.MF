@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Java EE 6 Documentation
+Bundle-SymbolicName: oracle.eclipse.tools.doc.javaee6;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-Vendor: Oracle
