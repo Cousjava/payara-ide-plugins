@@ -945,14 +945,14 @@ COPYRIGHT © 2008 THE ECLIPSE FOUNDATION. ALL RIGHTS RESERVED
          unpack="false"/>
 
    <plugin
-         id="oracle.eclipse.tools.javadoc.javaee5"
+         id="oracle.eclipse.tools.doc.javaee5"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="oracle.eclipse.tools.javadoc.javaee6"
+         id="oracle.eclipse.tools.doc.javaee6"
          download-size="0"
          install-size="0"
          version="0.0.0"
