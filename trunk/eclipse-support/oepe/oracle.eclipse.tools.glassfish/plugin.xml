@@ -1253,7 +1253,7 @@
                id="com.sun.enterprise.jst.server.sunappsrv.actions.topActionHelpv2">
              </action>              
                 
-             <action
+             <!--action
                 label="%menu.javaee6.javadoc"
                 icon="icons/obj16/glassfishserver.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$JavaEE6JavaDoc"
@@ -1269,7 +1269,7 @@
 				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc"
                 menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.javaee5docMenu">
-            </action> 
+            </action--> 
 
 		</actionSet>
     </extension>
