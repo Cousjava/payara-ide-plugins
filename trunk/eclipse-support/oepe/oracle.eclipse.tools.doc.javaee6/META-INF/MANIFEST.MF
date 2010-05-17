@@ -13,4 +13,4 @@ Import-Package: org.eclipse.core.commands,
  org.eclipse.ui.plugin,
  org.osgi.framework
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.5
