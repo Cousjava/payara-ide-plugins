@@ -3,13 +3,13 @@
    <description name="GlassFish Eclipse Update Site for the Helios release (Eclipse 3.6)" url="http://download.java.net/glassfish/eclipse/helios">
       GlassFish Eclipse Update Site for the Helios release (Eclipse 3.6)
    </description>
-   <feature url="features/oracle.eclipse.tools.helios.doc.javaee5_1.0.0.201005061004.jar" id="oracle.eclipse.tools.helios.doc.javaee5" version="1.0.0.201005061004">
+   <feature url="features/oracle.eclipse.tools.helios.doc.javaee5_1.0.0.qualifier.jar" id="oracle.eclipse.tools.helios.doc.javaee5" version="1.0.0.qualifier">
       <category name="glassfish_category"/>
    </feature>
-   <feature url="features/oracle.eclipse.tools.helios.doc.javaee6_1.0.0.201005061004.jar" id="oracle.eclipse.tools.helios.doc.javaee6" version="1.0.0.201005061004">
+   <feature url="features/oracle.eclipse.tools.helios.doc.javaee6_1.0.0.qualifier.jar" id="oracle.eclipse.tools.helios.doc.javaee6" version="1.0.0.qualifier">
       <category name="glassfish_category"/>
    </feature>
-   <feature url="features/oracle.eclipse.tools.helios.glassfish_1.6.0.201005061004.jar" id="oracle.eclipse.tools.helios.glassfish" version="1.6.0.201005061004">
+   <feature url="features/oracle.eclipse.tools.helios.glassfish_1.6.0.qualifier.jar" id="oracle.eclipse.tools.helios.glassfish" version="1.6.0.qualifier">
       <category name="glassfish_category"/>
    </feature>
    <category-def name="glassfish_category" label="GlassFish Application Server"/>
