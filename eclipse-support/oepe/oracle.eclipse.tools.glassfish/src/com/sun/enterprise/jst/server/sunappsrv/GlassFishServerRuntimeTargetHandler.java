@@ -36,7 +36,7 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
        //     File jarFile = new File(""+GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             String relativeDocPath="!/docs/api";
             if (runtime.getRuntimeType().getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){//GlassFish v3
-            	relativeDocPath="!/javaee6doc";
+            	relativeDocPath="!/javaee6doc/doc";
             }
 
            String javadocPath ="jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + relativeDocPath;
