@@ -3,5 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Java EE 5 Documentation
 Bundle-SymbolicName: oracle.eclipse.tools.doc.javaee5;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Oracle
+Import-Package: org.eclipse.jface.action,
+ org.eclipse.jface.viewers,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.browser
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.ui

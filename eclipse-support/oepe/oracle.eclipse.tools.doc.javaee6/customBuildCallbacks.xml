@@ -18,7 +18,8 @@
 	<!-- ===================================================================== -->
 	<target name="pre.build.jars">
 		<delete dir="javaee6doc" />
-		<unzip dest="javaee6doc" src="../oracle.eclipse.tools.glassfish/glassfish-all.jar"/>
+		<mkdir  dir="javaee6doc/doc"/>
+		<unzip dest="javaee6doc/doc" src="../oracle.eclipse.tools.glassfish/glassfish-all.jar"/>
 	</target>
 
 	<!-- ===================================================================== -->
