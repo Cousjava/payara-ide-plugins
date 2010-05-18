@@ -44,14 +44,18 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
            Bundle b = null;
            if (runtime.getRuntimeType().getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){//GlassFish v3
         	   b = Platform.getBundle("oracle.eclipse.tools.doc.javaee6");
+               if (b!=null){
+            	   URL u= FileLocator.resolve(b.getEntry("/javaee6doc/doc"));
+                   javadocPath = ""+u;
+              }
            }
            else {
 	           b = Platform.getBundle("oracle.eclipse.tools.doc.javaee5");
-            }
-           if (b!=null){
-        	   URL u= FileLocator.resolve(b.getEntry("/"));
-               javadocPath = ""+u;
-          }
+	           if (b!=null){
+	        	   URL u= FileLocator.resolve(b.getEntry("/docs/api"));
+	               javadocPath = ""+u;
+	          }           }
+
            
           //  SunAppSrvPlugin.logMessage("entry-------::::" +javadocPath,null);
 
