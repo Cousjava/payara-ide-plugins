@@ -61,7 +61,7 @@ public class JavaEE5JavaDoc extends AbstractHandler {
 
     public JavaEE5JavaDoc() {
 		try {
-			url= FileLocator.resolve(Platform.getBundle("oracle.eclipse.tools.doc.javaee5").getEntry("/docs/api/index.html"));
+			url= FileLocator.resolve(Platform.getBundle("oracle.eclipse.tools.doc.javaee5").getEntry("/javaee5doc/docs/api/index.html"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
