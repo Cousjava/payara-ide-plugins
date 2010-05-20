@@ -38,12 +38,53 @@
 
 package oracle.eclipse.tools.doc.javaee5;
 
+import java.io.IOException;
+import java.net.URL;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+
+
 /**
  *
  * @author Ludovic.Champenois@Sun.COM
  */
+public class JavaEE5JavaDoc extends AbstractHandler {
 
-	public class JavaEE5JavaDoc extends ShowURLAction {
-		public JavaEE5JavaDoc() { super("http://java.sun.com/javaee/5/docs/api/");}
-	}	
+	private URL url=null;
+
+    public JavaEE5JavaDoc() {
+		try {
+			url= FileLocator.resolve(Platform.getBundle("oracle.eclipse.tools.doc.javaee5").getEntry("/docs/api/index.html"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+   }
+ 
+	public Object execute(ExecutionEvent arg0) throws ExecutionException {
+		try {
+
+			
+			IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+			IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
+			browser.openURL(url);
+		} catch (Exception e) {
+	           //SunAppSrvPlugin.logMessage("Error opening browser: "+e.getMessage());
+
+		}
+		return null;
+
+	}
+
+
+
+}
+
 

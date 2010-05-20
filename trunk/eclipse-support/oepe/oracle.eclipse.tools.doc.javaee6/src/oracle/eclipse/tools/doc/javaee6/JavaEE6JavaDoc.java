@@ -39,12 +39,51 @@
 package oracle.eclipse.tools.doc.javaee6;
 
 
+import java.io.IOException;
+import java.net.URL;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+
+
 /**
  *
  * @author Ludovic.Champenois@Sun.COM
  */
+public class JavaEE6JavaDoc extends AbstractHandler {
 
-	public class JavaEE6JavaDoc extends ShowURLAction {
-		public JavaEE6JavaDoc() { super("http://javadoc.glassfish.org/javaee6/apidoc/");}
-	}	
+	private URL url=null;
+
+    public JavaEE6JavaDoc() {
+		try {
+			url= FileLocator.resolve(Platform.getBundle("oracle.eclipse.tools.doc.javaee6").getEntry("/javaee6doc/doc/index.html"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+   }
+ 
+	public Object execute(ExecutionEvent arg0) throws ExecutionException {
+		try {
+
+			
+			IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+			IWebBrowser browser = browserSupport.createBrowser(IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR, null, null, null);
+			browser.openURL(url);
+		} catch (Exception e) {
+	           //SunAppSrvPlugin.logMessage("Error opening browser: "+e.getMessage());
+
+		}
+		return null;
+
+	}
+
+
+}
 
