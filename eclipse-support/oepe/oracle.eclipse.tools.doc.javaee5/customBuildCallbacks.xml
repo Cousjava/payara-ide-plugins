@@ -18,7 +18,7 @@
 	<!-- ===================================================================== -->
 	<target name="pre.build.jars">
 		<delete dir="javaee5doc" />
-		<unzip dest="javaee5doc" src="../oracle.eclipse.tools.glassfish/javaee5-doc-api.zip"/>
+		<unzip dest="javaee5doc" src="./java_ee_javadocs.zip"/>
 	</target>
 
 	<!-- ===================================================================== -->
