@@ -52,7 +52,7 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
            else {
 	           b = Platform.getBundle("oracle.eclipse.tools.doc.javaee5");
 	           if (b!=null){
-	        	   URL u= FileLocator.resolve(b.getEntry("/docs/api"));
+	        	   URL u= FileLocator.resolve(b.getEntry("/javaee5doc/docs/api"));
 	               javadocPath = ""+u;
 	          }           }
 
