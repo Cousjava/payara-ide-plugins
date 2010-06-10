@@ -67,7 +67,7 @@
          <toolbar id="oracle.eclipse.tools.doc.javaee5.Toolbar">
             <command
                   commandId="oracle.eclipse.tools.doc.javaee5.helpCommand"
-                  icon="icons/Javaicon.gif"
+                  icon="icons/java-help.png"
                   tooltip="Java EE 5 Documentation"
                   id="oracle.eclipse.tools.doc.javaee5.Toolbar.helpCommand">
             </command>
