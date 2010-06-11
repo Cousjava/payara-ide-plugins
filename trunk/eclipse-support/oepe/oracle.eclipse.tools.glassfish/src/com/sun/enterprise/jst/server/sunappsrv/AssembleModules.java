@@ -1,9 +1,9 @@
 // <editor-fold defaultstate="collapsed" desc="CDDL+GPL License">
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- * 
+ *
  * Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.
- * 
+ *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
  * and Distribution License("CDDL") (collectively, the "License").  You
@@ -11,7 +11,7 @@
  * a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
  * or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
  * language governing permissions and limitations under the License.
- * 
+ *
  * When distributing the software, include this License Header Notice in each
  * file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
  * Sun designates this particular file as subject to the "Classpath" exception
@@ -20,9 +20,9 @@
  * Header, with the fields enclosed by brackets [] replaced by your own
  * identifying information: "Portions Copyrighted [year]
  * [name of copyright owner]"
- * 
+ *
  * Contributor(s):
- * 
+ *
  * If you wish your version of this file to be governed by only the CDDL or
  * only the GPL Version 2, indicate your decision by adding "[Contributor]
  * elects to include this software in this distribution under the [CDDL or GPL
@@ -37,7 +37,7 @@
 // </editor-fold>
 package com.sun.enterprise.jst.server.sunappsrv;
 
-			
+
 import java.io.File;
 import java.io.IOException;
 
@@ -54,6 +54,7 @@ import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.publishers.ModulePackager;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
@@ -68,12 +69,12 @@ import org.eclipse.wst.server.core.util.PublishHelper;
 @SuppressWarnings("restriction")
 public  class AssembleModules {
 
-	protected IModule module; 
+	protected IModule module;
 	protected IPath assembleRoot;
 	protected PublishHelper publishHelper;
 	protected SunAppServer server;
 	protected boolean childNeedsARedeployment=false;
-	
+
 	protected AssembleModules(IModule module, IPath assembleRoot, SunAppServer server , PublishHelper helper)
 	{
 		this.module=module;
@@ -82,15 +83,15 @@ public  class AssembleModules {
 		this.publishHelper = helper;
         SunAppSrvPlugin.logMessage("AssembleModules assembleRoot="+assembleRoot);
 /*		if(isModuleType(module, "jst.web")) {
-			
+
 		}
 		if(isModuleType(module, "jst.ear")) {
-			
+
 		}
 		*/
 
 	}
-	
+
 
 	public IPath assembleWebModule(IProgressMonitor monitor) throws CoreException{
 
@@ -99,22 +100,36 @@ public  class AssembleModules {
 		IModule[] childModules = webModule.getModules();
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
-			packModule(module, webModule.getURI(module), parent);
+			//packModule(module, webModule.getURI(module), parent);
+			String uri = webModule.getURI(module);
+			if (uri == null) { // The bad memories of WTP 1.0
+				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, "unable to assemble module null uri", null); //$NON-NLS-1$
+				throw new CoreException(status);
+			}
+			IJ2EEModule jeeModule = (IJ2EEModule) module.loadAdapter(IJ2EEModule.class, monitor);
+			if (jeeModule != null && jeeModule.isBinary()) { // Binary module
+				ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
+				IModuleResource[] resources = pm.members();
+				publishHelper.publishToPath(resources, parent.append(uri), monitor);
+			}
+			else { // Project module
+				packModule(module, uri, parent);
+			}
 		}
 		return parent;
 	}
-	
-		
-	public static boolean isModuleType(IModule module, String moduleTypeId){	
+
+
+	public static boolean isModuleType(IModule module, String moduleTypeId){
 			if(module.getModuleType()!=null && moduleTypeId.equals(module.getModuleType().getId())){
 				return true;
 			}
 			return false;
 	}
-	
-	
+
+
 	protected void packModule(IModule module, String deploymentUnitName, IPath destination)throws CoreException {
-		
+
 		String dest = destination.append(deploymentUnitName).toString();
         SunAppSrvPlugin.logMessage("AssembleModules dest="+dest);
 
@@ -178,20 +193,20 @@ public  class AssembleModules {
 			// no need to emit an error like CoreException(status[0]); just log in the entry
 			// see https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=268
 			for (int i=0;i<status.length;i++){
-				SunAppSrvPlugin.logMessage("warning copying module: "+status[i].getMessage());	
+				SunAppSrvPlugin.logMessage("warning copying module: "+status[i].getMessage());
 			}
 		}
-			
+
 		return assembleRoot;
 	}
-	
+
 	/* not used for now... Would be ejb module when v3 has them
-	 * 
+	 *
 	 */
 	public IPath assembleNonWebOrNonEARModule(IProgressMonitor monitor) throws CoreException {
-		return copyModule(module,monitor);		
+		return copyModule(module,monitor);
 	}
-	
+
 	public IPath assembleEARModule(IProgressMonitor monitor) throws CoreException{
 		//copy ear root to the temporary assembly directory
 		IPath parent =copyModule(module,monitor);
@@ -200,7 +215,7 @@ public  class AssembleModules {
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
 			String uri = earModule.getURI(module);
-			if(uri==null){ 
+			if(uri==null){
 				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,	"unable to assemble module null uri",null ); //$NON-NLS-1$
 				throw new CoreException(status);
 			}
@@ -208,29 +223,46 @@ public  class AssembleModules {
 			if( jeeModule != null && jeeModule.isBinary() ){//Binary module just copy
 				ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
 				IModuleResource[] resources = pm.members();
-				publishHelper.publishFull(resources, parent, monitor);
+				//ludo nbew publishHelper.publishFull(resources, parent, monitor);
+				//
+				//
+				//
+				publishHelper.publishToPath(resources, parent.append(uri), monitor);
+				//
+				//
+				//
+				//
+
+
 				continue;//done! no need to go further
 			}
-			if( shouldRepack( module ) ){	
+			if( shouldRepack( module ) ){
 				packModuleEARModule(module,uri, parent);
             }
 		}
 		return parent;
-		
-		
+
+
 	}
 	/**
      * Checks if there has been a change in the published resources.
      * @param module
      * @return module changed
 	 */
-	private boolean shouldRepack( IModule module ) {
+	/*private boolean shouldRepack( IModule module ) {
         final Server _server = (Server) server.getServer();
-        final IModule[] modules ={module}; 
+        final IModule[] modules ={module};
         IModuleResourceDelta[] deltas = _server.getPublishedResourceDelta( modules );
 
         return deltas.length > 0;
-    }
+    }*/
+	private boolean shouldRepack(IModule lmodule) {
+		final IModule[] rootMod = { module };
+		final IModule[] modules = { module, lmodule };
+		boolean repack = (IServer.PUBLISH_STATE_NONE != server.getServer().getModulePublishState(modules));
+		repack |= (IServer.PUBLISH_STATE_NONE != server.getServer().getModulePublishState(rootMod));
+		return repack;
+	}
 
 	/* returns true is a deploy command has to be run.
 	 *  for example a simple JSP change does not need a redeployment as the file is already been copied by the assembly in the
@@ -238,11 +270,11 @@ public  class AssembleModules {
 	 */
 	public boolean needsARedeployment(  ) {
         final Server _server = (Server) server.getServer();
-        final IModule[] modules ={module}; 
+        final IModule[] modules ={module};
         IModuleResourceDelta[] deltas = _server.getPublishedResourceDelta( modules );
         return (childNeedsARedeployment|| criticalResourceChangeThatNeedsARedeploy(deltas));
-    }	
-	/*return true is a module resource change requires a redeploy command 
+    }
+	/*return true is a module resource change requires a redeploy command
 	 * for example, web.xml or a .class file change needs a redepploy.
 	 * a jsp or html change just needs a file copy not a redeploy command.
 	 */
@@ -250,7 +282,7 @@ public  class AssembleModules {
 		if (deltas==null){
 			return false;
 		}
-	
+
         for (int i=0;i<deltas.length;i++){
             SunAppSrvPlugin.logMessage("AssembleModules criticalResourceChangeThatNeedsARedeploy DELTA IS="+deltas[i].getKind()+deltas[i].getModuleResource().getName());
             if (deltas[i].getModuleResource().getName().endsWith (".class")){//class file
@@ -266,15 +298,15 @@ public  class AssembleModules {
             	return true;
             }
             SunAppSrvPlugin.logMessage("AssembleModules neither class manifest or xml file");
-          
+
             IModuleResourceDelta[] childrenDeltas= deltas[i].getAffectedChildren();
 	        if ( criticalResourceChangeThatNeedsARedeploy(childrenDeltas)){
 	        	return true;
 	        }
         }
-		
+
 		return false;
-		
+
 	}
 
    protected void packModuleEARModule(IModule module, String deploymentUnitName, IPath destination) throws CoreException {
@@ -283,7 +315,7 @@ public  class AssembleModules {
        //need to replace the , with_ ie _war or _jar as the dirname for dir deploy
        SunAppSrvPlugin.logMessage("AssembleModules destination="+destination);
 		if(module.getModuleType().getId().equals("jst.web")) {//$NON-NLS-1$
-		
+
 			AssembleModules assembler= new AssembleModules(module, assembleRoot,server , publishHelper);
 			IPath webAppPath = assembler.assembleWebModule(new NullProgressMonitor());
 			String realDestination = destination.append(deploymentUnitName).toString();
@@ -292,29 +324,29 @@ public  class AssembleModules {
 			try {
 				packager =new ModulePackager(realDestination,false);
 				packager.pack(webAppPath.toFile(),webAppPath.toOSString());
-			
+
 			} catch (IOException e) {
 				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,
 						"unable to assemble module", e); //$NON-NLS-1$
 				throw new CoreException(status);
 			}
 			finally{
-				if(packager!=null) {					
+				if(packager!=null) {
 					try {
 						packager.finished();
 					} catch (IOException e) {
 					}
-				}				
-			}			
-			
+				}
+			}
+
 		}
 		else {
 			/*ludo super.*/packModule(module, deploymentUnitName, destination);
 		}
-		
+
 	}
-   
-   
+
+
 	public IPath assembleDirDeployedEARModule(IProgressMonitor monitor) throws CoreException{
 		//copy ear root to the temporary assembly directory
 		IPath parent =copyModule(module,monitor);
@@ -326,7 +358,7 @@ public  class AssembleModules {
 			IModule module = childModules[i];
 			String uri = earModule.getURI(module);
 		       SunAppSrvPlugin.logMessage("AssembleModules childModules.length="+childModules.length +" "+uri);
-			if(uri==null){ 
+			if(uri==null){
 				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,	"unable to assemble module null uri",null ); //$NON-NLS-1$
 				throw new CoreException(status);
 			}
@@ -346,16 +378,16 @@ public  class AssembleModules {
 
 				continue;//done! no need to go further
 			}
-			if(!module.getModuleType().getId().equals("jst.utility")) {//$NON-NLS-1$	see bug https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=251				
+			if(!module.getModuleType().getId().equals("jst.utility")) {//$NON-NLS-1$	see bug https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=251
 				uri = uri.replace (".","_");
 			}
 			//SunAppSrvPlugin.logMessage("AssembleModules module uri="+uri,null);
 			//SunAppSrvPlugin.logMessage("AssembleModules module.getModuleType().getId()="+module.getModuleType().getId(),null);
 			//SunAppSrvPlugin.logMessage("AssembleModules NEW URIRIRIRIRIRIRIR="+childModules.length +" "+uri);
-			if( shouldRepack( module ) ){	
+			if( shouldRepack( module ) ){
 			       SunAppSrvPlugin.logMessage("AssembleModules shouldRepack="+"yes");
 //				packModuleEARModule(module,uri, parent);
-				if(module.getModuleType().getId().equals("jst.web")) {//$NON-NLS-1$					
+				if(module.getModuleType().getId().equals("jst.web")) {//$NON-NLS-1$
 				       SunAppSrvPlugin.logMessage("AssembleModules module type is WEB!!!!");
 					AssembleModules assembler = new AssembleModules(module, assembleRoot.append(uri),server, publishHelper);
 					IPath webAppPath = assembler.assembleWebModule(new NullProgressMonitor());
@@ -364,7 +396,7 @@ public  class AssembleModules {
 				       SunAppSrvPlugin.logMessage("AssembleModules web need childNeedsARedeployment=="+childNeedsARedeployment);
 
 				//	String realDestination = parent.append(uri).toString();
-			    //    SunAppSrvPlugin.logMessage("AssembleModules realDestination="+realDestination);								
+			    //    SunAppSrvPlugin.logMessage("AssembleModules realDestination="+realDestination);
 				}
 				else {
 				       SunAppSrvPlugin.logMessage("AssembleModules module type is NOT WEB!!!!"+module.getModuleType().getId());
@@ -372,15 +404,15 @@ public  class AssembleModules {
 					AssembleModules assembler= new AssembleModules(module, assembleRoot.append(uri),server , publishHelper);
 					childNeedsARedeployment = (childNeedsARedeployment||assembler.needsARedeployment());
 				       SunAppSrvPlugin.logMessage("AssembleModules NOT web need childNeedsARedeployment=="+childNeedsARedeployment);
-					assembler.copyModule(module,monitor);		
+					assembler.copyModule(module,monitor);
 
-				}				
-																				
+				}
+
             }
-			
+
 		}
 		return parent;
-		
-		
+
+
 	}
 }
