@@ -63,7 +63,7 @@
                   id="oracle.eclipse.tools.doc.javaee5.helpCommand">
             </command>
       </menuContribution>
-       <menuContribution  locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+       <!--menuContribution  locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
          <toolbar id="oracle.eclipse.tools.doc.javaee5.Toolbar">
             <command
                   commandId="oracle.eclipse.tools.doc.javaee5.helpCommand"
@@ -72,7 +72,7 @@
                   id="oracle.eclipse.tools.doc.javaee5.Toolbar.helpCommand">
             </command>
          </toolbar>
-      </menuContribution>
+      </menuContribution-->
    </extension>
 
 </plugin>
