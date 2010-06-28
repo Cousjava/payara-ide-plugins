@@ -42,6 +42,8 @@ package com.sun.enterprise.jst.server.sunappsrv;
  *
  * @author ludo
  */
+import java.util.Set;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -52,7 +54,10 @@ import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.project.facet.core.ActionConfig;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
+import org.eclipse.wst.common.project.facet.core.IFacetedProjectWorkingCopy;
+import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
 import com.sun.enterprise.jst.server.sunappsrv.ejbjar.SunEjbJarXmlCreate;
@@ -64,13 +69,21 @@ public class GlassFishFacet implements IDelegate {
     
     
     public void execute(IProject prj, IProjectFacetVersion fv,Object config, IProgressMonitor monitor) throws CoreException {
-        
+    	ActionConfig facf = (ActionConfig)config;
+    	IFacetedProjectWorkingCopy workingcopy = facf.getFacetedProjectWorkingCopy();
+
+    	Set<IProjectFacetVersion> spv = workingcopy.getProjectFacets();
+    	boolean jsf =false;
+    	for (IProjectFacetVersion pp: spv){
+    		if (pp.getPluginId().equals("org.eclipse.jst.jsf.core")){
+    			jsf=true;
+    		}
+    	}
         //IVirtualComponent virtualC = ComponentCore.createComponent(prj);
 		IDataModel model = DataModelFactory.createDataModel(new JavaProjectFacetCreationDataModelProvider());
 		model.setStringProperty(IFacetDataModelProperties.FACET_PROJECT_NAME, prj.getName());
 
         
- ///       IDataModel model = DataModelFactory.createDataModel(new JavaComponentCreationDataModelProvider());
 ///        model.setStringProperty(IComponentCreationDataModelProperties.COMPONENT_NAME, virtualC.getName());
 ///        model.setStringProperty(IComponentCreationDataModelProperties.PROJECT_NAME, prj.getName());
 		IProject project = getProject(model);
@@ -78,8 +91,10 @@ public class GlassFishFacet implements IDelegate {
 			if (JavaEEProjectUtilities.isDynamicWebProject(project)) {
 				SunWebXmlCreate swa= new SunWebXmlCreate(model,"9.x");
 				swa.execute(monitor,null);
-				IndexJSPCreate i= new IndexJSPCreate(model);
-				i.execute(monitor,null);
+				if (jsf==false){
+					IndexJSPCreate i= new IndexJSPCreate(model);
+					i.execute(monitor,null);
+				}
 
 			} else if (JavaEEProjectUtilities.isEJBProject(project)) {
 				SunEjbJarXmlCreate sej= new SunEjbJarXmlCreate(model,"9.x");
