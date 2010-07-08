@@ -207,6 +207,9 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		if (((Servlet) servlet.getMainObject()).getRunAs() == null) {
 			Object urls = getAnnotatedValue("urlPatterns", serv
 					.getMemberValuePairs());
+			if (urls == null) {
+				 urls = getAnnotatedValue("value", serv
+						.getMemberValuePairs());			}
 			if (urls != null) {
 				RunAs runAs = JavaeeFactory.eINSTANCE.createRunAs();
 				if (urls instanceof String) {

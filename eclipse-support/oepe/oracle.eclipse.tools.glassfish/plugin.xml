@@ -1343,7 +1343,7 @@
            <modelProvider
                  factoryClass="com.sun.enterprise.jst.server.sunappsrv.v3.Web30MergedModelProviderFactory"
                  priority="99"/>
-           <facet id="jst.web" versions="2.5"/>
+           <facet id="jst.web" versions="3.0"/>
          </provider>
    </extension>
    
