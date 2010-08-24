@@ -286,12 +286,12 @@ public class CommandRunner extends BasicTask<OperationState> {
     
     public Future<OperationState> deploy(File dir, String moduleName, String contextRoot)  {
         return execute(new Commands.DeployCommand(dir.getAbsolutePath(), moduleName, 
-                contextRoot, computePreserveSessions(), server.isV3Prelude()));
+                contextRoot, computePreserveSessions()));
     }
     
     public Future<OperationState> redeploy(String moduleName, String contextRoot)  {
         return execute(new Commands.RedeployCommand(moduleName, contextRoot, 
-                computePreserveSessions(), server.isV3Prelude()));
+                computePreserveSessions()));
     }
 
     private  Boolean computePreserveSessions() {
@@ -379,7 +379,7 @@ public class CommandRunner extends BasicTask<OperationState> {
                             hconn.setRequestProperty("Content-Type", contentType);
                         }
                         hconn.setRequestProperty("User-Agent", "hk2-agent"); // NOI18N
-                        if (server.isV3() || (server.isV3Prelude() && !server.getUseAnonymousConnections().equals("true"))){
+                        if ( !server.getUseAnonymousConnections().equals("true")){
                         	// Set up an authorization header with our credentials
                         	// Hk2Properties tp = tm.getHk2Properties();
                         	String input = server.getAdminName() + ":" + server.getAdminPassword();

@@ -42,6 +42,8 @@ package com.sun.enterprise.jst.server.sunappsrv.editorsections;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -145,23 +147,16 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 		section.setClient(comp);
 		GridDataFactory txtGDF = GridDataFactory.fillDefaults().grab(true, false).span(2, 1).hint(50, SWT.DEFAULT);
 
-		createLabel(comp, Messages.DomainName, toolkit);
 
-		final Text domainname = toolkit.createText(comp, sunserver.getdomainName(), SWT.BORDER);
-		txtGDF.applyTo(domainname);
-		domainname.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
 
-				execute(new SunAppServerCommands(server, domainname.getText(),SunAppServer.DOMAINNAME));
-			}
-		});
 
-		final Text domaindir = SWTUtil.createLabeledPath(Messages.DomainDirectory, sunserver.getDomainDir(), comp, toolkit);
+
+		final Text domaindir = SWTUtil.createLabeledPath(Messages.DomainDirectory, sunserver.getDomainDir()+File.separator+sunserver.getdomainName(), comp, toolkit);
 		txtGDF.align(SWT.FILL, SWT.CENTER).span(1, 1).applyTo(domaindir);
 		domaindir.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 
-				execute(new SunAppServerCommands(server, domaindir.getText(),SunAppServer.DOMAINDIR));
+				execute(new SunAppServerCommands(server, domaindir.getText(),SunAppServer.DOMAINPATH));
 
 			}
 		});
@@ -205,9 +200,8 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 		adminServerPortNumber.setEnabled(false);
 
 
-		boolean isV3Prelude = sunserver.isV3Prelude();
 
-		if (isV3Prelude) {
+		if (sunserver.isV3()) {
 			final Button useAnonymousConnection = new Button(comp, SWT.CHECK);
 			useAnonymousConnection.setText(Messages.UseAnonymousConnection);
 			boolean useAnon=sunserver.getUseAnonymousConnections().equals("true");
@@ -224,9 +218,7 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 					execute(new SunAppServerCommands(server, ""+selected,SunAppServer.USEANONYMOUSCONNECTIONS));
 				}
 			});
-		}
 
-		if (isV3Prelude || sunserver.isV3()) {
 			final Button keepSessions = new Button(comp, SWT.CHECK);
 			keepSessions.setText(Messages.keepSessions);
 			keepSessions.setSelection(sunserver.getKeepSessions().equals("true"));
