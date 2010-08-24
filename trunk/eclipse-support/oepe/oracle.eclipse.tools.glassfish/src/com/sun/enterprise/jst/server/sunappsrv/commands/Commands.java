@@ -431,7 +431,7 @@ public class Commands {
      */
     public static final class DeployCommand extends ServerCommand {
         
-        public DeployCommand(final String path, final String name, final String contextRoot, final Boolean preserveSessions,final boolean isPrelude) {
+        public DeployCommand(final String path, final String name, final String contextRoot, final Boolean preserveSessions) {
             super("deploy"); // NOI18N
             
             StringBuilder cmd = new StringBuilder(128);
@@ -446,7 +446,7 @@ public class Commands {
                 cmd.append(contextRoot);
             }
             cmd.append(PARAM_SEPARATOR + "force=true");
-            addKeepSessions(cmd,preserveSessions,isPrelude);
+            addKeepSessions(cmd,preserveSessions);
             query = cmd.toString();
         }
         
@@ -457,7 +457,7 @@ public class Commands {
      */
     public static final class RedeployCommand extends ServerCommand {
         
-        public RedeployCommand(final String name, final String contextRoot, final Boolean preserveSessions,final boolean isPrelude) {
+        public RedeployCommand(final String name, final String contextRoot, final Boolean preserveSessions) {
             super("redeploy"); // NOI18N
             
             StringBuilder cmd = new StringBuilder(128);
@@ -467,21 +467,16 @@ public class Commands {
                 cmd.append(PARAM_SEPARATOR + "contextroot="); // NOI18N
                 cmd.append(contextRoot);
             }
-            addKeepSessions(cmd,preserveSessions, isPrelude);
+            addKeepSessions(cmd,preserveSessions);
             query = cmd.toString();
         }
         
     }
     
-    private static void addKeepSessions(StringBuilder cmd, Boolean preserveSessions,boolean isPrelude) {
+    private static void addKeepSessions(StringBuilder cmd, Boolean preserveSessions) {
         if (Boolean.TRUE.equals(preserveSessions)) {
-        	if (isPrelude){
-            cmd.append(ServerCommand.PARAM_SEPARATOR + "properties="); // NOI18N
-        	}
-        	else{ // only for lattest v3 after Apri 22nd : name is changed
-                cmd.append(ServerCommand.PARAM_SEPARATOR + "property="); // NOI18N
-      		
-        	}
+
+            cmd.append(ServerCommand.PARAM_SEPARATOR + "property="); // NOI18N
             cmd.append("keepSessions=true");
         }        
     }
