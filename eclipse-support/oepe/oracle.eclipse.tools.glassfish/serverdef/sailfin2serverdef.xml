@@ -52,16 +52,12 @@
     context="runtime"
     default="" />
     
-    <property id="sunappserver.domaindir"  label="%sunappserver.domaindir"
+    <!-- don't really want to show a default here, but "" results in invalid path errors -->
+    <property id="sunappserver.domainpath"  label="%sunappserver.domainpath"
     type="directory"
     context="server"
-    default="${sunappserver.rootdirectory}/domains" />
+    default="${sunappserver.rootdirectory}/domains/domain1" />
 
-    
-    <property id="sunappserver.domainname"  label="%sunappserver.domainname"
-    type="string"
-    context="server"
-    default="domain1" />
 
     <property id="sunappserver.adminname"  label="%sunappserver.adminname"
     type="string"

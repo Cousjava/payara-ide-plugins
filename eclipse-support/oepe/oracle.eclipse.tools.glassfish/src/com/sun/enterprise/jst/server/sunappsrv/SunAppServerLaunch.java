@@ -274,7 +274,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             if (serverBehavior.isV3()) {
 
                 // needed to see if we force JDK 1.6 (prelude did not need it)
-                if (sunserver.isV3Prelude() == false) { // so it is v3
                     if (vm.getJavaVersion().startsWith("1.5") || vm.getJavaVersion().startsWith("1.4")) { //$NON-NLS-1$ //$NON-NLS-2$
                         // error: real v3 only works with 1.6 or later.
                         abort("GlassFish v3 requires JDK 1.6 or later to run. Please select the correct JDK in the Server properties 'Runtime Environment' section.", //$NON-NLS-1$
@@ -289,7 +288,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                         abort("GlassFish v3 requires a JDK 1.6 and not a JRE. Please add/select the correct JDK in the Server properties 'Runtime Environment' section.", //$NON-NLS-1$
                                 null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);                   	
                     }
-                }
+
 
                 pb = new ProcessBuilder(vm.getInstallLocation() + "/bin/java", //$NON-NLS-1$
                         "-jar", serverBehavior.getSunApplicationServerInstallationDirectory() + "/modules/admin-cli.jar", //$NON-NLS-1$
@@ -327,7 +326,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         boolean javaDBStart = store.getBoolean(PreferenceConstants.ENABLE_START_JAVADB);
         if (javaDBStart) {
             String sampleDBDir = serverBehavior.getSampleDatabaseDir();
-            if ((serverBehavior.isV3()) && (sunserver.isV3Prelude() == false)) {  // so it is v3
+            if (serverBehavior.isV3() ) {  // so it is v3
 
                 command = ((sampleDBDir == null) ? new String[]{
                             vm.getInstallLocation() + "/bin/java", //$NON-NLS-1$

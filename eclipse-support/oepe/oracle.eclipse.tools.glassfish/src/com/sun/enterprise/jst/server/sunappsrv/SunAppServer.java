@@ -101,8 +101,9 @@ public class SunAppServer extends GenericServer {
     public static final String SERVERPORT = "sunappserver.serverportnumber";	//$NON-NLS-1$
     public static final String ADMINSERVERPORT = "sunappserver.adminserverportnumber";	//$NON-NLS-1$
 
-    public static final String DOMAINNAME = "sunappserver.domainname";	//$NON-NLS-1$
-    public static final String DOMAINDIR = "sunappserver.domaindir";	//$NON-NLS-1$
+    public static final String DEPRECATED_DOMAINNAME = "sunappserver.domainname";	//$NON-NLS-1$
+    public static final String DEPRECATED_DOMAINDIR = "sunappserver.domaindir";	//$NON-NLS-1$
+    public static final String DOMAINPATH = "sunappserver.domainpath";	//$NON-NLS-1$
     public static final String ADMINNAME = "sunappserver.adminname";	//$NON-NLS-1$
     public static final String ADMINPASSWORD = "sunappserver.adminpassword";	//$NON-NLS-1$
     public static final String KEEPSESSIONS = "sunappserver.keepSessions";	//$NON-NLS-1$
@@ -190,6 +191,13 @@ public Map<String, String> getProps(){
 		if (!f.canWrite()){
 			return MessageFormat.format(Messages.pathNotWritable, f.getAbsolutePath());
 		}
+		File configDir  = new File(f,"config");
+		if (!configDir.exists()){
+			return MessageFormat.format(Messages.pathDoesNotExist, configDir.getAbsolutePath());
+		}
+		if (!configDir.canWrite()){
+			return MessageFormat.format(Messages.pathNotWritable, configDir.getAbsolutePath());
+		}		
 		File domain= new File(f,"config/domain.xml");	//$NON-NLS-1$
 		if (!domain.exists()){
 			return MessageFormat.format(Messages.pathNotValidDomain, domain.getAbsolutePath());
@@ -205,29 +213,28 @@ public Map<String, String> getProps(){
    */
   @SuppressWarnings("unchecked")
 public void setServerInstanceProperties(Map map) {
-       domainValidationError=null;
-	  String domdir = (String)map.get(DOMAINDIR);
-	  String domainName = (String)map.get(DOMAINNAME);
-	  if ((domdir!=null)&&(!domdir.startsWith("${"))){ //only if we are correctly setup...	//$NON-NLS-1$
-		  domainValidationError = validateDomainExists(domdir, domainName);
-		  if (domainValidationError!=null) {
-				MessageDialog message;
-				Shell shell = SunAppSrvPlugin.getInstance().getWorkbench()
-				.getActiveWorkbenchWindow().getShell();
-				String labels[] = new String[1];
-				labels[0] = Messages.OKButton;
-				message = new MessageDialog(shell, Messages.TitleWrongDomainLocation, null,
-						domainValidationError, 2, labels, 1);
-				message.open();
-				
-				// throw new RuntimeException (Messages.TitleWrongDomainLocation +": "+domainValidationError); //$NON-NLS-1$
-		  } else {
-		  SunInitialize();
-		  map.put(ADMINSERVERPORT, adminServerPortNumber);
-		  map.put(SERVERPORT, serverPortNumber);
+		domainValidationError = null;
+		String domdir = null, domainName = null;
+		String val = (String) map.get(DOMAINPATH); // new as of August 2010
+		if ((val == null) || (val.startsWith("${"))) {// we have an old config
+														// we need to deal with
+			setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, map);
+			return;
+
+		}
+		domdir = new File(val).getParentFile().getAbsolutePath();       		 		
+
+		domainName = new File(val).getName();
+
+		if ((domdir != null) && (!domdir.startsWith("${"))) { //only if we are correctly setup...	//$NON-NLS-1$
+			domainValidationError = validateDomainExists(domdir, domainName);
+			if (domainValidationError == null) {
+
+			  SunInitialize();
+			  map.put(ADMINSERVERPORT, adminServerPortNumber);
+			  map.put(SERVERPORT, serverPortNumber);
 		  }
 	  }
-	  SunAppSrvPlugin.logMessage("in SunAppServer setServerInstanceProperties new MAP IS"+map);	//$NON-NLS-1$
 	  setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, map);
   }
   
@@ -235,7 +242,7 @@ public void setServerInstanceProperties(Map map) {
    */
   public IStatus validate() {
       
-   	   SunAppSrvPlugin.logMessage("in SunAppServer -------validate"+getDomainDir()+getdomainName());
+   	   SunAppSrvPlugin.logMessage("in SunAppServer -------validate"+getDomainDir()+"---"+getdomainName());
 		IStatus s= super.validate();
         
 		//File f= new File(getDomainDir()+File.separator+getdomainName());
@@ -284,6 +291,9 @@ public void setServerInstanceProperties(Map map) {
   public String getUseAnonymousConnections() {
 	  String s =getProps().get(USEANONYMOUSCONNECTIONS);
 	  if (s==null){
+		  if (getAdminPassword()!=null){
+			 return Boolean.FALSE.toString();
+		  }
 		  s = Boolean.TRUE.toString();
 	  }
       return  s;
@@ -326,11 +336,34 @@ public void setServerInstanceProperties(Map map) {
     }
         
     public String getdomainName() {
-        return (String) getProps().get(DOMAINNAME);
+    	String val = getProps().get(DOMAINPATH); //new as of August 2010
+    	if (val==null) {//we have an old config we need to deal with
+    		return (String) getProps().get(DEPRECATED_DOMAINNAME);
+    	}
+    	else{
+    		if (val.startsWith("$")) { //not expanded yet
+    			return "domain1";
+    		}
+    		else {
+    			return new File(val).getName();
+    		}
+   		
+    	}
     }
      
     public String getDomainDir() {
-        return (String) getProps().get(DOMAINDIR);
+    	String val = getProps().get(DOMAINPATH); //new as of August 2010
+    	if (val==null) {//we have an old config we need to deal with
+    		return (String) getProps().get(DEPRECATED_DOMAINDIR);
+    	}
+    	else {
+    		if (val.startsWith("$")) { //not expanded yet
+                return val;
+        	}
+        	else {
+        		return new File(val).getParentFile().getAbsolutePath();       		 		
+        	}
+    	}
     }
 
     public String getSampleDatabaseDir() {
@@ -463,15 +496,10 @@ public void setServerInstanceProperties(Map map) {
      */
 	public boolean isV3(){
 		//test the server name to contain GlassFish v3
-		return (this.getServer().getServerType().getName().indexOf("GlassFish v3")!=-1);
+		return (this.getServer().getServerType().getId().equals("com.sun.enterprise.jst.server.sunappsrv92"));
 	}
-	/* returns true if this is v3 prelude
-	 * and false otherwise, i.e v2 or v3 classic
-	 */
-	public boolean isV3Prelude(){
-		//test the server name to contain GlassFish v3 prelude
-		return (this.getServer().getServerType().getName().indexOf("GlassFish v3 Prelude")!=-1);
-	}	
+
+	
 	
 	public ServerPort[] getServerPorts() {
 
@@ -837,19 +865,13 @@ public void setServerInstanceProperties(Map map) {
     }
 
     public CommandFactory getCommandFactory() {
-    	if(isV3Prelude()){
-    		return new CommandFactory() {
-    			public SetPropertyCommand getSetPropertyCommand(String name, String value) {
-    				return new ServerCommand.SetPropertyCommand(name, value, "target={0}&value={1}"); 
-    			}
-    		};
-    	}else{
+
     		return new CommandFactory() {
     			public SetPropertyCommand getSetPropertyCommand(String name, String value) {
     				return new ServerCommand.SetPropertyCommand(name, value, "DEFAULT={0}={1}"); 
     			}
     		};
-    	}
+    	
     }
     
 }       

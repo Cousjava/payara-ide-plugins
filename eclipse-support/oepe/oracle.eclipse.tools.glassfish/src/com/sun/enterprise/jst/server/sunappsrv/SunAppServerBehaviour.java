@@ -749,7 +749,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 
 				Boolean preserveSessions=getSunAppServer().getKeepSessions().equals("true");
 				if (isV3()){
-					Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions , getSunAppServer().isV3Prelude());
+					Commands.DeployCommand command = new Commands.DeployCommand(spath,name,contextRoot,preserveSessions );
 					try {
 						Future<OperationState> result = getSunAppServer().execute(command);
 						OperationState res=result.get(120, TimeUnit.SECONDS);
