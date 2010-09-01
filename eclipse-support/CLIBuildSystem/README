@@ -1,0 +1,6 @@
+This is a modified for GlassFish and Eclipse 3.6 plugin that allows headless build of our GlassFish plugins.
+Original project is under http://code.google.com/p/headlesseclipse/
+
+Just install the jar in thre dropins dir of Eclipse 3.6 (and also add tptp which is needed for building GlassFish plugin) and
+our Hudson job does:
+
