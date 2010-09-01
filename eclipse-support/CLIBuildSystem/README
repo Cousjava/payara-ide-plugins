@@ -3,4 +3,14 @@ Original project is under http://code.google.com/p/headlesseclipse/
 
 Just install the jar in thre dropins dir of Eclipse 3.6 (and also add tptp which is needed for building GlassFish plugin) and
 our Hudson job does:
+(assuming Eclipse and the added moredules are on /Users/hudson/Desktop/HELIOSRC3)
+
+cd  oepe
+echo $JAVA_HOME
+
+rm -rf helios.updatesite/features* helios.updatesite/plugins* helios.updatesite/artifacts.jar* helios.updatesite/content.jar*
+/Users/hudson/Desktop/HELIOSRC3/eclipse/Eclipse.app/Contents/MacOS/eclipse -clean -nosplash -data /Users/hudson/workspace/Eclipse\ GlassFish\ Plugin\ for\ OEPE/oepe  -application com.ind.eclipse.headlessworkspace.Application   import  clean build exportupdatesites
+cd helios.updatesite
+rm -f updatesite.zip*
+zip -r updatesite.zip artifacts.jar content.jar features plugins site.xml
 
