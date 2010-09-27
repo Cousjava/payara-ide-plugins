@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IJ2EEModule;
@@ -95,7 +96,14 @@ public  class AssembleModules {
 
 	public IPath assembleWebModule(IProgressMonitor monitor) throws CoreException{
 
-		IPath parent =copyModule(module,monitor);
+		IPath parent = assembleRoot;
+
+		final IModule[] rootMod = { module };
+		boolean shouldCopy = (IServer.PUBLISH_STATE_NONE != server.getServer().getModulePublishState(rootMod));
+		if (shouldCopy)
+			copyModule(module, monitor);
+		
+		
 		IWebModule webModule = (IWebModule)module.loadAdapter(IWebModule.class, monitor);
 		IModule[] childModules = webModule.getModules();
 		for (int i = 0; i < childModules.length; i++) {
@@ -207,7 +215,31 @@ public  class AssembleModules {
 	protected IPath copyModule(IModule module, IProgressMonitor monitor) throws CoreException {
 		ProjectModule pm =(ProjectModule)module.loadAdapter(ProjectModule.class, monitor);
         //SunAppSrvPlugin.logMessage("AssembleModules copyModule ProjectModule is="+pm);
-		IStatus[] status = publishHelper.publishSmart(pm.members(), assembleRoot, monitor);
+		IPath [] jarPaths = null;
+		if(module.getModuleType().getId().equals("jst.web")) {//$NON-NLS-1$
+			//IModuleResource[] mr = getResources(module);
+			IWebModule webModule = (IWebModule)module.loadAdapter(IWebModule.class, monitor);
+			IModule [] childModules = webModule.getModules();
+			if (childModules != null && childModules.length > 0) {
+				jarPaths = new IPath[childModules.length];
+				for (int i = 0; i < childModules.length; i++) {
+					if (webModule != null) {
+						jarPaths[i] = new Path(webModule.getURI(childModules[i]));
+					}
+					else {
+						IJ2EEModule childModule = (IJ2EEModule)childModules[i].loadAdapter(IJ2EEModule.class, monitor);
+						if (childModule != null && childModule.isBinary()) {
+							jarPaths[i] = new Path("WEB-INF/lib").append(childModules[i].getName());
+						}
+						else {
+							jarPaths[i] = new Path("WEB-INF/lib").append(childModules[i].getName() + ".jar");
+						}
+					}
+				}
+			}			
+			
+		}
+		IStatus[] status = publishHelper.publishSmart(pm.members(), assembleRoot,jarPaths, monitor);
 		if (status != null && status.length > 0){
 			// no need to emit an error like CoreException(status[0]); just log in the entry
 			// see https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=268
