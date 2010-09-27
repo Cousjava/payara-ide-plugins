@@ -12,5 +12,9 @@
    <feature url="features/oracle.eclipse.tools.helios.glassfish_1.6.1.qualifier.jar" id="oracle.eclipse.tools.helios.glassfish" version="1.6.1.qualifier">
       <category name="glassfish_category"/>
    </feature>
-   <category-def name="glassfish_category" label="GlassFish Application Server"/>
+   <category-def name="glassfish_category" label="GlassFish Application Server">
+      <description>
+         GlassFish Application Server Plugins
+      </description>
+   </category-def>
 </site>
