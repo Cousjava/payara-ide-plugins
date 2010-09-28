@@ -69,7 +69,7 @@ public class DerbyConfigurator {
 
 	private static final String DERBY_PROVIDER_ID = "org.eclipse.datatools.connectivity.db.derby.embedded.connectionProfile"; //$NON-NLS-1$
 	private static final String DERBY_TEMPLATE_ID = "org.eclipse.datatools.connectivity.db.derby102.clientDriver"; //$NON-NLS-1$
-	private static final String DERBY_FOR_SAMPLE_DB = "DerbyForSampleDB"; //$NON-NLS-1$
+	private static final String DERBY_FOR_SAMPLE_DB = "GlassFishSampleDB"; //$NON-NLS-1$
 	public final static String DERBY_SAMPLE_INSTALL = "derby_sample_dir"; //$NON-NLS-1$
 	public final static String DERBY_SAMPLE_ID = "com.sun.enterprise.jst.server.derbysample"; //$NON-NLS-1$
 
@@ -78,27 +78,28 @@ public class DerbyConfigurator {
 
 		DriverInstance sample = dm.getDriverInstanceByName(DERBY_FOR_SAMPLE_DB);//$NON-NLS-1$
 		// if the sample is already configured we don't need to do anything
-		if (sample != null)
-			return;
+		if (sample == null){			
 
-		Properties properties = new Properties();
-
-		readProperties(serverDirectory, domainXml, properties);
-
-		String profileName = Messages.SAMPLE_JAVADB_DATABASE;
-		String description = Messages.SAMPLE_JAVADB_DATABASE_DESCRIPTION;
-
-		DriverInstance di = dm.createNewDriverInstance(DERBY_TEMPLATE_ID, DERBY_FOR_SAMPLE_DB, getDerbyClientJarLocation(serverDirectory));
-		properties.setProperty(ConnectionProfileConstants.PROP_DRIVER_DEFINITION_ID, di.getId());
-
-		try {
-			ProfileManager.getInstance().createProfile(profileName, description, DERBY_PROVIDER_ID, properties);
-		} catch (ConnectionProfileException e) {
-			SunAppSrvPlugin.logMessage("erororor", e);
-		/*	Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e), MessageFormat
-					.format(Messages.CONFIGURING_SAMPLE_DERBY_DATABASE_ENCOUNTERED_A_PROBLEM, e.getMessage()),
-					Messages.EXCEPTION_OCCURRED);*/
+			Properties properties = new Properties();
+	
+			readProperties(serverDirectory, domainXml, properties);
+	
+			String profileName = Messages.SAMPLE_JAVADB_DATABASE;
+			String description = Messages.SAMPLE_JAVADB_DATABASE_DESCRIPTION;
+	
+			DriverInstance di = dm.createNewDriverInstance(DERBY_TEMPLATE_ID, DERBY_FOR_SAMPLE_DB, getDerbyClientJarLocation(serverDirectory));
+			properties.setProperty(ConnectionProfileConstants.PROP_DRIVER_DEFINITION_ID, di.getId());
+	
+			try {
+				ProfileManager.getInstance().createProfile(profileName, description, DERBY_PROVIDER_ID, properties);
+			} catch (ConnectionProfileException e) {
+				SunAppSrvPlugin.logMessage("erororor", e);
+			/*	Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e), MessageFormat
+						.format(Messages.CONFIGURING_SAMPLE_DERBY_DATABASE_ENCOUNTERED_A_PROBLEM, e.getMessage()),
+						Messages.EXCEPTION_OCCURRED);*/
+			}
 		}
+		configureSample(progressMonitor);
 	}
 
 	private static void readProperties(File serverDirectory, String domainXml, Properties properties) {
@@ -177,10 +178,14 @@ public class DerbyConfigurator {
 
         return derbyLocation;
 	}
+	
+	public static String getSampleDBLocation(){
+		return Platform.getLocation().append(".metadata").append(".plugins").append( //$NON-NLS-1$ //$NON-NLS-2$
+				DERBY_SAMPLE_ID).toOSString();
+	}
 
 	public static String configureSample(IProgressMonitor progressMonitor) throws CoreException {
-		String databaseLocation = Platform.getLocation().append(".metadata").append(".plugins").append( //$NON-NLS-1$ //$NON-NLS-2$
-				DERBY_SAMPLE_ID).toOSString();
+		String databaseLocation = getSampleDBLocation();
 		File dbDirectory = new File(databaseLocation);
 		
 		if (dbDirectory.exists()) {	// already configured sample db in a previous run, we are done
@@ -215,7 +220,7 @@ public class DerbyConfigurator {
 
 			ant.run();
 			return databaseLocation;
-		} catch (IOException e) {
+		} catch (Exception e) {
 		/*	Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
 					MessageFormat.format(Messages.UNZIPPING_DERBY_SAMPLES_ENCOUNTERED_A_PROBLEM_0, e.getMessage()), e), e.getMessage(),
 					Messages.EXCEPTION_OCCURRED);*/

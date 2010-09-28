@@ -80,6 +80,7 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
+import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
 import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
 
 
@@ -367,7 +368,8 @@ public void setServerInstanceProperties(Map map) {
     }
 
     public String getSampleDatabaseDir() {
-        return (String) getProps().get(SAMPLEDBDIR);
+     //   return (String) getProps().get(SAMPLEDBDIR);
+    	return DerbyConfigurator.getSampleDBLocation();
     }
 
     private void syncHostAndPortsValues() {
