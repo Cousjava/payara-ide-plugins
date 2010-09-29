@@ -37,10 +37,13 @@
 // </editor-fold>
 package com.sun.enterprise.jst.server.sunappsrv.preferences;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
 
 /**
  * Class used to initialize default preference values.
@@ -60,9 +63,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.ENABLE_START_JAVADB, false);
 		store.setDefault(PreferenceConstants.ENABLE_START_VERBOSE, false);
 		store.setDefault(PreferenceConstants.ENABLE_COLORS_CONSOLE, true);
-			//	store.setDefault(PreferenceConstants.P_CHOICE, "choice2");
-	//	store.setDefault(PreferenceConstants.P_STRING,
-		//		"Default value");
+		String loc = DerbyConfigurator.getSampleDBLocation();
+
+		store.setDefault(PreferenceConstants.JAVA_DB_LOCATION, loc);
+		File f = new File(loc);
+		if (!f.exists()){
+			f.mkdirs();
+		}
 	}
 
 }

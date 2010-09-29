@@ -38,6 +38,7 @@
 package com.sun.enterprise.jst.server.sunappsrv.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -102,7 +103,13 @@ public class GlassFishPreferencePage extends FieldEditorPreferencePage
 					"Enable colored rendering in the GlassFish Log Viewer",
 					getFieldEditorParent()));
 
-	/*	addField(new RadioGroupFieldEditor(
+		addField(
+				new DirectoryFieldEditor(
+					PreferenceConstants.JAVA_DB_LOCATION,
+					"Java DB Database Location",
+					getFieldEditorParent()));
+		
+		/*	addField(new RadioGroupFieldEditor(
 				PreferenceConstants.P_CHOICE,
 			"An example of a multiple-choice preference",
 			1,

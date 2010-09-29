@@ -71,7 +71,7 @@ public class DerbyConfigurator {
 	private static final String DERBY_TEMPLATE_ID = "org.eclipse.datatools.connectivity.db.derby102.clientDriver"; //$NON-NLS-1$
 	private static final String DERBY_FOR_SAMPLE_DB = "GlassFishSampleDB"; //$NON-NLS-1$
 	public final static String DERBY_SAMPLE_INSTALL = "derby_sample_dir"; //$NON-NLS-1$
-	public final static String DERBY_SAMPLE_ID = "com.sun.enterprise.jst.server.derbysample"; //$NON-NLS-1$
+	public final static String DERBY_SAMPLE_ID = "glassfish.javadb"; //$NON-NLS-1$
 
 	static public void configure(IProgressMonitor progressMonitor, File serverDirectory, String domainXml) throws CoreException {
 		DriverManager dm = DriverManager.getInstance();
@@ -93,7 +93,7 @@ public class DerbyConfigurator {
 			try {
 				ProfileManager.getInstance().createProfile(profileName, description, DERBY_PROVIDER_ID, properties);
 			} catch (ConnectionProfileException e) {
-				SunAppSrvPlugin.logMessage("erororor", e);
+				SunAppSrvPlugin.logMessage("Error Creating Database Profile", e);
 			/*	Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e), MessageFormat
 						.format(Messages.CONFIGURING_SAMPLE_DERBY_DATABASE_ENCOUNTERED_A_PROBLEM, e.getMessage()),
 						Messages.EXCEPTION_OCCURRED);*/
@@ -146,7 +146,7 @@ public class DerbyConfigurator {
 					MessageFormat
 					.format(Messages.CONFIGURATION_OF_PORTS_FAILED_BECAUSE_OF , e.getMessage()), e), e.getMessage(),
 					Messages.EXCEPTION_OCCURRED);*/
-			SunAppSrvPlugin.logMessage("erororor", e);
+			SunAppSrvPlugin.logMessage("Error Reading DB data", e);
 		}
 
 		properties.setProperty("org.eclipse.datatools.connectivity.db.connectionProperties", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -188,7 +188,7 @@ public class DerbyConfigurator {
 		String databaseLocation = getSampleDBLocation();
 		File dbDirectory = new File(databaseLocation);
 		
-		if (dbDirectory.exists()) {	// already configured sample db in a previous run, we are done
+		if (new File(dbDirectory,"sun-appserv-samples").exists()) {	// already configured sample db in a previous run, we are done
 			return databaseLocation;
 		}
 
@@ -224,7 +224,7 @@ public class DerbyConfigurator {
 		/*	Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
 					MessageFormat.format(Messages.UNZIPPING_DERBY_SAMPLES_ENCOUNTERED_A_PROBLEM_0, e.getMessage()), e), e.getMessage(),
 					Messages.EXCEPTION_OCCURRED);*/
-			SunAppSrvPlugin.logMessage("erororor   cd", e);
+			SunAppSrvPlugin.logMessage("error creating java DB database", e);
 			}
 		return null;
 
