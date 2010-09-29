@@ -325,7 +325,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         }
         boolean javaDBStart = store.getBoolean(PreferenceConstants.ENABLE_START_JAVADB);
         if (javaDBStart) {
-            String sampleDBDir = serverBehavior.getSampleDatabaseDir();
+            String sampleDBDir = store.getString(PreferenceConstants.JAVA_DB_LOCATION);
             if (serverBehavior.isV3() ) {  // so it is v3
 
                 command = ((sampleDBDir == null) ? new String[]{

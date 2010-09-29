@@ -49,6 +49,7 @@ public class PreferenceConstants {
 	public static final String ENABLE_START_JAVADB = "EnableStartJavaDBPreference";
 	public static final String ENABLE_START_VERBOSE = "EnableStartVerboseModePreference";
 	public static final String ENABLE_COLORS_CONSOLE = "EnableColorsInConsolePreference";
+	public static final String JAVA_DB_LOCATION = "JavaDBLocation";
 
 	//public static final String P_CHOICE = "choicePreference";
 
