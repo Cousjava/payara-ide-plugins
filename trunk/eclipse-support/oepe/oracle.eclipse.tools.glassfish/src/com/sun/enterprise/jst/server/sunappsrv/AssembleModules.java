@@ -125,8 +125,12 @@ public  class AssembleModules {
 				
 				
 				if(!module.getModuleType().getId().equals("jst.utility")) {//$NON-NLS-1$	see bug https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=251
-					uri = uri.replace (".","_");
-				}
+					if (uri.endsWith(".war")){
+						uri = uri.substring(0,uri.length()-4)+"_war";					
+					} else if (uri.endsWith(".jar")){
+						uri = uri.substring(0,uri.length()-4)+"_jar";
+					}
+					}
 
 				if( shouldRepack( module ) ){
 
@@ -433,7 +437,11 @@ public  class AssembleModules {
 				continue;//done! no need to go further
 			}
 			if(!module.getModuleType().getId().equals("jst.utility")) {//$NON-NLS-1$	see bug https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=251
-				uri = uri.replace (".","_");
+				if (uri.endsWith(".war")){
+					uri = uri.substring(0,uri.length()-4)+"_war";					
+				} else if (uri.endsWith(".jar")){
+					uri = uri.substring(0,uri.length()-4)+"_jar";
+				}
 			}
 
 			if( shouldRepack( module ) ){
