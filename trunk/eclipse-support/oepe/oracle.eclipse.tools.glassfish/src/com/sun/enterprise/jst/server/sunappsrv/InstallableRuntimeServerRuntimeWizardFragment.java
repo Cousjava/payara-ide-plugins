@@ -1,13 +1,15 @@
-/***************************************************************************************************
- * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
- * accompanying materials are made available under the terms of the Eclipse Public License v1.0
+/*
+ * Copyright (c) 2005-2010 Oracle and/or its affiliates. All rights reserved.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: Gorkem Ercan - initial API and implementation
- * Portions Copyright 2008-2009 Sun Microsystems, Inc. All rights reserved.
- *               
- **************************************************************************************************/
+ *
+ * Contributors:
+ *     Sun Microsystems
+ *     Oracle
+ */
 
 package com.sun.enterprise.jst.server.sunappsrv;
 
