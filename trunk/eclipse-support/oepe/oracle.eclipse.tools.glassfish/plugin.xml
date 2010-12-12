@@ -376,6 +376,11 @@
             <factory class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
             <type class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
         </adapter>
+        <adapter>
+            <runtime-component id="org.glassfish.jst.server.runtime.glassfish"/>
+            <factory class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
+            <type class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
+        </adapter>
         <supported>
             <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="9.1"/>
             <facet id="sun.facet" version="9,8"/>
