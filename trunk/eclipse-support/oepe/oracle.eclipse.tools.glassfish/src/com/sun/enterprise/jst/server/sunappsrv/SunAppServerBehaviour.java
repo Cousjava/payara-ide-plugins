@@ -649,7 +649,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 					}
 					if(result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
 						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-								"Error during undeploy of module "+name+": "+command.message, null));
+								"Error during undeploy of module "+name+": "+command.getServerMessage(), null));
 					}
 				} catch(Exception ex) {
 					SunAppSrvPlugin.logMessage("Undeploy is failing=",ex );
@@ -736,7 +736,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 						}
 						if( res== OperationState.FAILED) {
 							throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-									"Deployment Error for module: "+name+": "+command.message, null));
+									"Deployment Error for module: "+name+": "+command.getServerMessage(), null));
 						}
 					} catch(Exception ex) {
 						SunAppSrvPlugin.logMessage("deploy is failing=",ex );
@@ -785,7 +785,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
                 }
                 if (result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
                     throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-                            "Error when trying to deploy the sun-resources.xml for " + module[0].getName() + ": " + register.message, null));
+                            "Error when trying to deploy the sun-resources.xml for " + module[0].getName() + ": " + register.getServerMessage(), null));
                 }
             } catch (Exception ex) {
                 SunAppSrvPlugin.logMessage("deploy of sun-resources is failing ", ex);

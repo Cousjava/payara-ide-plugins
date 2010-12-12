@@ -25,6 +25,7 @@ import org.eclipse.wst.server.core.IRuntime;
 public class WizardUtil {
 
 	private static final String V3_RUNTIME = "com.sun.enterprise.jst.server.runtime.sunappsrv92"; //$NON-NLS-1$
+	private static final String V31_RUNTIME = "org.glassfish.jst.server.runtime.glassfish31"; //$NON-NLS-1$
 
 	public static boolean isWebOrEJBProjectWithGF3Runtime(IProject project) {
 		try {
@@ -65,7 +66,10 @@ public class WizardUtil {
 			if ((runtime != null) && runtime.getRuntimeType().getId().equals(V3_RUNTIME)){
 				return true;
 			}
-		} catch (CoreException e) {
+			if ((runtime != null) && runtime.getRuntimeType().getId().equals(V31_RUNTIME)){
+				return true;
+			}
+                } catch (CoreException e) {
 			e.printStackTrace();
 		}
 

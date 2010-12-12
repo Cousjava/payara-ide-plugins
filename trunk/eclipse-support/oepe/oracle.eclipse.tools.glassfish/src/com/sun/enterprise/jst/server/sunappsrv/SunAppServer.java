@@ -41,10 +41,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
@@ -474,7 +472,11 @@ public void setServerInstanceProperties(Map map) {
      */
 	public boolean isV3(){
 		//test the server name to contain GlassFish v3
-		return (this.getServer().getServerType().getId().equals("com.sun.enterprise.jst.server.sunappsrv92"));
+		return (
+                        (this.getServer().getServerType().getId().equals("com.sun.enterprise.jst.server.sunappsrv92"))
+                        ||
+                        (this.getServer().getServerType().getId().equals("org.glassfish.jst.server.glassfish31"))
+                        );
 	}
 
 	

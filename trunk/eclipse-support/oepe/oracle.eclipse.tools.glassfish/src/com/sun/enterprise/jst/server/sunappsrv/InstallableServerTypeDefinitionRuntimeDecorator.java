@@ -84,7 +84,9 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 		if (definition.getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){
 			UNZIP_DIR_NAME = "glassfishv3";
 		}
-		fInstallDirName = installDirName;
+		if (definition.getId().equals("org.glassfish.jst.server.runtime.glassfish31")){
+			UNZIP_DIR_NAME = "glassfish3.1";
+		}		fInstallDirName = installDirName;
 		fDefinition = definition;
 		fProperties = initialProperties;
 		fRuntime = runtime;

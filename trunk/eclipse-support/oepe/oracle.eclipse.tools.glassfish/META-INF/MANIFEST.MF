@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: oracle.eclipse.tools.glassfish;singleton:=true
-Bundle-Version: 3.1.1.qualifier
+Bundle-Version: 3.2.0.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin
 Bundle-Vendor: %providerName
@@ -32,11 +32,6 @@ Require-Bundle: org.apache.xerces,
  org.eclipse.jdt.ui,
  org.eclipse.jdt.debug,
  org.eclipse.ui.console,
- org.eclipse.tptp.platform.profile.server.core;resolution:=optional,
- org.eclipse.tptp.platform.profile.server;resolution:=optional,
- org.eclipse.tptp.platform.jvmti.client;resolution:=optional,
- org.eclipse.tptp.platform.profile.server.wst;resolution:=optional,
- org.eclipse.tptp.monitoring.profile.server;resolution:=optional,
  org.eclipse.jst.jee.web,
  org.eclipse.wst.common.frameworks.ui,
  org.eclipse.jst.servlet.ui,

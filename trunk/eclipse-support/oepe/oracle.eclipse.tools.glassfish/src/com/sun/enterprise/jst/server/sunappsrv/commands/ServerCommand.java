@@ -18,6 +18,7 @@ package com.sun.enterprise.jst.server.sunappsrv.commands;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -40,8 +41,12 @@ public abstract class ServerCommand {
     protected final String command;
     protected String query = null;
     protected boolean retry = false;
-    // returned message from the command
-    public String message="";
+    private String serverMessage = "";
+
+    public String getServerMessage() {
+        return serverMessage;
+    }
+
     public ServerCommand(String command) {
         this.command = command;
     }
@@ -69,17 +74,17 @@ public abstract class ServerCommand {
      * Override to change the type of HTTP method used for this command.
      * Default is GET.
      * 
-     * @return HTTP method (GET, PUT, etc.)
+     * @return HTTP method (GET, POST, etc.)
      */
     public String getRequestMethod() {
         return "GET"; // NOI18N
     }
     
     /**
-     * Override and return true to send information to the server (HTTP PUT).
+     * Override and return true to send information to the server (HTTP POST).
      * Default is false.
      * 
-     * @return HTTP method (GET, PUT, etc.)
+     * @return true if using HTTP POST to send to server, false otherwise
      */
     public boolean getDoOutput() {
         return false;
@@ -89,14 +94,14 @@ public abstract class ServerCommand {
      * Override to set the content-type of information sent to the server.
      * Default is null (not set).
      * 
-     * @return HTTP method (GET, PUT, etc.)
+     * @return content-type of data sent to server via HTTP POST
      */
     public String getContentType() {
         return null;
     }
     
     /**
-     * Override to provide a data stream for PUT requests.  Data will be read
+     * Override to provide a data stream for POST requests.  Data will be read
      * from this stream [until EOF?] and sent to the server.
      * 
      * @return a new InputStream derivative that provides the data to send
@@ -104,6 +109,28 @@ public abstract class ServerCommand {
      *  return null, in which case no data will be sent.
      */
     public InputStream getInputStream() {
+        return null;
+    }
+
+    /**
+     * Override to provide a name for the data source whose inputstream is
+     * returned by getInputStream.  Must not return null if getInputStream()
+     * does not return null;
+     *
+     * @return the name to associate with the input stream
+     */
+    public String getInputName() {
+        return null;
+    }
+
+    /**
+     * Override to provide the lastModified date for data source whose
+     * inputstream is returned by getInputStream.  Must not return null if
+     * getInputStream() does not return null;
+     *
+     * @return String format of long integer from lastModified date of source.
+     */
+    public String getLastModified() {
         return null;
     }
 
@@ -154,12 +181,14 @@ public abstract class ServerCommand {
             result = true;
         } else {
             // !PW FIXME Need to pass this message back.  Need <Result> object?
-             message = m.getMainAttributes().getValue("message"); // NOI18N
+            String message = m.getMainAttributes().getValue("message"); // NOI18N
 
             // If server is not currently available for processing commands,
             // set the retry flag.
             if(message != null && message.contains("please wait")) {
                 retry = true;
+            } else {
+                serverMessage = null != message ? message.replaceAll("%%%EOL%%%", "\n") : "";
             }
             Logger.getLogger("glassfish").log(Level.WARNING, message);
         }
@@ -182,7 +211,7 @@ public abstract class ServerCommand {
     
     /**
      * Override to parse, validate, and/or format any data read from the 
-     * server in readResponse().
+     * server in readResponse() / readManifest().
      * 
      * @return true if data was processed correctly.
      */
@@ -199,7 +228,15 @@ public abstract class ServerCommand {
     public String toString() {
         return (query == null) ? command : command + QUERY_SEPARATOR + query;
     }
-    
+
+    public String getSrc() {
+        return "/__asadmin/";
+    }
+
+    public boolean acceptsGzip() {
+        return false;
+    }
+
     /**
      * Command to get property information for a dotted name.
      */
@@ -256,7 +293,7 @@ public abstract class ServerCommand {
 
         public SetPropertyCommand(final String property, final String value, String format) {
             super("set"); // NOI18N
-            query = MessageFormat.format(format, property, value);
+            query = MessageFormat.format(format, property,value); 
         }
 
         @Override
