@@ -54,6 +54,21 @@
     
     
     <extension point="org.eclipse.wst.server.core.runtimeTypes">
+         <!-- GlassFish 3.1 server -->
+
+        <runtimeType
+            id="org.glassfish.jst.server.runtime.glassfish31"
+            name="%runtimeTypeNameglassfish31" description="%runtimeTypeDescriptionglassfish31"
+            vendor="%runtimeTypeGlassFishVendor" version="3.1"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5, 3.0"/>
+            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0, 3.1"/>
+            <moduleType types="jst.connector" versions="1.0, 1.5, 1.6"/>
+            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0, 6.0"/>
+            <moduleType types="jst.utility"  versions="1.0"/>
+            <moduleType types="jst.appclient" versions="1.2, 1.3, 1.4, 5.0, 6.0"/>
+        </runtimeType>
+        
         <!-- GlassFish V3 server -->
 
         <runtimeType
@@ -104,7 +119,23 @@
     
     
     <extension point="org.eclipse.wst.server.core.serverTypes">
-        
+         <!-- GlassFish 3.1 server -->
+
+        <serverType
+            id="org.glassfish.jst.server.glassfish31"
+            name="%serverTypeNameglassfish31"
+            description="%serverTypeDescriptionglassfish31"
+            runtime="true"
+            class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
+            supportsRemoteHosts="false"
+            runtimeTypeId="org.glassfish.jst.server.runtime.glassfish31"
+              launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
+            startBeforePublish="true"
+            hasConfiguration="false"
+            launchModes="run,debug,profile">         
+        </serverType> 
+              
         <!-- GlassFish v3 server -->
 
         <serverType
@@ -164,6 +195,11 @@
 
 
     <extension point="org.eclipse.jst.server.generic.core.serverdefinition">
+    
+        <!-- GlassFish 3.1 server -->
+        <serverdefinition id="org.glassfish.jst.server.runtime.glassfish31" 
+                          definitionfile="/serverdef/glassfish31serverdef.xml">
+        </serverdefinition>
 
         
         <!-- GlassFish v3 server -->
@@ -215,6 +251,12 @@
                   typeIds="com.sun.enterprise.jst.server.sunappsrv92"
                   class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
 
+        <fragment id="org.eclipse.jst.server.generic.runtime"
+                  typeIds="org.glassfish.jst.server.runtime.glassfish31"
+                  class="com.sun.enterprise.jst.server.sunappsrv.InstallableRuntimeServerRuntimeWizardFragment"/>           
+        <fragment id="org.eclipse.jst.server.generic.server"
+                  typeIds="org.glassfish.jst.server.glassfish31"
+                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
 
         
     </extension>
@@ -224,7 +266,7 @@
         
         <image id="org.eclipse.jst.server.glassfish.image"
                icon="icons/obj16/glassfishserver.gif"
-               typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv91,com.sun.enterprise.jst.server.sunappsrv91,com.sun.enterprise.jst.server.runtime.sailfin2,com.sun.enterprise.jst.server.sailfin2,com.sun.enterprise.jst.server.runtime.sunappsrv92,com.sun.enterprise.jst.server.sunappsrv92"
+               typeIds="com.sun.enterprise.jst.server.runtime.sunappsrv91,com.sun.enterprise.jst.server.sunappsrv91,com.sun.enterprise.jst.server.runtime.sailfin2,com.sun.enterprise.jst.server.sailfin2,com.sun.enterprise.jst.server.runtime.sunappsrv92,com.sun.enterprise.jst.server.sunappsrv92,org.glassfish.jst.server.runtime.glassfish31,org.glassfish.jst.server.glassfish31"
                />
 
 
@@ -378,12 +420,16 @@
                              runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.1.5"/>
         <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv92"
                              runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.2"/>
+        <runtimeFacetMapping runtimeTypeId="org.glassfish.jst.server.runtime.glassfish31"
+                             runtime-component="org.glassfish.jst.server.runtime.glassfish"  version="3.1"/>
 
     </extension>    
     
     
     <extension point="org.eclipse.wst.common.project.facet.ui.images">
         <image runtime-component-type="com.sun.enterprise.jst.server.runtime.sunappsrv"
+               path="icons/obj16/glassfishserver.gif"/>
+       <image runtime-component-type="org.glassfish.jst.server.runtime.glassfish"
                path="icons/obj16/glassfishserver.gif"/>
         
     </extension>    
@@ -422,7 +468,16 @@
         
     </extension>
 
-
+    <extension id="sunappsrv.defaultFacets31"
+               name="%sunfacetlabel"
+               point="org.eclipse.wst.common.project.facet.core.defaultFacets">
+        
+        <default-facets>
+            <runtime-component id="org.glssfish.jst.server.runtime.sunappsrv" version="3.1"/>
+            <facet id="sun.facet" version="9" />
+        </default-facets>        
+        
+    </extension>
       
     <extension point = "org.eclipse.wst.xml.core.catalogContributions">
         <catalogContribution id="default">
@@ -668,7 +723,7 @@
     <extension point="org.eclipse.wst.server.ui.editorPageSections">
         <section id="com.sun.enterprise.jst.server.runtime.sunappsrv" order="10"
                  insertionId="org.eclipse.wst.server.editor.overview.left"
-                 typeIds="com.sun.enterprise.jst.server.sunappsrv*,com.sun.enterprise.jst.server.glassfish*,com.sun.enterprise.jst.server.sailfin*"
+                 typeIds="org.glassfish.jst.server.glassfish*,com.sun.enterprise.jst.server.sunappsrv*,com.sun.enterprise.jst.server.glassfish*,com.sun.enterprise.jst.server.sailfin*"
                  class="com.sun.enterprise.jst.server.sunappsrv.editorsections.ServerSection">
         </section>
     </extension>
@@ -1301,7 +1356,7 @@
        </classpathContainerPage>
     </extension-->
     
-   <extension point="org.eclipse.hyades.trace.ui.launchConfigMechanismAssociator">
+   <!--extension point="org.eclipse.hyades.trace.ui.launchConfigMechanismAssociator">
        <association launchConfigID="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType">
            <mechanism mechanismID="org.eclipse.tptp.trace.ui.jvmpiMechanism">
  	           <configuration
@@ -1319,7 +1374,7 @@
  	                 associatedAgent="org.eclipse.tptp.platform.jvmti.TIAgent"       
  	                 filter="org.eclipse.tptp.platform.profile.server.core.internal.TICollectorFiltration">                                                  
  	            </configuration>                        
- 	       </mechanism>
+ 	       </mechanism-->
  	
  	  <!--
  	                        
@@ -1333,9 +1388,9 @@
  	                        </mechanism>
  	        -->
  	                
- 	                </association>
+ 	                <!--/association>
  	        
- 	        </extension>
+ 	        </extension-->
  	        
    <extension
         point="org.eclipse.jst.j2ee.J2EEModelProvider">

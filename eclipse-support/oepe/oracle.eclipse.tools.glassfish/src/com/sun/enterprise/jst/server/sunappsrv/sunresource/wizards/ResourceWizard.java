@@ -45,6 +45,7 @@ import org.eclipse.wst.server.core.IRuntime;
 @SuppressWarnings("restriction")
 public abstract class ResourceWizard extends Wizard implements INewWizard {
 	private static final String GF_RUNTIME = "com.sun.enterprise.jst.server.runtime.sunappsrv"; //$NON-NLS-1$
+	private static final String NEWGF_RUNTIME = "org.glassfish.jst.server.runtime.glassfish"; //$NON-NLS-1$
 	private static final String SAILFIN_RUNTIME = "com.sun.enterprise.jst.server.runtime.sailfin"; //$NON-NLS-1$
 
 	protected ISelection selection;
@@ -121,7 +122,10 @@ public abstract class ResourceWizard extends Wizard implements INewWizard {
 						if (runtimeId.startsWith(GF_RUNTIME) || runtimeId.startsWith(SAILFIN_RUNTIME)) {
 							returnProjects.add(project2);
 						}
-					}
+						if (runtimeId.startsWith(NEWGF_RUNTIME) ) {
+							returnProjects.add(project2);
+						}
+                                        }
 				}
 			} catch (CoreException e) {
 				// just skip from list

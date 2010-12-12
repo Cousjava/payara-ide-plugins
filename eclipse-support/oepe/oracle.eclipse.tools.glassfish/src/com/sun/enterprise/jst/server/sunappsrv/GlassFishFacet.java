@@ -33,7 +33,6 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.ActionConfig;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectWorkingCopy;
-import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
 import com.sun.enterprise.jst.server.sunappsrv.ejbjar.SunEjbJarXmlCreate;

@@ -50,12 +50,21 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
             String relativeDocPath="!/docs/api";
             if (runtime.getRuntimeType().getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){//GlassFish v3
             	relativeDocPath="!/javaee6doc/doc";
+            } else
+            if (runtime.getRuntimeType().getId().equals("org.glaasfish.jst.server.runtime.glassfish31")){//GlassFish 3.1
+            	relativeDocPath="!/javaee6doc/doc";
             }
 
            String javadocPath ="jar:file:" + GlassFishServerRuntimeTargetHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath() + relativeDocPath;
 
            Bundle b = null;
            if (runtime.getRuntimeType().getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){//GlassFish v3
+        	   b = Platform.getBundle("oracle.eclipse.tools.doc.javaee6");
+               if (b!=null){
+            	   URL u= FileLocator.resolve(b.getEntry("/javaee6doc/doc"));
+                   javadocPath = ""+u;
+              }
+           } else    if (runtime.getRuntimeType().getId().equals("org.glassfish.jst.server.runtime.glassfish31")){//GlassFish 3.1
         	   b = Platform.getBundle("oracle.eclipse.tools.doc.javaee6");
                if (b!=null){
             	   URL u= FileLocator.resolve(b.getEntry("/javaee6doc/doc"));
