@@ -9,7 +9,7 @@
    <feature url="features/oracle.eclipse.tools.helios.doc.javaee6_1.0.0.qualifier.jar" id="oracle.eclipse.tools.helios.doc.javaee6" version="1.0.0.qualifier">
       <category name="glassfish_category"/>
    </feature>
-   <feature url="features/oracle.eclipse.tools.helios.glassfish_1.6.1.qualifier.jar" id="oracle.eclipse.tools.helios.glassfish" version="1.6.1.qualifier">
+   <feature url="features/oracle.eclipse.tools.helios.glassfish_1.7.0.qualifier.jar" id="oracle.eclipse.tools.helios.glassfish" version="1.7.0.qualifier">
       <category name="glassfish_category"/>
    </feature>
    <category-def name="glassfish_category" label="GlassFish Application Server">
