@@ -98,7 +98,10 @@ public  class AssembleModules {
 			}
 			else { // Project module
 			//ludo 2010	packModule(module, uri, parent);
-				
+				String version= server.getVersion3Only();
+				if (version.indexOf(" 3.1")==-1){
+					packModule(module, uri, parent);
+				}else{
 				
 				if(!module.getModuleType().getId().equals("jst.utility")) {//$NON-NLS-1$	see bug https://glassfishplugins.dev.java.net/issues/show_bug.cgi?id=251
 					if (uri.endsWith(".war")){
@@ -115,7 +118,8 @@ public  class AssembleModules {
 						assembler.copyModule(module,monitor);
 
 
-	            }				
+	            }	
+				}
 				
 				
 				

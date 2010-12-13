@@ -497,7 +497,7 @@ public class Commands {
     public static final class VersionCommand extends ServerCommand {
 
         private Manifest info;
-        
+        private String version;
         public VersionCommand() {
             super("version"); // NOI18N
         }
@@ -509,7 +509,19 @@ public class Commands {
 
         @Override
         public boolean processResponse() {
+            if(info == null) {
+                return false;
+            }
+            
+            Attributes mainAttrs = info.getMainAttributes();
+            if(mainAttrs != null) {
+                version = mainAttrs.getValue("message");
+            }
+            
             return true;
+        }
+        public String getVersion(){
+        	return version;
         }
         
     }
