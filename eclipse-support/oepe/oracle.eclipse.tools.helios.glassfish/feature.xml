@@ -11,10 +11,10 @@
  *     Oracle IDE Developers - initial API and implementation
  *******************************************************************************/
  -->
- <feature
+<feature
       id="oracle.eclipse.tools.helios.glassfish"
       label="%featureName"
-      version="1.6.1.qualifier"
+      version="1.7.0.qualifier"
       provider-name="%providerName"
       plugin="oracle.eclipse.tools.glassfish"
       image="glassfish.gif">
@@ -30,13 +30,13 @@
    <license url="%licenseUrl">
       %license
    </license>
-   
+
    <url>
       <update label="%updateSiteName" url="http://download.oracle.com/otn_software/oepe/helios"/>
    </url>
 
    <requires>
-      <import feature="org.eclipse.platform" version="3.6.0" match="equivalent"/>
+      <import feature="org.eclipse.platform" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.apache.xerces"/>
       <import plugin="org.apache.ant"/>
       <import plugin="org.eclipse.jdt.core"/>
