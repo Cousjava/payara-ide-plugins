@@ -556,6 +556,20 @@ public void setServerInstanceProperties(Map map) {
     	WRONG_SERVER_TYPE
     	
     }
+    
+	public  String getVersion3Only() {
+		Commands.VersionCommand command = new Commands.VersionCommand();
+		try {
+			Future<OperationState> result = execute(command);
+			if (result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED) {
+				return command.getVersion();
+			}
+
+		} catch (Exception ex) {
+			SunAppSrvPlugin.logMessage("getVersion3Only is failing=", ex); //$NON-NLS-1$
+		}
+		return "";
+	}
     /**
      * 
      * @return ServerStatus for possible V3 server. If server is not a V3 one, we will know
@@ -564,6 +578,9 @@ public void setServerInstanceProperties(Map map) {
      */
     public ServerStatus getV3ServerStatus() {
 
+   	
+    	
+    	
            Commands.LocationCommand command = new Commands.LocationCommand();
            try {
                 Future<OperationState> result = execute(command);
