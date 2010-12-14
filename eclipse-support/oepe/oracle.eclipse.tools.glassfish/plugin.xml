@@ -722,7 +722,28 @@
                     uri="dtds/sun-resources_1_4.dtd"
                     webURL="http://www.sun.com/software/appserver/dtds/sun-resources_1_4.dtd" />
 
-       <!-- New Java EE 6 only schemas... The old ee 5 schemas are alreay known by Eclipse current wtp.
+                    
+           <public publicId="-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN"
+                    uri="dtds/glassfish-web-app_3_0-1.dtd"
+                    webURL="ttp://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd" />
+                    
+                    
+           <public publicId="-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN"
+                    uri="dtds/glassfish-resources_1_5.dtd"
+                    webURL="http://glassfish.org/dtds/glassfish-resources_1_5.dtd" />
+                    
+           <public publicId="-//GlassFish.org//DTD GlassFish Application Server 3.1 EJB 3.1//EN"
+                    uri="dtds/glassfish-ejb-jar_3_1-1.dtd"
+                    webURL="http://glassfish.org/dtds/glassfish-ejb-jar_3_1-1.dtd" />
+                    
+           <public publicId="-//GlassFish.org//DTD GlassFish Application Server 3.1 Java EE Application 6.0//EN"
+                    uri="dtds/glassfish-application_6_0-1.dtd"
+                    webURL="http://glassfish.org/dtds/glassfish-application_6_0-1.dtd" />
+                    
+           <public publicId="-//GlassFish.org//DTD GlassFish Application Server 3.1 Java EE Application Client 6.0//EN"
+                    uri="dtds/glassfish-application-client_6_0-1.dtd"
+                    webURL="http://glassfish.org/dtds/glassfish-application-client_6_0-1.dtd" />
+                    <!-- New Java EE 6 only schemas... The old ee 5 schemas are alreay known by Eclipse current wtp.
         We might check when we need to remove these schemas from our plugin when Eclipse really support officially
         Java EE 6 -->
           <uri
