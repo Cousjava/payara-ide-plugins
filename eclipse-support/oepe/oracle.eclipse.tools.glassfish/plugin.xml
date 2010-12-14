@@ -1101,7 +1101,9 @@
                 	<test forcePluginActivation="true"
                 	property="org.eclipse.wst.server.ui.serverType"
                 	value="com.sun.enterprise.jst.server.*" />
-
+                	<test forcePluginActivation="true"
+                	property="org.eclipse.wst.server.ui.serverType"
+                	value="org.glassfish.jst.server.*" />
                 </or>
             </enablement>
       
