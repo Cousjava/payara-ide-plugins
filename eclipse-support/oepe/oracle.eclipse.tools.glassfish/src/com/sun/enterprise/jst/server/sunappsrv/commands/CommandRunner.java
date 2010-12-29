@@ -363,17 +363,14 @@ public class CommandRunner extends BasicTask<OperationState> {
                             TrustManager[] tm = new TrustManager[]{
                                 new X509TrustManager() {
 
-                                @Override
                                     public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
                                         return;
                                     }
 
-                                @Override
                                     public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
                                         return;
                                     }
 
-                                @Override
                                     public X509Certificate[] getAcceptedIssuers() {
                                         return null;
                                     }
@@ -387,7 +384,6 @@ public class CommandRunner extends BasicTask<OperationState> {
                                 ((HttpsURLConnection)hconn).setSSLSocketFactory(context.getSocketFactory());
                                 ((HttpsURLConnection)hconn).setHostnameVerifier(new HostnameVerifier() {
 
-                                    @Override
                                     public boolean verify(String string, SSLSession ssls) {
                                         return true;
                                     }
