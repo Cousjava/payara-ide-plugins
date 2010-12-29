@@ -16,6 +16,7 @@ package com.sun.enterprise.jst.server.sunappsrv.commands;
 
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -39,6 +41,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.eclipse.osgi.internal.signedcontent.Base64;
 
@@ -66,6 +78,9 @@ public class CommandRunner extends BasicTask<OperationState> {
     /** Executor that serializes management tasks. 
      */
     private static ExecutorService executor;
+    
+    private boolean authorized;
+
     
     /** Returns shared executor.
      */
@@ -321,28 +336,70 @@ public class CommandRunner extends BasicTask<OperationState> {
         String commandUrl;
         
         try {
-            commandUrl = constructCommandUrl(serverCmd.getCommand(), serverCmd.getQuery());
+            commandUrl = constructCommandUrl(serverCmd.getSrc(), serverCmd.getCommand(), serverCmd.getQuery());
         } catch (URISyntaxException ex) {
-            return fireOperationStateChanged(OperationState.FAILED, "MSG_ServerCmdException",
+            return fireOperationStateChanged(OperationState.FAILED, "MSG_ServerCmdException",  // NOI18N
                     serverCmd.toString(), instanceName, ex.getLocalizedMessage());
         }
-       
-        int retries = 5; // disable ("version".equals(cmd) || "__locations".equals(cmd)) ? 1 : 3;
-        Logger.getLogger("glassfish").log(Level.FINEST, 
-                "CommandRunner.call(" + commandUrl + ") called on thread \"" + 
-                Thread.currentThread().getName() + "\"");
-        
+
+        int retries = 1; // disable ("version".equals(cmd) || "__locations".equals(cmd)) ? 1 : 3;
+        Logger.getLogger("glassfish").log(Level.FINEST, "CommandRunner.call({0}) called on thread \"{1}\"", new Object[]{commandUrl, Thread.currentThread().getName()}); // NOI18N
+
         // Create a connection for this command
         try {
             urlToConnectTo = new URL(commandUrl);
 
             while(!httpSucceeded && retries-- > 0) {
                 try {
-                    Logger.getLogger("glassfish").log(Level.FINE, "V3 HTTP Command: " + commandUrl );
+                    Logger.getLogger("glassfish").log(Level.FINE, "HTTP Command: {0}", commandUrl); // NOI18N
 
                     conn = urlToConnectTo.openConnection();
                     if(conn instanceof HttpURLConnection) {
                         HttpURLConnection hconn = (HttpURLConnection) conn;
+
+                        if (conn instanceof HttpsURLConnection) {
+                            // let's just trust any server that we connect to...
+                            // we aren't send them money or secrets...
+                            TrustManager[] tm = new TrustManager[]{
+                                new X509TrustManager() {
+
+                                @Override
+                                    public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                                        return;
+                                    }
+
+                                @Override
+                                    public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                                        return;
+                                    }
+
+                                @Override
+                                    public X509Certificate[] getAcceptedIssuers() {
+                                        return null;
+                                    }
+                                }
+                            };
+
+                            SSLContext context = null;
+                            try {
+                                context = SSLContext.getInstance("SSL");
+                                context.init(null, tm, null);
+                                ((HttpsURLConnection)hconn).setSSLSocketFactory(context.getSocketFactory());
+                                ((HttpsURLConnection)hconn).setHostnameVerifier(new HostnameVerifier() {
+
+                                    @Override
+                                    public boolean verify(String string, SSLSession ssls) {
+                                        return true;
+                                    }
+
+                                });
+                            } catch (Exception ex) {
+                                // if there is an issue here... there will be another exception later
+                                // which will take care of the user interaction...
+                                Logger.getLogger("glassfish").log(Level.INFO, "trust manager problem: " + urlToConnectTo,ex); // NOI18N
+                            }
+
+                        }
 
                         // Set up standard connection characteristics
                         hconn.setAllowUserInteraction(false);
@@ -352,9 +409,15 @@ public class CommandRunner extends BasicTask<OperationState> {
                         hconn.setDoOutput(serverCmd.getDoOutput());
                         String contentType = serverCmd.getContentType();
                         if(contentType != null && contentType.length() > 0) {
-                            hconn.setRequestProperty("Content-Type", contentType);
+                            hconn.setRequestProperty("Content-Type", contentType); // NOI18N
+                            hconn.setChunkedStreamingMode(0);
                         }
                         hconn.setRequestProperty("User-Agent", "hk2-agent"); // NOI18N
+                        if (serverCmd.acceptsGzip()) {
+                            hconn.setRequestProperty("Accept-Encoding", "gzip");
+                        }
+
+                        
                         if ( !server.getUseAnonymousConnections().equals("true")){
                         	// Set up an authorization header with our credentials
                         	// Hk2Properties tp = tm.getHk2Properties();
@@ -363,38 +426,35 @@ public class CommandRunner extends BasicTask<OperationState> {
                         	hconn.setRequestProperty("Authorization", // NOI18N
                         			"Basic " + auth); // NOI18N
                         }
+
                         // Establish the connection with the server
+                       /// Authenticator.setDefault(AUTH);
                         hconn.connect();
+                        // Send data to server if necessary
+                        handleSend(hconn);
+
                         int respCode = hconn.getResponseCode();
                         if(respCode == HttpURLConnection.HTTP_UNAUTHORIZED || 
                                 respCode == HttpURLConnection.HTTP_FORBIDDEN) {
                             // connection to manager has not been allowed
-                            // authorized = false;
+                            authorized = false;
                             return fireOperationStateChanged(OperationState.FAILED, 
                                     "MSG_AuthorizationFailed", serverCmd.toString(), instanceName); // NOI18N
                         }
 
                         // !PW FIXME log status for debugging purposes
                         if(Boolean.getBoolean("org.netbeans.modules.hk2.LogManagerCommands")) { // NOI18N
-                            Logger.getLogger("glassfish").log(Level.FINE, 
-                                    "  receiving response, code: " + respCode);
+                            Logger.getLogger("glassfish").log(Level.FINE, "  receiving response, code: {0}", respCode); // NOI18N
                         }
-
-                        // Send data to server if necessary
-                        handleSend(hconn);
 
                         // Process the response message
                         if(handleReceive(hconn)) {
-                        	commandSucceeded = serverCmd.processResponse();
-                        	httpSucceeded = true;
-                        } else {
-                        	if (!serverCmd.retry()) {
-                        		httpSucceeded = true;
-                        	}
+                            commandSucceeded = serverCmd.processResponse();
                         }
+                        
+                        httpSucceeded = true;
                     } else {
-                        Logger.getLogger("glassfish").log(Level.INFO, "Unexpected connection type: " +
-                                urlToConnectTo);
+                        Logger.getLogger("glassfish").log(Level.INFO, "Unexpected connection type: {0}", urlToConnectTo); // NOI18N
                     }
                 } catch(ProtocolException ex) {
                     fireOperationStateChanged(OperationState.FAILED, "MSG_Exception", // NOI18N
@@ -414,33 +474,42 @@ public class CommandRunner extends BasicTask<OperationState> {
                 }
             } // while
         } catch(MalformedURLException ex) {
-            Logger.getLogger("glassfish").log(Level.WARNING, ex.getLocalizedMessage(), ex);
+            Logger.getLogger("glassfish").log(Level.WARNING, ex.getLocalizedMessage(), ex); // NOI18N
         }
-        SunAppSrvPlugin.logMessage("done executing: "+commandSucceeded +" "+serverCmd.toString());
-       
+        
         if(commandSucceeded) {
             return fireOperationStateChanged(OperationState.COMPLETED, "MSG_ServerCmdCompleted", // NOI18N
                     serverCmd.toString(), instanceName);
         } else {
             return fireOperationStateChanged(OperationState.FAILED, "MSG_ServerCmdFailed", // NOI18N
-                    serverCmd.toString(), instanceName);
+                    serverCmd.toString(), instanceName, serverCmd.getServerMessage());
         }
     }
     
-    private String constructCommandUrl(final String cmd, final String query) throws URISyntaxException {
+    private String constructCommandUrl(final String contextRoot, final String cmd, final String query) throws URISyntaxException {
         String host = server.getServer().getHost();
         int port = Integer.parseInt(server.getAdminServerPort());
-        URI uri = new URI("http", null, host, port, "/__asadmin/" + cmd, query, null); // NOI18N
+        URI uri = new URI(Utils.getHttpListenerProtocol(host, port), null, host, port, contextRoot + cmd, query, null); // NOI18N
         return uri.toASCIIString();
     }
     
+
+    /*
+     * Note: this is based on reading the code of CLIRemoteCommand.java
+     * from the server's code repository... Since some asadmin commands
+     * need to send multiple files, the server assumes the input is a ZIP
+     * stream.
+     */
     private void handleSend(HttpURLConnection hconn) throws IOException {
         InputStream istream = serverCmd.getInputStream();
         if(istream != null) {
-            BufferedOutputStream ostream = null;
+            ZipOutputStream ostream = null;
             try {
-                ostream = new BufferedOutputStream(hconn.getOutputStream(), 1024);
-                byte buffer[] = new byte[1024];
+                ostream = new ZipOutputStream(new BufferedOutputStream(hconn.getOutputStream(), 1024*1024));
+                ZipEntry e = new ZipEntry(serverCmd.getInputName());
+                e.setExtra(getExtraProperties());
+                ostream.putNextEntry(e);
+                byte buffer[] = new byte[1024*1024];
                 while (true) {
                     int n = istream.read(buffer);
                     if (n < 0) {
@@ -448,38 +517,50 @@ public class CommandRunner extends BasicTask<OperationState> {
                     }
                     ostream.write(buffer, 0, n);
                 }
+                ostream.closeEntry();
                 ostream.flush();
             } finally {
                 try {
                     istream.close();
                 } catch(IOException ex) {
-                        Logger.getLogger("glassfish").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                    Logger.getLogger("glassfish").log(Level.INFO, ex.getLocalizedMessage(), ex); // NOI18N
                 }
-                
                 if(ostream != null) {
                     try { 
                         ostream.close(); 
                     } catch(IOException ex) {
-                        Logger.getLogger("glassfish").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                        Logger.getLogger("glassfish").log(Level.INFO, ex.getLocalizedMessage(), ex);  // NOI18N
                     }
                     ostream = null;
                 }
             }
-        } else if("PUT".equalsIgnoreCase(serverCmd.getRequestMethod())) {
-            Logger.getLogger("glassfish").log(Level.INFO, "HTTP PUT request but no data stream provided");
+        } else if("POST".equalsIgnoreCase(serverCmd.getRequestMethod())) { // NOI18N
+            Logger.getLogger("glassfish").log(Level.INFO, "HTTP POST request but no data stream provided"); // NOI18N
         }
     }
     
+    private byte[] getExtraProperties() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Properties props = new Properties();
+        props.setProperty("data-request-type", "file-xfer"); // NOI18N
+        props.setProperty("last-modified", serverCmd.getLastModified()); // NOI18N
+        props.put("data-request-name", "DEFAULT");
+        props.put("data-request-is-recursive", "true");
+        props.put("Content-Type", "application/octet-stream");
+        props.list(new java.io.PrintStream(baos));
+        return baos.toByteArray();
+    }
+
     private boolean handleReceive(HttpURLConnection hconn) throws IOException {
         boolean result = false;
         InputStream httpInputStream = hconn.getInputStream();
         try {
-            result = serverCmd.readResponse(httpInputStream);
+            result = serverCmd.readResponse(httpInputStream, hconn);
         } finally {
             try {
                 httpInputStream.close();
             } catch (IOException ex) {
-                Logger.getLogger("glassfish").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                Logger.getLogger("glassfish").log(Level.INFO, ex.getLocalizedMessage(), ex);  // NOI18N
             }
         }
         return result;
