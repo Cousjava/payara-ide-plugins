@@ -605,6 +605,8 @@ public void setServerInstanceProperties(Map map) {
                 
                 if(res == OperationState.RUNNING) { 
                 	//let try one more time...it is possible to have running and then immediately completed..
+        			SunAppSrvPlugin.logMessage("getV3ServerStatus trying one more time" );	//$NON-NLS-1$
+
                 	res=result.get(15, TimeUnit.SECONDS);
                 }
                 if(res == OperationState.COMPLETED) {
