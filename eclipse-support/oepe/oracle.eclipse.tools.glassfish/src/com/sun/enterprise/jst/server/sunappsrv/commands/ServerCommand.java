@@ -170,7 +170,7 @@ public abstract class ServerCommand {
      * @return true if response was read correctly.
      * @throws java.io.IOException in case of stream error.
      */
-    public boolean readResponse(InputStream in) throws IOException {
+    public boolean readResponse(InputStream in, HttpURLConnection hconn) throws IOException {
         boolean result = false;
 
         Manifest m = new Manifest();

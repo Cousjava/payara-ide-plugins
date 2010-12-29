@@ -648,8 +648,10 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 								"cannot UnDeploy in less than 120 sec "+name, null));
 					}
 					if(result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
-						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-								"Error during undeploy of module "+name+": "+command.getServerMessage(), null));
+						SunAppSrvPlugin.logMessage("Warning when undeploying: " +name+": "+command.getServerMessage());
+				    //avoid throwing an error as it would not remove this app from eclipse publish area, and we want it removed.
+					//	throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+					//			"Error during undeploy of module "+name+": "+command.getServerMessage(), null));
 					}
 				} catch(Exception ex) {
 					SunAppSrvPlugin.logMessage("Undeploy is failing=",ex );

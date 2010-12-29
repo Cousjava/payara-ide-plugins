@@ -18,7 +18,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -518,10 +521,23 @@ public void setServerInstanceProperties(Map map) {
 			*/
 
         }
-    	return !isPortAvailable(Integer.parseInt(getServerPort()));
+    	return isRunning(getServer().getHost() , Integer.parseInt(getServerPort()));
     }
-
-    public static boolean isPortAvailable(int port) {
+    public static boolean isRunning(final String host, final int port) {
+        if(null == host)
+            return false;
+        
+        try {
+            InetSocketAddress isa = new InetSocketAddress(host, port);
+            Socket socket = new Socket();
+            socket.connect(isa, 100);
+            socket.close();
+            return true;
+        } catch(IOException ex) {
+            return false;
+        }
+    }
+    public  boolean isPortAvailable(int port) {
         // if the port is not in the allowed range - return false
         if ((port < 0) && (port > 65535)) {
             return false;
@@ -532,6 +548,7 @@ public void setServerInstanceProperties(Map map) {
         // and it is occupied
         ServerSocket socket = null;
         try {
+        	InetAddress s = InetAddress.getByName(getServer().getHost());
             socket = new ServerSocket(port);
             return true;
         } catch (IOException e) {
@@ -584,7 +601,13 @@ public void setServerInstanceProperties(Map map) {
            Commands.LocationCommand command = new Commands.LocationCommand();
            try {
                 Future<OperationState> result = execute(command);
-                if(result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED) {
+                OperationState res=result.get(30, TimeUnit.SECONDS);
+                
+                if(res == OperationState.RUNNING) { 
+                	//let try one more time...it is possible to have running and then immediately completed..
+                	res=result.get(15, TimeUnit.SECONDS);
+                }
+                if(res == OperationState.COMPLETED) {
                 	String installRoot = this.getDomainDir()+File.separator+this.getdomainName();
                 	String targetInstallRoot = command.getDomainRoot();
                 	//SunAppSrvPlugin.logMessage("IsReady is targetInstallRoot="+targetInstallRoot );
@@ -606,10 +629,13 @@ public void setServerInstanceProperties(Map map) {
                 		SunAppSrvPlugin.logMessage("getV3ServerStatus 3 DOMAINDIR_NOT_MATCHING" );	//$NON-NLS-1$
                 		return ServerStatus.DOMAINDIR_NOT_MATCHING;
                 	}
-                } else  {
+                } else  if (res==OperationState.FAILED){
                 	SunAppSrvPlugin.logMessage("apparently CREDENTIAL_ERROR" );	//$NON-NLS-1$
                 	return ServerStatus.CREDENTIAL_ERROR;
 
+                } else {
+                	SunAppSrvPlugin.logMessage("Command Still running!!! error" );	//$NON-NLS-1$
+                	return ServerStatus.CREDENTIAL_ERROR;              	
                 }
             } catch(Exception ex) {
                 SunAppSrvPlugin.logMessage("IsReady is failing=",ex );	//$NON-NLS-1$

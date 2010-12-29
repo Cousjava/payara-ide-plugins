@@ -16,6 +16,8 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import org.eclipse.wst.server.core.IServer;
 
+import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
+
 public class AdminURLHelper {
 	private static final String fallbackHost = "localhost";  //$NON-NLS-1$
 	private static final String fallbackPort = "4848";       //$NON-NLS-1$
@@ -35,6 +37,6 @@ public class AdminURLHelper {
 			hostName = sunserver.getServer().getHost();
 			portNumber = sunserver.getAdminServerPort();
 	    }
-	    return "http://" + hostName + ":" + portNumber + urlSuffix; //$NON-NLS-1$
+	    return Utils.getHttpListenerProtocol(hostName, portNumber) + "://" + hostName + ":" + portNumber + urlSuffix; //$NON-NLS-1$
 	}
 }
