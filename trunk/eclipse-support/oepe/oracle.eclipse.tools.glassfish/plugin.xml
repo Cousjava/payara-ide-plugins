@@ -1517,6 +1517,12 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
       provider="com.sun.enterprise.jst.server.sunappsrv.jaxrsLibraryproviderID"
       class="com.LibraryProviderInstallPanel"/>
    </extension-->
-
+<extension
+         point="org.eclipse.wst.server.core.internalStartup">
+      <startup
+            class="com.sun.enterprise.jst.server.sunappsrv.installation.Startup"
+            id="com.sun.enterprise.jst.server.sunappsrv.installation.startup">
+      </startup>
+   </extension>
 
 </plugin>
