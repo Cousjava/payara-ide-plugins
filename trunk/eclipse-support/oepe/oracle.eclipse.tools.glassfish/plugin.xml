@@ -1364,10 +1364,14 @@
 
      	<runtime
            archiveUrl="http://download.java.net/glassfish/3.0.1/release/glassfish-3.0.1.zip" 		   
-           licenseUrl="https://glassfishplugins.dev.java.net/license/CDDL+GPL+3rdPartyEPL.txt"
+           licenseUrl="http://download.java.net/glassfish/eclipse/CDDL+GPL+3rdPartyEPL.txt"
            id="com.sun.enterprise.jst.server.runtime.sunappsrv92">
     	</runtime>   	
-    	
+     	<runtime
+           archiveUrl="http://download.java.net/glassfish/3.1/promoted/latest-glassfish.zip" 		   
+           licenseUrl="http://download.java.net/glassfish/eclipse/CDDL+GPL+3rdPartyEPL.txt"
+           id="org.glassfish.jst.server.runtime.glassfish31">
+    	</runtime>      	
     </extension>
     <extension
           point="org.eclipse.ui.intro">
