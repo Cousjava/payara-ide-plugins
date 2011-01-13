@@ -23,17 +23,17 @@ public class HelpActions {
 	//V3 help menu item:
 	
 	public static class TopV3 extends ShowURLAction {
-		public TopV3() { super("http://docs.sun.com/app/docs/coll/1343.9");}
+		public TopV3() { super("http://download.oracle.com/docs/cd/E19798-01/index.html");}
 	}	
 
 	//V2.1 help menu item:
 	
 	public static class TopV21 extends ShowURLAction {
-		public TopV21() { super("http://docs.sun.com/app/docs/coll/1343.4");}
+		public TopV21() { super("http://download.oracle.com/docs/cd/E19879-01/index.html");}
 	}	
 
 	public static class JavaEE5JavaDoc extends ShowURLAction {
-		public JavaEE5JavaDoc() { super("http://java.sun.com/javaee/5/docs/api/");}
+		public JavaEE5JavaDoc() { super("http://download.oracle.com/javaee/5/api/");}
 	}
 	public static class JavaEE6JavaDoc extends ShowURLAction {
 		public JavaEE6JavaDoc() { super("http://javadoc.glassfish.org/javaee6/apidoc/");}
