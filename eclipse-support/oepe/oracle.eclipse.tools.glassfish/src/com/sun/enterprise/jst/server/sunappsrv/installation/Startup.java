@@ -24,7 +24,6 @@ import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 @SuppressWarnings("restriction")
 public class Startup implements org.eclipse.wst.server.core.internal.IStartup {
 
-	@Override
 	public void startup() {
 		ServerUIPreferences preferences = ServerUIPreferences.getInstance();
 		boolean showOnActivity = preferences.getShowOnActivity();
