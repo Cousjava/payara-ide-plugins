@@ -172,6 +172,7 @@ public abstract class ServerCommand {
      */
     public boolean readResponse(InputStream in, HttpURLConnection hconn) throws IOException {
         boolean result = false;
+        retry = false;
 
         Manifest m = new Manifest();
         m.read(in);
