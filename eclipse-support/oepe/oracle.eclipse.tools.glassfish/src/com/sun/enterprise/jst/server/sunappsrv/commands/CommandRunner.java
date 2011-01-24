@@ -398,6 +398,7 @@ public class CommandRunner extends BasicTask<OperationState> {
                         }
 
                         // Set up standard connection characteristics
+                        hconn.setReadTimeout(300000); //ie 300 secs see bug 328
                         hconn.setAllowUserInteraction(false);
                         hconn.setDoInput(true);
                         hconn.setUseCaches(false);
