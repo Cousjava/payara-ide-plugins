@@ -88,12 +88,12 @@ public class V3Configurator {
 				.getAdapter(SunAppServer.class);
 
 		domainXml = serverLocation.getAbsolutePath()
-				+ "glassfish/domain1/config/domain.xml";
+				+ "/glassfish/domains/domain1/config/domain.xml";
 
 		SunAppSrvPlugin.logMessage("domain.xml location is = " + domainXml);
 		Map<String, String> configuration = sunAppServer.getProps();
 		configuration.put(SunAppServer.DOMAINPATH,
-				serverLocation.getAbsolutePath() + "glassfish/domain1");
+				serverLocation.getAbsolutePath() + "/glassfish/domains/domain1");
 
 		sunAppServer.setServerInstanceProperties(configuration);
 
