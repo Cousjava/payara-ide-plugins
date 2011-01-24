@@ -349,7 +349,7 @@ public class CommandRunner extends BasicTask<OperationState> {
         try {
             urlToConnectTo = new URL(commandUrl);
 
-            while(!httpSucceeded && retries-- > 0) {
+            while ((!httpSucceeded && retries-- > 0) || serverCmd.retry() ) {
                 try {
                     Logger.getLogger("glassfish").log(Level.FINE, "HTTP Command: {0}", commandUrl); // NOI18N
 
