@@ -183,7 +183,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
                 // TODO Auto-generated catch block
                 SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : security exception"); //$NON-NLS-1$
             } catch (NoSuchMethodException e) {
-                SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : no such method  exception"); //$NON-NLS-1$
+            // usual case now, no need    SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : no such method  exception"); //$NON-NLS-1$
             } catch (IllegalArgumentException e) {
                 SunAppSrvPlugin.logMessage("in SunAppServerBehaviour setStartedState : illegal argument exception"); //$NON-NLS-1$
             } catch (IllegalAccessException e) {
@@ -194,6 +194,8 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
         }
         setServerState(IServer.STATE_STARTED);
         resetStatus(IServer.STATE_STARTED);
+		setMode(mode); 
+
     }
 
 	/**
