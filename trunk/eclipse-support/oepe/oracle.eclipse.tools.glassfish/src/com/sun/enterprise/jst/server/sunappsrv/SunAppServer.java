@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -115,11 +115,11 @@ public class SunAppServer extends GenericServer {
     protected void initialize() {
     	SunAppSrvPlugin.logMessage("in SunAppServer initialize"+this.getServer().getName());	//$NON-NLS-1$
     	super.initialize();
-    	SunInitialize();
+    	sunInitialize();
 
     }
 
-    protected void SunInitialize(){
+    protected void sunInitialize(){
     	String domainDir = getDomainDir();
     	String domainName = getdomainName();
     	if (initializedCalled){
@@ -208,7 +208,7 @@ public void setServerInstanceProperties(Map map) {
 			domainValidationError = validateDomainExists(domdir, domainName);
 			if (domainValidationError == null) {
 
-			  SunInitialize();
+			  sunInitialize();
 			  map.put(ADMINSERVERPORT, adminServerPortNumber);
 			  map.put(SERVERPORT, serverPortNumber);
 		  }
@@ -371,7 +371,7 @@ public void setServerInstanceProperties(Map map) {
     public void saveConfiguration(IProgressMonitor m) throws CoreException  {
         SunAppSrvPlugin.logMessage("in Save SunAppServer " +initializedCalled);	//$NON-NLS-1$
         if (initializedCalled==false){
-        	SunInitialize(); 
+        	sunInitialize(); 
             SunAppSrvPlugin.logMessage("in Save SunAppServer done" );	//$NON-NLS-1$
        }
         syncHostAndPortsValues();
@@ -662,7 +662,7 @@ public void setServerInstanceProperties(Map map) {
     		//
     		JMXServiceURL url = new JMXServiceURL(
     		"service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi");	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    		HashMap env = new HashMap();
+    		HashMap<String, String[]> env = new HashMap<String, String[]>();
     		env.put(JMXConnector.CREDENTIALS, new String[]{ getAdminName(), getAdminPassword()});
             SunAppSrvPlugin.logMessage("service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi" );	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     		jmxc = JMXConnectorFactory.connect(url, env);
