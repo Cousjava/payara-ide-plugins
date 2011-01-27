@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -114,7 +114,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         
         SunAppServer sunserver = serverBehavior.getSunAppServer();
         SunAppServer.ServerStatus status = SunAppServer.ServerStatus.CONNEXTION_ERROR;
-        sunserver.SunInitialize(); // force reread of domain info if necessary
+        sunserver.sunInitialize(); // force reread of domain info if necessary
         if (sunserver.isRunning()) {
             if (serverBehavior.isV3()) {
                 SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch Forcing a STOP!!!!"); //$NON-NLS-1$

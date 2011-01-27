@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2007-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2007-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -226,7 +226,7 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
      */
  	@SuppressWarnings("unchecked")
 	public Map getValues(){
- 		Map propertyMap = new HashMap();
+ 		Map propertyMap = new HashMap<String, String>();
  		propertyMap.put(serverDirProperty.getId(), path.getText());
      	return propertyMap;
      }

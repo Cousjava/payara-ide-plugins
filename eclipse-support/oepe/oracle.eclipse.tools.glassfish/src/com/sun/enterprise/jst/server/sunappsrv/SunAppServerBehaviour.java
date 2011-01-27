@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,9 +18,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -557,10 +556,18 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		publishDeployedDirectory(deltaKind,prop, module, monitor);
 
 		setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
+		FileOutputStream fos=null;
 		try {
-			prop.store(new FileOutputStream(path.toFile()), "GlassFish v3 Prelude");
+			prop.store(fos =new FileOutputStream(path.toFile()), "GlassFish 3");
 		} catch (Exception e) {
 			SunAppSrvPlugin.logMessage(" error in PUBLISH_STATE_NONE",e );
+		} finally{
+			if ( fos!=null ) 
+				try {
+				fos.close();
+			} catch (IOException e) {
+				//  Auto-generated catch block
+			}
 		}
 
 	}
