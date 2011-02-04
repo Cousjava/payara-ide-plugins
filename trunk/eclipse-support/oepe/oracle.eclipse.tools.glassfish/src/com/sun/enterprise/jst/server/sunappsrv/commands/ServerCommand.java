@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -47,6 +47,10 @@ public abstract class ServerCommand {
         return serverMessage;
     }
 
+    public void  setServerMessage(String m) {
+         serverMessage = m;
+    }
+    
     public ServerCommand(String command) {
         this.command = command;
     }

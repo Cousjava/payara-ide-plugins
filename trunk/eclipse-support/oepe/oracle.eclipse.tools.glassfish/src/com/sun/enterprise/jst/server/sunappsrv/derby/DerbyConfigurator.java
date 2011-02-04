@@ -14,7 +14,6 @@
 package com.sun.enterprise.jst.server.sunappsrv.derby;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Properties;
@@ -24,6 +23,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.tools.ant.listener.TimestampedLogger;
@@ -119,14 +119,10 @@ public class DerbyConfigurator {
 				}
 
 			}
-
 		} catch (Exception e) {
-	/*		Activator.showErrorAndLog(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-					MessageFormat
-					.format(Messages.CONFIGURATION_OF_PORTS_FAILED_BECAUSE_OF , e.getMessage()), e), e.getMessage(),
-					Messages.EXCEPTION_OCCURRED);*/
 			SunAppSrvPlugin.logMessage("Error Reading DB data", e);
 		}
+
 
 		properties.setProperty("org.eclipse.datatools.connectivity.db.connectionProperties", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		properties.setProperty("org.eclipse.datatools.connectivity.db.savePWD", "true"); //$NON-NLS-1$ //$NON-NLS-2$

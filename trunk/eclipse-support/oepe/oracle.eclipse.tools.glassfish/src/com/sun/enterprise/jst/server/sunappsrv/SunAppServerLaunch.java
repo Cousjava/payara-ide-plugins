@@ -113,6 +113,16 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         }
         
         SunAppServer sunserver = serverBehavior.getSunAppServer();
+		if (!sunserver.isLocalServer()) {
+	        if (sunserver.isRunning()) {
+	        	serverBehavior.setStartedState(mode);
+	        	return;
+	        }else {
+            abort("GlassFish Remote Servers cannot be start from this machine.", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
+	        }
+		}
+                
+        
         SunAppServer.ServerStatus status = SunAppServer.ServerStatus.CONNEXTION_ERROR;
         sunserver.sunInitialize(); // force reread of domain info if necessary
         if (sunserver.isRunning()) {
@@ -289,7 +299,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 pb = new ProcessBuilder(asadminCmd, "start-domain","--domaindir", serverBehavior.getDomainDir(), //$NON-NLS-1$ //$NON-NLS-2$
                         debugFlag, verboseFlag, domain);
                 SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(
-                        serverBehavior.getStopCommand());
+                        serverBehavior.getStopV2Command());
             }
 
             pb.directory(new File(serverBehavior.getSunApplicationServerInstallationDirectory()));

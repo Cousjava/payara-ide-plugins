@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -31,7 +31,7 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String DomainDirectory;
     public static String UseAnonymousConnection;
     public static String keepSessions;
-    public static String fastDeploy;
+    public static String jarDeploy;
      
     // additional strings to workaround for issue 222688
     public static String canInstallPath;
