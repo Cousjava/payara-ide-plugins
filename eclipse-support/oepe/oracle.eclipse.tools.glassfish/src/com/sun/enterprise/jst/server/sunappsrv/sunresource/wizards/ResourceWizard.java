@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
@@ -48,7 +47,7 @@ public abstract class ResourceWizard extends Wizard implements INewWizard {
 	private static final String NEWGF_RUNTIME = "org.glassfish.jst.server.runtime.glassfish"; //$NON-NLS-1$
 	private static final String SAILFIN_RUNTIME = "com.sun.enterprise.jst.server.runtime.sailfin"; //$NON-NLS-1$
 
-	protected ISelection selection;
+	protected IStructuredSelection selection;
 	protected String dirName;
 	protected IFolder folder;
 	
@@ -87,9 +86,8 @@ public abstract class ResourceWizard extends Wizard implements INewWizard {
 	}
 
 	protected IContainer getContainerResource() {
-		if (selection != null && selection.isEmpty() == false
-				&& selection instanceof IStructuredSelection) {
-			IStructuredSelection ssel = (IStructuredSelection) selection;
+		if (selection != null && selection.isEmpty() == false) {
+			IStructuredSelection ssel =  selection;
 			if (ssel.size() > 1)
 				return null;
 			Object obj = ssel.getFirstElement();
