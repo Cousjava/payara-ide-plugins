@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+//import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -55,7 +56,6 @@ import javax.net.ssl.X509TrustManager;
 import org.eclipse.osgi.internal.signedcontent.Base64;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.GetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
@@ -79,9 +79,8 @@ public class CommandRunner extends BasicTask<OperationState> {
      */
     private static ExecutorService executor;
     
-    private boolean authorized;
-
-    
+//    private static Authenticator AUTH = new AdminAuthenticator();
+   
     /** Returns shared executor.
      */
     private static synchronized ExecutorService executor() {
@@ -95,15 +94,31 @@ public class CommandRunner extends BasicTask<OperationState> {
     private ServerCommand serverCmd;
     
     /** Has been the last access to  manager web app authorized? */
-    //private boolean authorized;
+    private boolean authorized;
+    private final CommandFactory cf;
+    private final boolean isReallyRunning;
     private SunAppServer server;
     
     public CommandRunner(SunAppServer server) {
-    	super(null);
+        super(null);
+        this.cf = new CommandFactory()  {
+            @Override
+            public SetPropertyCommand getSetPropertyCommand(String name, String value) {
+                return new ServerCommand.SetPropertyCommand(name, value,
+                        "DEFAULT={0}={1}"); // NOI18N
+            }
+            
+        };
     	this.server =server;
-        
+        this.isReallyRunning = true;
     }
     
+    public CommandRunner(SunAppServer server, boolean isReallyRunning, CommandFactory cf, Map<String, String> properties, OperationStateListener... stateListener) {
+        super(properties, stateListener);
+        this.cf =cf;
+    	this.server =server;
+        this.isReallyRunning = isReallyRunning;
+    }    
     /**
      * Sends stop-domain command to server (asynchronous)
      * 
@@ -111,6 +126,79 @@ public class CommandRunner extends BasicTask<OperationState> {
     public Future<OperationState> stopServer() {
         return execute(Commands.STOP, "MSG_STOP_SERVER_IN_PROGRESS");
         
+    }
+    
+     /**
+     * Sends restart-domain command to server (asynchronous)
+     *
+     */
+    public Future<OperationState> restartServer(int debugPort, String query) {
+        final String restartQuery = query; // cf.getRestartQuery(debugPort);
+        if (-1 == debugPort || "".equals(restartQuery) ) {
+            return execute(new ServerCommand("restart-domain") {
+
+                @Override
+                public String getQuery() {
+                    return restartQuery;
+                }
+            }, "MSG_RESTART_SERVER_IN_PROGRESS"); // NOI18N
+        }
+        // force the options to be correct for remote debugging, then restart...
+        CommandRunner inner = new CommandRunner(server, isReallyRunning, cf, ip, new OperationStateListener() {
+
+            @Override
+            public void operationStateChanged(OperationState newState, String message) {
+                //throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        });
+
+        // I wish that the server folks had let me add a port number to the
+        // restart-domain --debug command... but this will have to do until then
+
+        ServerCommand.GetPropertyCommand getCmd = new ServerCommand.GetPropertyCommand("configs.config.server-config.java-config.debug-options");
+
+        OperationState state = null;
+        try {
+            state = inner.execute(getCmd).get();
+        } catch (InterruptedException ie) {
+            Logger.getLogger("glassfish").log(Level.INFO,debugPort+"",ie);
+        } catch (ExecutionException ee) {
+            Logger.getLogger("glassfish").log(Level.INFO,debugPort+"",ee);
+        }
+        String qs = null;
+        if (state == OperationState.COMPLETED) {
+            Map<String, String> data = getCmd.getData();
+            if (!data.isEmpty()) {
+                // now I can reset the debug data
+                String oldValue = data.get("configs.config.server-config.java-config.debug-options");
+                ServerCommand.SetPropertyCommand setCmd =
+                        cf.getSetPropertyCommand("configs.config.server-config.java-config.debug-options",
+                        oldValue.replace("transport=dt_shmem", "transport=dt_socket").
+                        replace("address=[^,]+", "address=" + debugPort));
+                //serverCmd = setCmd;
+                //task = executor.submit(this);
+                try {
+                    state = inner.execute(setCmd).get();
+                    qs = "debug=true";
+                } catch (InterruptedException ie) {
+                     Logger.getLogger("glassfish").log(Level.INFO,debugPort+"",ie);
+                } catch (ExecutionException ee) {
+                     Logger.getLogger("glassfish").log(Level.INFO,debugPort+"",ee);
+                }
+            }
+        }
+        if (null == qs) {
+            qs = "debug=false";
+        }
+        final String fqs = qs;
+        return execute(new ServerCommand("restart-domain") {
+
+            @Override
+            public String getQuery() {
+                return fqs;
+            }
+        }, "MSG_RESTART_SERVER_IN_PROGRESS");
     }
     
     /**
@@ -182,7 +270,41 @@ public class CommandRunner extends BasicTask<OperationState> {
         }
         return result;
     }
-    
+  
+       /**
+     * Sends list-web-services command to server (synchronous)
+     *
+     * @return String array of names of deployed applications.
+     */
+    public List<WSDesc> getWebServices() {
+        List<WSDesc> result = Collections.emptyList();
+        try {
+            List<String> wss = Collections.emptyList();
+            Commands.ListWebservicesCommand cmd = new Commands.ListWebservicesCommand();
+            serverCmd = cmd;
+            Future<OperationState> task = executor().submit(this);
+            OperationState state = task.get();
+            if (state == OperationState.COMPLETED) {
+                wss = cmd.getWebserviceList();
+
+                result = processWebServices(wss);
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
+        } catch (ExecutionException ex) {
+            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
+        }
+        return result;
+    }
+
+    private List<WSDesc> processWebServices(List<String> wssList){
+        List<WSDesc> result = new  ArrayList<WSDesc>();
+        for (String a : wssList) {
+            result.add(new WSDesc(a, a+"?wsdl", a+"?Tester")); // NOI18N
+        }
+        return result;
+    }
+
     public List<ResourceDesc> getResources(String type) {
         List<ResourceDesc> result = Collections.emptyList();
         try {
@@ -276,13 +398,19 @@ public class CommandRunner extends BasicTask<OperationState> {
     }
     
     public Future<OperationState> deploy(File dir, String moduleName, String contextRoot)  {
-        return execute(new Commands.DeployCommand(dir.getAbsolutePath(), moduleName, 
-                contextRoot, computePreserveSessions()));
+        return deploy(dir, moduleName, contextRoot, null, new File[0]);
     }
     
-    public Future<OperationState> redeploy(String moduleName, String contextRoot)  {
+    public Future<OperationState> deploy(File dir, String moduleName, String contextRoot, Map<String,String> properties, File[] libraries) {
+       // LogViewMgr.displayOutput(ip,null);
+        return execute(new Commands.DeployCommand(dir, moduleName,
+                contextRoot, computePreserveSessions(), properties, libraries));
+    }
+
+    public Future<OperationState> redeploy(String moduleName, String contextRoot, File[] libraries, boolean resourcesChanged)  {
+        //LogViewMgr.displayOutput(ip,null);
         return execute(new Commands.RedeployCommand(moduleName, contextRoot, 
-                computePreserveSessions()));
+                computePreserveSessions(), libraries, resourcesChanged));
     }
 
     private  Boolean computePreserveSessions() {
@@ -291,6 +419,14 @@ public class CommandRunner extends BasicTask<OperationState> {
     
     public Future<OperationState> undeploy(String moduleName) {
         return execute(new Commands.UndeployCommand(moduleName));
+    }
+    
+     public Future<OperationState> enable(String moduleName) {
+        return execute(new Commands.EnableCommand(moduleName));
+    }
+
+    public Future<OperationState> disable(String moduleName) {
+        return execute(new Commands.DisableCommand(moduleName));
     }
     
     public Future<OperationState> unregister(String resourceName, String suffix, String cmdPropName, boolean cascade) {
@@ -398,7 +534,7 @@ public class CommandRunner extends BasicTask<OperationState> {
                         }
 
                         // Set up standard connection characteristics
-                        hconn.setReadTimeout(300000); //ie 300 secs see bug 328
+                        //hconn.setReadTimeout(300000); //ie 300 secs see bug 328
                         hconn.setAllowUserInteraction(false);
                         hconn.setDoInput(true);
                         hconn.setUseCaches(false);
@@ -435,6 +571,10 @@ public class CommandRunner extends BasicTask<OperationState> {
                                 respCode == HttpURLConnection.HTTP_FORBIDDEN) {
                             // connection to manager has not been allowed
                             authorized = false;
+                            if(respCode == HttpURLConnection.HTTP_UNAUTHORIZED)
+                            	serverCmd.setServerMessage("Remote access is not authorized. Invalid user name or password.");
+                            if(respCode == HttpURLConnection.HTTP_FORBIDDEN)
+                            	serverCmd.setServerMessage("Remote access is forbidden. Remote Server should be secured. (via enable-secure-admin command).");
                             return fireOperationStateChanged(OperationState.FAILED, 
                                     "MSG_AuthorizationFailed", serverCmd.toString(), instanceName); // NOI18N
                         }
@@ -483,13 +623,13 @@ public class CommandRunner extends BasicTask<OperationState> {
         }
     }
     
-    private String constructCommandUrl(final String contextRoot, final String cmd, final String query) throws URISyntaxException {
-        String host = server.getServer().getHost();
-        int port = Integer.parseInt(server.getAdminServerPort());
-        URI uri = new URI(Utils.getHttpListenerProtocol(host, port), null, host, port, contextRoot + cmd, query, null); // NOI18N
-        return uri.toASCIIString();
-    }
-    
+     private String constructCommandUrl(final String cmdSrc, final String cmd, final String query) throws URISyntaxException {
+         String host = server.getServer().getHost();
+         int port = Integer.parseInt(server.getAdminServerPort());
+
+         URI uri = new URI(Utils.getHttpListenerProtocol(host,port), null, host, port, cmdSrc + cmd, query, null); // NOI18N
+         return uri.toASCIIString().replace("+", "%2b"); // these characters don't get handled by GF correctly... best I can tell.
+     }    
 
     /*
      * Note: this is based on reading the code of CLIRemoteCommand.java

@@ -103,7 +103,7 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 		section.setText(Messages.wizardSectionTitle);
 		/// String loc = sunserver.getRootDir();
 
-		SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
+		//SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
 		//     String loc =  serverBehavior.getSunApplicationServerInstallationDirectory();
 		// this is not used, so comment it out until it is
 		// should probably use formatters instead of concat as well
@@ -164,17 +164,29 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 		serverPortNumber = toolkit.createText(comp, sunserver.getServerPort(), SWT.BORDER);
 
 		txtGDF.applyTo(serverPortNumber);
-		serverPortNumber.setEditable(false);
-		serverPortNumber.setEnabled(false);
-
+		if (sunserver.isLocalServer()){
+			serverPortNumber.setEditable(false);
+			serverPortNumber.setEnabled(false);
+		}
+		serverPortNumber.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				execute(new SunAppServerCommands(server, serverPortNumber.getText(),SunAppServer.SERVERPORT));
+			}
+		});
 
 		createLabel(comp, Messages.AdminServerPortNumber, toolkit);
 
 		adminServerPortNumber = toolkit.createText(comp, sunserver.getAdminServerPort(), SWT.BORDER);
 		txtGDF.applyTo(adminServerPortNumber);
-		adminServerPortNumber.setEditable(false);
-		adminServerPortNumber.setEnabled(false);
-
+		if (sunserver.isLocalServer()){
+			adminServerPortNumber.setEditable(false);
+			adminServerPortNumber.setEnabled(false);
+		}
+		adminServerPortNumber.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				execute(new SunAppServerCommands(server, adminServerPortNumber.getText(),SunAppServer.ADMINSERVERPORT));
+			}
+		});
 
 
 		if (sunserver.isV3()) {
@@ -206,6 +218,20 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 					execute(new SunAppServerCommands(server, ""+selected,SunAppServer.KEEPSESSIONS));
 				}
 			});
+			
+			if (sunserver.isLocalServer()){
+				final Button jarDeploy = new Button(comp, SWT.CHECK);
+				jarDeploy.setText(Messages.jarDeploy);
+				jarDeploy.setSelection(sunserver.getJarDeploy().equals("true"));
+				txtGDF.applyTo(jarDeploy);
+				jarDeploy.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						//Determines if the checkBox is checked or not
+						boolean selected = jarDeploy.getSelection();
+						execute(new SunAppServerCommands(server, ""+selected,SunAppServer.JARDEPLOY));
+					}
+				});
+			}
 		}
 	}
 

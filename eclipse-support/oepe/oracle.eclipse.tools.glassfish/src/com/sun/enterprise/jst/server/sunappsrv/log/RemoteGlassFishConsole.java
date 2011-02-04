@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -14,7 +14,6 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.log;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jface.text.IDocument;
@@ -25,6 +24,7 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
 
@@ -35,18 +35,18 @@ import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
  * for our log console without affecting other consoles.  There are also some 
  * convenience methods for initializing from a file and showing the console page.
  * 
- * @author Rochelle Raccah
+ * @author Ludovic Champenois
  *
  */
-public class GlassFishConsole extends MessageConsole {
-	private static int interval = 500;
+public class RemoteGlassFishConsole extends MessageConsole {
+	private static int interval = 6000;
 	private static int numLines = 1000;
-	private LogThread thread;
-	private File file;
+	private RemoteLogThread thread;
+	private SunAppServer server;
 	
-	public GlassFishConsole(File f) {
-		super(f.getAbsolutePath(),  AppServerContextAction.getImageDescriptorFromlocalImage("icons/obj16/glassfishserver.gif"));
-		file = f;
+	public RemoteGlassFishConsole(SunAppServer s) {
+		super(s.getServer().getHost()+":"+s.getAdminServerPort(), AppServerContextAction.getImageDescriptorFromlocalImage("icons/obj16/glassfishserver.gif"));
+		server = s;
 	}
 
 	/* (non-Javadoc)
@@ -58,7 +58,7 @@ public class GlassFishConsole extends MessageConsole {
 		final IDocument document = getDocument();
 
 		try {
-			thread = new LogThread(file, interval, numLines);			
+			thread = new RemoteLogThread(server, interval, numLines);			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -69,23 +69,20 @@ public class GlassFishConsole extends MessageConsole {
 		thread.start();
 	}
 
-	@Override
 	public void dispose(){
 		SunAppSrvPlugin.logMessage("Console Dispose is CALLED...");
 		if (thread!=null){
 			thread.halt();
 			thread=null;
 		}
-		file = null;
 		super.dispose();
 	}
 	
-	
-	private static MessageConsole getConsole(File f) {
+	private static MessageConsole getConsole(SunAppServer s) {
 	      ConsolePlugin plugin = ConsolePlugin.getDefault();
 	      IConsoleManager manager = plugin.getConsoleManager();
 	      IConsole[] existing = manager.getConsoles();
-	      String name = f.getAbsolutePath();
+	      String name = s.getServer().getHost()+":"+s.getAdminServerPort();
 	      MessageConsole myConsole = null;
 
 	      for (int i = 0; i < existing.length; i++) {
@@ -95,21 +92,21 @@ public class GlassFishConsole extends MessageConsole {
 	         }
 	      }
 	      //no console found, so create a new one
-	      myConsole = new GlassFishConsole(f);
+	      myConsole = new RemoteGlassFishConsole(s);
 	      manager.addConsoles(new IConsole[]{myConsole});
 	      return myConsole;
 	}
 
-	public static void showConsole(File f) {
-		MessageConsole myConsole = getConsole(f);
+	public static void showConsole(SunAppServer s) {
+		MessageConsole myConsole = getConsole(s);
 		if (myConsole != null) {
 			ConsolePlugin.getDefault().getConsoleManager().showConsoleView(myConsole);
 		}
 	}
 
-	private LogThread.LogListener addListener(final IDocument doc, LogThread th){
+	private RemoteLogThread.LogListener addListener(final IDocument doc, RemoteLogThread th){
 		final Display display = Display.getCurrent();
-		return th.addListener(new LogThread.LogListener()	{
+		return th.addListener(new RemoteLogThread.LogListener()	{
 			public void logChanged(final Ring list){
 				if (!display.isDisposed()) {
 					display.asyncExec(new Runnable(){

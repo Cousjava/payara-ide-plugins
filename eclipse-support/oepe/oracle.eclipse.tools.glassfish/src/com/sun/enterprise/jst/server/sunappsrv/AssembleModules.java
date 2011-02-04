@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -59,13 +59,7 @@ public  class AssembleModules {
 		this.server =server;
 		this.publishHelper = helper;
         SunAppSrvPlugin.logMessage("AssembleModules assembleRoot="+assembleRoot);
-/*		if(isModuleType(module, "jst.web")) {
 
-		}
-		if(isModuleType(module, "jst.ear")) {
-
-		}
-		*/
 
 	}
 
@@ -103,19 +97,12 @@ public  class AssembleModules {
 					packModule(module, uri, parent);
 				}else{				
 
-				if( shouldRepack( module ) ){
-
+					if( shouldRepack( module ) ){
 						AssembleModules assembler= new AssembleModules(module, assembleRoot.append(uri),server , publishHelper);
 						childNeedsARedeployment = (childNeedsARedeployment||assembler.needsARedeployment());
 						assembler.copyModule(module,monitor);
-
-	            }	
-				}
-				
-				
-				
-				
-				
+					}	
+				}				
 			}
 		}
 		return parent;

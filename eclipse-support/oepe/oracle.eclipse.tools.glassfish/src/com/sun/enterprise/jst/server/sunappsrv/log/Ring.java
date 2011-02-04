@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -25,7 +25,7 @@ import java.util.LinkedList;
 public class Ring 
 {
 
-	private LinkedList list = new LinkedList();
+	private LinkedList<Object> list = new LinkedList<Object>();
 	private int count = 0;
 	private int maxItems = 0;
 
@@ -34,11 +34,11 @@ public class Ring
 	 */
 	private static final int LINE_WIDTH = 80;
 
-	public boolean isFull(){
+	public synchronized boolean isFull(){
 		return (count >= maxItems);
 	}
 
-	public boolean isEmpty(){
+	public synchronized boolean isEmpty(){
 		return (count == 0);
 	}
 
@@ -54,7 +54,7 @@ public class Ring
 	 * 
 	 * @return String
 	 */
-	public String getCompleteDocument(){
+	public synchronized String getCompleteDocument(){
 		StringBuffer sb = new StringBuffer(count * LINE_WIDTH);
 		for (int i = 0; i < count; i++) {
 			sb.append(list.get(i) + "\n");

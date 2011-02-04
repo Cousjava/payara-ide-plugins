@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,8 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 /**
  * author: Peter Williams
  */
@@ -28,8 +27,8 @@ public class V3LogFilter {
 	
     private final Locale logLocale = getLogLocale();
     private final String logBundleName = getLogBundle();
-    private final String localizedWarning = getLocalized(Level.WARNING.getName());
-    private final String localizedSevere = getLocalized(Level.SEVERE.getName());
+   // private final String localizedWarning = getLocalized(Level.WARNING.getName());
+   // private final String localizedSevere = getLocalized(Level.SEVERE.getName());
     private final Map<String, String> localizedLevels = getLevelMap();
     
     private Locale getLogLocale() {
@@ -72,91 +71,13 @@ public class V3LogFilter {
         
     }
     
-    public static abstract class StateFilter implements Filter {
-        
+
+
+    public static final class LogFileFilter  implements Filter {
         protected String message;
         
         protected int state;
         protected StringBuilder msg;
-        
-        StateFilter() {
-            state = 0;
-            msg = new StringBuilder(128);
-        }
-        
-        protected void reset() {
-            message = "";
-        }
-        
-        public abstract String process(char c);
-        
-    }
-    
-    public static final class StreamFilter extends StateFilter {
-
-        private static final Pattern messagePattern = Pattern.compile("([\\p{Lu}]{0,16}?):|([^\\r\\n]{0,24}?\\d\\d?:\\d\\d?:\\d\\d?)");
-        
-        private String line;
-        
-        public StreamFilter() {
-            reset();
-        }
-
-        @Override
-        protected void reset() {
-            super.reset();
-            line = "";
-        }
-
-        /**
-         * GlassFish server log format, when read from process stream:
-         *
-         * Aug 13, 2008 3:01:49 PM com.sun.enterprise.glassfish.bootstrap.ASMain main
-         * INFO: Launching GlassFish on Apache Felix OSGi platform
-         * Aug 13, 2008 3:01:50 PM com.sun.enterprise.glassfish.bootstrap.ASMainHelper setUpOSGiCache
-         * INFO: Removing Felix cache profile dir /space/tools/v3Aug7/domains/domain1/.felix/gf left from a previous run
-         * 
-         * Welcome to Felix.
-         * =================
-         * 
-         * Aug 13, 2008 3:01:51 PM HK2Main start
-         * INFO: contextRootDir = /space/tools/v3Aug7/modules
-         * ...
-         * Aug 13, 2008 3:02:14 PM
-         * SEVERE: Exception in thread "pool-6-thread-1"
-         * Aug 13, 2008 3:02:14 PM org.glassfish.scripting.rails.RailsDeployer load
-         * INFO: Loading application RailsGFV3 at /RailsGFV3
-         * Aug 13, 2008 3:02:14 PM
-         * SEVERE: /...absolute.path.../connection_specification.rb:232:in `establish_connection':
-         *
-         * !PW FIXME This parser should be checked for I18N stability.
-         */
-        public String process(char c) {
-            String result = null;
-
-            if(c == '\n') {
-                if(msg.length() > 0) {
-                    msg.append(c);
-                    line = msg.toString();
-                    msg.setLength(0);
-
-                    Matcher matcher = messagePattern.matcher(line);
-                    if(matcher.find() && matcher.start() == 0 && matcher.groupCount() > 1 && matcher.group(2) != null) {
-                        result = null;
-                    } else {
-                        result = line;
-                    }
-                }
-            } else if(c != '\r') {
-                msg.append(c);
-            }
-
-            return result;
-        }
-
-    }
-
-    public static final class LogFileFilter extends StateFilter {
         
         private String time;
         private String type;
@@ -167,13 +88,14 @@ public class V3LogFilter {
         private final Map<String, String> typeMap;
 
         public LogFileFilter(Map<String, String> typeMap) {
+            state = 0;
+            msg = new StringBuilder(128);
             this.typeMap = typeMap;
             reset();
         }
 
-        @Override
         protected void reset() {
-            super.reset();
+            message = "";
             time = type = version = classinfo = threadinfo = "";
             multiline = false;
         }

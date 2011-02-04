@@ -54,8 +54,8 @@ import org.xml.sax.SAXException;
 
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
-import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
+import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
 import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
@@ -85,7 +85,7 @@ public class SunAppServer extends GenericServer {
     public static final String ADMINNAME = "sunappserver.adminname";	//$NON-NLS-1$
     public static final String ADMINPASSWORD = "sunappserver.adminpassword";	//$NON-NLS-1$
     public static final String KEEPSESSIONS = "sunappserver.keepSessions";	//$NON-NLS-1$
-    public static final String FASTDEPLOY = "sunappserver.fastDeploy";	//$NON-NLS-1$
+    public static final String JARDEPLOY = "sunappserver.jarDeploy";	//$NON-NLS-1$
     public static final String USEANONYMOUSCONNECTIONS = "sunappserver.useAnonymousConnection";	//$NON-NLS-1$
 
     public static final String SAMPLEDBDIR = "sunappserver.sampledbdir";	//$NON-NLS-1$
@@ -132,9 +132,13 @@ public class SunAppServer extends GenericServer {
         	if (initializedCalled)
         		return;
     	}
-    	SunAppSrvPlugin.logMessage("in SunAppServer SunInitialize domain is"+getDomainDir());	//$NON-NLS-1$
-    	if ((domainDir!=null)&&(!domainDir.startsWith("${"))){ //only if we are correctly setup...	//$NON-NLS-1$
-    		if (readServerConfiguration(new File(domainDir+File.separator+domainName+"/config/domain.xml"))) {	//$NON-NLS-1$
+		if ((domainDir != null) && (!domainDir.startsWith("${"))) { //only if we are correctly setup...	//$NON-NLS-1$
+			if (!isLocalServer()) {
+				//no domain.xml to read
+				getServerPort();// force an init if needed
+				getAdminServerPort();// force an init if needed
+
+			}else if (readServerConfiguration(new File(domainDir+File.separator+domainName+"/config/domain.xml"))) {	//$NON-NLS-1$
 	    		SunAppSrvPlugin.logMessage("in SunAppServer initialize done readServerConfiguration");	//$NON-NLS-1$
 	    		syncHostAndPortsValues();
 	        	prevDomainDir = domainDir;
@@ -158,6 +162,11 @@ public Map<String, String> getProps(){
   }
 
   public String validateDomainExists(String domainDir, String domainName) {
+      
+	  if (!isLocalServer()){
+		  return null;		  
+	  }
+          
 	  if ((domainDir!=null)&&(!domainDir.startsWith("${"))){ //only if we are correctly setup...	//$NON-NLS-1$
 		File f= new File(domainDir+File.separator+domainName);
 		if (!f.exists()){
@@ -240,31 +249,30 @@ public void setServerInstanceProperties(Map map) {
 	  }
       return  s;
   }
-  public void setKeepSessions(String value) {
-  	getProps().put(KEEPSESSIONS, value);
-  }
-  /* fast deploy for v2 and v2.1 (not using ANT and optimal like in v3
-   * 
-   */
-  public String getFastDeploy() {
-	  String s =getProps().get(FASTDEPLOY);
-	  if (s==null){
-		  s = Boolean.FALSE.toString(); //by default, false
-	  }
-      return  s;
-  }
-  public void setFastDeploy(String value) {
-  	getProps().put(FASTDEPLOY, value);
-  	if (value.equals (Boolean.TRUE.toString())){
-    		setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, 2/*Server.AUTO_PUBLISH_OVERRIDE*/);
-           	setAttribute(Server.PROP_AUTO_PUBLISH_TIME, 0);
-   		
-  	}
-  	else{
-       	setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, Server.AUTO_PUBLISH_DISABLE);
- 		
-  	}
-  }  
+
+    /* JAR deploy for v3
+     * 
+     */
+    public String getJarDeploy() {
+        String s = getProps().get(JARDEPLOY);
+        if (s == null) {
+            s = Boolean.FALSE.toString(); //by default, false
+        }
+        return s;
+    }
+
+    public void getJarDeploy(String value) {
+        getProps().put(JARDEPLOY, value);
+        /*  	if (value.equals (Boolean.TRUE.toString())){
+        setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, 2)'//2Server.AUTO_PUBLISH_OVERRIDE*
+        setAttribute(Server.PROP_AUTO_PUBLISH_TIME, 0);
+        
+        }
+        else{
+        setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, Server.AUTO_PUBLISH_DISABLE);
+        
+        }*/
+    }  
   
   public String getUseAnonymousConnections() {
 	  String s =getProps().get(USEANONYMOUSCONNECTIONS);
@@ -276,16 +284,27 @@ public void setServerInstanceProperties(Map map) {
 	  }
       return  s;
   }
-  public void setUseAnonymousConnections(String value) {
+
+  /*public void setUseAnonymousConnections(String value) {
   	getProps().put(USEANONYMOUSCONNECTIONS, value);
-  }
+  }*/
 
   public void setV2ContextRoot(String value) {
 	  	getProps().put(CONTEXTROOT, value);
   }
 
   public String getServerPort() {
-        return serverPortNumber;
+		if (isLocalServer()) {
+			return serverPortNumber;
+		}
+		else {
+			serverPortNumber =getProps().get(SERVERPORT);
+			  if (serverPortNumber==null){
+				  serverPortNumber = "8080";				  
+			  }
+			  return serverPortNumber;
+		}
+			  
     }
 
 
@@ -299,11 +318,21 @@ public void setServerInstanceProperties(Map map) {
      */
     @Override
     protected int getHttpPort() {
-	    return Integer.parseInt(serverPortNumber);
+    	
+	    return Integer.parseInt(getServerPort());
     }
 
 	public String getAdminServerPort() {
-        return adminServerPortNumber;
+		if (isLocalServer()) {
+			return adminServerPortNumber;
+		}
+		else {//read it form the server props
+			adminServerPortNumber =getProps().get(ADMINSERVERPORT);
+			  if (adminServerPortNumber==null){
+				  adminServerPortNumber = "4848";				  
+			  }
+			  return adminServerPortNumber;
+		}
     }
     
     public String getAdminName() {
@@ -374,9 +403,10 @@ public void setServerInstanceProperties(Map map) {
         	sunInitialize(); 
             SunAppSrvPlugin.logMessage("in Save SunAppServer done" );	//$NON-NLS-1$
        }
-        syncHostAndPortsValues();
+     //   syncHostAndPortsValues();
 
         super.saveConfiguration(m);
+
 
     }
 
@@ -399,6 +429,10 @@ public void setServerInstanceProperties(Map map) {
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		if (propChangeListeners != null)
 			propChangeListeners.remove(listener);
+	}
+	
+	public boolean isLocalServer(){
+		return getServer().getHost().equalsIgnoreCase("localhost");
 	}
 
 	/**
@@ -898,7 +932,7 @@ public void setServerInstanceProperties(Map map) {
     		};
     	
     }
-    
+
 }       
     
 

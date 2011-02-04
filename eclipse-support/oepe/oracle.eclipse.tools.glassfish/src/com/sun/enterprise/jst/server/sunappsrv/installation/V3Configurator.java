@@ -138,7 +138,7 @@ public class V3Configurator {
 			GenericServerRuntime gRun = (GenericServerRuntime) wc.loadAdapter(
 					GenericServerRuntime.class, new NullProgressMonitor());
 
-			HashMap map = new HashMap();
+			HashMap<String, String> map = new HashMap<String, String>();
 
 			map.put(SunAppServer.ROOTDIR, glassfishLocation);
 			gRun.setServerDefinitionId(gRun.getRuntime().getRuntimeType()
