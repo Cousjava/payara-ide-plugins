@@ -102,7 +102,7 @@ public class CommandRunner extends BasicTask<OperationState> {
     public CommandRunner(SunAppServer server) {
         super(null);
         this.cf = new CommandFactory()  {
-            @Override
+            //@Override
             public SetPropertyCommand getSetPropertyCommand(String name, String value) {
                 return new ServerCommand.SetPropertyCommand(name, value,
                         "DEFAULT={0}={1}"); // NOI18N
@@ -146,7 +146,7 @@ public class CommandRunner extends BasicTask<OperationState> {
         // force the options to be correct for remote debugging, then restart...
         CommandRunner inner = new CommandRunner(server, isReallyRunning, cf, ip, new OperationStateListener() {
 
-            @Override
+            //@Override
             public void operationStateChanged(OperationState newState, String message) {
                 //throw new UnsupportedOperationException("Not supported yet.");
             }
