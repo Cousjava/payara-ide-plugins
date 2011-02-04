@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <!--
 /*******************************************************************************
- * Copyright (c) 2010 Oracle and/or its affiliates.
+ * Copyright (c) 2010-2011 Oracle and/or its affiliates.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -127,7 +127,7 @@
             description="%serverTypeDescriptionglassfish31"
             runtime="true"
             class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
-            supportsRemoteHosts="false"
+            supportsRemoteHosts="true"
             runtimeTypeId="org.glassfish.jst.server.runtime.glassfish31"
               launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
@@ -256,7 +256,7 @@
                   class="com.sun.enterprise.jst.server.sunappsrv.InstallableRuntimeServerRuntimeWizardFragment"/>           
         <fragment id="org.eclipse.jst.server.generic.server"
                   typeIds="org.glassfish.jst.server.glassfish31"
-                  class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+                  class="com.sun.enterprise.jst.server.sunappsrv.GFWizardCreation"/>
 
         
     </extension>
@@ -764,7 +764,7 @@
                  class="com.sun.enterprise.jst.server.sunappsrv.editorsections.ServerSection">
         </section>
     </extension>
- 
+     
     <extension point="org.eclipse.wst.server.ui.editorPages">
       <page
          id="com.sun.enterprise.jst.server.sunappsrv.editorsections.uc"
