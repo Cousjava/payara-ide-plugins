@@ -17,7 +17,10 @@
 	<!--   build.result.folder - folder to contain the build results           -->
 	<!-- ===================================================================== -->
 	<target name="pre.build.jars">
-		<unzip dest="." src="./glassfish.zip"/>
+		<exec dir="." executable="wget" >
+			<arg  line="http://dlc.sun.com.edgesuite.net/glassfish/v3.1/promoted/latest-glassfish.zip"/>
+		</exec>
+		<unzip dest="." src="./latest-glassfish.zip"/>
 		<touch file="glassfish3/glassfish/lib/asadmin/.nothing"/>
 		<touch file="glassfish3/glassfish/lib/endorsed/.nothing"/>
 		<delete dir="glassfish3/javadb/docs"/>
