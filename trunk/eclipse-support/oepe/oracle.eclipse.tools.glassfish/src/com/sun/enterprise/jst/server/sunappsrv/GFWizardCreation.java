@@ -148,8 +148,9 @@ public class GFWizardCreation extends WizardFragment {
 		}
 
 		private GenericServerRuntime getRuntimeDelegate() {
-			return (GenericServerRuntime) serverCopy.getRuntime().loadAdapter(
+			GenericServerRuntime g=  (GenericServerRuntime) serverCopy.getRuntime().loadAdapter(
 					GenericServerRuntime.class, null);
+			return g;
 		}
 
 		private String getSunApplicationServerInstallationDirectory() {
