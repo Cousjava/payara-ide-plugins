@@ -19,7 +19,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
@@ -73,7 +72,7 @@ public class V3Configurator {
 				return null;
 			}
 		}
-		IFile e;
+	
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
 		wc.setName("Internal "+ runtime.getName());
 
@@ -96,11 +95,9 @@ public class V3Configurator {
 
 
 
-	@SuppressWarnings("unchecked")
 	private IRuntime createRuntime(String glassfishLocation) {
 		try {
 			IServerType st = ServerCore.findServerType(serverID);
-			Object o2 = st.getRuntimeType();
 			IRuntime[] runtimes = ServerCore.getRuntimes();
 			ServerCore.getRuntimeTypes();
 			ServerCore.getServers();
