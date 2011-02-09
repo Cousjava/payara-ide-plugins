@@ -46,7 +46,6 @@ public class Startup implements org.eclipse.wst.server.core.internal.IStartup {
 
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		preferences.setShowOnActivity(showOnActivity);
