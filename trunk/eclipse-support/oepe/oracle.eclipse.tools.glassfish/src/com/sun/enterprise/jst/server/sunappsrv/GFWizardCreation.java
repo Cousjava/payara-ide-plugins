@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.ui.internal.SWTUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -53,7 +52,7 @@ public class GFWizardCreation extends WizardFragment {
 		handle.setImageDescriptor(ImageDescriptor.createFromURL(SunAppSrvPlugin
 				.getInstance().getBundle().getEntry("/icons/wizard75x66.png")) //$NON-NLS-1$
 		);
-		handle.setTitle("GlassFish Application server");
+		handle.setTitle("GlassFish Application Server");
 		handle.setDescription("Enter the configuration parameters for this GlassFish domain...");
 		IServerWorkingCopy server = getServer();
 		SunAppServer gf = (SunAppServer) server.loadAdapter(SunAppServer.class,
@@ -147,7 +146,7 @@ public class GFWizardCreation extends WizardFragment {
 			serverCopy = scopy;
 		}
 
-		private GenericServerRuntime getRuntimeDelegate() {
+	/*	private GenericServerRuntime getRuntimeDelegate() {
 			GenericServerRuntime g=  (GenericServerRuntime) serverCopy.getRuntime().loadAdapter(
 					GenericServerRuntime.class, null);
 			return g;
@@ -157,11 +156,11 @@ public class GFWizardCreation extends WizardFragment {
 			String path = (String) getRuntimeDelegate()
 					.getServerInstanceProperties().get(SunAppServer.ROOTDIR);
 			return path;
-		}
+		}*/
 
 		public void decorate(Composite parent) {
 			if (glassfish.isLocalServer()) {
-				String defaultLocation = getSunApplicationServerInstallationDirectory();
+				String defaultLocation =""+serverCopy.getRuntime().getLocation();// getSunApplicationServerInstallationDirectory();
 				File f= new File (defaultLocation,"/domains/domain1");
 				defaultLocation = f.getAbsolutePath();
 

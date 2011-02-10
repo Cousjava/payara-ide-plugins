@@ -339,7 +339,8 @@ public class SunAppServerBehaviour extends ServerBehaviourDelegate {
         return (GenericServerRuntime)getServer().getRuntime().loadAdapter(GenericServerRuntime.class,null);
      }	
 	public String getSunApplicationServerInstallationDirectory(){
-		String path= (String)getRuntimeDelegate().getServerInstanceProperties().get(SunAppServer.ROOTDIR);
+//		String path= (String)getRuntimeDelegate().getServerInstanceProperties().get(SunAppServer.ROOTDIR);
+		String path=""+getServer().getRuntime().getLocation();
 		/* SunAppServer  sunserver = (SunAppServer) getServer().getAdapter(SunAppServer.class);
         String d = sunserver.getRootDir();
               SunAppSrvPlugin.logMessage("getSunApplicationServerInstallationDirectory is :"+d);
@@ -350,8 +351,12 @@ public class SunAppServerBehaviour extends ServerBehaviourDelegate {
 	 *  based on the modules dir existence for now
 	 */
 	public boolean isV3(){
-		String loc=getSunApplicationServerInstallationDirectory();
-		return new File(loc+"/modules").exists();
+		try{
+			String loc=getSunApplicationServerInstallationDirectory();
+			return new File(loc+"/modules").exists();
+		}catch (Exception e){
+			return false;//something may get npes when the server view in Eclipse is corrupted...
+		}
 	}
 	public String getDomainName(){
 		SunAppServer  sunserver = getSunAppServer();
