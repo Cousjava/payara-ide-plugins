@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="GlassFish Eclipse Update Site for the Indigo release (Eclipse 3.7)" url="http://download.java.net/glassfish/eclipse/indigo">
+      GlassFish Eclipse Update Site for the Helios release (Eclipse 3.6)
+   </description>
+   <feature url="features/oracle.eclipse.tools.indigo.doc.javaee5_1.0.0.qualifier.jar" id="oracle.eclipse.tools.helios.doc.javaee5" version="1.0.0.qualifier">
+      <category name="glassfish_category"/>
+   </feature>
+   <feature url="features/oracle.eclipse.tools.indigo.doc.javaee6_1.0.0.qualifier.jar" id="oracle.eclipse.tools.helios.doc.javaee6" version="1.0.0.qualifier">
+      <category name="glassfish_category"/>
+   </feature>
+   <feature url="features/oracle.eclipse.tools.indigo.glassfish_1.7.1.qualifier.jar" id="oracle.eclipse.tools.helios.glassfish" version="1.7.1.qualifier">
+      <category name="glassfish_category"/>
+   </feature>
+   <category-def name="glassfish_category" label="GlassFish Application Server">
+      <description>
+         GlassFish Application Server Plugins
+      </description>
+   </category-def>
+</site>
