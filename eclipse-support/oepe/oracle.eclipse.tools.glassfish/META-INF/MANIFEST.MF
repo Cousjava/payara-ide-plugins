@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: oracle.eclipse.tools.glassfish;singleton:=true
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.2.1.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin
 Bundle-Vendor: %providerName
@@ -50,7 +50,7 @@ Require-Bundle: org.apache.xerces,
  oracle.eclipse.tools.doc.javaee5,
  org.eclipse.jst.j2ee.web
 Bundle-ActivationPolicy: lazy
-Export-Package: com.sun.enterprise.jst.server.sunappsrv;x-friends:="com.sun.enterprise.jst.server.sunappsrv.ui"
+Export-Package: com.sun.enterprise.jst.server.sunappsrv
 Import-Package: org.eclipse.ant.core,
  org.eclipse.jdt.ui.wizards,
  org.eclipse.jface.text,
