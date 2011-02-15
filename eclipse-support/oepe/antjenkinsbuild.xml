@@ -12,19 +12,19 @@
         <attribute name="updatesite.location" />
         <sequential>
             <delete>
-                <fileset dir="." includes="${updatesite.location}/features*"/>
+                <fileset dir="." includes="@{updatesite.location}/features*"/>
             </delete>
             <delete>
-                <fileset dir="." includes="${updatesite.location}/plugins*"/>
+                <fileset dir="." includes="@{updatesite.location}/plugins*"/>
             </delete>
             <delete>
-                <fileset dir="." includes="${updatesite.location}/artifacts.jar*"/>
+                <fileset dir="." includes="@{updatesite.location}/artifacts.jar*"/>
             </delete>
             <delete>
-                <fileset dir="." includes="${updatesite.location}/content.jar*"/>
+                <fileset dir="." includes="@{updatesite.location}/content.jar*"/>
             </delete>
             <delete>
-                <fileset dir="." includes="${updatesite.location}/updatesite.zip*"/>
+                <fileset dir="." includes="@{updatesite.location}/updatesite.zip*"/>
             </delete>
             <exec executable="${eclipse.location}" dir="${workspace.location}" >
                 <arg value="-clean"/>
@@ -38,8 +38,8 @@
                 <arg value="exportupdatesites"/>
             </exec>
 
-            <zip destfile="${updatesite.location}/updatesite.zip"
-       basedir="${updatesite.location}"
+            <zip destfile="@{updatesite.location}/updatesite.zip"
+       basedir="@{updatesite.location}"
        includes="updatesite.zip artifacts.jar content.jar features plugins site.xml"/>
         </sequential>
     </macrodef>
