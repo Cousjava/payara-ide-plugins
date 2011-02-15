@@ -42,18 +42,19 @@
        basedir="${updatesite.location}"
        includes="updatesite.zip artifacts.jar content.jar features plugins site.xml"/>
         </sequential>
+    </macrodef>
 
-        <target name="default" description="oepe">
+    <target name="default" description="oepe">
             
-            <move todir="/tmp" file="indigo.updatesite"/>           
-            <create-update-center-content updatesite.location="helios.updatesite"/>
-            <move todir="." file="/tmp/indigo.updatesite"/>
+        <move todir="/tmp" file="indigo.updatesite"/>           
+        <create-update-center-content updatesite.location="helios.updatesite"/>
+        <move todir="." file="/tmp/indigo.updatesite"/>
             
-            <move todir="/tmp" file="helios.updatesite"/>           
-            <create-update-center-content updatesite.location="indigo.updatesite"/>
-            <move todir="." file="/tmp/helios.updatesite"/>
+        <move todir="/tmp" file="helios.updatesite"/>           
+        <create-update-center-content updatesite.location="indigo.updatesite"/>
+        <move todir="." file="/tmp/helios.updatesite"/>
 
-        </target>
+    </target>
 
 
-    </project>
+</project>
