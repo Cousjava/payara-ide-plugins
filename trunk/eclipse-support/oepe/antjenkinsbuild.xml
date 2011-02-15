@@ -8,46 +8,52 @@
 
 
 
-    <target name="cleanup">
-        <delete>
-            <fileset dir="." includes="helios.updatesite/features*"/>
-        </delete>
-        <delete>
-            <fileset dir="." includes="helios.updatesite/plugins*"/>
-        </delete>
-        <delete>
-            <fileset dir="." includes="helios.updatesite/artifacts.jar*"/>
-        </delete>
-        <delete>
-            <fileset dir="." includes="helios.updatesite/content.jar*"/>
-        </delete>
+    <macrodef name="create-update-center-content" description="...">
+        <attribute name="updatesite.location" />
+        <sequential>
             <delete>
-        <fileset dir="." includes="helios.updatesite/updatesite.zip*"/>
-    </delete>
-    </target>
+                <fileset dir="." includes="${updatesite.location}/features*"/>
+            </delete>
+            <delete>
+                <fileset dir="." includes="${updatesite.location}/plugins*"/>
+            </delete>
+            <delete>
+                <fileset dir="." includes="${updatesite.location}/artifacts.jar*"/>
+            </delete>
+            <delete>
+                <fileset dir="." includes="${updatesite.location}/content.jar*"/>
+            </delete>
+            <delete>
+                <fileset dir="." includes="${updatesite.location}/updatesite.zip*"/>
+            </delete>
+            <exec executable="${eclipse.location}" dir="${workspace.location}" >
+                <arg value="-clean"/>
+                <arg value="-nosplash"/>
+                <arg value="-data"/>
+                <arg value="${workspace.location}"/>
+                <arg value="-application"/>
+                <arg value="com.ind.eclipse.headlessworkspace.Application"/>
+                <arg value="import"/>
+                <arg value="clean"/>
+                <arg value="exportupdatesites"/>
+            </exec>
 
-    <target name="init" />
+            <zip destfile="${updatesite.location}/updatesite.zip"
+       basedir="${updatesite.location}"
+       includes="updatesite.zip artifacts.jar content.jar features plugins site.xml"/>
+        </sequential>
 
-    <target name="default" description="oepet" depends="init, cleanup">
-        <exec executable="${eclipse.location}" dir="${workspace.location}" >
-            <arg value="-clean"/>
-            <arg value="-nosplash"/>
-            <arg value="-data"/>
-            <arg value="${workspace.location}"/>
-            <arg value="-application"/>
-            <arg value="com.ind.eclipse.headlessworkspace.Application"/>
-            <arg value="import"/>
-            <arg value="clean"/>
-            <arg value="exportupdatesites"/>
-        </exec>
+        <target name="default" description="oepe">
+            
+            <move todir="/tmp" file="indigo.updatesite"/>           
+            <create-update-center-content updatesite.location="helios.updatesite"/>
+            <move todir="." file="/tmp/indigo.updatesite"/>
+            
+            <move todir="/tmp" file="helios.updatesite"/>           
+            <create-update-center-content updatesite.location="indigo.updatesite"/>
+            <move todir="." file="/tmp/helios.updatesite"/>
 
-        <zip destfile="helios.updatesite/updatesite.zip"
-       basedir="helios.updatesite"
-       includes="updatesite.zip artifacts.jar content.jar features plugins site.xml"
-  />
+        </target>
 
 
-    </target>
-
-
-</project>
+    </project>
