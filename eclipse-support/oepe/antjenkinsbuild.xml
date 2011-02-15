@@ -43,7 +43,7 @@
 
             <zip destfile="@{updatesite.location}/updatesite.zip"
        basedir="@{updatesite.location}"
-       includes="updatesite.zip artifacts.jar content.jar features plugins site.xml"/>
+       includes="artifacts.jar content.jar features/** plugins/** site.xml"/>
         </sequential>
     </macrodef>
 
