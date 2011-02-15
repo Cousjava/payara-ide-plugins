@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="oepebuild" default="default" basedir=".">
+
+
+    <property name="eclipse.location" value="/Users/hudson/Desktop/eclipseheliosr1/Eclipse.app/Contents/MacOS/eclipse" />
+    <property name="workspace.location" value="/Users/hudson/workspace/Eclipse\ GlassFish\ Plugin\ for\ OEPE/oepe" />
+
+
+
+
+    <target name="cleanup">
+        <delete>
+            <fileset dir="." includes="helios.updatesite/features*"/>
+        </delete>
+        <delete>
+            <fileset dir="." includes="helios.updatesite/plugins*"/>
+        </delete>  
+        <delete>
+            <fileset dir="." includes="helios.updatesite/artifacts.jar*"/>
+        </delete>  
+        <delete>
+            <fileset dir="." includes="helios.updatesite/content.jar*"/>
+        </delete>        
+            <delete>
+        <fileset dir="." includes="helios.updatesite/updatesite.zip*"/>
+    </delete>  
+    </target>
+           
+    <target name="init" />
+
+    <target name="default" description="oepet" depends="init, cleanup">
+        <apply executable="$eclipse.location}" parallel="false" verbose="true" >
+            <srcfile />
+            <arg value="-clean"/>
+            <arg value="-nosplash"/>
+            <arg value="-data ${workspace.location}"/>
+            <arg value="-application com.ind.eclipse.headlessworkspace.Application"/>
+            <arg value="import"/>
+            <arg value="clean"/>
+            <arg value="exportupdatesites"/>
+        </apply>       
+  
+        <zip destfile="helios.updatesite/updatesite.zip"
+       basedir="helios.updatesite"
+       includes="updatesite.zip artifacts.jar content.jar features plugins site.xml"
+  />        
+        
+
+    </target>
+
+
+</project>
