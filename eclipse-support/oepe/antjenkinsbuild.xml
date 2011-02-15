@@ -53,9 +53,12 @@
         <create-update-center-content updatesite.location="helios.updatesite"/>
         <move todir="." file="/tmp/indigo.updatesite"/>
             
-        <move todir="/tmp" file="helios.updatesite"/>           
+        <move todir="/tmp" file="helios.updatesite"/> 
+        <replace file="oracle.eclipse.tools.glassfish/META-INF/MANIFEST.MF" token="Bundle-Version: 3.2.1.qualifier" value="Bundle-Version: 4.0.0.qualifier"/>
+
         <create-update-center-content updatesite.location="indigo.updatesite"/>
         <move todir="." file="/tmp/helios.updatesite"/>
+        <replace file="oracle.eclipse.tools.glassfish/META-INF/MANIFEST.MF" token="Bundle-Version: 4.0.0.qualifier" value="Bundle-Version: 3.2.1.qualifier"/>
 
     </target>
 
