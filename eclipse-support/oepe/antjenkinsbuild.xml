@@ -3,7 +3,7 @@
 
 
     <property name="eclipse.location" value="/Users/hudson/Desktop/eclipseheliosr1/Eclipse.app/Contents/MacOS/eclipse" />
-    <property name="workspace.location" value="/Users/hudson/workspace/Eclipse\ GlassFish\ Plugin\ for\ OEPE/oepe" />
+    <property name="workspace.location" value="/Users/hudson/workspace/Eclipse GlassFish Plugin for OEPE/oepe" />
 
 
 
@@ -29,16 +29,17 @@
     <target name="init" />
 
     <target name="default" description="oepet" depends="init, cleanup">
-        <apply executable="$eclipse.location}" parallel="false" verbose="true" >
-            <srcfile />
+        <exec executable="${eclipse.location}" dir="${workspace.location}" >
             <arg value="-clean"/>
             <arg value="-nosplash"/>
-            <arg value="-data ${workspace.location}"/>
-            <arg value="-application com.ind.eclipse.headlessworkspace.Application"/>
+            <arg value="-data"/>
+            <arg value="${workspace.location}"/>
+            <arg value="-application"/>
+            <arg value="com.ind.eclipse.headlessworkspace.Application"/>
             <arg value="import"/>
             <arg value="clean"/>
             <arg value="exportupdatesites"/>
-        </apply>       
+        </exec>
   
         <zip destfile="helios.updatesite/updatesite.zip"
        basedir="helios.updatesite"
