@@ -14,18 +14,18 @@
         </delete>
         <delete>
             <fileset dir="." includes="helios.updatesite/plugins*"/>
-        </delete>  
+        </delete>
         <delete>
             <fileset dir="." includes="helios.updatesite/artifacts.jar*"/>
-        </delete>  
+        </delete>
         <delete>
             <fileset dir="." includes="helios.updatesite/content.jar*"/>
-        </delete>        
+        </delete>
             <delete>
         <fileset dir="." includes="helios.updatesite/updatesite.zip*"/>
-    </delete>  
+    </delete>
     </target>
-           
+
     <target name="init" />
 
     <target name="default" description="oepet" depends="init, cleanup">
@@ -40,12 +40,12 @@
             <arg value="clean"/>
             <arg value="exportupdatesites"/>
         </exec>
-  
+
         <zip destfile="helios.updatesite/updatesite.zip"
        basedir="helios.updatesite"
        includes="updatesite.zip artifacts.jar content.jar features plugins site.xml"
-  />        
-        
+  />
+
 
     </target>
 
