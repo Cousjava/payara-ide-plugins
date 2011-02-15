@@ -25,6 +25,9 @@
             </delete>
             <delete>
                 <fileset dir="." includes="@{updatesite.location}/updatesite.zip*"/>
+            </delete>            
+            <delete>
+                <fileset dir="." includes=".metadata"/>
             </delete>
             <exec executable="${eclipse.location}" dir="${workspace.location}" >
                 <arg value="-clean"/>
