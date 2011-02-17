@@ -137,7 +137,6 @@ public class CodeGenerationUtils {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	static void cleanupJavadoc(Javadoc javadoc, String tagNamePrefix) {
 		Iterator it = javadoc.tags().iterator();
 		while (it.hasNext()) {
