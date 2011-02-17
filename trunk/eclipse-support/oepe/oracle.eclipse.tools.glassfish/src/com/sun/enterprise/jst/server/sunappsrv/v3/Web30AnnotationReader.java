@@ -113,7 +113,6 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 	 * @return result from processing the file
 	 * @throws JavaModelException
 	 */
-	@SuppressWarnings("unchecked")
 	private Result analyzeCompilationUnit(ICompilationUnit unit) throws JavaModelException {
 		IType rootType = unit.findPrimaryType();
 		/*
@@ -237,7 +236,6 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void servletFound(ICompilationUnit unit, Servlet servlet, Collection<IType> dependedTypes)
 			throws JavaModelException {
 		modelObject.getServlets().add(servlet);
@@ -288,14 +286,12 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 	private void securityIdentityTypeFound(ICompilationUnit file, SecurityIdentityType additional) {
 	}
 
-	@SuppressWarnings("unchecked")
 	private void resourceRefFound(ICompilationUnit unit, ResourceRef resourceRef, Collection<IType> dependedTypes)
 			throws JavaModelException {
 		modelObject.getResourceRefs().add(resourceRef);
 		connectObjectWithFile(unit, resourceRef, dependedTypes);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void ejbLocalRefFound(ICompilationUnit unit, EjbLocalRef localRef, Collection<IType> dependedTypes)
 			throws JavaModelException {
 		modelObject.getEjbLocalRefs().add(localRef);
@@ -376,7 +372,6 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected Collection<SecurityRoleRef> getSecurityRoleRefs(JavaEEObject target) {
 		if (Servlet.class.isInstance(target))
@@ -384,7 +379,6 @@ public class Web30AnnotationReader extends AbstractAnnotationModelProvider<WebAp
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected Collection<SecurityRole> getSecurityRoles() {
 		return modelObject.getSecurityRoles();

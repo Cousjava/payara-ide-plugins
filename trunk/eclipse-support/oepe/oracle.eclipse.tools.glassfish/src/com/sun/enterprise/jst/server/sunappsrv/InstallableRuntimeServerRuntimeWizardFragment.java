@@ -68,7 +68,6 @@ public class InstallableRuntimeServerRuntimeWizardFragment extends
         return (status != null && status.isOK());
     }
 
-    @SuppressWarnings("unchecked")
 	public void createContent( Composite parent, IWizardHandle handle ) {
         Map properties = null;
         ServerRuntime definition = null;

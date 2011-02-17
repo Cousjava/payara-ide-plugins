@@ -687,7 +687,6 @@ public void setServerInstanceProperties(Map map) {
      *  If the server is a V2 server but with a different install location that this one, we can also detect 
      *  this
      */   
-    @SuppressWarnings("unchecked")
 	public ServerStatus getV2ServerStatus(){
     	JMXConnector jmxc = null;
     	try{
