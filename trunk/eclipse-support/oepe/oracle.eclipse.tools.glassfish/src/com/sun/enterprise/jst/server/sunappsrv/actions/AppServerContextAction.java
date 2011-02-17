@@ -186,7 +186,6 @@ IWorkbenchWindowActionDelegate {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public void run() {
 		Iterator iterator = getStructuredSelection().iterator();
 		Object obj = iterator.next();
@@ -221,7 +220,6 @@ IWorkbenchWindowActionDelegate {
 	 * 
 	 * @param sel a selection
 	 */
-	@SuppressWarnings("unchecked")
 	public void selectionChanged(IStructuredSelection sel) {
 		if (sel.isEmpty()) {
 			setEnabled(false);
