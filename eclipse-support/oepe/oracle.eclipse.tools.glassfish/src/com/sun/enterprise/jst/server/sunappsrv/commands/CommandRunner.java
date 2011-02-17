@@ -265,7 +265,7 @@ public class CommandRunner extends BasicTask<OperationState> {
                     appList = new ArrayList<AppDesc>();
                     result.put(engine, appList);
                 }
-                appList.add(new AppDesc(name, path, contextRoot));
+                appList.add(new AppDesc(name, path, contextRoot, engine));
             }
         }
         return result;
@@ -329,11 +329,11 @@ public class CommandRunner extends BasicTask<OperationState> {
             String query;
             // see https:/glassfish.dev.java.net/issues/show_bug.cgi?id=7296
             // revert this, when the server side of issue is resolved
-            //if (null != name) {
-            //    query = "resources.*."+name+".*"; //$NON-NLS-1$ //$NON-NLS-2$
-            //} else {
+            if (null != name) {
+                query = "resources.*."+name+".*"; //$NON-NLS-1$ //$NON-NLS-2$
+            } else {
                 query = "resources.*"; //$NON-NLS-1$
-            //}
+            }
             cmd = new ServerCommand.GetPropertyCommand(query); 
             serverCmd = cmd;
             Future<OperationState> task = executor().submit(this);
