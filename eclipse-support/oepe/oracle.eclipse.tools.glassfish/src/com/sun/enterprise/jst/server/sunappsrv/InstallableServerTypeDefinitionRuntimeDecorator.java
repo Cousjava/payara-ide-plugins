@@ -69,14 +69,12 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
     private static final String ADMIN_SCRIPT_NAME = "asadmin"; //$NON-NLS-1$
 	private String fInstallDirName;
 	private ServerRuntime fDefinition;
-    @SuppressWarnings("unchecked")
 	private Map fProperties;
 	private GenericServerRuntime fRuntime;
 	private Property serverDirProperty;
 	private Text path;
 	private Button installButton;
 	
-	@SuppressWarnings("unchecked")
 	public InstallableServerTypeDefinitionRuntimeDecorator(ServerRuntime definition, Map initialProperties, 
 			IWizardHandle wizard, GenericServerRuntime runtime, String installDirName) {
 		super(definition, initialProperties,wizard,runtime);
@@ -93,7 +91,6 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 		serverDirProperty = getServerDirProperty(fDefinition.getProperty());
 	}
 
-	@SuppressWarnings("unchecked")
 	private Property getServerDirProperty(List fProperties) {
 		// assume there's just one property we want and it is the only runtime context property
 		for (int i = 0; i < fProperties.size(); i++) {

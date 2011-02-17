@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Future;
@@ -700,6 +701,31 @@ public class SunAppServerBehaviour extends ServerBehaviourDelegate {
 	}
 
 
+	
+    public void undeploy(String moduleName, IProgressMonitor monitor)
+    throws CoreException {
+        try {
+
+        	undeploy( moduleName);
+                // Retrieve the IModule for the module name
+                final List<IModule[]> moduleList = getAllModules();
+                IModule[] module = null;
+                for (IModule[] m: moduleList) {
+                    if (m.length == 1 && m[0].getName().equals(moduleName)) {
+                        module = m;
+                        break;
+                    }
+                }
+                // if we were able to map module name to IModule, set publish state to Full to tell
+                // a full deploy would be needed
+                if (module != null) {
+                    setModulePublishState(module, IServer.PUBLISH_STATE_FULL);
+                }
+            
+        } finally {
+        }
+    }
+
 /*not used yet	private GlassFishV2DeployFacility getV2DeploymentFacility(){
 		if (gfv2depl==null){
 			SunAppServer ss= getSunAppServer();
@@ -713,6 +739,31 @@ public class SunAppServerBehaviour extends ServerBehaviourDelegate {
 	}
 
 	*/
+    
+    private void undeploy(String moduleName) throws CoreException {
+		Commands.UndeployCommand command = new Commands.UndeployCommand(moduleName);
+		try {
+			Future<OperationState> result = getSunAppServer().execute(command);
+			//wait 120 seconds max
+			if(result.get(120, TimeUnit.SECONDS) == OperationState.RUNNING) {
+				throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+						"cannot UnDeploy in less than 120 sec "+moduleName, null));
+			}
+			if(result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
+				SunAppSrvPlugin.logMessage("Warning when undeploying: " +moduleName+": "+command.getServerMessage());
+		    //avoid throwing an error as it would not remove this app from eclipse publish area, and we want it removed.
+			//	throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+			//			"Error during undeploy of module "+name+": "+command.getServerMessage(), null));
+			}
+		} catch(Exception ex) {
+			SunAppSrvPlugin.logMessage("Undeploy is failing=",ex );
+			throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
+					"cannot UnDeploy "+moduleName, ex));    	
+    }
+    }
+    
+		
+		
 	private void publishDeployedDirectory(int deltaKind, Properties p,IModule module[], IProgressMonitor monitor) throws CoreException {
 		//ludo using PublishHelper now to control the temp area to be
 		// in the same file system of the deployed apps so that the mv operation Eclipse is doing sometimes can work.
@@ -723,25 +774,8 @@ public class SunAppServerBehaviour extends ServerBehaviourDelegate {
 			SunAppSrvPlugin.logMessage("REMOVED in publishPath" +publishPath);
 			if (isV3()){
 				String name = Utils.simplifyModuleID(module[0].getName());
-				Commands.UndeployCommand command = new Commands.UndeployCommand(name);
-				try {
-					Future<OperationState> result = getSunAppServer().execute(command);
-					//wait 120 seconds max
-					if(result.get(120, TimeUnit.SECONDS) == OperationState.RUNNING) {
-						throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-								"cannot UnDeploy in less than 120 sec "+name, null));
-					}
-					if(result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
-						SunAppSrvPlugin.logMessage("Warning when undeploying: " +name+": "+command.getServerMessage());
-				    //avoid throwing an error as it would not remove this app from eclipse publish area, and we want it removed.
-					//	throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-					//			"Error during undeploy of module "+name+": "+command.getServerMessage(), null));
-					}
-				} catch(Exception ex) {
-					SunAppSrvPlugin.logMessage("Undeploy is failing=",ex );
-					throw new CoreException(new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-							"cannot UnDeploy "+name, ex));
-				}
+				undeploy (name);
+				
 			}else { //v2
 		/*not used yet		boolean ret= getV2DeploymentFacility().unDeploy(module[0].getName());
 				SunAppSrvPlugin.logMessage("gfv2depl.unDeploy"+ret );
