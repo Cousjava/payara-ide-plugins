@@ -44,7 +44,6 @@ public class GlassFishLogPageParticipant implements IConsolePageParticipant {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class adapter) {
 		// TODO Auto-generated method stub
 		return null;
