@@ -120,7 +120,6 @@ public class V3Configurator {
 		return glassfishLocation;
 	}
 
-	@SuppressWarnings("unchecked")
 	private IRuntime createRuntime(String glassfishLocation) {
 		try {
 			IServerType st = ServerCore.findServerType(serverID);
