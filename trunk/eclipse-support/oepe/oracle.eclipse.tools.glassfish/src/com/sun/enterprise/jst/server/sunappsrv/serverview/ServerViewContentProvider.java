@@ -20,6 +20,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.viewers.BaseContentProvider;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
 
 @SuppressWarnings("restriction")
 public class ServerViewContentProvider extends BaseContentProvider implements ITreeContentProvider{
@@ -36,7 +37,17 @@ public class ServerViewContentProvider extends BaseContentProvider implements IT
 			String s  = server.getRuntime().getRuntimeType().getId();
 			if((s.equals("org.glassfish.jst.server.runtime.glassfish31") &&( server.getServerState()==IServer.STATE_STARTED))){
 				SunAppServer ser = (SunAppServer)server.loadAdapter(SunAppServer.class, new NullProgressMonitor() );
+				
 				if( ser!=null ){
+					try {
+						if ((!ser.isLocalServer())&&(!Utils.isSecurePort(ser.getServer().getHost(), Integer.parseInt(ser.getAdminServerPort())))){
+								TreeNode error = new TreeNode ("Error: the GlassFish server is remote, but not secured, Eclipse cannot access it", "",null);
+								return new Object[]{error};
+					    }
+					}catch (Exception e) {
+							TreeNode error = new TreeNode ("Error: "+e.getMessage(), "",null);
+							return new Object[]{error};
+					}
 					TreeNode root = new TreeNode("GlassFish Management", "GlassFish Management", null);
 					//Applications Node
 					DeployedApplicationsNode apps = new DeployedApplicationsNode(server );
