@@ -13,6 +13,9 @@
 package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +27,8 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jst.server.generic.ui.internal.SWTUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -38,10 +43,12 @@ import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
+import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
+
 public class GFWizardCreation extends WizardFragment {
 
 	private Helper helper;
-
+	boolean isValid =false;
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
 
 		Composite container = new Composite(parent, SWT.NONE);
@@ -93,11 +100,14 @@ public class GFWizardCreation extends WizardFragment {
 	public void exit() {
 		if (helper == null)
 			return;
-		if (helper.validate())// failed do not continue
+		if (isValid = !helper.validate())// failed do not continue
 			return;
 
 	}
-
+	@Override
+	public boolean isComplete(){
+		return isValid;
+	}
 	static class Helper {
 
 		private SunAppServer glassfish;
@@ -117,11 +127,11 @@ public class GFWizardCreation extends WizardFragment {
 					fLastMessage = "invalid GlassFish domain: " + path;
 					fWizard.setMessage(fLastMessage, IMessageProvider.ERROR);
 				} else {
-					if (fLastMessage != null
-							&& fLastMessage.equals(fWizard.getMessage())) {
-						fLastMessage = null;
+					//if (fLastMessage != null
+					//		&& fLastMessage.equals(fWizard.getMessage())) {
+					//	fLastMessage = null;
 						fWizard.setMessage(null, IMessageProvider.NONE);
-					}
+					//}
 					validate();
 				}
 			}
@@ -153,7 +163,8 @@ public class GFWizardCreation extends WizardFragment {
 		}
 
 		private String getSunApplicationServerInstallationDirectory() {
-			String path = (String) getRuntimeDelegate()
+			GenericServerRuntime g = getRuntimeDelegate();
+			String path = (String) g
 					.getServerInstanceProperties().get(SunAppServer.ROOTDIR);
 			return path;
 		}*/
@@ -165,21 +176,43 @@ public class GFWizardCreation extends WizardFragment {
 				defaultLocation = f.getAbsolutePath();
 
 					
-				Text path = SWTUtil.createLabeledFile("domain Directory",
+				Text path = SWTUtil.createLabeledPath("domain Directory",
 						defaultLocation , parent);
 				path.setData(SunAppServer.DOMAINPATH);
 				path.addModifyListener(new PathModifyListener());
 				fPropertyControls.add(path);
 			} else {
-				Text adminport = SWTUtil.createLabeledText("Admin port",
+				final Text adminport = SWTUtil.createLabeledText("Admin port",
 						"4848", parent);
 				adminport.setData(SunAppServer.ADMINSERVERPORT);
 				fPropertyControls.add(adminport);
-
-				Text serverport = SWTUtil.createLabeledText("Server port",
+				adminport.addModifyListener(new ModifyListener() {
+					public void modifyText(ModifyEvent e) {
+						try {
+						Integer.parseInt(adminport.getText());
+						}catch (NumberFormatException ex){
+							fWizard.setMessage("Not an integer value: "+ ex.getMessage() , IMessageProvider.ERROR);
+							fWizard.update();
+							return;
+						}
+						validate();
+					}
+				});
+				final Text serverport = SWTUtil.createLabeledText("Server port",
 						"8080", parent);
 				serverport.setData(SunAppServer.SERVERPORT);
 				fPropertyControls.add(serverport);
+				serverport.addModifyListener(new ModifyListener() {
+					public void modifyText(ModifyEvent e) {
+						try {
+							Integer.parseInt(serverport.getText());
+							}catch (NumberFormatException ex){
+								fWizard.setMessage("Not an integer value: "+ ex.getMessage() , IMessageProvider.ERROR);
+								fWizard.update();
+								return;
+							}
+							validate();					}
+				});
 			}
 
 			Text adminName = SWTUtil.createLabeledText("Admin name", "admin",
@@ -237,6 +270,18 @@ public class GFWizardCreation extends WizardFragment {
 				glassfish.setServerInstanceProperties(getValues());
 				status = glassfish.validate();
 			}
+			try {
+				if ((!glassfish.isLocalServer())&&(!Utils.isSecurePort(glassfish.getServer().getHost(), Integer.parseInt(glassfish.getAdminServerPort())))){
+					fWizard.setMessage("Remote Server is not secured: It cannot be used remotely...", IMessageProvider.ERROR);
+					fWizard.update();
+					return true;					
+				}
+			} catch (Exception e) {
+				fWizard.setMessage("error testing remote server: "+ e.getMessage() , IMessageProvider.ERROR);
+				fWizard.update();
+				return true;
+				}
+
 			if (status == null || status.isOK()) {
 				fWizard.setMessage(null, IMessageProvider.NONE);
 				fWizard.update();
