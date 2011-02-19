@@ -304,6 +304,9 @@ public class Commands {
                 appendLibraries(cmd, libraries);
             }
             cmd.append(PARAM_SEPARATOR).append("force=true"); // NOI18N
+            if (Boolean.TRUE.equals(preserveSessions)) {
+            	properties.put("keepSessions", "true");
+            }
             addProperties(cmd,properties);
             query = cmd.toString();
         }
@@ -388,7 +391,7 @@ public class Commands {
     }
 
     private static void addProperties(StringBuilder cmd, Boolean preserveSessions, boolean resourcesChanged) {
-        if(Boolean.TRUE.equals(preserveSessions) || resourcesChanged) {
+        if(Boolean.TRUE.equals(preserveSessions) || !resourcesChanged) {
             cmd.append(ServerCommand.PARAM_SEPARATOR).append("properties="); // NOI18N
         }
         if(Boolean.TRUE.equals(preserveSessions)) {
