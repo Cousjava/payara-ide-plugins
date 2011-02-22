@@ -259,7 +259,7 @@ public class Commands {
         }
 
         private boolean skipResource(String r) {
-            return r.equals("Nothing to list"); //NOI18N
+            return r.equals("Nothing to list."); //NOI18N
         }
     };
 

@@ -25,6 +25,7 @@ import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.actions.OpenInBrowserAction;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.actions.TestWebServiceAction;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.actions.UndeployAction;
+import com.sun.enterprise.jst.server.sunappsrv.serverview.actions.UnregisterResourceAction;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.actions.WSDLInfoWebServiceAction;
 
 public class ServerViewActionProvider extends GenericActionProvider {
@@ -78,7 +79,11 @@ public class ServerViewActionProvider extends GenericActionProvider {
 				if (obj instanceof DeployedApplicationsNode) {
 
 				} else if (obj instanceof ResourcesNode) {
-					// no-op
+					ResourcesNode r = (ResourcesNode) obj;
+					if (r.getResource()!=null){
+					menu.add(new Separator());
+					menu.add(new UnregisterResourceAction(selection,   actionSite));
+					}
 				} else if (obj instanceof ApplicationNode) {
 					menu.add(new Separator());
 					// Add undeploy action
