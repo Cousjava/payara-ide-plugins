@@ -62,7 +62,7 @@ public 	class WSDLInfoWebServiceAction extends Action {
 			         String host = server.getServer().getHost();
 			         int port = Integer.parseInt(server.getServerPort());
 
-			         String url = Utils.getHttpListenerProtocol(host,port)+"://"+ host+":"+port+ "/"+module.getWSInfo().getWsdlUrl();
+			         String url = Utils.getHttpListenerProtocol(host,port)+"://"+ host+":"+port+ "/"+module.getWSInfo().getName();
 					browser.openURL(new URL(url));
 
 				} catch (Exception e) {
