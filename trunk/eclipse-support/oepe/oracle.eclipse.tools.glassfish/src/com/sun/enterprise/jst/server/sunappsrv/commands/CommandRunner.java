@@ -36,10 +36,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
+//import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -160,10 +161,10 @@ public class CommandRunner extends BasicTask<OperationState> {
 
         OperationState state = null;
         try {
-            state = inner.execute(getCmd).get();
+            state = inner.execute(getCmd).get(30, TimeUnit.SECONDS);
         } catch (InterruptedException ie) {
             Logger.getLogger("glassfish").log(Level.INFO,debugPort+"",ie);
-        } catch (ExecutionException ee) {
+        } catch (Exception ee) {
             Logger.getLogger("glassfish").log(Level.INFO,debugPort+"",ee);
         }
         String qs = null;
@@ -179,11 +180,11 @@ public class CommandRunner extends BasicTask<OperationState> {
                 //serverCmd = setCmd;
                 //task = executor.submit(this);
                 try {
-                    state = inner.execute(setCmd).get();
+                    state = inner.execute(setCmd).get(30, TimeUnit.SECONDS);
                     qs = "debug=true";
                 } catch (InterruptedException ie) {
                      Logger.getLogger("glassfish").log(Level.INFO,debugPort+"",ie);
-                } catch (ExecutionException ee) {
+                } catch (Exception ee) {
                      Logger.getLogger("glassfish").log(Level.INFO,debugPort+"",ee);
                 }
             }
@@ -213,20 +214,20 @@ public class CommandRunner extends BasicTask<OperationState> {
             Commands.ListComponentsCommand cmd = new Commands.ListComponentsCommand(container);
             serverCmd = cmd;
             Future<OperationState> task = executor().submit(this);
-            OperationState state = task.get();
+            OperationState state = task.get(10, TimeUnit.SECONDS);
             if (state == OperationState.COMPLETED) {
                 apps = cmd.getApplicationMap();
             }
             ServerCommand.GetPropertyCommand getCmd = new ServerCommand.GetPropertyCommand("applications.application.*");
             serverCmd = getCmd;
             task = executor().submit(this);
-            state = task.get();
+            state = task.get(30, TimeUnit.SECONDS);
             if (state == OperationState.COMPLETED) {
                 result = processApplications(apps, getCmd.getData());
             }
         } catch (InterruptedException ex) {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
-        } catch (ExecutionException ex) {
+        } catch (Exception ex) {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
         }
         return result;
@@ -283,7 +284,7 @@ public class CommandRunner extends BasicTask<OperationState> {
             Commands.ListWebservicesCommand cmd = new Commands.ListWebservicesCommand();
             serverCmd = cmd;
             Future<OperationState> task = executor().submit(this);
-            OperationState state = task.get();
+            OperationState state = task.get(30, TimeUnit.SECONDS);
             if (state == OperationState.COMPLETED) {
                 wss = cmd.getWebserviceList();
 
@@ -291,7 +292,7 @@ public class CommandRunner extends BasicTask<OperationState> {
             }
         } catch (InterruptedException ex) {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
-        } catch (ExecutionException ex) {
+        } catch (Exception ex) {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
         }
         return result;
@@ -311,13 +312,13 @@ public class CommandRunner extends BasicTask<OperationState> {
             Commands.ListResourcesCommand cmd = new Commands.ListResourcesCommand(type);
             serverCmd = cmd;
             Future<OperationState> task = executor().submit(this);
-            OperationState state = task.get();
+            OperationState state = task.get(30, TimeUnit.SECONDS);
             if (state == OperationState.COMPLETED) {
                 result = cmd.getResourceList();
             }
         } catch (InterruptedException ex) {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);
-        } catch (ExecutionException ex) {
+        } catch (Exception ex) {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);
         }
         return result;
@@ -337,7 +338,7 @@ public class CommandRunner extends BasicTask<OperationState> {
             cmd = new ServerCommand.GetPropertyCommand(query); 
             serverCmd = cmd;
             Future<OperationState> task = executor().submit(this);
-            OperationState state = task.get();
+            OperationState state = task.get(30, TimeUnit.SECONDS);
             if (state == OperationState.COMPLETED) {
                 Map<String,String> retVal = cmd.getData();
                 if (retVal.isEmpty())
@@ -346,7 +347,7 @@ public class CommandRunner extends BasicTask<OperationState> {
             }
         } catch (InterruptedException ex) {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  //$NON-NLS-1$
-        } catch (ExecutionException ex) {
+        } catch (Exception ex) {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  //$NON-NLS-1$
         }
         return new HashMap<String,String>();
@@ -364,7 +365,7 @@ public class CommandRunner extends BasicTask<OperationState> {
                 SetPropertyCommand cmd = server.getCommandFactory().getSetPropertyCommand(compName, compValue);
                 serverCmd = cmd;
                 Future<OperationState> task = executor().submit(this);
-                OperationState state = task.get();
+                OperationState state = task.get(30, TimeUnit.SECONDS);
                 if (state == OperationState.COMPLETED) {
                     cmd.processResponse();
                 //return cmd.getData();
@@ -373,7 +374,7 @@ public class CommandRunner extends BasicTask<OperationState> {
                 lastEx = ex;
                 Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
                 itemsNotUpdated = addName(compName, itemsNotUpdated);
-            } catch (ExecutionException ex) {
+            } catch (Exception ex) {
                 lastEx = ex;
                 Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
                 itemsNotUpdated = addName(compName, itemsNotUpdated);
