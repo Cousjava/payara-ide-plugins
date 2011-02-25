@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,18 +19,25 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.tools.ant.taskdefs.Execute;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
 import org.eclipse.wst.server.core.IServer;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 /**
- * small action to test if the module is functional. Need te be removed later, when we are done
- * debugging
+ * action to launch the update center tool
  *
  * @author Ludovic.Champenois@Sun.COM
  */
-public class PreludeUpdateCenterAction extends OpenBrowserEditorAction {
+public class PreludeUpdateCenterAction extends AppServerContextAction {
 
     /**
      * The constructor.
@@ -38,13 +45,13 @@ public class PreludeUpdateCenterAction extends OpenBrowserEditorAction {
     public PreludeUpdateCenterAction() {
     	super ("GlassFish Update Center...",getImageDescriptorFromlocalImage("icons/obj16/updateCenter.png"));
     }
-
-
-	@Override
+    
+    
+    @SuppressWarnings("restriction")
     public void perform(IServer server) {
     	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
     	if (!sab.isV3()) { // V2 only
-			String loc=sab.getSunApplicationServerInstallationDirectory()+"/updatecenter/bin/updatetool";    	
+			String loc=sab.getSunApplicationServerInstallationDirectory()+"/updatecenter/bin/updatetool";    
        	    if (File.separator.equals("\\")) {
        			loc = loc + ".bat"; //NOI18N
        	    }
@@ -87,10 +94,67 @@ public class PreludeUpdateCenterAction extends OpenBrowserEditorAction {
 				showMessageDialog();
 				return;
 			}
-			showPageInBrowser(server);
+			File installRoot = new File(sab.getSunApplicationServerInstallationDirectory()).getParentFile();
+			if (!isUCInstalled(installRoot)){
+				showMessageDialog("GlassFish Update Tool is not yet installed. Please read the Eclipse console output and there, type 'y' to start the installation...");
+				
+			}
+			File tool= getV3UpdateCenterLauncher (installRoot);
+			try {
+
+				ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+				ILaunchConfigurationType programType =
+					manager.getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE);
+
+				ILaunchConfiguration cfg = programType.newInstance(null, "updatecentertool");
+				ILaunchConfigurationWorkingCopy wc = cfg.getWorkingCopy();
+				wc.setAttribute(IExternalToolConstants.ATTR_LOCATION,tool.getAbsolutePath());
+				wc.setAttribute(IExternalToolConstants.ATTR_WORKING_DIRECTORY, installRoot.getAbsolutePath());
+				wc.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS, "");
+				cfg = wc.doSave();
+			//	ILaunch il = cfg.launch(ILaunchManager.RUN_MODE, null, false, true);
+				DebugUITools.launch(cfg, ILaunchManager.RUN_MODE);
+				
+				cfg.delete();
+			} catch (CoreException e) {
+				//TODO: log error
+				e.printStackTrace();
+			}
     	}
     }
-
+    
+    private boolean isUCInstalled(File installRoot) {
+        return new File(installRoot, "updatetool/bin").exists();
+    }
+    
+    /**
+     * Locate update center launcher within the glassfish installation
+     *   [installRoot]/updatecenter/bin/updatetool[.BAT]
+     * 
+     * @param asInstallRoot appserver install location
+     * @return File reference to launcher, or null if not found.
+     */
+    private File getV3UpdateCenterLauncher(File installRoot) {
+        File result = null;
+        if(installRoot != null && installRoot.exists()) {
+            File updateCenterBin = new File(installRoot, "bin"); // NOI18N
+            if(updateCenterBin.exists()) {
+           	    if (File.separator.equals("\\")) {
+                    File launcherPath = new File(updateCenterBin, "updatetool.exe"); // NOI18N
+                    if(launcherPath.exists()) {
+                        result = launcherPath;
+                    } else {
+                        launcherPath = new File(updateCenterBin, "updatetool.bat"); // NOI18N
+                        result = (launcherPath.exists()) ? launcherPath : null;
+                    }
+                } else {
+                    File launcherPath = new File(updateCenterBin, "updatetool"); // NOI18N
+                    result = (launcherPath.exists()) ? launcherPath : null;
+                }
+            }
+        }
+        return result;
+    }
 	protected String getEditorClassName() { return "com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter"; }
 
  	protected String getIconName() { return "icons/obj16/sunappsrv.gif"; }
@@ -99,6 +163,6 @@ public class PreludeUpdateCenterAction extends OpenBrowserEditorAction {
 
     @Override
     public boolean accept(IServer server) {
-        return acceptIfServerRunning(server);
+        return true;//acceptIfServerRunning(server);
     }
 }
