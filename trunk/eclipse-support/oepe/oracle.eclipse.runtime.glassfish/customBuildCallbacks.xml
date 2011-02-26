@@ -17,12 +17,13 @@
 	<!--   build.result.folder - folder to contain the build results           -->
 	<!-- ===================================================================== -->
 	<target name="pre.build.jars">
-		<exec dir="." executable="wget" >
+		<!--exec dir="." executable="wget" >
 			<arg  line="http://dlc.sun.com.edgesuite.net/glassfish/v3.1/promoted/latest-glassfish.zip"/>
-		</exec>
+		</exec-->
 		<unzip dest="." src="./latest-glassfish.zip"/>
 		<touch file="glassfish3/glassfish/lib/asadmin/.nothing"/>
-		<touch file="glassfish3/glassfish/lib/endorsed/.nothing"/>
+		<touch file="glassfish3/.org.opensolaris,pkg/file/.nothing"/>
+		<touch file="glassfish3/.org.opensolaris,pkg/download/.nothing"/>
 		<delete dir="glassfish3/javadb/docs"/>
 		<delete dir="glassfish3/javadb/javadoc"/>
 		<delete dir="glassfish3/javadb/demo"/>
