@@ -150,6 +150,9 @@ public class PreludeUpdateCenterAction extends AppServerContextAction {
                 } else {
                     File launcherPath = new File(updateCenterBin, "updatetool"); // NOI18N
                     result = (launcherPath.exists()) ? launcherPath : null;
+                    if (result!=null){
+                    	result.setExecutable(true);
+                    }
                 }
             }
         }
