@@ -2,9 +2,8 @@
 <feature
       id="oracle.eclipse.runtime.helios.runtime.glassfish"
       label="%featureName"
-      version="3.1.0.qualifier"
-      provider-name="%providerName"
->
+      version="3.1.0.0"
+      provider-name="%providerName">
 
    <description url="https://glassfish.java.net">
       %featureDescription
@@ -21,6 +20,7 @@
    <url>
       <update label="%updateSiteName" url="http://download.java.net/glassfish/eclipse/helios"/>
    </url>
+
    <plugin
          id="oracle.eclipse.runtime.glassfish"
          download-size="0"
