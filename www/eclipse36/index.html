@@ -1,0 +1,786 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+
+
+
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>GlassFish and Eclipse 3.4</title></head><body>
+
+<h1>Eclipse 3.6 and GlassFish 3 , 3.1&nbsp; integration</h1>
+
+<i></i><br><br>
+
+Maintained by <a href="mailto:ludo@dev.java.net">Ludovic
+Champenois</a>.<br>28/02/2011.<br>
+
+<br>
+Prerequisite:<br>
+<br><br>
+<br>
+Download the Eclipse IDE for Java EE Developers (Based on Eclipse
+3.6) from <a href="http://www.eclipse.org/downloads/">http://www.eclipse.org/downloads/</a>.<br>
+<br>
+Note that if you choose a different package of the Eclipse IDE, you may need
+to update it by adding relevant plugins, for example all WTP and JST plugins.
+<br>
+<br>
+Optional: 
+Download and install GlassFish 3.1 Application server from <a href="http://glassfish.java.net/downloads/3.1-final.html">this page</a>.
+(make sure the JDK is defined in your path, otherwise GlassFish might
+use a JRE for its JVM and JSP compilation steps would fail).<br>
+
+
+<br>
+
+Download page looks like:<br>
+<br>
+
+<span style="text-decoration: underline;"><img style="width: 1024px; height: 311px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-51.png"></span><br>
+
+<br>
+
+<br>
+
+Table of Contents:<br>
+
+<ul>
+
+  <li><a href="#getting">Getting the GlassFish
+Plugin for Eclipse</a></li>
+
+  <li><a href="#1">Registering a GlassFish server to
+Eclipse</a></li>
+
+  <li><a href="#2">GlassFish Server Usage from the
+IDE</a></li>
+
+  <li><a href="#3">Creating a new Web Application
+project targeting GlassFish Server</a></li>
+
+  <li><a href="#4">Changing Global Preferences for
+the GlassFish Server</a></li>
+
+  <li><a href="#5">Using the Help menu for GlassFish</a></li>
+
+  <li><a href="#6">TCP/IP Monitoring Web
+Applications with GlassFish</a></li>
+
+  <li><a href="#7">Adding a Servlet and using
+Session Preservation feature</a></li>
+
+  <li><a href="#8">Using the Debugger to debug a
+Servlet with GlassFish</a></li>
+
+  <li><a href="#9">Viewing the GlassFish Admin
+Console from Eclipse</a></li><li><a href="#12">Adding a new Data Source and
+registering it to GlassFish</a></li>
+
+</ul>
+
+<br>
+
+<h2><a name="getting"></a>Getting the
+GlassFish Plugin for Eclipse <br>
+</h2>
+
+
+
+<br>
+
+Install the Eclipse IDE and start it, close the "Welcome" page:<br>
+
+<br>
+
+<img style="width: 767px; height: 574px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-52.png"><br>
+
+<br>
+
+<br>
+<br>
+Select the Help menu call "Installed New Software..." from the Eclipse
+IDE. You can now add a new Update Site using the "Add..." button.<br>
+Enter a Name and the following Update Center Location: http://download.java.net/glassfish/eclipse/helios <br>
+<br>
+
+<br>
+<img style="width: 835px; height: 625px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-53.png"><br>
+<br>
+<br>
+<br>
+After a while you should see all the available plugins: the GlassFish
+Runtime (optional), the Java EE JavaDocs, and the GlassFish Eclipse
+Plugin itself.<br>
+Select all of them if you want:<br>
+<br>
+<br>
+<img style="width: 751px; height: 579px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-55.png"><br>
+<br>
+Click in the Next Button, and after a while, the plugins are installed. You can restart Eclipse when prompted:<br>
+<br><br>
+<img style="width: 516px; height: 134px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-56.png"><br>
+<br>
+<br>
+After the Eclipse restart process, you should see this updated welcome screen:<br>
+<br>
+<br>
+<img style="width: 767px; height: 574px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-57.png"><br>
+<br>
+<br>
+<br>
+And the internally registered GlassFish 3.1 Application Server in the "Servers" tab view:<br>
+<br>
+<img style="width: 767px; height: 574px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-58.png"><br>
+<br>
+<br>
+<br>
+Select this server and click on the green start button (or the Start
+popup menu on the server node) to start the GlassFish Server from
+Eclipse. You should see output on the Eclipse console select if you
+want the real GlassFish Server Log file as well:<br>
+<br>
+<img style="width: 767px; height: 574px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-59.png"><br>
+<br>
+Once started, you can navigate the sub tree called "GlassFish
+Management" that shows the deployed applications and the deployed
+GlassFish Resources on this running server.<br>
+(Hint, you can undeploy apps from there, just select a node and see its popup menu for extra actions)<br>
+<br>
+<img style="width: 767px; height: 574px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-60.png"><br>
+<br><br>
+<br>
+<br>
+You can also register an external GlassFish server to the IDE if you want:.<br>
+
+<h2><a name="1"></a>Registering a GlassFish
+server to Eclipse</h2>
+
+<br>
+
+Once you have installed the GlassFish Plugin for Eclipse, you can
+register an external GlassFish server to the IDE. This is assuming you have on
+your system an installation of this server. If you do not have a
+GlassFish server installer, <a href="http://glassfish.java.net/downloads/3.1-final.html">you can download one from here</a>.<br>
+
+<br>
+
+<br>
+
+In the "Servers" view, select the popup menu "New | Server &nbsp;":<br>
+
+<br>&nbsp;
+
+<img style="width: 767px; height: 574px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-61.png"><br>
+
+<br>
+
+<br>
+
+Navigate to the GlassFish category and select GlassFish 3.1 (If
+you have another server type, select it. Currently, GlassFish v2.1,
+GlassFish 3.x, GlassFish 3.1 and Sailfin v2 application servers
+are supported with the Eclipse plugin).<br>
+
+Once the correct server is selected, press the "Next" button of the
+wizard to enter the server location on disk.<br>
+
+<br>&nbsp; <img style="width: 525px; height: 537px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-62.png"><br>
+
+<br>
+
+In this step, you need to enter a correct GlassFish installation
+directory. For example, in the demo case, the location is<br>
+
+<br><span style="font-style: italic;">/Users/ludo/glassfish3.1/glassfish</span><br>
+
+<br>
+
+Notice that the location <span style="font-style: italic;">/Users/ludo/glassfish3.1</span> contains
+more than the glassfish application server. It contains as well JavaDB,
+the Update Tool and its repository meta-data. So make sure you select
+the subdirectory called "<span style="font-style: italic;">glassfish</span>:" under<span style="font-style: italic;"> /Users/ludo/glassfish3.1</span>.<br>
+
+Once a correct server location is entered, the "Next" button of the
+wizard is enable.<br>
+
+<br>&nbsp;
+
+<img style="width: 525px; height: 417px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-63.png"><br>
+<br>
+<br>
+<img style="width: 525px; height: 417px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-64.png"><br>
+<img style="width: 525px; height: 537px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-65.png"><br>
+<br>
+Select now the Next button.<br>
+
+
+<br>
+
+The following step of the wizard has many good default values (that can
+be modified later on). By default, the domain named "domain1" in the
+standard domain directory is selected. Change the user name/password accordingly if
+you have installed the GlassFish 3.1 with this option. <br>
+<br>
+<br>
+<br>
+<img style="width: 610px; height: 537px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-66.png"><br>
+<br>
+Notice
+the "<span style="font-weight: bold;">Preserve Sessions Across Redeploy</span>" option is turned on by
+default. This is a nice feature of the GlassFish 3.1
+application server.<br>
+
+<br>&nbsp;
+
+<img style="width: 767px; height: 574px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-67.png"><br>
+
+<br>
+
+<h2><a name="2"></a>GlassFish Server Usage
+from the IDE</h2>
+
+Once a new GlassFish is registered to the Eclipse IDE, &nbsp;you'll
+see a new entry in the "Servers" view of the IDE. A popup menu is
+available on this node, as well as a toolbar for useful actions like
+"Start", "Debug" , " Monitor". Double clicking on the server node will
+also open the Server Editor where more options can be modified.<br>
+
+Notice the "GlassFish Enterprise Server" popup menu entry that allows a
+quick access to the GlassFish Update Center UI, the registration page,
+the Aquarium Web site, The Admin console page and the log viewer for
+this application server.<br>
+
+the GlassFish Update Center UI, the registration page and The Admin
+console page will require the GlassFish server to be up and running in
+order to be seen.<br>
+<br>
+<br>
+<br>
+<br>
+
+<br>
+
+<br>
+
+<br>
+&nbsp;<br>
+<br>
+<br>
+<img style="width: 718px; height: 547px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-70.png"><br>
+<br>
+<br>
+<br>
+<br>
+
+<br>
+
+Here is the Aquarium page viewed in the default Eclipse browser (which
+is an embedded browser inside Eclipse Editor).<br>
+
+<br>
+<img style="width: 753px; height: 534px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-71.png"><br>&nbsp;
+
+<br>
+
+<br>
+
+If you double click on the server node in the "Servers" view, the
+server editor window is showing up. You can fine tune some parameters
+like "<span style="font-weight: bold;">Publishing</span>". By default for GlassFish 3.1, the
+"Publishing" is setup to "<span style="font-weight: bold;">Automatic</span>"with a 0 second interval delay.<br>
+
+What is means is that the GlassFish plugin will perform an automatic
+redeployment of the Web Application project as soon as you save a file
+within this application. This can be a servlet change or a JSP change,
+or any class or web artifact in this application. This feature is also
+called "Deploy on Save" and for most of the web applications, this can
+be very fast (less than a second) with GlassFish 3.1.<br>
+If this is
+not the behavior you want, just select the "<span style="font-weight: bold;">Never publish
+automatically</span>" option and save your settings.<br>
+
+<br>
+
+You can also point to a different existing domain or modify the
+"Session Preservation" feature of GlassFish 3.1.<br>
+
+The second tab called "GlassFish Update Center" is active only when the
+server is up and running, and blank otherwise.<br>
+
+<br>&nbsp;
+
+<img style="width: 717px; height: 563px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-72.png"><br>
+
+<br>
+
+Let's click on the "Start" button (green arrow on the Servers view
+toolbar) (or popup menu action) to start the GlassFish 3.1
+server. A new Eclipse view named "GlassFish Log Viewer" should show up.
+It contains many tabs, one per server instance started by the Eclipse
+IDE. The tab is called "server.log" and you can see the server log
+location in the tooltip on this tab name.<br>
+
+<br>&nbsp;
+
+<br>
+
+<br>
+
+Once the server is started, the "Servers" view will display the correct
+State in the view: "Started" and Synchronized":<br>
+
+<br>
+
+<br>&nbsp;
+
+<br>
+
+<br>
+
+&nbsp;<br>
+
+<br>
+
+<h2><a name="3"></a>Creating a new Web
+Application project targeting GlassFish Server</h2>
+
+With the File | New | Projects... menu item, find the "Dynamic Web
+Project" category to create a new Web Application.<br>
+
+<br>
+
+Enter a Project Name in the first field: MyFirstWebApp.<br>
+
+Notice that the "GlassFish 3.1" Target Runtime is selected. If
+not, use the combo-box to select it. This will add all the necessary
+jar files in the project path so that you can compile with selected
+Java EE APIs.Just use the default settings for now and select the
+"Finish" button.<br>
+
+<br>
+
+<br>&nbsp;
+
+<img style="width: 602px; height: 753px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-73.png"><br>
+
+<br>
+
+The project is now created and visible in the Project Explorer view.
+The GlassFish plugin creates a default index.jsp page and opens it in
+the JSP editor.<br>
+
+<br>&nbsp;
+
+<img style="width: 769px; height: 551px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-74.png"><br>
+
+<br>
+
+<br>
+
+Select the "Run" Menu or toolbar icon, and pick the "Run On Server"
+option. Select GlassFish as the server you want to run this application
+(You can select the "Always use this server when running this project"
+check box to streamline further run invocations.<br>
+
+<br>&nbsp;
+
+<img style="width: 518px; height: 534px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-75.png"><br>
+
+<br>
+
+<br>
+
+The Web application is then deployed to GlassFish 3.1,&nbsp; and the index.jsp page
+appears in the Eclipse default Web Browser.<br>
+
+You can now switch back and forth between the index.jsp editor and the
+Web Browser view. Each time you save the JSP, the application is
+redeployed on Save, and you can reload the page (small yellow icon on
+the Browser view) to see the changes immediately.<br>
+
+<br>&nbsp;
+
+<img style="width: 769px; height: 551px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-76.png"><br>
+
+<br>
+
+<br>
+
+<h2><a name="4"></a>Changing Global
+Preferences for the GlassFish Server</h2>
+
+The GlassFish Plugin for Eclipse has some global preferences you can
+tweak. Use the "Preferences" Menu item and select the GlassFish
+Preferences category:<br>
+
+<br>&nbsp;
+
+<img style="width: 682px; height: 536px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-68.png"><br>
+
+<br>
+
+<br>
+
+Using the "GlassFish Preferences" category, you can modify the
+following flags:<br>
+
+<ul>
+
+  <li>Enable GlassFish Plugin Log information in IDE log file</li>
+
+  <ul>
+
+    <li>This is more for the plugin debugging purpose than
+anything
+else. Turn on this option to see additional traces in the Eclipse log
+file specific to the GlassFish Plugin. This option is OFF by default.</li>
+
+  </ul>
+
+  <li>Start the JavaDB database process when Starting GlassFish
+Server</li>
+
+  <ul>
+
+    <li>GlassFish Server includes Java DB Database and this
+option
+allows you to start it automatically when the server is started. It is
+very convenient to do when you work with JPA applications. The options
+is ON by default.</li>
+
+  </ul>
+
+  <li>Start the GlassFish Enterprise Server in verbose mode
+(Eclipse console can be used)</li>
+
+  <ul>
+
+    <li>Using this flag will send all the output log of the
+Server
+inside the Eclipse console as well. This options is OFF by default as
+there is a GlassFish specific log view.&nbsp;</li>
+
+  </ul>
+
+  <li>Enable colored rendering in the GlassFish Log Viewer</li>
+
+  <ul>
+
+    <li>For color blind people, you can turn this option OFF.
+Otherwise, INFO level messages will be black, WARNING messages will be
+yellow, SEVERE messages will be red, and multiple line entries will be
+Italic.</li>
+
+  </ul>
+
+</ul>
+
+<br>&nbsp;
+
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="5"></a>Using the Help menu for
+GlassFish</h2>
+
+You have access to all the Online Documentation books for GlassFish v2
+and GlassFish 3.1 via the Eclipse Help menu, under the
+"GlassFish Enterprise Server" &nbsp;menu item. Pleas take the time
+to
+read these official documents for learning how to use, administer or
+deploy with the GlassFish server. These books are opened in the Eclipse
+default Web Browser.<br>
+
+<br>
+
+You can also get to the <a href="http://www.sun.com/service/applicationserversubscriptions/">GlassFish
+Enterprise Server Support page</a> easily from there.<br>
+
+<br>&nbsp;
+
+<img style="width: 769px; height: 551px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-76.png"><br>
+
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="6"></a>TCP/IP Monitoring Web
+Applications with GlassFish</h2>
+
+TCP/IP monitoring a nice Eclipse feature that is enable for the
+GlassFish application server. It allows to trace HTTP requests made to
+your web application. You need first to configure the monitoring by
+selecting the server popup menu item named "Monitoring | Properties" as
+below:<br>
+
+<br>
+
+<br>
+
+<img style="width: 592px; height: 490px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-77.png"> <br>
+
+<br>
+
+In the Monitoring properties, select the "Add..." button on the right
+side:<br>
+
+<br>&nbsp;
+
+<img style="width: 297px; height: 303px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-78.png"><br>
+
+<br>
+
+<br>
+
+And select the "Server Port" which is the http port used by the
+GlassFish server. In our case, it is 8080. The port that will be used
+to actually do the monitoring is 8081 as specified in the Monitor Port
+field. (Change this port as you need).<br>
+
+<br>&nbsp;
+
+<img style="width: 619px; height: 537px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-79.png"><br>
+
+<br>
+
+Last step to do is to click on the "Start" button on the right side to
+start the monitoring on the port 8080 via the port 8081:<br>
+
+<br>&nbsp; <img style="width: 619px; height: 537px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-80.png"><br>
+
+<br>
+
+<br>
+
+You should see a "Started" status in the Status column. You are now all
+set to play with the monitoring feature.<br>
+
+Select "Apply" button and "OK".<br>
+
+<br>
+
+<br>
+
+<br>
+
+Now, assuming&nbsp; the GlassFish server is started, access a web
+page using the port 8081 instead of the regular port 8080.<br>
+
+The TCP/IP monitor view should appear below, and fill up with the
+traffic between your Web browser and your web application. When you
+select each request in the tree at the top left, information about the
+request/response is shown, the bottom left of the view will display the
+HTTP request that was made to your web application, and the bottom
+right will show each response.<br>
+
+<br>
+
+<br>&nbsp;
+
+<img style="width: 791px; height: 760px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-81.png"><br>
+
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="7"></a>Adding a Servlet and using
+Session Preservation feature</h2>
+
+Select the New Servlet category to create a new Servlet. Enter a
+package name (apkg for example), and a servler name (MyServlet for
+example).<br>
+
+&nbsp;<br>
+
+<br>&nbsp;
+
+<br>
+
+<br>
+
+In the Eclipse editor, add more logic to your servlet.&nbsp;<br>
+
+As an example of a servlet code dealing with Sessions, you can use <a href="MyServlet.java">the source content for the
+MyServlet.java</a>. You can copy paste most of the code.<br>
+
+Save your servlet file, and go the to Browser window to activate the
+servlet page (http://localhost:8080/MyFirstWebApp/MyServlet). You
+should see something similar to:<br>
+
+<br>
+
+<img alt="1" src="ishot-92.png"> <br>
+
+<br>
+
+Reload the serlvet web page a few times: you'll see the Number of
+Previous Accesses field growing (as seen above, we clicked 4 times on
+the page). This counter is stored in the Servlet Session data. We want
+now to modify the Servlet source code, and redeploy the web application
+to GlassFish 3.1 (remember, by default, the "Deploy On Save"
+mode is enable, so you just need to save the servlet source file and go
+the browser page and click the reload button to see the updated page.<br>
+
+<br>
+
+In our test we just add some text in the servlet as shown below: (<span style="font-weight: bold;">Update Servlet!!!</span>)<br>
+
+&nbsp;<br>
+
+<img alt="1" src="ishot-94.png"> <br>
+
+<br>
+
+See the update page: the servlet has been redeployed, we see the (<span style="font-weight: bold;">Update Servlet!!!</span>)
+change we did in the source editor, and the field "Number of Previous
+Accesses" is now 5, meaning that the Servlet Session Data was preserved
+during redeployment.<br>
+
+This is a very cool feature for GlassFish 3.1 critical when you
+are developing/debugging complex Web Applications with complex Session
+management (Shopping Cart,...) and you want to keep the information of
+your Sessions across redeployments.<br>
+
+<br>
+
+<img alt="1" src="ishot-95.png"> <br>
+
+<br>
+
+<br>
+
+<h2><a name="8"></a>Using the Debugger to
+debug a Servlet with GlassFish</h2>
+
+You can set breakpoints on any Java class (servlet, helper classes,
+JPA, Web Services,...) of a Web Application, or on JSP pages (which
+contain Java code fragments), using the popup menu available in the
+vertical grey bar of the Eclipse Editor (on the left side), and
+selecting the first menu item named "Toggle BreakPoint". If Eclipse can
+set up a break point on this selected line, a small icon will appear on
+the bar. Otherwise, Eclipse will notify that a breakpoint cannot be set
+on this line (For example, in HTML fragments of a JSP file).<br>
+
+<br>
+
+<br>
+
+<img alt="1" src="ishot-98.png"><img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-85.png" alt=""><br>
+<br>
+<br>
+<img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-86.png" alt=""><br>
+<br>
+<br>
+<br>
+ 
+
+<br>
+
+Once a breakpoint is declared, and that GlassFish server has been
+started in debug mode via the Servers views "Debug" button, Eclipse
+will swich to the Debug Perspective as soon as you activate a Web Page
+where a break point has been set:<br>
+
+<br>
+
+<img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-87.png" alt=""><br>
+<br>
+<br>
+
+<br>
+
+<img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-88.png" alt=""><br>
+
+You can now use the feature-rich Eclipse debugger on you Web
+Applications or Java EE applications running on the GlassFish
+Application Server.<br>
+
+<br>
+
+<br>
+
+<h2><a name="9"></a>Viewing the GlassFish
+Admin Console from Eclipse</h2>
+
+<br>
+
+There are many administrative features you cannot perform with the
+Eclipse IDE. but are available via the GlassFish Admin Console
+accessible from the IDE. The Admin console can be launched using the
+GlassFish entries in the GlassFish popup menu on the GlassFish server
+node. It takes a few seconds to start, so please wait until the page is
+fully initialized:<br>
+
+<br>
+
+<img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-89.png" alt=""><br>&nbsp;
+
+<br>
+
+<br>
+
+Here is the view of a fully functional GlassFish Administration Console
+running in the Eclipse default Web Brower. Of course it assumes that
+the GlassFish server is up and running.<br>
+
+<br>&nbsp;
+
+<br>
+
+<br>
+
+<img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-90.png" alt=""><br>
+
+<br><br>
+
+<br>
+
+<br>&nbsp;<br>
+
+<br>
+
+<br>
+
+<br>
+
+<h2><a name="12"></a>Adding a new Data Source
+and registering it to GlassFish</h2>
+
+<br>
+
+<img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-91.png" alt=""><br>
+
+<br>
+
+<br>
+
+<img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-92.png" alt=""><br>
+<br>
+<br>
+
+<img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-93.png" alt=""><br>
+<br>
+<br>
+<img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-94.png" alt=""><br>
+<br>
+<br>
+<img src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-95.png" alt=""><br>
+<br>
+<br>
+<img style="width: 767px; height: 574px;" alt="a" src="file:///Users/ludo/acvs/anewEclipse/trunk/www/eclipse36/ishot-69.png"><br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+</body></html>
