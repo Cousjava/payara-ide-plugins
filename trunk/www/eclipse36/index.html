@@ -3,6 +3,7 @@
 
 
 
+
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>GlassFish and Eclipse 3.6</title></head><body>
 
 <h1>Eclipse 3.6 and GlassFish 3.1 integration</h1>
@@ -33,7 +34,7 @@ use a JRE for its JVM and JSP compilation steps would fail).<br>
 Download page looks like:<br>
 <br>
 
-<span style="text-decoration: underline;"><img style="width: 1024px; height: 311px;" alt="a" src="ishot-51.png"></span><br>
+<span style="text-decoration: underline;"><img style="width: 759px; height: 230px;" alt="a" src="ishot-51.png"></span><br>
 
 <br>
 
@@ -592,28 +593,44 @@ Session Preservation feature</h2>
 
 Select the New Servlet category to create a new Servlet. Enter a
 package name (apkg for example), and a servler name (MyServlet for
-example).<br>
+example).<br>&nbsp;
 
-&nbsp;<br>
+<br>
+<img src="ishot-104.png" alt=""><br>
+<br>
+Run this app, and see the servlet URL:<br>
+<br>
 
 <br>&nbsp;
 
+<img src="ishot-100.png" alt=""><br>
+<br>
+<img style="width: 783px; height: 597px;" src="ishot-101.png" alt=""><br>
+<br>
+<br>
+<br>
 <br>
 
+
+In the Eclipse editor, add more logic to your servlet. (see the "Update Servlet" String)...<br>
+<br>
+<br>
+<img style="width: 783px; height: 597px;" src="ishot-102.png" alt=""><br>
 <br>
 
-In the Eclipse editor, add more logic to your servlet.&nbsp;<br>
-
-As an example of a servlet code dealing with Sessions, you can use <a href="MyServlet.java">the source content for the
-MyServlet.java</a>. You can copy paste most of the code.<br>
 
 Save your servlet file, and go the to Browser window to activate the
 servlet page (http://localhost:8080/MyFirstWebApp/MyServlet). You
 should see something similar to:<br>
-
+<br>
+<br>
+<br>
+<img style="width: 783px; height: 597px;" src="ishot-103.png" alt=""><br>
 <br>
 
-<img alt="1" src="ishot-92.png"> <br>
+<br>You can see the page updated, and the Number of Previous Accesses
+value increased from the previous run: the servlet session has been
+preserved during redeployment.<br>
 
 <br>
 
@@ -628,22 +645,14 @@ the browser page and click the reload button to see the updated page.<br>
 <br>
 
 In our test we just add some text in the servlet as shown below: (<span style="font-weight: bold;">Update Servlet!!!</span>)<br>
-
-&nbsp;<br>
-
-<img alt="1" src="ishot-94.png"> <br>
-
 <br>
-
-See the update page: the servlet has been redeployed, we see the (<span style="font-weight: bold;">Update Servlet!!!</span>)
-change we did in the source editor, and the field "Number of Previous
-Accesses" is now 5, meaning that the Servlet Session Data was preserved
-during redeployment.<br>
 
 This is a very cool feature for GlassFish 3.1 critical when you
 are developing/debugging complex Web Applications with complex Session
 management (Shopping Cart,...) and you want to keep the information of
 your Sessions across redeployments.<br>
+<br>
+<br>
 
 <br>
 
