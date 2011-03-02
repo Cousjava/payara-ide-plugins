@@ -4,6 +4,7 @@
 
 
 
+
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>GlassFish and Eclipse 3.6</title></head><body>
 
 <h1>Eclipse 3.6 and GlassFish 3.1 integration</h1>
@@ -205,8 +206,14 @@ wizard is enable.<br>
 
 <img style="width: 525px; height: 417px;" alt="a" src="ishot-63.png"><br>
 <br>
+Enter you correct server location:<br>
+<br>
 <br>
 <img style="width: 525px; height: 417px;" alt="a" src="ishot-64.png"><br>
+<br>
+<br>
+You are ready to continue the next wizard that enters the Domain information for this runtime.<br>
+<br>
 <img style="width: 525px; height: 537px;" alt="a" src="ishot-65.png"><br>
 <br>
 Select now the Next button.<br>
@@ -214,7 +221,7 @@ Select now the Next button.<br>
 
 <br>
 
-The following step of the wizard has many good default values (that can
+The following step of the wizard has many good default values for a Domain (that can
 be modified later on). By default, the domain named "domain1" in the
 standard domain directory is selected. Change the user name/password accordingly if
 you have installed the GlassFish 3.1 with this option. <br>
@@ -226,7 +233,7 @@ you have installed the GlassFish 3.1 with this option. <br>
 Notice
 the "<span style="font-weight: bold;">Preserve Sessions Across Redeploy</span>" option is turned on by
 default. This is a nice feature of the GlassFish 3.1
-application server.<br>
+application server. Now, another server runtime and domain is available in the Servers view:<br>
 
 <br>&nbsp;
 
@@ -252,16 +259,6 @@ the GlassFish Update Center UI, the registration page and The Admin
 console page will require the GlassFish server to be up and running in
 order to be seen.<br>
 <br>
-<br>
-<br>
-<br>
-
-<br>
-
-<br>
-
-<br>
-&nbsp;<br>
 <br>
 <br>
 <img style="width: 718px; height: 547px;" alt="a" src="ishot-70.png"><br>
@@ -318,24 +315,12 @@ It contains many tabs, one per server instance started by the Eclipse
 IDE. The tab is called "server.log" and you can see the server log
 location in the tooltip on this tab name.<br>
 
-<br>&nbsp;
-
-<br>
-
-<br>
+<br>&nbsp;<br>
 
 Once the server is started, the "Servers" view will display the correct
-State in the view: "Started" and Synchronized":<br>
+State in the view: "Started".<br>
 
 <br>
-
-<br>&nbsp;
-
-<br>
-
-<br>
-
-&nbsp;<br>
 
 <br>
 
@@ -473,13 +458,7 @@ Italic.</li>
 
 </ul>
 
-<br>&nbsp;
-
-<br>
-
-<br>
-
-<br>
+<br>&nbsp;<br>
 
 <h2><a name="5"></a>Using the Help menu for
 GlassFish</h2>
@@ -593,10 +572,13 @@ Session Preservation feature</h2>
 
 Select the New Servlet category to create a new Servlet. Enter a
 package name (apkg for example), and a servler name (MyServlet for
-example).<br>&nbsp;
+example).<br>
+<br>
+<a href="MyServlet.java">You can use this Servlet File as an example</a>...It has a simple Servlet Session as an integer which is incremented every time a given user reloads the page.<br>
+<br>&nbsp;
 
 <br>
-<img src="ishot-104.png" alt=""><br>
+<img style="width: 783px; height: 597px;" alt="" src="ishot-104.png"><br>
 <br>
 Run this app, and see the servlet URL:<br>
 <br>
