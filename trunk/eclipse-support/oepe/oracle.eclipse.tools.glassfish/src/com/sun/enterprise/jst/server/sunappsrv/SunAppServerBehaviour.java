@@ -41,6 +41,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
+import org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour;
 import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.osgi.util.NLS;
@@ -66,7 +67,7 @@ import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.ResourceUtils
  *
  */
 @SuppressWarnings("restriction")
-public class SunAppServerBehaviour extends ServerBehaviourDelegate {
+public class SunAppServerBehaviour extends GenericServerBehaviour {
 	private static final String DEFAULT_DOMAIN_DIR_NAME = "domains"; //$NON-NLS-N$
 	private static final String DEFAULT_DOMAIN_NAME = "domain1"; //$NON-NLS-N$
 //not used yet	private GlassFishV2DeployFacility gfv2depl=null;//lazy initialized
