@@ -218,6 +218,9 @@ public class CommandRunner extends BasicTask<OperationState> {
             if (state == OperationState.COMPLETED) {
                 apps = cmd.getApplicationMap();
             }
+            if (apps == null || apps.isEmpty()) {
+            	return result;
+            }
             ServerCommand.GetPropertyCommand getCmd = new ServerCommand.GetPropertyCommand("applications.application.*");
             serverCmd = getCmd;
             task = executor().submit(this);
@@ -232,7 +235,29 @@ public class CommandRunner extends BasicTask<OperationState> {
         }
         return result;
     }
-    
+ 
+    /**
+     * Sends list-clusters command to server (synchronous)
+     * 
+     * @return String array of names of cluster.
+     */
+    public List<ClusterDesc> getClusters() {
+        List<ClusterDesc> result = Collections.emptyList();
+        try {
+            Commands.ListClustersCommand cmd = new Commands.ListClustersCommand();
+            serverCmd = cmd;
+            Future<OperationState> task = executor().submit(this);
+            OperationState state = task.get(30, TimeUnit.SECONDS);
+            if (state == OperationState.COMPLETED) {
+                result = cmd.getClusterList();
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);
+        }
+        return result;
+    }
     private Map<String, List<AppDesc>> processApplications(Map<String, List<String>> appsList, Map<String, String> properties){
         Map<String, List<AppDesc>> result = new HashMap<String, List<AppDesc>>();
         Iterator<String> appsItr = appsList.keySet().iterator();
@@ -470,6 +495,7 @@ public class CommandRunner extends BasicTask<OperationState> {
         boolean commandSucceeded = false;
         URL urlToConnectTo = null;
         URLConnection conn = null;
+        HttpURLConnection hconn = null;
         String commandUrl;
         
         try {
@@ -492,7 +518,7 @@ public class CommandRunner extends BasicTask<OperationState> {
 
                     conn = urlToConnectTo.openConnection();
                     if(conn instanceof HttpURLConnection) {
-                        HttpURLConnection hconn = (HttpURLConnection) conn;
+                        hconn = (HttpURLConnection) conn;
 
                         if (conn instanceof HttpsURLConnection) {
                             // let's just trust any server that we connect to...
@@ -545,7 +571,15 @@ public class CommandRunner extends BasicTask<OperationState> {
                         if(contentType != null && contentType.length() > 0) {
                             hconn.setRequestProperty("Content-Type", contentType); // NOI18N
                             hconn.setChunkedStreamingMode(0);
-                        }
+                         } else {
+                            // work around that helps prevent tickling the
+                            // GF issue that is the root cause of 195384.
+                            //
+                            // GF doesn't expect to get image content, so it doesn't
+                            // try to handle the content... which prevents the
+                            // exception, according to Tim Quinn.
+                            hconn.setRequestProperty("Content-Type", "image/png");
+	                    }
                         hconn.setRequestProperty("User-Agent", "hk2-agent"); // NOI18N
                         if (serverCmd.acceptsGzip()) {
                             hconn.setRequestProperty("Accept-Encoding", "gzip");
@@ -603,6 +637,8 @@ public class CommandRunner extends BasicTask<OperationState> {
                         fireOperationStateChanged(OperationState.FAILED, "MSG_Exception", // NOI18N
                                 ex.getLocalizedMessage());
                     }
+                } finally {
+                    	if (null != hconn) hconn.disconnect();
                 }
                 
                 if(!httpSucceeded && retries > 0) {
