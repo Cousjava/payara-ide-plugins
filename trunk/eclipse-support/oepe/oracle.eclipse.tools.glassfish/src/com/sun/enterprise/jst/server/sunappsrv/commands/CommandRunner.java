@@ -241,7 +241,7 @@ public class CommandRunner extends BasicTask<OperationState> {
      * 
      * @return String array of names of cluster.
      */
-    public List<ClusterDesc> getClusters() {
+    /*public List<ClusterDesc> getClusters() {
         List<ClusterDesc> result = Collections.emptyList();
         try {
             Commands.ListClustersCommand cmd = new Commands.ListClustersCommand();
@@ -257,7 +257,7 @@ public class CommandRunner extends BasicTask<OperationState> {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);
         }
         return result;
-    }
+    }*/
     private Map<String, List<AppDesc>> processApplications(Map<String, List<String>> appsList, Map<String, String> properties){
         Map<String, List<AppDesc>> result = new HashMap<String, List<AppDesc>>();
         Iterator<String> appsItr = appsList.keySet().iterator();
