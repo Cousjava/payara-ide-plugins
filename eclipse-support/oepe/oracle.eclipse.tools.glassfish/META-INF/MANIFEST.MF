@@ -6,7 +6,7 @@ Bundle-Version: 3.2.1.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin
 Bundle-Vendor: %providerName
-Require-Bundle: 
+Require-Bundle: org.apache.xerces,
  org.apache.ant,
  org.eclipse.jdt.core,
  org.eclipse.jst.server.core,
