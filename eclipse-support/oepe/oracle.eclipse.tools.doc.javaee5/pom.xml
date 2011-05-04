@@ -12,35 +12,53 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>oracle.eclipse.glassfish</groupId>
-    <artifactId>glassfishplugins-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-  </parent>
+    <parent>
+        <groupId>oracle.eclipse.glassfish</groupId>
+        <artifactId>glassfishplugins-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-  <artifactId>oracle.eclipse.tools.glassfish.doc.javaee5</artifactId>
-  <packaging>eclipse-plugin</packaging>
+    <artifactId>oracle.eclipse.tools.glassfish.doc.javaee5</artifactId>
+    <packaging>eclipse-plugin</packaging>
 
-  <name>EE 5 JavaDoc Plug-in</name>
+    <name>EE 5 JavaDoc Plug-in</name>
 
- <build>
+    <build>
      <!-- workaround for https://issues.sonatype.org/browse/TYCHO-168 -->
-     <resources>
-      <resource>
-        <directory>src</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <groupId>org.sonatype.tycho</groupId>
-        <artifactId>maven-osgi-source-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
+        <resources>
+            <resource>
+                <directory>src</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.tycho</groupId>
+                <artifactId>maven-osgi-source-plugin</artifactId>
+            </plugin>
+            <plugin>  
+                <artifactId>maven-antrun-plugin</artifactId>  
+                <executions>  
+                    <execution>  
+                        <phase>compile</phase>  
+                        <configuration>  
+                            <tasks>  
+                      <!-- Using an ant task to deflate java_ee_javadocs.zip -->  
+                                <mkdir  dir="${project.basedir}/target/classes/javaee5doc"/>
+                                <unzip src="java_ee_javadocs.zip" dest="${project.basedir}/target/classes/javaee5doc"/>  
+                            </tasks>  
+                        </configuration>  
+                        <goals>  
+                            <goal>run</goal>  
+                        </goals>  
+                    </execution>  
+                </executions>  
+            </plugin>  
+        </plugins>
+    </build>
  
 </project>
