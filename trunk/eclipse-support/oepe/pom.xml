@@ -70,7 +70,7 @@
       <layout>p2</layout>
       <url>${eclipse-site}</url>
     </repository>
-    <repository>
+    <!--repository>
       <id>swtbot</id>
       <layout>p2</layout>
       <url>${swtbot-site}</url>
@@ -84,7 +84,7 @@
       <id>orbit</id>
       <layout>p2</layout>
       <url>${orbit-site}</url>
-    </repository>
+    </repository-->
   </repositories>
   
   <pluginRepositories>
