@@ -53,10 +53,12 @@
     <module>oracle.eclipse.tools.glassfish</module>
     <module>oracle.eclipse.tools.doc.javaee6</module>
     <module>oracle.eclipse.tools.doc.javaee5</module>
-
+    <module>oracle.eclipse.runtime.glassfish</module>
+    
     <module>oracle.eclipse.tools.helios.doc.javaee5</module>
     <module>oracle.eclipse.tools.helios.doc.javaee6</module>
     <module>oracle.eclipse.tools.helios.glassfish</module>
+    <module>oracle.eclipse.runtime.helios.runtime.glassfish</module>
     <module>helios.updatesite</module>
 
 
