@@ -37,10 +37,7 @@
             </resource>
         </resources>
         <plugins>
-            <plugin>
-                <groupId>org.sonatype.tycho</groupId>
-                <artifactId>maven-osgi-source-plugin</artifactId>
-            </plugin>
+
             <plugin>  
                 <artifactId>maven-antrun-plugin</artifactId>  
                 <executions>  
@@ -50,13 +47,13 @@
                             <tasks>  
                       <!-- Using an ant task to deflate glassfish zip file -->  
 
-		<unzip dest="${project.basedir}/target/classes" src="latest-glassfish.zip"/>
-		<touch file="${project.basedir}/target/classes/glassfish3/glassfish/lib/asadmin/.nothing"/>
-		<touch file="${project.basedir}/target/classes/glassfish3/.org.opensolaris,pkg/file/.nothing"/>
-		<touch file="${project.basedir}/target/classes/glassfish3/.org.opensolaris,pkg/download/.nothing"/>
-		<delete dir="${project.basedir}/target/classes/glassfish3/javadb/docs"/>
-		<delete dir="${project.basedir}/target/classes/glassfish3/javadb/javadoc"/>
-		<delete dir="${project.basedir}/target/classes/glassfish3/javadb/demo"/>
+		<unzip dest="${project.basedir}" src="latest-glassfish.zip"/>
+		<touch file="${project.basedir}/glassfish3/glassfish/lib/asadmin/.nothing"/>
+		<touch file="${project.basedir}/glassfish3/.org.opensolaris,pkg/file/.nothing"/>
+		<touch file="${project.basedir}/glassfish3/.org.opensolaris,pkg/download/.nothing"/>
+		<delete dir="${project.basedir}/glassfish3/javadb/docs"/>
+		<delete dir="${project.basedir}/glassfish3/javadb/javadoc"/>
+		<delete dir="${project.basedir}/glassfish3/javadb/demo"/>
                 </tasks>  
                         </configuration>  
                         <goals>  
@@ -64,7 +61,11 @@
                         </goals>  
                     </execution>  
                 </executions>  
-            </plugin>  
+            </plugin> 
+            <plugin>
+                <groupId>org.sonatype.tycho</groupId>
+                <artifactId>maven-osgi-source-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
  
