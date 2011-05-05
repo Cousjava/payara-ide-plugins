@@ -7,7 +7,6 @@ Bundle-Activator: oracle.eclipse.runtime.glassfish.Activator
 Bundle-Vendor: Oracle
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.server.core
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Import-Package: com.sun.enterprise.jst.server.sunappsrv,
  org.eclipse.core.resources,
@@ -17,3 +16,4 @@ Import-Package: com.sun.enterprise.jst.server.sunappsrv,
  org.eclipse.wst.server.core,
  org.eclipse.wst.server.ui.internal
 Bundle-classpath: library.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
