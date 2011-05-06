@@ -399,6 +399,8 @@ public  class AssembleModules {
 					uri = uri.substring(0,uri.length()-4)+"_war";					
 				} else if (uri.endsWith(".jar")){
 					uri = uri.substring(0,uri.length()-4)+"_jar";
+				} else if (uri.endsWith(".rar")){ //http://java.net/jira/browse/GLASSFISHPLUGINS-333
+					uri = uri.substring(0,uri.length()-4)+"_rar";
 				}
 			}
 
