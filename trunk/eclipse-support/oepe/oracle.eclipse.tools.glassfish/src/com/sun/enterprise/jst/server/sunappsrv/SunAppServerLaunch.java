@@ -149,14 +149,21 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                         "A GlassFish Enterprise Server is running on this port, but with a different root installation..."),//$NON-NLS-1$
                         IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 
-            } else {
+            } else if (status == SunAppServer.ServerStatus.CONNEXTION_ERROR) {
                 abort(
-                        "Port conflict: Please stop the server process using the same port as the one used by the Application Server.", //$NON-NLS-1$
+                        "The Eclipse plugin cannot communicate with the GlassFish server....", //$NON-NLS-1$
                         new RuntimeException(
-                        "A server process is already running on this port but we cannot determine if it's a GlassFish process (lack of info or credentials)." //$NON-NLS-1$
-                        + "If you do not find something else running on this port, check for antivirus software blocking or monitoring this port."), //$NON-NLS-1$
+                        "The Eclipse plugin cannot communicate with the GlassFish server." //$NON-NLS-1$
+                        + "Please, check for antivirus software blocking or monitoring this port, or firewall configuration, or VPN setup which might block some ports..."), //$NON-NLS-1$
                         IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 
+            } else {
+                abort(
+                        "The Eclipse plugin cannot communicate with the GlassFish server, status is :" + status, //$NON-NLS-1$
+                        new RuntimeException(
+                        "The Eclipse plugin cannot communicate with the GlassFish server." //$NON-NLS-1$
+                        + "Status is :"+status), //$NON-NLS-1$
+                        IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);           	
             }
         }
         IPreferenceStore store = SunAppSrvPlugin.getInstance().getPreferenceStore();
