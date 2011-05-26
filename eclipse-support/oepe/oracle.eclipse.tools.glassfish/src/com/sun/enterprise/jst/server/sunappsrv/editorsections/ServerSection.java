@@ -124,18 +124,18 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 
 
 
-
-		final Text domaindir = SWTUtil.createLabeledPath(Messages.DomainDirectory, sunserver.getDomainDir()+File.separator+sunserver.getdomainName(), comp, toolkit);
-		txtGDF.align(SWT.FILL, SWT.CENTER).span(1, 1).applyTo(domaindir);
-		domaindir.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-
-				execute(new SunAppServerCommands(server, domaindir.getText(),SunAppServer.DOMAINPATH));
-
-			}
-		});
-		domaindir.selectAll();
-		domaindir.setFocus();
+		if (sunserver.isLocalServer()){
+			final Text domaindir = SWTUtil.createLabeledPath(Messages.DomainDirectory, sunserver.getDomainDir()+File.separator+sunserver.getdomainName(), comp, toolkit);
+			txtGDF.align(SWT.FILL, SWT.CENTER).span(1, 1).applyTo(domaindir);
+			domaindir.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {	
+					execute(new SunAppServerCommands(server, domaindir.getText(),SunAppServer.DOMAINPATH));	
+				}
+			});
+			domaindir.selectAll();
+			domaindir.setFocus();
+		}
+		
 		createLabel(comp, Messages.AdminName, toolkit);
 
 		username = toolkit.createText(comp, sunserver.getAdminName(), SWT.BORDER);
