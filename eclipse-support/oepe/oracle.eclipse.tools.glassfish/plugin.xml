@@ -1365,11 +1365,17 @@
      	<runtime
            archiveUrl="http://download.java.net/glassfish/3.0.1/release/glassfish-3.0.1.zip" 		   
            licenseUrl="http://download.java.net/glassfish/eclipse/CDDL+GPL+3rdPartyEPL.txt"
+           archivePath="./"
+           archiveSize="77720782"
+           fileCount="1037"
            id="com.sun.enterprise.jst.server.runtime.sunappsrv92">
     	</runtime>   	
      	<runtime
            archiveUrl="http://download.java.net/glassfish/3.1/release/glassfish-3.1.zip" 		   
            licenseUrl="http://download.java.net/glassfish/eclipse/CDDL+GPL+3rdPartyEPL.txt"
+           archivePath="./"
+           archiveSize="82072122"
+           fileCount="1094"
            id="org.glassfish.jst.server.runtime.glassfish31">
     	</runtime>      	
     </extension>
