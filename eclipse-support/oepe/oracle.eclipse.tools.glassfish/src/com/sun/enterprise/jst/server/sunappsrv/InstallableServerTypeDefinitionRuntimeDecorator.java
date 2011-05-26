@@ -40,11 +40,13 @@ import org.eclipse.jst.server.generic.ui.internal.GenericServerUIMessages;
 import org.eclipse.jst.server.generic.ui.internal.SWTUtil;
 import org.eclipse.jst.server.generic.ui.internal.ServerTypeDefinitionRuntimeDecorator;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.internal.IInstallableRuntime;
@@ -113,6 +115,8 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 						.getId());
 		installButton = SWTUtil.createButton(composite, GenericServerUIMessages.installServerButton);
 		installButton.setEnabled(pathText.length() > 0);
+		final Label label = new Label(composite, SWT.NONE);
+		label.setText("(to enable Install Server, enter a path to a new directory....)");
 		installButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent se) {
 				final String selectedDirectory = path.getText();
@@ -159,7 +163,10 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 						// implementation of the installable runtime's install
 						// being all one block, that is not really useful as of
 						// now.  See wtp issue 274201
-						fWizard.run(true, false, runnable);
+						
+						// update: seems to be fixed now
+						fWizard.run(true, true, runnable);
+
 						path.setText(getInternalDirectoryName(selectedDirectory));
 						validate();
 					} catch (Exception e) {
