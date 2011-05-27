@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +38,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -49,8 +53,9 @@ public class GFWizardCreation extends WizardFragment {
 
 	private Helper helper;
 	boolean isValid =false;
+	private IWizardHandle handle;
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
-
+		this.handle = handle;
 		Composite container = new Composite(parent, SWT.NONE);
 		GridLayout grid = new GridLayout(1, false);
 		grid.marginWidth = 0;
@@ -84,6 +89,14 @@ public class GFWizardCreation extends WizardFragment {
 	 * @return
 	 */
 	private IServerWorkingCopy getServer() {
+		
+		IRuntime runtime = (IRuntime) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
+  
+		if (runtime != null){
+			String s =runtime.getName();
+			s =""+runtime.getName();
+		}
+		
 		IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel()
 				.getObject(TaskModel.TASK_SERVER);
 		return server;
@@ -91,6 +104,10 @@ public class GFWizardCreation extends WizardFragment {
 
 	@Override
 	public void enter() {
+		IServerWorkingCopy server = getServer();
+		SunAppServer gf = (SunAppServer) server.loadAdapter(SunAppServer.class,
+				null);
+		helper.updateServer(gf, server);
 
 		exit();
 
@@ -115,13 +132,44 @@ public class GFWizardCreation extends WizardFragment {
 		protected String fLastMessage;
 		protected IWizardHandle fWizard;
 		private List fPropertyControls = new ArrayList();
+		private Text path=null;
+		private Text adminport = null;
+		private Text serverport =null;
+		private Label domainDirLabel=null;
+		private Label adminportLabel=null;
+		private Label serverportLabel=null;
 
+		public void updateServer(SunAppServer server,
+				IServerWorkingCopy scopy){
+			this.glassfish = server;
+			this.serverCopy = scopy;
+			if (glassfish.isLocalServer()) {
+				
+				String defaultLocation =""+serverCopy.getRuntime().getLocation();// getSunApplicationServerInstallationDirectory();
+				File f= new File (defaultLocation,"/domains/domain1");
+				defaultLocation = f.getAbsolutePath();
+				path.setText(defaultLocation);
+				path.setVisible(true);
+				domainDirLabel.setVisible(true);
+				adminport.setVisible(false);
+				serverport.setVisible(false);
+				adminportLabel.setVisible(false);
+				serverportLabel.setVisible(false);
+				}
+			else {
+				path.setVisible(false);
+				domainDirLabel.setVisible(false);
+				adminport.setVisible(true);
+				serverport.setVisible(true);				
+				adminportLabel.setVisible(true);
+				serverportLabel.setVisible(true);			}
+		}
 		private final class PathModifyListener implements ModifyListener {
 			public void modifyText(ModifyEvent e) {
 				String path = ((Text) e.widget).getText();
 
 				if (path.length() < 1) {
-					fLastMessage = "Specify a valid GlassFish Domain diretory";
+					fLastMessage = "Specify a valid GlassFish Domain directory";
 					fWizard.setMessage(fLastMessage, IMessageProvider.ERROR);
 				} else if (!validDomainDir(path)) {
 					fLastMessage = "invalid GlassFish domain: " + path;
@@ -170,50 +218,27 @@ public class GFWizardCreation extends WizardFragment {
 		}*/
 
 		public void decorate(Composite parent) {
-			if (glassfish.isLocalServer()) {
+			
+			boolean local = glassfish.isLocalServer();
+
 				String defaultLocation =""+serverCopy.getRuntime().getLocation();// getSunApplicationServerInstallationDirectory();
 				File f= new File (defaultLocation,"/domains/domain1");
 				defaultLocation = f.getAbsolutePath();
 
-					
-				Text path = SWTUtil.createLabeledPath("domain Directory",
-						defaultLocation , parent);
+				
+				domainDirLabel = new Label(parent, SWT.NONE);
+				domainDirLabel.setText("domain Directory");
+				path = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
+				GridData gridData = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
+				gridData.horizontalSpan = 2;
+				path.setLayoutData(gridData);
+				path.setText(defaultLocation);				
 				path.setData(SunAppServer.DOMAINPATH);
 				path.addModifyListener(new PathModifyListener());
 				fPropertyControls.add(path);
-			} else {
-				final Text adminport = SWTUtil.createLabeledText("Admin port",
-						"4848", parent);
-				adminport.setData(SunAppServer.ADMINSERVERPORT);
-				fPropertyControls.add(adminport);
-				adminport.addModifyListener(new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						try {
-						Integer.parseInt(adminport.getText());
-						}catch (NumberFormatException ex){
-							fWizard.setMessage("Not an integer value: "+ ex.getMessage() , IMessageProvider.ERROR);
-							fWizard.update();
-							return;
-						}
-						validate();
-					}
-				});
-				final Text serverport = SWTUtil.createLabeledText("Server port",
-						"8080", parent);
-				serverport.setData(SunAppServer.SERVERPORT);
-				fPropertyControls.add(serverport);
-				serverport.addModifyListener(new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						try {
-							Integer.parseInt(serverport.getText());
-							}catch (NumberFormatException ex){
-								fWizard.setMessage("Not an integer value: "+ ex.getMessage() , IMessageProvider.ERROR);
-								fWizard.update();
-								return;
-							}
-							validate();					}
-				});
-			}
+				path.setVisible(local);
+
+
 
 			Text adminName = SWTUtil.createLabeledText("Admin name", "admin",
 					parent);
@@ -231,6 +256,58 @@ public class GFWizardCreation extends WizardFragment {
 			sessions.setData(SunAppServer.KEEPSESSIONS);
 			fPropertyControls.add(sessions);
 			Dialog.applyDialogFont(parent);
+			
+			
+			adminportLabel = new Label(parent, SWT.NONE);
+			adminportLabel.setText("Admin port");
+			adminport = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
+			GridData gridData2 = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
+			gridData2.horizontalSpan = 2;
+			adminport.setLayoutData(gridData2);
+			adminport.setText("4848");
+			adminport.setData(SunAppServer.ADMINSERVERPORT);
+			
+			fPropertyControls.add(adminport);
+			adminport.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					try {
+					Integer.parseInt(adminport.getText());
+					}catch (NumberFormatException ex){
+						fWizard.setMessage("Not an integer value: "+ ex.getMessage() , IMessageProvider.ERROR);
+						fWizard.update();
+						return;
+					}
+					validate();
+				}
+			});
+			adminport.setVisible(!local);
+			adminportLabel.setVisible(!local);
+
+			serverportLabel = new Label(parent, SWT.NONE);
+			serverportLabel.setText("Server Port");
+			serverport = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
+			GridData gridData3 = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
+			gridData3.horizontalSpan = 2;
+			serverport.setLayoutData(gridData3);
+			serverport.setText("8080");				
+			
+			serverport.setData(SunAppServer.SERVERPORT);
+			fPropertyControls.add(serverport);
+			serverport.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					try {
+						Integer.parseInt(serverport.getText());
+						}catch (NumberFormatException ex){
+							fWizard.setMessage("Not an integer value: "+ ex.getMessage() , IMessageProvider.ERROR);
+							fWizard.update();
+							return;
+						}
+						validate();
+						}
+			});
+			serverport.setVisible(!local);
+			serverportLabel.setVisible(!local);
+
 		}
 
 		/**
@@ -241,8 +318,11 @@ public class GFWizardCreation extends WizardFragment {
 		public Map getValues() {
 			Map propertyMap = new HashMap();
 			for (int i = 0; i < fPropertyControls.size(); i++) {
-				String prop = (String) ((Control) fPropertyControls.get(i))
-						.getData();
+				Control c = (Control) fPropertyControls.get(i);
+				if (!c.isVisible()){
+					continue;
+				}
+				String prop = (String) (c).getData();
 				if (fPropertyControls.get(i) instanceof Button) {
 					Button button = (Button) fPropertyControls.get(i);
 					propertyMap.put(prop,
@@ -272,16 +352,20 @@ public class GFWizardCreation extends WizardFragment {
 			}
 			try {
 				if ((!glassfish.isLocalServer())&&(!Utils.isSecurePort(glassfish.getServer().getHost(), Integer.parseInt(glassfish.getAdminServerPort())))){
-					fWizard.setMessage("Remote Server is not secured: It cannot be used remotely...", IMessageProvider.ERROR);
+					fWizard.setMessage("Cannot access a non secure remote server. (Hint: run asadmin enable-secure-admin)", IMessageProvider.ERROR);
 					fWizard.update();
 					return true;					
 				}
-			} catch (Exception e) {
+			} catch (UnknownHostException e) {
+				fWizard.setMessage("Unknown Host Exception for host name: "+ e.getMessage() , IMessageProvider.ERROR);
+				fWizard.update();
+				return true;
+				}
+			catch (Exception e) {
 				fWizard.setMessage("error testing remote server: "+ e.getMessage() , IMessageProvider.ERROR);
 				fWizard.update();
 				return true;
 				}
-
 			if (status == null || status.isOK()) {
 				fWizard.setMessage(null, IMessageProvider.NONE);
 				fWizard.update();
