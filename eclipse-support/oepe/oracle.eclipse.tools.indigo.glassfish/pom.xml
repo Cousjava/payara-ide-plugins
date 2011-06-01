@@ -22,7 +22,7 @@
 
   <artifactId>oracle.eclipse.tools.indigo.glassfish-feature</artifactId>
   <packaging>eclipse-feature</packaging>
-
+<version>1.7.1.qualifier</version>
   <name>oracle.eclipse.tools.indigo.glassfish Feature</name>
 
 </project>
