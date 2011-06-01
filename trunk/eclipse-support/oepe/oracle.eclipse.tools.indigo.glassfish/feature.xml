@@ -14,7 +14,7 @@
 <feature
       id="oracle.eclipse.tools.indigo.glassfish"
       label="%featureName"
-      version="1.7.1.qualifier"
+      version="1.8.0.qualifier"
       provider-name="%providerName"
       plugin="oracle.eclipse.tools.glassfish"
       image="glassfish.gif">
