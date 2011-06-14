@@ -51,7 +51,7 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
             if (runtime.getRuntimeType().getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){//GlassFish v3
             	relativeDocPath="!/javaee6doc/doc";
             } else
-            if (runtime.getRuntimeType().getId().equals("org.glaasfish.jst.server.runtime.glassfish31")){//GlassFish 3.1
+            if (runtime.getRuntimeType().getId().equals("org.glassfish.jst.server.runtime.glassfish31")){//GlassFish 3.1
             	relativeDocPath="!/javaee6doc/doc";
             }
 
