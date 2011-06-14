@@ -23,6 +23,6 @@
   <artifactId>oracle.eclipse.tools.helios.doc.javaee6</artifactId>
   <packaging>eclipse-feature</packaging>
 
-  <name>EE 6 javadoc Feature</name>
+  <name>EE 6 javadoc Helios Feature</name>
 
 </project>
