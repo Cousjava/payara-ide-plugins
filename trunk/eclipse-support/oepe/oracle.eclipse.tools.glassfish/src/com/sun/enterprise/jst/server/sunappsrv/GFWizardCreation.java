@@ -32,13 +32,20 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
@@ -107,9 +114,13 @@ public class GFWizardCreation extends WizardFragment {
 		IServerWorkingCopy server = getServer();
 		SunAppServer gf = (SunAppServer) server.loadAdapter(SunAppServer.class,
 				null);
+		
 		helper.updateServer(gf, server);
+		if (gf.isLocalServer()){
+			isValid = helper.validate();
+		}
 
-		exit();
+	//	exit();
 
 	}
 
@@ -117,15 +128,13 @@ public class GFWizardCreation extends WizardFragment {
 	public void exit() {
 		if (helper == null)
 			return;
-		if (isValid = !helper.validate())// failed do not continue
-			return;
-
+		isValid = helper.validate();
 	}
 	@Override
 	public boolean isComplete(){
 		return isValid;
 	}
-	static class Helper {
+	class Helper {
 
 		private SunAppServer glassfish;
 		private IServerWorkingCopy serverCopy;
@@ -138,6 +147,8 @@ public class GFWizardCreation extends WizardFragment {
 		private Label domainDirLabel=null;
 		private Label adminportLabel=null;
 		private Label serverportLabel=null;
+		private Button pingButton=null;
+		private Button domainBrowseButton = null;
 
 		public void updateServer(SunAppServer server,
 				IServerWorkingCopy scopy){
@@ -150,19 +161,24 @@ public class GFWizardCreation extends WizardFragment {
 				defaultLocation = f.getAbsolutePath();
 				path.setText(defaultLocation);
 				path.setVisible(true);
+				domainBrowseButton.setVisible(true);
 				domainDirLabel.setVisible(true);
 				adminport.setVisible(false);
 				serverport.setVisible(false);
 				adminportLabel.setVisible(false);
 				serverportLabel.setVisible(false);
+				pingButton.setVisible(false);
 				}
 			else {
 				path.setVisible(false);
+				domainBrowseButton.setVisible(false);
 				domainDirLabel.setVisible(false);
 				adminport.setVisible(true);
 				serverport.setVisible(true);				
 				adminportLabel.setVisible(true);
-				serverportLabel.setVisible(true);			}
+				serverportLabel.setVisible(true);
+				pingButton.setVisible(true);
+			}
 		}
 		private final class PathModifyListener implements ModifyListener {
 			public void modifyText(ModifyEvent e) {
@@ -171,16 +187,22 @@ public class GFWizardCreation extends WizardFragment {
 				if (path.length() < 1) {
 					fLastMessage = "Specify a valid GlassFish Domain directory";
 					fWizard.setMessage(fLastMessage, IMessageProvider.ERROR);
+					isValid = false;
+					fWizard.update();
 				} else if (!validDomainDir(path)) {
-					fLastMessage = "invalid GlassFish domain: " + path;
+					fLastMessage = "Invalid GlassFish domain: " + path;
 					fWizard.setMessage(fLastMessage, IMessageProvider.ERROR);
+					isValid = false;
+					fWizard.update();
 				} else {
 					//if (fLastMessage != null
 					//		&& fLastMessage.equals(fWizard.getMessage())) {
 					//	fLastMessage = null;
 						fWizard.setMessage(null, IMessageProvider.NONE);
 					//}
-					validate();
+						isValid = validate();
+						fWizard.update();
+						
 				}
 			}
 
@@ -225,19 +247,64 @@ public class GFWizardCreation extends WizardFragment {
 				File f= new File (defaultLocation,"/domains/domain1");
 				defaultLocation = f.getAbsolutePath();
 
-				
+
 				domainDirLabel = new Label(parent, SWT.NONE);
 				domainDirLabel.setText("domain Directory");
 				path = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
+				domainBrowseButton = SWTUtil.createButton(parent,"...");
+
 				GridData gridData = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
-				gridData.horizontalSpan = 2;
+				gridData.horizontalSpan = 1;
 				path.setLayoutData(gridData);
+				path.setText(defaultLocation);
+				path.setData(SunAppServer.DOMAINPATH);
+				path.addModifyListener(new PathModifyListener());
+				final Shell s =  domainBrowseButton.getShell();
+
+				domainBrowseButton.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent e) {
+						DirectoryDialog dlg = new DirectoryDialog(s);
+						dlg.setText(path.getText().replace('\\', '/'));
+						dlg.setMessage("Select a GlassFish Domain Directory");
+						String res = dlg.open();
+						if (res != null) {
+							path.setText(res.replace('\\', '/'));
+						}
+					}
+
+					public void widgetDefaultSelected(SelectionEvent e) {
+						widgetSelected(e);
+					}
+
+				});
+				
+			/*	domainDirLabel = new Label(parent, SWT.NONE);
+				domainDirLabel.setText("domain Directory");
+				path = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
+				GridData gridData = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
+				gridData.horizontalSpan = 3;
+				path.setLayoutData(gridData);
+				domainDirLabel.setLayoutData(gridData);
 				path.setText(defaultLocation);				
 				path.setData(SunAppServer.DOMAINPATH);
 				path.addModifyListener(new PathModifyListener());
 				fPropertyControls.add(path);
 				path.setVisible(local);
-
+				domainBrowseButton = SWTUtil.createButton(parent, "...");
+				domainBrowseButton.setVisible(local);
+				domainBrowseButton.setLayoutData(gridData);
+				
+				final Shell s =  domainBrowseButton.getShell();
+				domainBrowseButton.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent se) {
+						DirectoryDialog dialog = new DirectoryDialog(s);
+						dialog.setMessage("Select a GlassFish Domain Directory");
+						dialog.setFilterPath(path.getText());
+						String selectedDirectory = dialog.open();
+						if (selectedDirectory != null)
+							path.setText(selectedDirectory);
+					}
+				});*/
 
 
 			Text adminName = SWTUtil.createLabeledText("Admin name", "admin",
@@ -259,7 +326,7 @@ public class GFWizardCreation extends WizardFragment {
 			
 			
 			adminportLabel = new Label(parent, SWT.NONE);
-			adminportLabel.setText("Admin port");
+			adminportLabel.setText("Admin Port");
 			adminport = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
 			GridData gridData2 = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
 			gridData2.horizontalSpan = 2;
@@ -277,7 +344,7 @@ public class GFWizardCreation extends WizardFragment {
 						fWizard.update();
 						return;
 					}
-					validate();
+			//		validate();
 				}
 			});
 			adminport.setVisible(!local);
@@ -299,16 +366,32 @@ public class GFWizardCreation extends WizardFragment {
 						Integer.parseInt(serverport.getText());
 						}catch (NumberFormatException ex){
 							fWizard.setMessage("Not an integer value: "+ ex.getMessage() , IMessageProvider.ERROR);
+							isValid = false;
 							fWizard.update();
 							return;
 						}
-						validate();
+					//	validate();
 						}
 			});
 			serverport.setVisible(!local);
 			serverportLabel.setVisible(!local);
 
-		}
+			
+			pingButton = SWTUtil.createButton(parent, "Ping Server...");
+			pingButton.setVisible(!local);
+
+			fPropertyControls.add(pingButton);
+		    Listener listener = new Listener() {
+		        public void handleEvent(Event event) {
+				isValid=	validate();
+				fWizard.update();
+
+
+		        }
+		      };
+
+		      pingButton.addListener(SWT.Selection, listener);
+			}
 
 		/**
 		 * Returns the property name/value pairs.
@@ -343,38 +426,40 @@ public class GFWizardCreation extends WizardFragment {
 			}
 			return propertyMap;
 		}
-
+		
 		public boolean validate() {
 			IStatus status = null;
 			if (glassfish != null) {
 				glassfish.setServerInstanceProperties(getValues());
 				status = glassfish.validate();
 			}
-			try {
-				if ((!glassfish.isLocalServer())&&(!Utils.isSecurePort(glassfish.getServer().getHost(), Integer.parseInt(glassfish.getAdminServerPort())))){
-					fWizard.setMessage("Cannot access a non secure remote server. (Hint: run asadmin enable-secure-admin)", IMessageProvider.ERROR);
+			
+			if (!glassfish.isLocalServer()) {
+				String version = glassfish.getVersion3Only();
+				if (version.equals("")) {
+					// (!Utils.isSecurePort(glassfish.getServer().getHost(),
+					// Integer.parseInt(glassfish.getAdminServerPort())))){
+					fWizard.setMessage(
+							"Cannot communicate with "
+									+ glassfish.getServer().getHost()
+									+ ":"
+									+ glassfish.getAdminServerPort()
+									+ " remote server. Is it up? Is it secure? (Hint: run asadmin enable-secure-admin)",
+							IMessageProvider.ERROR);
 					fWizard.update();
-					return true;					
+					return false;
 				}
-			} catch (UnknownHostException e) {
-				fWizard.setMessage("Unknown Host Exception for host name: "+ e.getMessage() , IMessageProvider.ERROR);
-				fWizard.update();
-				return true;
-				}
-			catch (Exception e) {
-				fWizard.setMessage("error testing remote server: "+ e.getMessage() , IMessageProvider.ERROR);
-				fWizard.update();
-				return true;
-				}
+			}
+
 			if (status == null || status.isOK()) {
 				fWizard.setMessage(null, IMessageProvider.NONE);
 				fWizard.update();
 			} else {
 				fWizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
 				fWizard.update();
-				return true;
+				return false;
 			}
-			return false;
+			return true;
 		}
 	}
 

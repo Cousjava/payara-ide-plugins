@@ -39,7 +39,7 @@ public class ServerViewContentProvider extends BaseContentProvider implements IT
 				SunAppServer ser = (SunAppServer)server.loadAdapter(SunAppServer.class, new NullProgressMonitor() );
 				
 				if( ser!=null ){
-					try {
+/*					try {
 						if ((!ser.isLocalServer())&&(!Utils.isSecurePort(ser.getServer().getHost(), Integer.parseInt(ser.getAdminServerPort())))){
 								TreeNode error = new TreeNode ("Error: the GlassFish server is remote, but not secured, Eclipse cannot access it", "",null);
 								return new Object[]{error};
@@ -47,7 +47,7 @@ public class ServerViewContentProvider extends BaseContentProvider implements IT
 					}catch (Exception e) {
 							TreeNode error = new TreeNode ("Error: "+e.getMessage(), "",null);
 							return new Object[]{error};
-					}
+					}*/
 					TreeNode root = new TreeNode("GlassFish Management", "GlassFish Management", null);
 					//Applications Node
 					DeployedApplicationsNode apps = new DeployedApplicationsNode(server );

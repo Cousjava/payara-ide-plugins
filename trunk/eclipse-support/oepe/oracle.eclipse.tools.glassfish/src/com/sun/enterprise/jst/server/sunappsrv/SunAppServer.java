@@ -249,7 +249,21 @@ public void setServerInstanceProperties(Map map) {
 	  }
       return  s;
   }
-
+  
+  /* return null is no need to keep sessions
+   * or keepsession if server is older than 3.1
+   * or keepstate for 3.1 and above servers
+   */
+  public  String computePreserveSessions() {
+  	String ret=null;
+      if ( !getKeepSessions().equals("true"))
+      	return ret;
+      if (getServer().getRuntime().getRuntimeType().getId().equals("org.glassfish.jst.server.runtime.glassfish31"))
+      	ret = "keepstate";
+      else 
+      	ret = "keepSessions";
+      return ret;
+  }
     /* JAR deploy for v3
      * 
      */
@@ -612,8 +626,12 @@ public void setServerInstanceProperties(Map map) {
 		Commands.VersionCommand command = new Commands.VersionCommand();
 		try {
 			Future<OperationState> result = execute(command);
-			if (result.get(30, TimeUnit.SECONDS) == OperationState.COMPLETED) {
+			OperationState state = result.get(30, TimeUnit.SECONDS);
+			if ( state == OperationState.COMPLETED) {
 				return command.getVersion();
+			} else {
+				SunAppSrvPlugin.logMessage("getVersion3Only is failing="+ state,null); //$NON-NLS-1$
+				
 			}
 
 		} catch (Exception ex) {

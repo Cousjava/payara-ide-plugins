@@ -659,7 +659,6 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 
 			try {
 				File archivePath = ExportJavaEEArchive.export(module[0], monitor);
-				Boolean preserveSessions = getSunAppServer().getKeepSessions().equals("true");
 				String name = Utils.simplifyModuleID(module[0].getName());
 				String contextRoot=null;
 
@@ -671,7 +670,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 				Map<String, String> properties = new HashMap<String, String>();
 				File[] libraries = new File[0];
 				Commands.DeployCommand command = new Commands.DeployCommand(
-						archivePath, name, contextRoot, preserveSessions, properties, libraries);
+						archivePath, name, contextRoot, getSunAppServer().computePreserveSessions(), properties, libraries);
 				try {
 					Future<OperationState> result = getSunAppServer().execute(command);
 					OperationState res = result.get(520, TimeUnit.SECONDS);
@@ -844,11 +843,10 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			if (needARedeploy ){
 				String name = Utils.simplifyModuleID(module[0].getName());
 
-				Boolean preserveSessions=getSunAppServer().getKeepSessions().equals("true");
 				if (isV3()){
 					Map<String, String> properties = new HashMap<String, String>();
 					File[] libraries = new File[0];
-					Commands.DeployCommand command = new Commands.DeployCommand(new File(spath),name,contextRoot,preserveSessions , properties, libraries);
+					Commands.DeployCommand command = new Commands.DeployCommand(new File(spath),name,contextRoot,getSunAppServer().computePreserveSessions() , properties, libraries);
 					try {
 						Future<OperationState> result = getSunAppServer().execute(command);
 						OperationState res=result.get(120, TimeUnit.SECONDS);

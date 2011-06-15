@@ -283,7 +283,7 @@ public class Commands {
         private final boolean isDirDeploy;
         private final File path;
 
-        public DeployCommand(final File path, final String name, final String contextRoot, final Boolean preserveSessions, final Map<String,String> properties, File[] libraries) {
+        public DeployCommand(final File path, final String name, final String contextRoot, final String preserveSessions, final Map<String,String> properties, File[] libraries) {
             super("deploy"); // NOI18N
 
             this.isDirDeploy = path.isDirectory();
@@ -304,8 +304,13 @@ public class Commands {
                 appendLibraries(cmd, libraries);
             }
             cmd.append(PARAM_SEPARATOR).append("force=true"); // NOI18N
-            if (Boolean.TRUE.equals(preserveSessions)) {
-            	properties.put("keepSessions", "true");
+            if (preserveSessions!=null) {
+  //          	properties.put(preserveSessions, "true");
+                if (preserveSessions.equals("keepstate")) {
+                   cmd.append(PARAM_SEPARATOR).append(preserveSessions+"=true"); // NOI18N
+                } else {
+            	   properties.put("keepSessions", "true");
+                }
             }
             addProperties(cmd,properties);
             query = cmd.toString();
@@ -371,7 +376,7 @@ public class Commands {
      */
     public static final class RedeployCommand extends ServerCommand {
 
-        public RedeployCommand(final String name, final String contextRoot, final Boolean preserveSessions, 
+        public RedeployCommand(final String name, final String contextRoot, final String preserveSessions, 
                 final File[] libraries, final boolean resourcesChanged) {
             super("redeploy"); // NOI18N
 
@@ -390,12 +395,12 @@ public class Commands {
         }
     }
 
-    private static void addProperties(StringBuilder cmd, Boolean preserveSessions, boolean resourcesChanged) {
+    private static void addProperties(StringBuilder cmd, String preserveSessions, boolean resourcesChanged) {
         if(Boolean.TRUE.equals(preserveSessions) || !resourcesChanged) {
             cmd.append(ServerCommand.PARAM_SEPARATOR).append("properties="); // NOI18N
         }
-        if(Boolean.TRUE.equals(preserveSessions)) {
-            cmd.append("keepSessions=true");  // NOI18N
+        if(preserveSessions!=null) {
+            cmd.append(preserveSessions+"=true");  // NOI18N
             if (!resourcesChanged) {
                 cmd.append(":"); // NOI18N
             }

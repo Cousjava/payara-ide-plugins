@@ -57,6 +57,7 @@ import javax.net.ssl.X509TrustManager;
 import org.eclipse.osgi.internal.signedcontent.Base64;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.GetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
@@ -119,13 +120,14 @@ public class CommandRunner extends BasicTask<OperationState> {
         this.cf =cf;
     	this.server =server;
         this.isReallyRunning = isReallyRunning;
-    }    
+    }
+    
     /**
      * Sends stop-domain command to server (asynchronous)
      * 
      */
     public Future<OperationState> stopServer() {
-        return execute(Commands.STOP, "MSG_STOP_SERVER_IN_PROGRESS");
+        return execute(Commands.STOP, "MSG_STOP_SERVER_IN_PROGRESS"); // NOI18N
         
     }
     
@@ -430,18 +432,16 @@ public class CommandRunner extends BasicTask<OperationState> {
     public Future<OperationState> deploy(File dir, String moduleName, String contextRoot, Map<String,String> properties, File[] libraries) {
        // LogViewMgr.displayOutput(ip,null);
         return execute(new Commands.DeployCommand(dir, moduleName,
-                contextRoot, computePreserveSessions(), properties, libraries));
+                contextRoot, server.computePreserveSessions(), properties, libraries));
     }
 
     public Future<OperationState> redeploy(String moduleName, String contextRoot, File[] libraries, boolean resourcesChanged)  {
         //LogViewMgr.displayOutput(ip,null);
         return execute(new Commands.RedeployCommand(moduleName, contextRoot, 
-                computePreserveSessions(), libraries, resourcesChanged));
+        		server.computePreserveSessions(), libraries, resourcesChanged));
     }
 
-    private  Boolean computePreserveSessions() {
-        return server.getKeepSessions().equals("true");
-    }
+
     
     public Future<OperationState> undeploy(String moduleName) {
         return execute(new Commands.UndeployCommand(moduleName));
@@ -517,23 +517,30 @@ public class CommandRunner extends BasicTask<OperationState> {
                     Logger.getLogger("glassfish").log(Level.FINE, "HTTP Command: {0}", commandUrl); // NOI18N
 
                     conn = urlToConnectTo.openConnection();
-                    if(conn instanceof HttpURLConnection) {
-                        hconn = (HttpURLConnection) conn;
+                    if (conn instanceof HttpURLConnection) {
+                        int respCode = 0;
+                        URL oldUrlToConnectTo;
+                        do { // deal with possible redirects from 3.1
+                            oldUrlToConnectTo = urlToConnectTo;
+                            hconn = (HttpURLConnection) conn;
 
                         if (conn instanceof HttpsURLConnection) {
                             // let's just trust any server that we connect to...
                             // we aren't send them money or secrets...
                             TrustManager[] tm = new TrustManager[]{
                                 new X509TrustManager() {
-
+                                        
+                                    @Override
                                     public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
                                         return;
                                     }
-
+                                    
+                                    @Override
                                     public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
                                         return;
                                     }
 
+                                    @Override
                                     public X509Certificate[] getAcceptedIssuers() {
                                         return null;
                                     }
@@ -547,10 +554,10 @@ public class CommandRunner extends BasicTask<OperationState> {
                                 ((HttpsURLConnection)hconn).setSSLSocketFactory(context.getSocketFactory());
                                 ((HttpsURLConnection)hconn).setHostnameVerifier(new HostnameVerifier() {
 
+                                    @Override
                                     public boolean verify(String string, SSLSession ssls) {
                                         return true;
                                     }
-
                                 });
                             } catch (Exception ex) {
                                 // if there is an issue here... there will be another exception later
@@ -601,9 +608,9 @@ public class CommandRunner extends BasicTask<OperationState> {
                         // Send data to server if necessary
                         handleSend(hconn);
 
-                        int respCode = hconn.getResponseCode();
-                        if(respCode == HttpURLConnection.HTTP_UNAUTHORIZED || 
-                                respCode == HttpURLConnection.HTTP_FORBIDDEN) {
+                        respCode = hconn.getResponseCode();
+                        if (respCode == HttpURLConnection.HTTP_UNAUTHORIZED
+                                 || respCode == HttpURLConnection.HTTP_FORBIDDEN) {
                             // connection to manager has not been allowed
                             authorized = false;
                             if(respCode == HttpURLConnection.HTTP_UNAUTHORIZED)
@@ -612,7 +619,15 @@ public class CommandRunner extends BasicTask<OperationState> {
                             	serverCmd.setServerMessage("Remote access is forbidden. Remote Server should be secured. (via enable-secure-admin command).");
                             return fireOperationStateChanged(OperationState.FAILED, 
                                     "MSG_AuthorizationFailed", serverCmd.toString(), instanceName); // NOI18N
-                        }
+                        } else if (respCode == HttpURLConnection.HTTP_MOVED_TEMP
+                                    || respCode == HttpURLConnection.HTTP_MOVED_PERM) {
+                                String newUrl = hconn.getHeaderField("Location");
+                                Logger.getLogger("glassfish").log(Level.FINER, "moved to {0}", newUrl);
+                                hconn.disconnect();
+                                urlToConnectTo = new URL(newUrl);
+                                conn = urlToConnectTo.openConnection();
+                            }
+                        } while (urlToConnectTo != oldUrlToConnectTo);
 
                         // !PW FIXME log status for debugging purposes
                         if(Boolean.getBoolean("org.netbeans.modules.hk2.LogManagerCommands")) { // NOI18N
@@ -633,7 +648,8 @@ public class CommandRunner extends BasicTask<OperationState> {
                             ex.getLocalizedMessage());
                     retries = 0;
                 } catch(IOException ex) {
-                    if(retries <= 0) {
+                    SunAppSrvPlugin.logMessage("error ",ex );	//$NON-NLS-1$
+                   if(retries <= 0) {
                         fireOperationStateChanged(OperationState.FAILED, "MSG_Exception", // NOI18N
                                 ex.getLocalizedMessage());
                     }
@@ -663,11 +679,16 @@ public class CommandRunner extends BasicTask<OperationState> {
      private String constructCommandUrl(final String cmdSrc, final String cmd, final String query) throws URISyntaxException {
          String host = server.getServer().getHost();
          int port = Integer.parseInt(server.getAdminServerPort());
-
-         URI uri = new URI(Utils.getHttpListenerProtocol(host,port), null, host, port, cmdSrc + cmd, query, null); // NOI18N
+         String protocol = "http";
+         //only for non 3.1 and later //TODO for later!!!
+         if (!server.getServer().getRuntime().getRuntimeType().getId().equals("org.glassfish.jst.server.runtime.glassfish31")) {
+            protocol = Utils.getHttpListenerProtocol(host,port);
+         }
+         URI uri = new URI(protocol, null, host, port, cmdSrc + cmd, query, null); // NOI18N
          return uri.toASCIIString().replace("+", "%2b"); // these characters don't get handled by GF correctly... best I can tell.
      }    
 
+     
     /*
      * Note: this is based on reading the code of CLIRemoteCommand.java
      * from the server's code repository... Since some asadmin commands
