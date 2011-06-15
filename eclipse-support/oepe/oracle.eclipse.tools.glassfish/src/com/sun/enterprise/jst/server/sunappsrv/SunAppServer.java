@@ -551,7 +551,10 @@ public void setServerInstanceProperties(Map map) {
      * @throws CoreException 
      */
     public  boolean isRunning() throws CoreException {
-
+    	if (!isLocalServer()){// remote is for 3.0 or above, then we use get version http/s request to avoid
+    		// proxy security issues with a simple socket usage...
+    		return  (!getVersion3Only().equals(""));
+    	}
 		String domainValidationError = validateDomainExists(getDomainDir(), getdomainName());
 		if (domainValidationError != null) {
 			throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, 
