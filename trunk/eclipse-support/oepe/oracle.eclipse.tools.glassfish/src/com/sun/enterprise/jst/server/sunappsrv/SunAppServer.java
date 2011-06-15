@@ -629,7 +629,7 @@ public void setServerInstanceProperties(Map map) {
 		Commands.VersionCommand command = new Commands.VersionCommand();
 		try {
 			Future<OperationState> result = execute(command);
-			OperationState state = result.get(30, TimeUnit.SECONDS);
+			OperationState state = result.get(8, TimeUnit.SECONDS);
 			if ( state == OperationState.COMPLETED) {
 				return command.getVersion();
 			} else {
