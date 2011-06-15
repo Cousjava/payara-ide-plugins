@@ -17,6 +17,7 @@ package com.sun.enterprise.jst.server.sunappsrv.commands;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -53,6 +54,26 @@ public class Utils {
 
         return moduleID;
     }
+    /**
+     * Determine if a local port is occupied.
+     *
+     * @param port
+     * @return true, if the local port is in use.
+     */
+    public static boolean isLocalPortOccupied(int port) {
+        ServerSocket ss = null;
+        boolean retVal = true;
+        try {
+            ss = new ServerSocket(port);
+            retVal = false;
+        } catch (IOException ioe) {
+            // do nothing
+        } finally {
+            if (null != ss) {try { ss.close(); } catch (IOException ioe) {} }
+        }
+        return retVal;
+    }
+    
     /**
      * identify the http/https protocol designator for a port
      *
@@ -125,9 +146,10 @@ public class Utils {
                 String localhost = socksNonProxyHosts.length() > 0 ? "|localhost" : "localhost";
                 System.setProperty("socksNonProxyHosts",  socksNonProxyHosts + localhost);
                 if (depth < 1) {
-                    return isSecurePort(hostname,port,1);
+                    socket.close();
+                   return isSecurePort(hostname,port,1);
                 } else {
-
+                socket.close();
                 ConnectException ce = new ConnectException();
                 ce.initCause(ex);
                 throw ce; //status unknow at this point
@@ -145,8 +167,6 @@ public class Utils {
         byte[] input = new byte[8192];
         istream.read(input);
 
-        // Close the socket
-        socket.close();
 
         // Determine protocol from result
         // Can't read https response w/ OpenSSL (or equiv), so use as
@@ -155,6 +175,8 @@ public class Utils {
         boolean isSecure = true;
         if (response.length() == 0) {
             //isSecure = false;
+            // Close the socket
+            socket.close();
             throw new ConnectException();
         } else if (response.startsWith("http/1.1 302 moved temporarily")) {
             // 3.1 has started to use redirects... but 3.0 is still using the older strategies...
@@ -178,7 +200,9 @@ public class Utils {
         } else if (response.indexOf("connection: ") != -1) {
             isSecure = false;
         }
-        return isSecure;
+            // Close the socket
+            socket.close();
+            return isSecure;
     }
 
     /**
