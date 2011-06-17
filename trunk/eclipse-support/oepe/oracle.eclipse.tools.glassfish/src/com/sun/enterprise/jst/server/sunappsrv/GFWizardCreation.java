@@ -258,6 +258,7 @@ public class GFWizardCreation extends WizardFragment {
 				path.setLayoutData(gridData);
 				path.setText(defaultLocation);
 				path.setData(SunAppServer.DOMAINPATH);
+				fPropertyControls.add(path);
 				path.addModifyListener(new PathModifyListener());
 				final Shell s =  domainBrowseButton.getShell();
 
@@ -402,10 +403,13 @@ public class GFWizardCreation extends WizardFragment {
 			Map propertyMap = new HashMap();
 			for (int i = 0; i < fPropertyControls.size(); i++) {
 				Control c = (Control) fPropertyControls.get(i);
-				if (!c.isVisible()){
+				String prop = (String) (c).getData();
+				if (prop==null){
 					continue;
 				}
-				String prop = (String) (c).getData();
+				if ((!c.isVisible()/*&&(!prop.equals(SunAppServer.DOMAINPATH)))*/)){
+					continue;
+				}
 				if (fPropertyControls.get(i) instanceof Button) {
 					Button button = (Button) fPropertyControls.get(i);
 					propertyMap.put(prop,

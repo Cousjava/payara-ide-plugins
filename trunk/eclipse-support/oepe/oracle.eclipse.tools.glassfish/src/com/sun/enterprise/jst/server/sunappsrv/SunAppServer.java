@@ -205,7 +205,9 @@ public void setServerInstanceProperties(Map map) {
 		String val = (String) map.get(DOMAINPATH); // new as of August 2010
 		if ((val == null) || (val.startsWith("${"))) {// we have an old config
 														// we need to deal with
+			map.put(ADDRESS, getServer().getHost());
 			setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, map);
+			initializedCalled = true;
 			return;
 
 		}
