@@ -621,7 +621,8 @@ public class CommandRunner extends BasicTask<OperationState> {
                                     "MSG_AuthorizationFailed", serverCmd.toString(), instanceName); // NOI18N
                         } else if (respCode == HttpURLConnection.HTTP_MOVED_TEMP
                                     || respCode == HttpURLConnection.HTTP_MOVED_PERM) {
-                                String newUrl = hconn.getHeaderField("Location");
+                             //   String newUrl = hconn.getHeaderField("Location");
+                               	String newUrl = commandUrl.replaceFirst("http", "https");
                                 Logger.getLogger("glassfish").log(Level.FINER, "moved to {0}", newUrl);
                                 hconn.disconnect();
                                 urlToConnectTo = new URL(newUrl);
@@ -680,10 +681,13 @@ public class CommandRunner extends BasicTask<OperationState> {
          String host = server.getServer().getHost();
          int port = Integer.parseInt(server.getAdminServerPort());
          String protocol = "http";
+         if (!server.isLocalServer()){ //mandatory https for remote 3.1 servers...
+        	 protocol= "https";
+         }
          //only for non 3.1 and later //TODO for later!!!
          if (!server.getServer().getRuntime().getRuntimeType().getId().equals("org.glassfish.jst.server.runtime.glassfish31")) {
             protocol = Utils.getHttpListenerProtocol(host,port);
-         }
+         }  
          URI uri = new URI(protocol, null, host, port, cmdSrc + cmd, query, null); // NOI18N
          return uri.toASCIIString().replace("+", "%2b"); // these characters don't get handled by GF correctly... best I can tell.
      }    
