@@ -18,9 +18,9 @@
 	<!-- ===================================================================== -->
 	<target name="pre.build.jars">
 		<!--exec dir="." executable="wget" >
-			<arg  line="http://dlc.sun.com.edgesuite.net/glassfish/v3.1/promoted/latest-glassfish.zip"/>
+			<arg  line="http://dlc.sun.com.edgesuite.net/glassfish/3.1.1/release/glassfish-3.1.1.zip"/>
 		</exec-->
-		<unzip dest="." src="./latest-glassfish.zip"/>
+		<unzip dest="." src="./glassfish-3.1.1.zip"/>
 		<touch file="glassfish3/glassfish/lib/asadmin/.nothing"/>
 		<touch file="glassfish3/.org.opensolaris,pkg/file/.nothing"/>
 		<touch file="glassfish3/.org.opensolaris,pkg/download/.nothing"/>
