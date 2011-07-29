@@ -38,7 +38,7 @@ public class Startup implements org.eclipse.wst.server.core.internal.IStartup {
 
 			try {
 				new V3Configurator(glassfishv3Location,
-						"org.glassfish.jst.server.glassfish31", "glassfish3")
+						"org.glassfish.jst.server.glassfish31", "glassfish3")  //TODO 311?
 						.configure();
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block

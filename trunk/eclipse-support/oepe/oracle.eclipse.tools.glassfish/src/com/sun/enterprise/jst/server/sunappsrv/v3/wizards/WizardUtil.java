@@ -21,11 +21,11 @@ import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.server.core.IRuntime;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+
 @SuppressWarnings("restriction")
 public class WizardUtil {
 
-	private static final String V3_RUNTIME = "com.sun.enterprise.jst.server.runtime.sunappsrv92"; //$NON-NLS-1$
-	private static final String V31_RUNTIME = "org.glassfish.jst.server.runtime.glassfish31"; //$NON-NLS-1$
 
 	public static boolean isWebOrEJBProjectWithGF3Runtime(IProject project) {
 		try {
@@ -63,13 +63,10 @@ public class WizardUtil {
 	public static boolean hasGF3Runtime(IProject project) {
 		try {
 			IRuntime runtime = J2EEProjectUtilities.getServerRuntime(project);
-			if ((runtime != null) && runtime.getRuntimeType().getId().equals(V3_RUNTIME)){
+			if ((runtime != null) && SunAppSrvPlugin.is3OrAbove(runtime)){
 				return true;
 			}
-			if ((runtime != null) && runtime.getRuntimeType().getId().equals(V31_RUNTIME)){
-				return true;
-			}
-                } catch (CoreException e) {
+               } catch (CoreException e) {
 			e.printStackTrace();
 		}
 

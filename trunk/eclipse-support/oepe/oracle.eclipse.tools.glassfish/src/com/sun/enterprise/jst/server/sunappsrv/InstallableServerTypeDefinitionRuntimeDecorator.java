@@ -81,12 +81,16 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 			IWizardHandle wizard, GenericServerRuntime runtime, String installDirName) {
 		super(definition, initialProperties,wizard,runtime);
 		//adding v3 build support for download. root dir is a bit different
-		if (definition.getId().equals("com.sun.enterprise.jst.server.runtime.sunappsrv92")){
+		if (definition.getId().equals(SunAppSrvPlugin.V3_RUNTIME)){
 			UNZIP_DIR_NAME = "glassfishv3";
 		}
-		if (definition.getId().equals("org.glassfish.jst.server.runtime.glassfish31")){
+		if (definition.getId().equals(SunAppSrvPlugin.V31_RUNTIME)){
 			UNZIP_DIR_NAME = "glassfish3";
-		}		fInstallDirName = installDirName;
+		} else 	if (definition.getId().equals(SunAppSrvPlugin.V311_RUNTIME)){
+			UNZIP_DIR_NAME = "glassfish3";
+		}
+                
+                fInstallDirName = installDirName;
 		fDefinition = definition;
 		fProperties = initialProperties;
 		fRuntime = runtime;
