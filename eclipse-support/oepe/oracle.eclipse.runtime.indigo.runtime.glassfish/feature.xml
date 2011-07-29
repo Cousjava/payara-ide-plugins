@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="oracle.eclipse.runtime.helios.runtime.glassfish"
+      id="oracle.eclipse.runtime.indigo.runtime.glassfish"
       label="%featureName"
       version="3.1.1.0"
       provider-name="%providerName">
