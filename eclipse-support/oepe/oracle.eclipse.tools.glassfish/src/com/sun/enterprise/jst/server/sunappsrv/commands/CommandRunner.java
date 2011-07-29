@@ -685,7 +685,7 @@ public class CommandRunner extends BasicTask<OperationState> {
         	 protocol= "https";
          }
          //only for non 3.1 and later //TODO for later!!!
-         if (!server.getServer().getRuntime().getRuntimeType().getId().equals("org.glassfish.jst.server.runtime.glassfish31")) {
+         if (!SunAppSrvPlugin.is31OrAbove(server.getServer().getRuntime())) {
             protocol = Utils.getHttpListenerProtocol(host,port);
          }  
          URI uri = new URI(protocol, null, host, port, cmdSrc + cmd, query, null); // NOI18N

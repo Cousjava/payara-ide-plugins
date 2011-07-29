@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.server.core.IRuntime;
 import org.osgi.framework.BundleContext;
 
 import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
@@ -32,6 +33,9 @@ import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
  *Sun Servers Plugin
  */
 public class SunAppSrvPlugin extends AbstractUIPlugin {
+	public static final String V3_RUNTIME = "com.sun.enterprise.jst.server.runtime.sunappsrv92"; //$NON-NLS-1$
+	public static final String V31_RUNTIME = "org.glassfish.jst.server.runtime.glassfish31"; //$NON-NLS-1$
+	public static final String V311_RUNTIME = "org.glassfish.jst.server.runtime.glassfish311"; //$NON-NLS-1$
     
     public static final String SUNPLUGIN_ID = "oracle.eclipse.tools.glassfish";
     private static SunAppSrvPlugin singleton;
@@ -91,4 +95,19 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
         return new Status(IStatus.ERROR, SUNPLUGIN_ID, -1, mess, e);        
     }
     
+    public static boolean is31OrAbove(IRuntime runtime){      
+        if (runtime.getRuntimeType().getId().equals(V31_RUNTIME))
+            return true;
+        if (runtime.getRuntimeType().getId().equals(V311_RUNTIME))
+            return true;
+        return false;      
+                    
+    }
+    public static boolean is3OrAbove(IRuntime runtime){      
+        if (runtime.getRuntimeType().getId().equals(V3_RUNTIME))
+            return true;
+
+        return is31OrAbove(runtime);      
+                    
+    }
 }

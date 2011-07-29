@@ -260,7 +260,7 @@ public void setServerInstanceProperties(Map map) {
   	String ret=null;
       if ( !getKeepSessions().equals("true"))
       	return ret;
-      if (getServer().getRuntime().getRuntimeType().getId().equals("org.glassfish.jst.server.runtime.glassfish31"))
+      if (SunAppSrvPlugin.is31OrAbove(getServer().getRuntime()))
       	ret = "keepstate";
       else 
       	ret = "keepSessions";

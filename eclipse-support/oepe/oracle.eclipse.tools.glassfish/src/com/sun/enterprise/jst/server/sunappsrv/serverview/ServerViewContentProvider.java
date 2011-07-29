@@ -20,7 +20,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.viewers.BaseContentProvider;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
-import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
 public class ServerViewContentProvider extends BaseContentProvider implements ITreeContentProvider{
@@ -33,9 +33,9 @@ public class ServerViewContentProvider extends BaseContentProvider implements IT
 		if( parentElement instanceof IServer ){
 			IServer server = (IServer) parentElement;
 			
-			//only active for glassfish 3.1 server which is started!!!
-			String s  = server.getRuntime().getRuntimeType().getId();
-			if((s.equals("org.glassfish.jst.server.runtime.glassfish31") &&( server.getServerState()==IServer.STATE_STARTED))){
+			//only active for glassfish 3.1.x server which is started!!!
+            boolean is31x = SunAppSrvPlugin.is31OrAbove(server.getRuntime());
+			if((is31x &&( server.getServerState()==IServer.STATE_STARTED))){
 				SunAppServer ser = (SunAppServer)server.loadAdapter(SunAppServer.class, new NullProgressMonitor() );
 				
 				if( ser!=null ){
