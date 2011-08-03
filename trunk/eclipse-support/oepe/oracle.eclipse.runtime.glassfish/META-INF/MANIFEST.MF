@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: GlassFish 3.1.1 Application Server runtime
+Bundle-Name: GlassFish 3.1.1 Application Server Runtime
 Bundle-SymbolicName: oracle.eclipse.runtime.glassfish;singleton:=true
 Bundle-Version: 3.1.1.0
 Bundle-Activator: oracle.eclipse.runtime.glassfish.Activator
@@ -8,6 +8,7 @@ Bundle-Vendor: Oracle
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.server.core
 Bundle-ActivationPolicy: lazy
+Eclipse-BundleShape: dir
 Import-Package: com.sun.enterprise.jst.server.sunappsrv,
  org.eclipse.core.resources,
  org.eclipse.jst.server.generic.core.internal,
