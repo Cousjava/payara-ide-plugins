@@ -22,7 +22,7 @@
 
     <artifactId>oracle.eclipse.runtime.glassfish</artifactId>
     <packaging>eclipse-plugin</packaging>
-    <version>3.1.0.0</version>
+    <version>3.1.1.0</version>
 
     <name>GlassFish runtime as an Eclipse Plug-in</name>
 
