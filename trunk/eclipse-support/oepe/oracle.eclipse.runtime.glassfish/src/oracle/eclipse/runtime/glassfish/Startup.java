@@ -41,7 +41,7 @@ public class Startup implements org.eclipse.wst.server.core.internal.IStartup {
 					&& glassfishv3Location.isDirectory()) {
 
 				new V3Configurator(glassfishv3Location,
-						"org.glassfish.jst.server.glassfish31")
+						"org.glassfish.jst.server.glassfish311")
 						.configure();
 
 			}
