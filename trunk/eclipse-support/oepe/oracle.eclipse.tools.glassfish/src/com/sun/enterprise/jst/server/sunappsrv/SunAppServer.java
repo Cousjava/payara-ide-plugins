@@ -529,7 +529,8 @@ public void setServerInstanceProperties(Map map) {
                         (this.getServer().getServerType().getId().equals("com.sun.enterprise.jst.server.sunappsrv92"))
                         ||
                         (this.getServer().getServerType().getId().equals("org.glassfish.jst.server.glassfish31"))
-                        );
+                        ||
+                        (this.getServer().getServerType().getId().equals("org.glassfish.jst.server.glassfish311"))                        );
 	}
 
 	
