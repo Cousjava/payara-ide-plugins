@@ -47,7 +47,7 @@
                             <tasks>  
                       <!-- Using an ant task to deflate glassfish zip file -->  
 
-		<unzip dest="${project.basedir}" src="latest-glassfish.zip"/>
+		<unzip dest="${project.basedir}" src="glassfish-3.1.1.zip"/>
 		<touch file="${project.basedir}/glassfish3/glassfish/lib/asadmin/.nothing"/>
 		<touch file="${project.basedir}/glassfish3/.org.opensolaris,pkg/file/.nothing"/>
 		<touch file="${project.basedir}/glassfish3/.org.opensolaris,pkg/download/.nothing"/>
