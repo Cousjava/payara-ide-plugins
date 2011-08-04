@@ -113,9 +113,11 @@ public class V3Configurator {
 
 		Map<String, String> configuration = sunAppServer.getProps();
 		configuration.put(SunAppServer.DOMAINPATH, expectedDomainLocation);
+		configuration.put(SunAppServer.USEANONYMOUSCONNECTIONS, "true");
+
 
 		sunAppServer.setServerInstanceProperties(configuration);
-
+		sunAppServer.setDefaultPublishState();
 		wc.save(true, null);
 
 		return;
