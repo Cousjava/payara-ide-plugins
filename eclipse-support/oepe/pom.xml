@@ -61,7 +61,11 @@
     <module>oracle.eclipse.runtime.helios.runtime.glassfish</module>
     <module>helios.updatesite</module>
 
-
+    <module>oracle.eclipse.tools.indigo.doc.javaee5</module>
+    <module>oracle.eclipse.tools.indigo.doc.javaee6</module>
+    <module>oracle.eclipse.tools.indigo.glassfish</module>
+    <module>oracle.eclipse.runtime.indigo.runtime.glassfish</module>
+    <module>indigo.updatesite</module>
    </modules>
 
   <repositories>
