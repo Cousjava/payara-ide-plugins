@@ -293,7 +293,8 @@ public void setServerInstanceProperties(Map map) {
   public String getUseAnonymousConnections() {
 	  String s =getProps().get(USEANONYMOUSCONNECTIONS);
 	  if (s==null){
-		  if (getAdminPassword()!=null){
+		  String pass=getAdminPassword();
+		  if ((s!=null)&&(!s.equals(""))){
 			 return Boolean.FALSE.toString();
 		  }
 		  s = Boolean.TRUE.toString();
@@ -508,6 +509,11 @@ public void setServerInstanceProperties(Map map) {
     @Override
     public void setDefaults(IProgressMonitor monitor) {
          SunAppSrvPlugin.logMessage("In  setDefaults for " +this.getServer().getServerType().getName());	//$NON-NLS-1$
+         setDefaultPublishState();
+        super.setDefaults(monitor);        
+        
+    }
+    public void setDefaultPublishState(){
         if (isV3()){
     		setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, 2/*Server.AUTO_PUBLISH_OVERRIDE*/);
            	setAttribute(Server.PROP_AUTO_PUBLISH_TIME, 0);
@@ -515,16 +521,13 @@ public void setServerInstanceProperties(Map map) {
         else{
            	setAttribute(Server.PROP_AUTO_PUBLISH_SETTING, Server.AUTO_PUBLISH_DISABLE);
                     	
-        }
-        super.setDefaults(monitor);
-        
-        
+        }    	
     }
     /* for both v3 or v3 prelude
      * 
      */
 	public boolean isV3(){
-		//test the server name to contain GlassFish v3
+		//test the server name to contain GlassFish v3 3.1 or 3.1.1
 		return (
                         (this.getServer().getServerType().getId().equals("com.sun.enterprise.jst.server.sunappsrv92"))
                         ||
