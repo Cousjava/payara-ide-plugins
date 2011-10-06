@@ -22,7 +22,7 @@
 
   <artifactId>oracle.eclipse.tools.glassfish</artifactId>
   <packaging>eclipse-plugin</packaging>
-    <version>3.2.3.qualifier</version>
+    <version>4.1.0.qualifier</version>
 
   <name>oracle.eclipse.tools.glassfish Plug-in</name>
 
