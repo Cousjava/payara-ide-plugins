@@ -181,12 +181,23 @@ public abstract class ServerCommand {
         Manifest m = new Manifest();
         m.read(in);
         String outputCode = m.getMainAttributes().getValue("exit-code"); // NOI18N
-        if(outputCode.equalsIgnoreCase("Success")) { // NOI18N
+        if (outputCode.equalsIgnoreCase("Success")) { // NOI18N
             readManifest(m);
             result = true;
         } else {
             // !PW FIXME Need to pass this message back.  Need <Result> object?
-            String message = m.getMainAttributes().getValue("message"); // NOI18N
+            String message = null; // m.getMainAttributes().getValue("message"); // NOI18N
+            try {
+                String tmp = m.getMainAttributes().getValue("message"); // NOI18N
+                if (null != tmp) {
+                    message = tmp;
+                    message = URLDecoder.decode(tmp, "UTF-8"); // NOI18N
+                }
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger("glassfish").log(Level.WARNING, "Could not URL decode with UTF-8"); // NOI18N
+            } catch (IllegalArgumentException iae) {
+                // ignore this for now
+            }
 
             // If server is not currently available for processing commands,
             // set the retry flag.
@@ -270,7 +281,18 @@ public abstract class ServerCommand {
                 return false;
             }
 
-            for (String key : info.getEntries().keySet()) {
+            for (String encodedkey : info.getEntries().keySet()) {
+                String key = "";
+                try {
+                    if (null != encodedkey) {
+                        key = encodedkey;
+                        key = URLDecoder.decode(encodedkey, "UTF-8"); // NOI18N
+                    }
+                } catch (UnsupportedEncodingException uee) {
+                    Logger.getLogger("glassfish").log(Level.INFO, encodedkey, uee); // NOI18N
+                } catch (IllegalArgumentException iae) {
+                    // ignore this for now
+                }
                 int equalsIndex = key.indexOf('=');
                 if(equalsIndex >= 0) {
                     String keyPart = key.substring(0, equalsIndex);
