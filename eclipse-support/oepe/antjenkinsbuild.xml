@@ -64,14 +64,14 @@
         
         <move todir="." file="/tmp/oepe.updatesite"/>
         <move todir="/tmp" file="oracle.eclipse.runtime.glassfish"/>
-        <move todir="/tmp" file="oracle.eclipse.helios.runtime.glassfish"/>
-        <move todir="/tmp" file="oracle.eclipse.indigo.runtime.glassfish"/>
+        <move todir="/tmp" file="oracle.eclipse.runtime.helios.runtime.glassfish"/>
+        <move todir="/tmp" file="oracle.eclipse.runtime.indigo.runtime.glassfish"/>
         <create-update-center-content updatesite.location="oepe.updatesite"/>        
         <move todir="." file="/tmp/helios.updatesite"/>
         <move todir="." file="/tmp/indigo.updatesite"/>
         <move todir="." file="/tmp/oracle.eclipse.runtime.glassfish"/>
-        <move todir="." file="/tmp/oracle.eclipse.helios.runtime.glassfish"/>
-        <move todir="." file="/tmp/oracle.eclipse.indigo.runtime.glassfish"/>
+        <move todir="." file="/tmp/oracle.eclipse.runtime.helios.runtime.glassfish"/>
+        <move todir="." file="/tmp/oracle.eclipse.runtime.indigo.runtime.glassfish"/>
  
     </target>
 
