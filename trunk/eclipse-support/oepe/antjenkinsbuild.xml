@@ -49,12 +49,8 @@
 
     <target name="default" description="oepe">
             
-        <move todir="/tmp" file="indigo.updatesite"/>
         <move todir="/tmp" file="helios.updatesite"/>
-        <create-update-center-content updatesite.location="oepe.updatesite"/>
         <move todir="/tmp" file="oepe.updatesite"/> 
-
-        <move todir="." file="/tmp/indigo.updatesite"/>    
         <replace file="oracle.eclipse.tools.glassfish/META-INF/MANIFEST.MF" token="Bundle-Version: 3.2.3.qualifier" value="Bundle-Version: 4.0.2.qualifier"/>
         <!--replace file="oracle.eclipse.tools.glassfish/about.properties" token="11.1.1.7.3" value="11.1.1.8.0"/-->
         <create-update-center-content updatesite.location="indigo.updatesite"/>
@@ -64,10 +60,19 @@
         <replace file="oracle.eclipse.tools.glassfish/META-INF/MANIFEST.MF" token="Bundle-Version: 4.0.2.qualifier" value="Bundle-Version: 3.2.3.qualifier"/>
         <!--replace file="oracle.eclipse.tools.glassfish/about.properties" token="11.1.1.8.0" value="11.1.1.7.3"/-->
         <create-update-center-content updatesite.location="helios.updatesite"/>
+        <move todir="/tmp" file="helios.updatesite"/>
         
-        <move todir="." file="/tmp/indigo.updatesite"/>
         <move todir="." file="/tmp/oepe.updatesite"/>
-  
+        <move todir="/tmp" file="oracle.eclipse.runtime.glassfish"/>
+        <move todir="/tmp" file="oracle.eclipse.helios.runtime.glassfish"/>
+        <move todir="/tmp" file="oracle.eclipse.indigo.runtime.glassfish"/>
+        <create-update-center-content updatesite.location="oepe.updatesite"/>        
+        <move todir="." file="/tmp/helios.updatesite"/>
+        <move todir="." file="/tmp/indigo.updatesite"/>
+        <move todir="." file="/tmp/oracle.eclipse.runtime.glassfish"/>
+        <move todir="." file="/tmp/oracle.eclipse.helios.runtime.glassfish"/>
+        <move todir="." file="/tmp/oracle.eclipse.indigo.runtime.glassfish"/>
+ 
     </target>
 
 
