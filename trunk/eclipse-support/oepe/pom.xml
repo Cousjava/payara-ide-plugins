@@ -66,7 +66,12 @@
     <module>oracle.eclipse.tools.indigo.glassfish</module>
     <module>oracle.eclipse.runtime.indigo.runtime.glassfish</module>
     <module>indigo.updatesite</module>
-   </modules>
+
+    <module>oracle.eclipse.tools.oepe.doc.javaee5</module>
+    <module>oracle.eclipse.tools.oepe.doc.javaee6</module>
+    <module>oracle.eclipse.tools.oepe.glasfish</module>
+    <module>oepe.updatesite</module>
+</modules>
 
   <repositories>
     <repository>
