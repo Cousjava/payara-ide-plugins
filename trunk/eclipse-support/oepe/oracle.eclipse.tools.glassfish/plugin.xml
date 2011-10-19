@@ -1572,6 +1572,14 @@ point="org.eclipse.jst.common.project.facet.core.libraryProviders">
                      value="jst.web:[3.0" forcePluginActivation="true"/>
             </iterate>
         </with>        
+        <with variable="projectFacets">
+            <count value="+"/>
+            <iterate operator="or">
+                <test
+                     property="org.eclipse.wst.common.project.facet.core.projectFacet"
+                     value="sun.facet:[9" forcePluginActivation="true"/>
+            </iterate>
+        </with>        
       </enablement>
       <action type="INSTALL">
         <operation class="com.sun.enterprise.jst.server.sunappsrv.InstallJAXRS"/>
@@ -1595,12 +1603,12 @@ point="org.eclipse.jst.ws.jaxrs.core.jaxrsLibraryProvider" >
 
 </extension>
 
-   <!--extension
+   <extension
 point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
     <panel 
       provider="com.sun.enterprise.jst.server.sunappsrv.jaxrsLibraryproviderID"
-      class="com.LibraryProviderInstallPanel"/>
-   </extension-->
+      class="com.sun.enterprise.jst.server.sunappsrv.JAXRSActionPanels"/>
+   </extension>
 <extension
          point="org.eclipse.wst.server.core.internalStartup">
       <startup

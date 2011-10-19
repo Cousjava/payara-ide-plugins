@@ -54,6 +54,7 @@ Export-Package: com.sun.enterprise.jst.server.sunappsrv
 Import-Package: org.eclipse.ant.core,
  org.eclipse.jdt.ui.wizards,
  org.eclipse.jface.text,
+ org.eclipse.jst.common.project.facet.ui.libprov,
  org.eclipse.jst.j2ee.ejb.internal.operations,
  org.eclipse.jst.j2ee.internal.web.archive.operations,
  org.eclipse.jst.j2ee.internal.web.operations,
