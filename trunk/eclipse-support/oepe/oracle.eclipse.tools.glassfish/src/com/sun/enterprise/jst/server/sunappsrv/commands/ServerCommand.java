@@ -22,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -181,7 +182,7 @@ public abstract class ServerCommand {
         Manifest m = new Manifest();
         m.read(in);
         String outputCode = m.getMainAttributes().getValue("exit-code"); // NOI18N
-        if (outputCode.equalsIgnoreCase("Success")) { // NOI18N
+        if (null == outputCode || !"FAILURE".equals(outputCode.toUpperCase(Locale.ENGLISH))) { // NOI18N
             readManifest(m);
             result = true;
         } else {
