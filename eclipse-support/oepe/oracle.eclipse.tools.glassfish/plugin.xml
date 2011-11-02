@@ -1655,8 +1655,7 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
             </triggerPoints>
             <possibleChildren>
                 <or>
-                    <instanceof value="java.lang.Object">
-                    </instanceof>
+                    <instanceof value="com.sun.enterprise.jst.server.sunappsrv.serverview.TreeNode"/>
                 </or>
             </possibleChildren>
             <actionProvider
