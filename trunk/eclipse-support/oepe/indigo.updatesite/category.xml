@@ -9,7 +9,7 @@
    <feature url="features/oracle.eclipse.tools.indigo.doc.javaee6_1.0.0.qualifier.jar" id="oracle.eclipse.tools.indigo.doc.javaee6" version="1.0.0.qualifier">
       <category name="glassfish_category"/>
    </feature>
-   <feature url="features/oracle.eclipse.tools.indigo.glassfish_1.8.0.qualifier.jar" id="oracle.eclipse.tools.indigo.glassfish" version="1.8.0.qualifier">
+   <feature url="features/oracle.eclipse.tools.indigo.glassfish_2.0.0.qualifier.jar" id="oracle.eclipse.tools.indigo.glassfish" version="2.0.0.qualifier">
       <category name="glassfish_category"/>
    </feature>
    <feature url="features/oracle.eclipse.runtime.indigo.runtime.glassfish_3.1.1.0.jar" id="oracle.eclipse.runtime.indigo.runtime.glassfish" version="3.1.1.0">

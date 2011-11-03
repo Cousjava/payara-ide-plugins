@@ -55,6 +55,7 @@
     <module>oracle.eclipse.tools.doc.javaee5</module>
     <module>oracle.eclipse.runtime.glassfish</module>
     
+    <!--
     <module>oracle.eclipse.tools.helios.doc.javaee5</module>
     <module>oracle.eclipse.tools.helios.doc.javaee6</module>
     <module>oracle.eclipse.tools.helios.glassfish</module>
@@ -66,9 +67,17 @@
     <module>oracle.eclipse.tools.indigo.glassfish</module>
     <module>oracle.eclipse.runtime.indigo.runtime.glassfish</module>
     <module>indigo.updatesite</module>
+    -->
 
-    <module>oepe.updatesite</module>
-    <module>asgard-indigo.updatesite</module>
+    <module>oracle.eclipse.tools.juno.doc.javaee5</module>
+    <module>oracle.eclipse.tools.juno.doc.javaee6</module>
+    <module>oracle.eclipse.tools.juno.glassfish</module>
+    <module>oracle.eclipse.runtime.juno.runtime.glassfish</module>
+    <module>juno.updatesite</module>
+
+<!--    <module>oepe.updatesite</module> -->
+<!--    <module>asgard-indigo.updatesite</module> -->
+    <module>asgard-juno.updatesite</module>
 </modules>
 
   <repositories>

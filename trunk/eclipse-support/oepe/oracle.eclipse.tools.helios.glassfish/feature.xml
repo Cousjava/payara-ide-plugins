@@ -14,7 +14,7 @@
 <feature
       id="oracle.eclipse.tools.helios.glassfish"
       label="%featureName"
-      version="1.8.0.qualifier"
+      version="2.0.0.qualifier"
       provider-name="%providerName"
       plugin="oracle.eclipse.tools.glassfish"
       image="glassfish.gif">
