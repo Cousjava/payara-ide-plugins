@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="GlassFish Tools Update Site for OEPE (12.1.1.0)" url="http://download.java.net/glassfish/eclipse/oepe12.1.1i">
+      GlassFish Tools Update Site for OEPE (12.1.1.0)
+   </description>
+   <feature url="features/oracle.eclipse.tools.indigo.doc.javaee5_1.0.0.qualifier.jar" id="oracle.eclipse.tools.indigo.doc.javaee5" version="1.0.0.qualifier">
+      <category name="glassfish_category"/>
+   </feature>
+   <feature url="features/oracle.eclipse.tools.indigo.doc.javaee6_1.0.0.qualifier.jar" id="oracle.eclipse.tools.indigo.doc.javaee6" version="1.0.0.qualifier">
+      <category name="glassfish_category"/>
+   </feature>
+   <feature url="features/oracle.eclipse.tools.indigo.glassfish_2.0.0.qualifier.jar" id="oracle.eclipse.tools.indigo.glassfish" version="2.0.0.qualifier">
+      <category name="glassfish_category"/>
+   </feature>
+   <category-def name="glassfish_category" label="GlassFish Application Server">
+      <description>
+         GlassFish Application Server Plugins
+      </description>
+   </category-def>
+</site>
