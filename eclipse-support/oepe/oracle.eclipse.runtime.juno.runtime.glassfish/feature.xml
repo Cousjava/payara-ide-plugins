@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="oracle.eclipse.runtime.juno.runtime.glassfish"
+      label="%featureName"
+      version="3.1.1.0"
+      provider-name="%providerName">
+
+   <description url="https://glassfish.java.net">
+      %featureDescription
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseUrl">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.java.net/glassfish/eclipse/juno"/>
+   </url>
+
+   <plugin
+         id="oracle.eclipse.runtime.glassfish"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="true"/>
+
+</feature>
