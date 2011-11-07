@@ -82,6 +82,8 @@
       <import plugin="org.eclipse.jst.jee"/>
       <import plugin="org.eclipse.jst.jee.ui"/>
       <import plugin="org.eclipse.jst.ws.jaxrs.ui"/>
+      <import plugin="oracle.eclipse.tools.doc.javaee5"/>
+      <import plugin="oracle.eclipse.tools.doc.javaee6"/>
    </requires>
 
    <plugin
@@ -91,7 +93,7 @@
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
+   <!-- <plugin
          id="oracle.eclipse.tools.doc.javaee5"
          download-size="0"
          install-size="0"
@@ -102,5 +104,6 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+         -->
 
 </feature>
