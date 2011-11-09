@@ -23,7 +23,7 @@
   <artifactId>asgard-juno.updatesite</artifactId>
   <packaging>eclipse-repository</packaging>
 
-  <name>GlassFisn OEPE Repository</name>
+  <name>GlassFish OEPE 12.1.1j Repository</name>
   <!-- see http://issues.sonatype.org/browse/TYCHO-313 -->
   <version>1.0.0-SNAPSHOT</version>
 
