@@ -20,7 +20,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>oracle.eclipse.tools.juno.doc.javaee6-feature</artifactId>
+  <artifactId>oracle.eclipse.tools.juno.doc.javaee6</artifactId>
   <packaging>eclipse-feature</packaging>
 
   <name>oracle.eclipse.tools.juno.doc.javaee6 Feature</name>
