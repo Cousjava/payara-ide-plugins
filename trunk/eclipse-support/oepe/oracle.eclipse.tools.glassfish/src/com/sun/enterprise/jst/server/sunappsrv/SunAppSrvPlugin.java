@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -36,6 +36,7 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
 	public static final String V3_RUNTIME = "com.sun.enterprise.jst.server.runtime.sunappsrv92"; //$NON-NLS-1$
 	public static final String V31_RUNTIME = "org.glassfish.jst.server.runtime.glassfish31"; //$NON-NLS-1$
 	public static final String V311_RUNTIME = "org.glassfish.jst.server.runtime.glassfish311"; //$NON-NLS-1$
+	public static final String V312_RUNTIME = "org.glassfish.jst.server.runtime.glassfish312"; //$NON-NLS-1$
     
     public static final String SUNPLUGIN_ID = "oracle.eclipse.tools.glassfish";
     private static SunAppSrvPlugin singleton;
@@ -99,6 +100,8 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
         if (runtime.getRuntimeType().getId().equals(V31_RUNTIME))
             return true;
         if (runtime.getRuntimeType().getId().equals(V311_RUNTIME))
+            return true;
+        if (runtime.getRuntimeType().getId().equals(V312_RUNTIME))
             return true;
         return false;      
                     
