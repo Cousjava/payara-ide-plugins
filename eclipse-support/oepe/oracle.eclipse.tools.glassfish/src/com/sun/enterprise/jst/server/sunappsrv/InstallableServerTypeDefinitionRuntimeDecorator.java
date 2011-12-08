@@ -88,6 +88,8 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 			UNZIP_DIR_NAME = "glassfish3";
 		} else 	if (definition.getId().equals(SunAppSrvPlugin.V311_RUNTIME)){
 			UNZIP_DIR_NAME = "glassfish3";
+		} else 	if (definition.getId().equals(SunAppSrvPlugin.V312_RUNTIME)){
+			UNZIP_DIR_NAME = "glassfish3";
 		}
                 
                 fInstallDirName = installDirName;
