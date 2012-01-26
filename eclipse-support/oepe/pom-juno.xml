@@ -39,7 +39,7 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.13.0</tycho-version>
+    <tycho-version>0.14.0-SNAPSHOT</tycho-version>
     <platform-version-name>juno</platform-version-name>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
@@ -93,6 +93,13 @@
            remove this when this version is released -->
       <id>codehaus.snapshots</id>
       <url>http://snapshots.repository.codehaus.org/</url>
+    </pluginRepository>
+    <pluginRepository>
+      <!-- need tycho 0.14.0-SNAPSHOT, see
+           https://bugs.eclipse.org/bugs/show_bug.cgi?id=359787
+           remove this when this version is released -->
+      <id>tycho-snapshots</id>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
     </pluginRepository>
   </pluginRepositories>
 
