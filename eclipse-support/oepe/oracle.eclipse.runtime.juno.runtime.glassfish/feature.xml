@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="oracle.eclipse.runtime.juno.runtime.glassfish"
+      id="oracle.eclipse.runtime.juno.runtime.glassfish312"
       label="%featureName"
-      version="3.1.1.0"
+      version="3.1.2.0"
       provider-name="%providerName">
 
    <description url="https://glassfish.java.net">
@@ -22,7 +22,7 @@
    </url>
 
    <plugin
-         id="oracle.eclipse.runtime.glassfish"
+         id="oracle.eclipse.runtime.glassfish312"
          download-size="0"
          install-size="0"
          version="0.0.0"

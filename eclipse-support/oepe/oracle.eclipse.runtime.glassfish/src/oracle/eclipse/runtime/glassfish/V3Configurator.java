@@ -70,7 +70,7 @@ public class V3Configurator {
 		SunAppSrvPlugin.logMessage(
 				"Not  Registered yet : " + glassfishLocation, null);
 
-		deleteOldGlassFishInternalRuntimes(glassfishLocation);
+		//deleteOldGlassFishInternalRuntimes(glassfishLocation);
 		SunAppSrvPlugin.logMessage("done with deleting obsolete runtimes : ",
 				null);
 
@@ -127,7 +127,7 @@ public class V3Configurator {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		IPath location = root.getLocation();
-		return "" + location + "/glassfish311eclipsedefaultdomain";
+		return "" + location + "/glassfish312eclipsedefaultdomain";
 	}
 
 	private IRuntime getRuntimeByLocation(String glassfishLocation) {
