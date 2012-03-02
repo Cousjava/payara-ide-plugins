@@ -93,16 +93,12 @@
          version="0.0.0"
          unpack="false"/>
 
-   <!-- <plugin
-         id="oracle.eclipse.tools.doc.javaee5"
+   <!--plugin
+         id="oracle.eclipse.tools.glassfish.40"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/-->
 
-   <plugin
-         id="oracle.eclipse.tools.doc.javaee6"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
--->
 </feature>

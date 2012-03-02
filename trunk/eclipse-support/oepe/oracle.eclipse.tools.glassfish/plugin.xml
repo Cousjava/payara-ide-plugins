@@ -345,7 +345,7 @@
                   class="com.sun.enterprise.jst.server.sunappsrv.InstallableRuntimeServerRuntimeWizardFragment"/>           
         <fragment id="org.eclipse.jst.server.generic.server"
                   typeIds="org.glassfish.jst.server.glassfish312"
-                  class="com.sun.enterprise.jst.server.sunappsrv.GFWizardCreation"/>       
+                  class="com.sun.enterprise.jst.server.sunappsrv.GFWizardCreation"/>
     </extension>
     
     <extension point="org.eclipse.wst.server.ui.serverImages">
@@ -1524,10 +1524,10 @@
            id="org.glassfish.jst.server.runtime.glassfish311">
         </runtime>
         <runtime
-           archiveUrl="http://download.java.net/glassfish/3.1.2/promoted/latest-glassfish.zip" 		   
+           archiveUrl="http://download.java.net/glassfish/3.1.2/release/glassfish-3.1.2.zip" 		   
            licenseUrl="http://download.java.net/glassfish/eclipse/CDDL+GPL+3rdPartyEPL.txt"
            archivePath="./"
-           archiveSize="82072122"
+           archiveSize="84945198"
            fileCount="1094"
            id="org.glassfish.jst.server.runtime.glassfish312">
         </runtime>

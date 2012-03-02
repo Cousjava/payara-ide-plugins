@@ -20,10 +20,10 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>oracle.eclipse.runtime.indigo.runtime.glassfish</artifactId>
+  <artifactId>oracle.eclipse.runtime.indigo.runtime.glassfish312</artifactId>
   <packaging>eclipse-feature</packaging>
-  <version>3.1.1.0</version>
+  <version>3.1.2.0</version>
 
-  <name>GlassFish 3.1.1 as an Eclipse plugin feature</name>
+  <name>GlassFish 3.1.2 as an Eclipse plugin feature</name>
 
 </project>

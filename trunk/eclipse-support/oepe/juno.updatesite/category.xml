@@ -12,7 +12,7 @@
    <feature url="features/oracle.eclipse.tools.juno.glassfish_2.0.1.qualifier.jar" id="oracle.eclipse.tools.juno.glassfish" version="2.0.1.qualifier">
       <category name="glassfish_category"/>
    </feature>
-   <feature url="features/oracle.eclipse.runtime.juno.runtime.glassfish_3.1.1.0.jar" id="oracle.eclipse.runtime.juno.runtime.glassfish" version="3.1.1.0">
+   <feature url="features/oracle.eclipse.runtime.juno.runtime.glassfish_3.1.2.0.jar" id="oracle.eclipse.runtime.juno.runtime.glassfish312" version="3.1.2.0">
       <category name="glassfish_category"/>
    </feature>
    <category-def name="glassfish_category" label="GlassFish Application Server">
