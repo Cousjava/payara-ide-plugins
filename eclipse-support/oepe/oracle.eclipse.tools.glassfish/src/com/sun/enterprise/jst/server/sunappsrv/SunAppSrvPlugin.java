@@ -37,6 +37,7 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
 	public static final String V31_RUNTIME = "org.glassfish.jst.server.runtime.glassfish31"; //$NON-NLS-1$
 	public static final String V311_RUNTIME = "org.glassfish.jst.server.runtime.glassfish311"; //$NON-NLS-1$
 	public static final String V312_RUNTIME = "org.glassfish.jst.server.runtime.glassfish312"; //$NON-NLS-1$
+	public static final String V4_RUNTIME = "org.glassfish.jst.server.runtime.glassfish40"; //$NON-NLS-1$
     
     public static final String SUNPLUGIN_ID = "oracle.eclipse.tools.glassfish";
     private static SunAppSrvPlugin singleton;
@@ -103,6 +104,8 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
             return true;
         if (runtime.getRuntimeType().getId().equals(V312_RUNTIME))
             return true;
+        if (runtime.getRuntimeType().getId().equals(V4_RUNTIME))
+        	return true;
         return false;      
                     
     }
@@ -113,4 +116,5 @@ public class SunAppSrvPlugin extends AbstractUIPlugin {
         return is31OrAbove(runtime);      
                     
     }
+    
 }
