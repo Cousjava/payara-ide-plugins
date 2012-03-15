@@ -25,7 +25,7 @@ public class GetSupportAction extends ShowURLAction  {
      * The constructor.
      */
     public GetSupportAction() {
-    	super("http://www.sun.com/software/products/glassfish_portfolio/get_it.jsp");
+    	super("https://shop.oracle.com/pls/ostore/f?p=dstore:4:343767690548618:::RIR:IR_ROWFILTER:glassfish&tz=-8:00");
     }
 
 }

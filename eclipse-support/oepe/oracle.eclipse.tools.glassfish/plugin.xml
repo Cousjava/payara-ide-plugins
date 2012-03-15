@@ -1275,12 +1275,13 @@
             </menu>
       
             <action
-                label="%menu.viewlogfile"
-                icon="icons/obj16/logfile.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.ViewLogAction"
-                tooltip="View GlassFish Log File"
-                menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.ViewLogAction">
+                  class="com.sun.enterprise.jst.server.sunappsrv.actions.ViewLogAction"
+                  enablesFor="1"
+                  icon="icons/obj16/logfile.gif"
+                  id="com.sun.enterprise.jst.server.sunappsrv.actions.ViewLogAction"
+                  label="%menu.viewlogfile"
+                  menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
+                  tooltip="View GlassFish Log File">
             </action>
             <action
                 label="%menu.viewadminconsole"
@@ -1292,7 +1293,7 @@
             </action>
             <action
                 label="%menu.theaquarium"
-                enablesFor="1"
+                enablesFor="*"
                 icon="icons/obj16/resources.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction"
                 menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
@@ -1300,29 +1301,29 @@
             </action>   
             <action
                 label="%menu.glassfish.getsupport"
-                enablesFor="1"
+                enablesFor="*"
                 icon="icons/obj16/sunappsrv.gif"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction"
                 menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction">
             </action>     
-            <action
+            <!--action
                 label="%menu.registerglassfish"
                 enablesFor="1"
                 icon="icons/obj16/registration.png"
                 class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction"
                 menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
                 id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction">
-            </action>
+            </action-->
             <action
-                label="%menu.updatecenter"
-                enablesFor="1"
-                icon="icons/obj16/updateCenter.png"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction"
-                tooltip="GlassFish Update Center"
-                toolbarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction">
+                  class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction"
+                  enablesFor="1"
+                  icon="icons/obj16/updateCenter.png"
+                  id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction"
+                  label="%menu.updatecenter"
+                  menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
+                  toolbarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
+                  tooltip="GlassFish Update Center">
             </action>
         </objectContribution>
     
