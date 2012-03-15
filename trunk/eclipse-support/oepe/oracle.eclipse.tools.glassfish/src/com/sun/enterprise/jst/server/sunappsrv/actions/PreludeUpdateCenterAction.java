@@ -166,6 +166,14 @@ public class PreludeUpdateCenterAction extends AppServerContextAction {
 
     @Override
     public boolean accept(IServer server) {
-        return true;//acceptIfServerRunning(server);
+        //return true;//acceptIfServerRunning(server);
+    	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
+		File installRoot = new File(sab.getSunApplicationServerInstallationDirectory()).getParentFile();
+		return isUCLauncherInstalled(installRoot);
     }
+
+	private boolean isUCLauncherInstalled(File installRoot) {
+		return getV3UpdateCenterLauncher(installRoot) != null;
+	}
+
 }

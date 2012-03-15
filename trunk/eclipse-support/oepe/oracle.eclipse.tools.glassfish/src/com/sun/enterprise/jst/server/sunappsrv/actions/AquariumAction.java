@@ -26,6 +26,6 @@ public class AquariumAction extends ShowURLAction {
      * The constructor.
      */
     public AquariumAction() {
-        super("http://blogs.sun.com/theaquarium/");
+        super("http://blogs.oracle.com/theaquarium/");
    }
 }

@@ -79,6 +79,7 @@ IWorkbenchWindowActionDelegate {
 
 		this.shell = getView("org.eclipse.wst.server.ui.ServersView").getViewSite().getShell();
 		setEnabled(true);
+		
 		if (image==null){
 			image = getImageDescriptorFromlocalImage("icons/obj16/sunappsrv.gif");
 		}
@@ -86,6 +87,7 @@ IWorkbenchWindowActionDelegate {
 		this.setImageDescriptor(image);	
 		tb.add(this);
 		tb.update(true);
+
 	}
 		
 		public static ImageDescriptor getImageDescriptorFromlocalImage(String localPath){
@@ -207,7 +209,9 @@ IWorkbenchWindowActionDelegate {
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
 				if (obj instanceof IServer) {
 					selectedServer = (IServer) obj;
-					setEnabled(accept(selectedServer));
+					boolean isActionAccepted = accept(selectedServer);
+					setEnabled(isActionAccepted);
+					action.setEnabled(isActionAccepted);
 					return;
 				}
 			}
@@ -255,12 +259,11 @@ IWorkbenchWindowActionDelegate {
 		message.open();
 	}
 	public void init(IViewPart arg0) {
-		// TODO Auto-generated method stub
+		//selectionChanged(getSelectionProvider().getSelection());
 		
 	}
 	public void init(IWorkbenchWindow arg0) {
-		// TODO Auto-generated method stub
-		
+		//selectionChanged(getSelectionProvider().getSelection());
 	}
 
  	protected void showPageInDefaultBrowser(String url) throws PartInitException, MalformedURLException {
