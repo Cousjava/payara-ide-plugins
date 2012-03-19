@@ -801,17 +801,10 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		else {
 			IPath path = new Path (getDomainDirWithDomainName()+"/eclipseApps/"+module[0].getName());
 
-            //first deploy the sun resource file if there in path:
-
-			registerSunResource(module , p, path);
-
 	//		IModuleResource[] moduleResource = getResources(module);
 	//		SunAppSrvPlugin.logMessage("IModuleResource len="+moduleResource.length);
 	//		for (int j=0;j<moduleResource.length ;j++
 	//			SunAppSrvPlugin.logMessage("IModuleResource n="+moduleResource[j].getName()+"-----"+moduleResource[j].getModuleRelativePath());
-
-
-
 
 
 			String contextRoot=null;
@@ -838,6 +831,10 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 				needARedeploy = assembler.needsARedeployment();
 
 			}
+			
+			//deploy the sun resource file if there in path:
+			registerSunResource(module , p, path);
+			
 			String spath =""+ path;
 			///BUG NEED ALSO to test if it has been deployed once...isDeployed()
 			if (needARedeploy ){
