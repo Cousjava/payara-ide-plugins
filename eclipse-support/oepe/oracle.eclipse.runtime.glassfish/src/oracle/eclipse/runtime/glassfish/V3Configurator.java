@@ -58,8 +58,7 @@ public class V3Configurator {
 	
 	public void configure() throws CoreException {
 
-		String glassfishLocation = new File(serverLocation, "glassfish")
-				.getAbsolutePath();
+		File glassfishLocation = new File(serverLocation, "glassfish");
 
 		IRuntime alreadyThere = getRuntimeByLocation(glassfishLocation);
 		if (alreadyThere != null) {
@@ -68,14 +67,14 @@ public class V3Configurator {
 			return;
 		}
 		SunAppSrvPlugin.logMessage(
-				"Not  Registered yet : " + glassfishLocation, null);
+				"Not  Registered yet : " + glassfishLocation.getAbsolutePath(), null);
 
 		//deleteOldGlassFishInternalRuntimes(glassfishLocation);
 		SunAppSrvPlugin.logMessage("done with deleting obsolete runtimes : ",
 				null);
 
 		IServerType st = ServerCore.findServerType(serverID);// v3
-		IRuntime runtime = createRuntime(glassfishLocation);
+		IRuntime runtime = createRuntime(glassfishLocation.getAbsolutePath());
 		IServer[] servers = ServerCore.getServers();
 
 		for (IServer server : servers) {
@@ -130,14 +129,14 @@ public class V3Configurator {
 		return "" + location + "/glassfish312eclipsedefaultdomain";
 	}
 
-	private IRuntime getRuntimeByLocation(String glassfishLocation) {
+	private IRuntime getRuntimeByLocation(File glassfishLocation) {
 
 		IServerType st = ServerCore.findServerType(serverID);
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		ServerCore.getRuntimeTypes();
 		ServerCore.getServers();
 		for (IRuntime runtime : runtimes) {
-			String currentlocation = "" + runtime.getLocation();
+			File currentlocation = new File("" + runtime.getLocation());
 			if (runtime != null
 					&& runtime.getRuntimeType().equals(st.getRuntimeType())) {
 				if (currentlocation.equals(glassfishLocation))
