@@ -20,9 +20,9 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>oracle.eclipse.runtime.glassfish312</artifactId>
+    <artifactId>oracle.eclipse.runtime.glassfish312r2</artifactId>
     <packaging>eclipse-plugin</packaging>
-    <version>3.1.2.0</version>
+    <version>3.1.2.qualifier</version>
 
     <name>GlassFish runtime as an Eclipse Plug-in</name>
 
@@ -36,32 +36,7 @@
                 </excludes>
             </resource>
         </resources>
-        <plugins>
-
-            <plugin>  
-                <artifactId>maven-antrun-plugin</artifactId>  
-                <executions>  
-                    <execution>  
-                        <phase>compile</phase>  
-                        <configuration>  
-                            <tasks>  
-                      <!-- Using an ant task to deflate glassfish zip file -->  
-
-		<unzip dest="${project.basedir}" src="glassfish-3.1.2.zip"/>
-		<touch file="${project.basedir}/glassfish3/glassfish/lib/asadmin/.nothing"/>
-		<touch file="${project.basedir}/glassfish3/.org.opensolaris,pkg/file/.nothing"/>
-		<touch file="${project.basedir}/glassfish3/.org.opensolaris,pkg/download/.nothing"/>
-		<delete dir="${project.basedir}/glassfish3/javadb/docs"/>
-		<delete dir="${project.basedir}/glassfish3/javadb/javadoc"/>
-		<delete dir="${project.basedir}/glassfish3/javadb/demo"/>
-                </tasks>  
-                        </configuration>  
-                        <goals>  
-                            <goal>run</goal>  
-                        </goals>  
-                    </execution>  
-                </executions>  
-            </plugin> 
+        <plugins> 
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-source-plugin</artifactId>

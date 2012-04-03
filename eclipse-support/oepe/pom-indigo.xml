@@ -54,6 +54,8 @@
     <module>oracle.eclipse.tools.doc.javaee6</module>
     <module>oracle.eclipse.tools.doc.javaee5</module>
     <module>oracle.eclipse.runtime.glassfish</module>
+    <module>oracle.eclipse.runtime.glassfish.build</module>
+    <!--module>oracle.eclipse.tools.glassfish.40</module-->
     <module>oracle.eclipse.tools.indigo.doc.javaee5</module>
     <module>oracle.eclipse.tools.indigo.doc.javaee6</module>
     <module>oracle.eclipse.tools.indigo.glassfish</module>

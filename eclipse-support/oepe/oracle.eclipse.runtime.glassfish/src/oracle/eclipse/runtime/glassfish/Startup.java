@@ -15,9 +15,8 @@ package oracle.eclipse.runtime.glassfish;
 import java.io.File;
 import java.net.URL;
 
-
 import org.eclipse.core.runtime.FileLocator;
-
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 import org.osgi.framework.Bundle;
 
@@ -28,7 +27,8 @@ public class Startup implements org.eclipse.wst.server.core.internal.IStartup {
 		ServerUIPreferences preferences = ServerUIPreferences.getInstance();
 		boolean showOnActivity = preferences.getShowOnActivity();
 		preferences.setShowOnActivity(false);
-		Bundle bundle = Activator.getDefault().getBundle();
+		Bundle bundle = //Activator.getDefault().getBundle();
+				Platform.getBundle("oracle.eclipse.runtime.glassfish.build312");
 		try {
 			URL url = FileLocator.resolve(bundle.getEntry("/"));
 
