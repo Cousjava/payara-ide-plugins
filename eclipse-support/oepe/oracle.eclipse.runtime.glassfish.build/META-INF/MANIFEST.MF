@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Server
+Bundle-SymbolicName: oracle.eclipse.runtime.glassfish.build312
+Bundle-Version: 1.0.0
+Fragment-Host: oracle.eclipse.runtime.glassfish312r2;bundle-version="3.1.2"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Eclipse-BundleShape: dir
