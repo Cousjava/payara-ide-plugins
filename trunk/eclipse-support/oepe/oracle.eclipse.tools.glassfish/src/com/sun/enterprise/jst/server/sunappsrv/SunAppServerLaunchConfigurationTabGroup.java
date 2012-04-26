@@ -33,7 +33,7 @@ public class SunAppServerLaunchConfigurationTabGroup extends AbstractLaunchConfi
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[7];
 		// workaround for issue 238692
 		// tabs[0] = new ServerLaunchConfigurationTab(new String[] {"com.sun.enterprise.jst.server"});
-		tabs[0] = new ComboServerLaunchConfigurationTab(new String[] {"com.sun.enterprise.jst.server"});
+		tabs[0] = new ComboServerLaunchConfigurationTab(new String[] {"com.sun.enterprise.jst.server", "org.glassfish.jst.server"});
 		// end workaround
 		tabs[0].setLaunchConfigurationDialog(dialog);
 		tabs[1] = new JavaArgumentsTab();
