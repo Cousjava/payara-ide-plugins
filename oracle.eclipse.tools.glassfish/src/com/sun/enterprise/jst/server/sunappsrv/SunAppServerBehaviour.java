@@ -78,11 +78,12 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 		      SunAppSrvPlugin.logMessage("in SunAppServerBehaviour CTOR ");
 
 	}
-	protected void initialize(IProgressMonitor monitor){
+	
+	protected void initialize(IProgressMonitor monitor) {
 		super.initialize(monitor);
 		SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize" );
 		final SunAppServer  sunserver = getSunAppServer();
-        try {
+		try {
 			if (sunserver.isLocalServer()){
 				DerbyConfigurator.configure(null, new File(getSunApplicationServerInstallationDirectory()), getDomainDirWithDomainName()+"/config/domain.xml");
 			}
@@ -90,38 +91,32 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		try {
-			if (sunserver.isRunning()){
-				SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize is running!!" );
+		if (sunserver.isRunning()){
+			SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize is running!!" );
 
-				if (isV3()) {
-					if (!sunserver.isLocalServer()){
-						setStartedState();						
-						return;
-					}
-					if (sunserver.getV3ServerStatus()==SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
-						SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize V3 DOMAINDIR_MATCHING"  );
-						setStartedState();
-						return;
-					} else {
-						SunAppSrvPlugin.logMessage("***in SunAppServerBehaviour initialize V3 DOMAINDIR_NOT_MATCHING, will reset to stop shortly"  );
-					}
-				} else {
-					if (sunserver.getV2ServerStatus()==SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
-						SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize V2 DOMAINDIR_MATCHING"  );
-						setStartedState();
-						return;
-					}
-				}
+			if (!sunserver.isLocalServer()){
+				setStartedState();						
+				return;
 			}
-			SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize STOP by Default..."  );
-			setServerState(IServer.STATE_STOPPED);
-			resetStatus(IServer.STATE_STOPPED);
-			} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			if (sunserver.getServerStatus()==SunAppServer.ServerStatus.DOMAINDIR_MATCHING){
+				SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize V3 DOMAINDIR_MATCHING"  );
+				setStartedState();
+				return;
+			} else {
+				SunAppSrvPlugin.logMessage("***in SunAppServerBehaviour initialize V3 DOMAINDIR_NOT_MATCHING, will reset to stop shortly"  );
+			}
 
+		}
+		
+		try {
+			sunserver.isDomainValid();
+		} catch (CoreException e) {
+			SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize detected domain configuration problem..."  );
+		}
+		
+		SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize STOP by Default..."  );
+		setServerState(IServer.STATE_STOPPED);
+		resetStatus(IServer.STATE_STOPPED);
 	}
 
 	/* get the correct adapter for  the GlassFish server
@@ -362,7 +357,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 	}
 	public String getDomainName(){
 		SunAppServer  sunserver = getSunAppServer();
-		String d = sunserver.getdomainName();
+		String d = sunserver.getDomainName();
 		if (isEmpty(d)) {
 			d = DEFAULT_DOMAIN_NAME;
 		}

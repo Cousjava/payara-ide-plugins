@@ -439,7 +439,7 @@ public class GFWizardCreation extends WizardFragment {
 			}
 			
 			if (!glassfish.isLocalServer()) {
-				String version = glassfish.getVersion3Only();
+				String version = glassfish.getVersionString();
 				if (version.equals("")) {
 					// (!Utils.isSecurePort(glassfish.getServer().getHost(),
 					// Integer.parseInt(glassfish.getAdminServerPort())))){

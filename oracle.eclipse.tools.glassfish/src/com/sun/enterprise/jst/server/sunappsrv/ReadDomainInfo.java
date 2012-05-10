@@ -47,8 +47,8 @@ public class ReadDomainInfo {
     String serverPort = "2"; //$NON-NLS-1$
     private String domainScriptFilePath;
 
-    public ReadDomainInfo(String loc, String domainName) {
-        domainScriptFilePath = loc + "/domains/" + domainName + "/config/domain.xml"; //$NON-NLS-1$ //$NON-NLS-2$
+    public ReadDomainInfo(String domainDir, String domainName) {
+        domainScriptFilePath = domainDir + File.separator + domainName + "/config/domain.xml"; //$NON-NLS-1$ //$NON-NLS-2$
 
         // Load domain.xml
         Document domainScriptDocument = loadDomainScriptFile();
