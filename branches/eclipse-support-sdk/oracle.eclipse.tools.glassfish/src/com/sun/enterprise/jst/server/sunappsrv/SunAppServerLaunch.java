@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,7 +43,6 @@ import org.eclipse.jdt.launching.ExecutionArguments;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMConnector;
 import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -56,6 +58,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
+import org.glassfish.tools.ide.GlassFishIdeException;
+import org.glassfish.tools.ide.admin.CommandStartDAS;
+import org.glassfish.tools.ide.admin.ResultProcess;
+import org.glassfish.tools.ide.admin.ServerAdmin;
+import org.glassfish.tools.ide.data.IdeContext;
 import org.osgi.framework.Version;
 
 import com.sun.enterprise.jst.server.sunappsrv.log.GlassFishConsole;
@@ -117,7 +124,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 	        	serverBehavior.setStartedState(mode);
 	        	return;
 	        }else {
-            abort("GlassFish Remote Servers cannot be start from this machine.", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
+	        	abort("GlassFish Remote Servers cannot be start from this machine.", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
 	        }
 		}
                 
@@ -125,13 +132,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         SunAppServer.ServerStatus status = SunAppServer.ServerStatus.CONNEXTION_ERROR;
         sunserver.sunInitialize(); // force reread of domain info if necessary
         if (sunserver.isRunning()) {
-            if (serverBehavior.isV3()) {
-                SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch Forcing a STOP!!!!"); //$NON-NLS-1$
-                status = sunserver.getV3ServerStatus();
-            } else { // V2
-                SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch Forcing a STOP!!!!"); //$NON-NLS-1$
-                status = sunserver.getV2ServerStatus();
-            }
+        	status = sunserver.getServerStatus();
             if (status == SunAppServer.ServerStatus.DOMAINDIR_MATCHING) {
                 // we are really to the server we know about, so that we can
                 // stop it and restart it to get the log file
@@ -172,6 +173,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
         String asadminCmd = serverBehavior.getSunApplicationServerInstallationDirectory() + "/bin/asadmin" + getScriptExtension(); //$NON-NLS-1$
         String domain = serverBehavior.getDomainName();
+        String domainAbsolutePath = serverBehavior.getDomainDir() + File.separator + domain;
         String debugFlag = "--debug=false"; //$NON-NLS-1$
         if (mode.equals("debug")) { //$NON-NLS-1$
             debugFlag = "--debug"; //$NON-NLS-1$
@@ -180,7 +182,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         AbstractVMInstall/* IVMInstall */ vm = (AbstractVMInstall) serverBehavior.getRuntimeDelegate().getVMInstall();
 
         IVMInstall vm2 = verifyVMInstall(configuration);
-        IVMRunner runner = vm2.getVMRunner(mode);
 
         File workingDir = verifyWorkingDirectory(configuration);
         String workingDirName = null;
@@ -218,7 +219,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         }
 
         setDefaultSourceLocator(launch, configuration);
-        ReadDomainInfo di = new ReadDomainInfo(serverBehavior.getSunApplicationServerInstallationDirectory(),
+        ReadDomainInfo di = new ReadDomainInfo(serverBehavior.getDomainDir(),
                 serverBehavior.getDomainName());
         if (ILaunchManager.PROFILE_MODE.equals(mode)) {
             try {
@@ -239,8 +240,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                             monitor);
                     String[] vmArgs2 = runConfig.getVMArguments();
                     String nativeLib = "";  //$NON-NLS-1$
+                    String jph = "JAVA_PROFILER_HOME="; //$NON-NLS-1$
                     for (String nameVal : runConfig.getEnvironment()) {
-                        String jph = "JAVA_PROFILER_HOME="; //$NON-NLS-1$
                         if (nameVal.startsWith(jph)) {
                             nativeLib = nameVal.substring(jph.length());
                         }
@@ -260,9 +261,9 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         } else {
             di.removeProfilerElements();
         }
-        try {
+/*        try {
             monitor.worked(10);
-
+/*
             if (serverBehavior.isV3()) {
 
                 // needed to see if we force JDK 1.6 (prelude did not need it)
@@ -310,11 +311,27 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
             pb.directory(new File(serverBehavior.getSunApplicationServerInstallationDirectory()));
             Process process = pb.start();
-
-            IProcess runtimeProcess = new RuntimeProcess(launch, process, "...", null); //$NON-NLS-1$
-        } catch (IOException ioe) {
+*/
+            String options = prepareOptions(new String[] {debugFlag, verboseFlag});
+            CommandStartDAS startCommand = new CommandStartDAS(vm.getInstallLocation().getAbsolutePath(), null, options, null, domainAbsolutePath);
+            ResultProcess process = null;
+            try {
+                Future<ResultProcess> future = 
+                        ServerAdmin.<ResultProcess>exec(sunserver, startCommand, new IdeContext());
+                try {
+                    process = future.get();
+                } catch (InterruptedException e) {
+                    abort("DAS start failed.",  e, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+                } catch (ExecutionException e) {
+                	abort("DAS start failed.",  e, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+                }
+            } catch (GlassFishIdeException gfie) {
+            	abort("DAS start failed.",  gfie, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+            }
+            IProcess runtimeProcess = new RuntimeProcess(launch, process.getValue().getProcess(), "...", null); //$NON-NLS-1$
+/*        } catch (IOException ioe) {
             abort("error Launching Executable", ioe,  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
-        }
+        }*/
         boolean javaDBStart = store.getBoolean(PreferenceConstants.ENABLE_START_JAVADB);
         if (javaDBStart) {
             String sampleDBDir = store.getString(PreferenceConstants.JAVA_DB_LOCATION);
@@ -347,7 +364,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
             }
             try {
-                Process process = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
+                Process process2 = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -379,7 +396,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 //}
                 if (sunserver.isRunning()) {
                     if (serverBehavior.isV3()) {
-                        SunAppServer.ServerStatus s = sunserver.getV3ServerStatus();
+                        SunAppServer.ServerStatus s = sunserver.getServerStatus();
                         if (s == SunAppServer.ServerStatus.CREDENTIAL_ERROR) {
 
                             abort("Wrong user name or password.", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
@@ -390,12 +407,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                             SunAppSrvPlugin.logMessage("V3 not ready"); //$NON-NLS-1$
                             continue;
                         }
-                    } else { // V2: wait a little bit more to make sure V2 admin is initialized
-                        if (sunserver.getV2ServerStatus() != SunAppServer.ServerStatus.DOMAINDIR_MATCHING) {
-                            SunAppSrvPlugin.logMessage("V2 not ready"); //$NON-NLS-1$
-                            continue;
-                        }
-
                     }
                     serverBehavior.setStartedState(mode);
                     
@@ -453,6 +464,15 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             } catch (InterruptedException ex) {}
         }
     }
+	
+	private static String prepareOptions(String[] options) {
+		StringBuffer b = new StringBuffer();
+		for (String opt : options) {
+			b.append(opt);
+			b.append(" ");
+		}
+		return b.toString();
+	}
     
     static class ProfilerInfoMessage {
     	static void display(final String mess) {

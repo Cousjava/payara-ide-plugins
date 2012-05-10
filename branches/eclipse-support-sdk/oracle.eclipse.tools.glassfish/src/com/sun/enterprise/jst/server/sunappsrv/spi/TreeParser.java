@@ -233,7 +233,7 @@ public final class TreeParser extends DefaultHandler {
         }
     }
 
-    public static abstract class NodeReader {
+    public static abstract class NodeReader<T> {
 
         public void readAttributes(String qname, Attributes attributes) throws SAXException {
         }
@@ -245,6 +245,12 @@ public final class TreeParser extends DefaultHandler {
         }
 
         public void endNode(String qname) throws SAXException {
+        }
+        
+        protected T result;
+        
+        public T getResult() {
+        	return result;
         }
     }
 

@@ -19,24 +19,17 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
-import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXServiceURL;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -49,6 +42,16 @@ import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
+import org.glassfish.tools.ide.GlassFishIdeException;
+import org.glassfish.tools.ide.admin.Command;
+import org.glassfish.tools.ide.admin.CommandVersion;
+import org.glassfish.tools.ide.admin.ResultString;
+import org.glassfish.tools.ide.admin.ServerAdmin;
+import org.glassfish.tools.ide.data.GlassFishAdminInterface;
+import org.glassfish.tools.ide.data.GlassFishServer;
+import org.glassfish.tools.ide.data.GlassFishVersion;
+import org.glassfish.tools.ide.data.IdeContext;
+import org.glassfish.tools.ide.server.ServerSupport;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -58,6 +61,10 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.Operatio
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
+import com.sun.enterprise.jst.server.sunappsrv.spi.HttpData;
+import com.sun.enterprise.jst.server.sunappsrv.spi.HttpListenerReader;
+import com.sun.enterprise.jst.server.sunappsrv.spi.JmxConnectorReader;
+import com.sun.enterprise.jst.server.sunappsrv.spi.NetworkListenerReader;
 import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
 
 
@@ -68,7 +75,7 @@ import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
  **/
 
 @SuppressWarnings("restriction")
-public class SunAppServer extends GenericServer {
+public class SunAppServer extends GenericServer implements GlassFishServer {
     
     public static final String ROOTDIR = "sunappserver.rootdirectory";	//$NON-NLS-1$
     // This property does not come from serverdef, but is used there and in the ant files
@@ -121,7 +128,7 @@ public class SunAppServer extends GenericServer {
 
     protected void sunInitialize(){
     	String domainDir = getDomainDir();
-    	String domainName = getdomainName();
+    	String domainName = getDomainName();
     	if (initializedCalled){
         	if ((prevDomainDir != null) && !prevDomainDir.startsWith("${") && !prevDomainDir.equals(domainDir)) {	//$NON-NLS-1$
         		initializedCalled = false;
@@ -194,6 +201,17 @@ public Map<String, String> getProps(){
 	  return Messages.incompleteDomainSetup;
   }
   String domainValidationError=null;
+  
+  public boolean isDomainValid() throws CoreException {
+	  String domainValidationError = validateDomainExists(getDomainDir(), getDomainName());
+	  if (domainValidationError != null) {
+		  throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, 
+				  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR, domainValidationError, 
+				  new RuntimeException(domainValidationError)));
+	  }
+	  return true;
+  }
+  
   /* overide needed to store the admin server port and server port immediately at server creation
    * (non-Javadoc)
    * @see org.eclipse.jst.server.generic.core.internal.GenericServer#setServerInstanceProperties(java.util.Map)
@@ -231,7 +249,7 @@ public void setServerInstanceProperties(Map map) {
    */
   public IStatus validate() {
       
-   	   SunAppSrvPlugin.logMessage("in SunAppServer -------validate"+getDomainDir()+"---"+getdomainName());
+   	   SunAppSrvPlugin.logMessage("in SunAppServer -------validate"+getDomainDir()+"---"+getDomainName());
 		IStatus s= super.validate();
         
 		//File f= new File(getDomainDir()+File.separator+getdomainName());
@@ -359,36 +377,32 @@ public void setServerInstanceProperties(Map map) {
     	getProps().put(ADMINNAME, value);
     }
         
-    public String getdomainName() {
+    public String getDomainName() {
     	String val = getProps().get(DOMAINPATH); //new as of August 2010
-    	if (val==null) {//we have an old config we need to deal with
-    		return (String) getProps().get(DEPRECATED_DOMAINNAME);
+    	if (val == null) {
+    		// TODO throw some exception
     	}
-    	else{
-    		if (val.startsWith("$")) { //not expanded yet
-    			return "domain1";
-    		}
-    		else {
-    			return new File(val).getName();
-    		}
-   		
+    	if (val.startsWith("$")) { //not expanded yet
+    		return "domain1";
+    	}
+    	else {
+    		return new File(val).getName();
     	}
     }
      
     public String getDomainDir() {
     	String val = getProps().get(DOMAINPATH); //new as of August 2010
-    	if (val==null) {//we have an old config we need to deal with
-    		return (String) getProps().get(DEPRECATED_DOMAINDIR);
+    	if (val == null) {
+    		// TODO throw some exception
     	}
-    	else {
-    		if (val.startsWith("$")) { //not expanded yet
-                return val;
-        	}
-        	else {
-        		return new File(val).getParentFile().getAbsolutePath();       		 		
-        	}
-    	}
+    	if (val.startsWith("$")) { //not expanded yet
+          return val;
+      	}
+       	else {
+       		return new File(val).getParentFile().getAbsolutePath();       		 		
+       	}
     }
+    
 
     public String getSampleDatabaseDir() {
      //   return (String) getProps().get(SAMPLEDBDIR);
@@ -556,23 +570,25 @@ public void setServerInstanceProperties(Map map) {
 		}
 	}
     /**
-     * 
+     * Checks if the server is running.
+     *  
      * @return true if we can ping to the server
      * @throws CoreException 
      */
-    public  boolean isRunning() throws CoreException {
+    public  boolean isRunning() {
     	if (!isLocalServer()){// remote is for 3.0 or above, then we use get version http/s request to avoid
     		// proxy security issues with a simple socket usage...
-    		return  (!getVersion3Only().equals(""));
+    		try {
+    			getVersionString();
+    			return true;
+    		} catch (GlassFishIdeException e) {
+    			// something happened so we assume that the server is not running
+    			return false;
+    		}
     	}
-		String domainValidationError = validateDomainExists(getDomainDir(), getdomainName());
-		if (domainValidationError != null) {
-			throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, 
-    				IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR, domainValidationError, 
-    				new RuntimeException(domainValidationError)));
-		}
+    	// TODO find out where it occurs
     	if (adminServerPortNumber.equals("1114848")){	//$NON-NLS-1$
-    		SunAppSrvPlugin.logMessage("catastrophic state where adminServerPortNumber is not initialize is null in SunAppServer.java");	//$NON-NLS-1$
+    		SunAppSrvPlugin.logMessage("catastrophic state where adminServerPortNumber is not initialized in SunAppServer.java");	//$NON-NLS-1$
     		SunAppSrvPlugin.logMessage("catastrophic Only thing to do is restart Eclipse");	//$NON-NLS-1$
     		initialize();
     		/*throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, 
@@ -582,28 +598,14 @@ public void setServerInstanceProperties(Map map) {
 			*/
 
         }
-    	return isRunning(getServer().getHost() , Integer.parseInt(getServerPort()));
+    	return ServerSupport.isRunning(this);
     }
-    public static boolean isRunning(final String host, final int port) {
-        if(null == host)
-            return false;
-        
-        try {
-            InetSocketAddress isa = new InetSocketAddress(host, port);
-            Socket socket = new Socket();
-            socket.connect(isa, 100);
-            socket.close();
-            return true;
-        } catch(IOException ex) {
-            return false;
-        }
-    }
+
     public  boolean isPortAvailable(int port) {
         // if the port is not in the allowed range - return false
         if ((port < 0) && (port > 65535)) {
             return false;
         }
-
         // if the port is not in the restricted list, we'll try to open a server
         // socket on it, if we fail, then someone is already listening on this port
         // and it is occupied
@@ -635,34 +637,32 @@ public void setServerInstanceProperties(Map map) {
     	
     }
     
-	public  String getVersion3Only() {
-		Commands.VersionCommand command = new Commands.VersionCommand();
-		try {
-			Future<OperationState> result = execute(command);
-			OperationState state = result.get(8, TimeUnit.SECONDS);
-			if ( state == OperationState.COMPLETED) {
-				return command.getVersion();
-			} else {
-				SunAppSrvPlugin.logMessage("getVersion3Only is failing="+ state,null); //$NON-NLS-1$
-				
-			}
-
-		} catch (Exception ex) {
-			SunAppSrvPlugin.logMessage("getVersion3Only is failing=", ex); //$NON-NLS-1$
-		}
-		return "";
-	}
+    public String getVersionString() throws GlassFishIdeException {
+    	Command command = new CommandVersion();
+    	IdeContext ide = new IdeContext();
+    	Future<ResultString> future = ServerAdmin.exec(this, command, ide);
+    	try {
+    		ResultString result = future.get(30, TimeUnit.SECONDS);
+    		return result.getValue();
+    	} catch (InterruptedException e) {
+    		throw new GlassFishIdeException("Exception by calling getVersionString", e);
+    	} catch (ExecutionException e) {
+    		throw new GlassFishIdeException("Exception by calling getVersionString", e);
+    	} catch (TimeoutException e) {
+    		throw new GlassFishIdeException("Timeout for getting version command exceeded", e);
+    	}
+    }
+    
     /**
      * 
      * @return ServerStatus for possible V3 server. If server is not a V3 one, we will know
      *  If the server is a V3 server but with a different install location that this one, we can also detect 
      *  this
      */
-    public ServerStatus getV3ServerStatus() {
+    public ServerStatus getServerStatus() {
 
    	
-    	
-    	
+    	   
            Commands.LocationCommand command = new Commands.LocationCommand();
            try {
                 Future<OperationState> result = execute(command);
@@ -675,7 +675,7 @@ public void setServerInstanceProperties(Map map) {
                 	res=result.get(15, TimeUnit.SECONDS);
                 }
                 if(res == OperationState.COMPLETED) {
-                	String installRoot = this.getDomainDir()+File.separator+this.getdomainName();
+                	String installRoot = this.getDomainDir()+File.separator+this.getDomainName();
                 	String targetInstallRoot = command.getDomainRoot();
                 	//SunAppSrvPlugin.logMessage("IsReady is targetInstallRoot="+targetInstallRoot );
                 	//SunAppSrvPlugin.logMessage("IsReady is installRoot="+installRoot );
@@ -712,63 +712,7 @@ public void setServerInstanceProperties(Map map) {
       
 
     }    
-    /**
-     * 
-     * @return ServerStatus for possible V2 server. If server is not a V2 one, we will know
-     *  If the server is a V2 server but with a different install location that this one, we can also detect 
-     *  this
-     */   
-	public ServerStatus getV2ServerStatus(){
-    	JMXConnector jmxc = null;
-    	try{
 
-    		// Create an RMI connector client
-    		//
-    		JMXServiceURL url = new JMXServiceURL(
-    		"service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi");	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    		HashMap<String, String[]> env = new HashMap<String, String[]>();
-    		env.put(JMXConnector.CREDENTIALS, new String[]{ getAdminName(), getAdminPassword()});
-            SunAppSrvPlugin.logMessage("service:jmx:rmi:///jndi/rmi://"+getServer().getHost()+":"+jmxPort+"/jmxrmi" );	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    		jmxc = JMXConnectorFactory.connect(url, env);
-    		SunAppSrvPlugin.logMessage("after JMXConnectorFactory");	//$NON-NLS-1$
-    		MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();
-   			ObjectName on = new ObjectName("com.sun.appserv:type=domain,category=config");	//$NON-NLS-1$
-
-    		Object o = mbsc.invoke(on, "getConfigDir", null, null);	//$NON-NLS-1$
-    		SunAppSrvPlugin.logMessage("mbsc.invoke="+o);	//$NON-NLS-1$
-   		if (o != null) {
-    			File domainDir=new File(""+o).getParentFile(); //$NON-NLS-1$
-                File knownDomainRoot = new File(this.getDomainDir()+File.separator+this.getdomainName());
-                if (domainDir.getCanonicalPath().equals(knownDomainRoot.getCanonicalPath())){
-                	return ServerStatus.DOMAINDIR_MATCHING;
-                }else {
-                	return ServerStatus.DOMAINDIR_NOT_MATCHING;
-               	
-                }
-    		}
-    		else {
-                SunAppSrvPlugin.logMessage("V2 not ready yet: o=null" );	//$NON-NLS-1$
-            	return ServerStatus.MBEAN_ERROR;
-   		}
-   		
-
-    	} catch (Exception e) {
-            SunAppSrvPlugin.logMessage("V2 not ready yet:",e );	//$NON-NLS-1$
-           	return ServerStatus.CONNEXTION_ERROR;
-            
-    	} finally {
-    		if (jmxc!=null){
-        		try {
-					jmxc.close();
-				} catch (IOException e) {
-					// what can we do there
-					
-				}
-   			
-    		}
-    	}
-
-    }   
     public Future<OperationState> execute(ServerCommand command) {
         CommandRunner mgr = new CommandRunner(this);
         return mgr.execute(command);
@@ -779,98 +723,17 @@ public void setServerInstanceProperties(Map map) {
         
         if (domainXml.exists()) {
             List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
+            JmxConnectorReader jmxReader = new JmxConnectorReader();
+            HttpListenerReader httpListenerReader = new HttpListenerReader();
+            NetworkListenerReader networkListenerReader = new NetworkListenerReader();
+            
             pathList.add(new TreeParser.Path("/domain/configs/config/admin-service/jmx-connector",	//$NON-NLS-1$
-                    new TreeParser.NodeReader() {
-                @Override
-                public void readAttributes(String qname, Attributes attributes) throws SAXException {
- /*
-        <admin-service type="das-and-server" system-jmx-connector-name="system">
-        <jmx-connector ..... port="8686" />
-  */
-                	String jmxAttr= attributes.getValue("port");	//$NON-NLS-1$
-                	try{
-                		int port = Integer.parseInt(jmxAttr);
-                		jmxPort = ""+port;	//$NON-NLS-1$
-                		SunAppSrvPlugin.logMessage("JMX Port is "+jmxPort );	//$NON-NLS-1$
-                	} catch(NumberFormatException ex) {
-                        SunAppSrvPlugin.logMessage("error reading one jmx port"+ex );	//$NON-NLS-1$
-
-                	}
-                    
-                }
-            }));
+                    jmxReader));
             pathList.add(new TreeParser.Path("/domain/configs/config/http-service/http-listener",	//$NON-NLS-1$
-                    new TreeParser.NodeReader() {
-                @Override
-                public void readAttributes(String qname, Attributes attributes) throws SAXException {
-                    // <http-listener 
-                    //   id="http-listener-1" port="8080" xpowered-by="true" 
-                    //   enabled="true" address="0.0.0.0" security-enabled="false" 
-                    //   family="inet" default-virtual-server="server" 
-                    //   server-name="" blocking-enabled="false" acceptor-threads="1">
-                    try {
-                        String id = attributes.getValue("id");	//$NON-NLS-1$
-                       if(id != null && id.length() > 0) {
-                            int port = Integer.parseInt(attributes.getValue("port"));	//$NON-NLS-1$
-                            SunAppSrvPlugin.logMessage("PORT is "+port );	//$NON-NLS-1$
-                           boolean secure = Boolean.TRUE.toString().equals(attributes.getValue("security-enabled"));	//$NON-NLS-1$
-                            boolean enabled = !Boolean.FALSE.toString().equals(attributes.getValue("enabled"));	//$NON-NLS-1$
-                            SunAppSrvPlugin.logMessage("secure "+secure );	//$NON-NLS-1$
-                           if(enabled) {
-                                HttpData data = new HttpData(id, port, secure);
-                                SunAppSrvPlugin.logMessage(" Adding " + data );	//$NON-NLS-1$
-                                httpMap.put(id, data);
-                            } else {
-                                SunAppSrvPlugin.logMessage("http-listener " + id + " is not enabled and won't be used." );	//$NON-NLS-1$ //$NON-NLS-2$
-                            }
-                        } else {
-                            SunAppSrvPlugin.logMessage("http-listener found with no name" );	//$NON-NLS-1$
-                        }
-                    } catch(NumberFormatException ex) {
-                        SunAppSrvPlugin.logMessage("http-listener error reading this"+ex );	//$NON-NLS-1$
-                      // throw new SAXException(ex);
-                    }
-                }
-            }));
+                    httpListenerReader));
                         
             //New grizzly config for latest GF v3 builds (after build 44)
-            pathList.add(new TreeParser.Path("/domain/configs/config/network-config/network-listeners/network-listener",
-                                new TreeParser.NodeReader() {
-                            @Override
-                            public void readAttributes(String qname, Attributes attributes) throws SAXException {
-/*
-         <network-listeners>
-          <thread-pool max-thread-pool-size="20" min-thread-pool-size="2" thread-pool-id="http-thread-pool" max-queue-size="4096"></thread-pool>
-          <network-listener port="8080" protocol="http-listener-1" transport="tcp" name="http-listener-1" thread-pool="http-thread-pool"></network-listener>
-          <network-listener port="8181" enabled="false" protocol="http-listener-2" transport="tcp" name="http-listener-2" thread-pool="http-thread-pool"></network-listener>
-          <network-listener port="4848" protocol="admin-listener" transport="tcp" name="admin-listener" thread-pool="http-thread-pool"></network-listener>
-        </network-listeners>
- */
-                                try {
-                                    String id = attributes.getValue("name");
-                                    if(id != null && id.length() > 0) {
-                                    	
-                                    	if (attributes.getValue("port").startsWith("$")){  //GlassFish v3.1 : ignore these template entries
-                                    		return;
-                                    	}
-                                        int port = Integer.parseInt(attributes.getValue("port"));
-                                        boolean secure = "true".equals(attributes.getValue("security-enabled"));
-                                        boolean enabled = !"false".equals(attributes.getValue("enabled"));
-                                        if(enabled) {
-                                            HttpData data = new HttpData(id, port, secure);
-                                            SunAppSrvPlugin.logMessage( " Adding " + data);
-                                            httpMap.put(id, data);
-                                        } else {
-                                        	SunAppSrvPlugin.logMessage ("http-listener " + id + " is not enabled and won't be used.");
-                                        }
-                                    } else {
-                                    	SunAppSrvPlugin.logMessage( "http-listener found with no name");
-                                    }
-                                } catch(NumberFormatException ex) {
-                                    throw new SAXException(ex);
-                                }
-                            }
-                        }));
+            pathList.add(new TreeParser.Path("/domain/configs/config/network-config/network-listeners/network-listener", networkListenerReader));
            
             try {
                 TreeParser.readXml(domainXml, pathList);
@@ -922,36 +785,6 @@ public void setServerInstanceProperties(Map map) {
         return result;
     }
     
-    private static class HttpData {
-
-        private final String id;
-        private final int port;
-        private final boolean secure;
-        
-        public HttpData(String id, int port, boolean secure) {
-            this.id = id;
-            this.port = port;
-            this.secure = secure;
-        }
-        
-        public String getId() {
-            return id;
-        }
-
-        public int getPort() {
-            return port;
-        }
-
-        public boolean isSecure() {
-            return secure;
-        }
-        
-        @Override
-        public String toString() {
-            return "{ " + id + ", " + port + ", " + secure + " }";	//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        }
-        
-    }
 
     public CommandFactory getCommandFactory() {
 
@@ -962,6 +795,69 @@ public void setServerInstanceProperties(Map map) {
     		};
     	
     }
+
+/*
+ * Implementation of adapter methods used by tooling SDK library.
+ */
+	@Override
+	public int getAdminPort() {
+		return Integer.parseInt(getAdminServerPort());
+	}
+
+
+	@Override
+	public String getAdminUser() {
+		return getAdminName();
+	}
+
+
+	@Override
+	public String getDomainsFolder() {
+		return getDomainDir();
+	}
+
+
+	@Override
+	public String getHost() {
+		return getServer().getHost();
+	}
+
+
+	@Override
+	public String getName() {
+		return getServer().getName();
+	}
+
+
+	@Override
+	public int getPort() {
+		return getHttpPort();
+	}
+
+
+	@Override
+	public String getUrl() {
+		return null;
+	}
+
+
+	@Override
+	public GlassFishVersion getVersion() {
+		return GlassFishVersion.GF_3_1_2;
+	}
+
+
+	@Override
+	public GlassFishAdminInterface getAdminInterface() {
+		return GlassFishAdminInterface.REST;
+	}
+
+
+	@Override
+	public String getServerHome() {
+		return new File(getServer().getRuntime().getLocation().toString()).getAbsolutePath();
+	}
+	
 
 }       
     

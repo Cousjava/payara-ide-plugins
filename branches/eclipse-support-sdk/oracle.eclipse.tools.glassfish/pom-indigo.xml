@@ -25,7 +25,7 @@
     <version>4.2.1.qualifier</version>
 
   <name>oracle.eclipse.tools.glassfish Plug-in</name>
-
+  
  <build>
      <!-- workaround for https://issues.sonatype.org/browse/TYCHO-168 -->
      <resources>

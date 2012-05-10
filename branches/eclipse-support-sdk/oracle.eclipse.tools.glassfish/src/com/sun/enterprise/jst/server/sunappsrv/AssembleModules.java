@@ -92,7 +92,7 @@ public  class AssembleModules {
 			}
 			else { // Project module
 			//ludo 2010	packModule(module, uri, parent);
-				String version= server.getVersion3Only();
+				String version= server.getVersionString();
 				if (version.indexOf(" 3.1")==-1){
 					packModule(module, uri, parent);
 				}else{				

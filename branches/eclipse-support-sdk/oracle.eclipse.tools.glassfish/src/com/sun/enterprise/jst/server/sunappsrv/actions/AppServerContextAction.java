@@ -169,11 +169,7 @@ IWorkbenchWindowActionDelegate {
 		SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter(
 				SunAppServerBehaviour.class, null);
 		if (sab != null) {
-			try {
-				return sab.getSunAppServer().isRunning();
-			} catch (CoreException e) {
-				return false;
-			}
+			return sab.getSunAppServer().isRunning();
 		}
 		return false;
 	}
