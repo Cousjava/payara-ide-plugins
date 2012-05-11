@@ -52,8 +52,6 @@ import org.glassfish.tools.ide.data.GlassFishServer;
 import org.glassfish.tools.ide.data.GlassFishVersion;
 import org.glassfish.tools.ide.data.IdeContext;
 import org.glassfish.tools.ide.server.ServerSupport;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
@@ -717,74 +715,69 @@ public void setServerInstanceProperties(Map map) {
         CommandRunner mgr = new CommandRunner(this);
         return mgr.execute(command);
     }   
-     boolean readServerConfiguration(File domainXml) {
-        boolean result = false;
-        final Map<String, HttpData> httpMap = new LinkedHashMap<String, HttpData>();
-        
-        if (domainXml.exists()) {
-            List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
-            JmxConnectorReader jmxReader = new JmxConnectorReader();
-            HttpListenerReader httpListenerReader = new HttpListenerReader();
-            NetworkListenerReader networkListenerReader = new NetworkListenerReader();
-            
-            pathList.add(new TreeParser.Path("/domain/configs/config/admin-service/jmx-connector",	//$NON-NLS-1$
-                    jmxReader));
-            pathList.add(new TreeParser.Path("/domain/configs/config/http-service/http-listener",	//$NON-NLS-1$
-                    httpListenerReader));
-                        
-            //New grizzly config for latest GF v3 builds (after build 44)
-            pathList.add(new TreeParser.Path("/domain/configs/config/network-config/network-listeners/network-listener", networkListenerReader));
-           
-            try {
-                TreeParser.readXml(domainXml, pathList);
-                
-                // !PW This probably more convoluted than it had to be, but while
-                // http-listeners are usually named "http-listener-1", "http-listener-2", ...
-                // technically they could be named anything.
-                // 
-                // For now, the logic is as follows:
-                //   admin port is the one named "admin-listener"
-                //   http port is the first non-secure enabled port - typically http-listener-1
-                //   https port is the first secure enabled port - typically http-listener-2
-                // disabled ports are ignored.
-                //
-                HttpData adminData = httpMap.remove("admin-listener");	//$NON-NLS-1$
-                
-               adminServerPortNumber =""+(adminData != null ? adminData.getPort() : -1);	//$NON-NLS-1$
-               SunAppSrvPlugin.logMessage("reading from domain.xml adminServerPortNumber="+adminServerPortNumber );	//$NON-NLS-1$
-               
-                
-                HttpData httpData = null;
-                HttpData httpsData = null;
-                
-                for(HttpData data: httpMap.values()) {
-                    if(data.isSecure()) {
-                        if(httpsData == null) {
-                            httpsData = data;
-                        }
-                    } else {
-                        if(httpData == null) {
-                            httpData = data;
-                        }
-                    }
-                    if(httpData != null && httpsData != null) {
-                        break;
-                    }
-                }
-                
-                int httpPort = httpData != null ? httpData.getPort() : -1;
-                serverPortNumber= ""+httpPort;	//$NON-NLS-1$
-                SunAppSrvPlugin.logMessage("reading from domain.xml serverPortNumber="+serverPortNumber );	//$NON-NLS-1$
-                /////ludo secure TODO   wi.setHttpsPort(httpsData != null ? httpsData.getPort() : -1);
-                
-                result = httpPort != -1;
-            } catch(IllegalStateException ex) {
-                SunAppSrvPlugin.logMessage("error IllegalStateException ",ex);	//$NON-NLS-1$
-            }
-        }
-        return result;
-    }
     
+    boolean readServerConfiguration(File domainXml) {
+    	boolean result = false;
+    	final Map<String, HttpData> httpMap = new LinkedHashMap<String, HttpData>();
+
+    	if (domainXml.exists()) {
+    		JmxConnectorReader jmxReader = new JmxConnectorReader();
+    		HttpListenerReader httpListenerReader = new HttpListenerReader();
+    		NetworkListenerReader networkListenerReader = new NetworkListenerReader();
+
+    		try {
+    			TreeParser.readXml(domainXml, jmxReader, httpListenerReader, networkListenerReader);
+    			jmxPort = jmxReader.getResult();
+
+    			httpMap.putAll(httpListenerReader.getResult());
+    			httpMap.putAll(networkListenerReader.getResult());
+    			// !PW This probably more convoluted than it had to be, but while
+    				// http-listeners are usually named "http-listener-1", "http-listener-2", ...
+    			// technically they could be named anything.
+    			// 
+    			// For now, the logic is as follows:
+    			//   admin port is the one named "admin-listener"
+    			//   http port is the first non-secure enabled port - typically http-listener-1
+    			//   https port is the first secure enabled port - typically http-listener-2
+    			// disabled ports are ignored.
+    			//
+    			HttpData adminData = httpMap.remove("admin-listener");	//$NON-NLS-1$
+
+    			adminServerPortNumber =""+(adminData != null ? adminData.getPort() : -1);	//$NON-NLS-1$
+    			SunAppSrvPlugin.logMessage("reading from domain.xml adminServerPortNumber="+adminServerPortNumber );	//$NON-NLS-1$
+
+
+    			HttpData httpData = null;
+    			HttpData httpsData = null;
+
+    			for(HttpData data: httpMap.values()) {
+    				if(data.isSecure()) {
+    					if(httpsData == null) {
+    						httpsData = data;
+    					}
+    				} else {
+    					if(httpData == null) {
+    						httpData = data;
+    					}
+    				}
+    				if(httpData != null && httpsData != null) {
+    					break;
+    				}
+    			}
+
+    			int httpPort = httpData != null ? httpData.getPort() : -1;
+    			serverPortNumber= ""+httpPort;	//$NON-NLS-1$
+    			SunAppSrvPlugin.logMessage("reading from domain.xml serverPortNumber="+serverPortNumber );	//$NON-NLS-1$
+    			/////ludo secure TODO   wi.setHttpsPort(httpsData != null ? httpsData.getPort() : -1);
+
+    			result = httpPort != -1;
+    		} catch(IllegalStateException ex) {
+    			SunAppSrvPlugin.logMessage("error IllegalStateException ",ex);	//$NON-NLS-1$
+    		}
+    	}
+    	return result;
+    }
+
 
     public CommandFactory getCommandFactory() {
 

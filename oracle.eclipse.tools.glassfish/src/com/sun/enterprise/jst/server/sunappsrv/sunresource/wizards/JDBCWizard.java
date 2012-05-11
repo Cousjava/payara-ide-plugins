@@ -173,7 +173,7 @@ public class JDBCWizard extends ResourceWizard {
 		//If present, don't add another connection pool
 		//TODO
 		//Extend this to do a complete check of the pool attributes like url, driverClass, datasourceClass etc
-		if(ResourceUtils.isDuplicate(poolName, ResourceUtils.TYPE_CONNECTIONPOOL, selectedProject)) {
+		if(ResourceUtils.isDuplicate(poolName, ResourceType.JDBC_CONNECTION_POOL, selectedProject)) {
 			createConnPool = false;
 		}
 		

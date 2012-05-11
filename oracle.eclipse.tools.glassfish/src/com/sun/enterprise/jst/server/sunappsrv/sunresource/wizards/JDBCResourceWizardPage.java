@@ -112,7 +112,7 @@ public class JDBCResourceWizardPage extends WizardPage {
 				String newSelection = projectNameCombo.getText();
 				if (newSelection != null) {
 					selectedProject = ProjectUtilities.getProject(newSelection);
-					resources = ResourceUtils.getResources(ResourceUtils.TYPE_JDBC, selectedProject);
+					resources = ResourceUtils.getResources(selectedProject, ResourceType.JDBC_RESOURCE);
 					dialogChanged();
 				}
 			}
@@ -180,7 +180,7 @@ public class JDBCResourceWizardPage extends WizardPage {
 	private void initialize() {
 		populateCombos();
 		dialogChanged();
-        resources = ResourceUtils.getResources(ResourceUtils.TYPE_JDBC, selectedProject);
+        resources = ResourceUtils.getResources(selectedProject, ResourceType.JDBC_RESOURCE);
 		if(resources.contains(defaultJndiName)){
 			String jndiName = ResourceUtils.getUniqueResourceName(defaultJndiName, resources);
 			jndiText.setText(jndiName);
