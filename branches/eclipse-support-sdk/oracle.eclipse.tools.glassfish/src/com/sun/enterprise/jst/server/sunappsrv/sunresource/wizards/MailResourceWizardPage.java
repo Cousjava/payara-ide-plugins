@@ -92,7 +92,7 @@ public class MailResourceWizardPage extends WizardPage {
 				String newSelection = projectNameCombo.getText();
 				if (newSelection != null) {
 					selectedProject = ProjectUtilities.getProject(newSelection);
-					resources = ResourceUtils.getResources(ResourceUtils.TYPE_JDBC, selectedProject);
+					resources = ResourceUtils.getResources(selectedProject, ResourceType.JDBC_RESOURCE);
 					dialogChanged();
 				}
 			}
@@ -149,7 +149,7 @@ public class MailResourceWizardPage extends WizardPage {
 	}
 
 	private void initialize() {
-		resources = ResourceUtils.getResources(ResourceUtils.TYPE_JAVAMAIL, selectedProject);
+		resources = ResourceUtils.getResources(selectedProject, ResourceType.JAVA_MAIL);
 		if(resources.contains(defaultJndiName)){
 			String jndiName = ResourceUtils.getUniqueResourceName(defaultJndiName, resources);
 			jndiText.setText(jndiName);

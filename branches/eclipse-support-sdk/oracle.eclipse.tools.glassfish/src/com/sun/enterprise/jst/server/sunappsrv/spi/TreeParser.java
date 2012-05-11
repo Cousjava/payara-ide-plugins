@@ -18,16 +18,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -47,7 +48,7 @@ public final class TreeParser extends DefaultHandler {
     private static final boolean isFinestLoggable = LOGGER.isLoggable(Level.FINEST);
     private static final boolean isFinerLoggable = LOGGER.isLoggable(Level.FINER);
 
-    public static boolean readXml(File xmlFile, List<Path> pathList) throws IllegalStateException {
+    public static boolean readXml(File xmlFile, DomainConfigReader... pathList) throws IllegalStateException {
         boolean result = false;
         InputStream is = null;
         try {
@@ -88,7 +89,11 @@ public final class TreeParser extends DefaultHandler {
     private int depth;
     private NodeReader childNodeReader;
 
-    private TreeParser(List<Path> pathList) {
+    private TreeParser(DomainConfigReader[] readers) {
+    	ArrayList<Path> pathList = new ArrayList<TreeParser.Path>();
+    	for (DomainConfigReader r : readers) {
+    		Collections.addAll(pathList, r.getPathsToListen());
+    	}
         root = buildTree(pathList);
     }
 
@@ -233,7 +238,7 @@ public final class TreeParser extends DefaultHandler {
         }
     }
 
-    public static abstract class NodeReader<T> {
+    public static abstract class NodeReader {
 
         public void readAttributes(String qname, Attributes attributes) throws SAXException {
         }
@@ -247,11 +252,6 @@ public final class TreeParser extends DefaultHandler {
         public void endNode(String qname) throws SAXException {
         }
         
-        protected T result;
-        
-        public T getResult() {
-        	return result;
-        }
     }
 
     public static class Path {

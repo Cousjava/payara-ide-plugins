@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -43,15 +42,14 @@ import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.GetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
-import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
+import com.sun.enterprise.jst.server.sunappsrv.spi.ResourcesReader;
 import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
 
 public class ResourceUtils {
@@ -62,10 +60,6 @@ public class ResourceUtils {
 	public static final String EAR_CONTENT = "EarContent"; //$NON-NLS-1$
 	public static final String EJB_CONTENT = "ejbModule"; //$NON-NLS-1$
 	public static final String META_INF = "META-INF"; //$NON-NLS-1$
-	public static final String TYPE_JDBC = "JDBC"; //$NON-NLS-1$
-	public static final String TYPE_CONNECTIONPOOL = "CONNECTIONPOOL"; //$NON-NLS-1$
-	public static final String TYPE_JAVAMAIL = "JAVAMAIL"; //$NON-NLS-1$
-	public static final String TYPE_CONNECTOR = "CONNECTOR"; //$NON-NLS-1$
 	
 	private static final String SUN_RESOURCES_XML_HEADER = 
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<!DOCTYPE resources PUBLIC " +  //$NON-NLS-1$ //$NON-NLS-2$
@@ -223,80 +217,46 @@ public class ResourceUtils {
 	}
 	
 		
-	public static List<String> getResources(String type, IProject selectedProject){
+	public static List<String> getResources(IProject selectedProject, ResourceType... types){
 		List<String> resources = new ArrayList<String>();
 		if (selectedProject != null) {
 			File xmlFile = getSunResourceFile(selectedProject);
 			if (xmlFile.exists()) {
-				List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
-				ResourcesList df = new ResourcesList("jndi-name"); //$NON-NLS-1$
-				if (type.equals(TYPE_JDBC)) {
-					pathList.add(new TreeParser.Path("/resources/jdbc-resource", df)); //$NON-NLS-1$
-				} else if (type.equals(TYPE_CONNECTOR)) {
-					pathList.add(new TreeParser.Path("/resources/admin-object-resource", df)); //$NON-NLS-1$
-					pathList.add(new TreeParser.Path("/resources/connector-resource", df)); //$NON-NLS-1$
-				} else if (type.equals(TYPE_JAVAMAIL)) {
-					pathList.add(new TreeParser.Path("/resources/mail-resource", df)); //$NON-NLS-1$
-				} else if (type.equals(TYPE_CONNECTIONPOOL)) {
-					df = new ResourcesList("name"); //$NON-NLS-1$
-					pathList.add(new TreeParser.Path("/resources/jdbc-connection-pool", df)); //$NON-NLS-1$
+				for (ResourceType type : types) {
+					ResourcesReader reader = new ResourcesReader(type);
+					TreeParser.readXml(xmlFile, reader);
+					resources.addAll(reader.getResourceData().keySet());
 				}
-				TreeParser.readXml(xmlFile, pathList);
-				resources = df.getResources();
 			}
 		} else {
 			SunAppSrvPlugin.logMessage("No valid project selected");
 		}
 		return resources;
 	}
-	
-	public static class ResourcesList extends TreeParser.NodeReader {
-		private final List<String> resourcesList = new ArrayList<String>();
-		private String attrName;
-
-		public ResourcesList(String attrname) {
-			attrName = attrname;
-		}
-
-		@Override
-		public void readAttributes(String qname, Attributes attributes) throws SAXException {
-			String jndiName = attributes.getValue(attrName);
-			resourcesList.add(jndiName);
-		}
-
-		public List<String> getResources() {
-			return resourcesList;
-		}
-	}
 
 	public static void checkUpdateServerResources(File sunResourcesXml, SunAppServer sunAppsrv) {
 		Map<String, String> changedData = new HashMap<String, String>();
-		List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
-		ResourceFinder cpFinder = new ResourceFinder("name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/jdbc-connection-pool", cpFinder)); //$NON-NLS-1$
-		ResourceFinder jdbcFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/jdbc-resource", jdbcFinder)); //$NON-NLS-1$
-		ResourceFinder connectorPoolFinder = new ResourceFinder("name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/connector-connection-pool", connectorPoolFinder)); //$NON-NLS-1$
-		ResourceFinder connectorFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/connector-resource", connectorFinder)); //$NON-NLS-1$
-		ResourceFinder aoFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/admin-object-resource", aoFinder)); //$NON-NLS-1$
-		ResourceFinder mailFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/mail-resource", mailFinder)); //$NON-NLS-1$
+		
+		ResourcesReader cpReader = new ResourcesReader(ResourceType.JDBC_CONNECTION_POOL);
+		ResourcesReader jdbcReader = new ResourcesReader(ResourceType.JDBC_RESOURCE);
+		ResourcesReader connectorPoolReader = new ResourcesReader(ResourceType.CONNECTOR_POOL);
+		ResourcesReader connectorResourceReader = new ResourcesReader(ResourceType.CONNECTOR_RESOURCE);
+		ResourcesReader aoReader = new ResourcesReader(ResourceType.ADMIN_OBJECT_RESOURCE);
+		ResourcesReader mailReader = new ResourcesReader(ResourceType.JAVA_MAIL);
 
 		try {
-			TreeParser.readXml(sunResourcesXml, pathList);
+			TreeParser.readXml(sunResourcesXml, cpReader, jdbcReader, connectorPoolReader,
+					connectorResourceReader, aoReader, mailReader);
 		} catch (IllegalStateException ex) {
 			SunAppSrvPlugin.logMessage("Exception while reading resource file : " + sunResourcesXml, ex);	//$NON-NLS-1$
 		}
 		Map<String, String> allRemoteData = getResourceData("resources.*", sunAppsrv); //$NON-NLS-1$
-		changedData = checkResources(cpFinder, "resources.jdbc-connection-pool.", allRemoteData, changedData); //$NON-NLS-1$
-		changedData = checkResources(jdbcFinder, "resources.jdbc-resource.", allRemoteData, changedData); //$NON-NLS-1$
-		changedData = checkResources(connectorPoolFinder, "resources.connector-connection-pool.", allRemoteData, changedData); //$NON-NLS-1$
-		changedData = checkResources(connectorFinder, "resources.connector-resource.", allRemoteData, changedData); //$NON-NLS-1$
-		changedData = checkResources(aoFinder, "resources.admin-object-resource.", allRemoteData, changedData); //$NON-NLS-1$
-		changedData = checkResources(mailFinder, "resources.mail-resource.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(cpReader, "resources.jdbc-connection-pool.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(jdbcReader, "resources.jdbc-resource.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(connectorPoolReader, "resources.connector-connection-pool.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(connectorResourceReader, "resources.connector-resource.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(aoReader, "resources.admin-object-resource.", allRemoteData, changedData); //$NON-NLS-1$
+		changedData = checkResources(mailReader, "resources.mail-resource.", allRemoteData, changedData); //$NON-NLS-1$
 
 		if (changedData.size() > 0) {
 			putResourceData(changedData, sunAppsrv);
@@ -324,11 +284,10 @@ public class ResourceUtils {
         return new HashMap<String,String>();
     }
 	
-	private static Map<String, String> checkResources(ResourceFinder resourceFinder, String prefix, Map<String, String> allRemoteData, Map<String, String> changedData) {
-        List<String> resources = resourceFinder.getResourceNames();
-        for (int i = 0; i < resources.size(); i++) {
-            String jndiName = resources.get(i);
-            Map<String, String> localData = resourceFinder.getResourceData().get(jndiName);
+	private static Map<String, String> checkResources(ResourcesReader resourceReader, String prefix, Map<String, String> allRemoteData, Map<String, String> changedData) {
+        Set<String> resources = resourceReader.getResourceData().keySet();
+        for (String jndiName : resources) {
+            Map<String, String> localData = resourceReader.getResourceData().get(jndiName);
             String remoteKey = prefix + jndiName + "."; //$NON-NLS-1$
 
             Map<String, String> remoteData = new HashMap<String, String>();
@@ -401,54 +360,6 @@ public class ResourceUtils {
         }
     }
 	
-	public static class ResourceFinder extends TreeParser.NodeReader {
-
-		private Map<String, String> properties = null;
-		private Map<String, Map<String, String>> resourceData = new HashMap<String, Map<String, String>>();
-
-		private final String nameKey;
-
-		public ResourceFinder(String in_nameKey) {
-			nameKey = in_nameKey;
-		}
-
-		@Override
-		public void readAttributes(String qname, Attributes attributes) throws SAXException {
-			properties = new HashMap<String, String>();
-
-			String resourceName = attributes.getValue(nameKey);
-			properties.put(nameKey, resourceName);  
-
-			int attrLen = attributes.getLength();
-			for (int i = 0; i < attrLen; i++) {
-				String name = attributes.getQName(i);
-				String value = attributes.getValue(i);
-				if (name != null && name.length() > 0 && value != null && value.length() > 0) {
-					properties.put(name, value);
-				}
-			}
-		}
-
-		@Override
-		public void readChildren(String qname, Attributes attributes) throws SAXException {
-			String propName = qname + "." + attributes.getValue("name"); //$NON-NLS-1$ //$NON-NLS-2$
-			properties.put(propName, attributes.getValue("value"));  //$NON-NLS-1$
-		}
-
-		@Override
-		public void endNode(String qname) throws SAXException {
-			String poolName = properties.get(nameKey);  
-			resourceData.put(poolName, properties);
-		}
-
-		public List<String> getResourceNames() {
-			return new ArrayList<String>(resourceData.keySet());
-		}
-
-		public Map<String, Map<String, String>> getResourceData() {
-			return Collections.unmodifiableMap(resourceData);
-		}
-	}
 
     public static String getUniqueResourceName(String name, List<String> resources){
 		for (int i = 1;; i++) {
@@ -467,9 +378,9 @@ public class ResourceUtils {
 		return isDuplicate;
 	}
 	
-	public static boolean isDuplicate (String name, String type, IProject selectedProject){
+	public static boolean isDuplicate (String name, ResourceType type, IProject selectedProject){
 		boolean isDuplicate = false;
-		List<String> resources = getResources(type, selectedProject);
+		List<String> resources = getResources(selectedProject, type);
 		if (resources.contains(name)) {
 				isDuplicate = true;
 		}

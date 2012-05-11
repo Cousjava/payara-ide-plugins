@@ -1,5 +1,6 @@
 package com.sun.enterprise.jst.server.sunappsrv.spi;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.xml.sax.Attributes;
@@ -7,8 +8,24 @@ import org.xml.sax.SAXException;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser.NodeReader;
+import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser.Path;
 
-public class NetworkListenerReader extends NodeReader<Map<String, HttpData>> {
+public class NetworkListenerReader extends NodeReader implements DomainConfigReader {
+	
+	public static final String DEFAULT_PATH = "/domain/configs/config/network-config/network-listeners/network-listener";
+	
+	private String path;
+	
+	private Map<String, HttpData> result;
+	
+	public NetworkListenerReader() {
+		this(DEFAULT_PATH);
+	}
+	
+	public NetworkListenerReader(String path) {
+		this.path = path;
+		this.result = new HashMap<String, HttpData>();
+	}
 
 	@Override
 	public void readAttributes(String qname, Attributes attributes) throws SAXException {
@@ -43,5 +60,14 @@ public class NetworkListenerReader extends NodeReader<Map<String, HttpData>> {
 		} catch(NumberFormatException ex) {
 			throw new SAXException(ex);
 		}
+	}
+	
+	@Override
+	public Path[] getPathsToListen() {
+		return new Path[] {new Path(path, this)};
+	}
+
+	public Map<String, HttpData> getResult() {
+		return result;
 	}
 }
