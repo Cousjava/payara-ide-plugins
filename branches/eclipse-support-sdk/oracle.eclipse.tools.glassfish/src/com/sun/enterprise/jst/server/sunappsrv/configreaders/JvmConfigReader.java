@@ -1,16 +1,17 @@
-package com.sun.enterprise.jst.server.sunappsrv.spi;
+package com.sun.enterprise.jst.server.sunappsrv.configreaders;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.glassfish.tools.ide.server.parser.DomainConfigReader;
+import org.glassfish.tools.ide.server.parser.TreeParser;
+import org.glassfish.tools.ide.server.parser.TreeParser.NodeListener;
+import org.glassfish.tools.ide.server.parser.TreeParser.Path;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser.NodeReader;
-import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser.Path;
-
-public class JvmConfigReader extends NodeReader implements
+public class JvmConfigReader extends NodeListener implements
 		DomainConfigReader {
 	
 	private String serverName;
@@ -26,8 +27,8 @@ public class JvmConfigReader extends NodeReader implements
 		this.serverName = serverName;
 	}
 
-	public TreeParser.NodeReader getServerFinder() {
-        return new TreeParser.NodeReader() {
+	public TreeParser.NodeListener getServerFinder() {
+        return new TreeParser.NodeListener() {
             @Override
             public void readAttributes(String qname, Attributes attributes) throws SAXException {
 //                <server lb-weight="100" name="server" config-ref="server-config">
@@ -41,8 +42,8 @@ public class JvmConfigReader extends NodeReader implements
         };
     }
 
-    public TreeParser.NodeReader getConfigFinder() {
-        return new TreeParser.NodeReader() {
+    public TreeParser.NodeListener getConfigFinder() {
+        return new TreeParser.NodeListener() {
             @Override
             public void readAttributes(String qname, Attributes attributes) throws SAXException {
 //                <config name="server-config" dynamic-reconfiguration-enabled="true">
@@ -96,8 +97,8 @@ public class JvmConfigReader extends NodeReader implements
         }
     }
     
-    public TreeParser.NodeReader getMonitoringFinder() {
-    	return new TreeParser.NodeReader() {
+    public TreeParser.NodeListener getMonitoringFinder() {
+    	return new TreeParser.NodeListener() {
     		@Override
     		public void readAttributes(String qname, Attributes attributes) throws SAXException {
     			//                <monitoring-service [monitoring-enabled="false"] 

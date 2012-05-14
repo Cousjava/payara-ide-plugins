@@ -1,4 +1,4 @@
-package com.sun.enterprise.jst.server.sunappsrv.spi;
+package com.sun.enterprise.jst.server.sunappsrv.configreaders;
 
 public class HttpData {
 
