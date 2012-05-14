@@ -52,18 +52,18 @@ import org.glassfish.tools.ide.data.GlassFishServer;
 import org.glassfish.tools.ide.data.GlassFishVersion;
 import org.glassfish.tools.ide.data.IdeContext;
 import org.glassfish.tools.ide.server.ServerSupport;
+import org.glassfish.tools.ide.server.parser.TreeParser;
 
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
+import com.sun.enterprise.jst.server.sunappsrv.configreaders.HttpData;
+import com.sun.enterprise.jst.server.sunappsrv.configreaders.HttpListenerReader;
+import com.sun.enterprise.jst.server.sunappsrv.configreaders.JmxConnectorReader;
+import com.sun.enterprise.jst.server.sunappsrv.configreaders.NetworkListenerReader;
 import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
-import com.sun.enterprise.jst.server.sunappsrv.spi.HttpData;
-import com.sun.enterprise.jst.server.sunappsrv.spi.HttpListenerReader;
-import com.sun.enterprise.jst.server.sunappsrv.spi.JmxConnectorReader;
-import com.sun.enterprise.jst.server.sunappsrv.spi.NetworkListenerReader;
-import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
 
 
 

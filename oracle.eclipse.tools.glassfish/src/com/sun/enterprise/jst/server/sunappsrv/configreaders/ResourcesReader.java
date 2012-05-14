@@ -1,16 +1,17 @@
-package com.sun.enterprise.jst.server.sunappsrv.spi;
+package com.sun.enterprise.jst.server.sunappsrv.configreaders;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.tools.ide.server.parser.DomainConfigReader;
+import org.glassfish.tools.ide.server.parser.TreeParser.NodeListener;
+import org.glassfish.tools.ide.server.parser.TreeParser.Path;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser.NodeReader;
-import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser.Path;
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.ResourceType;
 
-public class ResourcesReader extends NodeReader implements
+public class ResourcesReader extends NodeListener implements
 		DomainConfigReader {
 
 	private String path;

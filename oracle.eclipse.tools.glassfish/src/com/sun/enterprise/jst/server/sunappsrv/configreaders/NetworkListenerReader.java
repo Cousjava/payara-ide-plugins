@@ -1,16 +1,17 @@
-package com.sun.enterprise.jst.server.sunappsrv.spi;
+package com.sun.enterprise.jst.server.sunappsrv.configreaders;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.tools.ide.server.parser.DomainConfigReader;
+import org.glassfish.tools.ide.server.parser.TreeParser.NodeListener;
+import org.glassfish.tools.ide.server.parser.TreeParser.Path;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser.NodeReader;
-import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser.Path;
 
-public class NetworkListenerReader extends NodeReader implements DomainConfigReader {
+public class NetworkListenerReader extends NodeListener implements DomainConfigReader {
 	
 	public static final String DEFAULT_PATH = "/domain/configs/config/network-config/network-listeners/network-listener";
 	
