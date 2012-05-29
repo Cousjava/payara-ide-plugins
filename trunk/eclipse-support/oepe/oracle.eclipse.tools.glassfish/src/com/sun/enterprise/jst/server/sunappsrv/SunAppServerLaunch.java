@@ -218,7 +218,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         }
 
         setDefaultSourceLocator(launch, configuration);
-        ReadDomainInfo di = new ReadDomainInfo(serverBehavior.getSunApplicationServerInstallationDirectory(),
+        ReadDomainInfo di = new ReadDomainInfo(sunserver.getDomainDir(),
                 serverBehavior.getDomainName());
         if (ILaunchManager.PROFILE_MODE.equals(mode)) {
             try {

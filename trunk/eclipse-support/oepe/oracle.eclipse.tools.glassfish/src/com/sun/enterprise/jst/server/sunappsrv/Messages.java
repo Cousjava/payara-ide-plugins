@@ -37,6 +37,8 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String canInstallPath;
     public static String possibleInstallExists;
     public static String downloadingServer;
+    
+    public static String runtimeNameLabel;
 
     public static String register;
     public static String updateCenter;

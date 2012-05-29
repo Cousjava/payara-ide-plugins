@@ -27,10 +27,7 @@ import org.eclipse.jst.server.generic.ui.internal.ServerDefinitionTypeAwareWizar
 import org.eclipse.jst.server.generic.ui.internal.ServerTypeDefinitionRuntimeDecorator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.internal.IInstallableRuntime;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
@@ -82,15 +79,17 @@ public class InstallableRuntimeServerRuntimeWizardFragment extends
                         .getRuntimeType().getId() );
         if( ir != null )
         {
-            fDecorators = new GenericServerCompositeDecorator[2];
+            fDecorators = new GenericServerCompositeDecorator[3];
             fDecorators[0] = new JRESelectDecorator( getRuntimeDelegate(), getWizard() );
-            fDecorators[1] = new InstallableServerTypeDefinitionRuntimeDecorator(
+            fDecorators[1] = new ServerRuntimeNameDecorator(getRuntimeDelegate(), handle);
+            fDecorators[2] = new InstallableServerTypeDefinitionRuntimeDecorator(
             		definition, properties, getWizard(), getRuntimeDelegate(), INSTALL_DIR_NAME );
         } else
         {
-            fDecorators = new GenericServerCompositeDecorator[2];
+            fDecorators = new GenericServerCompositeDecorator[3];
             fDecorators[0] = new JRESelectDecorator( getRuntimeDelegate(), getWizard() );
-            fDecorators[1] = new ServerTypeDefinitionRuntimeDecorator(
+            fDecorators[1] = new ServerRuntimeNameDecorator(getRuntimeDelegate(), handle);
+            fDecorators[2] = new ServerTypeDefinitionRuntimeDecorator(
                     definition, properties, getWizard(), getRuntimeDelegate() );
         }
 
@@ -115,8 +114,8 @@ public class InstallableRuntimeServerRuntimeWizardFragment extends
      * @see org.eclipse.wst.server.ui.wizard.IWizardFragment#enter()
      */
     public void enter() {
-        if( getRuntimeDelegate() != null )
-            getRuntimeDelegate().getRuntimeWorkingCopy().setName( createName() );
+//        if( getRuntimeDelegate() != null )
+//            getRuntimeDelegate().getRuntimeWorkingCopy().setName( createName() );
 
         for( int i = 0; i < fDecorators.length; i++ )
         {
@@ -132,28 +131,6 @@ public class InstallableRuntimeServerRuntimeWizardFragment extends
             if( fDecorators[i].validate() )//failed do not continue
                 return;
         }
-    }
-
-    private String createName() {
-        RuntimeDelegate dl = getRuntimeDelegate();
-        IRuntimeType runtimeType = dl.getRuntime().getRuntimeType();
-        String name = NLS.bind(
-                GenericServerUIMessages.runtimeName, runtimeType.getName() );
-        IRuntime[] list = ServerCore.getRuntimes();
-        int suffix = 1;
-        String suffixName = name;
-        for( int i = 0; i < list.length; i++ )
-        {
-            if( (list[i].getName().equals( name ) || list[i].getName().equals(
-                    suffixName ))
-                    && !list[i].equals( dl.getRuntime() ) )
-                suffix++;
-            suffixName = name + ' ' + suffix;
-        }
-
-        if( suffix > 1 )
-            return suffixName;
-        return name;
     }
 
     private GenericServerRuntime getRuntimeDelegate() {
@@ -194,7 +171,7 @@ public class InstallableRuntimeServerRuntimeWizardFragment extends
     private String getRuntimeName() {
         if( getRuntimeDelegate() != null
                 && getRuntimeDelegate().getRuntime() != null )
-            return getRuntimeDelegate().getRuntime().getName();
+            return getRuntimeDelegate().getRuntime().getRuntimeType().getName();
         return null;
     }
     
