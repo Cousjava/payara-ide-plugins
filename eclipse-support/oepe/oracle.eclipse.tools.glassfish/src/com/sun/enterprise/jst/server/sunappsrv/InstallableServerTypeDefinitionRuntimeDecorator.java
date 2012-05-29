@@ -74,7 +74,7 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 	private Map fProperties;
 	private GenericServerRuntime fRuntime;
 	private Property serverDirProperty;
-	private Text path;
+	private Text pathField;
 	private Button installButton;
 	
 	public InstallableServerTypeDefinitionRuntimeDecorator(ServerRuntime definition, Map initialProperties, 
@@ -92,7 +92,7 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 			UNZIP_DIR_NAME = "glassfish3";
 		}
                 
-                fInstallDirName = installDirName;
+        fInstallDirName = installDirName;
 		fDefinition = definition;
 		fProperties = initialProperties;
 		fRuntime = runtime;
@@ -112,10 +112,10 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 	public void decorate(final GenericServerComposite composite) {
 		String pathText;
 		Dialog.applyDialogFont(composite);
-		path = SWTUtil.createLabeledPath(serverDirProperty.getLabel(),getPropertyValue(serverDirProperty),composite);
-		path.setData(serverDirProperty);
-		path.addModifyListener(new PathModifyListener());
-		pathText = path.getText();
+		pathField = SWTUtil.createLabeledPath(serverDirProperty.getLabel(),getPropertyValue(serverDirProperty),composite);
+		pathField.setData(serverDirProperty);
+		pathField.addModifyListener(new PathModifyListener());
+		pathText = pathField.getText();
 		final IInstallableRuntime ir = ServerPlugin
 				.findInstallableRuntime(fRuntime.getRuntime().getRuntimeType()
 						.getId());
@@ -125,7 +125,7 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 		label.setText("(to enable Install Server, enter a path to a new directory....)");
 		installButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent se) {
-				final String selectedDirectory = path.getText();
+				final String selectedDirectory = pathField.getText();
 				if (selectedDirectory != null) {
 					String license = null;
 					try {
@@ -173,7 +173,7 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 						// update: seems to be fixed now
 						fWizard.run(true, true, runnable);
 
-						path.setText(getInternalDirectoryName(selectedDirectory));
+						pathField.setText(getInternalDirectoryName(selectedDirectory));
 						validate();
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE,
@@ -183,11 +183,11 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 				}
 			}
 		});
-		if (pathText.length() > 0) {
-			// has an initial value, probably opened from edit dialog...
-			// must do this after install button is created above
-			validatePath(pathText);
-		}
+//		if (pathText.length() > 0) {
+//			// has an initial value, probably opened from edit dialog...
+//			// must do this after install button is created above
+//			validate();
+//		}
 	}
 
     private String getInternalDirectoryName(String installDir) {
@@ -237,49 +237,10 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
  	@SuppressWarnings("unchecked")
 	public Map getValues(){
  		Map propertyMap = new HashMap<String, String>();
- 		propertyMap.put(serverDirProperty.getId(), path.getText());
+ 		propertyMap.put(serverDirProperty.getId(), pathField.getText());
      	return propertyMap;
      }
-
- 	private void validatePath(String path) {
- 		if(path.length()<1)
- 		{
- 			fLastMessage = GenericServerUIMessages.emptyPath;
- 			fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
- 			installButton.setEnabled(false);
- 		}
- 		else if(!pathExist(path)){
- 			fLastMessage = Messages.canInstallPath;
- 			fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
- 			installButton.setEnabled(true);
- 		}else{
- 			if(fLastMessage!=null && fLastMessage.equals(fWizard.getMessage())){
- 				fLastMessage=null;
- 				fWizard.setMessage(null,IMessageProvider.NONE);
- 			}
- 			boolean isInvalid = validate();
- 			if (isInvalid) {
- 				String glassfishDir = path + File.separatorChar + fInstallDirName;
- 				String unzipDirName = getInternalDirectoryName(path);
-
- 				if(pathExist(glassfishDir)){
- 					fLastMessage = NLS.bind(Messages.possibleInstallExists,fInstallDirName);
- 					fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
- 					installButton.setEnabled(false);
- 				} else if (pathExist(unzipDirName)) {
- 					fLastMessage = NLS.bind(Messages.possibleInstallExists,UNZIP_DIR_NAME + File.separatorChar + fInstallDirName);
- 					fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
- 					installButton.setEnabled(false);
- 				} else {
- 					fLastMessage = Messages.canInstallPath;
- 					fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
- 					installButton.setEnabled(true);
- 				}
- 			} else {
- 				installButton.setEnabled(false);
- 			}
- 		}
- 	}
+ 	
 	private boolean pathExist(String path){
 		File f = new File(path);
 		return f.exists();
@@ -288,8 +249,52 @@ public class InstallableServerTypeDefinitionRuntimeDecorator extends ServerTypeD
 
 	private final class PathModifyListener implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
-			String path = ((Text) e.widget).getText();
-			validatePath(path);
+			fRuntime.getRuntimeWorkingCopy().setLocation(new Path(pathField.getText()));
+			validate();
 		}
 	}
+
+
+	@Override
+	public boolean validate() {
+		String path = pathField.getText();
+		boolean isInvalid = super.validate();
+ 		if (isInvalid) {
+ 			if(!pathExist(path)){
+ 				fLastMessage = Messages.canInstallPath;
+ 				fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
+ 				installButton.setEnabled(true);
+ 			}else{
+
+ 				String glassfishDir = path + File.separatorChar + fInstallDirName;
+ 				String unzipDirName = getInternalDirectoryName(path);
+
+ 				if(pathExist(glassfishDir)){
+ 					fLastMessage = NLS.bind(Messages.possibleInstallExists,fInstallDirName);
+ 					fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
+ 					installButton.setEnabled(false);	
+ 				} else if (pathExist(unzipDirName)) {
+ 					fLastMessage = NLS.bind(Messages.possibleInstallExists,UNZIP_DIR_NAME + File.separatorChar + fInstallDirName);
+ 					fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
+ 					installButton.setEnabled(false);
+ 				} 
+// 				else {
+// 					// path exists but the runtime is invalid
+// 					// only if no message is assigned to the wizard so far
+// 					if ((fWizard.getMessage() == null) || fWizard.getMessage().isEmpty()) {
+// 						fLastMessage = Messages.canInstallPath;
+// 	 					fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
+// 	 					installButton.setEnabled(true);
+// 					}
+// 				}
+ 			}
+ 			return true;
+ 		}
+ 		else {
+ 			installButton.setEnabled(false);
+ 			return false;
+ 		}
+	}
+	
+	
 }
