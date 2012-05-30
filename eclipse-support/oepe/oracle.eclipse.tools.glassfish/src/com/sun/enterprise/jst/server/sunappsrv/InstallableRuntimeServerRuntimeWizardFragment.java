@@ -15,6 +15,8 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
@@ -64,6 +66,22 @@ public class InstallableRuntimeServerRuntimeWizardFragment extends
         IStatus status = runtime.validate();
         return (status != null && status.isOK());
     }
+
+    
+	@Override
+	public void performFinish(IProgressMonitor monitor) throws CoreException {
+		super.performFinish(monitor);
+		// check if we are editing runtime
+		if (isEdit()) {
+			// TODO change the name of runtime in projects and servers
+		}
+	}
+	
+	private boolean isEdit() {
+		IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) getTaskModel()
+                .getObject( TaskModel.TASK_RUNTIME );
+		return wc.getOriginal() != null;
+	}
 
 	public void createContent( Composite parent, IWizardHandle handle ) {
         Map properties = null;
