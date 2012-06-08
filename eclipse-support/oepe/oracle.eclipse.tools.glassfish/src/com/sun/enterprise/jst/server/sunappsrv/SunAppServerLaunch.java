@@ -180,86 +180,11 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         AbstractVMInstall/* IVMInstall */ vm = (AbstractVMInstall) serverBehavior.getRuntimeDelegate().getVMInstall();
 
         IVMInstall vm2 = verifyVMInstall(configuration);
-        IVMRunner runner = vm2.getVMRunner(mode);
-
-        File workingDir = verifyWorkingDirectory(configuration);
-        String workingDirName = null;
-        if (workingDir != null) {
-            workingDirName = workingDir.getAbsolutePath();
-        }
-
-        // Program & VM args
-        String pgmArgs = getProgramArguments(configuration);
-        String vmArgs = getVMArguments(configuration);
-        String[] envp = getEnvironment(configuration);
-
-        ExecutionArguments execArgs = new ExecutionArguments(vmArgs, pgmArgs);
-
-        // VM-specific attributes
-        Map vmAttributesMap = getVMSpecificAttributesMap(configuration);
-
-        // Classpath
-        String[] classpath = getClasspath(configuration);
 
         //String mainTypeName = tomcatServer.getRuntimeClass();
 
-        // Create VM config
-        VMRunnerConfiguration runConfig = new VMRunnerConfiguration("com.sun.enterprise.glassfish.bootstrap.ASMain", classpath); //$NON-NLS-1$
-        runConfig.setProgramArguments(execArgs.getProgramArgumentsArray());
-        runConfig.setVMArguments(execArgs.getVMArgumentsArray());
-        runConfig.setWorkingDirectory(workingDirName);
-        runConfig.setEnvironment(envp);
-        runConfig.setVMSpecificAttributesMap(vmAttributesMap);
-
-        // Bootpath
-        String[] bootpath = getBootpath(configuration);
-        if (bootpath != null && bootpath.length > 0) {
-            runConfig.setBootClassPath(bootpath);
-        }
-
         setDefaultSourceLocator(launch, configuration);
-        ReadDomainInfo di = new ReadDomainInfo(sunserver.getDomainDir(),
-                serverBehavior.getDomainName());
-        if (ILaunchManager.PROFILE_MODE.equals(mode)) {
-            try {
-            	// if the IDE is less than Galileo... don't attempt to do
-            	// profiling...
-            	//
-            	Version tptpVersion = getCurrentVersion("org.eclipse.tptp.platform.models"); //$NON-NLS-1$
-            	Version testVersion = new Version(4,5,9);
-            	if (null == tptpVersion) {
-                    ProfilerInfoMessage.display(Messages.noProfilersConfigured);
-                    di.removeProfilerElements();
-            	} else if (tptpVersion.compareTo(testVersion) < 1) {
-            		// open info dialog
-            		ProfilerInfoMessage.display(Messages.profilingUnsupportedInVersion);
-                    di.removeProfilerElements();
-            	} else {
-                    ServerProfilerDelegate.configureProfiling(launch, vm2, runConfig,
-                            monitor);
-                    String[] vmArgs2 = runConfig.getVMArguments();
-                    String nativeLib = "";  //$NON-NLS-1$
-                    for (String nameVal : runConfig.getEnvironment()) {
-                        String jph = "JAVA_PROFILER_HOME="; //$NON-NLS-1$
-                        if (nameVal.startsWith(jph)) {
-                            nativeLib = nameVal.substring(jph.length());
-                        }
-                    }
-                    if (vmArgs2 != null && vmArgs2.length == 1) {
-                        String orig = vmArgs2[0];
-                        String[] broken = orig.split(":"); //$NON-NLS-1$
-                        String fixed = broken[0] + ":" + nativeLib + File.separator + broken[1] + ":" + broken[2]; //$NON-NLS-1$
-                        vmArgs2[0] = fixed;
-                    }
-                    di.addProfilerElements(nativeLib, vmArgs2);
-                }
-            } catch (CoreException ce) {
-                ProfilerInfoMessage.display(Messages.noProfilersConfigured);
-                di.removeProfilerElements();
-            }
-        } else {
-            di.removeProfilerElements();
-        }
+        
         try {
             monitor.worked(10);
 

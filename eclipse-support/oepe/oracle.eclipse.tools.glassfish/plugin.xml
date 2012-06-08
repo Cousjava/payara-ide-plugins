@@ -20,7 +20,7 @@
             id="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
             name="%sunappserver.ConfigurationTypeName"
             delegate="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunch"
-            modes="run, debug, profile"
+            modes="run, debug"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
     </extension> 
