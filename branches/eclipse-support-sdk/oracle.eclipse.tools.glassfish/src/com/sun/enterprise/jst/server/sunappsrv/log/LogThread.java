@@ -16,10 +16,10 @@ package com.sun.enterprise.jst.server.sunappsrv.log;
 
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Vector;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
@@ -36,7 +36,7 @@ public class LogThread extends Thread{
 		public void logChanged(Ring list);
 	}
 
-	private File logFile = null;
+	private FileInputStream log = null;
 	private int sleepTime = 500; // ms
 
 	private int numLines = 100;
@@ -49,10 +49,10 @@ public class LogThread extends Thread{
 	/**
 	 * Create a LogThread.
 	 */
-	public LogThread(File file, int interval, int numLines)
-	throws FileNotFoundException, IOException	{
+	public LogThread(InputStream log, int interval, int numLines)
+		{
 		setDaemon(true);
-		logFile = file;
+		this.log = (FileInputStream)log;
 		sleepTime = interval;
 		this.numLines = numLines;
 	}
@@ -81,7 +81,7 @@ public class LogThread extends Thread{
 	}
 
 	public void run()	{
-		BufferedReader reader = null;
+		BufferedReader reader = new BufferedReader(new InputStreamReader(log));
 
 		isThreadActive = true;
 		ringBuffer = new Ring(numLines);
@@ -91,45 +91,45 @@ public class LogThread extends Thread{
 		while (isThreadActive) {
 			boolean updated = false;
 			boolean truncated = false;
-			while (reader==null){
-				if (logFile.exists()){
-					try {
-						reader = new BufferedReader(new FileReader(logFile));
-					} catch (FileNotFoundException e) {
-						SunAppSrvPlugin.logMessage("Error reading from log file", e);
-					}
-					
-				}
-				try {
-					sleep(sleepTime);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					//nothing to report on
-				}
-			}
+//			while (reader==null){
+//				if (logReader.exists()){
+//					try {
+//						reader = new BufferedReader(new FileReader(logReader));
+//					} catch (FileNotFoundException e) {
+//						SunAppSrvPlugin.logMessage("Error reading from log file", e);
+//					}
+//					
+//				}
+//				try {
+//					sleep(sleepTime);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					//nothing to report on
+//				}
+//			}
 	
-			//Test if file is truncated...
-			truncated = false;
-			if (logFile.length() < size) {
-				truncated = true;
-			}
-			size = logFile.length();
 			try {
+				//Test if file is truncated...
+				truncated = false;
+				if (log.getChannel().size() < size) {
+					truncated = true;
+				}
+				size = log.getChannel().size();
 				if (truncated) {
 					ringBuffer.add("log file rotation...");
 					updated = true;
 					reader.close();
-					reader = new BufferedReader(new FileReader(logFile));
+					reader = new BufferedReader(new InputStreamReader(log));
 
 					// complete read
 					while ((line = reader.readLine()) != null) {
 					}
 				}
-				else if (!logFile.exists()) {
-					ringBuffer.add("log file deleted");
-					updated = true;
-					isThreadActive = false;
-				}
+//				else if (!log.exists()) {
+//					ringBuffer.add("log file deleted");
+//					updated = true;
+//					isThreadActive = false;
+//				}
 				else {
 					while( reader.ready()) {
 						line = filter.process((char) reader.read());
@@ -172,9 +172,9 @@ public class LogThread extends Thread{
 		}
 	}
 
-	public String getFilename() {
-		return logFile.getAbsolutePath();
-	}
+//	public String getFilename() {
+//		return logReader.getAbsolutePath();
+//	}
 
 	public int getInterval()	{
 		return sleepTime;

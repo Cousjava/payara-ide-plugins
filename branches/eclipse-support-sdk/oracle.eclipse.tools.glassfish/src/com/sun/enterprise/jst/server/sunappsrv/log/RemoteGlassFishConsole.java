@@ -23,6 +23,7 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.glassfish.tools.ide.server.FetchLog;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
@@ -57,14 +58,15 @@ public class RemoteGlassFishConsole extends MessageConsole {
 		super.init();
 		final IDocument document = getDocument();
 
+		FetchLog logFetcher = FetchLog.create(server, true);
+		
 		try {
-			thread = new RemoteLogThread(server, interval, numLines);			
-		}
-		catch (Exception e) {
+			thread = new RemoteLogThread(logFetcher.getInputStream(), interval, numLines);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return;
-		}
-
+		}			
+		
 		addListener(document, thread);
 		thread.start();
 	}

@@ -20,7 +20,7 @@
             id="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
             name="%sunappserver.ConfigurationTypeName"
             delegate="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunch"
-            modes="run, debug, profile"
+            modes="run, debug"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
     </extension> 
@@ -101,48 +101,12 @@
         
         <!-- GlassFish V3 server -->
 
-        <runtimeType
-            id="com.sun.enterprise.jst.server.runtime.sunappsrv92"
-            name="%runtimeTypeName92" description="%runtimeTypeDescription92"
-            vendor="%runtimeTypeGlassFishVendor" version="9.2"
-            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
-            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5, 3.0"/>
-            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0, 3.1"/>
-            <moduleType types="jst.connector" versions="1.0, 1.5, 1.6"/>
-            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0, 6.0"/>
-            <moduleType types="jst.utility"  versions="1.0"/>
-            <moduleType types="jst.appclient" versions="1.2, 1.3, 1.4, 5.0, 6.0"/>
-        </runtimeType>
              
         
         <!-- GlassFish V2 server -->
-        <runtimeType
-            id="com.sun.enterprise.jst.server.runtime.sunappsrv91"
-            name="%runtimeTypeName91" description="%runtimeTypeDescription91"
-            vendor="%runtimeTypeGlassFishVendor" version="9.1"
-            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
-            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
-            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
-            <moduleType types="jst.connector" versions="1.0, 1.5"/>
-            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0"/>
-            <moduleType types="jst.appclient" versions="1.2, 1.3, 1.4, 5.0"/>
-            <moduleType types="jst.utility"  versions="1.0"/>
-        </runtimeType>
         
         
         <!-- Sailfin v2 server -->
-        <runtimeType
-            id="com.sun.enterprise.jst.server.runtime.sailfin2"
-            name="%runtimeTypeNameSailfin2" description="%runtimeTypeDescriptionSailfin2"
-            vendor="%runtimeTypeGlassFishVendor" version="Sailfin v2"
-            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
-            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
-            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
-            <moduleType types="jst.connector" versions="1.0, 1.5"/>
-            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0"/>
-            <moduleType types="jst.appclient" versions="1.2, 1.3, 1.4, 5.0"/>
-            <moduleType types="jst.utility"  versions="1.0"/>
-        </runtimeType>
 
     </extension>
     
@@ -163,7 +127,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug,profile">         
+            launchModes="run,debug">         
         </serverType> 
         
          <!-- GlassFish 3.1.1 server -->
@@ -202,57 +166,14 @@
               
         <!-- GlassFish v3 server -->
 
-        <serverType
-            id="com.sun.enterprise.jst.server.sunappsrv92"
-            name="%serverTypeName92"
-            description="%serverTypeDescription92"
-            runtime="true"
-            class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
-            supportsRemoteHosts="false"
-            runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv92"
-              launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
-            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
-            startBeforePublish="true"
-            hasConfiguration="false"
-            launchModes="run,debug,profile">         
-        </serverType> 
        
  
         
         <!-- GlassFish v2 server -->
-        <serverType
-            id="com.sun.enterprise.jst.server.sunappsrv91"
-            name="%serverTypeName91"
-            description="%serverTypeDescription91"
-            runtime="true"
-            class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
-            supportsRemoteHosts="false"
-            runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv91"
-            launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
-            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
-            startBeforePublish="true"
-            hasConfiguration="false"
-            launchModes="run,debug,profile">         
-        </serverType> 
         
 
 
         <!-- Sailfin v2 server -->
-        <serverType
-            id="com.sun.enterprise.jst.server.sailfin2"
-            name="%serverTypeNameSailfin2"
-            description="%serverTypeDescriptionSailfin2"
-            runtime="true"
-            class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
-            initialState="stopped"
-            supportsRemoteHosts="false"
-            runtimeTypeId="com.sun.enterprise.jst.server.runtime.sailfin2"
-            launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
-            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
-            startBeforePublish="true"
-            hasConfiguration="false"
-            launchModes="run,debug,profile">         
-        </serverType> 
 
         
     </extension>
@@ -277,9 +198,6 @@
 
         
         <!-- GlassFish v3 server -->
-        <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv92" 
-                          definitionfile="/serverdef/glassfishv3serverdef.xml">
-        </serverdefinition>
 
 
         
@@ -287,14 +205,8 @@
         <!-- GlassFish v2 server -->
 
         
-        <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv91" 
-                          definitionfile="/serverdef/sunappsrv91serverdef.xml">
-        </serverdefinition>
 
         
-        <serverdefinition id="com.sun.enterprise.jst.server.runtime.sailfin2" 
-                          definitionfile="/serverdef/sailfin2serverdef.xml">
-        </serverdefinition>
  
         
     </extension>

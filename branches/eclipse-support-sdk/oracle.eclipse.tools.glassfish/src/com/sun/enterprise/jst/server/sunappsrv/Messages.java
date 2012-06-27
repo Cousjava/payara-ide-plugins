@@ -46,6 +46,7 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String pathNotWritable;
     public static String pathNotValidDomain;
     public static String incompleteDomainSetup;
+    public static String invalidPortNumbers;
     public static String TitleWrongDomainLocation;
     public static String OKButton;
 
