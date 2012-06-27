@@ -365,7 +365,7 @@ public class SunAppServerBehaviour extends GenericServerBehaviour {
 	}
 	public String getDomainDir(){
 		SunAppServer  sunserver = getSunAppServer();
-		String d = sunserver.getDomainDir();
+		String d = sunserver.getDomainsFolder();
 		if (isEmpty(d)) {
 			d = getDefaultDomainDir();
 		}

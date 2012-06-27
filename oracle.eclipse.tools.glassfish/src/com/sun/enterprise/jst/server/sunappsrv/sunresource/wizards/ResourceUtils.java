@@ -42,6 +42,8 @@ import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
+import org.glassfish.tools.ide.server.parser.ResourcesReader;
+import org.glassfish.tools.ide.server.parser.ResourcesReader.ResourceType;
 import org.glassfish.tools.ide.server.parser.TreeParser;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
@@ -50,7 +52,6 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.Operatio
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.GetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
-import com.sun.enterprise.jst.server.sunappsrv.configreaders.ResourcesReader;
 
 public class ResourceUtils {
 	public static final String RESOURCE_FILE_TEMPLATE = "templates/sun-resources-xml-template.resource"; //$NON-NLS-1$

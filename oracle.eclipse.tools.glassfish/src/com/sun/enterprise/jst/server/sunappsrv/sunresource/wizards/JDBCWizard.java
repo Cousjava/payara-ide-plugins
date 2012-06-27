@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.glassfish.tools.ide.server.parser.ResourcesReader.ResourceType;
 
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.JDBCInfo;
 

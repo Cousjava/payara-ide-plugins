@@ -32,9 +32,6 @@
     context="server"
     default="${sunappserver.rootdirectory}/domains/domain1" />
     
-
-
-
     <property id="sunappserver.adminname"  label="%sunappserver.adminname"
     type="string"
     context="server"
@@ -45,13 +42,25 @@
     context="server"
     default="" />
     
+    <property id="sunappserver.target" label="%sunappserver.target"
+    type="string"
+    context="server"
+    default="" />
+    
     <property id="sunappserver.keepSessions" label="%sunappserver.keepSessions"
     type="boolean"
     context="server"
     default="true" />
-
-
-
+    
+    <property id="sunappserver.adminserverportnumber" label="%sunappserver.adminserverportnumber"
+    type="integer"
+    context="server"
+    default="4848"/>
+    
+    <property id="sunappserver.serverportnumber" label="%sunappserver.serverportnumber"
+    type="integer"
+    context="server"
+    default="8080"/>
 
 
     <module>

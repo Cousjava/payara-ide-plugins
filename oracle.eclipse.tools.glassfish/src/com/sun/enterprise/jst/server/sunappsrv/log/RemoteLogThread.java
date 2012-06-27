@@ -12,7 +12,10 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Vector;
 import java.util.concurrent.Future;
 
@@ -31,7 +34,7 @@ public class RemoteLogThread extends Thread {
 		public void logChanged(Ring list);
 	}
 
-	private SunAppServer server = null;
+	private InputStream log;
 	private int sleepTime = 6000; // ms
 
 	private int numLines = 100;
@@ -42,10 +45,10 @@ public class RemoteLogThread extends Thread {
 	/**
 	 * Create a LogThread.
 	 */
-	public RemoteLogThread(SunAppServer s, int interval, int numLines)
+	public RemoteLogThread(InputStream log, int interval, int numLines)
 			throws IOException {
 		setDaemon(true);
-		server = s;
+		this.log = log;
 		sleepTime = interval;
 		this.numLines = numLines;
 	}
@@ -73,71 +76,36 @@ public class RemoteLogThread extends Thread {
 	}
 
 	public void run() {
-
+		BufferedReader reader = new BufferedReader(new InputStreamReader(log));
+		// read from the input stream and put all the changes to the I/O window
+        boolean updated = false;
 		isThreadActive = true;
 		ringBuffer = new Ring(numLines);
 		V3LogFilter.Filter filter = new V3LogFilter.LogFileFilter(
 				new V3LogFilter().getLevelMap());
 		String line = null;
 		while (isThreadActive) {
-			CommandRunner cmd = new CommandRunner(server);
-
-			Commands.FetchLogData fld = new Commands.FetchLogData(null);
-			Future<OperationState> result = cmd.execute(fld);
-			OperationState state = null;
-			try {
-				state = result.get();
-
-				if (state == OperationState.COMPLETED) {
-					// now we start to actually put data into the pipe
-
-					while (true) {
-						try {
-							Thread.sleep(sleepTime);
-						} catch (InterruptedException e) {
-							// nothing to do
-						}
-						String newQuery = fld.getNextQuery();
-						fld = new Commands.FetchLogData(newQuery);
-						result = cmd.execute(fld);
-						state = result.get();
-						if (state == OperationState.COMPLETED) {
-							String s = fld.getLines();
-							if (null != s && !"null\n".equals(s)) {
-								for (int i = 0; i < s.length(); i++) {
-									line = filter.process(s.charAt(i));
-									if (line != null) {
-										line = stripNewline(line);
-										ringBuffer.add(line);
-									}
-								}
-
-								notifyListeners();
-
-							}
-						} else {
-							//SunAppSrvPlugin.logMessage(
-							//		"error remotelogviewer state = " + state,
-							//		null);
-
-							break;
-						}
-
+			 try {
+				while (reader.ready()) {
+					line = filter.process((char) reader.read());
+					if (line!=null){
+						line = stripNewline(line);
+						updated = true;
+						ringBuffer.add(line);								
 					}
-				} else {
-					try {
-						Thread.sleep(sleepTime);
-					} catch (InterruptedException e) {
-						// nothing to do
-					}
-				//	SunAppSrvPlugin.logMessage(
-				//			"Error reading from log file, state = " + state,
-				//			null);
-
-				}
-			} catch (Exception ex) {
-				SunAppSrvPlugin.logMessage("Error reading from log file", ex);
-			} 
+				 }
+				
+				if (updated)
+					notifyListeners();
+				
+				sleep(sleepTime);
+				ringBuffer.clear();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}

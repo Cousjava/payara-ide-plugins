@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.glassfish.tools.ide.server.parser.ResourcesReader.ResourceType;
 
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.JDBCInfo;
 

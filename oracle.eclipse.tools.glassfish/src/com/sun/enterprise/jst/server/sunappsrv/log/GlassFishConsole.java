@@ -24,7 +24,9 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.glassfish.tools.ide.server.FetchLog;
 
+import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
 
@@ -43,10 +45,24 @@ public class GlassFishConsole extends MessageConsole {
 	private static int numLines = 1000;
 	private LogThread thread;
 	private File file;
+	private SunAppServer server;
+	private Process process = null;
 	
 	public GlassFishConsole(File f) {
-		super(f.getAbsolutePath(),  AppServerContextAction.getImageDescriptorFromlocalImage("icons/obj16/glassfishserver.gif"));
+		super(f.getAbsolutePath(), 
+				AppServerContextAction.getImageDescriptorFromlocalImage("icons/obj16/glassfishserver.gif"));
 		file = f;
+	}
+	
+	public GlassFishConsole(SunAppServer s) {
+		super(s.getHost()+":"+s.getAdminServerPort(), 
+				AppServerContextAction.getImageDescriptorFromlocalImage("icons/obj16/glassfishserver.gif"));
+		server = s;
+	}
+	
+	public GlassFishConsole(SunAppServer s, Process p) {
+		this(s);
+		process = p;
 	}
 
 	/* (non-Javadoc)
@@ -57,13 +73,8 @@ public class GlassFishConsole extends MessageConsole {
 		super.init();
 		final IDocument document = getDocument();
 
-		try {
-			thread = new LogThread(file, interval, numLines);			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
+		FetchLog fl = FetchLog.create(server, true);
+		thread = new LogThread(fl.getInputStream(), interval, numLines);
 
 		addListener(document, thread);
 		thread.start();
@@ -81,11 +92,10 @@ public class GlassFishConsole extends MessageConsole {
 	}
 	
 	
-	private static MessageConsole getConsole(File f) {
+	private static MessageConsole getConsole(String name) {
 	      ConsolePlugin plugin = ConsolePlugin.getDefault();
 	      IConsoleManager manager = plugin.getConsoleManager();
 	      IConsole[] existing = manager.getConsoles();
-	      String name = f.getAbsolutePath();
 	      MessageConsole myConsole = null;
 
 	      for (int i = 0; i < existing.length; i++) {
@@ -94,17 +104,43 @@ public class GlassFishConsole extends MessageConsole {
 	        	 return myConsole;
 	         }
 	      }
-	      //no console found, so create a new one
-	      myConsole = new GlassFishConsole(f);
-	      manager.addConsoles(new IConsole[]{myConsole});
-	      return myConsole;
+	      return null;
 	}
 
 	public static void showConsole(File f) {
-		MessageConsole myConsole = getConsole(f);
-		if (myConsole != null) {
-			ConsolePlugin.getDefault().getConsoleManager().showConsoleView(myConsole);
+		ConsolePlugin plugin = ConsolePlugin.getDefault();
+	    IConsoleManager manager = plugin.getConsoleManager();
+		MessageConsole myConsole = getConsole(f.getAbsolutePath());
+		if (myConsole == null) {
+			//no console found, so create a new one
+		      myConsole = new GlassFishConsole(f);
+		      manager.addConsoles(new IConsole[]{myConsole});
 		}
+		manager.showConsoleView(myConsole);
+	}
+	
+	public static void showConsole(SunAppServer s) {
+		ConsolePlugin plugin = ConsolePlugin.getDefault();
+	    IConsoleManager manager = plugin.getConsoleManager();
+		MessageConsole myConsole = getConsole(s.getHost()+":"+s.getAdminServerPort());
+		if (myConsole == null) {
+			//no console found, so create a new one
+		      myConsole = new GlassFishConsole(s);
+		      manager.addConsoles(new IConsole[]{myConsole});
+		}
+		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(myConsole);
+	}
+	
+	public static void showConsole(SunAppServer s, Process p) {
+		ConsolePlugin plugin = ConsolePlugin.getDefault();
+	    IConsoleManager manager = plugin.getConsoleManager();
+		MessageConsole myConsole = getConsole(s.getHost()+":"+s.getAdminServerPort());
+		if (myConsole == null) {
+			//no console found, so create a new one
+		      myConsole = new GlassFishConsole(s, p);
+		      manager.addConsoles(new IConsole[]{myConsole});
+		}
+		ConsolePlugin.getDefault().getConsoleManager().showConsoleView(myConsole);
 	}
 
 	private LogThread.LogListener addListener(final IDocument doc, LogThread th){
@@ -133,4 +169,5 @@ public class GlassFishConsole extends MessageConsole {
 			}
 		});
 	}
+
 }

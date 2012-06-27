@@ -125,7 +125,7 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 
 
 		if (sunserver.isLocalServer()){
-			final Text domaindir = SWTUtil.createLabeledPath(Messages.DomainDirectory, sunserver.getDomainDir()+File.separator+sunserver.getDomainName(), comp, toolkit);
+			final Text domaindir = SWTUtil.createLabeledPath(Messages.DomainDirectory, sunserver.getDomainsFolder()+File.separator+sunserver.getDomainName(), comp, toolkit);
 			txtGDF.align(SWT.FILL, SWT.CENTER).span(1, 1).applyTo(domaindir);
 			domaindir.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {	
@@ -238,7 +238,7 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 	 */
 	@Override
 	public String getErrorMessage() {
-		String domainValidationError = sunserver.validateDomainExists(sunserver.getDomainDir(), sunserver.getDomainName());
+		String domainValidationError = sunserver.validateDomainExists(sunserver.getDomainsFolder(), sunserver.getDomainName());
 		if (domainValidationError != null) {
 			return domainValidationError;
 		}
@@ -247,7 +247,7 @@ public class ServerSection extends ServerEditorSection implements PropertyChange
 
 
 	public IStatus[] getSaveStatus(){
-		String domainValidationError = sunserver.validateDomainExists(sunserver.getDomainDir(), sunserver.getDomainName());
+		String domainValidationError = sunserver.validateDomainExists(sunserver.getDomainsFolder(), sunserver.getDomainName());
 		if (domainValidationError != null) {
 			IStatus[] i= new IStatus[1];
 			i[0] = new Status(IStatus.ERROR,  "Glassfish",domainValidationError);
