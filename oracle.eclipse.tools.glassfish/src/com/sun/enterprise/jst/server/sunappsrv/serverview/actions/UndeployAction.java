@@ -34,7 +34,7 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.DeployedApplicationsNode;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.TreeNode;
 
@@ -67,7 +67,7 @@ public 	class UndeployAction extends Action {
 						.getParent();
 
 				try {
-					final SunAppServerBehaviour be = target
+					final GlassfishGenericServerBehaviour be = target
 							.getServerBehavior();
 					IRunnableWithProgress op = new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) {

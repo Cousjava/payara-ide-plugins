@@ -32,6 +32,7 @@ public class Messages extends org.eclipse.osgi.util.NLS {
     public static String UseAnonymousConnection;
     public static String keepSessions;
     public static String jarDeploy;
+    public static String targetTooltip;
      
     // additional strings to workaround for issue 222688
     public static String canInstallPath;

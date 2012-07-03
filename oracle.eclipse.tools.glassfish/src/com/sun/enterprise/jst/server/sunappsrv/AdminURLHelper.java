@@ -31,9 +31,9 @@ public class AdminURLHelper {
 		String portNumber = fallbackPort;
 
 	    if (server != null){
-			SunAppServerBehaviour sab = (SunAppServerBehaviour)server.loadAdapter(
-					SunAppServerBehaviour.class, null);
-			SunAppServer sunserver = sab.getSunAppServer();
+			GlassfishGenericServerBehaviour sab = (GlassfishGenericServerBehaviour)server.loadAdapter(
+					GlassfishGenericServerBehaviour.class, null);
+			GlassfishGenericServer sunserver = sab.getSunAppServer();
 			hostName = sunserver.getServer().getHost();
 			portNumber = sunserver.getAdminServerPort();
 	    }

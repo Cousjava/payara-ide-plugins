@@ -32,6 +32,7 @@ public class LogReader implements Runnable {
 						System.out.println("reader ready, reading line...");
 						String message = reader.readLine();
 						output.println(message);
+						output.flush();
 					}
 				}
 				try {

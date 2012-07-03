@@ -20,15 +20,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,7 +34,6 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.GZIPInputStream;
 
 
 
@@ -47,23 +43,6 @@ import java.util.zip.GZIPInputStream;
  * @author Peter Williams
  */
 public class Commands {
-
-    // ------------------------------------------------------------------------
-    // Specific server commands.
-    // ------------------------------------------------------------------------
-    /**
-     * Command to start a server domain
-     */
-    public static final ServerCommand START = new ServerCommand("start-domain") { // NOI18N
-    };
-    /**
-     * Command to stop a server domain
-     */
-    public static final ServerCommand STOP = new ServerCommand("stop-domain") { // NOI18N
-    };
-
-    public static final ServerCommand RESTART = new ServerCommand("restart-domain") { // NOI18N
-    };
 
     /**
      * Command to list applications current deployed on the server.
@@ -397,45 +376,21 @@ public class Commands {
             }
         }
     }
-
-    /**
-     * Command to redeploy a directory deployed app that is already deployed.
-     */
-    public static final class RedeployCommand extends ServerCommand {
-
-        public RedeployCommand(final String name, final String contextRoot, final String preserveSessions, 
-                final File[] libraries, final boolean resourcesChanged) {
-            super("redeploy"); // NOI18N
-
-            StringBuilder cmd = new StringBuilder(128);
-            cmd.append("name="); // NOI18N
-            cmd.append(sanitizeName(name));
-            if(contextRoot != null && contextRoot.length() > 0) {
-                cmd.append(PARAM_SEPARATOR).append("contextroot="); // NOI18N
-                cmd.append(contextRoot);
-            }
-            if (libraries.length > 0) {
-                appendLibraries(cmd, libraries);
-            }
-            addProperties(cmd, preserveSessions, resourcesChanged);
-            query = cmd.toString();
-        }
-    }
-
-    private static void addProperties(StringBuilder cmd, String preserveSessions, boolean resourcesChanged) {
-        if(Boolean.TRUE.equals(preserveSessions) || !resourcesChanged) {
-            cmd.append(ServerCommand.PARAM_SEPARATOR).append("properties="); // NOI18N
-        }
-        if(preserveSessions!=null) {
-            cmd.append(preserveSessions+"=true");  // NOI18N
-            if (!resourcesChanged) {
-                cmd.append(":"); // NOI18N
-            }
-        }
-        if (!resourcesChanged) {
-            cmd.append("preserveAppScopedResources=true"); // NOI18N
-        }
-    }
+//
+//    private static void addProperties(StringBuilder cmd, String preserveSessions, boolean resourcesChanged) {
+//        if(Boolean.TRUE.equals(preserveSessions) || !resourcesChanged) {
+//            cmd.append(ServerCommand.PARAM_SEPARATOR).append("properties="); // NOI18N
+//        }
+//        if(preserveSessions!=null) {
+//            cmd.append(preserveSessions+"=true");  // NOI18N
+//            if (!resourcesChanged) {
+//                cmd.append(":"); // NOI18N
+//            }
+//        }
+//        if (!resourcesChanged) {
+//            cmd.append("preserveAppScopedResources=true"); // NOI18N
+//        }
+//    }
 
     /**
      * Command to undeploy a deployed application.
@@ -448,27 +403,6 @@ public class Commands {
         }
     }
 
-    /**
-     * Command to enable a deployed application.
-     */
-    public static final class EnableCommand extends ServerCommand {
-
-        public EnableCommand(final String name) {
-            super("enable"); // NOI18N
-            query = "DEFAULT=" + sanitizeName(name); // NOI18N
-        }
-    }
-
-    /**
-     * Command to disable a deployed application.
-     */
-    public static final class DisableCommand extends ServerCommand {
-
-        public DisableCommand(final String name) {
-            super("disable"); // NOI18N
-            query = "DEFAULT=" + sanitizeName(name); // NOI18N
-        }
-    }
     /**
      * Command to unregister a resource.
      */
@@ -487,201 +421,6 @@ public class Commands {
             cmd.append('=');
             cmd.append(name);
             query = cmd.toString();
-        }
-    }
-
-    /**
-     * Command to get version information from the server.
-     */
-    public static final class VersionCommand extends ServerCommand {
-
-        private Manifest info;
-        private String version;
-        public VersionCommand() {
-            super("version"); // NOI18N
-        }
-
-        @Override
-        public void readManifest(Manifest manifest) throws IOException {
-            info = manifest;
-        }
-
-        @Override
-        public boolean processResponse() {
-            if(info == null) {
-                return false;
-            }
-            
-            Attributes mainAttrs = info.getMainAttributes();
-            if(mainAttrs != null) {
-                version = mainAttrs.getValue("message");
-            }
-            
-            return true;
-        }
-        public String getVersion(){
-        	return version;
-        }
-        
-    }
-
-    /**
-     * Command to get version information from the server.
-     */
-    public static final class LocationCommand extends ServerCommand {
-
-        private Manifest info;
-        private String installRoot;
-        private String domainRoot;
-
-        public LocationCommand() {
-            super("__locations"); // NOI18N
-        }
-
-        public String getInstallRoot() {
-            return installRoot;
-        }
-
-        public String getDomainRoot() {
-            return domainRoot;
-        }
-
-        @Override
-        public void readManifest(Manifest manifest) throws IOException {
-            info = manifest;
-        }
-
-        @Override
-        public boolean processResponse() {
-            if(info == null) {
-                return false;
-            }
-
-            Attributes mainAttrs = info.getMainAttributes();
-            if(mainAttrs != null) {
-                installRoot = mainAttrs.getValue("Base-Root_value");  // NOI18N
-                domainRoot = mainAttrs.getValue("Domain-Root_value");  // NOI18N
-            }
-
-            return true;
-        }
-    }
-    
-    /*
-     * Command to get log data from the server
-     */
-    public static final class FetchLogData extends ServerCommand {
-        private String lines = "";
-        private String nextURL = "";
-        
-        public FetchLogData(String query) {
-            super("view-log");
-            this.query = query;
-        }
-        
-        public String getLines() {
-            return lines;
-        }
-
-        public String getNextQuery() {
-            return nextURL;
-        }
-
-        @Override
-        public boolean acceptsGzip() {
-            return true;
-        }
-        
-        @Override
-        public boolean readResponse(InputStream in, HttpURLConnection hconn) {
-            StringWriter sw = new StringWriter();
-            try {
-                InputStream cooked = in;
-                String ce = hconn.getContentEncoding();
-                if (null != ce && ce.contains("gzip")) {
-                    cooked = new GZIPInputStream(in);
-                }
-                java.io.InputStreamReader isr = new java.io.InputStreamReader(cooked);
-                java.io.BufferedReader br = new java.io.BufferedReader(isr);
-                while (br.ready()) {
-                    sw.write(br.readLine());
-                    sw.write("\n");
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } finally {
-                try {
-                    sw.close();
-                } catch (IOException ex) {
-                    
-                }
-            }
-            lines = sw.toString();
-            nextURL = hconn.getHeaderField("X-Text-Append-Next");
-            int delim = nextURL.lastIndexOf("?");
-            if (-1 != delim) {
-                nextURL = nextURL.substring(delim+1);
-            }
-            return -1 == delim ? false : true;
-        }
-        
-        @Override
-        public String getSrc() {
-            return "/management/domain/";
-        }
-    }
-
-    static class ListWebservicesCommand extends ServerCommand {
-
-        private Manifest manifest;
-        private List<String> wsList;
-
-        public ListWebservicesCommand() {
-            super("__list-webservices"); // NOI18N
-        }
-
-        public List<String> getWebserviceList() {
-            // !PW Can still modify sublist... is there a better structure?
-            if(wsList != null) {
-                return Collections.unmodifiableList(wsList);
-            } else {
-                return Collections.emptyList();
-            }
-        }
-
-        @Override
-        public void readManifest(Manifest manifest) throws IOException {
-            this.manifest = manifest;
-        }
-
-        @Override
-        public boolean processResponse() {
-            if(manifest == null) {
-                return false;
-            }
-            
-            Map <String, String> filter = new HashMap<String, String>();
-
-            Iterator<String> keyIterator = manifest.getEntries().keySet().iterator();
-            while (keyIterator.hasNext()) {
-                String k = keyIterator.next();
-                if (!k.contains("address:/")) // NOI18N
-                    continue;
-                if (k.contains("address:/wsat-wsat")) // NOI18N
-                    continue;
-                if (k.contains("address:/__wstx-services")) // NOI18N
-                    continue;
-                String a = k.replaceFirst(".* address:/", "").replaceFirst("\\. .*", ""); // NOI18N
-                if (filter.containsKey(a))
-                    continue;
-                filter.put(a,a);
-                if(wsList == null) {
-                    wsList = new ArrayList<String>();
-                }
-                wsList.add(a);
-            }
-
-            return true;
         }
     }
     

@@ -33,7 +33,7 @@ import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
@@ -84,15 +84,15 @@ public class V3Configurator {
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
 		wc.setName(MessageFormat.format(Messages.Bundled, runtime.getName()));
 
-		SunAppServer sunAppServer = (SunAppServer) wc
-				.getAdapter(SunAppServer.class);
+		GlassfishGenericServer sunAppServer = (GlassfishGenericServer) wc
+				.getAdapter(GlassfishGenericServer.class);
 
 		domainXml = serverLocation.getAbsolutePath()
 				+ "/glassfish/domains/domain1/config/domain.xml";
 
 		SunAppSrvPlugin.logMessage("domain.xml location is = " + domainXml);
 		Map<String, String> configuration = sunAppServer.getProps();
-		configuration.put(SunAppServer.DOMAINPATH,
+		configuration.put(GlassfishGenericServer.DOMAINPATH,
 				serverLocation.getAbsolutePath() + "/glassfish/domains/domain1");
 
 		sunAppServer.setServerInstanceProperties(configuration);
@@ -139,7 +139,7 @@ public class V3Configurator {
 
 			HashMap<String, String> map = new HashMap<String, String>();
 
-			map.put(SunAppServer.ROOTDIR, glassfishLocation);
+			map.put(GlassfishGenericServer.ROOTDIR, glassfishLocation);
 			gRun.setServerDefinitionId(gRun.getRuntime().getRuntimeType()
 					.getId());
 			gRun.setServerInstanceProperties(map);

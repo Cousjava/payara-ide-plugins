@@ -23,8 +23,8 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.DeployedApplicationsNode;
@@ -56,7 +56,7 @@ public 	class OpenInBrowserAction extends Action {
 						.getParent();
 
 				try {
-					final SunAppServerBehaviour be = target
+					final GlassfishGenericServerBehaviour be = target
 							.getServerBehavior();
 
 					IWorkbenchBrowserSupport browserSupport = PlatformUI
@@ -66,7 +66,7 @@ public 	class OpenInBrowserAction extends Action {
 									IWorkbenchBrowserSupport.LOCATION_BAR
 											| IWorkbenchBrowserSupport.NAVIGATION_BAR,
 									null, null, null);
-					SunAppServer server= be.getSunAppServer();
+					GlassfishGenericServer server= be.getSunAppServer();
 			         String host = server.getServer().getHost();
 			         int port = Integer.parseInt(server.getServerPort());
 

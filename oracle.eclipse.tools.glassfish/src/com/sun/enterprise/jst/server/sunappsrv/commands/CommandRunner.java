@@ -20,7 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-//import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -28,6 +27,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-//import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -45,8 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -55,12 +54,23 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.eclipse.osgi.internal.signedcontent.Base64;
+import org.glassfish.tools.ide.admin.Command;
+import org.glassfish.tools.ide.admin.CommandListComponents;
+import org.glassfish.tools.ide.admin.CommandListResources;
+import org.glassfish.tools.ide.admin.CommandListWebServices;
+import org.glassfish.tools.ide.admin.ResultList;
+import org.glassfish.tools.ide.admin.ResultMap;
+import org.glassfish.tools.ide.admin.ServerAdmin;
+import org.glassfish.tools.ide.admin.TaskState;
+import org.glassfish.tools.ide.data.IdeContext;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.GetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
+//import java.net.Authenticator;
+//import java.util.concurrent.ExecutionException;
 
 
 
@@ -99,9 +109,9 @@ public class CommandRunner extends BasicTask<OperationState> {
     private boolean authorized;
     private final CommandFactory cf;
     private final boolean isReallyRunning;
-    private SunAppServer server;
+    private GlassfishGenericServer server;
     
-    public CommandRunner(SunAppServer server) {
+    public CommandRunner(GlassfishGenericServer server) {
         super(null);
         this.cf = new CommandFactory()  {
             //@Override
@@ -115,20 +125,11 @@ public class CommandRunner extends BasicTask<OperationState> {
         this.isReallyRunning = true;
     }
     
-    public CommandRunner(SunAppServer server, boolean isReallyRunning, CommandFactory cf, Map<String, String> properties, OperationStateListener... stateListener) {
+    public CommandRunner(GlassfishGenericServer server, boolean isReallyRunning, CommandFactory cf, Map<String, String> properties, OperationStateListener... stateListener) {
         super(properties, stateListener);
         this.cf =cf;
     	this.server =server;
         this.isReallyRunning = isReallyRunning;
-    }
-    
-    /**
-     * Sends stop-domain command to server (asynchronous)
-     * 
-     */
-    public Future<OperationState> stopServer() {
-        return execute(Commands.STOP, "MSG_STOP_SERVER_IN_PROGRESS"); // NOI18N
-        
     }
     
      /**
@@ -213,20 +214,22 @@ public class CommandRunner extends BasicTask<OperationState> {
         Map<String, List<AppDesc>> result = Collections.emptyMap();
         try {
             Map<String, List<String>> apps = Collections.emptyMap();
-            Commands.ListComponentsCommand cmd = new Commands.ListComponentsCommand(container);
-            serverCmd = cmd;
-            Future<OperationState> task = executor().submit(this);
-            OperationState state = task.get(10, TimeUnit.SECONDS);
-            if (state == OperationState.COMPLETED) {
-                apps = cmd.getApplicationMap();
+            Command command = new CommandListComponents(null);
+    		Future<ResultMap<String, List<String>>> future = ServerAdmin
+    				.<ResultMap<String, List<String>>> exec(server, command,
+    						new IdeContext());
+    		ResultMap<String, List<String>> res = future.get(10, TimeUnit.SECONDS);
+            if (TaskState.COMPLETED.equals(res.getState())) {
+                apps = res.getValue();
             }
             if (apps == null || apps.isEmpty()) {
             	return result;
             }
+            //TODO replace with call to sdk  
             ServerCommand.GetPropertyCommand getCmd = new ServerCommand.GetPropertyCommand("applications.application.*");
             serverCmd = getCmd;
-            task = executor().submit(this);
-            state = task.get(30, TimeUnit.SECONDS);
+            Future<OperationState> task = executor().submit(this);
+            OperationState state = task.get(30, TimeUnit.SECONDS);
             if (state == OperationState.COMPLETED) {
                 result = processApplications(apps, getCmd.getData());
             }
@@ -308,13 +311,12 @@ public class CommandRunner extends BasicTask<OperationState> {
         List<WSDesc> result = Collections.emptyList();
         try {
             List<String> wss = Collections.emptyList();
-            Commands.ListWebservicesCommand cmd = new Commands.ListWebservicesCommand();
-            serverCmd = cmd;
-            Future<OperationState> task = executor().submit(this);
-            OperationState state = task.get(30, TimeUnit.SECONDS);
-            if (state == OperationState.COMPLETED) {
-                wss = cmd.getWebserviceList();
-
+            Command command = new CommandListWebServices();
+    		Future<ResultList<String>> future = ServerAdmin
+    				.<ResultList<String>> exec(server, command, new IdeContext());
+    		ResultList<String> res = future.get(30, TimeUnit.SECONDS);
+            if (TaskState.COMPLETED.equals(res.getState())) {
+                wss = res.getValue();
                 result = processWebServices(wss);
             }
         } catch (InterruptedException ex) {
@@ -334,21 +336,26 @@ public class CommandRunner extends BasicTask<OperationState> {
     }
 
     public List<ResourceDesc> getResources(String type) {
-        List<ResourceDesc> result = Collections.emptyList();
+        List<String> result = Collections.emptyList();
+        List<ResourceDesc> retVal = Collections.emptyList();
         try {
-            Commands.ListResourcesCommand cmd = new Commands.ListResourcesCommand(type);
-            serverCmd = cmd;
-            Future<OperationState> task = executor().submit(this);
-            OperationState state = task.get(30, TimeUnit.SECONDS);
-            if (state == OperationState.COMPLETED) {
-                result = cmd.getResourceList();
+        	Command command = new CommandListResources(CommandListResources.command(
+                    type), null);
+                Future<ResultList<String>> future = ServerAdmin.<ResultList<String>>
+                exec(server, command, new IdeContext());
+            ResultList<String> res = future.get(30, TimeUnit.SECONDS);
+            if (TaskState.COMPLETED.equals(res.getState())) {
+                result = res.getValue();
+            }
+            for (String rsc : result) {
+            	retVal.add(new ResourceDesc(rsc, type));
             }
         } catch (InterruptedException ex) {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);
         } catch (Exception ex) {
             Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);
         }
-        return result;
+        return retVal;
     }
     
     public Map<String, String> getResourceData(String name) {
@@ -362,6 +369,7 @@ public class CommandRunner extends BasicTask<OperationState> {
             } else {
                 query = "resources.*"; //$NON-NLS-1$
             }
+            // TODO replace with SDK call
             cmd = new ServerCommand.GetPropertyCommand(query); 
             serverCmd = cmd;
             Future<OperationState> task = executor().submit(this);
@@ -389,7 +397,8 @@ public class CommandRunner extends BasicTask<OperationState> {
             String compValue = data.get(k);
 
             try {
-                SetPropertyCommand cmd = server.getCommandFactory().getSetPropertyCommand(compName, compValue);
+            	// TODO replace with SDK code
+                SetPropertyCommand cmd = new ServerCommand.SetPropertyCommand(compName, compValue, "DEFAULT={0}={1}");
                 serverCmd = cmd;
                 Future<OperationState> task = executor().submit(this);
                 OperationState state = task.get(30, TimeUnit.SECONDS);
@@ -415,44 +424,6 @@ public class CommandRunner extends BasicTask<OperationState> {
             }
             throw pce;
         }
-    }
-
-    public Future<OperationState> deploy(File dir) {
-        return deploy(dir, dir.getParentFile().getName(), null);
-    }
-
-    public Future<OperationState> deploy(File dir, String moduleName) {
-        return deploy(dir, moduleName, null);
-    }
-    
-    public Future<OperationState> deploy(File dir, String moduleName, String contextRoot)  {
-        return deploy(dir, moduleName, contextRoot, null, new File[0]);
-    }
-    
-    public Future<OperationState> deploy(File dir, String moduleName, String contextRoot, Map<String,String> properties, File[] libraries) {
-       // LogViewMgr.displayOutput(ip,null);
-        return execute(new Commands.DeployCommand(dir, moduleName,
-                contextRoot, server.computePreserveSessions(), properties, libraries));
-    }
-
-    public Future<OperationState> redeploy(String moduleName, String contextRoot, File[] libraries, boolean resourcesChanged)  {
-        //LogViewMgr.displayOutput(ip,null);
-        return execute(new Commands.RedeployCommand(moduleName, contextRoot, 
-        		server.computePreserveSessions(), libraries, resourcesChanged));
-    }
-
-
-    
-    public Future<OperationState> undeploy(String moduleName) {
-        return execute(new Commands.UndeployCommand(moduleName));
-    }
-    
-     public Future<OperationState> enable(String moduleName) {
-        return execute(new Commands.EnableCommand(moduleName));
-    }
-
-    public Future<OperationState> disable(String moduleName) {
-        return execute(new Commands.DisableCommand(moduleName));
     }
     
     public Future<OperationState> unregister(String resourceName, String suffix, String cmdPropName, boolean cascade) {
@@ -681,7 +652,7 @@ public class CommandRunner extends BasicTask<OperationState> {
          String host = server.getServer().getHost();
          int port = Integer.parseInt(server.getAdminServerPort());
          String protocol = "http";
-         if (!server.isLocalServer()){ //mandatory https for remote 3.1 servers...
+         if (server.getServerBehaviourAdapter().isRemote()){ //mandatory https for remote 3.1 servers...
         	 protocol= "https";
          }
          //only for non 3.1 and later //TODO for later!!!

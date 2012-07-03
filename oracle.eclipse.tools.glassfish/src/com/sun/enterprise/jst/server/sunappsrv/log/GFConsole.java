@@ -19,6 +19,7 @@ public class GFConsole extends MessageConsole implements IGlassFishConsole {
 
 	@Override
 	public void startLogging(FetchLog... logFetchers) {
+		stopLogging();
 		readers = new ArrayList<LogReader>(logFetchers.length);
 		MessageConsoleStream output = newMessageStream();
 		for (FetchLog logFetcher : logFetchers) {
@@ -36,6 +37,7 @@ public class GFConsole extends MessageConsole implements IGlassFishConsole {
 		for (LogReader r : readers) {
 			r.stop();
 		}
+		readers = null;
 	}
 
 	@Override

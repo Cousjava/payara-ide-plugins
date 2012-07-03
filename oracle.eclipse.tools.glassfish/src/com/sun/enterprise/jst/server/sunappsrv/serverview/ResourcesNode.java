@@ -22,7 +22,7 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.server.core.IServer;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ResourceDesc;
@@ -67,9 +67,9 @@ public class ResourcesNode extends TreeNode {
 		return resDescriptor;
 	}
 
-	public SunAppServerBehaviour getServerBehavior() {
-		return (SunAppServerBehaviour) server.loadAdapter(
-				SunAppServerBehaviour.class, null);
+	public GlassfishGenericServerBehaviour getServerBehavior() {
+		return (GlassfishGenericServerBehaviour) server.loadAdapter(
+				GlassfishGenericServerBehaviour.class, null);
 	}
 
 	public Object[] getChildren() {
@@ -81,7 +81,7 @@ public class ResourcesNode extends TreeNode {
 		final ArrayList<ResourcesNode> list = new ArrayList<ResourcesNode>();
 		if (this.children == null) {
 
-			final SunAppServerBehaviour behaviour = getServerBehavior();
+			final GlassfishGenericServerBehaviour behaviour = getServerBehavior();
 			try {
 				if (behaviour == null) {
 					this.children = list

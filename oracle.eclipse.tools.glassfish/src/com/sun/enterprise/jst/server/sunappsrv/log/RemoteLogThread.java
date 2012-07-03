@@ -17,13 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Vector;
-import java.util.concurrent.Future;
-
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
-import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
-import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 
 /**
  * author: ludovic champenois

@@ -30,11 +30,11 @@ public class SunAppServerCommands  extends AbstractOperation {
     protected String oldValue;
     protected String commandName;
     
-    SunAppServer sunServer;
+    GlassfishGenericServer sunServer;
     
     public SunAppServerCommands(IServerWorkingCopy server, String newValue, String commandName) {
         super( commandName);
-        sunServer = SunAppServer.getSunAppServer(server);
+        sunServer = GlassfishGenericServer.getSunAppServer(server);
         this.value = newValue;
         this.commandName = commandName;
     }

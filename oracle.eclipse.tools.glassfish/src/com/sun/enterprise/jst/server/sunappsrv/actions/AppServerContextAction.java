@@ -18,7 +18,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -43,7 +42,7 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.wst.server.core.IServer;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 /**
@@ -148,8 +147,8 @@ IWorkbenchWindowActionDelegate {
 			targetPart = viewPArt;
 		}
 
-		SunAppServerBehaviour sab = (SunAppServerBehaviour) selectedServer.loadAdapter(
-				SunAppServerBehaviour.class, null);
+		GlassfishGenericServerBehaviour sab = (GlassfishGenericServerBehaviour) selectedServer.loadAdapter(
+				GlassfishGenericServerBehaviour.class, null);
 		SunAppSrvPlugin.logMessage("Message is:" + action + sab.getDomainDir() + selectedServer );
 		perform(selectedServer);
 	}
@@ -166,10 +165,10 @@ IWorkbenchWindowActionDelegate {
 	}
 
 	protected boolean acceptIfServerRunning(IServer server) {
-		SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter(
-				SunAppServerBehaviour.class, null);
+		GlassfishGenericServerBehaviour sab = (GlassfishGenericServerBehaviour) server.loadAdapter(
+				GlassfishGenericServerBehaviour.class, null);
 		if (sab != null) {
-			return sab.getSunAppServer().isRunning();
+			return sab.isRunning();
 		}
 		return false;
 	}
