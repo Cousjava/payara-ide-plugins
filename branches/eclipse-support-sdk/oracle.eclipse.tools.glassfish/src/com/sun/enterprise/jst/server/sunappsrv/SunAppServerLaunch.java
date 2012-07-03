@@ -23,7 +23,6 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -34,19 +33,21 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMConnector;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.osgi.service.resolver.BundleDescription;
-import org.eclipse.osgi.service.resolver.State;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.glassfish.tools.ide.admin.ResultProcess;
+import org.glassfish.tools.ide.server.FetchLog;
+import org.glassfish.tools.ide.server.FetchLogSimple;
 import org.glassfish.tools.ide.server.ServerTasks;
 import org.glassfish.tools.ide.utils.ServerUtils;
 import org.glassfish.tools.ide.utils.Utils;
-import org.osgi.framework.Version;
 
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour.ServerStatus;
 import com.sun.enterprise.jst.server.sunappsrv.log.GlassFishConsole;
+import com.sun.enterprise.jst.server.sunappsrv.log.GlassfishConsoleManager;
+import com.sun.enterprise.jst.server.sunappsrv.log.IGlassFishConsole;
 import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
 
 @SuppressWarnings("restriction")
@@ -62,23 +63,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         throw new CoreException(new Status(IStatus.ERROR,  SunAppSrvPlugin.SUNPLUGIN_ID, code, message, exception));
     }
 
-    private String getScriptExtension() {
-        String ret = ""; //$NON-NLS-1$
-        if (File.separator.equals("\\")) {//$NON-NLS-1$
-            ret = ".bat"; //$NON-NLS-1$
-        }
-        return ret;
-    }
-    
-    private static Version getCurrentVersion(String bundleId) {
-    	State s = Platform.getPlatformAdmin().getState();
-        if (null == s) {
-            return null;
-        }
-    	BundleDescription bd = s.getBundle(bundleId, null);
-    	return  null == bd ? null : bd.getVersion();
-    }
-
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
         SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch launch"); //$NON-NLS-1$
 
@@ -88,11 +72,11 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             abort("missing Server", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
         }
 
-        final SunAppServerBehaviour serverBehavior = (SunAppServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
+        final GlassfishGenericServerBehaviour serverBehavior = (GlassfishGenericServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
+        final GlassfishGenericServer serverAdapter = serverBehavior.getSunAppServer();
         
-        final SunAppServer sunserver = serverBehavior.getSunAppServer();
-		if (!sunserver.isLocalServer()) {
-	        if (sunserver.isRunning()) {
+		if (serverBehavior.isRemote()) {
+	        if (serverBehavior.isRunning()) {
 	        	serverBehavior.setStartedState(mode);
 	        	return;
 	        }else {
@@ -104,13 +88,14 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
         String domain = serverBehavior.getDomainName();
         String domainAbsolutePath = serverBehavior.getDomainDir() + File.separator + domain;
               
-        File bootstrapJar = ServerUtils.getJarName(serverBehavior.getSunApplicationServerInstallationDirectory(), ServerUtils.GFV3_JAR_MATCHER);
+        File bootstrapJar = ServerUtils.getJarName(serverAdapter.getServerInstallationDirectory(), ServerUtils.GFV3_JAR_MATCHER);
         if(bootstrapJar == null) {
             abort("bootstrap jar not found", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
         
         // TODO which java to use? for now ignore the one from launch config
         AbstractVMInstall/* IVMInstall */ vm = (AbstractVMInstall) serverBehavior.getRuntimeDelegate().getVMInstall();
+        
         //IVMInstall vm2 = verifyVMInstall(configuration);
 
         
@@ -134,7 +119,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
         setDefaultSourceLocator(launch, configuration);
 
-        ResultProcess process = ServerTasks.startServer(sunserver, startArgs);
+        final ResultProcess process = ServerTasks.startServer(serverAdapter, startArgs);
         
         //DebugPlugin.newProcess(launch, process.getValue().getProcess(), "GlassFish Server");
                 
@@ -144,11 +129,11 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 command = ((sampleDBDir == null) ? new String[]{
                             vm.getInstallLocation() + "/bin/java", //$NON-NLS-1$
                             "-jar", //$NON-NLS-1$
-                            serverBehavior.getSunApplicationServerInstallationDirectory() + "/modules/admin-cli.jar", "start-database"} //$NON-NLS-1$ //$NON-NLS-2$
+                            serverAdapter.getServerInstallationDirectory() + "/modules/admin-cli.jar", "start-database"} //$NON-NLS-1$ //$NON-NLS-2$
                         : new String[]{
                             vm.getInstallLocation() + "/bin/java", //$NON-NLS-1$
                             "-jar", //$NON-NLS-1$
-                            serverBehavior.getSunApplicationServerInstallationDirectory() + "/modules/admin-cli.jar", //$NON-NLS-1$
+                            serverAdapter.getServerInstallationDirectory() + "/modules/admin-cli.jar", //$NON-NLS-1$
                             "start-database", "--dbhome", sampleDBDir //$NON-NLS-1$ //$NON-NLS-2$
                         });
                 // add also the stop on exit command:
@@ -156,10 +141,10 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                         new String[]{
                             vm.getInstallLocation() + "/bin/java", //$NON-NLS-1$
                             "-jar", //$NON-NLS-1$
-                            serverBehavior.getSunApplicationServerInstallationDirectory() + "/modules/admin-cli.jar", //$NON-NLS-1$
+                            serverAdapter.getServerInstallationDirectory() + "/modules/admin-cli.jar", //$NON-NLS-1$
                             "stop-database"}); //$NON-NLS-1$
             try {
-                Process process2 = Execute.launch(null, command, null, new File(serverBehavior.getSunApplicationServerInstallationDirectory()), true);
+                Process process2 = Execute.launch(null, command, null, new File(serverAdapter.getServerInstallationDirectory()), true);
                 DebugPlugin.newProcess(launch, process2, "Derby Database");
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -179,8 +164,10 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                     try {
                         PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
                                     public void run() {
-                                        String logFile = serverBehavior.getDomainDirWithDomainName() + "/logs/server.log"; //$NON-NLS-1$
-                                        GlassFishConsole.showConsole(sunserver);
+//                                        String logFile = serverBehavior.getDomainDirWithDomainName() + "/logs/server.log"; //$NON-NLS-1$
+//                                        GlassFishConsole.showConsole(serverAdapter);
+                                    	  IGlassFishConsole console = GlassfishConsoleManager.getConsole(serverAdapter);
+                                    	  console.startLogging(new FetchLogSimple(process.getValue().getProcess().getInputStream()));
                                     }
                                 });
                     } catch (Exception e) {
@@ -190,15 +177,15 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                 //if (ILaunchManager.PROFILE_MODE.equals(mode)) {
                 	//return;
                 //}
-                if (sunserver.isRunning()) {
+                if (serverBehavior.isRunning()) {
 
-                	SunAppServer.ServerStatus s = sunserver.getServerStatus();
-                	if (s == SunAppServer.ServerStatus.CREDENTIAL_ERROR) {
+                	ServerStatus s = serverBehavior.getServerStatus();
+                	if (s == ServerStatus.CREDENTIAL_ERROR) {
 
                 		abort("Wrong user name or password.", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
                 		return;
                 	}
-                	if (s != SunAppServer.ServerStatus.DOMAINDIR_MATCHING) {
+                	if (s != ServerStatus.DOMAINDIR_MATCHING) {
 
                 		SunAppSrvPlugin.logMessage("V3 not ready"); //$NON-NLS-1$
                 		continue;
@@ -248,7 +235,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 //        connector.connect(arg, monitor, launch);
 //	}
 	
-//	private void waitForStart(SunAppServer server, final SunAppServerBehaviour serverBehavior, IProgressMonitor monitor) {
+//	private void waitForStart(SunAppServer server, final GlassfishGenericServerBehaviour serverBehavior, IProgressMonitor monitor) {
 //		boolean viewLog = false;
 //		int i = 0;
 //		while (true) {
@@ -274,7 +261,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 //                //}
 //                if (server.isRunning()) {
 //
-//                	SunAppServer.ServerStatus s = sunserver.getServerStatus();
+//                	SunAppServer.ServerStatus s = serverAdapter.getServerStatus();
 //                	if (s == SunAppServer.ServerStatus.CREDENTIAL_ERROR) {
 //
 //                		abort("Wrong user name or password.", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
@@ -293,13 +280,13 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 //		}
 //	}
 	
-	private void checkServerStatus(SunAppServerBehaviour serverBehavior) throws CoreException {
-		SunAppServer.ServerStatus status = SunAppServer.ServerStatus.CONNEXTION_ERROR;
-		SunAppServer sunserver = serverBehavior.getSunAppServer();
-        sunserver.readDomainConfig(); // force reread of domain info if necessary
-        if (sunserver.isRunning()) {
-        	status = sunserver.getServerStatus();
-            if (status == SunAppServer.ServerStatus.DOMAINDIR_MATCHING) {
+	private void checkServerStatus(GlassfishGenericServerBehaviour serverBehavior) throws CoreException {
+		ServerStatus status = ServerStatus.CONNEXTION_ERROR;
+		GlassfishGenericServer serverAdapter = serverBehavior.getSunAppServer();
+        serverAdapter.readDomainConfig(); // force reread of domain info if necessary
+        if (serverBehavior.isRunning()) {
+        	status = serverBehavior.getServerStatus();
+            if (status == ServerStatus.DOMAINDIR_MATCHING) {
                 // we are really to the server we know about, so that we can
                 // stop it and restart it to get the log file
                 serverBehavior.stop(true);
@@ -309,14 +296,14 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                     // e.printStackTrace();
                 }
 
-            } else if (status == SunAppServer.ServerStatus.DOMAINDIR_NOT_MATCHING) {
+            } else if (status == ServerStatus.DOMAINDIR_NOT_MATCHING) {
                 abort(
                         "Please, check the other GlassFish Application Server process and stop it.", //$NON-NLS-1$
                         new RuntimeException(
                         "A GlassFish Enterprise Server is running on this port, but with a different root installation..."),//$NON-NLS-1$
                         IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 
-            } else if (status == SunAppServer.ServerStatus.CONNEXTION_ERROR) {
+            } else if (status == ServerStatus.CONNEXTION_ERROR) {
                 abort(
                         "The Eclipse plugin cannot communicate with the GlassFish server....", //$NON-NLS-1$
                         new RuntimeException(

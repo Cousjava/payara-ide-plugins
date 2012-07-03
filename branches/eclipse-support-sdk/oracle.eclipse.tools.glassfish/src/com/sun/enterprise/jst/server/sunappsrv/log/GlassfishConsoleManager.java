@@ -7,7 +7,7 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleListener;
 import org.eclipse.ui.console.IConsoleManager;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 
 public class GlassfishConsoleManager {
 	
@@ -31,7 +31,7 @@ public class GlassfishConsoleManager {
 		});
 	}
 	
-	public static IGlassFishConsole getConsole(SunAppServer server) {
+	public static IGlassFishConsole getConsole(GlassfishGenericServer server) {
 		String consoleID = getConsoleID(server);
 		IGlassFishConsole gfConsole = findConsole(consoleID);
 		//IGlassFishConsole gfConsole = consoles.get(consoleID);
@@ -58,8 +58,8 @@ public class GlassfishConsoleManager {
 	      return null;
 	}
 	
-	private static String getConsoleID(SunAppServer server) {
-		if (server.isLocalServer())
+	private static String getConsoleID(GlassfishGenericServer server) {
+		if (!server.getServerBehaviourAdapter().isRemote())
 			return server.getDomainsFolder() + File.separator + 
 					server.getDomainName() + File.separator + "logs" +
 			File.separator + "server.log";

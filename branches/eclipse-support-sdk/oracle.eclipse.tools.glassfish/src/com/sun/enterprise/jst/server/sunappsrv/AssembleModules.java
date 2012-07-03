@@ -49,10 +49,10 @@ public  class AssembleModules {
 	protected IModule module;
 	protected IPath assembleRoot;
 	protected PublishHelper publishHelper;
-	protected SunAppServer server;
+	protected GlassfishGenericServer server;
 	protected boolean childNeedsARedeployment=false;
 
-	protected AssembleModules(IModule module, IPath assembleRoot, SunAppServer server , PublishHelper helper)
+	protected AssembleModules(IModule module, IPath assembleRoot, GlassfishGenericServer server , PublishHelper helper)
 	{
 		this.module=module;
 		this.assembleRoot = assembleRoot;
@@ -92,7 +92,7 @@ public  class AssembleModules {
 			}
 			else { // Project module
 			//ludo 2010	packModule(module, uri, parent);
-				String version= server.getVersionString();
+				String version= server.getServerBehaviourAdapter().getVersion();
 				if (version.indexOf(" 3.1")==-1){
 					packModule(module, uri, parent);
 				}else{				

@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.viewers.BaseContentProvider;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
@@ -34,7 +34,7 @@ public class ServerViewContentProvider extends BaseContentProvider implements IT
             //only active for glassfish 3.1.x server which is started!!!
             boolean is31x = SunAppSrvPlugin.is31OrAbove(server.getRuntime());
             if ((is31x && (server.getServerState() == IServer.STATE_STARTED))) {
-                SunAppServer ser = (SunAppServer) server.loadAdapter(SunAppServer.class, new NullProgressMonitor());
+                GlassfishGenericServer ser = (GlassfishGenericServer) server.loadAdapter(GlassfishGenericServer.class, new NullProgressMonitor());
 
                 if (ser != null) {
                     TreeNode root = new TreeNode("GlassFish Management", "GlassFish Management", null);

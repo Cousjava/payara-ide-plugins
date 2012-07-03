@@ -18,7 +18,7 @@ import java.util.Map.Entry;
 
 import org.eclipse.wst.server.core.IServer;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.commands.AppDesc;
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
@@ -38,9 +38,9 @@ public class DeployedApplicationsNode extends TreeNode {
 		return this.server;
 	}
 
-	public SunAppServerBehaviour getServerBehavior() {
-		return (SunAppServerBehaviour) server.loadAdapter(
-				SunAppServerBehaviour.class, null);
+	public GlassfishGenericServerBehaviour getServerBehavior() {
+		return (GlassfishGenericServerBehaviour) server.loadAdapter(
+				GlassfishGenericServerBehaviour.class, null);
 	}
 
 	public Object[] getChildren() {
@@ -48,7 +48,7 @@ public class DeployedApplicationsNode extends TreeNode {
 		ArrayList<ApplicationNode> appsList = new ArrayList<ApplicationNode>();
 		if (this.deployedapps == null) {
 
-			final SunAppServerBehaviour behaviour = getServerBehavior();
+			final GlassfishGenericServerBehaviour behaviour = getServerBehavior();
 			try {
 				if (behaviour == null) {
 					this.deployedapps = appsList

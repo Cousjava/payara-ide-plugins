@@ -27,8 +27,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.NodeTypes;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.ResourcesNode;
@@ -63,11 +63,11 @@ public class UnregisterResourceAction extends Action {
 				}
 
 				try {
-					final SunAppServerBehaviour be = currentResource
+					final GlassfishGenericServerBehaviour be = currentResource
 							.getServerBehavior();
 					IRunnableWithProgress op = new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) {
-							SunAppServer server= be.getSunAppServer();
+							GlassfishGenericServer server= be.getSunAppServer();
 							CommandRunner mgr = new CommandRunner(server);
 
 							String propName="";

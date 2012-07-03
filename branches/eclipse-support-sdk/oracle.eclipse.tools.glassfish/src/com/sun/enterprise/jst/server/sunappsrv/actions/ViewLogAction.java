@@ -15,15 +15,12 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.actions;
 
-import java.io.File;
-
 import org.eclipse.wst.server.core.IServer;
 import org.glassfish.tools.ide.server.FetchLog;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.log.GlassfishConsoleManager;
-import com.sun.enterprise.jst.server.sunappsrv.log.GlassFishConsole;
 import com.sun.enterprise.jst.server.sunappsrv.log.IGlassFishConsole;
 import com.sun.enterprise.jst.server.sunappsrv.log.RemoteGlassFishConsole;
 /**
@@ -41,13 +38,13 @@ public class ViewLogAction extends AppServerContextAction{
 		
 
 		try {
-	        SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter(
-	                SunAppServerBehaviour.class, null);
-	        if (sab.getSunAppServer().isLocalServer()){
+	        GlassfishGenericServerBehaviour sab = (GlassfishGenericServerBehaviour) server.loadAdapter(
+	                GlassfishGenericServerBehaviour.class, null);
+	        if (!sab.isRemote()){
 	        	IGlassFishConsole console = GlassfishConsoleManager.getConsole(sab.getSunAppServer());
-	        	console.startLogging(FetchLog.create(sab.getSunAppServer(), true));
+	        	console.startLogging(FetchLog.create(sab.getSunAppServer()));
 	        }else {
-	    		if (!sab.getSunAppServer().isRunning()){
+	    		if (!sab.isRunning()){
 	    			showMessageDialog();
 	    			return;
 	    		}

@@ -36,7 +36,7 @@ import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 @SuppressWarnings("restriction")
@@ -96,8 +96,8 @@ public class V3Configurator {
 
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
 		wc.setName("Internal " + runtime.getName());
-		SunAppServer sunAppServer = (SunAppServer) wc
-				.getAdapter(SunAppServer.class);
+		GlassfishGenericServer sunAppServer = (GlassfishGenericServer) wc
+				.getAdapter(GlassfishGenericServer.class);
 
 		String expectedDomainLocation = getDomainLocation();
 		File dom = new File(expectedDomainLocation);
@@ -111,8 +111,8 @@ public class V3Configurator {
 		}
 
 		Map<String, String> configuration = sunAppServer.getProps();
-		configuration.put(SunAppServer.DOMAINPATH, expectedDomainLocation);
-		configuration.put(SunAppServer.USEANONYMOUSCONNECTIONS, "true");
+		configuration.put(GlassfishGenericServer.DOMAINPATH, expectedDomainLocation);
+		configuration.put(GlassfishGenericServer.USEANONYMOUSCONNECTIONS, "true");
 
 
 		sunAppServer.setServerInstanceProperties(configuration);
@@ -222,7 +222,7 @@ public class V3Configurator {
 			SunAppSrvPlugin.logMessage("Creating NEW : " + glassfishLocation,
 					null);
 
-			map.put(SunAppServer.ROOTDIR, glassfishLocation);
+			map.put(GlassfishGenericServer.ROOTDIR, glassfishLocation);
 			gRun.setServerDefinitionId(gRun.getRuntime().getRuntimeType()
 					.getId());
 			gRun.setServerInstanceProperties(map);

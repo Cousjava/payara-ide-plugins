@@ -25,7 +25,7 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.glassfish.tools.ide.server.FetchLog;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
 
@@ -43,9 +43,9 @@ public class RemoteGlassFishConsole extends MessageConsole {
 	private static int interval = 6000;
 	private static int numLines = 1000;
 	private RemoteLogThread thread;
-	private SunAppServer server;
+	private GlassfishGenericServer server;
 	
-	public RemoteGlassFishConsole(SunAppServer s) {
+	public RemoteGlassFishConsole(GlassfishGenericServer s) {
 		super(s.getServer().getHost()+":"+s.getAdminServerPort(), AppServerContextAction.getImageDescriptorFromlocalImage("icons/obj16/glassfishserver.gif"));
 		server = s;
 	}
@@ -80,7 +80,7 @@ public class RemoteGlassFishConsole extends MessageConsole {
 		super.dispose();
 	}
 	
-	private static MessageConsole getConsole(SunAppServer s) {
+	private static MessageConsole getConsole(GlassfishGenericServer s) {
 	      ConsolePlugin plugin = ConsolePlugin.getDefault();
 	      IConsoleManager manager = plugin.getConsoleManager();
 	      IConsole[] existing = manager.getConsoles();
@@ -99,7 +99,7 @@ public class RemoteGlassFishConsole extends MessageConsole {
 	      return myConsole;
 	}
 
-	public static void showConsole(SunAppServer s) {
+	public static void showConsole(GlassfishGenericServer s) {
 		MessageConsole myConsole = getConsole(s);
 		if (myConsole != null) {
 			ConsolePlugin.getDefault().getConsoleManager().showConsoleView(myConsole);

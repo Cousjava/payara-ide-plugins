@@ -46,8 +46,9 @@ import org.glassfish.tools.ide.server.parser.ResourcesReader;
 import org.glassfish.tools.ide.server.parser.ResourcesReader.ResourceType;
 import org.glassfish.tools.ide.server.parser.TreeParser;
 
-import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
+import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.GetPropertyCommand;
@@ -235,7 +236,7 @@ public class ResourceUtils {
 		return resources;
 	}
 
-	public static void checkUpdateServerResources(File sunResourcesXml, SunAppServer sunAppsrv) {
+	public static void checkUpdateServerResources(File sunResourcesXml, GlassfishGenericServer sunAppsrv) {
 		Map<String, String> changedData = new HashMap<String, String>();
 		
 		ResourcesReader cpReader = new ResourcesReader(ResourceType.JDBC_CONNECTION_POOL);
@@ -264,10 +265,10 @@ public class ResourceUtils {
 		}
 	}
 
-	private static Map<String, String> getResourceData(String query, SunAppServer sunAppsrv) {
+	private static Map<String, String> getResourceData(String query, GlassfishGenericServer sunAppsrv) {
         try {
             GetPropertyCommand cmd = new ServerCommand.GetPropertyCommand(query); 
-            Future<OperationState> task = sunAppsrv.execute(cmd);
+            Future<OperationState> task = new CommandRunner(sunAppsrv).execute(cmd);
             OperationState state = task.get();
             if (state == OperationState.COMPLETED) {
                 Map<String,String> retVal = cmd.getData();
@@ -344,14 +345,14 @@ public class ResourceUtils {
         return changedData;
     }
 	
-	private static void putResourceData(Map<String, String> data, SunAppServer sunAppsrv) {
+	private static void putResourceData(Map<String, String> data, GlassfishGenericServer sunAppsrv) {
         Set<String> keys = data.keySet();
         for (String k : keys) {
             String name = k;
             String value = data.get(k);
             try {
                 SetPropertyCommand spc = sunAppsrv.getCommandFactory().getSetPropertyCommand(name, value);
-                Future<OperationState> task = sunAppsrv.execute(spc);
+                Future<OperationState> task = new CommandRunner(sunAppsrv).execute(spc);
                 OperationState state = task.get();
             } catch (InterruptedException ex) {
             	SunAppSrvPlugin.logMessage("error setting resource data ", ex);	//$NON-NLS-1$

@@ -13,13 +13,8 @@
 package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -30,13 +25,10 @@ import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.ui.internal.SWTUtil;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -50,18 +42,17 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
-import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
-
 public class GFWizardCreation extends WizardFragment {
 
 	private Helper helper;
 	private IWizardHandle handle;
+
+	private boolean isValid = false;
 
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
 		this.handle = handle;
@@ -76,7 +67,7 @@ public class GFWizardCreation extends WizardFragment {
 		handle.setTitle("GlassFish Application Server");
 		handle.setDescription("Enter the configuration parameters for this GlassFish domain...");
 		IServerWorkingCopy server = getServer();
-		SunAppServer gf = (SunAppServer) server.loadAdapter(SunAppServer.class,
+		GlassfishGenericServer gf = (GlassfishGenericServer) server.loadAdapter(GlassfishGenericServer.class,
 				null);
 		helper = new Helper(handle, gf, server);
 
@@ -98,14 +89,15 @@ public class GFWizardCreation extends WizardFragment {
 	 * @return
 	 */
 	private IServerWorkingCopy getServer() {
-		
-		IRuntime runtime = (IRuntime) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-  
-		if (runtime != null){
-			String s =runtime.getName();
-			s =""+runtime.getName();
+
+		IRuntime runtime = (IRuntime) getTaskModel().getObject(
+				TaskModel.TASK_RUNTIME);
+
+		if (runtime != null) {
+			String s = runtime.getName();
+			s = "" + runtime.getName();
 		}
-		
+
 		IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel()
 				.getObject(TaskModel.TASK_SERVER);
 		return server;
@@ -114,46 +106,45 @@ public class GFWizardCreation extends WizardFragment {
 	@Override
 	public void enter() {
 		IServerWorkingCopy server = getServer();
-		SunAppServer gf = (SunAppServer) server.loadAdapter(SunAppServer.class,
+		GlassfishGenericServer gf = (GlassfishGenericServer) server.loadAdapter(GlassfishGenericServer.class,
 				null);
-		
+
 		helper.updateServer(gf, server);
 	}
 
-	
 	@Override
 	public boolean isComplete() {
-		return helper.validate();
+		return isValid;
 	}
-	
+
 	class Helper {
 
-		private SunAppServer glassfish;
+		private GlassfishGenericServer glassfish;
 		private IServerWorkingCopy serverCopy;
 		private ArrayList<Control> fPropertyControls = null;
 		protected String fLastMessage;
 		protected IWizardHandle fWizard;
-		private Text path=null;
+		private Text path = null;
 		private Text adminName = null;
 		private Text adminPassword = null;
 		private Text adminport = null;
-		private Text serverport =null;
+		private Text serverport = null;
 		private Text target = null;
 		private Button preserveSessions = null;
-		private Label domainDirLabel=null;
-		private Label adminportLabel=null;
-		private Label serverportLabel=null;
-		private Button pingButton=null;
+		private Label domainDirLabel = null;
+		private Label adminportLabel = null;
+		private Label serverportLabel = null;
+		private Button pingButton = null;
 		private Button domainBrowseButton = null;
 
-		public void updateServer(SunAppServer server,
-				IServerWorkingCopy scopy){
+		public void updateServer(GlassfishGenericServer server, IServerWorkingCopy scopy) {
 			this.glassfish = server;
 			this.serverCopy = scopy;
-			if (glassfish.isLocalServer()) {
-				
-				String defaultLocation =""+serverCopy.getRuntime().getLocation();// getSunApplicationServerInstallationDirectory();
-				File f= new File (defaultLocation,"/domains/domain1");
+			if (!glassfish.getServerBehaviourAdapter().isRemote()) {
+
+				String defaultLocation = ""
+						+ serverCopy.getRuntime().getLocation();// getSunApplicationServerInstallationDirectory();
+				File f = new File(defaultLocation, "/domains/domain1");
 				defaultLocation = f.getAbsolutePath();
 				path.setText(defaultLocation);
 				path.setVisible(true);
@@ -164,23 +155,24 @@ public class GFWizardCreation extends WizardFragment {
 				adminportLabel.setVisible(false);
 				serverportLabel.setVisible(false);
 				pingButton.setVisible(false);
-				}
-			else {
+			} else {
 				path.setVisible(false);
 				domainBrowseButton.setVisible(false);
 				domainDirLabel.setVisible(false);
 				adminport.setVisible(true);
-				serverport.setVisible(true);				
+				serverport.setVisible(true);
 				adminportLabel.setVisible(true);
 				serverportLabel.setVisible(true);
 				pingButton.setVisible(true);
 			}
 		}
+
 		private final class PathModifyListener implements ModifyListener {
 			public void modifyText(ModifyEvent e) {
 				String path = ((Text) e.widget).getText();
 
 				if (path.length() < 1) {
+					isValid = false;
 					fLastMessage = "Specify a valid GlassFish Domain directory";
 					fWizard.setMessage(fLastMessage, IMessageProvider.ERROR);
 					fWizard.update();
@@ -191,7 +183,7 @@ public class GFWizardCreation extends WizardFragment {
 
 		}
 
-		public Helper(IWizardHandle handle, SunAppServer server,
+		public Helper(IWizardHandle handle, GlassfishGenericServer server,
 				IServerWorkingCopy scopy) {
 			super();
 			glassfish = server;
@@ -199,94 +191,93 @@ public class GFWizardCreation extends WizardFragment {
 			serverCopy = scopy;
 		}
 
-	/*	private GenericServerRuntime getRuntimeDelegate() {
-			GenericServerRuntime g=  (GenericServerRuntime) serverCopy.getRuntime().loadAdapter(
-					GenericServerRuntime.class, null);
-			return g;
-		}
-
-		private String getSunApplicationServerInstallationDirectory() {
-			GenericServerRuntime g = getRuntimeDelegate();
-			String path = (String) g
-					.getServerInstanceProperties().get(SunAppServer.ROOTDIR);
-			return path;
-		}*/
+		/*
+		 * private GenericServerRuntime getRuntimeDelegate() {
+		 * GenericServerRuntime g= (GenericServerRuntime)
+		 * serverCopy.getRuntime().loadAdapter( GenericServerRuntime.class,
+		 * null); return g; }
+		 * 
+		 * private String getSunApplicationServerInstallationDirectory() {
+		 * GenericServerRuntime g = getRuntimeDelegate(); String path = (String)
+		 * g .getServerInstanceProperties().get(SunAppServer.ROOTDIR); return
+		 * path; }
+		 */
 
 		public void decorate(Composite parent) {
 			fPropertyControls = new ArrayList<Control>();
 			// get properties from server definition
-			Map<String, Property> serverProps = getServerProperties(glassfish.getServerDefinition());
+			Map<String, Property> serverProps = getServerProperties(glassfish
+					.getServerDefinition());
 			Property prop = null;
-				String defaultLocation =""+serverCopy.getRuntime().getLocation();// getSunApplicationServerInstallationDirectory();
-				File f= new File (defaultLocation,"/domains/domain1");
-				defaultLocation = f.getAbsolutePath();
-				
-				// domain path and browse button
-				prop = serverProps.get(SunAppServer.DOMAINPATH);
-				domainDirLabel = new Label(parent, SWT.NONE);
-				domainDirLabel.setText(prop.getLabel());
-				GridData gridData = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
-				gridData.horizontalSpan = 1;
-				path = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
-				path.setLayoutData(gridData);
-				path.setText(prop.getDefault());
-				path.setData(SunAppServer.DOMAINPATH);
-				fPropertyControls.add(path);
-				domainBrowseButton = SWTUtil.createButton(parent,"...");
-				path.addModifyListener(new PathModifyListener());
-				final Shell s =  domainBrowseButton.getShell();
-				domainBrowseButton.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						DirectoryDialog dlg = new DirectoryDialog(s);
-						dlg.setText(path.getText().replace('\\', '/'));
-						dlg.setMessage("Select a GlassFish Domain Directory");
-						String res = dlg.open();
-						if (res != null) {
-							path.setText(res.replace('\\', '/'));
-						}
+			String defaultLocation = "" + serverCopy.getRuntime().getLocation();// getSunApplicationServerInstallationDirectory();
+			File f = new File(defaultLocation, "/domains/domain1");
+			defaultLocation = f.getAbsolutePath();
+
+			// domain path and browse button
+			prop = serverProps.get(GlassfishGenericServer.DOMAINPATH);
+			domainDirLabel = new Label(parent, SWT.NONE);
+			domainDirLabel.setText(prop.getLabel());
+			GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true,
+					false);
+			gridData.horizontalSpan = 1;
+			path = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
+			path.setLayoutData(gridData);
+			path.setText(prop.getDefault());
+			path.setData(GlassfishGenericServer.DOMAINPATH);
+			fPropertyControls.add(path);
+			domainBrowseButton = SWTUtil.createButton(parent, "...");
+			path.addModifyListener(new PathModifyListener());
+			final Shell s = domainBrowseButton.getShell();
+			domainBrowseButton.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					DirectoryDialog dlg = new DirectoryDialog(s);
+					dlg.setText(path.getText().replace('\\', '/'));
+					dlg.setMessage("Select a GlassFish Domain Directory");
+					String res = dlg.open();
+					if (res != null) {
+						path.setText(res.replace('\\', '/'));
 					}
+				}
 
-					public void widgetDefaultSelected(SelectionEvent e) {
-						widgetSelected(e);
-					}
+				public void widgetDefaultSelected(SelectionEvent e) {
+					widgetSelected(e);
+				}
 
-				});
+			});
 
-				// target field
-				prop = serverProps.get(SunAppServer.TARGET);
-				target = SWTUtil.createLabeledText(prop.getLabel(), prop.getDefault(), parent);
-				target.setData(SunAppServer.TARGET);
-				fPropertyControls.add(target);
-
-				// admin name
-				prop = serverProps.get(SunAppServer.ADMINNAME);
-			adminName = SWTUtil.createLabeledText(prop.getLabel(), prop.getDefault(), parent);
-			adminName.setData(SunAppServer.ADMINNAME);
+			// admin name
+			prop = serverProps.get(GlassfishGenericServer.ADMINNAME);
+			adminName = SWTUtil.createLabeledText(prop.getLabel(),
+					prop.getDefault(), parent);
+			adminName.setData(GlassfishGenericServer.ADMINNAME);
 			fPropertyControls.add(adminName);
 
 			// admin pass
-			prop = serverProps.get(SunAppServer.ADMINPASSWORD);
-			adminPassword = SWTUtil.createLabeledText(prop.getLabel(), prop.getDefault(), parent);
+			prop = serverProps.get(GlassfishGenericServer.ADMINPASSWORD);
+			adminPassword = SWTUtil.createLabeledText(prop.getLabel(),
+					prop.getDefault(), parent);
 			adminPassword.setEchoChar('*');
-			adminPassword.setData(SunAppServer.ADMINPASSWORD);
+			adminPassword.setData(GlassfishGenericServer.ADMINPASSWORD);
 			fPropertyControls.add(adminPassword);
 
 			// session preservation
-			prop = serverProps.get(SunAppServer.KEEPSESSIONS);
-			preserveSessions = SWTUtil.createLabeledCheck(prop.getLabel(), Boolean.parseBoolean(prop.getDefault()), parent);
-			preserveSessions.setData(SunAppServer.KEEPSESSIONS);
+			prop = serverProps.get(GlassfishGenericServer.KEEPSESSIONS);
+			preserveSessions = SWTUtil.createLabeledCheck(prop.getLabel(),
+					Boolean.parseBoolean(prop.getDefault()), parent);
+			preserveSessions.setData(GlassfishGenericServer.KEEPSESSIONS);
 			fPropertyControls.add(preserveSessions);
-			
+
 			// admin port
-			prop = serverProps.get(SunAppServer.ADMINSERVERPORT);
-			GridData gridData2 = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
+			prop = serverProps.get(GlassfishGenericServer.ADMINSERVERPORT);
+			GridData gridData2 = new GridData(SWT.FILL, SWT.BEGINNING, true,
+					false);
 			gridData2.horizontalSpan = 2;
 			adminportLabel = new Label(parent, SWT.NONE);
 			adminportLabel.setText(prop.getLabel());
 			adminport = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
 			adminport.setText(prop.getDefault());
 			adminport.setLayoutData(gridData2);
-			adminport.setData(SunAppServer.ADMINSERVERPORT);
+			adminport.setData(GlassfishGenericServer.ADMINSERVERPORT);
 			adminport.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					validate();
@@ -295,35 +286,44 @@ public class GFWizardCreation extends WizardFragment {
 			fPropertyControls.add(adminport);
 
 			// server port
-			prop = serverProps.get(SunAppServer.SERVERPORT);
-			GridData gridData3 = new GridData(SWT.FILL,SWT.BEGINNING,true,false);
+			prop = serverProps.get(GlassfishGenericServer.SERVERPORT);
+			GridData gridData3 = new GridData(SWT.FILL, SWT.BEGINNING, true,
+					false);
 			gridData3.horizontalSpan = 2;
 			serverportLabel = new Label(parent, SWT.NONE);
 			serverportLabel.setText(prop.getLabel());
 			serverport = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
 			serverport.setText(prop.getDefault());
 			serverport.setLayoutData(gridData3);
-			serverport.setData(SunAppServer.SERVERPORT);
+			serverport.setData(GlassfishGenericServer.SERVERPORT);
 			serverport.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					validate();
 				}
 			});
 			fPropertyControls.add(serverport);
-			
+
+			// target field
+			prop = serverProps.get(GlassfishGenericServer.TARGET);
+			target = SWTUtil.createLabeledText(prop.getLabel(),
+					prop.getDefault(), parent);
+			target.setData(GlassfishGenericServer.TARGET);
+			target.setToolTipText(Messages.targetTooltip);
+			fPropertyControls.add(target);
+
 			// ping button
 			pingButton = SWTUtil.createButton(parent, "Ping Server...");
-		    Listener listener = new Listener() {
-		        public void handleEvent(Event event) {
-		        	validate();
-		        }
-		      };
-		      pingButton.addListener(SWT.Selection, listener);
-		      
-		      Dialog.applyDialogFont(parent);
-		      
-		      //updateServer(glassfish, serverCopy);
-			}
+			Listener listener = new Listener() {
+				public void handleEvent(Event event) {
+					validate();
+				}
+			};
+			pingButton.addListener(SWT.Selection, listener);
+
+			Dialog.applyDialogFont(parent);
+
+			// updateServer(glassfish, serverCopy);
+		}
 
 		/**
 		 * Returns the property name/value pairs.
@@ -335,10 +335,12 @@ public class GFWizardCreation extends WizardFragment {
 			for (int i = 0; i < fPropertyControls.size(); i++) {
 				Control c = (Control) fPropertyControls.get(i);
 				String prop = (String) (c).getData();
-				if (prop==null){
+				if (prop == null) {
 					continue;
 				}
-				if ((!c.isVisible()/*&&(!prop.equals(SunAppServer.DOMAINPATH)))*/)){
+				if ((!c.isVisible()/*
+									 * &&(!prop.equals(SunAppServer.DOMAINPATH)))
+									 */)) {
 					continue;
 				}
 				if (fPropertyControls.get(i) instanceof Button) {
@@ -361,25 +363,27 @@ public class GFWizardCreation extends WizardFragment {
 			}
 			return propertyMap;
 		}
-		
-		private Map<String, Property> getServerProperties(ServerRuntime serverDef) {
-			HashMap<String, Property> propertiesMap = new HashMap<String, Property>(serverDef.getProperty().size());
+
+		private Map<String, Property> getServerProperties(
+				ServerRuntime serverDef) {
+			HashMap<String, Property> propertiesMap = new HashMap<String, Property>(
+					serverDef.getProperty().size());
 			for (int i = 0; i < serverDef.getProperty().size(); i++) {
 				Property p = (Property) serverDef.getProperty().get(i);
 				propertiesMap.put(p.getId(), p);
 			}
 			return propertiesMap;
 		}
-		
+
 		public boolean validate() {
 			IStatus status = null;
 			if (glassfish != null) {
 				glassfish.setServerInstanceProperties(getValues());
 				status = glassfish.validate();
 			}
-			
-			if (!glassfish.isLocalServer()) {
-				String version = glassfish.getVersionString();
+
+			if (glassfish.getServerBehaviourAdapter().isRemote()) {
+				String version = glassfish.getServerBehaviourAdapter().getVersion();
 				if (version.equals("")) {
 					// (!Utils.isSecurePort(glassfish.getServer().getHost(),
 					// Integer.parseInt(glassfish.getAdminServerPort())))){
@@ -390,15 +394,18 @@ public class GFWizardCreation extends WizardFragment {
 									+ glassfish.getAdminServerPort()
 									+ " remote server. Is it up? Is it secure? (Hint: run asadmin enable-secure-admin)",
 							IMessageProvider.ERROR);
+					isValid = false;
 					fWizard.update();
 					return false;
 				}
 			}
 
 			if (status == null || status.isOK()) {
+				isValid = true;
 				fWizard.setMessage(null, IMessageProvider.NONE);
 				fWizard.update();
 			} else {
+				isValid = false;
 				fWizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
 				fWizard.update();
 				return false;

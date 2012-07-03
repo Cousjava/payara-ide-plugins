@@ -47,13 +47,13 @@ IClasspathContainerPage, IClasspathContainerPageExtension{
 		for (int i = 0; i < size; i++) {
 			if (runtimes[i].getRuntimeType() != null) {
 				
-		        SunAppServer sab1 = (SunAppServer) runtimes[i].loadAdapter(
-		                SunAppServer.class, null);
+		        GlassfishGenericServer sab1 = (GlassfishGenericServer) runtimes[i].loadAdapter(
+		                GlassfishGenericServer.class, null);
 		        
 			    SunAppSrvPlugin.logMessage("in sab1  "+sab1);
 
-		        SunAppServerBehaviour sab = (SunAppServerBehaviour) runtimes[i].loadAdapter(
-		                SunAppServerBehaviour.class, null);
+		        GlassfishGenericServerBehaviour sab = (GlassfishGenericServerBehaviour) runtimes[i].loadAdapter(
+		                GlassfishGenericServerBehaviour.class, null);
 			    SunAppSrvPlugin.logMessage("in sab  "+sab);
 		        
 				s=s+ "--"+runtimes[i].getLocation()+runtimes[i].getId();
@@ -70,13 +70,13 @@ IClasspathContainerPage, IClasspathContainerPageExtension{
 				IServer[] ss=ServerCore.getServers();
 				int aa = ss.length;
 				for (int ii = 0; ii < aa; ii++) {
-			         sab1 = (SunAppServer) ss[ii].loadAdapter(
-			                SunAppServer.class, null);
+			         sab1 = (GlassfishGenericServer) ss[ii].loadAdapter(
+			                GlassfishGenericServer.class, null);
 			        
 				    SunAppSrvPlugin.logMessage("777in sab1  "+sab1);
 
-			         sab = (SunAppServerBehaviour) ss[ii].loadAdapter(
-			                SunAppServerBehaviour.class, null);
+			         sab = (GlassfishGenericServerBehaviour) ss[ii].loadAdapter(
+			                GlassfishGenericServerBehaviour.class, null);
 				    SunAppSrvPlugin.logMessage("777in sab  "+sab);					
 				}
 			}
