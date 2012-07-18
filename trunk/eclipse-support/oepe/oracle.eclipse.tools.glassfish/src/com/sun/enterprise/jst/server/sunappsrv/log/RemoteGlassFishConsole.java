@@ -26,7 +26,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
+import com.sun.enterprise.jst.server.sunappsrv.handlers.AppServerContextAction;
 
 
 /**

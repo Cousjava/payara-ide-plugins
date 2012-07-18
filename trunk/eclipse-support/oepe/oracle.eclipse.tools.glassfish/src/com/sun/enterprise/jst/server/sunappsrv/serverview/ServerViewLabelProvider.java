@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
-import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
+import com.sun.enterprise.jst.server.sunappsrv.handlers.AppServerContextAction;
 
 public class ServerViewLabelProvider extends LabelProvider implements ITableFontProvider {
 

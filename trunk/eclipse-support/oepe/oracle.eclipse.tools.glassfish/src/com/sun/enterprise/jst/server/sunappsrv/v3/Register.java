@@ -37,7 +37,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import com.sun.enterprise.jst.server.sunappsrv.AdminURLHelper;
 import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
+import com.sun.enterprise.jst.server.sunappsrv.handlers.AppServerContextAction;
 
 /**
  * @author Ludo

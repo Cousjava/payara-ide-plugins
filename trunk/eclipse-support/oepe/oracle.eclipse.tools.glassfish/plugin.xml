@@ -60,7 +60,7 @@
             id="org.glassfish.jst.server.runtime.glassfish312"
             name="%runtimeTypeNameglassfish312" description="%runtimeTypeDescriptionglassfish312"
             vendor="%runtimeTypeGlassFishVendor" version="3.1.2"
-            class="com.sun.enterprise.jst.server.sunappsrv.GlassfishRuntime">
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5, 3.0"/>
             <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0, 3.1"/>
             <moduleType types="jst.connector" versions="1.0, 1.5, 1.6"/>
@@ -75,7 +75,7 @@
             id="org.glassfish.jst.server.runtime.glassfish311"
             name="%runtimeTypeNameglassfish311" description="%runtimeTypeDescriptionglassfish311"
             vendor="%runtimeTypeGlassFishVendor" version="3.1.1"
-            class="com.sun.enterprise.jst.server.sunappsrv.GlassfishRuntime">
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5, 3.0"/>
             <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0, 3.1"/>
             <moduleType types="jst.connector" versions="1.0, 1.5, 1.6"/>
@@ -90,7 +90,7 @@
             id="org.glassfish.jst.server.runtime.glassfish31"
             name="%runtimeTypeNameglassfish31" description="%runtimeTypeDescriptionglassfish31"
             vendor="%runtimeTypeGlassFishVendor" version="3.1"
-            class="com.sun.enterprise.jst.server.sunappsrv.GlassfishRuntime">
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5, 3.0"/>
             <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0, 3.1"/>
             <moduleType types="jst.connector" versions="1.0, 1.5, 1.6"/>
@@ -105,7 +105,7 @@
             id="com.sun.enterprise.jst.server.runtime.sunappsrv92"
             name="%runtimeTypeName92" description="%runtimeTypeDescription92"
             vendor="%runtimeTypeGlassFishVendor" version="9.2"
-            class="com.sun.enterprise.jst.server.sunappsrv.GlassfishRuntime">
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5, 3.0"/>
             <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0, 3.1"/>
             <moduleType types="jst.connector" versions="1.0, 1.5, 1.6"/>
@@ -120,7 +120,7 @@
             id="com.sun.enterprise.jst.server.runtime.sunappsrv91"
             name="%runtimeTypeName91" description="%runtimeTypeDescription91"
             vendor="%runtimeTypeGlassFishVendor" version="9.1"
-            class="com.sun.enterprise.jst.server.sunappsrv.GlassfishRuntime">
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
             <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
             <moduleType types="jst.connector" versions="1.0, 1.5"/>
@@ -135,7 +135,7 @@
             id="com.sun.enterprise.jst.server.runtime.sailfin2"
             name="%runtimeTypeNameSailfin2" description="%runtimeTypeDescriptionSailfin2"
             vendor="%runtimeTypeGlassFishVendor" version="Sailfin v2"
-            class="com.sun.enterprise.jst.server.sunappsrv.GlassfishRuntime">
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
             <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
             <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
             <moduleType types="jst.connector" versions="1.0, 1.5"/>
@@ -1233,7 +1233,7 @@
      		class="com.sun.enterprise.jst.server.sunappsrv.sailfin.wizards.SailfinTester">
         </propertyTester>
     </extension>
-
+    
     <extension point="org.eclipse.ui.perspectiveExtensions">
         <perspectiveExtension targetID="org.eclipse.jst.j2ee.J2EEPerspective">
 	 		<!--newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AnnotatedServletWizard"/>
@@ -1244,91 +1244,6 @@
             <newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.NewXHTMLWizard"/>
             <newWizardShortcut id="com.sun.enterprise.jst.server.sunappsrv.v3.wizards.AddGenericResourceWizard"/>
         </perspectiveExtension>
-    </extension>
-
-    <extension point="org.eclipse.ui.popupMenus">
-        <objectContribution
-                adaptable="true"
-                id="com.sun.enterprise.jst.server.ui.serveractions"
-                objectClass="org.eclipse.wst.server.core.IServer">
-            <enablement>
-                <or>
-                    <test forcePluginActivation="true"
-                	property="org.eclipse.wst.server.ui.serverType"
-                	value="com.sun.enterprise.jst.server.sunappsrv*" />
-                    <test forcePluginActivation="true"
-                	property="org.eclipse.wst.server.ui.serverType"
-                	value="com.sun.enterprise.jst.server.*" />
-                    <test forcePluginActivation="true"
-                	property="org.eclipse.wst.server.ui.serverType"
-                	value="org.glassfish.jst.server.*" />
-                </or>
-            </enablement>
-      
-            <menu
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu"
-                label="%menu.glassfishtopmenu"
-                icon="icons/obj16/glassfishserver.gif"
-                path="additions">
-                <separator name="group1"/>
-
-            </menu>
-      
-            <action
-                  class="com.sun.enterprise.jst.server.sunappsrv.actions.ViewLogAction"
-                  enablesFor="1"
-                  icon="icons/obj16/logfile.gif"
-                  id="com.sun.enterprise.jst.server.sunappsrv.actions.ViewLogAction"
-                  label="%menu.viewlogfile"
-                  menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                  tooltip="View GlassFish Log File">
-            </action>
-            <action
-                label="%menu.viewadminconsole"
-                icon="icons/obj16/glassfishserver.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.OpenBrowserAction"
-                tooltip="View GlassFish Admin Console"
-                menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.OpenBrowserAction">
-            </action>
-            <action
-                label="%menu.theaquarium"
-                enablesFor="*"
-                icon="icons/obj16/resources.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction"
-                menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction">
-            </action>   
-            <action
-                label="%menu.glassfish.getsupport"
-                enablesFor="*"
-                icon="icons/obj16/sunappsrv.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction"
-                menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction">
-            </action>     
-            <!--action
-                label="%menu.registerglassfish"
-                enablesFor="1"
-                icon="icons/obj16/registration.png"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction"
-                menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeRegistrationAction">
-            </action-->
-            <action
-                  class="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction"
-                  enablesFor="1"
-                  icon="icons/obj16/updateCenter.png"
-                  id="com.sun.enterprise.jst.server.sunappsrv.actions.PreludeUpdateCenterAction"
-                  label="%menu.updatecenter"
-                  menubarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                  toolbarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                  tooltip="GlassFish Update Center">
-            </action>
-        </objectContribution>
-    
-    
-
     </extension>
   
     <extension point="org.eclipse.ui.editors">
@@ -1350,35 +1265,6 @@
         </editor>
     </extension>
      
-    <extension point="org.eclipse.ui.viewActions">
-        <viewContribution
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.toolbar"
-                targetID="org.eclipse.wst.server.ui.ServersView">
-            <menu
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenuModule"
-                label="GlassFish"
-                path="additions">
-                <separator name="group1"/>
-
-            </menu>
-            <action
-                label="%menu.theaquarium"
-                icon="icons/obj16/resources.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction"
- 				toolbarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenuModule/group1"
-               	id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction">
-            </action>
-            
-            <action
-                label="%menu.glassfish.getsupport"
-                icon="icons/obj16/sunappsrv.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction"
-                toolbarPath="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction">
-            </action>
-                  
-        </viewContribution>
-    </extension>
     <extension
           point="org.eclipse.ui.preferenceTransfer">
     </extension>
@@ -1396,94 +1282,6 @@
         <initializer
              class="com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceInitializer">
         </initializer>
-    </extension>
-        
-    <extension point="org.eclipse.ui.actionSets">
-        <actionSet
-		id="org.eclipse.help.internal.ui.HelpActionSet"
-		label="%help"
-		visible="true">
-             <!--menu
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaee5docMenu"
-                label="%menu.javaee5.javadoc"
-                icon="icons/obj16/glassfishserver.gif"
-                path="help/helpEnd"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$JavaEE5JavaDoc"
-				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc">              
-                  <separator name="group1"/>
-            </menu>	
-              <menu
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaee6docMenu"
-                label="%menu.javaee6.javadoc"
-                icon="icons/obj16/glassfishserver.gif"
-                path="help/helpEnd"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$JavaEE6JavaDoc"
-				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc">              
-                  <separator name="group1"/>
-            </menu-->
-            <menu
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu"
-                label="%menu.glassfishtopmenu"
-                icon="icons/obj16/glassfishserver.gif"
-                path="help/helpEnd">
-                
-                <separator name="group1"/>
-
-            </menu>	
-
-            <action
-                label="%menu.theaquarium"
-                icon="icons/obj16/resources.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumAction"
-                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.AquariumActionHelp">
-            </action>   
-            <action
-                label="%menu.glassfish.getsupport"
-                icon="icons/obj16/sunappsrv.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportAction"
-                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
- 		helpContextId="org.eclipse.help.ui.helpContentsMenusupport"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.GetSupportActionHelp">
-            </action>                               
-            <action
-                label="%menu.v311.documentation"
-                icon="icons/obj16/glassfishserver.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$TopV31"
-                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-               id="com.sun.enterprise.jst.server.sunappsrv.actions.topActionHelpv31">
-            </action>   
-                    
-            <action
-                label="%menu.v2.documentation"
-                icon="icons/obj16/glassfishserver.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$TopV21"
-                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-				helpContextId="org.eclipse.help.ui.helpContentsMenuaquarium"
-               id="com.sun.enterprise.jst.server.sunappsrv.actions.topActionHelpv2">
-            </action>              
-                
-             <!--action
-                label="%menu.javaee6.javadoc"
-                icon="icons/obj16/glassfishserver.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$JavaEE6JavaDoc"
-				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc"
-                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaee6docMenu">
-            </action>                                  
-             		
-            <action
-                label="%menu.javaee5.javadoc"
-                icon="icons/obj16/glassfishserver.gif"
-                class="com.sun.enterprise.jst.server.sunappsrv.actions.HelpActions$JavaEE5JavaDoc"
-				helpContextId="org.eclipse.help.ui.helpContentsjavaeedoc"
-                menubarPath="help/com.sun.enterprise.jst.server.sunappsrv.actions.subMenu/group1"
-                id="com.sun.enterprise.jst.server.sunappsrv.actions.javaee5docMenu">
-            </action--> 
-
-        </actionSet>
     </extension>
 
     <extension point="org.eclipse.ui.console.consolePageParticipants">
@@ -1754,9 +1552,303 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
             <commonSorter class="com.sun.enterprise.jst.server.sunappsrv.serverview.ServerViewViewerSorter"/>
         </navigatorContent>
     </extension>
+    <extension
+          point="org.eclipse.ui.commands">
+      <category
+            name="glassfish-commands"
+            id="oracle.eclipse.tools.glassfish.commands.category">
+      </category>
+      <command
+            description="%menu.viewlogfile"
+            id="oracle.eclipse.tools.glassfish.commands.ViewLogCommand"
+            name="%menu.viewlogfile">
+      </command>
+      <command
+            description="%menu.viewadminconsole"
+            id="oracle.eclipse.tools.glassfish.commands.ViewAdminConsoleCommand"
+            name="%menu.viewadminconsole">
+      </command>
+      <command
+            description="%menu.updatecenter"
+            id="oracle.eclipse.tools.glassfish.commands.UpdateCenterCommand"
+            name="%menu.updatecenter">
+      </command>
+      <command
+            id="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+            name="OpenUrlCommand">
+         <commandParameter
+               id="oracle.eclipse.tools.glassfish.commands.urlParam"
+               name="url"
+               optional="false">
+         </commandParameter>
+      </command>
+    </extension>
 
+	 <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.sun.enterprise.jst.server.sunappsrv.handlers.UpdateCenterHandler"
+            commandId="oracle.eclipse.tools.glassfish.commands.UpdateCenterCommand">
+         <enabledWhen>
+            <reference
+                  definitionId="oracle.eclipse.tools.glassfish.oneGlassfishSelected">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.sun.enterprise.jst.server.sunappsrv.handlers.ViewLogHandler"
+            commandId="oracle.eclipse.tools.glassfish.commands.ViewLogCommand">
+         <enabledWhen>
+            <reference
+                  definitionId="oracle.eclipse.tools.glassfish.oneGlassfishSelected">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.sun.enterprise.jst.server.sunappsrv.handlers.ViewAdminConsoleHandler"
+            commandId="oracle.eclipse.tools.glassfish.commands.ViewAdminConsoleCommand">
+         <enabledWhen>
+            <reference
+                  definitionId="oracle.eclipse.tools.glassfish.oneRunningGlassfishSelected">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.sun.enterprise.jst.server.sunappsrv.handlers.ShowURLHandler"
+            commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand">
+      </handler>
+	</extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           allPopups="false"
+           locationURI="toolbar:org.eclipse.wst.server.ui.ServersView?after=additions">
+        <command
+              commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+              icon="icons/obj16/resources.gif"
+              label="%menu.theaquarium"
+              style="push">
+           <parameter
+                 name="oracle.eclipse.tools.glassfish.commands.urlParam"
+                 value="http://blogs.oracle.com/theaquarium/">
+           </parameter>
+        </command>
+        <command
+              commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+              icon="icons/obj16/sunappsrv.gif"
+              label="%menu.glassfish.getsupport"
+              style="push">
+           <parameter
+                 name="oracle.eclipse.tools.glassfish.commands.urlParam"
+                 value="https://shop.oracle.com/pls/ostore/f?p=dstore:4:343767690548618:::RIR:IR_ROWFILTER:glassfish&amp;tz=-8:00">
+           </parameter>
+        </command>
+        <command
+              commandId="oracle.eclipse.tools.glassfish.commands.UpdateCenterCommand"
+              icon="icons/obj16/updateCenter.png"
+              style="push">
+        </command>
+        <command
+              commandId="oracle.eclipse.tools.glassfish.commands.ViewAdminConsoleCommand"
+              icon="icons/obj16/glassfishserver.gif"
+              style="push">
+        </command>
+        <command
+              commandId="oracle.eclipse.tools.glassfish.commands.ViewLogCommand"
+              icon="icons/obj16/logfile.gif"
+              style="push">
+        </command>
+     </menuContribution>
+     <menuContribution
+           allPopups="false"
+           locationURI="popup:org.eclipse.wst.server.ui.ServersView?after=additions">
+        <menu
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu"
+                label="%menu.glassfishtopmenu"
+                icon="icons/obj16/glassfishserver.gif">
+                <separator name="group1"/>
+                <visibleWhen
+                      checkEnabled="false">
+                   <reference
+                         definitionId="oracle.eclipse.tools.glassfish.moreGlassfishSelected">
+                   </reference>
+                </visibleWhen>
+                <command
+                      commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+                      icon="icons/obj16/resources.gif"
+                      label="%menu.theaquarium"
+                      style="push">
+                   <parameter
+                         name="oracle.eclipse.tools.glassfish.commands.urlParam"
+                         value="http://blogs.oracle.com/theaquarium/">
+                   </parameter>
+        </command>
+        <command
+              commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+              icon="icons/obj16/sunappsrv.gif"
+              label="%menu.glassfish.getsupport"
+              style="push">
+           <parameter
+                 name="oracle.eclipse.tools.glassfish.commands.urlParam"
+                 value="https://shop.oracle.com/pls/ostore/f?p=dstore:4:343767690548618:::RIR:IR_ROWFILTER:glassfish&amp;tz=-8:00">
+           </parameter>
+        </command>
+        <command
+              commandId="oracle.eclipse.tools.glassfish.commands.UpdateCenterCommand"
+              icon="icons/obj16/updateCenter.png"
+              style="push">
+        </command>
+        <command
+              commandId="oracle.eclipse.tools.glassfish.commands.ViewAdminConsoleCommand"
+              icon="icons/obj16/glassfishserver.gif"
+              style="push">
+        </command>
+        <command
+              commandId="oracle.eclipse.tools.glassfish.commands.ViewLogCommand"
+              icon="icons/obj16/logfile.gif"
+              style="push">
+        </command>
 
-
-
+        </menu>
+       
+     </menuContribution>
+     <menuContribution
+           allPopups="false"
+           locationURI="menu:help?after=helpEnd">
+        <menu
+                id="com.sun.enterprise.jst.server.sunappsrv.actions.subMenu"
+                label="%menu.glassfishtopmenu"
+                icon="icons/obj16/glassfishserver.gif">
+                <separator name="group1"/>
+                <command
+                      commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+                      icon="icons/obj16/glassfishserver.gif"
+                      label="%menu.v311.documentation"
+                      style="push">
+                   <parameter
+                         name="oracle.eclipse.tools.glassfish.commands.urlParam"
+                         value="http://download.oracle.com/docs/cd/E18930_01/index.html">
+                   </parameter>
+                </command>
+                <command
+                      commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+                      icon="icons/obj16/glassfishserver.gif"
+                      label="%menu.v2.documentation"
+                      style="push">
+                   <parameter
+                         name="oracle.eclipse.tools.glassfish.commands.urlParam"
+                         value="http://download.oracle.com/docs/cd/E19879-01/index.html">
+                   </parameter>
+                </command>
+                <command
+              commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+              icon="icons/obj16/resources.gif"
+              label="%menu.theaquarium"
+              style="push">
+           <parameter
+                 name="oracle.eclipse.tools.glassfish.commands.urlParam"
+                 value="http://blogs.oracle.com/theaquarium/">
+           </parameter>
+        </command>
+        <command
+              commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+              icon="icons/obj16/sunappsrv.gif"
+              label="%menu.glassfish.getsupport"
+              style="push">
+           <parameter
+                 name="oracle.eclipse.tools.glassfish.commands.urlParam"
+                 value="https://shop.oracle.com/pls/ostore/f?p=dstore:4:343767690548618:::RIR:IR_ROWFILTER:glassfish&amp;tz=-8:00">
+           </parameter>
+        </command>
+        </menu>
+     </menuContribution>
+  </extension>
+  <extension
+        point="org.eclipse.core.expressions.definitions">
+     <definition
+           id="oracle.eclipse.tools.glassfish.oneGlassfishSelected">
+        <and>
+           <count
+                 value="1">
+           </count>
+           <iterate
+                 ifEmpty="false">
+              <adapt
+                    type="org.eclipse.wst.server.core.IServer">
+                 <and>
+                    <or>
+                       <test
+                             property="org.eclipse.wst.server.ui.serverType"
+                             value="org.glassfish.jst.server.*">
+                       </test>
+                       <test
+                             property="org.eclipse.wst.server.ui.serverType"
+                             value="com.sun.enterprise.jst.server.*">
+                       </test>
+                    </or>
+                 </and>
+              </adapt>
+           </iterate>
+        </and>
+     </definition>
+     <definition
+           id="oracle.eclipse.tools.glassfish.moreGlassfishSelected">
+           <iterate
+                 ifEmpty="false">
+              <adapt
+                    type="org.eclipse.wst.server.core.IServer">
+                    <or>
+                 <test
+                       property="org.eclipse.wst.server.ui.serverType"
+                       value="org.glassfish.jst.server.*">
+                 </test>
+                 <test
+                       property="org.eclipse.wst.server.ui.serverType"
+                       value="com.sun.enterprise.jst.server.*">
+                 </test>
+                 </or>
+              </adapt>
+           </iterate>
+     </definition>
+     <definition
+           id="oracle.eclipse.tools.glassfish.oneRunningGlassfishSelected">
+           <and>
+           <count
+                 value="1">
+           </count>
+           <iterate
+                 ifEmpty="false">
+              <adapt
+                    type="org.eclipse.wst.server.core.IServer">
+                 <and>
+                    <or>
+                       <test
+                             property="org.eclipse.wst.server.ui.serverType"
+                             value="org.glassfish.jst.server.*">
+                       </test>
+                       <test
+                             property="org.eclipse.wst.server.ui.serverType"
+                             value="com.sun.enterprise.jst.server.*">
+                       </test>
+                    </or>
+                    <test
+                          property="oracle.eclipse.tools.glassfish.isRunning">
+                    </test>
+                 </and>
+              </adapt>
+           </iterate>
+        </and>
+     </definition>
+  </extension>
+  <extension
+        point="org.eclipse.core.expressions.propertyTesters">
+     <propertyTester
+           class="com.sun.enterprise.jst.server.sunappsrv.handlers.GlassFishStateTester"
+           id="oracle.eclipse.tools.glassfish.GlassFishStateTester"
+           namespace="oracle.eclipse.tools.glassfish"
+           properties="isRunning"
+           type="org.eclipse.wst.server.core.IServer">
+     </propertyTester>
+  </extension>
 
 </plugin>

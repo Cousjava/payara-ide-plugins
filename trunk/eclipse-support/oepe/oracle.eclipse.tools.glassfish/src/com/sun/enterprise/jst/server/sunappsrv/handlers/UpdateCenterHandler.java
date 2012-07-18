@@ -1,19 +1,4 @@
-/*
- * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Sun Microsystems
- *     Oracle
- */
-
-
-
-package com.sun.enterprise.jst.server.sunappsrv.actions;
+package com.sun.enterprise.jst.server.sunappsrv.handlers;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,30 +11,20 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
 import org.eclipse.wst.server.core.IServer;
 
 import com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
-/**
- * action to launch the update center tool
- *
- * @author Ludovic.Champenois@Sun.COM
- */
-public class PreludeUpdateCenterAction extends AppServerContextAction {
+public class UpdateCenterHandler extends AbstractGlassfishSelectionHandler {
 
-    /**
-     * The constructor.
-     */
-    public PreludeUpdateCenterAction() {
-    	super ("GlassFish Update Center...",getImageDescriptorFromlocalImage("icons/obj16/updateCenter.png"));
-    }
-    
-    
-    @SuppressWarnings("restriction")
-    public void perform(IServer server) {
-    	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
+	@Override
+	public void processSelection(IStructuredSelection selection) {
+		// only one server should be selected
+		IServer server = (IServer)selection.getFirstElement();
+		SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
     	if (!sab.isV3()) { // V2 only
 			String loc=sab.getSunApplicationServerInstallationDirectory()+"/updatecenter/bin/updatetool";    
        	    if (File.separator.equals("\\")) {
@@ -90,16 +65,17 @@ public class PreludeUpdateCenterAction extends AppServerContextAction {
     			SunAppSrvPlugin.logMessage("error Launching Executable", ioe);
     		}
     	} else { // V3
-			if (accept(server)==false){
-				showMessageDialog();
-				return;
-			}
 			File installRoot = new File(sab.getSunApplicationServerInstallationDirectory()).getParentFile();
 			if (!isUCInstalled(installRoot)){
 				showMessageDialog("GlassFish Update Tool is not yet installed. Please read the Eclipse console output and there, type 'y' to start the installation...");
 				
 			}
 			File tool= getV3UpdateCenterLauncher (installRoot);
+			// UC launcher was not found - tell it to the user
+			if (tool == null) {
+				showMessageDialog("Selected Glassfish server installation does not contain update center launcher.");
+				return;
+			}
 			try {
 
 				ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
@@ -121,9 +97,9 @@ public class PreludeUpdateCenterAction extends AppServerContextAction {
 				e.printStackTrace();
 			}
     	}
-    }
-    
-    private boolean isUCInstalled(File installRoot) {
+	}
+	
+	private boolean isUCInstalled(File installRoot) {
         return new File(installRoot, "updatetool/bin").exists();
     }
     
@@ -158,22 +134,5 @@ public class PreludeUpdateCenterAction extends AppServerContextAction {
         }
         return result;
     }
-	protected String getEditorClassName() { return "com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter"; }
-
- 	protected String getIconName() { return "icons/obj16/sunappsrv.gif"; }
-
- 	protected String getURL() { return new com.sun.enterprise.jst.server.sunappsrv.v3.UpdateCenter().getURL(); }
-
-    @Override
-    public boolean accept(IServer server) {
-        //return true;//acceptIfServerRunning(server);
-    	SunAppServerBehaviour sab = (SunAppServerBehaviour) server.loadAdapter( SunAppServerBehaviour.class, null);
-		File installRoot = new File(sab.getSunApplicationServerInstallationDirectory()).getParentFile();
-		return isUCLauncherInstalled(installRoot);
-    }
-
-	private boolean isUCLauncherInstalled(File installRoot) {
-		return getV3UpdateCenterLauncher(installRoot) != null;
-	}
 
 }
