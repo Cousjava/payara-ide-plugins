@@ -5,7 +5,8 @@ Bundle-SymbolicName: oracle.eclipse.tools.doc.javaee6;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Oracle
 Require-Bundle: org.eclipse.ui,
- org.eclipse.ui.browser
+ org.eclipse.ui.browser,
+ org.eclipse.ui.workbench
 Import-Package: org.eclipse.core.commands,
  org.eclipse.core.runtime,
  org.eclipse.jface.action,

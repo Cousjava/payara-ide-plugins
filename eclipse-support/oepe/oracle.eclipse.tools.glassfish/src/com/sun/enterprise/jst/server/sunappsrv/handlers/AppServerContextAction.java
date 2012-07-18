@@ -12,7 +12,7 @@
  */
 
 
-package com.sun.enterprise.jst.server.sunappsrv.actions;
+package com.sun.enterprise.jst.server.sunappsrv.handlers;
 
 import java.net.MalformedURLException;
 import java.net.URL;
