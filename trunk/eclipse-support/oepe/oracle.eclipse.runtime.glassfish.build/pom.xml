@@ -15,7 +15,7 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>oracle.eclipse.runtime.glassfish.build312</artifactId>
+	<artifactId>oracle.eclipse.runtime.glassfish.build3122</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<version>1.0.0</version>
 
@@ -42,7 +42,7 @@
 							<tasks>
 								<!-- Using an ant task to deflate glassfish zip file -->
 
-								<unzip dest="${project.basedir}" src="glassfish-3.1.2.zip" />
+								<unzip dest="${project.basedir}" src="glassfish-3.1.2.2.zip" />
 								<touch
 									file="${project.basedir}/glassfish3/glassfish/lib/asadmin/.nothing" />
 								<touch
