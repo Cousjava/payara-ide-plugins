@@ -55,6 +55,7 @@ import org.xml.sax.SAXException;
 import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
+import com.sun.enterprise.jst.server.sunappsrv.commands.OperationStateListener;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
@@ -537,6 +538,8 @@ public void setServerInstanceProperties(Map map) {
                         ||
                         (this.getServer().getServerType().getId().equals("org.glassfish.jst.server.glassfish312"))
                         ||
+                        (this.getServer().getServerType().getId().equals("org.glassfish.jst.server.glassfish3122"))
+                        ||
                         (this.getServer().getServerType().getId().equals("org.glassfish.jst.server.glassfish40")));
 	}
 
@@ -639,7 +642,7 @@ public void setServerInstanceProperties(Map map) {
 		Commands.VersionCommand command = new Commands.VersionCommand();
 		try {
 			Future<OperationState> result = execute(command);
-			OperationState state = result.get(8, TimeUnit.SECONDS);
+			OperationState state = result.get(30, TimeUnit.SECONDS);
 			if ( state == OperationState.COMPLETED) {
 				return command.getVersion();
 			} else {
@@ -660,9 +663,6 @@ public void setServerInstanceProperties(Map map) {
      */
     public ServerStatus getV3ServerStatus() {
 
-   	
-    	
-    	
            Commands.LocationCommand command = new Commands.LocationCommand();
            try {
                 Future<OperationState> result = execute(command);
@@ -697,8 +697,8 @@ public void setServerInstanceProperties(Map map) {
                 		return ServerStatus.DOMAINDIR_NOT_MATCHING;
                 	}
                 } else  if (res==OperationState.FAILED){
-                	SunAppSrvPlugin.logMessage("apparently CREDENTIAL_ERROR" );	//$NON-NLS-1$
-                	return ServerStatus.CREDENTIAL_ERROR;
+                	SunAppSrvPlugin.logMessage("CREDENTIAL_ERROR or CONNECTION ERROR" );	//$NON-NLS-1$
+                	return ServerStatus.CONNEXTION_ERROR;
 
                 } else {
                 	SunAppSrvPlugin.logMessage("Command Still running!!! error" );	//$NON-NLS-1$

@@ -154,9 +154,10 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                         "The Eclipse plugin cannot communicate with the GlassFish server....", //$NON-NLS-1$
                         new RuntimeException(
                         "The Eclipse plugin cannot communicate with the GlassFish server." //$NON-NLS-1$
-                        + "Please, check for antivirus software blocking or monitoring this port, or firewall configuration, or VPN setup which might block some ports..."), //$NON-NLS-1$
+                        + "Please, check for other software blocking or using this port, " +
+                        "or firewall configuration, " +
+                        "or VPN setup which might block some ports..."), //$NON-NLS-1$
                         IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
-
             } else {
                 abort(
                         "The Eclipse plugin cannot communicate with the GlassFish server, status is :" + status, //$NON-NLS-1$
