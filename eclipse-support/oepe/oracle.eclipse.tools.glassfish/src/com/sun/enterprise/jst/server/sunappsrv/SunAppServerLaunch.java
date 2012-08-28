@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,22 +33,17 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.RuntimeProcess;
 import org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.AbstractVMInstall;
-import org.eclipse.jdt.launching.ExecutionArguments;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMConnector;
 import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jst.server.core.ServerProfilerDelegate;
 import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.osgi.service.resolver.State;
 import org.eclipse.osgi.util.NLS;
@@ -56,6 +54,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
+import org.glassfish.tools.ide.server.parser.JvmConfigReader;
+import org.glassfish.tools.ide.server.parser.TreeParser;
 import org.osgi.framework.Version;
 
 import com.sun.enterprise.jst.server.sunappsrv.log.GlassFishConsole;
@@ -328,11 +328,16 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
                     // /////startPingingThread();
                     setDefaultSourceLocator(launch, configuration);
                     if (mode.equals("debug")) { //$NON-NLS-1$
-
+                    	File domainXml = new File(sunserver.getDomainDir() + File.separator + sunserver.getdomainName() + 
+                    			File.separator + "config" + File.separator + "domain.xml");
+                    	Integer debugPort;
+                    	if (!domainXml.exists() || (debugPort = readDebugPort(domainXml)) == null) {
+                    		debugPort = 9009;
+                    	}
                         Map<String, String> arg = new HashMap<String, String>();
 
                         arg.put("hostname", "localhost"); //$NON-NLS-1$ //$NON-NLS-2$
-                        arg.put("port", "9009"); //$NON-NLS-1$ //$NON-NLS-2$
+                        arg.put("port", debugPort.toString()); //$NON-NLS-1$ //$NON-NLS-2$
                         arg.put("timeout", "25000"); //$NON-NLS-1$ //$NON-NLS-2$
                         String connectorId = getVMConnectorId(configuration);
                         IVMConnector connector = null;
@@ -379,6 +384,26 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
             } catch (InterruptedException ex) {}
         }
     }
+	
+	private Integer readDebugPort(File domainXml) {
+		Integer result = null;
+		JvmConfigReader jvmReader = new JvmConfigReader("server");
+		TreeParser.readXml(domainXml, jvmReader);
+		String debugOpts = jvmReader.getPropMap().get("debug-options");
+		if (debugOpts != null) {
+			Pattern p = Pattern.compile("address=([0-9]+)");
+			Matcher m = p.matcher(debugOpts);
+			if (m.find()) {
+				String debugPort = m.group(1);
+				try {
+					result = Integer.parseInt(debugPort);
+				} catch (NumberFormatException e) {
+				}
+			}
+			
+		}
+		return result;
+	}
     
     static class ProfilerInfoMessage {
     	static void display(final String mess) {
