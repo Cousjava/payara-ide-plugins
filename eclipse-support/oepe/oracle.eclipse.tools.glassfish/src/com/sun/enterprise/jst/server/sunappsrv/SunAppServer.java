@@ -59,7 +59,7 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.OperationStateListener;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
-import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
+import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParserOld;
 
 
 
@@ -778,9 +778,9 @@ public void setServerInstanceProperties(Map map) {
         final Map<String, HttpData> httpMap = new LinkedHashMap<String, HttpData>();
         
         if (domainXml.exists()) {
-            List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
-            pathList.add(new TreeParser.Path("/domain/configs/config/admin-service/jmx-connector",	//$NON-NLS-1$
-                    new TreeParser.NodeReader() {
+            List<TreeParserOld.Path> pathList = new ArrayList<TreeParserOld.Path>();
+            pathList.add(new TreeParserOld.Path("/domain/configs/config/admin-service/jmx-connector",	//$NON-NLS-1$
+                    new TreeParserOld.NodeReader() {
                 @Override
                 public void readAttributes(String qname, Attributes attributes) throws SAXException {
  /*
@@ -799,8 +799,8 @@ public void setServerInstanceProperties(Map map) {
                     
                 }
             }));
-            pathList.add(new TreeParser.Path("/domain/configs/config/http-service/http-listener",	//$NON-NLS-1$
-                    new TreeParser.NodeReader() {
+            pathList.add(new TreeParserOld.Path("/domain/configs/config/http-service/http-listener",	//$NON-NLS-1$
+                    new TreeParserOld.NodeReader() {
                 @Override
                 public void readAttributes(String qname, Attributes attributes) throws SAXException {
                     // <http-listener 
@@ -834,8 +834,8 @@ public void setServerInstanceProperties(Map map) {
             }));
                         
             //New grizzly config for latest GF v3 builds (after build 44)
-            pathList.add(new TreeParser.Path("/domain/configs/config/network-config/network-listeners/network-listener",
-                                new TreeParser.NodeReader() {
+            pathList.add(new TreeParserOld.Path("/domain/configs/config/network-config/network-listeners/network-listener",
+                                new TreeParserOld.NodeReader() {
                             @Override
                             public void readAttributes(String qname, Attributes attributes) throws SAXException {
 /*
@@ -873,7 +873,7 @@ public void setServerInstanceProperties(Map map) {
                         }));
            
             try {
-                TreeParser.readXml(domainXml, pathList);
+                TreeParserOld.readXml(domainXml, pathList);
                 
                 // !PW This probably more convoluted than it had to be, but while
                 // http-listeners are usually named "http-listener-1", "http-listener-2", ...
