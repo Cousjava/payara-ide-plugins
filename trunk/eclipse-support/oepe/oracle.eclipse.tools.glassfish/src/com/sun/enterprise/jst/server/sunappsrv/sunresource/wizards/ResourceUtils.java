@@ -52,7 +52,7 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.GetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
-import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParser;
+import com.sun.enterprise.jst.server.sunappsrv.spi.TreeParserOld;
 
 public class ResourceUtils {
 	public static final String RESOURCE_FILE_TEMPLATE = "templates/sun-resources-xml-template.resource"; //$NON-NLS-1$
@@ -228,20 +228,20 @@ public class ResourceUtils {
 		if (selectedProject != null) {
 			File xmlFile = getSunResourceFile(selectedProject);
 			if (xmlFile.exists()) {
-				List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
+				List<TreeParserOld.Path> pathList = new ArrayList<TreeParserOld.Path>();
 				ResourcesList df = new ResourcesList("jndi-name"); //$NON-NLS-1$
 				if (type.equals(TYPE_JDBC)) {
-					pathList.add(new TreeParser.Path("/resources/jdbc-resource", df)); //$NON-NLS-1$
+					pathList.add(new TreeParserOld.Path("/resources/jdbc-resource", df)); //$NON-NLS-1$
 				} else if (type.equals(TYPE_CONNECTOR)) {
-					pathList.add(new TreeParser.Path("/resources/admin-object-resource", df)); //$NON-NLS-1$
-					pathList.add(new TreeParser.Path("/resources/connector-resource", df)); //$NON-NLS-1$
+					pathList.add(new TreeParserOld.Path("/resources/admin-object-resource", df)); //$NON-NLS-1$
+					pathList.add(new TreeParserOld.Path("/resources/connector-resource", df)); //$NON-NLS-1$
 				} else if (type.equals(TYPE_JAVAMAIL)) {
-					pathList.add(new TreeParser.Path("/resources/mail-resource", df)); //$NON-NLS-1$
+					pathList.add(new TreeParserOld.Path("/resources/mail-resource", df)); //$NON-NLS-1$
 				} else if (type.equals(TYPE_CONNECTIONPOOL)) {
 					df = new ResourcesList("name"); //$NON-NLS-1$
-					pathList.add(new TreeParser.Path("/resources/jdbc-connection-pool", df)); //$NON-NLS-1$
+					pathList.add(new TreeParserOld.Path("/resources/jdbc-connection-pool", df)); //$NON-NLS-1$
 				}
-				TreeParser.readXml(xmlFile, pathList);
+				TreeParserOld.readXml(xmlFile, pathList);
 				resources = df.getResources();
 			}
 		} else {
@@ -250,7 +250,7 @@ public class ResourceUtils {
 		return resources;
 	}
 	
-	public static class ResourcesList extends TreeParser.NodeReader {
+	public static class ResourcesList extends TreeParserOld.NodeReader {
 		private final List<String> resourcesList = new ArrayList<String>();
 		private String attrName;
 
@@ -271,22 +271,22 @@ public class ResourceUtils {
 
 	public static void checkUpdateServerResources(File sunResourcesXml, SunAppServer sunAppsrv) {
 		Map<String, String> changedData = new HashMap<String, String>();
-		List<TreeParser.Path> pathList = new ArrayList<TreeParser.Path>();
+		List<TreeParserOld.Path> pathList = new ArrayList<TreeParserOld.Path>();
 		ResourceFinder cpFinder = new ResourceFinder("name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/jdbc-connection-pool", cpFinder)); //$NON-NLS-1$
+		pathList.add(new TreeParserOld.Path("/resources/jdbc-connection-pool", cpFinder)); //$NON-NLS-1$
 		ResourceFinder jdbcFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/jdbc-resource", jdbcFinder)); //$NON-NLS-1$
+		pathList.add(new TreeParserOld.Path("/resources/jdbc-resource", jdbcFinder)); //$NON-NLS-1$
 		ResourceFinder connectorPoolFinder = new ResourceFinder("name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/connector-connection-pool", connectorPoolFinder)); //$NON-NLS-1$
+		pathList.add(new TreeParserOld.Path("/resources/connector-connection-pool", connectorPoolFinder)); //$NON-NLS-1$
 		ResourceFinder connectorFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/connector-resource", connectorFinder)); //$NON-NLS-1$
+		pathList.add(new TreeParserOld.Path("/resources/connector-resource", connectorFinder)); //$NON-NLS-1$
 		ResourceFinder aoFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/admin-object-resource", aoFinder)); //$NON-NLS-1$
+		pathList.add(new TreeParserOld.Path("/resources/admin-object-resource", aoFinder)); //$NON-NLS-1$
 		ResourceFinder mailFinder = new ResourceFinder("jndi-name"); //$NON-NLS-1$
-		pathList.add(new TreeParser.Path("/resources/mail-resource", mailFinder)); //$NON-NLS-1$
+		pathList.add(new TreeParserOld.Path("/resources/mail-resource", mailFinder)); //$NON-NLS-1$
 
 		try {
-			TreeParser.readXml(sunResourcesXml, pathList);
+			TreeParserOld.readXml(sunResourcesXml, pathList);
 		} catch (IllegalStateException ex) {
 			SunAppSrvPlugin.logMessage("Exception while reading resource file : " + sunResourcesXml, ex);	//$NON-NLS-1$
 		}
@@ -401,7 +401,7 @@ public class ResourceUtils {
         }
     }
 	
-	public static class ResourceFinder extends TreeParser.NodeReader {
+	public static class ResourceFinder extends TreeParserOld.NodeReader {
 
 		private Map<String, String> properties = null;
 		private Map<String, Map<String, String>> resourceData = new HashMap<String, Map<String, String>>();

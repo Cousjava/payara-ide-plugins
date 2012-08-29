@@ -41,7 +41,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  * @author Peter Williams, Ludovic Champenois
  */
-public final class TreeParser extends DefaultHandler {
+public final class TreeParserOld extends DefaultHandler {
 
     private static Logger LOGGER = Logger.getLogger("glassfish");
     private static final boolean isFinestLoggable = LOGGER.isLoggable(Level.FINEST);
@@ -59,7 +59,7 @@ public final class TreeParser extends DefaultHandler {
             //                
             factory.setNamespaceAware(false);
             SAXParser saxParser = factory.newSAXParser();
-            DefaultHandler handler = new TreeParser(pathList);
+            DefaultHandler handler = new TreeParserOld(pathList);
             is = new BufferedInputStream(new FileInputStream(xmlFile));
             saxParser.parse(new InputSource(is), handler);
             result = true;
@@ -88,7 +88,7 @@ public final class TreeParser extends DefaultHandler {
     private int depth;
     private NodeReader childNodeReader;
 
-    private TreeParser(List<Path> pathList) {
+    private TreeParserOld(List<Path> pathList) {
         root = buildTree(pathList);
     }
 
