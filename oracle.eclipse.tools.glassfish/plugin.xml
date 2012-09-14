@@ -161,7 +161,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3ServerBehavior"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug,profile">         
+            launchModes="run,debug">         
         </serverType> 
               
         <!-- GlassFish v3 server -->

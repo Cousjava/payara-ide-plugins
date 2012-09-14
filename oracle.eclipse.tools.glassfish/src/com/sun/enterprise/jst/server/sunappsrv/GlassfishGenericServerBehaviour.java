@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,7 @@ import org.eclipse.wst.server.core.util.PublishHelper;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.glassfish.tools.ide.GlassFishIdeException;
 import org.glassfish.tools.ide.admin.Command;
+import org.glassfish.tools.ide.admin.CommandGetProperty;
 import org.glassfish.tools.ide.admin.CommandLocation;
 import org.glassfish.tools.ide.admin.CommandVersion;
 import org.glassfish.tools.ide.admin.ResultMap;
@@ -64,9 +66,9 @@ import org.glassfish.tools.ide.server.ServerTasks;
 import org.glassfish.tools.ide.utils.ServerUtils;
 
 import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
-import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
 import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
+import com.sun.enterprise.jst.server.sunappsrv.log.GlassfishConsoleManager;
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.ResourceUtils;
 
 /**
@@ -97,7 +99,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 		SunAppSrvPlugin.logMessage("in SunAppServerBehaviour initialize");
 		final GlassfishGenericServer sunserver = getSunAppServer();
 		try {
-			if (!isRemote()) {
+			if (!sunserver.isRemote()) {
 				DerbyConfigurator.configure(null,
 						new File(sunserver.getServerInstallationDirectory()),
 						sunserver.getDomainConfigurationFilePath());
@@ -110,7 +112,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 			SunAppSrvPlugin
 					.logMessage("in SunAppServerBehaviour initialize is running!!");
 
-			if (isRemote()) {
+			if (sunserver.isRemote()) {
 				setStartedState();
 				return;
 			}
@@ -137,11 +139,6 @@ public abstract class GlassfishGenericServerBehaviour extends
 				.logMessage("in SunAppServerBehaviour initialize STOP by Default...");
 		setServerState(IServer.STATE_STOPPED);
 		resetStatus(IServer.STATE_STOPPED);
-	}
-
-	public boolean isRemote() {
-		return (getServer().getServerType().supportsRemoteHosts() && !SocketUtil
-				.isLocalhost(getServer().getHost()));
 	}
 
 	/*
@@ -188,7 +185,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 				.logMessage("in SunAppServerBehaviour setupLaunch state="
 						+ state);
 
-		if (isRemote()) {
+		if (getSunAppServer().isRemote()) {
 			SunAppSrvPlugin
 					.logMessage("in SunAppServerBehaviour CTOR after sunserver it is running!!!");
 			setMode(launchMode); // ILaunchManager.RUN_MODE);
@@ -246,7 +243,6 @@ public abstract class GlassfishGenericServerBehaviour extends
 		}
 		setServerState(IServer.STATE_STARTED);
 		resetStatus(IServer.STATE_STARTED);
-
 	}
 
 	/**
@@ -373,7 +369,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 	 */
 	public boolean isRunning() {
 		GlassfishGenericServer server = getSunAppServer();
-		if (isRemote()) {// remote is for 3.0 or above, then we use get version
+		if (getSunAppServer().isRemote()) {// remote is for 3.0 or above, then we use get version
 							// http/s request to avoid
 			// proxy security issues with a simple socket usage...
 			try {
@@ -493,7 +489,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 	@Override
 	public void stop(boolean force) {
 		SunAppSrvPlugin.logMessage("in SunAppServerBehaviour stop");
-		if (isRemote()) {
+		if (getSunAppServer().isRemote()) {
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 				public void run() {
 					boolean answer = MessageDialog
@@ -512,6 +508,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 			return;
 		}
 
+		stopImpl();
 		resetStatus(getServer().getServerState());
 
 		setServerState(IServer.STATE_STOPPED);
@@ -522,11 +519,23 @@ public abstract class GlassfishGenericServerBehaviour extends
 	 * @stop GlassFish v3 or v3 prelude via http command
 	 */
 	protected void stopImpl() {
+		GlassfishGenericServer server = getSunAppServer();
+		if (server.hasNonDefaultTarget()) {
+			String target = getSunAppServer().getTarget();
+			ResultString result = ServerTasks.stopCluster(server, target);
+			if (TaskState.FAILED.equals(result.getState())) {
+				result = ServerTasks.stopServerInstance(server, target);
+				if (TaskState.FAILED.equals(result.getState())) {
+					SunAppSrvPlugin.logMessage("stopping target (cluster or instance) failed " + result.getValue()); //$NON-NLS-1$
+				}
+			}
+		}
 		ResultString result = ServerTasks.stopServer(getSunAppServer());
 
 		if (!TaskState.COMPLETED.equals(result.getState())) {
 			SunAppSrvPlugin.logMessage("stop-domain v3 is failing. Reason: " + result.getValue()); //$NON-NLS-1$
 		}
+		GlassfishConsoleManager.getConsole(server).stopLogging();
 	}
 
 	public String getDomainDirWithDomainName() {
@@ -603,7 +612,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 			} catch (Exception ex) {
 			}
 		}
-		if ((!isRemote() && getSunAppServer().getJarDeploy().equalsIgnoreCase(
+		if ((!getSunAppServer().isRemote() && getSunAppServer().getJarDeploy().equalsIgnoreCase(
 				"false"))) {
 			publishDeployedDirectory(deltaKind, prop, module, monitor);
 		} else {
@@ -919,6 +928,74 @@ public abstract class GlassfishGenericServerBehaviour extends
 		}
 	}
 
+	public void updateHttpPort() {
+		GlassfishGenericServer server = getSunAppServer();
+		String target = server.getTarget();
+		CommandGetProperty cgp;
+		if ((target == null) || target.isEmpty()) {
+			cgp = new CommandGetProperty("*.server-config.*.http-listener-1.port");
+		} else {
+			target = getServerFromTarget(target);
+			cgp = new CommandGetProperty("servers.server."+target+".system-property.HTTP_LISTENER_PORT.value");
+		}
+		Future<ResultMap<String, String>> future = ServerAdmin.<ResultMap<String, String>>exec(getSunAppServer(), cgp, new IdeContext());
+        ResultMap<String, String> result = null;
+        try {
+			result = future.get(20, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			SunAppSrvPlugin.logMessage("Unable to retrieve server http port for target " + target, e);
+		} catch (java.util.concurrent.ExecutionException e) {
+			SunAppSrvPlugin.logMessage("Unable to retrieve server http port for target " + target, e);
+		} catch (TimeoutException e) {
+			SunAppSrvPlugin.logMessage("Unable to retrieve server http port for target " + target, e);
+		}
+        
+        boolean portSet = false;
+        if ((result != null) && TaskState.COMPLETED.equals(result.getState())) {
+        	for (Entry<String, String> entry : result.getValue().entrySet()) {
+                String val = entry.getValue();
+                try {
+                    if (null != val && val.trim().length() > 0) {
+                        Integer.parseInt(val);
+                        server.getProps().put(GlassfishGenericServer.SERVERPORT, val);
+                        portSet = true;
+                        break;
+                    }
+                } catch (NumberFormatException nfe) {
+                    // skip it quietly..
+                }
+            }
+        }
+        
+        if (!portSet) {
+        	server.getProps().put(GlassfishGenericServer.SERVERPORT, "28080");
+        }
+	}
+	
+	private String getServerFromTarget(String target) {
+        String retVal = target; // NOI18N
+        CommandGetProperty  cgp = new CommandGetProperty("clusters.cluster."+target+".server-ref.*.ref"); // NOI18N
+        Future<ResultMap<String, String>> future = ServerAdmin.<ResultMap<String, String>>exec(getSunAppServer(), cgp, new IdeContext());
+        ResultMap<String, String> result = null;
+        try {
+			result = future.get(20, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+		} catch (java.util.concurrent.ExecutionException e) {
+		} catch (TimeoutException e) {
+		}
+        
+        if ((result != null) && TaskState.COMPLETED.equals(result.getState())) {
+        	for (Entry<String, String> entry : result.getValue().entrySet()) {
+                String val = entry.getValue();
+                    if (null != val && val.trim().length() > 0) {
+                        retVal = val;
+                        break;
+                    }
+            }
+        }
+        return retVal;
+    }
+	
 	protected void registerSunResource(IModule module[], Properties p,
 			IPath path) throws CoreException {
 		// Get correct location for sun-resources.xml

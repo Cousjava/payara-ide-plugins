@@ -56,4 +56,6 @@ public class Messages extends org.eclipse.osgi.util.NLS {
 	public static String profilingUnsupportedInVersion;
 	
 	public static String serverDirectoryGone;
+	public static String emptyTargetMsg;
+	public static String target;
 }
