@@ -27,7 +27,7 @@ import org.glassfish.tools.ide.server.FetchLog;
 
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.actions.AppServerContextAction;
+import com.sun.enterprise.jst.server.sunappsrv.handlers.AppServerContextAction;
 
 
 /**
