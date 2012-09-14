@@ -35,6 +35,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jst.server.generic.ui.internal.SWTUtil;
@@ -65,8 +66,8 @@ public class ServerSection extends ServerEditorSection implements
 
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
-		sunserver = GlassfishGenericServer.getSunAppServer(server);
-		sunserver.addPropertyChangeListener(this);
+		sunserver = (GlassfishGenericServer)server.loadAdapter(GlassfishGenericServer.class, new NullProgressMonitor());
+		server.addPropertyChangeListener(this);
 	}
 
 	/*
@@ -76,7 +77,7 @@ public class ServerSection extends ServerEditorSection implements
 	 */
 	@Override
 	public void dispose() {
-		sunserver.removePropertyChangeListener(this);
+		server.removePropertyChangeListener(this);
 		super.dispose();
 	}
 
@@ -118,7 +119,7 @@ public class ServerSection extends ServerEditorSection implements
 		GridDataFactory txtGDF = GridDataFactory.fillDefaults()
 				.grab(true, false).span(2, 1).hint(50, SWT.DEFAULT);
 
-		boolean isRemote = sunserver.getServerBehaviourAdapter().isRemote();
+		boolean isRemote = sunserver.isRemote();
 
 		if (!isRemote) {
 			final Text domaindir = SWTUtil.createLabeledPath(
@@ -128,7 +129,7 @@ public class ServerSection extends ServerEditorSection implements
 			txtGDF.align(SWT.FILL, SWT.CENTER).span(1, 1).applyTo(domaindir);
 			domaindir.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
-					execute(new SunAppServerCommands(server, domaindir
+					execute(new SunAppServerCommands(sunserver, domaindir
 							.getText(), GlassfishGenericServer.DOMAINPATH));
 				}
 			});
@@ -136,14 +137,29 @@ public class ServerSection extends ServerEditorSection implements
 			domaindir.setFocus();
 		}
 
+		txtGDF.align(SWT.FILL, SWT.CENTER).span(2, 1);
+		
+		if (sunserver.useCustomTarget()) {
+			// target
+			createLabel(comp, Messages.target, toolkit);
+			final Text target = toolkit.createText(comp, sunserver.getTarget());
+			txtGDF.applyTo(target);
+			target.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					execute(new SunAppServerCommands(sunserver, target.getText(),
+							GlassfishGenericServer.TARGET));
+				}
+			});
+		}
+
 		createLabel(comp, Messages.AdminName, toolkit);
 
 		username = toolkit.createText(comp, sunserver.getAdminName(),
 				SWT.BORDER);
-		txtGDF.align(SWT.FILL, SWT.CENTER).span(2, 1).applyTo(username);
+		txtGDF.applyTo(username);
 		username.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				execute(new SunAppServerCommands(server, username.getText(),
+				execute(new SunAppServerCommands(sunserver, username.getText(),
 						GlassfishGenericServer.ADMINNAME));
 			}
 		});
@@ -156,7 +172,7 @@ public class ServerSection extends ServerEditorSection implements
 		txtGDF.applyTo(password);
 		password.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				execute(new SunAppServerCommands(server, password.getText(),
+				execute(new SunAppServerCommands(sunserver, password.getText(),
 						GlassfishGenericServer.ADMINPASSWORD));
 			}
 		});
@@ -173,7 +189,7 @@ public class ServerSection extends ServerEditorSection implements
 		}
 		serverPortNumber.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				execute(new SunAppServerCommands(server, serverPortNumber
+				execute(new SunAppServerCommands(sunserver, serverPortNumber
 						.getText(), GlassfishGenericServer.SERVERPORT));
 			}
 		});
@@ -189,7 +205,7 @@ public class ServerSection extends ServerEditorSection implements
 		}
 		adminServerPortNumber.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				execute(new SunAppServerCommands(server, adminServerPortNumber
+				execute(new SunAppServerCommands(sunserver, adminServerPortNumber
 						.getText(), GlassfishGenericServer.ADMINSERVERPORT));
 			}
 		});
@@ -210,7 +226,7 @@ public class ServerSection extends ServerEditorSection implements
 								.getSelection();
 						username.setEnabled(!selected);
 						password.setEnabled(!selected);
-						execute(new SunAppServerCommands(server, "" + selected,
+						execute(new SunAppServerCommands(sunserver, "" + selected,
 								GlassfishGenericServer.USEANONYMOUSCONNECTIONS));
 					}
 				});
@@ -225,7 +241,7 @@ public class ServerSection extends ServerEditorSection implements
 							org.eclipse.swt.events.SelectionEvent e) {
 						// Determines if the checkBox is checked or not
 						boolean selected = keepSessions.getSelection();
-						execute(new SunAppServerCommands(server, "" + selected,
+						execute(new SunAppServerCommands(sunserver, "" + selected,
 								GlassfishGenericServer.KEEPSESSIONS));
 					}
 				});
@@ -241,7 +257,7 @@ public class ServerSection extends ServerEditorSection implements
 								org.eclipse.swt.events.SelectionEvent e) {
 							// Determines if the checkBox is checked or not
 							boolean selected = jarDeploy.getSelection();
-							execute(new SunAppServerCommands(server, ""
+							execute(new SunAppServerCommands(sunserver, ""
 									+ selected,
 									GlassfishGenericServer.JARDEPLOY));
 						}
@@ -267,15 +283,17 @@ public class ServerSection extends ServerEditorSection implements
 	}
 
 	public IStatus[] getSaveStatus() {
-		String domainValidationError = sunserver.validateDomainExists(sunserver
-				.getDomainPath());
-		if (domainValidationError != null) {
-			IStatus[] i = new IStatus[1];
-			i[0] = new Status(IStatus.ERROR, "Glassfish", domainValidationError);
-			return i;
-		}
+		// String domainValidationError =
+		// sunserver.validateDomainExists(sunserver
+		// .getDomainPath());
+		IStatus status = sunserver.validate();
+		// if (domainValidationError != null) {
+		// IStatus[] i = new IStatus[1];
+		// i[0] = new Status(IStatus.ERROR, "Glassfish", domainValidationError);
+		// return i;
+		// }
 
-		return new IStatus[0];
+		return new IStatus[] { status };
 	}
 
 	protected Label createLabel(Composite parent, String text,

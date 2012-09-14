@@ -40,8 +40,8 @@ public class ViewLogAction extends AppServerContextAction{
 		try {
 	        GlassfishGenericServerBehaviour sab = (GlassfishGenericServerBehaviour) server.loadAdapter(
 	                GlassfishGenericServerBehaviour.class, null);
-	        if (!sab.isRemote()){
-	        	IGlassFishConsole console = GlassfishConsoleManager.getConsole(sab.getSunAppServer());
+	        if (!sab.getSunAppServer().isRemote()){
+	        	IGlassFishConsole console = GlassfishConsoleManager.showConsole(sab.getSunAppServer());
 	        	console.startLogging(FetchLog.create(sab.getSunAppServer()));
 	        }else {
 	    		if (!sab.isRunning()){

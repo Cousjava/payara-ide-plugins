@@ -33,12 +33,12 @@ import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.util.SocketUtil;
 import org.glassfish.tools.ide.data.GlassFishAdminInterface;
 import org.glassfish.tools.ide.data.GlassFishServer;
 import org.glassfish.tools.ide.data.GlassFishVersion;
 import org.glassfish.tools.ide.server.parser.HttpData;
 import org.glassfish.tools.ide.server.parser.HttpListenerReader;
-import org.glassfish.tools.ide.server.parser.JmxConnectorReader;
 import org.glassfish.tools.ide.server.parser.NetworkListenerReader;
 import org.glassfish.tools.ide.server.parser.TreeParser;
 
@@ -64,6 +64,7 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 	// now we read these props from domain.xml
 	public static final String SERVERPORT = "sunappserver.serverportnumber"; //$NON-NLS-1$
 	public static final String ADMINSERVERPORT = "sunappserver.adminserverportnumber"; //$NON-NLS-1$
+	public static final String USECUSTOMTARGET = "sunappserver.usecustomtarget";
 	public static final String TARGET = "sunappserver.target";
 	public static final String DOMAINPATH = "sunappserver.domainpath"; //$NON-NLS-1$
 	public static final String ADMINNAME = "sunappserver.adminname"; //$NON-NLS-1$
@@ -80,8 +81,6 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 
 	public static final String DOMAINUPDATE = "domainupdate"; //$NON-NLS-1$
 	private List<PropertyChangeListener> propChangeListeners;
-
-	private String jmxPort;
 
 	public GlassfishGenericServer() {
 		SunAppSrvPlugin.logMessage("in SunAppServer CTOR"); //$NON-NLS-1$
@@ -106,14 +105,19 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 				.getAdapter(GlassfishGenericServerBehaviour.class);
 		if (serverBehavior == null) {
 			serverBehavior = (GlassfishGenericServerBehaviour) getServer()
-					.loadAdapter(GlassfishGenericServer.class,
+					.loadAdapter(GlassfishGenericServerBehaviour.class,
 							new NullProgressMonitor());
 		}
 		return serverBehavior;
 	}
+	
+	public boolean isRemote() {
+		return (getServer().getServerType().supportsRemoteHosts() && !SocketUtil
+				.isLocalhost(getServer().getHost()));
+	}
 
 	protected void readDomainConfig() {
-		if (!getServerBehaviourAdapter().isRemote()) {
+		if (!isRemote()) {
 			if (readServerConfiguration(new File(getDomainsFolder()
 					+ File.separator + getDomainName() + "/config/domain.xml"))) { //$NON-NLS-1$
 				SunAppSrvPlugin
@@ -143,7 +147,7 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 
 	public String validateDomainExists(String domainPath) {
 
-		if (getServerBehaviourAdapter().isRemote()) {
+		if (isRemote()) {
 			return null;
 		}
 
@@ -215,18 +219,39 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 
 		// validate ports
 		try {
-			Integer.parseInt(getServerPort());
+			//Integer.parseInt(getServerPort());
 			Integer.parseInt(getAdminServerPort());
 		} catch (NumberFormatException e) {
 			return new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID,
 					Messages.invalidPortNumbers);
 		}
 
+		// validate target if needed
+		if (useCustomTarget()) {
+			String target = getTarget();
+			if ((target == null) || target.isEmpty()) {
+				return new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID,
+						Messages.emptyTargetMsg);
+			}
+		}
+		
 		return new Status(IStatus.OK, SunAppSrvPlugin.SUNPLUGIN_ID, 0, "", null); //$NON-NLS-1$
 	}
 
 	public String getKeepSessions() {
 		return getProps().get(KEEPSESSIONS);
+	}
+	
+	public boolean useCustomTarget() {
+		return "true".equals(getProps().get(USECUSTOMTARGET));
+	}
+	
+	public String getTarget() {
+		return getProps().get(TARGET);
+	}
+	
+	public boolean hasNonDefaultTarget() {
+		return (getTarget() != null) && !getTarget().isEmpty();
 	}
 
 	/*
@@ -269,15 +294,6 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 			s = Boolean.TRUE.toString();
 		}
 		return s;
-	}
-
-	/*
-	 * public void setUseAnonymousConnections(String value) {
-	 * getProps().put(USEANONYMOUSCONNECTIONS, value); }
-	 */
-
-	public void setV2ContextRoot(String value) {
-		getProps().put(CONTEXTROOT, value);
 	}
 
 	public String getServerPort() {
@@ -475,14 +491,14 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 		final Map<String, HttpData> httpMap = new LinkedHashMap<String, HttpData>();
 
 		if (domainXml.exists()) {
-			JmxConnectorReader jmxReader = new JmxConnectorReader();
+			//JmxConnectorReader jmxReader = new JmxConnectorReader();
 			HttpListenerReader httpListenerReader = new HttpListenerReader();
 			NetworkListenerReader networkListenerReader = new NetworkListenerReader();
 
 			try {
-				TreeParser.readXml(domainXml, jmxReader, httpListenerReader,
+				TreeParser.readXml(domainXml, httpListenerReader,
 						networkListenerReader);
-				jmxPort = jmxReader.getResult();
+				//jmxPort = jmxReader.getResult();
 
 				httpMap.putAll(httpListenerReader.getResult());
 				httpMap.putAll(networkListenerReader.getResult());
@@ -608,12 +624,17 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 
 	@Override
 	public GlassFishAdminInterface getAdminInterface() {
-		return GlassFishAdminInterface.REST;
+		return GlassFishAdminInterface.HTTP;
 	}
 
 	@Override
 	public String getServerHome() {
 		return new File(getServer().getRuntime().getLocation().toString())
 				.getAbsolutePath();
+	}
+	
+	@Override
+	public String getServerRoot() {
+		return null;
 	}
 }

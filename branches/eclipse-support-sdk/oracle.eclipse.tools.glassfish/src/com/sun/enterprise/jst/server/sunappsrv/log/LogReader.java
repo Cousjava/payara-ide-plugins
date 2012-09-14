@@ -12,15 +12,19 @@ public class LogReader implements Runnable {
 	private FetchLog logFetcher;
 	private volatile boolean shutDown = false;
 	private MessageConsoleStream output;
-	
+
 	public LogReader(FetchLog logFetcher, MessageConsoleStream outputStream) {
 		this.logFetcher = logFetcher;
 		this.output = outputStream;
 	}
-	
+
 	@Override
 	public void run() {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(logFetcher.getInputStream()));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				logFetcher.getInputStream()));
+		V3LogFilter.Filter filter = new V3LogFilter.LogFileFilter(
+				new V3LogFilter().getLevelMap());
+		String line;
 		try {
 			while (true) {
 				synchronized (this) {
@@ -29,10 +33,13 @@ public class LogReader implements Runnable {
 						break;
 					}
 					while (reader.ready()) {
-						System.out.println("reader ready, reading line...");
-						String message = reader.readLine();
-						output.println(message);
-						output.flush();
+						line = filter.process((char) reader.read());
+						if (line != null) {
+							System.out.println("line ready..");
+							//String message = reader.readLine();
+							output.println(stripNewline(line));
+							output.flush();
+						}
 					}
 				}
 				try {
@@ -57,5 +64,13 @@ public class LogReader implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static final String stripNewline(String s) {
+		int len = s.length();
+		if(len > 0 && '\n' == s.charAt(len-1)) {
+			s = s.substring(0, len-1);
+		}
+		return s;
 	}
 }

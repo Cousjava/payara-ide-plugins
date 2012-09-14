@@ -652,7 +652,7 @@ public class CommandRunner extends BasicTask<OperationState> {
          String host = server.getServer().getHost();
          int port = Integer.parseInt(server.getAdminServerPort());
          String protocol = "http";
-         if (server.getServerBehaviourAdapter().isRemote()){ //mandatory https for remote 3.1 servers...
+         if (server.isRemote()){ //mandatory https for remote 3.1 servers...
         	 protocol= "https";
          }
          //only for non 3.1 and later //TODO for later!!!

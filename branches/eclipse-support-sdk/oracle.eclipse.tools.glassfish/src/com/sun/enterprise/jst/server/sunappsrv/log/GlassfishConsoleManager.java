@@ -31,6 +31,26 @@ public class GlassfishConsoleManager {
 		});
 	}
 	
+	/**
+	 * Similar to getConsole but it also displays console for specified server.
+	 * 
+	 * @param server
+	 * @return
+	 */
+	public static IGlassFishConsole showConsole(GlassfishGenericServer server) {
+		IGlassFishConsole gfConsole = getConsole(server);
+		manager.showConsoleView(gfConsole);
+		return gfConsole;
+	}
+	
+	/**
+	 * Returns console for specified server.
+	 * For each server there is only one console. It reads information
+	 * from server.log file.
+	 * 
+	 * @param server
+	 * @return
+	 */
 	public static IGlassFishConsole getConsole(GlassfishGenericServer server) {
 		String consoleID = getConsoleID(server);
 		IGlassFishConsole gfConsole = findConsole(consoleID);
@@ -41,7 +61,6 @@ public class GlassfishConsoleManager {
 		    manager.addConsoles(new IConsole[]{gfConsole});
 		    //consoles.put(consoleID, gfConsole);
 		}
-		manager.showConsoleView(gfConsole);
 		return gfConsole;
 	}
 	
@@ -59,7 +78,7 @@ public class GlassfishConsoleManager {
 	}
 	
 	private static String getConsoleID(GlassfishGenericServer server) {
-		if (!server.getServerBehaviourAdapter().isRemote())
+		if (!server.isRemote())
 			return server.getDomainsFolder() + File.separator + 
 					server.getDomainName() + File.separator + "logs" +
 			File.separator + "server.log";
