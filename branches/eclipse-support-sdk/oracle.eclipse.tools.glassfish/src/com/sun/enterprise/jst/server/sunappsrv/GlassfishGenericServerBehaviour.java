@@ -54,8 +54,11 @@ import org.eclipse.wst.server.core.util.PublishHelper;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.glassfish.tools.ide.GlassFishIdeException;
 import org.glassfish.tools.ide.admin.Command;
+import org.glassfish.tools.ide.admin.CommandAddResources;
+import org.glassfish.tools.ide.admin.CommandDeploy;
 import org.glassfish.tools.ide.admin.CommandGetProperty;
 import org.glassfish.tools.ide.admin.CommandLocation;
+import org.glassfish.tools.ide.admin.CommandUndeploy;
 import org.glassfish.tools.ide.admin.CommandVersion;
 import org.glassfish.tools.ide.admin.ResultMap;
 import org.glassfish.tools.ide.admin.ResultString;
@@ -65,7 +68,6 @@ import org.glassfish.tools.ide.data.IdeContext;
 import org.glassfish.tools.ide.server.ServerTasks;
 import org.glassfish.tools.ide.utils.ServerUtils;
 
-import com.sun.enterprise.jst.server.sunappsrv.commands.Commands;
 import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
 import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
 import com.sun.enterprise.jst.server.sunappsrv.log.GlassfishConsoleManager;
@@ -530,7 +532,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 				}
 			}
 		}
-		ResultString result = ServerTasks.stopServer(getSunAppServer());
+		ResultString result = ServerTasks.stopServer(server);
 
 		if (!TaskState.COMPLETED.equals(result.getState())) {
 			SunAppSrvPlugin.logMessage("stop-domain v3 is failing. Reason: " + result.getValue()); //$NON-NLS-1$
@@ -662,26 +664,17 @@ public abstract class GlassfishGenericServerBehaviour extends
 				}
 				Map<String, String> properties = new HashMap<String, String>();
 				File[] libraries = new File[0];
-				Commands.DeployCommand command = new Commands.DeployCommand(
-						archivePath, name, contextRoot, getSunAppServer()
-								.computePreserveSessions(), properties,
-						libraries);
+				
+				CommandDeploy command = new CommandDeploy(name, null, archivePath, contextRoot, properties, libraries);
+				
 				try {
-					// Future<OperationState> result =
-					// getSunAppServer().execute(command);
-					// OperationState res = result.get(520, TimeUnit.SECONDS);
-					// if (res == OperationState.RUNNING) {
-					// throw new CoreException(new Status(IStatus.ERROR,
-					// SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-					// "Timeout after 520s when trying to deploy "
-					// + name + ". Please try again ", null));
-					// }
-					// if (res == OperationState.FAILED) {
-					// throw new CoreException(new Status(IStatus.ERROR,
-					// SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-					// "Deployment Error for module: " + name + ": "
-					// + command.getServerMessage(), null));
-					// }
+					Future<ResultString> future =
+		                    ServerAdmin.<ResultString>exec(getSunAppServer(), command, new IdeContext());
+		                ResultString result = future.get(520, TimeUnit.SECONDS);
+		                if (!TaskState.COMPLETED.equals(result.getState())) {
+		                	SunAppSrvPlugin.logMessage("deploy is failing=" + result.getValue());
+							throw new Exception("deploy is failing=" + result.getValue());
+		                }
 				} catch (Exception ex) {
 					SunAppSrvPlugin.logMessage("deploy is failing=", ex);
 					throw new CoreException(new Status(IStatus.ERROR,
@@ -722,28 +715,15 @@ public abstract class GlassfishGenericServerBehaviour extends
 	}
 
 	private void undeploy(String moduleName) throws CoreException {
-		Commands.UndeployCommand command = new Commands.UndeployCommand(
-				moduleName);
+		CommandUndeploy cmd = new CommandUndeploy(moduleName, null);
 		try {
-			// Future<OperationState> result =
-			// getSunAppServer().execute(command);
-			// //wait 120 seconds max
-			// if(result.get(120, TimeUnit.SECONDS) == OperationState.RUNNING) {
-			// throw new CoreException(new Status(IStatus.ERROR,
-			// SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-			// "cannot UnDeploy in less than 120 sec "+moduleName, null));
-			// }
-			// if(result.get(120, TimeUnit.SECONDS) == OperationState.FAILED) {
-			// SunAppSrvPlugin.logMessage("Warning when undeploying: "
-			// +moduleName+": "+command.getServerMessage());
-			// //avoid throwing an error as it would not remove this app from
-			// eclipse publish area, and we want it removed.
-			// // throw new CoreException(new Status(IStatus.ERROR,
-			// SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-			// //
-			// "Error during undeploy of module "+name+": "+command.getServerMessage(),
-			// null));
-			// }
+			Future<ResultString> future =
+                    ServerAdmin.<ResultString>exec(getSunAppServer(), cmd, new IdeContext());
+                ResultString result = future.get(520, TimeUnit.SECONDS);
+                if (!TaskState.COMPLETED.equals(result.getState())) {
+                	SunAppSrvPlugin.logMessage("deploy is failing=" + result.getValue());
+					throw new Exception("undeploy is failing=" + result.getValue());
+                }
 		} catch (Exception ex) {
 			SunAppSrvPlugin.logMessage("Undeploy is failing=", ex);
 			throw new CoreException(new Status(IStatus.ERROR,
@@ -829,27 +809,15 @@ public abstract class GlassfishGenericServerBehaviour extends
 
 				Map<String, String> properties = new HashMap<String, String>();
 				File[] libraries = new File[0];
-				Commands.DeployCommand command = new Commands.DeployCommand(
-						new File(spath), name, contextRoot, getSunAppServer()
-								.computePreserveSessions(), properties,
-						libraries);
+				CommandDeploy command = new CommandDeploy(name, null, new File(spath), contextRoot, properties, libraries);
 				try {
-					// Future<OperationState> result =
-					// getSunAppServer().execute(command);
-					// OperationState res=result.get(120, TimeUnit.SECONDS);
-					// SunAppSrvPlugin.logMessage("res="+res);
-					// if( res== OperationState.RUNNING) {
-					// throw new CoreException(new Status(IStatus.ERROR,
-					// SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-					// "Timeout after 120s when trying to deploy "+name+". Please try again ",
-					// null));
-					// }
-					// if( res== OperationState.FAILED) {
-					// throw new CoreException(new Status(IStatus.ERROR,
-					// SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-					// "Deployment Error for module: "+name+": "+command.getServerMessage(),
-					// null));
-					// }
+					Future<ResultString> future =
+		                    ServerAdmin.<ResultString>exec(getSunAppServer(), command, new IdeContext());
+		                ResultString result = future.get(120, TimeUnit.SECONDS);
+		                if (!TaskState.COMPLETED.equals(result.getState())) {
+		                	SunAppSrvPlugin.logMessage("deploy is failing=" + result.getValue());
+							throw new Exception("deploy is failing=" + result.getValue());
+		                }
 				} catch (Exception ex) {
 					SunAppSrvPlugin.logMessage("deploy is failing=", ex);
 					throw new CoreException(new Status(IStatus.ERROR,
@@ -1013,26 +981,15 @@ public abstract class GlassfishGenericServerBehaviour extends
 		if (sunResource.exists()) {
 			ResourceUtils.checkUpdateServerResources(sunResource,
 					getSunAppServer());
-			Commands.AddResourcesCommand register = new Commands.AddResourcesCommand(
-					sunResource.getAbsolutePath());
+			CommandAddResources command = new CommandAddResources(sunResource, null);
 			try {
-				// Future<OperationState> result =
-				// getSunAppServer().execute(register);
-				// if (result.get(120, TimeUnit.SECONDS) ==
-				// OperationState.RUNNING) {
-				// throw new CoreException(new Status(IStatus.ERROR,
-				// SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-				// "Timeout after 120s when trying to deploy the sun-resources.xml for "
-				// + module[0].getName() + ". Please try again ", null));
-				// }
-				// if (result.get(120, TimeUnit.SECONDS) ==
-				// OperationState.FAILED) {
-				// throw new CoreException(new Status(IStatus.ERROR,
-				// SunAppSrvPlugin.SUNPLUGIN_ID, 0,
-				// "Error when trying to deploy the sun-resources.xml for " +
-				// module[0].getName() + ": " + register.getServerMessage(),
-				// null));
-				// }
+				Future<ResultString> future =
+	                    ServerAdmin.<ResultString>exec(getSunAppServer(), command, new IdeContext());
+	                ResultString result = future.get(120, TimeUnit.SECONDS);
+	                if (!TaskState.COMPLETED.equals(result.getState())) {
+	                	SunAppSrvPlugin.logMessage("register resource is failing=" + result.getValue());
+						throw new Exception("register resource is failing=" + result.getValue());
+	                }
 			} catch (Exception ex) {
 				SunAppSrvPlugin.logMessage(
 						"deploy of sun-resources is failing ", ex);

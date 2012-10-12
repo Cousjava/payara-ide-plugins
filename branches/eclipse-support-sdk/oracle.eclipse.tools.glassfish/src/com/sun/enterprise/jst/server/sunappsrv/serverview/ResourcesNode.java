@@ -20,21 +20,19 @@ import java.util.Set;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import org.eclipse.wst.server.core.IServer;
 
-import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.ResourceDesc;
 
 public class ResourcesNode extends TreeNode {
 
-	IServer server = null;
+	GlassfishGenericServer server = null;
 	ResourcesNode[] children = null;
 	boolean containerNode = false;
 	ResourceDesc resDescriptor = null;
 
-	public ResourcesNode(String name, String type, IServer server,
+	public ResourcesNode(String name, String type, GlassfishGenericServer server,
 			ResourceDesc resDescriptor) {
 		super(name, type, null);
 		this.server = server;
@@ -55,6 +53,12 @@ public class ResourcesNode extends TreeNode {
 
 	}
 
+	
+	public GlassfishGenericServer getServer() {
+		return server;
+	}
+
+
 	public void setContainerNode() {
 		containerNode = true;
 	}
@@ -67,11 +71,6 @@ public class ResourcesNode extends TreeNode {
 		return resDescriptor;
 	}
 
-	public GlassfishGenericServerBehaviour getServerBehavior() {
-		return (GlassfishGenericServerBehaviour) server.loadAdapter(
-				GlassfishGenericServerBehaviour.class, null);
-	}
-
 	public Object[] getChildren() {
 		// if a container node or a node that does shows a resource, return std
 		// child
@@ -80,19 +79,15 @@ public class ResourcesNode extends TreeNode {
 		}
 		final ArrayList<ResourcesNode> list = new ArrayList<ResourcesNode>();
 		if (this.children == null) {
-
-			final GlassfishGenericServerBehaviour behaviour = getServerBehavior();
 			try {
-				if (behaviour == null) {
+				if (server == null) {
 					this.children = list
 							.toArray(new ResourcesNode[list.size()]);
 					return this.children;
 				}
 
 				try {
-					CommandRunner mgr = new CommandRunner(
-							behaviour.getSunAppServer());
-					List<ResourceDesc> resourcesList = mgr.getResources(type);
+					List<ResourceDesc> resourcesList = NodesUtils.getResources(server, type);
 
 					for (ResourceDesc resource : resourcesList) {
 						ResourcesNode t = new ResourcesNode(resource.getName(),
@@ -127,9 +122,7 @@ public class ResourcesNode extends TreeNode {
 		PropertyDescriptor pd;
 		try {
 			if (resDescriptor != null) {
-				CommandRunner mgr = new CommandRunner(getServerBehavior()
-						.getSunAppServer());
-				map = mgr.getResourceData(resDescriptor.getName());
+				map = NodesUtils.getResourceData(server, resDescriptor.getName());
 				Set<String> s = map.keySet();
 				for (String prop : s) {
 					String realvalue = prop.substring(

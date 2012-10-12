@@ -67,8 +67,8 @@ public 	class UndeployAction extends Action {
 						.getParent();
 
 				try {
-					final GlassfishGenericServerBehaviour be = target
-							.getServerBehavior();
+					final GlassfishGenericServerBehaviour be = target.getServer()
+							.getServerBehaviourAdapter();
 					IRunnableWithProgress op = new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) {
 							try {

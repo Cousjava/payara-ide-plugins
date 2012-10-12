@@ -15,41 +15,31 @@ package com.sun.enterprise.jst.server.sunappsrv.serverview;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.server.core.IServer;
-
-import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
 import com.sun.enterprise.jst.server.sunappsrv.commands.WSDesc;
 
 public class DeployedWebServicesNode extends TreeNode {
 
-	IServer server = null;
+	GlassfishGenericServer server = null;
 	WebServiceNode[] deployedapps = null;
 
-	public DeployedWebServicesNode(IServer server) {
+	public DeployedWebServicesNode(GlassfishGenericServer server) {
 		super("Deployed Web Services", null, null);
 		this.server = server;
 
 	}
 
-	public IServer getServer() {
+	public GlassfishGenericServer getServer() {
 		return this.server;
-	}
-
-	public GlassfishGenericServerBehaviour getServerBehavior() {
-		return (GlassfishGenericServerBehaviour) server.loadAdapter(
-				GlassfishGenericServerBehaviour.class, null);
 	}
 
 	public Object[] getChildren() {
 
 		ArrayList<WebServiceNode> appsList = new ArrayList<WebServiceNode>();
 		if (this.deployedapps == null) {
-
-			final GlassfishGenericServerBehaviour behaviour = getServerBehavior();
 			try {
-				if (behaviour == null) {
+				if (server == null) {
 					this.deployedapps = appsList
 							.toArray(new WebServiceNode[appsList
 									.size()]);
@@ -57,9 +47,7 @@ public class DeployedWebServicesNode extends TreeNode {
 				}
 
 				try {
-					CommandRunner mgr = new CommandRunner(
-							behaviour.getSunAppServer());
-					List<WSDesc> wss = mgr.getWebServices();
+					List<WSDesc> wss = NodesUtils.getWebServices(server);
 							
 
 						for (WSDesc app : wss) {

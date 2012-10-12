@@ -27,8 +27,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IContainer;
@@ -42,17 +44,21 @@ import org.eclipse.jst.j2ee.project.JavaEEProjectUtilities;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.common.componentcore.resources.IVirtualFolder;
+import org.glassfish.tools.ide.admin.Command;
+import org.glassfish.tools.ide.admin.CommandGetProperty;
+import org.glassfish.tools.ide.admin.CommandSetProperty;
+import org.glassfish.tools.ide.admin.ResultMap;
+import org.glassfish.tools.ide.admin.ResultString;
+import org.glassfish.tools.ide.admin.ServerAdmin;
+import org.glassfish.tools.ide.admin.TaskState;
+import org.glassfish.tools.ide.data.GlassFishServer;
+import org.glassfish.tools.ide.data.IdeContext;
 import org.glassfish.tools.ide.server.parser.ResourcesReader;
 import org.glassfish.tools.ide.server.parser.ResourcesReader.ResourceType;
 import org.glassfish.tools.ide.server.parser.TreeParser;
 
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
-import com.sun.enterprise.jst.server.sunappsrv.commands.GlassfishModule.OperationState;
-import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
-import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.GetPropertyCommand;
-import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
 
 public class ResourceUtils {
 	public static final String RESOURCE_FILE_TEMPLATE = "templates/sun-resources-xml-template.resource"; //$NON-NLS-1$
@@ -252,7 +258,7 @@ public class ResourceUtils {
 		} catch (IllegalStateException ex) {
 			SunAppSrvPlugin.logMessage("Exception while reading resource file : " + sunResourcesXml, ex);	//$NON-NLS-1$
 		}
-		Map<String, String> allRemoteData = getResourceData("resources.*", sunAppsrv); //$NON-NLS-1$
+		Map<String, String> allRemoteData = getResourceData(sunAppsrv, null); //$NON-NLS-1$
 		changedData = checkResources(cpReader, "resources.jdbc-connection-pool.", allRemoteData, changedData); //$NON-NLS-1$
 		changedData = checkResources(jdbcReader, "resources.jdbc-resource.", allRemoteData, changedData); //$NON-NLS-1$
 		changedData = checkResources(connectorPoolReader, "resources.connector-connection-pool.", allRemoteData, changedData); //$NON-NLS-1$
@@ -261,27 +267,37 @@ public class ResourceUtils {
 		changedData = checkResources(mailReader, "resources.mail-resource.", allRemoteData, changedData); //$NON-NLS-1$
 
 		if (changedData.size() > 0) {
-			putResourceData(changedData, sunAppsrv);
+			try {
+				putResourceData(sunAppsrv, changedData);
+			} catch (PartialCompletionException e) {
+				SunAppSrvPlugin.logMessage("Some of the resources were not updated!", e);
+			}
 		}
 	}
 
-	private static Map<String, String> getResourceData(String query, GlassfishGenericServer sunAppsrv) {
-        try {
-            GetPropertyCommand cmd = new ServerCommand.GetPropertyCommand(query); 
-            Future<OperationState> task = new CommandRunner(sunAppsrv).execute(cmd);
-            OperationState state = task.get();
-            if (state == OperationState.COMPLETED) {
-                Map<String,String> retVal = cmd.getData();
-                if (retVal.isEmpty()) {
-                	SunAppSrvPlugin.logMessage(query + " has no data");	//$NON-NLS-1$
-                } 	
+	public static Map<String, String> getResourceData(GlassFishServer server, String name) {
+		try {
+            //GetPropertyCommand cmd;
+            String query;
+            if (null != name) {
+                query = "resources.*."+name+".*"; //$NON-NLS-1$ //$NON-NLS-2$
+            } else {
+                query = "resources.*"; //$NON-NLS-1$
+            }
+            Command command = new CommandGetProperty(query);
+            Future<ResultMap<String, String>> future = ServerAdmin.<ResultMap<String, String>>exec(server, command, new IdeContext());
+            ResultMap<String, String> result = future.get(30, TimeUnit.SECONDS);
+            
+            if (TaskState.COMPLETED.equals(result.getState())) {
+            	Map<String, String> retVal = result.getValue();
+            	if (retVal.isEmpty())
+                    Logger.getLogger("glassfish").log(Level.INFO, null, new IllegalStateException(query+" has no data"));  //$NON-NLS-1$
                 return retVal;
             }
-
         } catch (InterruptedException ex) {
-        	SunAppSrvPlugin.logMessage("error getting resource data with query " + query, ex);	//$NON-NLS-1$
-        } catch (ExecutionException ex) {
-            SunAppSrvPlugin.logMessage("error getting resource data with query " + query, ex);	//$NON-NLS-1$
+            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  //$NON-NLS-1$
+        } catch (Exception ex) {
+            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  //$NON-NLS-1$
         }
         return new HashMap<String,String>();
     }
@@ -345,24 +361,51 @@ public class ResourceUtils {
         return changedData;
     }
 	
-	private static void putResourceData(Map<String, String> data, GlassfishGenericServer sunAppsrv) {
-        Set<String> keys = data.keySet();
-        for (String k : keys) {
-            String name = k;
-            String value = data.get(k);
+	public static void putResourceData(GlassFishServer server, Map<String, String> data) throws PartialCompletionException {
+		String itemsNotUpdated = null;
+        Throwable lastEx = null;
+        for (String k : data.keySet()) {
+            String compName = k;
+            String compValue = data.get(k);
+
             try {
-                SetPropertyCommand spc = sunAppsrv.getCommandFactory().getSetPropertyCommand(name, value);
-                Future<OperationState> task = new CommandRunner(sunAppsrv).execute(spc);
-                OperationState state = task.get();
+            	Command command = new CommandSetProperty(compName, compValue);
+            	Future<ResultString> future = 
+                        ServerAdmin.<ResultString>exec(server, command, new IdeContext());
+            	ResultString result = future.get(30, TimeUnit.SECONDS);
+            	if (!TaskState.COMPLETED.equals(result.getState())) {
+            		itemsNotUpdated = addName(compName, itemsNotUpdated);
+            	}
             } catch (InterruptedException ex) {
-            	SunAppSrvPlugin.logMessage("error setting resource data ", ex);	//$NON-NLS-1$
-            } catch (ExecutionException ex) {
-            	SunAppSrvPlugin.logMessage("error setting resource data ", ex);	//$NON-NLS-1$
+                lastEx = ex;
+                Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
+                itemsNotUpdated = addName(compName, itemsNotUpdated);
+            } catch (Exception ex) {
+                lastEx = ex;
+                Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);  // NOI18N
+                itemsNotUpdated = addName(compName, itemsNotUpdated);
             }
+        }
+        if (null != itemsNotUpdated) {
+            PartialCompletionException pce = new PartialCompletionException(itemsNotUpdated);
+            if (null != lastEx) {
+                pce.initCause(lastEx);
+            }
+            throw pce;
         }
     }
 	
-
+	
+	private static String addName(final String compName, final String itemsNotUpdated) {
+        String retVal = itemsNotUpdated;
+        if (null != itemsNotUpdated) {
+            retVal += ", "+compName;
+        } else {
+            retVal = compName;
+        }
+        return retVal;
+    }
+	
     public static String getUniqueResourceName(String name, List<String> resources){
 		for (int i = 1;; i++) {
 			String resourceName = name + "_" + i; //$NON-NLS-1$

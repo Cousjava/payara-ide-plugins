@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.tools.ide.admin.Command;
 import org.glassfish.tools.ide.admin.CommandListComponents;
+import org.glassfish.tools.ide.admin.CommandListResources;
 import org.glassfish.tools.ide.admin.CommandListWebServices;
 import org.glassfish.tools.ide.admin.ResultList;
 import org.glassfish.tools.ide.admin.ResultMap;
@@ -24,10 +25,37 @@ import org.glassfish.tools.ide.data.GlassFishServer;
 import org.glassfish.tools.ide.data.IdeContext;
 
 import com.sun.enterprise.jst.server.sunappsrv.commands.AppDesc;
+import com.sun.enterprise.jst.server.sunappsrv.commands.ResourceDesc;
 import com.sun.enterprise.jst.server.sunappsrv.commands.WSDesc;
+import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.PartialCompletionException;
+import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.ResourceUtils;
 
 public class NodesUtils {
 
+	public static List<ResourceDesc> getResources(GlassFishServer server, String type) {
+        List<String> result = Collections.emptyList();
+        List<ResourceDesc> retVal = Collections.emptyList();
+        try {
+        	Command command = new CommandListResources(CommandListResources.command(
+                    type), null);
+                Future<ResultList<String>> future = ServerAdmin.<ResultList<String>>
+                exec(server, command, new IdeContext());
+            ResultList<String> res = future.get(30, TimeUnit.SECONDS);
+            if (TaskState.COMPLETED.equals(res.getState())) {
+                result = res.getValue();
+            }
+            for (String rsc : result) {
+            	retVal.add(new ResourceDesc(rsc, type));
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            Logger.getLogger("glassfish").log(Level.INFO, ex.getMessage(), ex);
+        }
+        return retVal;
+    }
+	
+	
 	public static Map<String, List<AppDesc>> getApplications(
 			GlassFishServer server, String container) {
 		Map<String, List<String>> apps = Collections.emptyMap();
@@ -124,4 +152,13 @@ public class NodesUtils {
 		}
 		return result;
 	}
+	
+	public static Map<String, String> getResourceData(GlassFishServer server, String name) {
+        return ResourceUtils.getResourceData(server, name);
+    }
+	
+	public static void putResourceData(GlassFishServer server, Map<String, String> data) throws PartialCompletionException {
+        ResourceUtils.putResourceData(server, data);
+    }
+
 }

@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import org.eclipse.wst.server.core.IServer;
 
+import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.commands.WSDesc;
 
 /**
@@ -31,16 +31,16 @@ import com.sun.enterprise.jst.server.sunappsrv.commands.WSDesc;
 public class WebServiceNode extends TreeNode{
 
 	DeployedWebServicesNode parent;
-	IServer server = null;
+	GlassfishGenericServer server = null;
 	TreeNode[] modules = null;
 	WSDesc app = null;
-	public WebServiceNode(DeployedWebServicesNode root, IServer server, WSDesc app) {
+	public WebServiceNode(DeployedWebServicesNode root, GlassfishGenericServer server, WSDesc app) {
 		super(app.getName(), null, root);
 		this.server = server;
 		this.app = app;
 	}
 	
-	public IServer getServer(){
+	public GlassfishGenericServer getServer(){
 		return this.server;
 	}
 	

@@ -48,8 +48,8 @@ public 	class TestWebServiceAction extends Action {
 						.getParent();
 
 				try {
-					final GlassfishGenericServerBehaviour be = target
-							.getServerBehavior();
+					final GlassfishGenericServerBehaviour be = target.getServer()
+							.getServerBehaviourAdapter();
 
 					IWorkbenchBrowserSupport browserSupport = PlatformUI
 							.getWorkbench().getBrowserSupport();

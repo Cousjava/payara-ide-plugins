@@ -39,11 +39,11 @@ public class ServerViewContentProvider extends BaseContentProvider implements IT
                 if (ser != null) {
                     TreeNode root = new TreeNode("GlassFish Management", "GlassFish Management", null);
                     //Applications Node
-                    DeployedApplicationsNode apps = new DeployedApplicationsNode(server);
+                    DeployedApplicationsNode apps = new DeployedApplicationsNode(ser);
                     //Resources Node
-                    DeployedWebServicesNode ws = new DeployedWebServicesNode(server);
+                    DeployedWebServicesNode ws = new DeployedWebServicesNode(ser);
 
-                    ResourcesNode rs = new ResourcesNode("Resources", NodeTypes.RESOURCES, server, null);
+                    ResourcesNode rs = new ResourcesNode("Resources", NodeTypes.RESOURCES, ser, null);
                     rs.setContainerNode();
                     root.addChild(apps);
                     root.addChild(rs);

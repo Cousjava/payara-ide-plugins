@@ -9,8 +9,11 @@ import org.glassfish.tools.ide.server.FetchLog;
 
 public class LogReader implements Runnable {
 
+	private static final int RESUME_LOOP_COUNT = 3;
+	
 	private FetchLog logFetcher;
 	private volatile boolean shutDown = false;
+	private int resumeLoopCount = 0;
 	private MessageConsoleStream output;
 
 	public LogReader(FetchLog logFetcher, MessageConsoleStream outputStream) {
@@ -28,7 +31,7 @@ public class LogReader implements Runnable {
 		try {
 			while (true) {
 				synchronized (this) {
-					if (shutDown) {
+					if (shutDown && !reader.ready() && (resumeLoopCount++ > RESUME_LOOP_COUNT)) {
 						System.out.println("Shutdown true, break...");
 						break;
 					}
@@ -49,21 +52,21 @@ public class LogReader implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("end...");
+			System.out.println("end, closing streams...");
+			logFetcher.close();
+			try {
+				output.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public synchronized void stop() {
-		System.out.println("stop called, closing streams...");
+		System.out.println("stop called...");
 		shutDown = true;
-		logFetcher.close();
-		try {
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	private static final String stripNewline(String s) {
