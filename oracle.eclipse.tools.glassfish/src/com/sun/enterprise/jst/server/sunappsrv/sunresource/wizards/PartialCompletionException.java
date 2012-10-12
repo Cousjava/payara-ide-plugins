@@ -11,7 +11,7 @@
  *     Oracle
  */
 
-package com.sun.enterprise.jst.server.sunappsrv.commands;
+package com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards;
 
 /**
  * 

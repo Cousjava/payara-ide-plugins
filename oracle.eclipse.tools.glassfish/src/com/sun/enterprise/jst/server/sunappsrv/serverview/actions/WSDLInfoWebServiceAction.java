@@ -49,7 +49,7 @@ public 	class WSDLInfoWebServiceAction extends Action {
 
 				try {
 					final GlassfishGenericServerBehaviour be = target
-							.getServerBehavior();
+							.getServer().getServerBehaviourAdapter();
 
 					IWorkbenchBrowserSupport browserSupport = PlatformUI
 							.getWorkbench().getBrowserSupport();

@@ -12,6 +12,11 @@
 
 package com.sun.enterprise.jst.server.sunappsrv.serverview.actions;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -26,10 +31,15 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
+import org.glassfish.tools.ide.admin.CommandDeleteResource;
+import org.glassfish.tools.ide.admin.ResultString;
+import org.glassfish.tools.ide.admin.ServerAdmin;
+import org.glassfish.tools.ide.admin.TaskState;
+import org.glassfish.tools.ide.data.IdeContext;
 
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
-import com.sun.enterprise.jst.server.sunappsrv.commands.CommandRunner;
+import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.NodeTypes;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.ResourcesNode;
 
@@ -64,43 +74,74 @@ public class UnregisterResourceAction extends Action {
 
 				try {
 					final GlassfishGenericServerBehaviour be = currentResource
-							.getServerBehavior();
+							.getServer().getServerBehaviourAdapter();
 					IRunnableWithProgress op = new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor) {
-							GlassfishGenericServer server= be.getSunAppServer();
-							CommandRunner mgr = new CommandRunner(server);
+							GlassfishGenericServer server = be
+									.getSunAppServer();
 
-							String propName="";
+							String propName = "";
 							boolean cascadeDelete = false;
 							String type = currentResource.getType();
-                            if (type.equals(NodeTypes.JDBC_RESOURCE)) {
+							if (type.equals(NodeTypes.JDBC_RESOURCE)) {
 								propName = "jdbc_resource_name";
-                            } else if (type.equals(NodeTypes.JDBC_CONNECTION_POOL)) {
+							} else if (type
+									.equals(NodeTypes.JDBC_CONNECTION_POOL)) {
 								propName = "jdbc_connection_pool_id";
 								cascadeDelete = true;
-								}
+							}
 
-                            else if (type.equals(NodeTypes.CONN_RESOURCE)) {
+							else if (type.equals(NodeTypes.CONN_RESOURCE)) {
 								propName = "connector_resource_pool_id";
-								}
+							}
 
-                            else if (type.equals(NodeTypes.CONN_CONNECTION_POOL)) {
+							else if (type
+									.equals(NodeTypes.CONN_CONNECTION_POOL)) {
 								propName = "poolname";
-								}
+							}
 
-                            else if (type.equals(NodeTypes.ADMINOBJECT_RESOURCE)) {
+							else if (type
+									.equals(NodeTypes.ADMINOBJECT_RESOURCE)) {
 								propName = "jndi_name";
-								}
+							}
 
-                            else if (type.equals(NodeTypes.JAVAMAIL_RESOURCE)) {
+							else if (type.equals(NodeTypes.JAVAMAIL_RESOURCE)) {
 								propName = "jndi_name";
-								}
+							}
 
-
-							mgr.unregister(currentResource.getResource()
-									.getName(), currentResource.getResource()
-									.getCommandSuffix(), propName,
+							String resourceName = currentResource.getResource()
+									.getName();
+							CommandDeleteResource command = new CommandDeleteResource(
+									resourceName, currentResource.getResource()
+											.getCommandSuffix(), propName,
 									cascadeDelete);
+							Future<ResultString> future = ServerAdmin
+									.<ResultString> exec(server, command,
+											new IdeContext());
+							ResultString result;
+							try {
+								result = future.get(30, TimeUnit.SECONDS);
+								if (!TaskState.COMPLETED.equals(result
+										.getState())) {
+									SunAppSrvPlugin
+											.logMessage("Unable to delete resource "
+													+ resourceName
+													+ ". Message: "
+													+ result.getValue());
+								}
+							} catch (InterruptedException e) {
+								SunAppSrvPlugin.logMessage(
+										"Unable to delete resource "
+												+ resourceName, e);
+							} catch (ExecutionException e) {
+								SunAppSrvPlugin.logMessage(
+										"Unable to delete resource "
+												+ resourceName, e);
+							} catch (TimeoutException e) {
+								SunAppSrvPlugin.logMessage(
+										"Unable to delete resource "
+												+ resourceName, e);
+							}
 
 						}
 					};
