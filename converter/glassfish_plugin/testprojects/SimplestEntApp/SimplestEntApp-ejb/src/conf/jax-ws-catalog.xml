@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
-    <system systemId="http://localhost:8080/StandAloneWSImple/EchoService?wsdl" uri="wsdl/localhost_8080/StandAloneWSImple/EchoService.wsdl"/>
-    <system systemId="http://localhost:8080/StandAloneWSImple/EchoService?xsd=1" uri="wsdl/localhost_8080/StandAloneWSImple/EchoService.xsd_1.xsd"/>
-</catalog>
-
-
