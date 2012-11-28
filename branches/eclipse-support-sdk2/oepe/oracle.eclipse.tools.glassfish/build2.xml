@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*******************************************************************************
+ * Copyright (c) 2010 Oracle and/or its affiliates.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Oracle IDE Developers - initial API and implementation
+ *******************************************************************************/
+ -->
+
+<project name="GlassFish Java EE 5" default="release">
+	<target name="init">
+		<property file="build.properties" />
+		<property name="plugin.id"
+			value="oracle.eclipse.tools.helios.glassfish" />
+		<property name="plugin.version" value="2.0.1" />
+	</target>
+
+	<target name="release" depends="init">
+		<!--mkdir dir="plugins/${plugin.id}_${plugin.version}" />
+		<copy todir="plugins/${plugin.id}_${plugin.version}">
+			<fileset dir="." includes="${bin.includes}" />
+		</copy-->
+		<unzip dest="bin/" src="javaee5-doc-api.zip"/>
+		<!--copy todir="plugins/${plugin.id}_${plugin.version}">
+			<fileset dir="${output.build.area}" />
+		</copy-->
+		<mkdir dir="bin/javaee6doc" />
+		<unzip dest="bin/javaee6doc" src="glassfish-all.jar"/>
+		<mkdir dir="bin/cometdoc" />
+		<unzip dest="bin/cometdoc" src="grizzly-comet-1.9.19-SNAPSHOT-javadoc.jar"/>
+
+		<zip destfile="${plugin.id}_${plugin.version}.jar"
+			basedir="bin" includes="**" />
+		<copy file="${plugin.id}_${plugin.version}.jar"
+			todir="/Users/hudson/eclipse/plugins">
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="plugins" />
+	</target>
+	<target name="archive" depends="init">
+		<zip destfile="../glassfishplugin.zip" basedir="../"
+			includes="com.sun.enterprise.jst.server.sunappsrv/"
+			excludes="*/CVS/,*/bin/" />
+	</target>
+</project>
