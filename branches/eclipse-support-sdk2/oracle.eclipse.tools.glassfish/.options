@@ -1,0 +1,4 @@
+# Debugging options for the com.sun.enterprise.jst.server.sunappsrv plugin
+
+# Turn on general debugging
+com.sun.enterprise.jst.server.sunappsrv/debug=true

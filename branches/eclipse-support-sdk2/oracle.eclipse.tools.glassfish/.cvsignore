@@ -1,0 +1,9 @@
+bin
+.metadata
+dist
+.DS_Store
+.settings
+build
+src.zip
+com.sun.enterprise.jst.server.sunappsrv_*.jar
+plugins
