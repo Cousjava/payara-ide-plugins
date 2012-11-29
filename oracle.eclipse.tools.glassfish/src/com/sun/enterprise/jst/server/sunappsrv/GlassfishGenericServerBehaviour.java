@@ -522,16 +522,6 @@ public abstract class GlassfishGenericServerBehaviour extends
 	 */
 	protected void stopImpl() {
 		GlassfishGenericServer server = getSunAppServer();
-		if (server.hasNonDefaultTarget()) {
-			String target = getSunAppServer().getTarget();
-			ResultString result = ServerTasks.stopCluster(server, target);
-			if (TaskState.FAILED.equals(result.getState())) {
-				result = ServerTasks.stopServerInstance(server, target);
-				if (TaskState.FAILED.equals(result.getState())) {
-					SunAppSrvPlugin.logMessage("stopping target (cluster or instance) failed " + result.getValue()); //$NON-NLS-1$
-				}
-			}
-		}
 		ResultString result = ServerTasks.stopServer(server);
 
 		if (!TaskState.COMPLETED.equals(result.getState())) {
@@ -898,24 +888,18 @@ public abstract class GlassfishGenericServerBehaviour extends
 
 	public void updateHttpPort() {
 		GlassfishGenericServer server = getSunAppServer();
-		String target = server.getTarget();
 		CommandGetProperty cgp;
-		if ((target == null) || target.isEmpty()) {
-			cgp = new CommandGetProperty("*.server-config.*.http-listener-1.port");
-		} else {
-			target = getServerFromTarget(target);
-			cgp = new CommandGetProperty("servers.server."+target+".system-property.HTTP_LISTENER_PORT.value");
-		}
+		cgp = new CommandGetProperty("*.server-config.*.http-listener-1.port");
 		Future<ResultMap<String, String>> future = ServerAdmin.<ResultMap<String, String>>exec(getSunAppServer(), cgp, new IdeContext());
         ResultMap<String, String> result = null;
         try {
 			result = future.get(20, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
-			SunAppSrvPlugin.logMessage("Unable to retrieve server http port for target " + target, e);
+			SunAppSrvPlugin.logMessage("Unable to retrieve server http port for server ", e);
 		} catch (java.util.concurrent.ExecutionException e) {
-			SunAppSrvPlugin.logMessage("Unable to retrieve server http port for target " + target, e);
+			SunAppSrvPlugin.logMessage("Unable to retrieve server http port for target ", e);
 		} catch (TimeoutException e) {
-			SunAppSrvPlugin.logMessage("Unable to retrieve server http port for target " + target, e);
+			SunAppSrvPlugin.logMessage("Unable to retrieve server http port for target ", e);
 		}
         
         boolean portSet = false;
@@ -939,30 +923,6 @@ public abstract class GlassfishGenericServerBehaviour extends
         	server.getProps().put(GlassfishGenericServer.SERVERPORT, "28080");
         }
 	}
-	
-	private String getServerFromTarget(String target) {
-        String retVal = target; // NOI18N
-        CommandGetProperty  cgp = new CommandGetProperty("clusters.cluster."+target+".server-ref.*.ref"); // NOI18N
-        Future<ResultMap<String, String>> future = ServerAdmin.<ResultMap<String, String>>exec(getSunAppServer(), cgp, new IdeContext());
-        ResultMap<String, String> result = null;
-        try {
-			result = future.get(20, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-		} catch (java.util.concurrent.ExecutionException e) {
-		} catch (TimeoutException e) {
-		}
-        
-        if ((result != null) && TaskState.COMPLETED.equals(result.getState())) {
-        	for (Entry<String, String> entry : result.getValue().entrySet()) {
-                String val = entry.getValue();
-                    if (null != val && val.trim().length() > 0) {
-                        retVal = val;
-                        break;
-                    }
-            }
-        }
-        return retVal;
-    }
 	
 	protected void registerSunResource(IModule module[], Properties p,
 			IPath path) throws CoreException {

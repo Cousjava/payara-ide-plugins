@@ -44,12 +44,7 @@
     type="string"
     context="server"
     default="" />
-    
-    <property id="sunappserver.target" label="%sunappserver.target"
-    type="string"
-    context="server"
-    default="" />
-    
+
     <property id="sunappserver.keepSessions" label="%sunappserver.keepSessions"
     type="boolean"
     context="server"

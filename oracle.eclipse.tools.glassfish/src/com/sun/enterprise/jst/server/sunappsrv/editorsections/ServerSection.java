@@ -138,19 +138,6 @@ public class ServerSection extends ServerEditorSection implements
 		}
 
 		txtGDF.align(SWT.FILL, SWT.CENTER).span(2, 1);
-		
-		if (sunserver.useCustomTarget()) {
-			// target
-			createLabel(comp, Messages.target, toolkit);
-			final Text target = toolkit.createText(comp, sunserver.getTarget());
-			txtGDF.applyTo(target);
-			target.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					execute(new SunAppServerCommands(sunserver, target.getText(),
-							GlassfishGenericServer.TARGET));
-				}
-			});
-		}
 
 		createLabel(comp, Messages.AdminName, toolkit);
 
