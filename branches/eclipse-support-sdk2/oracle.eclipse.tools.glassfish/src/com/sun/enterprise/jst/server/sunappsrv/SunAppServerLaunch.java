@@ -43,8 +43,6 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.glassfish.tools.ide.admin.ResultProcess;
-import org.glassfish.tools.ide.admin.ResultString;
-import org.glassfish.tools.ide.admin.TaskState;
 import org.glassfish.tools.ide.server.FetchLog;
 import org.glassfish.tools.ide.server.ServerTasks;
 import org.glassfish.tools.ide.server.ServerTasks.StartMode;
@@ -92,17 +90,13 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 		boolean isReady = isServerReady(serverBehavior);
 		try {
 			if (serverAdapter.isRemote()) {
-				if (isReady) {
-					startTarget(serverAdapter, serverBehavior, monitor);
-				} else {
+				if (!isReady) {
 					abort("GlassFish Remote Servers cannot be start from this machine.",
 							null,
 							IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 				}
 			} else {
-				if (isReady) {
-					startTarget(serverAdapter, serverBehavior, monitor);
-				} else {
+				if (!isReady) {
 					startDASAndTarget(serverAdapter, serverBehavior,
 							configuration, launch, mode, monitor);
 				}
@@ -256,12 +250,10 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 			connector.connect(arg, monitor, launch);
 
 			DebugPlugin.getDefault().addDebugEventListener(
-					new GlassfishServerDebugListener(serverBehavior, "localhost:" + debugPort));
+					new GlassfishServerDebugListener(serverBehavior,
+							"localhost:" + debugPort));
 		}
 
-		if (serverAdapter.hasNonDefaultTarget()) {
-			startTarget(serverAdapter, serverBehavior, monitor);
-		}
 	}
 
 	private void waitUntilStarted(
@@ -291,29 +283,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 				return;
 			}
 		}
-	}
-
-	private void startTarget(GlassfishGenericServer serverAdapter,
-			GlassfishGenericServerBehaviour serverBehavior,
-			IProgressMonitor monitor) throws CoreException,
-			InterruptedException {
-		if (!serverAdapter.hasNonDefaultTarget()) {
-			return;
-		}
-		String target = serverAdapter.getTarget();
-		ResultString result = ServerTasks.startCluster(serverAdapter, target);
-		if (TaskState.FAILED.equals(result.getState())) {
-			// try to start instance
-			result = ServerTasks.startServerInstance(serverAdapter, target);
-		}
-
-		if (TaskState.FAILED.equals(result.getState())) {
-			ServerTasks.stopServer(serverAdapter);
-			abort("Cannot start cluster or instance with name " + target, null,
-					IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
-		}
-
-		waitUntilStarted(serverBehavior, 0, monitor);
 	}
 
 	private boolean isServerReady(GlassfishGenericServerBehaviour serverBehavior)
@@ -376,7 +345,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 		private String debugTargetIdentifier;
 
 		public GlassfishServerDebugListener(
-				GlassfishGenericServerBehaviour serverBehavior, String debugTargetIdentifier) {
+				GlassfishGenericServerBehaviour serverBehavior,
+				String debugTargetIdentifier) {
 			this.serverBehavior = serverBehavior;
 			this.debugTargetIdentifier = debugTargetIdentifier;
 		}
@@ -393,7 +363,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
 							SunAppSrvPlugin
 									.logMessage("JDIDebugTarget=" + dt.getName()); //$NON-NLS-1$
-							if ((dt.getName().indexOf(debugTargetIdentifier) != -1) && events[i].getKind() == DebugEvent.TERMINATE) { //$NON-NLS-1$
+							if ((dt.getName().indexOf(debugTargetIdentifier) != -1)
+									&& events[i].getKind() == DebugEvent.TERMINATE) { //$NON-NLS-1$
 								DebugPlugin.getDefault()
 										.removeDebugEventListener(this);
 								serverBehavior.stop(true);

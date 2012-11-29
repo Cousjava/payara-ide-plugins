@@ -65,7 +65,7 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 	public static final String SERVERPORT = "sunappserver.serverportnumber"; //$NON-NLS-1$
 	public static final String ADMINSERVERPORT = "sunappserver.adminserverportnumber"; //$NON-NLS-1$
 	public static final String USECUSTOMTARGET = "sunappserver.usecustomtarget";
-	public static final String TARGET = "sunappserver.target";
+	//public static final String TARGET = "sunappserver.target";
 	public static final String DOMAINPATH = "sunappserver.domainpath"; //$NON-NLS-1$
 	public static final String ADMINNAME = "sunappserver.adminname"; //$NON-NLS-1$
 	public static final String ADMINPASSWORD = "sunappserver.adminpassword"; //$NON-NLS-1$
@@ -225,15 +225,6 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 			return new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID,
 					Messages.invalidPortNumbers);
 		}
-
-		// validate target if needed
-		if (useCustomTarget()) {
-			String target = getTarget();
-			if ((target == null) || target.isEmpty()) {
-				return new Status(IStatus.ERROR, SunAppSrvPlugin.SUNPLUGIN_ID,
-						Messages.emptyTargetMsg);
-			}
-		}
 		
 		return new Status(IStatus.OK, SunAppSrvPlugin.SUNPLUGIN_ID, 0, "", null); //$NON-NLS-1$
 	}
@@ -244,14 +235,6 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 	
 	public boolean useCustomTarget() {
 		return "true".equals(getProps().get(USECUSTOMTARGET));
-	}
-	
-	public String getTarget() {
-		return getProps().get(TARGET);
-	}
-	
-	public boolean hasNonDefaultTarget() {
-		return (getTarget() != null) && !getTarget().isEmpty();
 	}
 
 	/*

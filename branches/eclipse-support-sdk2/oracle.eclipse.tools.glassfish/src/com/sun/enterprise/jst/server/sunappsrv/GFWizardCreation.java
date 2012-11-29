@@ -135,7 +135,7 @@ public class GFWizardCreation extends WizardFragment {
 		private Text adminPassword = null;
 		private Text adminport = null;
 		private Text serverport = null;
-		private Text target = null;
+		//private Text target = null;
 		private Button useDefaultTarget;
 		private Button useCustomTarget;
 		private Button preserveSessions = null;
@@ -309,76 +309,7 @@ public class GFWizardCreation extends WizardFragment {
 //					Boolean.parseBoolean(prop.getDefault()), parent);
 			preserveSessions.setData(GlassfishGenericServer.KEEPSESSIONS);
 			fPropertyControls.add(preserveSessions);
-
-			// server port
-//			prop = serverProps.get(GlassfishGenericServer.SERVERPORT);
-//			GridData gridData3 = new GridData(SWT.FILL, SWT.BEGINNING, true,
-//					false);
-//			gridData3.horizontalSpan = 2;
-//			serverportLabel = new Label(parent, SWT.NONE);
-//			serverportLabel.setText(prop.getLabel());
-//			serverport = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
-//			serverport.setText(prop.getDefault());
-//			serverport.setLayoutData(gridData3);
-//			serverport.setData(GlassfishGenericServer.SERVERPORT);
-//			serverport.addModifyListener(new ModifyListener() {
-//				public void modifyText(ModifyEvent e) {
-//					validate();
-//				}
-//			});
-//			fPropertyControls.add(serverport);
-
-			useDefaultTarget = new Button(parent, SWT.RADIO);
-			gridData = new GridData();
-			gridData.horizontalSpan = 3;
-			useDefaultTarget.setLayoutData(gridData);
-			useDefaultTarget.setSelection(true);
-			useDefaultTarget.setText("Use default server (DAS)");
 			
-			useCustomTarget = new Button(parent, SWT.RADIO);
-			gridData = new GridData();
-			gridData.horizontalSpan = 1;
-			useCustomTarget.setLayoutData(gridData);
-			useCustomTarget.setText("Use custom target (cluster or instance)");
-			useCustomTarget.setData(GlassfishGenericServer.USECUSTOMTARGET);
-			useCustomTarget.addListener(SWT.Selection, new Listener() {
-				
-				@Override
-				public void handleEvent(Event e) {
-					target.setEnabled(useCustomTarget.getSelection());
-					validate();
-				}
-			});
-			fPropertyControls.add(useCustomTarget);
-			
-			// target field
-			prop = serverProps.get(GlassfishGenericServer.TARGET);
-			gridData = new GridData(SWT.FILL, SWT.BEGINNING, true,
-					false);
-			gridData.horizontalSpan = 2;
-			target = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
-			target.setData(GlassfishGenericServer.TARGET);
-			target.setToolTipText(Messages.targetTooltip);
-			target.setEnabled(false);
-			target.setLayoutData(gridData);
-			target.addModifyListener(new ModifyListener() {
-				
-				@Override
-				public void modifyText(ModifyEvent e) {
-					String target = ((Text) e.widget).getText();
-					if (target.length() < 1) {
-						isValid = false;
-						fLastMessage = "Specify target - cluster or instance.";
-						fWizard.setMessage(fLastMessage, IMessageProvider.ERROR);
-						fWizard.update();
-					} else {
-						validate();
-					}
-				}
-			});
-			
-			fPropertyControls.add(target);
-
 			// ping button
 			pingButton = SWTUtil.createButton(parent, "Ping Server...");
 			Listener listener = new Listener() {
