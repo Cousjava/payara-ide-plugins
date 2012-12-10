@@ -26,7 +26,8 @@ public class ViewLogHandler extends AbstractGlassfishSelectionHandler {
 
 			IGlassFishConsole console = GlassfishConsoleManager
 					.showConsole(serverAdapter);
-			console.startLogging(FetchLog.create(serverAdapter, true));
+			if (!console.isLogging())
+				console.startLogging(FetchLog.create(serverAdapter, true));
 		} catch (Exception e) {
 			SunAppSrvPlugin.logMessage("Error opening log: " + e.getMessage());
 

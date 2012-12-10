@@ -9,5 +9,7 @@ public interface IGlassFishConsole extends IConsole {
 	public void startLogging(FetchLog... logFetchers);
 	
 	public void stopLogging();
+	
+	public boolean isLogging();
 
 }

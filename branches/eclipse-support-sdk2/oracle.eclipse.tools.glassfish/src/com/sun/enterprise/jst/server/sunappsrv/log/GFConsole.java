@@ -45,5 +45,10 @@ public class GFConsole extends MessageConsole implements IGlassFishConsole {
 		super.dispose();
 		stopLogging();
 	}
+
+	@Override
+	public boolean isLogging() {
+		return (readers != null) && (readers.size() > 0);
+	}
 	
 }

@@ -134,14 +134,10 @@ public class GFWizardCreation extends WizardFragment {
 		private Text adminName = null;
 		private Text adminPassword = null;
 		private Text adminport = null;
-		private Text serverport = null;
 		//private Text target = null;
-		private Button useDefaultTarget;
-		private Button useCustomTarget;
 		private Button preserveSessions = null;
 		private Label domainDirLabel = null;
 		private Label adminportLabel = null;
-		private Label serverportLabel = null;
 		private Button pingButton = null;
 		private Button domainBrowseButton = null;
 

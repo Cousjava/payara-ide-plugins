@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -34,16 +35,17 @@ public class NodesUtils {
 
 	public static List<ResourceDesc> getResources(GlassFishServer server, String type) {
         List<String> result = Collections.emptyList();
-        List<ResourceDesc> retVal = Collections.emptyList();
+        LinkedList<ResourceDesc> retVal = null;
         try {
         	Command command = new CommandListResources(CommandListResources.command(
                     type), null);
                 Future<ResultList<String>> future = ServerAdmin.<ResultList<String>>
                 exec(server, command, new IdeContext());
-            ResultList<String> res = future.get(30, TimeUnit.SECONDS);
+            ResultList<String> res = future.get();
             if (TaskState.COMPLETED.equals(res.getState())) {
                 result = res.getValue();
             }
+            retVal = new LinkedList<ResourceDesc>();
             for (String rsc : result) {
             	retVal.add(new ResourceDesc(rsc, type));
             }

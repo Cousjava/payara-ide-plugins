@@ -68,9 +68,8 @@ Import-Package: org.eclipse.ant.core,
  org.eclipse.ui.internal.navigator.filters,
  org.eclipse.ui.navigator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: sdk-0.1-SNAPSHOT.jar,
- .
-
+Bundle-ClassPath: .,
+ glassfish-tooling-sdk-0.3-SNAPSHOT.jar
 
 
 

@@ -15,6 +15,8 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -88,6 +90,10 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
 		// find out if our server is really running and ready
 		boolean isReady = isServerReady(serverBehavior);
+		if (isReady) {
+			System.out.println("hurrrraaaaa");
+			SunAppSrvPlugin.logMessage("server is already started!!!");
+		}
 		try {
 			if (serverAdapter.isRemote()) {
 				if (!isReady) {
@@ -166,7 +172,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 					// GlassFishConsole.showConsole(serverAdapter);
 					IGlassFishConsole console = GlassfishConsoleManager
 							.showConsole(serverAdapter);
-					console.startLogging(FetchLog.create(serverAdapter, true));
+					if (!console.isLogging())
+						console.startLogging(FetchLog.create(serverAdapter, true));
 				}
 			});
 		} catch (Exception e) {
@@ -213,9 +220,10 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 			}
 		}
 
+		// wait (and update http port)
 		waitUntilStarted(serverBehavior, ServerUtil.getServer(configuration)
 				.getStartTimeout(), monitor);
-
+		
 		serverBehavior.updateHttpPort();
 
 		// /////startPingingThread();
@@ -291,7 +299,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 		GlassfishGenericServer serverAdapter = serverBehavior.getSunAppServer();
 		serverAdapter.readDomainConfig(); // force reread of domain info if
 											// necessary
-		if (serverBehavior.isRunning()) {
+		if (ServerUtils.isDASRunning(serverAdapter)) {
 			status = serverBehavior.getServerStatus();
 			if (status == ServerStatus.DOMAINDIR_MATCHING) {
 				// // we are really to the server we know about, so that we can
@@ -367,7 +375,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 									&& events[i].getKind() == DebugEvent.TERMINATE) { //$NON-NLS-1$
 								DebugPlugin.getDefault()
 										.removeDebugEventListener(this);
-								serverBehavior.stop(true);
+								if (!dt.isTerminated())
+									serverBehavior.stop(true);
 							}
 						} catch (DebugException e) {
 							// TODO Auto-generated catch block
