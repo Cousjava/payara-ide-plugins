@@ -38,7 +38,7 @@ public class LogReader implements Runnable {
 					while (reader.ready()) {
 						line = filter.process((char) reader.read());
 						if (line != null) {
-							System.out.println("line ready..");
+							//System.out.println("line ready..");
 							//String message = reader.readLine();
 							output.println(stripNewline(line));
 							output.flush();
@@ -46,7 +46,6 @@ public class LogReader implements Runnable {
 					}
 				}
 				try {
-					System.out.println("Sleep a little...");
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();

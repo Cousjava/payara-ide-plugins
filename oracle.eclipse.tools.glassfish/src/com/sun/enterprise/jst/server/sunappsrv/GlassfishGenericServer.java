@@ -500,40 +500,15 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 				// disabled ports are ignored.
 				//
 				HttpData adminData = httpMap.remove("admin-listener"); //$NON-NLS-1$
-
+				int adminPort = adminData.getPort();
 				getProps().put(
 						ADMINSERVERPORT,
-						String.valueOf(adminData != null ? adminData.getPort()
+						String.valueOf(adminData != null ? adminPort
 								: -1)); //$NON-NLS-1$
 				SunAppSrvPlugin
 						.logMessage("reading from domain.xml adminServerPortNumber=" + getAdminServerPort()); //$NON-NLS-1$
 
-				HttpData httpData = null;
-				HttpData httpsData = null;
-
-				for (HttpData data : httpMap.values()) {
-					if (data.isSecure()) {
-						if (httpsData == null) {
-							httpsData = data;
-						}
-					} else {
-						if (httpData == null) {
-							httpData = data;
-						}
-					}
-					if (httpData != null && httpsData != null) {
-						break;
-					}
-				}
-
-				int httpPort = httpData != null ? httpData.getPort() : -1;
-				getProps().put(SERVERPORT, String.valueOf(httpPort));
-				SunAppSrvPlugin
-						.logMessage("reading from domain.xml serverPortNumber=" + getServerPort()); //$NON-NLS-1$
-				// ///ludo secure TODO wi.setHttpsPort(httpsData != null ?
-				// httpsData.getPort() : -1);
-
-				result = httpPort != -1;
+				result = adminPort != -1;
 			} catch (IllegalStateException ex) {
 				SunAppSrvPlugin.logMessage("error IllegalStateException ", ex); //$NON-NLS-1$
 			}

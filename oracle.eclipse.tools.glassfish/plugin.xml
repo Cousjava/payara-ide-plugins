@@ -131,11 +131,11 @@
             name="%serverTypeNameglassfish3122"
             description="%serverTypeDescriptionglassfish3122"
             runtime="true"
-            class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
+            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3ServerBehavior"
+            class="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3Server"
             supportsRemoteHosts="true"
             runtimeTypeId="org.glassfish.jst.server.runtime.glassfish3122"
-              launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
-            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
+            launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
             startBeforePublish="true"
             hasConfiguration="false"
             launchModes="run,debug,profile">         
@@ -1507,8 +1507,19 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
             name="%menu.updatecenter">
       </command>
       <command
-            id="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
-            name="OpenUrlCommand">
+            description="%menu.theaquarium"
+            id="oracle.eclipse.tools.glassfish.commands.ShowAquarium"
+            name="%menu.theaquarium">
+         <commandParameter
+               id="oracle.eclipse.tools.glassfish.commands.urlParam"
+               name="url"
+               optional="false">
+         </commandParameter>
+      </command>
+      <command
+            description="%menu.glassfish.getsupport"
+            id="oracle.eclipse.tools.glassfish.commands.GetSupport"
+            name="%menu.glassfish.getsupport">
          <commandParameter
                id="oracle.eclipse.tools.glassfish.commands.urlParam"
                name="url"
@@ -1548,7 +1559,11 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
       </handler>
       <handler
             class="com.sun.enterprise.jst.server.sunappsrv.handlers.ShowURLHandler"
-            commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand">
+            commandId="oracle.eclipse.tools.glassfish.commands.ShowAquarium">
+      </handler>
+      <handler
+            class="com.sun.enterprise.jst.server.sunappsrv.handlers.ShowURLHandler"
+            commandId="oracle.eclipse.tools.glassfish.commands.GetSupport">
       </handler>
 	</extension>
   <extension
@@ -1557,9 +1572,8 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
            allPopups="false"
            locationURI="toolbar:org.eclipse.wst.server.ui.ServersView?after=additions">
         <command
-              commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+              commandId="oracle.eclipse.tools.glassfish.commands.ShowAquarium"
               icon="icons/obj16/resources.gif"
-              label="%menu.theaquarium"
               style="push">
            <parameter
                  name="oracle.eclipse.tools.glassfish.commands.urlParam"
@@ -1567,9 +1581,8 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
            </parameter>
         </command>
         <command
-              commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+              commandId="oracle.eclipse.tools.glassfish.commands.GetSupport"
               icon="icons/obj16/sunappsrv.gif"
-              label="%menu.glassfish.getsupport"
               style="push">
            <parameter
                  name="oracle.eclipse.tools.glassfish.commands.urlParam"

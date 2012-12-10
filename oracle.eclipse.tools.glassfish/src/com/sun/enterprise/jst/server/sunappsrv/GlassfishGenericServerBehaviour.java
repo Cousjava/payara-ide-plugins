@@ -371,6 +371,16 @@ public abstract class GlassfishGenericServerBehaviour extends
 	 */
 	public boolean isRunning() {
 		GlassfishGenericServer server = getSunAppServer();
+		// server port is not set yet
+		try {
+			server.getPort();
+		} catch (NumberFormatException e) {
+			if (ServerUtils.isDASRunning(server))
+				updateHttpPort();
+			else
+				return false;
+		}
+		
 		if (getSunAppServer().isRemote()) {// remote is for 3.0 or above, then we use get version
 							// http/s request to avoid
 			// proxy security issues with a simple socket usage...
@@ -449,40 +459,27 @@ public abstract class GlassfishGenericServerBehaviour extends
 
 	@Override
 	public void restart(final String launchMode) throws CoreException {
-//		try {
-//			CommandRunnerOld mgr = new CommandRunnerOld(getSunAppServer());
-//			Future<OperationState> result = mgr.execute(Commands.RESTART);
-//			if (result.get(180, TimeUnit.SECONDS) == OperationState.COMPLETED) {
-//				setServerState(IServer.STATE_STARTED);
-//
-//			} else {
-//				SunAppSrvPlugin.logMessage("Cannot restart in 180 seconds"); //$NON-NLS-1$
-//				return;
-//
-//			}
-//		} catch (Exception ex) {
-//			SunAppSrvPlugin.logMessage(
-//					"restarting  GlassFish 3.x is failing=", ex); //$NON-NLS-1$
-//			return;
-//		}
-		// v2
 		SunAppSrvPlugin.logMessage("in SunAppServerBehaviour restart");
-		stop(true);
+		setServerState(IServer.STATE_STOPPING);
+		stopServer(false);
+		setServerState(IServer.STATE_STOPPED);
 		Thread thread = new Thread("Synchronous server start") {
 			public void run() {
 				try {
+					//setServerState(IServer.STATE_STARTING);
 					// SunAppSrvPlugin.logMessage("in !!!!!!!SunAppServerBehaviour restart");
-					getServer().start(launchMode, new NullProgressMonitor());
+					getServer().getLaunchConfiguration(true, null).launch(launchMode, new NullProgressMonitor());
+					//getServer().start(launchMode, new NullProgressMonitor());
 					SunAppSrvPlugin
 							.logMessage("in SunAppServerBehaviour restart done");
-					setServerState(IServer.STATE_STARTED);
-
+					
 				} catch (Exception e) {
 					SunAppSrvPlugin.logMessage(
 							"in SunAppServerBehaviour restart", e);
 				}
 			}
 		};
+		
 		thread.setDaemon(true);
 		thread.start();
 
@@ -491,7 +488,20 @@ public abstract class GlassfishGenericServerBehaviour extends
 	@Override
 	public void stop(boolean force) {
 		SunAppSrvPlugin.logMessage("in SunAppServerBehaviour stop");
-		if (getSunAppServer().isRemote()) {
+		
+
+		stopServer(true);
+		resetStatus(getServer().getServerState());
+		setServerState(IServer.STATE_STOPPED);
+	}
+
+	/**
+	 * 
+	 * @stop GlassFish v3 or v3 prelude via http command
+	 */
+	protected void stopServer(boolean stopLogging) {
+		final GlassfishGenericServer server = getSunAppServer();
+		if (server.isRemote()) {
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 				public void run() {
 					boolean answer = MessageDialog
@@ -501,34 +511,36 @@ public abstract class GlassfishGenericServerBehaviour extends
 									"Stopping a remote sever",
 									"Are you sure you want to stop a remote domain? \nYou will not be able to start it again from this machine...");
 					if (answer) {
-						stopImpl();
-						setServerState(IServer.STATE_STOPPED);
+						stopImpl(server);
 					}
 				}
 			});
 
 			return;
 		}
-
-		stopImpl();
-		resetStatus(getServer().getServerState());
-
-		setServerState(IServer.STATE_STOPPED);
+		
+		stopImpl(server);
+		if (stopLogging)
+			GlassfishConsoleManager.getConsole(server).stopLogging();
 	}
-
-	/**
-	 * 
-	 * @stop GlassFish v3 or v3 prelude via http command
-	 */
-	protected void stopImpl() {
-		GlassfishGenericServer server = getSunAppServer();
+	
+	private void stopImpl(GlassfishGenericServer server) {
 		ResultString result = ServerTasks.stopServer(server);
 
 		if (!TaskState.COMPLETED.equals(result.getState())) {
 			SunAppSrvPlugin.logMessage("stop-domain v3 is failing. Reason: " + result.getValue()); //$NON-NLS-1$
 		}
-		GlassfishConsoleManager.getConsole(server).stopLogging();
+		
+		// wait util is really stopped
+		while (isRunning()) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
+	
 
 	public String getDomainDirWithDomainName() {
 		return getDomainDir().trim() + File.separatorChar + getDomainName();
