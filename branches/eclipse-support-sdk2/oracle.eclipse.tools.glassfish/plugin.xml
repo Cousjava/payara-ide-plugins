@@ -138,7 +138,7 @@
             launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug,profile">         
+            launchModes="run,debug">         
         </serverType> 
         
          <!-- GlassFish 3.1.2 server -->
@@ -154,6 +154,7 @@
               name="%serverTypeNameglassfish312"
               runtime="true"
               runtimeTypeId="org.glassfish.jst.server.runtime.glassfish312"
+              startBeforePublish="true"
               supportsRemoteHosts="true"
               synchronousStart="false">         
         </serverType> 
@@ -172,7 +173,7 @@
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3ServerBehavior"
             startBeforePublish="true"
             hasConfiguration="false"
-            launchModes="run,debug,profile">         
+            launchModes="run,debug">         
         </serverType> 
         
         <!-- GlassFish 3.1 server -->
