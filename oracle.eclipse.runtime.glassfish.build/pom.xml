@@ -42,7 +42,7 @@
 							<tasks>
 								<!-- Using an ant task to deflate glassfish zip file -->
 
-								<unzip dest="${project.basedir}" src="glassfish-3.1.2.zip" />
+								<unzip dest="${project.basedir}" src="glassfish-3.1.2.2.zip" />
 								<touch
 									file="${project.basedir}/glassfish3/glassfish/lib/asadmin/.nothing" />
 								<touch
