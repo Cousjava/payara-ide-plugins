@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jst.server.generic.ui.internal.SWTUtil;
+import org.glassfish.tools.ide.data.GlassFishVersion;
 
 import com.sun.enterprise.jst.server.sunappsrv.Messages;
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
@@ -66,7 +67,8 @@ public class ServerSection extends ServerEditorSection implements
 
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
-		sunserver = (GlassfishGenericServer)server.loadAdapter(GlassfishGenericServer.class, new NullProgressMonitor());
+		sunserver = (GlassfishGenericServer) server.loadAdapter(
+				GlassfishGenericServer.class, new NullProgressMonitor());
 		server.addPropertyChangeListener(this);
 	}
 
@@ -192,63 +194,71 @@ public class ServerSection extends ServerEditorSection implements
 		}
 		adminServerPortNumber.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				execute(new SunAppServerCommands(sunserver, adminServerPortNumber
-						.getText(), GlassfishGenericServer.ADMINSERVERPORT));
+				execute(new SunAppServerCommands(sunserver,
+						adminServerPortNumber.getText(),
+						GlassfishGenericServer.ADMINSERVERPORT));
 			}
 		});
 
-		final Button useAnonymousConnection = new Button(comp, SWT.CHECK);
-		useAnonymousConnection.setText(Messages.UseAnonymousConnection);
-		boolean useAnon = sunserver.getUseAnonymousConnections().equals("true");
-		useAnonymousConnection.setSelection(useAnon);
-		username.setEnabled(!useAnon);
-		password.setEnabled(!useAnon);
-		txtGDF.span(3, 1).indent(45, 0).applyTo(useAnonymousConnection);
-		useAnonymousConnection
-				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					public void widgetSelected(
-							org.eclipse.swt.events.SelectionEvent e) {
-						// Determines if the checkBox is checked or not
-						boolean selected = useAnonymousConnection
-								.getSelection();
-						username.setEnabled(!selected);
-						password.setEnabled(!selected);
-						execute(new SunAppServerCommands(sunserver, "" + selected,
-								GlassfishGenericServer.USEANONYMOUSCONNECTIONS));
-					}
-				});
-
-		final Button keepSessions = new Button(comp, SWT.CHECK);
-		keepSessions.setText(Messages.keepSessions);
-		keepSessions.setSelection(sunserver.getKeepSessions().equals("true"));
-		txtGDF.applyTo(keepSessions);
-		keepSessions
-				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					public void widgetSelected(
-							org.eclipse.swt.events.SelectionEvent e) {
-						// Determines if the checkBox is checked or not
-						boolean selected = keepSessions.getSelection();
-						execute(new SunAppServerCommands(sunserver, "" + selected,
-								GlassfishGenericServer.KEEPSESSIONS));
-					}
-				});
-
-		if (!isRemote) {
-			final Button jarDeploy = new Button(comp, SWT.CHECK);
-			jarDeploy.setText(Messages.jarDeploy);
-			jarDeploy.setSelection(sunserver.getJarDeploy().equals("true"));
-			txtGDF.applyTo(jarDeploy);
-			jarDeploy
+		if (!sunserver.getVersion().equals(GlassFishVersion.GF_2)) {
+			final Button useAnonymousConnection = new Button(comp, SWT.CHECK);
+			useAnonymousConnection.setText(Messages.UseAnonymousConnection);
+			boolean useAnon = sunserver.getUseAnonymousConnections().equals(
+					"true");
+			useAnonymousConnection.setSelection(useAnon);
+			username.setEnabled(!useAnon);
+			password.setEnabled(!useAnon);
+			txtGDF.span(3, 1).indent(45, 0).applyTo(useAnonymousConnection);
+			useAnonymousConnection
 					.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 						public void widgetSelected(
 								org.eclipse.swt.events.SelectionEvent e) {
 							// Determines if the checkBox is checked or not
-							boolean selected = jarDeploy.getSelection();
-							execute(new SunAppServerCommands(sunserver, ""
-									+ selected,
-									GlassfishGenericServer.JARDEPLOY));
+							boolean selected = useAnonymousConnection
+									.getSelection();
+							username.setEnabled(!selected);
+							password.setEnabled(!selected);
+							execute(new SunAppServerCommands(
+									sunserver,
+									"" + selected,
+									GlassfishGenericServer.USEANONYMOUSCONNECTIONS));
 						}
 					});
+
+			final Button keepSessions = new Button(comp, SWT.CHECK);
+			keepSessions.setText(Messages.keepSessions);
+			keepSessions.setSelection(sunserver.getKeepSessions()
+					.equals("true"));
+			txtGDF.applyTo(keepSessions);
+			keepSessions
+					.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+						public void widgetSelected(
+								org.eclipse.swt.events.SelectionEvent e) {
+							// Determines if the checkBox is checked or not
+							boolean selected = keepSessions.getSelection();
+							execute(new SunAppServerCommands(sunserver, ""
+									+ selected,
+									GlassfishGenericServer.KEEPSESSIONS));
+						}
+					});
+
+			if (!isRemote) {
+				final Button jarDeploy = new Button(comp, SWT.CHECK);
+				jarDeploy.setText(Messages.jarDeploy);
+				jarDeploy.setSelection(sunserver.getJarDeploy().equals("true"));
+				txtGDF.applyTo(jarDeploy);
+				jarDeploy
+						.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+							public void widgetSelected(
+									org.eclipse.swt.events.SelectionEvent e) {
+								// Determines if the checkBox is checked or not
+								boolean selected = jarDeploy.getSelection();
+								execute(new SunAppServerCommands(sunserver, ""
+										+ selected,
+										GlassfishGenericServer.JARDEPLOY));
+							}
+						});
+			}
 		}
 
 	}

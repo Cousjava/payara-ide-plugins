@@ -469,7 +469,7 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 		return getServer().getRuntime().getLocation().toString();
 	}
 
-	private boolean readServerConfiguration(File domainXml) {
+	protected boolean readServerConfiguration(File domainXml) {
 		boolean result = false;
 		final Map<String, HttpData> httpMap = new LinkedHashMap<String, HttpData>();
 
@@ -576,9 +576,7 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 	}
 
 	@Override
-	public GlassFishVersion getVersion() {
-		return GlassFishVersion.GF_3_1_2;
-	}
+	public abstract GlassFishVersion getVersion();
 
 	@Override
 	public GlassFishAdminInterface getAdminInterface() {

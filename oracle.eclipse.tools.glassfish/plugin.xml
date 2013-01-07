@@ -17,9 +17,17 @@
     <extension point="org.eclipse.debug.core.launchConfigurationTypes">
         
         <launchConfigurationType
-            id="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            id="org.glassfish.jst.server.GlassfishServerLaunchConfigurationType"
             name="%sunappserver.ConfigurationTypeName"
-            delegate="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunch"
+            delegate="com.sun.enterprise.jst.server.sunappsrv.GlassfishServerLaunchDelegate"
+            modes="run, debug"
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
+            
+            <launchConfigurationType
+            id="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            name="%sunappserver.ConfigurationTypeNameV2"
+            delegate="com.sun.enterprise.jst.server.sunappsrv.SunServerLaunchDelegate"
             modes="run, debug"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
@@ -46,6 +54,11 @@
         <launchConfigurationTabGroup
             id="com.sun.enterprise.jst.server.runtime.sunappsrv.launchConfigurationTabGroup"
             type="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            class="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationTabGroup">
+        </launchConfigurationTabGroup>
+        <launchConfigurationTabGroup
+            id="org.glassfish.jst.server.launchConfigurationTabGroup"
+            type="org.glassfish.jst.server.GlassfishServerLaunchConfigurationType"
             class="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationTabGroup">
         </launchConfigurationTabGroup>
         <!-- end workaround-->
@@ -110,14 +123,48 @@
             <moduleType types="jst.appclient" versions="1.2, 1.3, 1.4, 5.0, 6.0"/>
         </runtimeType>
         
-        <!-- GlassFish V3 server -->
-
+        <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.sunappsrv92"
+            name="%runtimeTypeName92" description="%runtimeTypeDescription92"
+            vendor="%runtimeTypeGlassFishVendor" version="9.2"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5, 3.0"/>
+            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0, 3.1"/>
+            <moduleType types="jst.connector" versions="1.0, 1.5, 1.6"/>
+            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0, 6.0"/>
+            <moduleType types="jst.utility"  versions="1.0"/>
+            <moduleType types="jst.appclient" versions="1.2, 1.3, 1.4, 5.0, 6.0"/>
+        </runtimeType>
              
         
         <!-- GlassFish V2 server -->
+        <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.sunappsrv91"
+            name="%runtimeTypeName91" description="%runtimeTypeDescription91"
+            vendor="%runtimeTypeGlassFishVendor" version="9.1"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
+            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
+            <moduleType types="jst.connector" versions="1.0, 1.5"/>
+            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0"/>
+            <moduleType types="jst.appclient" versions="1.2, 1.3, 1.4, 5.0"/>
+            <moduleType types="jst.utility"  versions="1.0"/>
+        </runtimeType>
         
         
         <!-- Sailfin v2 server -->
+        <runtimeType
+            id="com.sun.enterprise.jst.server.runtime.sailfin2"
+            name="%runtimeTypeNameSailfin2" description="%runtimeTypeDescriptionSailfin2"
+            vendor="%runtimeTypeGlassFishVendor" version="Sailfin v2"
+            class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+            <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5"/>
+            <moduleType types="jst.ejb" versions="1.1, 2.0, 2.1, 3.0"/>
+            <moduleType types="jst.connector" versions="1.0, 1.5"/>
+            <moduleType types="jst.ear" versions="1.2, 1.3, 1.4, 5.0"/>
+            <moduleType types="jst.appclient" versions="1.2, 1.3, 1.4, 5.0"/>
+            <moduleType types="jst.utility"  versions="1.0"/>
+        </runtimeType>
 
     </extension>
     
@@ -135,7 +182,7 @@
             class="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3Server"
             supportsRemoteHosts="true"
             runtimeTypeId="org.glassfish.jst.server.runtime.glassfish3122"
-            launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            launchConfigId="org.glassfish.jst.server.GlassfishServerLaunchConfigurationType"
             startBeforePublish="true"
             hasConfiguration="false"
             launchModes="run,debug">         
@@ -149,7 +196,7 @@
               description="%serverTypeDescriptionglassfish312"
               hasConfiguration="false"
               id="org.glassfish.jst.server.glassfish312"
-              launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+              launchConfigId="org.glassfish.jst.server.GlassfishServerLaunchConfigurationType"
               launchModes="run,debug"
               name="%serverTypeNameglassfish312"
               runtime="true"
@@ -169,7 +216,7 @@
             class="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3Server"
             supportsRemoteHosts="true"
             runtimeTypeId="org.glassfish.jst.server.runtime.glassfish311"
-              launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+              launchConfigId="org.glassfish.jst.server.GlassfishServerLaunchConfigurationType"
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3ServerBehavior"
             startBeforePublish="true"
             hasConfiguration="false"
@@ -186,7 +233,7 @@
             class="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3Server"
             supportsRemoteHosts="true"
             runtimeTypeId="org.glassfish.jst.server.runtime.glassfish31"
-              launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+              launchConfigId="org.glassfish.jst.server.GlassfishServerLaunchConfigurationType"
             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3ServerBehavior"
             startBeforePublish="true"
             hasConfiguration="false"
@@ -195,14 +242,57 @@
               
         <!-- GlassFish v3 server -->
 
+        <serverType
+            id="com.sun.enterprise.jst.server.sunappsrv92"
+            name="%serverTypeName92"
+            description="%serverTypeDescription92"
+            runtime="true"
+            class="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3Server"
+            supportsRemoteHosts="false"
+            runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv92"
+              launchConfigId="org.glassfish.jst.server.GlassfishServerLaunchConfigurationType"
+            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.GlassfishV3ServerBehavior"
+            startBeforePublish="true"
+            hasConfiguration="false"
+            launchModes="run,debug,profile">         
+        </serverType> 
        
  
         
         <!-- GlassFish v2 server -->
+        <serverType
+            id="com.sun.enterprise.jst.server.sunappsrv91"
+            name="%serverTypeName91"
+            description="%serverTypeDescription91"
+            runtime="true"
+            class="com.sun.enterprise.jst.server.sunappsrv.GlassfishV2Server"
+            supportsRemoteHosts="false"
+            runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv91"
+            launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.GlassfishV2ServerBehavior"
+            startBeforePublish="true"
+            hasConfiguration="false"
+            launchModes="run,debug,profile">         
+        </serverType> 
         
 
 
         <!-- Sailfin v2 server -->
+        <serverType
+            id="com.sun.enterprise.jst.server.sailfin2"
+            name="%serverTypeNameSailfin2"
+            description="%serverTypeDescriptionSailfin2"
+            runtime="true"
+            class="com.sun.enterprise.jst.server.sunappsrv.GlassfishV2Server"
+            initialState="stopped"
+            supportsRemoteHosts="false"
+            runtimeTypeId="com.sun.enterprise.jst.server.runtime.sailfin2"
+            launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
+            behaviourClass="com.sun.enterprise.jst.server.sunappsrv.GlassfishV2ServerBehavior"
+            startBeforePublish="true"
+            hasConfiguration="false"
+            launchModes="run,debug,profile">         
+        </serverType>
 
         
     </extension>
@@ -232,15 +322,22 @@
 
         
         <!-- GlassFish v3 server -->
+        <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv92" 
+                          definitionfile="/serverdef/glassfishv3serverdef.xml">
+        </serverdefinition>
 
 
-        
-               
         <!-- GlassFish v2 server -->
 
         
+        <serverdefinition id="com.sun.enterprise.jst.server.runtime.sunappsrv91" 
+                          definitionfile="/serverdef/sunappsrv91serverdef.xml">
+        </serverdefinition>
 
         
+        <serverdefinition id="com.sun.enterprise.jst.server.runtime.sailfin2" 
+                          definitionfile="/serverdef/sailfin2serverdef.xml">
+        </serverdefinition>
  
         
     </extension>
@@ -403,17 +500,58 @@
     </extension>
     
     <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+        <runtime-component-type   id="com.sun.enterprise.jst.server.runtime.sunappsrv"/>
         <runtime-component-type   id="org.glassfish.jst.server.runtime.glassfish"/>
-        
+
+        <runtime-component-version type="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.1"/>
+        <runtime-component-version type="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.1.5"/>
+        <runtime-component-version type="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.2"/>
         <runtime-component-version type="org.glassfish.jst.server.runtime.glassfish"  version="3.1"/>
         <runtime-component-version type="org.glassfish.jst.server.runtime.glassfish"  version="3.1.1"/>
         <runtime-component-version type="org.glassfish.jst.server.runtime.glassfish"  version="3.1.2"/>
         <runtime-component-version type="org.glassfish.jst.server.runtime.glassfish"  version="3.1.2.2"/>
         <adapter>
+            <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv"/>
+            <factory class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
+            <type class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
+        </adapter>
+        <adapter>
             <runtime-component id="org.glassfish.jst.server.runtime.glassfish"/>
             <factory class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
             <type class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
         </adapter>
+        <supported>
+            <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="9.1"/>
+            <facet id="sun.facet" version="9,8"/>
+            <facet id="jst.web" version="2.2,2.3,2.4,2.5"/>
+            <facet id="jst.ejb" version="1.1,2.0,2.1,3.0"/>
+            <facet id="jst.ear"  version="1.2,1.3,1.4,5.0"/>
+            <facet id="jst.connector"  version="1.0,1.5"/>
+            <facet id="jst.appclient" version="1.2,1.3,1.4,5.0"/>
+            <facet id="jst.utility"  version="1.0"/>  
+        </supported>
+        <supported>
+            <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="9.1.5"/>
+            <facet id="sun.facet" version="9,8"/>
+            <facet id="sip.facet" version="1.1"/>
+            <facet id="jst.web" version="2.2,2.3,2.4,2.5"/>
+            <facet id="jst.ejb" version="1.1,2.0,2.1,3.0"/>
+            <facet id="jst.ear"  version="1.2,1.3,1.4,5.0"/>
+            <facet id="jst.connector"  version="1.0,1.5"/>
+            <facet id="jst.appclient" version="1.2,1.3,1.4,5.0"/>
+            <facet id="jst.utility"  version="1.0"/>  
+        </supported>
+        <supported>
+            <runtime-component id="com.sun.enterprise.jst.server.runtime.sunappsrv" version="9.2"/> <!--glassFish v3-->
+            <facet id="sun.facet" version="9"/>
+            <facet id="jst.web" version="2.2,2.3,2.4,2.5,3.0"/>
+            <facet id="jst.ejb" version="1.1,2.0,2.1,3.0,3.1"/>
+            <facet id="jst.ear"  version="1.2,1.3,1.4,5.0,6.0"/>
+            <facet id="jst.connector"  version="1.0,1.5,1.6"/>
+            <facet id="jst.appclient" version="1.2,1.3,1.4,5.0,6.0"/>
+            <facet id="jst.utility"  version="1.0"/> 
+            <facet id="jst.webfragment" version="3.0" />
+        </supported>
         <supported>
             <runtime-component id="org.glassfish.jst.server.runtime.glassfish" version="3.1"/> <!--glassFish 3.1-->
             <facet id="sun.facet" version="9"/>
@@ -462,6 +600,15 @@
     </extension>
     
     <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
+
+        <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv91"
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.1"/>
+        <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sailfin1"
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.1.5"/>
+        <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sailfin2"
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.1.5"/>
+        <runtimeFacetMapping runtimeTypeId="com.sun.enterprise.jst.server.runtime.sunappsrv92"
+                             runtime-component="com.sun.enterprise.jst.server.runtime.sunappsrv"  version="9.2"/>
         <runtimeFacetMapping runtimeTypeId="org.glassfish.jst.server.runtime.glassfish31"
                              runtime-component="org.glassfish.jst.server.runtime.glassfish"  version="3.1"/>
         <runtimeFacetMapping runtimeTypeId="org.glassfish.jst.server.runtime.glassfish311"
@@ -1534,9 +1681,28 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
       <handler
             class="com.sun.enterprise.jst.server.sunappsrv.handlers.UpdateCenterHandler"
             commandId="oracle.eclipse.tools.glassfish.commands.UpdateCenterCommand">
+         <activeWhen>
+         	<reference
+                  definitionId="oracle.eclipse.tools.glassfish.oneV3GlassfishSelected">
+            </reference>
+         </activeWhen>
          <enabledWhen>
             <reference
-                  definitionId="oracle.eclipse.tools.glassfish.oneGlassfishSelected">
+                  definitionId="oracle.eclipse.tools.glassfish.oneV3GlassfishSelected">
+            </reference>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="com.sun.enterprise.jst.server.sunappsrv.handlers.UpdateCenterV2Handler"
+            commandId="oracle.eclipse.tools.glassfish.commands.UpdateCenterCommand">
+         <activeWhen>
+         	<reference
+                  definitionId="oracle.eclipse.tools.glassfish.oneV2GlassfishSelected">
+            </reference>
+         </activeWhen>
+         <enabledWhen>
+            <reference
+                  definitionId="oracle.eclipse.tools.glassfish.oneV2GlassfishSelected">
             </reference>
          </enabledWhen>
       </handler>
@@ -1720,41 +1886,92 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
            </count>
            <iterate
                  ifEmpty="false">
+                 <or>
+           			<reference definitionId="oracle.eclipse.tools.glassfish.isV3"/>
+           			<reference definitionId="oracle.eclipse.tools.glassfish.isV2"/>
+           		</or>
+           	</iterate>
+        </and>
+     </definition>
+     <definition
+           id="oracle.eclipse.tools.glassfish.oneGlassfishSelected">
+        <and>
+           <count
+                 value="1">
+           </count>
+           <iterate
+                 ifEmpty="false">
+                 <or>
+           			<reference definitionId="oracle.eclipse.tools.glassfish.isV3"/>
+           			<reference definitionId="oracle.eclipse.tools.glassfish.isV2"/>
+           		</or>
+           	</iterate>
+        </and>
+     </definition>
+     <definition
+           id="oracle.eclipse.tools.glassfish.oneV3GlassfishSelected">
+        <and>
+           <count
+                 value="1">
+           </count>
+           <iterate
+                 ifEmpty="false">
+                 <test
+                          property="oracle.eclipse.tools.glassfish.v3Test">
+                  </test>
+           	</iterate>
+        </and>
+     </definition>
+     <definition
+           id="oracle.eclipse.tools.glassfish.oneV2GlassfishSelected">
+        <and>
+           <count
+                 value="1">
+           </count>
+           <iterate
+                 ifEmpty="false">
+                 <not>
+           			<test
+                          property="oracle.eclipse.tools.glassfish.v3Test">
+                  </test>
+           		</not>
+           	</iterate>
+        </and>
+     </definition>
+     <definition
+           id="oracle.eclipse.tools.glassfish.isV2">
+           
               <adapt
                     type="org.eclipse.wst.server.core.IServer">
                  <and>
-                    <or>
-                       <test
-                             property="org.eclipse.wst.server.ui.serverType"
-                             value="org.glassfish.jst.server.*">
-                       </test>
                        <test
                              property="org.eclipse.wst.server.ui.serverType"
                              value="com.sun.enterprise.jst.server.*">
                        </test>
-                    </or>
                  </and>
               </adapt>
-           </iterate>
-        </and>
+     </definition>
+     <definition
+           id="oracle.eclipse.tools.glassfish.isV3">
+           
+              <adapt
+                    type="org.eclipse.wst.server.core.IServer">
+                 <and>
+                       <test
+                             property="org.eclipse.wst.server.ui.serverType"
+                             value="org.glassfish.jst.server.*">
+                       </test>
+                 </and>
+              </adapt>
      </definition>
      <definition
            id="oracle.eclipse.tools.glassfish.moreGlassfishSelected">
            <iterate
                  ifEmpty="false">
-              <adapt
-                    type="org.eclipse.wst.server.core.IServer">
-                    <or>
-                 <test
-                       property="org.eclipse.wst.server.ui.serverType"
-                       value="org.glassfish.jst.server.*">
-                 </test>
-                 <test
-                       property="org.eclipse.wst.server.ui.serverType"
-                       value="com.sun.enterprise.jst.server.*">
-                 </test>
-                 </or>
-              </adapt>
+             <or>
+           			<reference definitionId="oracle.eclipse.tools.glassfish.isV3"/>
+           			<reference definitionId="oracle.eclipse.tools.glassfish.isV2"/>
+           		</or>
            </iterate>
      </definition>
      <definition
@@ -1765,26 +1982,17 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
            </count>
            <iterate
                  ifEmpty="false">
-              <adapt
-                    type="org.eclipse.wst.server.core.IServer">
                  <and>
-                    <or>
-                       <test
-                             property="org.eclipse.wst.server.ui.serverType"
-                             value="org.glassfish.jst.server.*">
-                       </test>
-                       <test
-                             property="org.eclipse.wst.server.ui.serverType"
-                             value="com.sun.enterprise.jst.server.*">
-                       </test>
-                    </or>
-                    <test
+             <or>
+           			<reference definitionId="oracle.eclipse.tools.glassfish.isV3"/>
+           			<reference definitionId="oracle.eclipse.tools.glassfish.isV2"/>
+           		</or>
+           		<test
                           property="oracle.eclipse.tools.glassfish.isRunning">
-                    </test>
-                 </and>
-              </adapt>
-           </iterate>
-        </and>
+                  </test>
+                  </and>
+           </iterate>     
+         </and>
      </definition>
   </extension>
   <extension
@@ -1794,6 +2002,13 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
            id="oracle.eclipse.tools.glassfish.GlassFishStateTester"
            namespace="oracle.eclipse.tools.glassfish"
            properties="isRunning"
+           type="org.eclipse.wst.server.core.IServer">
+     </propertyTester>
+     <propertyTester
+           class="com.sun.enterprise.jst.server.sunappsrv.handlers.GlassFishVersionTester"
+           id="oracle.eclipse.tools.glassfish.GlassFishVersionTester"
+           namespace="oracle.eclipse.tools.glassfish"
+           properties="v3Test"
            type="org.eclipse.wst.server.core.IServer">
      </propertyTester>
   </extension>
