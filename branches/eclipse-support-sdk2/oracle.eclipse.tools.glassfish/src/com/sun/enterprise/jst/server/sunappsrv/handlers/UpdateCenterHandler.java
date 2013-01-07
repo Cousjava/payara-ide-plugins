@@ -1,9 +1,7 @@
 package com.sun.enterprise.jst.server.sunappsrv.handlers;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -16,8 +14,6 @@ import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
 import org.eclipse.wst.server.core.IServer;
 
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
-import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
 
 public class UpdateCenterHandler extends AbstractGlassfishSelectionHandler {
 

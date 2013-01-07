@@ -57,7 +57,6 @@ import org.glassfish.tools.ide.admin.Command;
 import org.glassfish.tools.ide.admin.CommandAddResources;
 import org.glassfish.tools.ide.admin.CommandDeploy;
 import org.glassfish.tools.ide.admin.CommandGetProperty;
-import org.glassfish.tools.ide.admin.CommandLocation;
 import org.glassfish.tools.ide.admin.CommandUndeploy;
 import org.glassfish.tools.ide.admin.CommandVersion;
 import org.glassfish.tools.ide.admin.ResultMap;
@@ -84,7 +83,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 	private static final String DEFAULT_DOMAIN_NAME = "domain1"; //$NON-NLS-N$
 	// not used yet private GlassFishV2DeployFacility gfv2depl=null;//lazy
 	// initialized
-	private boolean needARedeploy = true; // by default, will be calculated..
+	protected boolean needARedeploy = true; // by default, will be calculated..
 	
 	public enum ServerStatus {
 		DOMAINDIR_MATCHING, DOMAINDIR_NOT_MATCHING, CONNEXTION_ERROR, CREDENTIAL_ERROR, MBEAN_ERROR, WRONG_SERVER_TYPE
@@ -734,7 +733,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 		}
 	}
 
-	private void publishDeployedDirectory(int deltaKind, Properties p,
+	protected void publishDeployedDirectory(int deltaKind, Properties p,
 			IModule module[], IProgressMonitor monitor) throws CoreException {
 		// ludo using PublishHelper now to control the temp area to be
 		// in the same file system of the deployed apps so that the mv operation
@@ -833,70 +832,8 @@ public abstract class GlassfishGenericServerBehaviour extends
 			}
 		}
 	}
-
-	/**
-	 * 
-	 * @return ServerStatus for possible V3 server. If server is not a V3 one,
-	 *         we will know If the server is a V3 server but with a different
-	 *         install location that this one, we can also detect this
-	 */
-	public ServerStatus getServerStatus() {
-		GlassfishGenericServer server = getSunAppServer();
-		CommandLocation command = new CommandLocation();
-		try {
-			Future<ResultMap<String, String>> future = ServerAdmin
-					.<ResultMap<String, String>> exec(server, command,
-							new IdeContext());
-			ResultMap<String, String> result = future.get(30, TimeUnit.SECONDS);
-
-			if (result.getState() == TaskState.RUNNING) {
-				// let try one more time...it is possible to have running and
-				// then immediately completed..
-				SunAppSrvPlugin
-						.logMessage("getV3ServerStatus trying one more time"); //$NON-NLS-1$
-				result = future.get(15, TimeUnit.SECONDS);
-			}
-			if (result.getState() == TaskState.COMPLETED) {
-				String installRoot = server.getDomainsFolder() + File.separator
-						+ server.getDomainName();
-				String targetInstallRoot = result.getValue().get(
-						"Domain-Root_value");
-				// SunAppSrvPlugin.logMessage("IsReady is targetInstallRoot="+targetInstallRoot
-				// );
-				// SunAppSrvPlugin.logMessage("IsReady is installRoot="+installRoot
-				// );
-				if (installRoot != null && targetInstallRoot != null) {
-					File installDir = new File(installRoot);
-					File targetInstallDir = new File(targetInstallRoot);
-					if (installDir.getCanonicalPath().equals(
-							targetInstallDir.getCanonicalPath())) {
-						SunAppSrvPlugin
-								.logMessage("getV3ServerStatus DOMAINDIR_MATCHING"); //$NON-NLS-1$
-						return ServerStatus.DOMAINDIR_MATCHING;
-					} else {
-						SunAppSrvPlugin
-								.logMessage("getV3ServerStatus DOMAINDIR_NOT_MATCHING"); //$NON-NLS-1$
-						return ServerStatus.DOMAINDIR_NOT_MATCHING;
-					}
-				} else {
-					SunAppSrvPlugin
-							.logMessage("getV3ServerStatus 3 DOMAINDIR_NOT_MATCHING"); //$NON-NLS-1$
-					return ServerStatus.DOMAINDIR_NOT_MATCHING;
-				}
-			} else if (result.getState() == TaskState.FAILED) {
-				SunAppSrvPlugin.logMessage("apparently CREDENTIAL_ERROR"); //$NON-NLS-1$
-				return ServerStatus.CREDENTIAL_ERROR;
-
-			} else {
-				SunAppSrvPlugin.logMessage("Command Still running!!! error"); //$NON-NLS-1$
-				return ServerStatus.CREDENTIAL_ERROR;
-			}
-		} catch (Exception ex) {
-			SunAppSrvPlugin.logMessage("IsReady is failing=", ex); //$NON-NLS-1$
-			SunAppSrvPlugin.logMessage("getV3ServerStatus 2 CONNEXTION_ERROR"); //$NON-NLS-1$
-			return ServerStatus.CONNEXTION_ERROR;
-		}
-	}
+	
+	public abstract ServerStatus getServerStatus();
 
 	public void updateHttpPort() {
 		GlassfishGenericServer server = getSunAppServer();

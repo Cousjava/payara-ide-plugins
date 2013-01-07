@@ -1,22 +1,7 @@
-/*
- * Copyright (c) 1997-2011 Oracle and/or its affiliates. All rights reserved.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Sun Microsystems
- *     Oracle
- */
-
 package com.sun.enterprise.jst.server.sunappsrv;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -35,36 +20,31 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
-import org.eclipse.jdt.launching.AbstractVMInstall;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMConnector;
+import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
-import org.glassfish.tools.ide.admin.ResultProcess;
 import org.glassfish.tools.ide.server.FetchLog;
-import org.glassfish.tools.ide.server.ServerTasks;
-import org.glassfish.tools.ide.server.ServerTasks.StartMode;
+import org.glassfish.tools.ide.server.parser.JvmConfigReader;
+import org.glassfish.tools.ide.server.parser.TreeParser;
 import org.glassfish.tools.ide.utils.ServerUtils;
-import org.glassfish.tools.ide.utils.Utils;
 
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour.ServerStatus;
 import com.sun.enterprise.jst.server.sunappsrv.log.GlassfishConsoleManager;
 import com.sun.enterprise.jst.server.sunappsrv.log.IGlassFishConsole;
 import com.sun.enterprise.jst.server.sunappsrv.preferences.PreferenceConstants;
 
-@SuppressWarnings("restriction")
-public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate {
+public class SunServerLaunchDelegate extends
+		AbstractJavaLaunchConfigurationDelegate {
 
 	public static final String GFV3_MODULES_DIR_NAME = "modules"; //$NON-NLS-1$
 
-	private static Pattern debugPortPattern = Pattern
-			.compile("-Xrunjdwp:\\S*address=([0-9]+)");
-
-	public SunAppServerLaunch() {
+	public SunServerLaunchDelegate() {
 		// SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch ctor");
 	}
 
@@ -72,6 +52,14 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 			throws CoreException {
 		throw new CoreException(new Status(IStatus.ERROR,
 				SunAppSrvPlugin.SUNPLUGIN_ID, code, message, exception));
+	}
+
+	private String getScriptExtension() {
+		String ret = ""; //$NON-NLS-1$
+		if (File.separator.equals("\\")) {//$NON-NLS-1$
+			ret = ".bat"; //$NON-NLS-1$
+		}
+		return ret;
 	}
 
 	public void launch(ILaunchConfiguration configuration, String mode,
@@ -83,7 +71,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 			abort("missing Server", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
 		}
 
-		final GlassfishGenericServerBehaviour serverBehavior = (GlassfishGenericServerBehaviour) server
+		final GlassfishV2ServerBehavior serverBehavior = (GlassfishV2ServerBehavior) server
 				.loadAdapter(ServerBehaviourDelegate.class, null);
 		final GlassfishGenericServer serverAdapter = serverBehavior
 				.getSunAppServer();
@@ -91,7 +79,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 		// find out if our server is really running and ready
 		boolean isReady = isServerReady(serverBehavior);
 		if (isReady) {
-			System.out.println("hurrrraaaaa");
 			SunAppSrvPlugin.logMessage("server is already started!!!");
 		}
 		try {
@@ -116,54 +103,47 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 	}
 
 	private void startDASAndTarget(final GlassfishGenericServer serverAdapter,
-			GlassfishGenericServerBehaviour serverBehavior,
+			GlassfishV2ServerBehavior serverBehavior,
 			ILaunchConfiguration configuration, ILaunch launch, String mode,
 			IProgressMonitor monitor) throws CoreException,
 			InterruptedException {
-		String domain = serverBehavior.getDomainName();
-		String domainAbsolutePath = serverBehavior.getDomainDir()
-				+ File.separator + domain;
-
-		File bootstrapJar = ServerUtils.getJarName(
-				serverAdapter.getServerInstallationDirectory(),
-				ServerUtils.GFV3_JAR_MATCHER);
-		if (bootstrapJar == null) {
-			abort("bootstrap jar not found", null,
-					IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
-		}
-
-		// TODO which java to use? for now ignore the one from launch config
-		AbstractVMInstall/* IVMInstall */vm = (AbstractVMInstall) serverBehavior
-				.getRuntimeDelegate().getVMInstall();
-
-		// IVMInstall vm2 = verifyVMInstall(configuration);
-
-		StartupArgsImpl startArgs = new StartupArgsImpl();
-		startArgs.setJavaHome(vm.getInstallLocation().getAbsolutePath());
-		// Program & VM args
-		String pgmArgs = getProgramArguments(configuration);
-		String vmArgs = getVMArguments(configuration);
-		startArgs.addJavaArgs(vmArgs);
-		startArgs.addGlassfishArgs(pgmArgs);
-		startArgs.addGlassfishArgs("--domain " + domain);
-		startArgs.addGlassfishArgs("--domaindir "
-				+ Utils.quote(domainAbsolutePath));
-		StartMode startMode = StartMode.START;
-		if ("debug".equals(mode)) {
-			startMode = StartMode.DEBUG;
-		}
-
-		// String[] envp = getEnvironment(configuration);
 
 		IPreferenceStore store = SunAppSrvPlugin.getInstance()
 				.getPreferenceStore();
-		// boolean verboseMode =
-		// store.getBoolean(PreferenceConstants.ENABLE_START_VERBOSE);
+		boolean verboseMode = store
+				.getBoolean(PreferenceConstants.ENABLE_START_VERBOSE);
+		String verboseFlag = "--verbose=" + verboseMode;
+
+		String asadminCmd = serverAdapter.getServerInstallationDirectory()
+				+ "/bin/asadmin" + getScriptExtension(); //$NON-NLS-1$
+		String domain = serverBehavior.getDomainName();
+		String debugFlag = "--debug=false"; //$NON-NLS-1$
+		if (mode.equals("debug")) { //$NON-NLS-1$
+			debugFlag = "--debug"; //$NON-NLS-1$
+		}
+		ProcessBuilder pb = null;
+//		AbstractVMInstall/* IVMInstall */vm = (AbstractVMInstall) serverBehavior
+//				.getRuntimeDelegate().getVMInstall();
+
+		IVMInstall vm2 = verifyVMInstall(configuration);
+
+		// String mainTypeName = tomcatServer.getRuntimeClass();
 
 		setDefaultSourceLocator(launch, configuration);
 
-		final ResultProcess process = ServerTasks.startServer(serverAdapter,
-				startArgs, startMode);
+		pb = new ProcessBuilder(asadminCmd,
+				"start-domain", "--domaindir", serverBehavior.getDomainDir(), //$NON-NLS-1$ //$NON-NLS-2$
+				debugFlag, verboseFlag, domain);
+		SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(
+				serverBehavior.getStopV2Command());
+
+		pb.directory(new File(serverAdapter.getServerInstallationDirectory()));
+		//Process process = null;
+		try {
+			pb.start();
+		} catch (IOException e1) {
+			abort("error Launching Executable", e1, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
+		}
 
 		try {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
@@ -173,7 +153,8 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 					IGlassFishConsole console = GlassfishConsoleManager
 							.showConsole(serverAdapter);
 					if (!console.isLogging())
-						console.startLogging(FetchLog.create(serverAdapter, true));
+						console.startLogging(FetchLog.create(serverAdapter,
+								true));
 				}
 			});
 		} catch (Exception e) {
@@ -186,25 +167,11 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 			String sampleDBDir = store
 					.getString(PreferenceConstants.JAVA_DB_LOCATION);
 			String[] command = ((sampleDBDir == null) ? new String[] {
-					vm.getInstallLocation() + "/bin/java", //$NON-NLS-1$
-					"-jar", //$NON-NLS-1$
-					serverAdapter.getServerInstallationDirectory()
-							+ "/modules/admin-cli.jar", "start-database" } //$NON-NLS-1$ //$NON-NLS-2$
-					: new String[] {
-							vm.getInstallLocation() + "/bin/java", //$NON-NLS-1$
-							"-jar", //$NON-NLS-1$
-							serverAdapter.getServerInstallationDirectory()
-									+ "/modules/admin-cli.jar", //$NON-NLS-1$
-							"start-database", "--dbhome", sampleDBDir //$NON-NLS-1$ //$NON-NLS-2$
-					});
-			// add also the stop on exit command:
+					asadminCmd, "start-database" } : new String[] { asadminCmd, //$NON-NLS-1$
+					"start-database", "--dbhome", sampleDBDir }); //$NON-NLS-1$ //$NON-NLS-2$
+			// stop the db on exit of the IDE:
 			SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(
-					new String[] {
-							vm.getInstallLocation() + "/bin/java", //$NON-NLS-1$
-							"-jar", //$NON-NLS-1$
-							serverAdapter.getServerInstallationDirectory()
-									+ "/modules/admin-cli.jar", //$NON-NLS-1$
-							"stop-database" }); //$NON-NLS-1$
+					new String[] { asadminCmd, "stop-database" }); //$NON-NLS-1$
 			try {
 				Process process2 = Execute
 						.launch(null,
@@ -223,7 +190,7 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 		// wait (and update http port)
 		waitUntilStarted(serverBehavior, ServerUtil.getServer(configuration)
 				.getStartTimeout(), monitor);
-		
+
 		serverBehavior.updateHttpPort();
 
 		// /////startPingingThread();
@@ -231,17 +198,13 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 		if (mode.equals("debug")) { //$NON-NLS-1$
 
 			Map<String, String> arg = new HashMap<String, String>();
-			Integer debugPort = null;
-			try {
-				debugPort = getDebugPort(process.getValue().getArguments());
-			} catch (NumberFormatException e) {
-				abort("Server run in debug mode but the debug port couldn't be determined!",
-						e, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
-			}
-			if (debugPort == null) {
-				abort("Server run in debug mode but the debug port couldn't be determined!",
-						null,
-						IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+			File domainXml = new File(serverAdapter.getDomainsFolder()
+					+ File.separator + serverAdapter.getDomainName()
+					+ File.separator + "config" + File.separator + "domain.xml");
+			Integer debugPort;
+			if (!domainXml.exists()
+					|| (debugPort = readDebugPort(domainXml)) == null) {
+				debugPort = 9009;
 			}
 
 			arg.put("hostname", "localhost"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -264,11 +227,31 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 
 	}
 
+	private Integer readDebugPort(File domainXml) {
+		Integer result = null;
+		JvmConfigReader jvmReader = new JvmConfigReader("server");
+		TreeParser.readXml(domainXml, jvmReader);
+		String debugOpts = jvmReader.getPropMap().get("debug-options");
+		if (debugOpts != null) {
+			Pattern p = Pattern.compile("address=([0-9]+)");
+			Matcher m = p.matcher(debugOpts);
+			if (m.find()) {
+				String debugPort = m.group(1);
+				try {
+					result = Integer.parseInt(debugPort);
+				} catch (NumberFormatException e) {
+				}
+			}
+
+		}
+		return result;
+	}
+
 	private void waitUntilStarted(
 			GlassfishGenericServerBehaviour serverBehavior, int startTimeout,
 			IProgressMonitor monitor) throws InterruptedException,
 			CoreException {
-		for (int i = 0; true; i++) {
+		while (true) {
 			try {
 				monitor.worked(10);
 				Thread.sleep(1000);// 1 sec
@@ -339,14 +322,6 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 		}
 	}
 
-	private static Integer getDebugPort(String startArgs) {
-		Matcher m = debugPortPattern.matcher(startArgs);
-		if (m.find()) {
-			return Integer.parseInt(m.group(1));
-		}
-		return null;
-	}
-
 	class GlassfishServerDebugListener implements IDebugEventSetListener {
 
 		private GlassfishGenericServerBehaviour serverBehavior;
@@ -387,5 +362,4 @@ public class SunAppServerLaunch extends AbstractJavaLaunchConfigurationDelegate 
 			}
 		}
 	}
-
 }
