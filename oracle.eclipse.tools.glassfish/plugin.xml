@@ -1655,19 +1655,8 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
             name="%menu.updatecenter">
       </command>
       <command
-            description="%menu.theaquarium"
-            id="oracle.eclipse.tools.glassfish.commands.ShowAquarium"
-            name="%menu.theaquarium">
-         <commandParameter
-               id="oracle.eclipse.tools.glassfish.commands.urlParam"
-               name="url"
-               optional="false">
-         </commandParameter>
-      </command>
-      <command
-            description="%menu.glassfish.getsupport"
-            id="oracle.eclipse.tools.glassfish.commands.GetSupport"
-            name="%menu.glassfish.getsupport">
+            id="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
+            name="OpenUrlCommand">
          <commandParameter
                id="oracle.eclipse.tools.glassfish.commands.urlParam"
                name="url"
@@ -1726,11 +1715,7 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
       </handler>
       <handler
             class="com.sun.enterprise.jst.server.sunappsrv.handlers.ShowURLHandler"
-            commandId="oracle.eclipse.tools.glassfish.commands.ShowAquarium">
-      </handler>
-      <handler
-            class="com.sun.enterprise.jst.server.sunappsrv.handlers.ShowURLHandler"
-            commandId="oracle.eclipse.tools.glassfish.commands.GetSupport">
+            commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand">
       </handler>
 	</extension>
   <extension
@@ -1739,8 +1724,9 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
            allPopups="false"
            locationURI="toolbar:org.eclipse.wst.server.ui.ServersView?after=additions">
         <command
-              commandId="oracle.eclipse.tools.glassfish.commands.ShowAquarium"
+              commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
               icon="icons/obj16/resources.gif"
+              label="%menu.theaquarium"
               style="push">
            <parameter
                  name="oracle.eclipse.tools.glassfish.commands.urlParam"
@@ -1748,8 +1734,9 @@ point="org.eclipse.jst.common.project.facet.ui.libraryProviderActionPanels">
            </parameter>
         </command>
         <command
-              commandId="oracle.eclipse.tools.glassfish.commands.GetSupport"
+              commandId="oracle.eclipse.tools.glassfish.commands.OpenUrlCommand"
               icon="icons/obj16/sunappsrv.gif"
+              label="%menu.glassfish.getsupport"
               style="push">
            <parameter
                  name="oracle.eclipse.tools.glassfish.commands.urlParam"
