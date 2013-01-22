@@ -10,6 +10,7 @@ import org.glassfish.tools.ide.server.parser.HttpData;
 import org.glassfish.tools.ide.server.parser.HttpListenerReader;
 import org.glassfish.tools.ide.server.parser.JmxConnectorReader;
 import org.glassfish.tools.ide.server.parser.NetworkListenerReader;
+import org.glassfish.tools.ide.server.parser.TargetConfigNameReader;
 import org.glassfish.tools.ide.server.parser.TreeParser;
 
 public class GlassfishV2Server extends GlassfishGenericServer {
@@ -39,9 +40,16 @@ public class GlassfishV2Server extends GlassfishGenericServer {
 		final Map<String, HttpData> httpMap = new LinkedHashMap<String, HttpData>();
 
 		if (domainXml.exists()) {
-			JmxConnectorReader jmxReader = new JmxConnectorReader();
-			HttpListenerReader httpListenerReader = new HttpListenerReader();
-			NetworkListenerReader networkListenerReader = new NetworkListenerReader();
+			TargetConfigNameReader configNameReader = new TargetConfigNameReader();
+			TreeParser.readXml(domainXml, configNameReader);
+			String configName = configNameReader.getTargetConfigName();
+			if (configName == null) {
+				return false;
+			}
+			
+			JmxConnectorReader jmxReader = new JmxConnectorReader(configName);
+			HttpListenerReader httpListenerReader = new HttpListenerReader(configName);
+			NetworkListenerReader networkListenerReader = new NetworkListenerReader(configName);
 
 			try {
 				TreeParser.readXml(domainXml, httpListenerReader,

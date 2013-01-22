@@ -57,6 +57,7 @@ import org.glassfish.tools.ide.admin.Command;
 import org.glassfish.tools.ide.admin.CommandAddResources;
 import org.glassfish.tools.ide.admin.CommandDeploy;
 import org.glassfish.tools.ide.admin.CommandGetProperty;
+import org.glassfish.tools.ide.admin.CommandStopDAS;
 import org.glassfish.tools.ide.admin.CommandUndeploy;
 import org.glassfish.tools.ide.admin.CommandVersion;
 import org.glassfish.tools.ide.admin.ResultMap;
@@ -524,7 +525,7 @@ public abstract class GlassfishGenericServerBehaviour extends
 	}
 	
 	private void stopImpl(GlassfishGenericServer server) {
-		ResultString result = ServerTasks.stopServer(server);
+		ResultString result = CommandStopDAS.stopDAS(server);
 
 		if (!TaskState.COMPLETED.equals(result.getState())) {
 			SunAppSrvPlugin.logMessage("stop-domain v3 is failing. Reason: " + result.getValue()); //$NON-NLS-1$
