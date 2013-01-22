@@ -40,6 +40,7 @@ import org.glassfish.tools.ide.data.GlassFishVersion;
 import org.glassfish.tools.ide.server.parser.HttpData;
 import org.glassfish.tools.ide.server.parser.HttpListenerReader;
 import org.glassfish.tools.ide.server.parser.NetworkListenerReader;
+import org.glassfish.tools.ide.server.parser.TargetConfigNameReader;
 import org.glassfish.tools.ide.server.parser.TreeParser;
 
 import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
@@ -475,9 +476,14 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 
 		if (domainXml.exists()) {
 			//JmxConnectorReader jmxReader = new JmxConnectorReader();
-			HttpListenerReader httpListenerReader = new HttpListenerReader();
-			NetworkListenerReader networkListenerReader = new NetworkListenerReader();
-
+			TargetConfigNameReader configNameReader = new TargetConfigNameReader();
+			TreeParser.readXml(domainXml, configNameReader);
+			String configName = configNameReader.getTargetConfigName();
+			if (configName == null) {
+				return false;
+			}
+			HttpListenerReader httpListenerReader = new HttpListenerReader(configName);
+			NetworkListenerReader networkListenerReader = new NetworkListenerReader(configName);
 			try {
 				TreeParser.readXml(domainXml, httpListenerReader,
 						networkListenerReader);
