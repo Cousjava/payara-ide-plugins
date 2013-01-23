@@ -18,6 +18,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.model.RuntimeProcess;
 import org.eclipse.jdt.internal.debug.core.model.JDIDebugTarget;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
@@ -138,9 +139,9 @@ public class SunServerLaunchDelegate extends
 				serverBehavior.getStopV2Command());
 
 		pb.directory(new File(serverAdapter.getServerInstallationDirectory()));
-		//Process process = null;
 		try {
-			pb.start();
+			Process p = pb.start();
+			new RuntimeProcess(launch, p, "...", null);
 		} catch (IOException e1) {
 			abort("error Launching Executable", e1, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
 		}
@@ -186,7 +187,7 @@ public class SunServerLaunchDelegate extends
 				e.printStackTrace();
 			}
 		}
-
+				
 		// wait (and update http port)
 		waitUntilStarted(serverBehavior, ServerUtil.getServer(configuration)
 				.getStartTimeout(), monitor);
@@ -225,6 +226,7 @@ public class SunServerLaunchDelegate extends
 							"localhost:" + debugPort));
 		}
 
+		
 	}
 
 	private Integer readDebugPort(File domainXml) {
