@@ -79,6 +79,28 @@ public class GlassfishV2Server extends GlassfishGenericServer {
 				SunAppSrvPlugin
 						.logMessage("reading from domain.xml adminServerPortNumber=" + getAdminServerPort()); //$NON-NLS-1$
 
+				HttpData httpData = null;
+                HttpData httpsData = null;
+                
+                for(HttpData data: httpMap.values()) {
+                    if(data.isSecure()) {
+                        if(httpsData == null) {
+                            httpsData = data;
+                        }
+                    } else {
+                        if(httpData == null) {
+                            httpData = data;
+                        }
+                    }
+                    if(httpData != null && httpsData != null) {
+                        break;
+                    }
+                }
+                
+                int httpPort = httpData != null ? httpData.getPort() : -1;
+                getProps().put(SERVERPORT, String.valueOf(httpPort));
+                SunAppSrvPlugin
+					.logMessage("reading from domain.xml serverPortNumber=" + getServerPort()); //$NON-NLS-1$
 				try {
 					int port = Integer.parseInt(jmxReader.getResult());
 					jmxPort = "" + port;
@@ -87,7 +109,7 @@ public class GlassfishV2Server extends GlassfishGenericServer {
 							.logMessage("error reading one jmx port" + e);
 				}
 
-				result = adminPort != -1;
+				result = (adminPort != -1) && (httpPort != -1);
 			} catch (IllegalStateException ex) {
 				SunAppSrvPlugin.logMessage("error IllegalStateException ", ex); //$NON-NLS-1$
 			}
