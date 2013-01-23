@@ -4,6 +4,11 @@ import java.io.File;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
 import org.glassfish.tools.ide.admin.CommandLocation;
 import org.glassfish.tools.ide.admin.ResultMap;
 import org.glassfish.tools.ide.admin.ServerAdmin;
@@ -14,6 +19,84 @@ import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour.S
 
 public class GlassfishV3ServerBehavior extends GlassfishGenericServerBehaviour {
 
+	/**
+	 * Publish a single module to the server.
+	 * <p>
+	 * This method is called by the server core framework, in response to a call
+	 * to <code>IServer.publish()</code>. Clients should never call this method
+	 * directly.
+	 * </p>
+	 * <p>
+	 * If the deltaKind is IServer.REMOVED, the module may have been completely
+	 * deleted and does not exist anymore. In this case, a dummy module (with
+	 * the correct id) will be passed to this method.
+	 * </p>
+	 * <p>
+	 * It is recommended that clients implementing this method be responsible
+	 * for setting the module state.
+	 * </p>
+	 * 
+	 * @param kind
+	 *            one of the IServer.PUBLISH_XX constants. Valid values are:
+	 *            <ul>
+	 *            <li><code>PUBLISH_FULL</code>- indicates a full publish.</li>
+	 *            <li><code>PUBLISH_INCREMENTAL</code>- indicates a incremental
+	 *            publish.
+	 *            <li><code>PUBLISH_AUTO</code>- indicates an automatic
+	 *            incremental publish.</li>
+	 *            <li><code>PUBLISH_CLEAN</code>- indicates a clean request.
+	 *            Clean throws out all state and cleans up the module on the
+	 *            server before doing a full publish.
+	 *            </ul>
+	 * @param module
+	 *            the module to publish
+	 * @param deltaKind
+	 *            one of the IServer publish change constants. Valid values are:
+	 *            <ul>
+	 *            <li><code>ADDED</code>- indicates the module has just been
+	 *            added to the server and this is the first publish.
+	 *            <li><code>NO_CHANGE</code>- indicates that nothing has changed
+	 *            in the module since the last publish.</li>
+	 *            <li><code>CHANGED</code>- indicates that the module has been
+	 *            changed since the last publish. Call
+	 *            <code>getPublishedResourceDelta()</code> for details of the
+	 *            change.
+	 *            <li><code>REMOVED</code>- indicates the module has been
+	 *            removed and should be removed/cleaned up from the server.
+	 *            </ul>
+	 * @param monitor
+	 *            a progress monitor, or <code>null</code> if progress reporting
+	 *            and cancellation are not desired
+	 * @throws CoreException
+	 *             if there is a problem publishing the module
+	 */
+	public void publishModule(int kind, int deltaKind, IModule[] module,
+			IProgressMonitor monitor) throws CoreException {
+
+		// first, test if the server is still existing
+		File serverloc = new File(getSunAppServer()
+				.getServerInstallationDirectory());
+		if (!serverloc.exists()) {
+			SunAppSrvPlugin.logMessage(
+					NLS.bind(Messages.serverDirectoryGone,
+							serverloc.getAbsolutePath()), null);
+			return;
+
+		}
+
+		needARedeploy = true; // by default
+
+		long t = System.currentTimeMillis();
+		if (module.length > 1) {// only publish root modules, i.e web modules
+			setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
+		} else {
+			publishModuleForGlassFishV3(kind, deltaKind, module, monitor);
+			SunAppSrvPlugin.logMessage("done publishModule in "
+					+ (System.currentTimeMillis() - t) + " ms");
+		}
+
+	}
+	
 	/**
 	 * 
 	 * @return ServerStatus for possible V3 server. If server is not a V3 one,
