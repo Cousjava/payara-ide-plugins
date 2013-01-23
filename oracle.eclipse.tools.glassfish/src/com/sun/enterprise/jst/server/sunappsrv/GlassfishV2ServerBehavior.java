@@ -218,6 +218,14 @@ public class GlassfishV2ServerBehavior extends GlassfishGenericServerBehaviour {
 		if (stopLogging)
 			GlassfishConsoleManager.getConsole(server).stopLogging();
 	}
+	
+	
+
+	@Override
+	public void updateHttpPort() {
+		// read domain config
+		getSunAppServer().readDomainConfig();
+	}
 
 	private void stopImpl(GlassfishGenericServer server) {
 		// set arguments to be passed to Runtime.exec
