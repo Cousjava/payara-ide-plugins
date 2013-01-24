@@ -6,10 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.Map.Entry;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -29,11 +25,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.componentcore.internal.util.ComponentUtilities;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.util.PublishHelper;
-import org.glassfish.tools.ide.admin.CommandGetProperty;
-import org.glassfish.tools.ide.admin.ResultMap;
-import org.glassfish.tools.ide.admin.ServerAdmin;
-import org.glassfish.tools.ide.admin.TaskState;
-import org.glassfish.tools.ide.data.IdeContext;
 
 import com.sun.enterprise.jst.server.sunappsrv.log.GlassfishConsoleManager;
 
@@ -91,85 +82,6 @@ public class GlassfishV2ServerBehavior extends GlassfishGenericServerBehaviour {
 					// what can we do there
 
 				}
-
-			}
-		}
-	}
-
-	@Override
-	protected void publishDeployedDirectory(int deltaKind, Properties p,
-			IModule[] module, IProgressMonitor monitor) throws CoreException {
-		// ludo using PublishHelper now to control the temp area to be
-		// in the same file system of the deployed apps so that the mv operation
-		// Eclipse is doing sometimes can work.
-		PublishHelper helper = new PublishHelper(new Path(
-				getDomainDirWithDomainName() + "/eclipseAppsTmp").toFile());
-
-		if (deltaKind == REMOVED) {
-			String publishPath = (String) p.get(module[0].getId());
-			SunAppSrvPlugin.logMessage("REMOVED in publishPath" + publishPath);
-
-			if (publishPath != null) {
-				try {
-					File pub = new File(publishPath);
-					if (pub.exists()) {
-						SunAppSrvPlugin
-								.logMessage("PublishUtil.deleteDirectory called");
-						IStatus[] stat = PublishHelper.deleteDirectory(pub,
-								monitor);
-						analyseReturnedStatus(stat);
-					}
-				} catch (Exception e) {
-					throw new CoreException(new Status(IStatus.WARNING,
-							SunAppSrvPlugin.SUNPLUGIN_ID, 0, "cannot remove "
-									+ module[0].getName(), e));
-				}
-			}
-		} else {
-			IPath path = new Path(getDomainDirWithDomainName()
-					+ "/eclipseApps/" + module[0].getName());
-
-			// IModuleResource[] moduleResource = getResources(module);
-			// SunAppSrvPlugin.logMessage("IModuleResource len="+moduleResource.length);
-			// for (int j=0;j<moduleResource.length ;j++
-			// SunAppSrvPlugin.logMessage("IModuleResource n="+moduleResource[j].getName()+"-----"+moduleResource[j].getModuleRelativePath());
-
-			String contextRoot = null;
-			AssembleModules assembler = new AssembleModules(module[0], path,
-					getSunAppServer(), helper);
-			SunAppSrvPlugin.logMessage("PublishUtil.publishSmart called");
-
-			// either ear or web.
-			if (AssembleModules.isModuleType(module[0], "jst.web")) {
-				SunAppSrvPlugin.logMessage("is WEB");
-				assembler.assembleWebModule(monitor);
-
-				needARedeploy = assembler.needsARedeployment();
-				String projectContextRoot = ComponentUtilities
-						.getServerContextRoot(module[0].getProject());
-				contextRoot = (((projectContextRoot != null) && (projectContextRoot
-						.length() > 0)) ? projectContextRoot : module[0]
-						.getName());
-			} else if (AssembleModules.isModuleType(module[0], "jst.ear")) {
-				SunAppSrvPlugin.logMessage("is EAR");
-				assembler.assembleDirDeployedEARModule(monitor);
-				needARedeploy = assembler.needsARedeployment();
-
-			} else {// default
-				assembler.assembleNonWebOrNonEARModule(monitor);
-				needARedeploy = assembler.needsARedeployment();
-
-			}
-
-			// deploy the sun resource file if there in path:
-			registerSunResource(module, p, path);
-
-			String spath = "" + path;
-			// /BUG NEED ALSO to test if it has been deployed
-			// once...isDeployed()
-			if (!needARedeploy) {
-				SunAppSrvPlugin
-						.logMessage("optimal: NO NEED TO TO A REDEPLOYMENT, !!!");
 
 			}
 		}
