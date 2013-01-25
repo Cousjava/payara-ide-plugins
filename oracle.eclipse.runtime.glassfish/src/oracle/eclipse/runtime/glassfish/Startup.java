@@ -28,7 +28,7 @@ public class Startup implements org.eclipse.wst.server.core.internal.IStartup {
 		boolean showOnActivity = preferences.getShowOnActivity();
 		preferences.setShowOnActivity(false);
 		Bundle bundle = //Activator.getDefault().getBundle();
-				Platform.getBundle("oracle.eclipse.runtime.glassfish.build312");
+				Platform.getBundle("oracle.eclipse.runtime.glassfish.build3122");
 		try {
 			URL url = FileLocator.resolve(bundle.getEntry("/"));
 
@@ -41,7 +41,7 @@ public class Startup implements org.eclipse.wst.server.core.internal.IStartup {
 					&& glassfishv3Location.isDirectory()) {
 
 				new V3Configurator(glassfishv3Location,
-						"org.glassfish.jst.server.glassfish312")
+						"org.glassfish.jst.server.glassfish3122")
 						.configure();
 
 			}

@@ -31,7 +31,7 @@ import org.glassfish.tools.ide.admin.ServerAdmin;
 import org.glassfish.tools.ide.admin.TaskState;
 import org.glassfish.tools.ide.data.IdeContext;
 
-import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
+import com.sun.enterprise.jst.server.sunappsrv.serverview.Utils;
 
 public class GlassfishV3ServerBehavior extends GlassfishGenericServerBehaviour {
 

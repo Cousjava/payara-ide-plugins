@@ -24,8 +24,8 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.DeployedWebServicesNode;
+import com.sun.enterprise.jst.server.sunappsrv.serverview.Utils;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.WebServiceNode;
 
 public 	class TestWebServiceAction extends Action {

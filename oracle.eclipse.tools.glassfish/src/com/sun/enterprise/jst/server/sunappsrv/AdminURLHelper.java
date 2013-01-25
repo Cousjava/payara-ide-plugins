@@ -16,7 +16,7 @@ package com.sun.enterprise.jst.server.sunappsrv;
 
 import org.eclipse.wst.server.core.IServer;
 
-import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
+import com.sun.enterprise.jst.server.sunappsrv.serverview.Utils;
 
 public class AdminURLHelper {
 	private static final String fallbackHost = "localhost";  //$NON-NLS-1$

@@ -23,7 +23,6 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.commands.ResourceDesc;
 
 public class ResourcesNode extends TreeNode {
 

@@ -43,8 +43,6 @@ import org.glassfish.tools.ide.server.parser.NetworkListenerReader;
 import org.glassfish.tools.ide.server.parser.TargetConfigNameReader;
 import org.glassfish.tools.ide.server.parser.TreeParser;
 
-import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand;
-import com.sun.enterprise.jst.server.sunappsrv.commands.ServerCommand.SetPropertyCommand;
 import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
 
 /* wrapper to get rw access to all the props defined in the serverdef files
@@ -520,18 +518,6 @@ public abstract class GlassfishGenericServer extends GenericServer implements
 			}
 		}
 		return result;
-	}
-
-	public CommandFactory getCommandFactory() {
-
-		return new CommandFactory() {
-			public SetPropertyCommand getSetPropertyCommand(String name,
-					String value) {
-				return new ServerCommand.SetPropertyCommand(name, value,
-						"DEFAULT={0}={1}");
-			}
-		};
-
 	}
 
 	public String getDomainConfigurationFilePath() {

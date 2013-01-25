@@ -20,7 +20,6 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
-import com.sun.enterprise.jst.server.sunappsrv.commands.WSDesc;
 
 /**
  * A deployed web service node in the server view

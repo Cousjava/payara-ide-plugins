@@ -25,9 +25,6 @@ import org.glassfish.tools.ide.admin.TaskState;
 import org.glassfish.tools.ide.data.GlassFishServer;
 import org.glassfish.tools.ide.data.IdeContext;
 
-import com.sun.enterprise.jst.server.sunappsrv.commands.AppDesc;
-import com.sun.enterprise.jst.server.sunappsrv.commands.ResourceDesc;
-import com.sun.enterprise.jst.server.sunappsrv.commands.WSDesc;
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.PartialCompletionException;
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.ResourceUtils;
 
