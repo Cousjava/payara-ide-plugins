@@ -18,7 +18,6 @@ import java.util.Map.Entry;
 
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.commands.AppDesc;
 
 public class DeployedApplicationsNode extends TreeNode {
 

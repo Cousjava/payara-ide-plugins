@@ -138,28 +138,14 @@ public class SunServerLaunchDelegate extends
 		SunAppSrvPlugin.getInstance().addCommandToExecuteAtExit(
 				serverBehavior.getStopV2Command());
 
+		startLogging(serverAdapter, serverBehavior);
+		
 		pb.directory(new File(serverAdapter.getServerInstallationDirectory()));
 		try {
 			Process p = pb.start();
 			new RuntimeProcess(launch, p, "...", null);
 		} catch (IOException e1) {
 			abort("error Launching Executable", e1, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR); //$NON-NLS-1$
-		}
-
-		try {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					//                        String logFile = serverBehavior.getDomainDirWithDomainName() + "/logs/server.log"; //$NON-NLS-1$
-					// GlassFishConsole.showConsole(serverAdapter);
-					IGlassFishConsole console = GlassfishConsoleManager
-							.showConsole(serverAdapter);
-					if (!console.isLogging())
-						console.startLogging(FetchLog.create(serverAdapter,
-								true));
-				}
-			});
-		} catch (Exception e) {
-			SunAppSrvPlugin.logMessage("page.showView", e); //$NON-NLS-1$
 		}
 
 		boolean javaDBStart = store
@@ -275,6 +261,28 @@ public class SunServerLaunchDelegate extends
 				}
 				return;
 			}
+		}
+	}
+	
+	private void startLogging(final GlassfishGenericServer serverAdapter, final GlassfishGenericServerBehaviour serverBehavior) {
+		try {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					File logFile = new File(serverBehavior.getDomainDirWithDomainName() + "/logs/server.log"); //$NON-NLS-1$
+					try {
+						logFile.createNewFile();
+					} catch (IOException e) {
+						// ignore, log file exists
+					}
+					// GlassFishConsole.showConsole(serverAdapter);
+					IGlassFishConsole console = GlassfishConsoleManager
+							.showConsole(serverAdapter);
+					if (!console.isLogging())
+						console.startLogging(FetchLog.create(serverAdapter, true));
+				}
+			});
+		} catch (Exception e) {
+			SunAppSrvPlugin.logMessage("page.showView", e); //$NON-NLS-1$
 		}
 	}
 

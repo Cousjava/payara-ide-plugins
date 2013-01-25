@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: GlassFish 3.1.2 Application Server Runtime
-Bundle-SymbolicName: oracle.eclipse.runtime.glassfish312r2;singleton:=true
+Bundle-Name: GlassFish 3.1.2.2 Application Server Runtime
+Bundle-SymbolicName: oracle.eclipse.runtime.glassfish3122;singleton:=true
 Bundle-Version: 3.1.2.qualifier
 Bundle-Activator: oracle.eclipse.runtime.glassfish.Activator
 Bundle-Vendor: Oracle

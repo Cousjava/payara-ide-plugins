@@ -126,7 +126,7 @@ public class V3Configurator {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		IPath location = root.getLocation();
-		return "" + location + "/glassfish312eclipsedefaultdomain";
+		return "" + location + "/glassfish3122eclipsedefaultdomain";
 	}
 
 	private IRuntime getRuntimeByLocation(File glassfishLocation) {

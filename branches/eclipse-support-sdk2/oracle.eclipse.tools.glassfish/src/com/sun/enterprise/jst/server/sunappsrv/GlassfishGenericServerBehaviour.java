@@ -63,9 +63,9 @@ import org.glassfish.tools.ide.admin.TaskState;
 import org.glassfish.tools.ide.data.IdeContext;
 import org.glassfish.tools.ide.utils.ServerUtils;
 
-import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
 import com.sun.enterprise.jst.server.sunappsrv.derby.DerbyConfigurator;
 import com.sun.enterprise.jst.server.sunappsrv.log.GlassfishConsoleManager;
+import com.sun.enterprise.jst.server.sunappsrv.serverview.Utils;
 import com.sun.enterprise.jst.server.sunappsrv.sunresource.wizards.ResourceUtils;
 
 /**

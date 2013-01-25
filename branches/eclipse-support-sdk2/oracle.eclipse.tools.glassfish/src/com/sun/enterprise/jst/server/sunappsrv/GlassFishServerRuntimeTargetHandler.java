@@ -57,14 +57,14 @@ public class GlassFishServerRuntimeTargetHandler extends GenericServerRuntimeTar
            if (SunAppSrvPlugin.is3OrAbove(runtime)){//GlassFish v3.x.x
         	   b = Platform.getBundle("oracle.eclipse.tools.doc.javaee6");
                if (b!=null){
-            	   URL u= FileLocator.resolve(b.getEntry("/target/classes/javaee6doc/doc"));
+            	   URL u= FileLocator.resolve(b.getEntry("/javaee6doc/doc"));
                    javadocPath = ""+u;
               }
            } 
            else {//old ee 5
 	           b = Platform.getBundle("oracle.eclipse.tools.doc.javaee5");
 	           if (b!=null){
-	        	   URL u= FileLocator.resolve(b.getEntry("/target/classes/javaee5doc/docs/api"));
+	        	   URL u= FileLocator.resolve(b.getEntry("/javaee5doc/docs/api"));
 	               javadocPath = ""+u;
 	          }           }
 

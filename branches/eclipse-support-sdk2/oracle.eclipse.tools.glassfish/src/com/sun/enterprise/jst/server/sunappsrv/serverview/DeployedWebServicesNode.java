@@ -17,7 +17,6 @@ import java.util.List;
 
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.commands.WSDesc;
 
 public class DeployedWebServicesNode extends TreeNode {
 

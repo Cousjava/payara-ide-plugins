@@ -26,9 +26,9 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
 import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServerBehaviour;
 import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-import com.sun.enterprise.jst.server.sunappsrv.commands.Utils;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.DeployedApplicationsNode;
 import com.sun.enterprise.jst.server.sunappsrv.serverview.TreeNode;
+import com.sun.enterprise.jst.server.sunappsrv.serverview.Utils;
 
 public 	class OpenInBrowserAction extends Action {
 	ISelection selection;
