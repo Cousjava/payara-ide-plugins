@@ -39,13 +39,13 @@
    <extension
          point="org.eclipse.wst.server.core.serverTypes">
            <serverType
-             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.SunAppServerBehaviour"
-             class="com.sun.enterprise.jst.server.sunappsrv.SunAppServer"
+             behaviourClass="com.sun.enterprise.jst.server.sunappsrv.GlassfishV4ServerBehavior"
+             class="com.sun.enterprise.jst.server.sunappsrv.GlassfishV4Server"
              description="%serverTypeDescriptionglassfish40"
              hasConfiguration="false"
              id="org.glassfish.jst.server.glassfish40"
-             launchConfigId="com.sun.enterprise.jst.server.sunappsrv.SunAppServerLaunchConfigurationType"
-             launchModes="run,debug,profile"
+             launchConfigId="org.glassfish.jst.server.GlassfishServerLaunchConfigurationType"
+             launchModes="run,debug"
              name="%serverTypeNameglassfish40"
              runtime="true"
              runtimeTypeId="org.glassfish.jst.server.runtime.glassfish40"

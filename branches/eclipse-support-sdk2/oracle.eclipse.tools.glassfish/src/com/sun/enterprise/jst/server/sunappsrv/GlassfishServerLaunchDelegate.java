@@ -62,7 +62,7 @@ public class GlassfishServerLaunchDelegate extends AbstractJavaLaunchConfigurati
 	public static final String GFV3_MODULES_DIR_NAME = "modules"; //$NON-NLS-1$
 
 	private static Pattern debugPortPattern = Pattern
-			.compile("-Xrunjdwp:\\S*address=([0-9]+)");
+			.compile("-\\S+jdwp[:=]\\S*address=([0-9]+)");
 
 	public GlassfishServerLaunchDelegate() {
 		// SunAppSrvPlugin.logMessage("in SUN SunAppServerLaunch ctor");

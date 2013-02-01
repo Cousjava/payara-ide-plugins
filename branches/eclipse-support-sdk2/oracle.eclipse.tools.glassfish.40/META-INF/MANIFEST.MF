@@ -6,3 +6,5 @@ Bundle-SymbolicName: oracle.eclipse.tools.glassfish.40;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: oracle.eclipse.tools.glassfish
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: json-simple-1.1.1.jar,
+ .
