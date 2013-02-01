@@ -50,7 +50,15 @@
     context="server"
     default="true" />
 
-
+	<property id="sunappserver.adminserverportnumber" label="%sunappserver.adminserverportnumber"
+    type="integer"
+    context="server"
+    default="4848"/>
+    
+    <property id="sunappserver.serverportnumber" label="%sunappserver.serverportnumber"
+    type="integer"
+    context="server"
+    default="8080"/>
 
 
 

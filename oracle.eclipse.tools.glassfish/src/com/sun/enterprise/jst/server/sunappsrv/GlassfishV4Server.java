@@ -12,7 +12,7 @@ public class GlassfishV4Server extends GlassfishGenericServer {
 
 	@Override
 	public GlassFishAdminInterface getAdminInterface() {
-		return GlassFishAdminInterface.REST;
+		return GlassFishAdminInterface.HTTP;
 	}
 
 	
