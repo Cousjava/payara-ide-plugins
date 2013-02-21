@@ -146,37 +146,6 @@ public class V3Configurator {
 		return null;
 	}
 
-	private void deleteOldGlassFishInternalRuntimes(String newglassfishLocation) {
-
-		// IServerType st = ServerCore.findServerType(serverID);
-		IRuntime[] runtimes = ServerCore.getRuntimes();
-		ServerCore.getRuntimeTypes();
-		ServerCore.getServers();
-		for (IRuntime runtime : runtimes) {
-			String currentlocation = "" + runtime.getLocation();
-			if (currentlocation.indexOf("oracle.eclipse.runtime.glassfish") != -1) {
-				if (!currentlocation.equals(newglassfishLocation)) {
-					// we can delete this old runtime defined from an old plugin
-					// ServerCore.
-					SunAppSrvPlugin.logMessage("Deleting Old registered : "
-							+ currentlocation, null);
-
-					try {
-						runtime.delete();
-					} catch (CoreException e) {
-						SunAppSrvPlugin.logMessage(
-								"Error Deleting Old registered : "
-										+ currentlocation, e);
-
-					}
-
-					// delete the osgi cache as well
-				}
-
-			}
-		}
-	}
-
 	static private boolean deleteOSGICacheDirectory(File osgicache) {
 		if (osgicache.exists()) {
 			File[] files = osgicache.listFiles();
