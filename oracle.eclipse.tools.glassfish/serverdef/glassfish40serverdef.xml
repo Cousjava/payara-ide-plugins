@@ -151,16 +151,10 @@
     <classpath id="sunappsrv.project" >
 	<fileset dir="${sunappserver.rootdirectory}">
 		<include name="modules/javax.*.jar" />
-		<include name="modules/mail*.jar" />
-		<include name="modules/web/javax.*.jar" />
-		<include name="modules/ejb/javax.*.jar" />
 		<include name="modules/webbeans-osgi*.jar" />
 		<include name="modules/weld-osgi*.jar" />
 		<include name="modules/bean-validator*.jar" />
-		<include name="modules/jsr311-api*.jar" />
 		<include name="modules/jersey-*.jar" />
-		<include name="modules/grizzly-comet*.jar" />
-		<include name="modules/grizzly-websockets*.jar" />
 		<include name="modules/glassfish-api*.jar" />
 		<include name="modules/ha-api*.jar" />
 		<include name="modules/endorsed/*.jar" />
@@ -173,8 +167,6 @@
 	<fileset dir="${sunappserver.rootdirectory}">
 		<include name="modules/jaxb*.jar" />
 		<include name="modules/webservices*.jar" />
-		<include name="modules/woodstox-osgi*.jar" />
-		
 	</fileset>
 	<fileset dir="${sunappserver.rootdirectory}/../">
 		<include name="mq/lib/jaxm-api*.jar" />		
@@ -186,7 +178,12 @@
 		<include name="lib/toplink-essentials*.jar" />
 	</fileset>
 	<!-- leave at least one fully specified jar as an archive so that validation works -->
-        <archive path="${sunappserver.rootdirectory}/modules/glassfish-api.jar" />    </classpath>
+        <archive path="${sunappserver.rootdirectory}/modules/glassfish-api.jar" />    
+     <!-- to distinguish GF4 from GF3.x -->   
+  		 <archive path="${sunappserver.rootdirectory}/modules/javax.websocket-api.jar" /> 
+  </classpath>
+        
+       
 	
     <!-- Note: This is not currently used, but it uses the property sunappserver.serveraddress -->
     <!-- which does not come from the props above, but is set by synchronizing it with the value -->

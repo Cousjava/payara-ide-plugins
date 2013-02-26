@@ -32,7 +32,7 @@ public class LogReader implements Runnable {
 			while (true) {
 				synchronized (this) {
 					if (shutDown && !reader.ready() && (resumeLoopCount++ > RESUME_LOOP_COUNT)) {
-						System.out.println("Shutdown true, break...");
+						//System.out.println("Shutdown true, break...");
 						break;
 					}
 					while (reader.ready()) {
@@ -51,7 +51,7 @@ public class LogReader implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("end, closing streams...");
+			//System.out.println("end, closing streams...");
 			logFetcher.close();
 			try {
 				output.close();
@@ -64,7 +64,7 @@ public class LogReader implements Runnable {
 	}
 
 	public synchronized void stop() {
-		System.out.println("stop called...");
+		//System.out.println("stop called...");
 		shutDown = true;
 	}
 	
