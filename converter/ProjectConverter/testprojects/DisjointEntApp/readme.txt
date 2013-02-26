@@ -1,1 +1,0 @@
-this project had most of its NB generated files stripped before check-in
