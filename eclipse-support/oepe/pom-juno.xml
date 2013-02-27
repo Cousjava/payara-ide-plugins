@@ -39,9 +39,10 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.15.0</tycho-version>
+    <tycho-version>0.16.0</tycho-version>
     <platform-version-name>juno</platform-version-name>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
+    <oepe-site>http://oepe-hudson.us.oracle.com/dash/view/Annex/job/Annex-JavaEE7-Build/lastSuccessfulBuild/artifact/annex/javaee7/build/product/repository/</oepe-site>
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
     <swtbot-site>http://download.eclipse.org/technology/swtbot/${platform-version-name}/dev-build/update-site</swtbot-site>
     <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/S20110124210048/repository</orbit-site>
@@ -50,18 +51,15 @@
 		
 
   <modules>
-    <module>oracle.eclipse.tools.glassfish</module>
-    <module>oracle.eclipse.tools.doc.javaee6</module>
-    <module>oracle.eclipse.tools.doc.javaee5</module>
     <module>oracle.eclipse.runtime.glassfish</module>
     <module>oracle.eclipse.runtime.glassfish.build</module>
     
-    <module>oracle.eclipse.tools.juno.doc.javaee5</module>
-    <module>oracle.eclipse.tools.juno.doc.javaee6</module>
-    <module>oracle.eclipse.tools.juno.glassfish</module>
+    <module>oracle.eclipse.runtime.glassfish.v4</module>
+    <module>oracle.eclipse.runtime.glassfish.build.v4</module>
+
     <module>oracle.eclipse.runtime.juno.runtime.glassfish</module>
+    <module>oracle.eclipse.runtime.juno.runtime.glassfish.v4</module>
     <module>juno.updatesite</module>
-    <module>asgard-juno.updatesite</module>
 </modules>
 
   <repositories>
@@ -69,6 +67,11 @@
       <id>juno</id>
       <layout>p2</layout>
       <url>${eclipse-site}</url>
+    </repository>
+    <repository>
+      <id>oepe</id>
+      <layout>p2</layout>
+      <url>${oepe-site}</url>
     </repository>
     <!--repository>
       <id>swtbot</id>
