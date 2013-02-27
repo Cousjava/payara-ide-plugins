@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GlassFish 4.0 Server Runtime
+Bundle-SymbolicName: oracle.eclipse.runtime.glassfish40;singleton:=true
+Bundle-Version: 4.0.0.qualifier
+Bundle-Activator: oracle.eclipse.runtime.glassfish.Activator
+Bundle-Vendor: Oracle
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.wst.server.core,
+ oracle.eclipse.tools.glassfish,
+ org.eclipse.core.resources,
+ org.eclipse.jst.server.generic.core,
+ org.eclipse.ui.workbench,
+ org.eclipse.wst.server.ui
+Bundle-ActivationPolicy: lazy
+Bundle-classpath: library.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
