@@ -21,6 +21,9 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import oracle.eclipse.tools.glassfish.GlassfishGenericServer;
+import oracle.eclipse.tools.glassfish.GlassfishToolsPlugin;
+
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -36,11 +39,8 @@ import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 
-import com.sun.enterprise.jst.server.sunappsrv.GlassfishGenericServer;
-import com.sun.enterprise.jst.server.sunappsrv.SunAppSrvPlugin;
-
 @SuppressWarnings("restriction")
-public class V3Configurator {
+public class RuntimeConfigurator {
 
 	//
 	private String serverID;
@@ -50,7 +50,7 @@ public class V3Configurator {
 	/**
 	 * @param serverID
 	 */
-	public V3Configurator(File serverLocation, String serverID) {
+	public RuntimeConfigurator(File serverLocation, String serverID) {
 		this.serverID = serverID;
 		this.serverLocation = serverLocation;
 	}
@@ -62,15 +62,15 @@ public class V3Configurator {
 
 		IRuntime alreadyThere = getRuntimeByLocation(glassfishLocation);
 		if (alreadyThere != null) {
-			SunAppSrvPlugin.logMessage("Already Registered: "
+			GlassfishToolsPlugin.logMessage("Already Registered: "
 					+ glassfishLocation, null);
 			return;
 		}
-		SunAppSrvPlugin.logMessage(
+		GlassfishToolsPlugin.logMessage(
 				"Not  Registered yet : " + glassfishLocation.getAbsolutePath(), null);
 
 		//deleteOldGlassFishInternalRuntimes(glassfishLocation);
-		SunAppSrvPlugin.logMessage("done with deleting obsolete runtimes : ",
+		GlassfishToolsPlugin.logMessage("done with deleting obsolete runtimes : ",
 				null);
 
 		IServerType st = ServerCore.findServerType(serverID);// v3
@@ -167,11 +167,11 @@ public class V3Configurator {
 			ServerCore.getServers();
 			for (IRuntime runtime : runtimes) {
 				String fff = "" + runtime.getLocation();
-				SunAppSrvPlugin.logMessage("loop in createRuntime : " + fff,
+				GlassfishToolsPlugin.logMessage("loop in createRuntime : " + fff,
 						null);
 				if (runtime.getRuntimeType().equals(st.getRuntimeType())) {
 					if (fff.equals(glassfishLocation)) {
-						SunAppSrvPlugin.logMessage("ALREREEEEEDDDD : "
+						GlassfishToolsPlugin.logMessage("ALREREEEEEDDDD : "
 								+ glassfishLocation, null);
 						return runtime;
 					}
@@ -179,16 +179,17 @@ public class V3Configurator {
 			}
 
 			IRuntimeWorkingCopy wc;
-			SunAppSrvPlugin.logMessage("before Creating working copy : ", null);
+			GlassfishToolsPlugin.logMessage("before Creating working copy : ", null);
 			wc = st.getRuntimeType().createRuntime(null, null);
-			SunAppSrvPlugin.logMessage("Creating working copy : " + wc, null);
+			wc.setName("GlassFish 3.1.2.2");
+			GlassfishToolsPlugin.logMessage("Creating working copy : " + wc, null);
 
 			GenericServerRuntime gRun = (GenericServerRuntime) wc.loadAdapter(
 					GenericServerRuntime.class, new NullProgressMonitor());
-			SunAppSrvPlugin.logMessage("grun : " + gRun, null);
+			GlassfishToolsPlugin.logMessage("grun : " + gRun, null);
 
 			HashMap<String, String> map = new HashMap<String, String>();
-			SunAppSrvPlugin.logMessage("Creating NEW : " + glassfishLocation,
+			GlassfishToolsPlugin.logMessage("Creating NEW : " + glassfishLocation,
 					null);
 
 			map.put(GlassfishGenericServer.ROOTDIR, glassfishLocation);
@@ -197,11 +198,11 @@ public class V3Configurator {
 			gRun.setServerInstanceProperties(map);
 
 			wc.setLocation(new Path(glassfishLocation));
-			SunAppSrvPlugin.logMessage("pre saving new runtime : "
+			GlassfishToolsPlugin.logMessage("pre saving new runtime : "
 					+ glassfishLocation, null);
 			return wc.save(true, null);
 		} catch (CoreException e) {
-			SunAppSrvPlugin.logMessage("core exception : " + glassfishLocation,
+			GlassfishToolsPlugin.logMessage("core exception : " + glassfishLocation,
 					e);
 
 		}

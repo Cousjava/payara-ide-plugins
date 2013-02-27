@@ -32,16 +32,16 @@ public class Startup implements org.eclipse.wst.server.core.internal.IStartup {
 		try {
 			URL url = FileLocator.resolve(bundle.getEntry("/"));
 
-			File glassfishv3Location = new File(url.getFile(), "glassfish3");
+			File glassfishvLocation = new File(url.getFile(), "glassfish3");
 
 		//	File glassfishv3Location = new File(
 		//			new Path(Platform.getInstallLocation().getURL().getFile())
 		//					.toPortableString() + "glassfish3");
-			if (glassfishv3Location.exists()
-					&& glassfishv3Location.isDirectory()) {
+			if (glassfishvLocation.exists()
+					&& glassfishvLocation.isDirectory()) {
 
-				new V3Configurator(glassfishv3Location,
-						"org.glassfish.jst.server.glassfish3122")
+				new RuntimeConfigurator(glassfishvLocation,
+						"org.glassfish.jst.server.glassfish31")
 						.configure();
 
 			}

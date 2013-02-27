@@ -126,7 +126,7 @@ public class RuntimeConfigurator {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		IPath location = root.getLocation();
-		return "" + location + "/glassfish3122eclipsedefaultdomain";
+		return "" + location + "/glassfish40eclipsedefaultdomain";
 	}
 
 	private IRuntime getRuntimeByLocation(File glassfishLocation) {

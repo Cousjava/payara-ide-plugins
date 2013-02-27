@@ -7,7 +7,7 @@ Bundle-Activator: oracle.eclipse.runtime.glassfish.Activator
 Bundle-Vendor: Oracle
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.server.core,
- oracle.eclipse.tools.glassfish,
+ oracle.eclipse.tools.glassfish;bundle-version="5.0.1.20130225",
  org.eclipse.core.resources,
  org.eclipse.jst.server.generic.core,
  org.eclipse.ui.workbench,
