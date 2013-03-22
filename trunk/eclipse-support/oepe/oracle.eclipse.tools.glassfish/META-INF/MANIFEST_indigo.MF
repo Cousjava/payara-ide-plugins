@@ -46,8 +46,6 @@ Require-Bundle: org.apache.xerces,
  org.eclipse.jst.j2ee.core,
  org.eclipse.jst.common.project.facet.core,
  org.eclipse.jst.ws.jaxrs.core,
- oracle.eclipse.tools.doc.javaee6,
- oracle.eclipse.tools.doc.javaee5,
  org.eclipse.jst.j2ee.web
 Bundle-ActivationPolicy: lazy
 Export-Package: com.sun.enterprise.jst.server.sunappsrv
