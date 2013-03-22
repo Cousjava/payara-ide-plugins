@@ -20,7 +20,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>kepler.updatesite</artifactId>
+  <artifactId>juno.updatesite</artifactId>
   <packaging>eclipse-repository</packaging>
 
   <name>GlassFisn Juno Repository</name>

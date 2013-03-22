@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description name="GlassFish Eclipse Update Site for the Juno release (Eclipse 3.8)" url="http://download.java.net/glassfish/eclipse/juno">
+      GlassFish Eclipse Update Site for the Kepler release (Eclipse 4.3)
+   </description>
+   <feature url="features/oracle.eclipse.runtime.kepler.runtime.glassfish_3.1.2.qualifier.jar" id="oracle.eclipse.runtime.kepler.runtime.glassfish3122" version="3.1.2.qualifier">
+      <category name="glassfish_category"/>
+   </feature>
+   <feature url="features/oracle.eclipse.runtime.kepler.runtime.glassfish_4.0.0.qualifier.jar" id="oracle.eclipse.runtime.kepler.runtime.glassfish40" version="4.0.0.qualifier">
+      <category name="glassfish_category"/>
+   </feature>
+   <category-def name="glassfish_category" label="GlassFish Application Server">
+      <description>
+         GlassFish Application Server Runtime
+      </description>
+   </category-def>
+</site>
