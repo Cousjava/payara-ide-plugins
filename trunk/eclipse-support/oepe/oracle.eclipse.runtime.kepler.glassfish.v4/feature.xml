@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="oracle.eclipse.runtime.juno.runtime.glassfish3122"
+      id="oracle.eclipse.runtime.kepler.runtime.glassfish40"
       label="%featureName"
-      version="3.1.2.qualifier"
+      version="4.0.0.qualifier"
       provider-name="%providerName">
 
    <description url="https://glassfish.java.net">
@@ -18,17 +18,17 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://download.java.net/glassfish/juno/runtime"/>
+      <update label="%updateSiteName" url="http://download.java.net/glassfish/kepler/runtime"/>
    </url>
 
    <plugin
-         id="oracle.eclipse.runtime.glassfish3122"
+         id="oracle.eclipse.runtime.glassfish40"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="oracle.eclipse.runtime.glassfish.build3122"
+         id="oracle.eclipse.runtime.glassfish.build40"
          download-size="0"
          install-size="0"
          version="1.0.0"
