@@ -57,8 +57,8 @@
     <module>oracle.eclipse.runtime.glassfish.v4</module>
     <module>oracle.eclipse.runtime.glassfish.build.v4</module>
 
-    <module>oracle.eclipse.runtime.kepler.runtime.glassfish</module>
-    <module>oracle.eclipse.runtime.kepler.runtime.glassfish.v4</module>
+    <module>oracle.eclipse.runtime.kepler.glassfish</module>
+    <module>oracle.eclipse.runtime.kepler.glassfish.v4</module>
     <module>kepler.updatesite</module>
 </modules>
 
