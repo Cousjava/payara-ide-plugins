@@ -22,10 +22,10 @@
 
   <artifactId>oracle.eclipse.tools.glassfish</artifactId>
   <packaging>eclipse-plugin</packaging>
-    <version>4.2.1.qualifier</version>
+    <version>5.0.1.qualifier</version>
 
   <name>oracle.eclipse.tools.glassfish Plug-in</name>
-  
+
  <build>
      <!-- workaround for https://issues.sonatype.org/browse/TYCHO-168 -->
      <resources>
