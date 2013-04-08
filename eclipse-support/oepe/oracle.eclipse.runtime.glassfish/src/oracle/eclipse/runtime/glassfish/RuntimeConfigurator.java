@@ -181,7 +181,7 @@ public class RuntimeConfigurator {
 			IRuntimeWorkingCopy wc;
 			GlassfishToolsPlugin.logMessage("before Creating working copy : ", null);
 			wc = st.getRuntimeType().createRuntime(null, null);
-			wc.setName("GlassFish 3.1.2.2");
+			wc.setName("GlassFish Plugin 3.1.2.2");
 			GlassfishToolsPlugin.logMessage("Creating working copy : " + wc, null);
 
 			GenericServerRuntime gRun = (GenericServerRuntime) wc.loadAdapter(
