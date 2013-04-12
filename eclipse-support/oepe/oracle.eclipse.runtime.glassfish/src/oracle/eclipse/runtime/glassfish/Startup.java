@@ -15,6 +15,8 @@ package oracle.eclipse.runtime.glassfish;
 import java.io.File;
 import java.net.URL;
 
+import oracle.eclipse.tools.glassfish.RuntimeConfigurator;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
@@ -41,7 +43,8 @@ public class Startup implements org.eclipse.wst.server.core.internal.IStartup {
 					&& glassfishvLocation.isDirectory()) {
 
 				new RuntimeConfigurator(glassfishvLocation,
-						"org.glassfish.jst.server.glassfish31")
+						"org.glassfish.jst.server.glassfish31", "Internal GlassFish 3.1.2.2",
+						"glassfish3122eclipsedefaultdomain")
 						.configure();
 
 			}
